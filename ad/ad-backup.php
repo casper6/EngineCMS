@@ -1,12 +1,8 @@
-
 <?php
+# ДвижОк CMS: Резервная копия
+# (c) 2006-2012 by Merkushev Vladimir
+# Основано на Database Backup System (c) 2001 by Thomas Rudant (thomas.rudant@grunk.net) http://www.grunk.net http://www.securite-internet.org
 ini_set('memory_limit', '64M');
-# ДвижОк CMS: Backup
-# (c) 2006-2009 by Merkushev Vladimir
-# Based on Database Backup System
-# (c) 2001 by Thomas Rudant (thomas.rudant@grunk.net)
-# http://www.grunk.net - http://www.securite-internet.org
-
 if (!defined('ADMIN_FILE')) {
 	die ("Доступ закрыт!");
 }
@@ -15,12 +11,7 @@ if ($cash != 1) $cash = 0;
 $aid = substr("$aid", 0,25);
 $row = $db->sql_fetchrow($db->sql_query("SELECT realadmin FROM " . $prefix . "_authors WHERE aid='$aid'"));
 if ($row['realadmin'] == 1) {
-// Редкий примитифф ))
-$url = str_replace("http://","",$siteurl);
-$url = str_replace("www.","",$url);
-$url = str_replace(".ru","",$url);
-$url = str_replace("/","",$url);
-$url = str_replace(".","_",$url);
+$url = str_replace(".","_",str_replace("/","",str_replace(".ru","",str_replace("www.","",str_replace("http://","",$siteurl)))));
 switch($op) {
 		case "backup":
 		@set_time_limit(600);
@@ -39,14 +30,9 @@ switch($op) {
 			$strDone = "Дата:";
 			$strat = "Время:";
 			$date_jour = str_replace(" ", "_", date2normal_view(date ("Y-m-d"),0,0,1));
-#--------------------ZIP
-//header('Content-Encoding: gzip'); 
 
-
-//ob_start(); // временно убран
-//ob_implicit_flush(0);  // временно убран
-$gzip_contents = "";
-#--------------------ZIP
+			header( 'Content-Type: text/html; charset=utf-8' ); 
+			$gzip_contents = "";
 		// мы делаем особенную DOS-CRLF магию...
 		//$client = $_SERVER["HTTP_USER_AGENT"];
 		//if(ereg('[^(]*\((.*)\)[^)]*',$client,$regs)) {
@@ -64,7 +50,6 @@ $gzip_contents = "";
 			$result = mysql_db_query($db, "SELECT * FROM $table") or mysql_die();
 			$i = 0;
 			while($row = mysql_fetch_row($result)) {
-				// set_time_limit(60); // HaRa
 				$table_list = "(";
 				for($j=0; $j<mysql_num_fields($result);$j++)
 				$table_list .= mysql_field_name($result,$j).", ";
@@ -81,8 +66,10 @@ $gzip_contents = "";
 					else
 					$schema_insert .= " '',";
 				}
+
 				$schema_insert = ereg_replace(",$", "", $schema_insert);
 				$schema_insert .= ")";
+
 				$handler(trim($schema_insert));
 				$i++;
 			}
@@ -142,12 +129,18 @@ $gzip_contents = "";
 			exit;
 		}
 		global $dbhost, $dbuname, $dbpass, $dbname;
-		mysql_pconnect($dbhost, $dbuname, $dbpass);
+		$con = mysqli_connect($dbhost, $dbuname, $dbpass);
+
+		// Необходимая вставка для UTF-8 кодировки
+		$con->query("SET NAMES 'utf8'");
+		$con->set_charset('utf8');
+
 		@mysql_select_db("$dbname") or die ("Ошибка: Не могу выбрать базу данных");
 		//$tables = mysql_list_tables($dbname);
-// замена функции
-$sql = "SHOW TABLES FROM $dbname";
-$tables = mysql_query($sql) or die ("Ошибка: Не могу получить базу данных");
+		
+		// замена функции
+		$sql = "SHOW TABLES FROM $dbname";
+		$tables = mysql_query($sql) or die ("Ошибка: Не могу получить базу данных");
 
 		$num_tables = @mysql_numrows($tables);
 		if($num_tables == 0) {
@@ -155,10 +148,7 @@ $tables = mysql_query($sql) or die ("Ошибка: Не могу получит�
 		} else {
 			$i = 0;
 			$heure_jour = date ("H:i");
-			// # ========================================================$crlf
-			// # $strName: $dbname. $strDone $date_jour $strat $heure_jour $crlf
-			// # ========================================================$crlf
-//$crlf
+
 $gzip_contents .= "<?php
 $crlf
 require_once(\"mainfile.php\");$crlf
@@ -184,9 +174,7 @@ global \$prefix;$crlf
 			}
 $gzip_contents .= "print (\"<center><h2>Обновление базы данных окончено!</h2><br>\");$crlf?>";
 		}
-#-----------------------------------ZIP
-//$gzip_contents = ob_get_contents();  // временно убран
-/*
+
 $gzip_contents = str_replace("   "," ",$gzip_contents);
 $gzip_contents = str_replace("  "," ",$gzip_contents);
 $gzip_contents = str_replace("</td> <td","</td><td>",$gzip_contents);
@@ -207,8 +195,6 @@ $gzip_contents = str_replace('valign=\"top\"',"valign=top",$gzip_contents);
 $gzip_contents = str_replace('rowspan=\"2\"',"rowspan=2",$gzip_contents);
 $gzip_contents = str_replace('<br> <br>',"<br><br>",$gzip_contents);
 $gzip_contents = str_replace('</tr> </table>',"</tr></table>",$gzip_contents);
-*/
-// ob_end_clean(); // временно убран
 
 fputs(fopen("backup/".$strFileName."_".$url."_".$date_jour.".txt","wb"), $gzip_contents );
 echo "файл создан<br>";
