@@ -75,7 +75,7 @@ if ($name=="-email") { // занесение мыла как скрытого к
 
 } elseif ($name=="-search") { // Поиск по всем разделам
 	###################################################### ПОИСК ПОИСК 
-	global $soderganie, $tip, $DBName, $prefix, $db, $module_name, $ModuleName, $slovo, $slovo_poisk, $design, $razdel_design, $now, $ip, $papka;
+	global $soderganie, $tip, $DBName, $prefix, $db, $module_name, $ModuleName, $slovo, $design, $now, $ip, $papka;
 	echo $slovo;
 	$slov = str_replace("  "," ",str_replace(";"," ",str_replace("—"," ",str_replace("`"," ",str_replace("№ ","№",str_replace("№"," №",str_replace(",",", ",str_replace("ё","е",trim(strip_tags($slovo))))))))));
 
@@ -231,7 +231,7 @@ if ($name=="-email") { // занесение мыла как скрытого к
 
 } elseif ($name=="-slovo") { // Поиск по ключ. словам
 	###################################################### ТЕГИ
-	global $soderganie, $tip, $DBName, $prefix, $db, $slovo, $slovo_poisk, $design;
+	global $soderganie, $tip, $DBName, $prefix, $db, $slovo, $design;
 	$slov = trim(strip_tags(urldecode(str_replace( "-","%", $slovo))));
 	$slov = str_replace("  "," ",trim($slov));
 	$slovo = str_replace(" ","%",$slov);
@@ -769,7 +769,7 @@ if ($media==2) { // удалить
 						$open_text = "<div id=block_open_text class=\"block_open_text ".$class."\">".$open_text.$dalee."</div>";
 						
 						if ($pic_ramka == 1) { // настройка используется для рамок изображений на сайте Самарских Родителей)
-							$open_text = str_replace("<img","<div id=for_pic style='padding-bottom:20px;' class=\"for_pic".$class."\"><img", str_replace("<IMG","<img",$open_text));
+							$open_text = str_replace("<img","<div id=for_pic class=\"for_pic".$class."\"><img", str_replace("<IMG","<img",$open_text));
 						}
 							if ($zagolovokin == 0) {
 								$zagolovok = "<div class=\"block_title ".$class."\"><span class=\"block_li_data ".$class."\">".$data."</span>".$cat."<a class=\"block_title ".$class."\" href=-".$module."_page_".$p_id.$blank.">".$title."</a></div>";
@@ -1533,7 +1533,6 @@ case "30": # Статистика раздела, выводит кол-во п�
 	$block=str_replace("[поиск]", $search, $block);
 
 	// Ставим подписку
-	global $slovo_mail, $mail_pic;
 	$search = "<form method=POST action=\"/--email\" style='display:inline;' class=main_mail_form><table width=100%><tr><td align=right>Email: </td><td><input type=text name=mail class=main_mail_input size=10 style='width:100%;'></td></tr><tr><td align=right>Имя: </td><td><input type=text name=avtor class=main_mail_input size=10 style='width:100%;'></td></tr><tr><td colspan=2 align=right><input type='submit' name='ok' value='Подписаться'></td></tr></table></form>";
 	$block=str_replace("[подписка]", $search, $block);
 

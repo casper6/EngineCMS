@@ -7,7 +7,7 @@ require_once("shablon.php");
 $module_name = basename(dirname(__FILE__));
 ###########################################
 // передается из header
-global $prefix, $db, $soderganie, $soderganie2, $tip, $options, $ModuleName, $DBName, $otpravka_pic; 
+global $prefix, $db, $soderganie, $soderganie2, $tip, $options, $ModuleName, $DBName; 
 if ($DBName=="") $DBName="news";
 if ($tip=="") $tip="mainpage";
 if ($ModuleName=="") $ModuleName = "Содержание";
@@ -1116,7 +1116,7 @@ if (($post!=0 and $cid!=0) or ($cid == 0 and $show_add_post_on_first_page==1)) $
 function page($pid, $all) {
 global $strelka, $soderganie, $soderganie2, $tip, $DBName, $db, $prefix, $module_name, $admin, $pagetitle, $pagetitle2, $ModuleName, $print, $siteurl, $keywords2, $description2, $data_page;
 // настройки модуля из БД
-global $golos, $golostype, $post, $comments, $datashow, $sort, $tags, $lim, $folder, $media, $view, $col, $menushow, $favorites, $socialnetwork, $name, $put_in_blog, $base, $titleshow, $otpravka_pic, $comments_add, $add_css, $comment_shablon, $page_shablon, $comments_all, $comments_num, $comments_mail, $comments_adres, $comments_tel, $vetki, $comments_all, $comments_num, $comments_desc, $comments_1, $comments_2, $comments_3, $comments_4, $comments_5, $comments_6, $comments_7, $comments_8, $tag_text_show;
+global $golos, $golostype, $post, $comments, $datashow, $sort, $tags, $lim, $folder, $media, $view, $col, $menushow, $favorites, $socialnetwork, $name, $put_in_blog, $base, $titleshow, $comments_add, $add_css, $comment_shablon, $page_shablon, $comments_all, $comments_num, $comments_mail, $comments_adres, $comments_tel, $vetki, $comments_all, $comments_num, $comments_desc, $comments_1, $comments_2, $comments_3, $comments_4, $comments_5, $comments_6, $comments_7, $comments_8, $tag_text_show;
 $pid = intval($pid);
 //$soderganie .= "<table class=all_page width=100%><tr valign=top><td>";
 
@@ -1189,12 +1189,11 @@ default:
   $active = $row['active'];
 
 if ( $cid=="" or ($active != 1 and !is_admin($admin))) {
-  global $search_pic;
   header("HTTP/1.0 404 Not Found");
   echo "<center style='margin-top:40px;'><img src=/images/icon_no.png> <b>Запрашиваемая страница не существует.</b><br>Она была удалена, отключена или никогда и не создавалась.<br><br>Вы имеете право сохранять молчание и перейти на <a href=/>Главную страницу</a> <br>или попробовать найти нужную информацию на сайте с помощью быстрого поиска: <form method=POST action=\"/--search\" style='display:inline;' class=main_search_form>
   <table width=40%><tr valign=top><td>
   <input type=search name=slovo class=main_search_input size=10 style='width:100%;'></td><td width=65>
-  <input type='image' name='ok' src='".$search_pic."' title='Найти' style='border:none;'>
+  <input type='submit' name='ok' value='Найти' class='main_search_button'>
   </td></tr></table>
   </form></center>";
   exit;
@@ -1815,7 +1814,7 @@ function addcomm($pid) {
   $usercomm=1; # писать неюзерам нельзя РЕАЛИЗОВАТЬ!!!
   $commentagain=0;
 
-  global $soderganie, $tip, $DBName, $db, $prefix, $cookie, $module_name, $user, $otpravka_pic, $media_comment, $comments_mail, $comments_adres, $comments_tel, $comments_2, $comments_3, $comments_4, $comments_5, $comments_6, $comments_7;
+  global $soderganie, $tip, $DBName, $db, $prefix, $cookie, $module_name, $user, $media_comment, $comments_mail, $comments_adres, $comments_tel, $comments_2, $comments_3, $comments_4, $comments_5, $comments_6, $comments_7;
   $pid = intval($pid);
   // Понадобится если будут спамить в обход капче! Тогда использовать проверку времени!!!
   //$ip = getenv("REMOTE_ADDR"); // IP
@@ -1874,13 +1873,6 @@ function addcomm($pid) {
 
   if ($comments_tel == 1 or $comments_tel == 3) $ret .= "".$comments_6." <input type=text name='tel' id='tel' value=\"".$tel."\" size=17>"; else $ret .= "<input type=hidden name='tel' id='tel' value=\"".$tel."\">";
 
-  /*
-  <DIV class=editorbutton onclick=\"clc_bbcode('i',1)\"><IMG title=\"Наклонный текст\" src=\"images/comm/italic.gif\"></DIV>
-  <DIV class=editorbutton onclick=\"clc_bbcode('li',0)\"><IMG title=\"Маркированный список\" src=\"images/comm/li.gif\"></DIV>
-  <DIV class=editorbutton onclick=\"clc_name('[mail=ваш_e-mail@mail.ru]Ваше имя[/mail]')\"><IMG title=\"Вставить E-Mail\" src=\"images/comm/mail.gif\"></DIV>
-  <DIV class=editorbutton onclick=\"clc_name('[url=http://]Название сайта или страницы[/url]')\"><IMG title='Вставить ссылку' src=\"images/comm/url.gif\"></DIV>
-  */
-
   $ret .= "<table width=100% cellspacing=0 cellpadding=0><tr valign=bottom><td width=350>".$comments_7."</td><td>
   <DIV class='editor' style='margin-top:10px; width:100%;'> 
   <DIV class='editorbutton' onclick=\"clc_bbcode('жирный',1)\"><IMG title='Жирный текст' src='images/comm/bold.gif'></DIV>
@@ -1891,7 +1883,6 @@ function addcomm($pid) {
   if ($more_smile == 1) $ret .= "<div id=\"cont\" class=\"editorbutton\" OnClick=\"show('onoffsmilies1');\" style=\"cursor: pointer;\"><img title=\"Смайлы: альтернативная коллекция :)\" src=\"images/smilies/75.gif\"></div>
   <div id=\"cont\" class=\"editorbutton\" OnClick=\"show('onoffsmilies2');\" style=\"cursor: pointer;\"><img title=\"Смайлы: если эмоций маловато :)\" src=\"images/smilies/17.gif\"></div>
   <div id=\"cont\" class=\"editorbutton\" OnClick=\"show('onoffsmilies3');\" style=\"cursor: pointer;\"><img title=\"Смайлы: аниме-эмоции o_O\" src=\"images/smilies/18.gif\"></div>";
-// src=".$otpravka_pic."  style='border:0;' кнопка
   $ret .= "</td></tr></table>
   <TEXTAREA id=area rows=7 style='font-size:18px;' name=info></TEXTAREA>
 
@@ -2063,7 +2054,7 @@ function addpost($cid) {
   # Настройка-----------------
   $usercomm=1; # писать неюзерам нельзя РЕАЛИЗОВАТЬ!!!
   # Настройка-----------------
-  global $soderganie, $tip, $show_add_post_fileform, $DBName, $db, $prefix, $cookie, $module_name, $user, $admin, $tema, $tema_name, $tema_title, $tema_opis, $post, $otpravka_pic;
+  global $soderganie, $tip, $show_add_post_fileform, $DBName, $db, $prefix, $cookie, $module_name, $user, $admin, $tema, $tema_name, $tema_title, $tema_opis, $post;
   $cid = intval($cid);
 
   $sql = "select id, shablon from ".$prefix."_mainpage where `tables`='pages' and name='$DBName' and type='2'";
@@ -2236,7 +2227,7 @@ function addpost($cid) {
     }
   } // end if ($view==4) {
   $ret .= "<input type='hidden' name='keystring' value='".$chars[array_rand($chars)]."'>
-  <br><br><center><input type ='image' name='ok' src='".$otpravka_pic."' title='Отправить' style='border:0;'></center>";
+  <br><br><center><input class='comm_submit' type='submit' name='ok' value='Отправить'></center>";
 
   if ($post==2) $ret .= "<br>Информация будет добавлена на сайт сразу после проверки администратором.";
   //if ($post==3) $ret .= "<br>Информация будет добавлена на сайт, но появится в RSS только после проверки администратором.";
@@ -2487,7 +2478,7 @@ function addcomm_reiting($pid, $cid) {
   //$usercomm=1; # писать неюзерам нельзя РЕАЛИЗОВАТЬ!!!
   //$commentagain=1; // У рейтингов только один раз можно!!!
   # Настройка-----------------
-    global $soderganie, $tip, $DBName, $db, $prefix, $cookie, $module_name, $user, $admin, $reiting_data, $otpravka_pic;
+    global $soderganie, $tip, $DBName, $db, $prefix, $cookie, $module_name, $user, $admin, $reiting_data;
     $pid = intval($pid);
   // Понадобится если будут спамить в обход капче! Тогда использовать проверку времени!!!
   //$sql = "SELECT gid FROM ".$prefix."_".$tip."_golos WHERE ip='$ip'";
@@ -2601,7 +2592,7 @@ function addcomm_reiting($pid, $cid) {
   </td></tr>
   <tr valign=top><td align=right><b>Введите цифры*:</b></td><td><input type=text name=keystring size='3' maxlength='3'><br><img src='kcaptcha/index.php?".session_name()."=".session_id()."' style='border-radius: 10px;'></td></tr>
   </table>
-  <center><input type ='image' name='ok' src=".$otpravka_pic." title='Отправить' style='border:0;'></center>
+  <center><input class='comm_submit' type='submit' name='ok' value='Отправить'></center>
   <input name=num value=\"".$pid."\" type=hidden>
   <input name=cid value=\"".$cid."\" type=hidden>
   <input name=go value=\"savereiting\" type=hidden></form>";
