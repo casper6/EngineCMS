@@ -1,5 +1,7 @@
 Options -Indexes +FollowSymLinks
-DirectorySlash off
+
+#Может вызывать Internal Server Error (осторожно!) - позволяет убирать слеши в конце ссылок
+#DirectorySlash off
 
 #Разрешаем выполнения Rewrite_mod 
 RewriteEngine On

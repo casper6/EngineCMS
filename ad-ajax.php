@@ -865,7 +865,11 @@ $pageslistdel .= "</table><i>Максимум отображения: 10.000 с�
       if (!isset($module)) $titl_mainpage = "РАЗДЕЛ УДАЛЁН! &rarr; $module";
       else $titl_mainpage = trim($title_mainpage2[$module]);
       if ($del == true) $del = "<a title='Удалить отключенный комментарий' onclick=delcomm(".$cid.") class=punkt><img class='icon2 i21' src='/images/1.gif' align=right></a>"; else $del = "";
-      $pageslistdel .= "<tr onclick=show('comm".$cid."') title='Показать комментарий...' valign=top style='cursor:pointer;' class='tr_hover' id=1comm".$cid.$bgcolor."><td class='gray'><nobr>".$data."</nobr></td><td>".$del."<a onclick=offcomm(".$cid.") class=punkt>".$vkl."</a><a title='Изменить комментарий' href='sys.php?op=base_comments_edit_comments&cid=".$cid."'><img class='icon i35' src='/images/1.gif' align=right></a><i>".$avtor2."</i><span class='gray'> ".$pishet." разделе «".$titl_mainpage."» на странице </span><a title='Открыть на сайте...' target=_blank href='-".$module."_page_".$num."#comm_".$cid."'>".$titles."</a>: <span class='gray'>".$textline."</span></td></tr>
+      $pageslistdel .= "<tr onclick=show('comm".$cid."') title='Показать комментарий...' valign=top style='cursor:pointer;' class='tr_hover' id=1comm".$cid.$bgcolor."><td class='gray'><nobr>".$data."</nobr></td><td>".$del."<a onclick=offcomm(".$cid.") class=punkt>".$vkl."</a>
+
+      <a title='Изменить комментарий' href='sys.php?op=base_comments_edit_comments&cid=".$cid."'><img class='icon2 i35' src=/images/1.gif align=right></a>
+
+      <i>".$avtor2."</i><span class='gray'> ".$pishet." разделе «".$titl_mainpage."» на странице </span><a title='Открыть на сайте...' target=_blank href='-".$module."_page_".$num."#comm_".$cid."'>".$titles."</a>: <span class='gray'>".$textline."</span></td></tr>
       <tr><td colspan=2 class='polosa'".$bgcolor.">
       <div style='display:none;' id=comm".$cid.">
       <br>".$otvet.$mails.$tel."<br>
@@ -875,7 +879,7 @@ $pageslistdel .= "</table><i>Максимум отображения: 10.000 с�
       </div>
       </td></tr>";
     } else {
-      if ($mail != "") $pageslistdel .= "<tr valign=top id=1comm".$cid.$bgcolor."><td class='polosa gray'><nobr>".$data."</nobr></td><td class='polosa'><a title='Удалить подписку' onclick=delcomm(".$cid.") class=punkt><img class='icon2 i21' src='/images/1.gif' align=right></a><a title='Изменить подписку' href='sys.php?op=base_comments_edit_comments&cid=".$cid."'><img class='icon i35' src='/images/1.gif' align=right></a> <span class=green>Подписка на рассылку</span>, ".$avtor." &rarr; ".$mail."</td></tr>";
+      if ($mail != "") $pageslistdel .= "<tr valign=top id=1comm".$cid.$bgcolor."><td class='polosa gray'><nobr>".$data."</nobr></td><td class='polosa'><a title='Удалить подписку' onclick=delcomm(".$cid.") class=punkt><img class='icon2 i21' src='/images/1.gif' align=right></a><a title='Изменить подписку' href='sys.php?op=base_comments_edit_comments&cid=".$cid."'><img class='icon2 i35' src='/images/1.gif' align=right></a> <span class=green>Подписка на рассылку</span>, ".$avtor." &rarr; ".$mail."</td></tr>";
       else $pageslistdel .= "<tr valign=top id=1comm".$cid.$bgcolor."><td class='polosa gray'><nobr>".$data."</nobr></td><td class='polosa'><a title='Удалить сообщение' onclick=delcomm(".$cid.") class=punkt><img class='icon2 i21' src='/images/1.gif' align=right></a> <span class=green>".$avtor."</span> &rarr; ".$txt."</td></tr>";
     }
   }

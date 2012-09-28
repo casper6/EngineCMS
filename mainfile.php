@@ -1409,16 +1409,6 @@ function antivirus($x="0") { // антивирус для защиты от htac
   }
 }
 ///////////////////////////////////////////////////////////////
-/*
-function http_request($url) { // Получение страницы другого сайта НЕ РАБОТАЕТ!!!
-    $curl_handler = curl_init($url);
-    curl_setopt($curl_handler, CURLOPT_RETURNTRANSFER, 1);
-    $response = curl_exec($curl_handler);
-    curl_close($curl_handler);
-    return $response;
-}
-*/
-///////////////////////////////////////////////////////////////
 function system_mes($subg) { // Отправка системного сообщения администратору (в список «Комментарии»)
   global $prefix, $db, $now;
   $db->sql_query("INSERT INTO ".$prefix."_pages_comments ( `cid` , `num` , `avtor` , `mail` , `text` , `ip` , `data`, `drevo`, `adres`, `tel`, `active` ) VALUES ('', '0', 'ДвижОк', '', '".$subg."', '', '$now', '', '', '', '1')");
