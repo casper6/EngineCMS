@@ -133,8 +133,6 @@ A[target=\"_blank\"] {
 .video_link {padding-left:20px; background:url(/spaw2/uploads/images/icons/video.gif) no-repeat left;}
 .home_link {padding-left:20px; background:url(/spaw2/uploads/images/icons/domoi.gif) no-repeat left;}
 .user_link {padding-left:20px; background:url(/spaw2/uploads/images/icons/comment.gif) no-repeat left;}
-    
-.all_width {width:100%;}
 
 .small {font-size: 0.9em;}
 .red, .red a {color:red;}
@@ -214,10 +212,7 @@ A[target=\"_blank\"] {
 .menu-v-d li:hover ul li:hover ul,
 .menu-v-d li:hover ul li:hover ul li:hover ul { display: block; }
 
-.table1menu_link {text-decoration:none;}
-
-/* Все ссылки в меню */
-.li1menu_link { text-decoration:none; }
+.li1menu_link, .table1menu_link { text-decoration:none; }
 
 /* Красивая таблица - стиль table_light */
 table.table_light { border-collapse: collapse; border: 1px solid white; }
@@ -295,6 +290,11 @@ table[align=right] {margin-left: 10px;}
 .i46 {background: url('/images/icons.png') -720px; }
 
 /* =========================================== */
+/* Предустановки - перенос стилей из php */
+
+.all_width, .main_mail_input {width:100%;}
+.main_mail_form, .main_search_form, .add, .main_search_form {display:inline;}
+
 
 
 .show_block { border: 2px solid black; padding:2px;  border-radius: 12px;  -moz-border-radius: 12px;  -webkit-border-radius: 12px;}

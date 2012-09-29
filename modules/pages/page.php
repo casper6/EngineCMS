@@ -1673,7 +1673,7 @@ $result = $db->sql_query($sql);
 $nu = $db->sql_numrows($result);
 
 $show_password = 0;
-global $siteurl, $user, $oplata_kurier, $info_usluga;
+global $siteurl, $oplata_kurier, $info_usluga;
 	$sql = "SELECT $zapros_names FROM ".$prefix."_base_".$baza_name." ".$where."";
 	$result = $db->sql_query($sql);
 	$row = $db->sql_fetchrow($result);
@@ -1814,7 +1814,7 @@ function addcomm($pid) {
   $usercomm=1; # писать неюзерам нельзя РЕАЛИЗОВАТЬ!!!
   $commentagain=0;
 
-  global $soderganie, $tip, $DBName, $db, $prefix, $cookie, $module_name, $user, $media_comment, $comments_mail, $comments_adres, $comments_tel, $comments_2, $comments_3, $comments_4, $comments_5, $comments_6, $comments_7;
+  global $soderganie, $tip, $DBName, $db, $prefix, $cookie, $module_name, $media_comment, $comments_mail, $comments_adres, $comments_tel, $comments_2, $comments_3, $comments_4, $comments_5, $comments_6, $comments_7;
   $pid = intval($pid);
   // Понадобится если будут спамить в обход капче! Тогда использовать проверку времени!!!
   //$ip = getenv("REMOTE_ADDR"); // IP
@@ -1837,14 +1837,8 @@ function addcomm($pid) {
     $tel = "";
   }
 
-  if (is_user($user)) {
-    cookiedecode($user);
-    $avtor = $cookie[1];
-    $avt_key="<input type=hidden name='avtory' id='avtory' value=\"".$avtor."\" size=17> ".$avt;
-  } else {
-    $avt_key="<input type=text name='avtory' id='avtory' value=\"".$avtor."\" size=17> ";
-  }
-  if (is_user($user)) getusrinfo($user);
+  $avt_key="<input type=text name='avtory' id='avtory' value=\"".$avtor."\" size=17> ";
+
   if ($commentagain==1) $ret .= "Вы можете оставить только один комментарий<br>";
 
   //$ver = mt_rand(10000, 99999); // получили случайное число
@@ -1911,13 +1905,13 @@ function add_base($baza_name,$name) {
   # Настройка-----------------
   $usercomm=1; # писать неюзерам нельзя РЕАЛИЗОВАТЬ!!!
 
-  global $soderganie, $tip, $DBName, $db, $prefix, $module_name, $user, $admin, $tema, $tema_name, $tema_title, $tema_opis, $post;
+  global $soderganie, $tip, $DBName, $db, $prefix, $module_name, $admin, $tema, $tema_name, $tema_title, $tema_opis, $post;
   $soderganie .= "<br><a href=/-".$name."_addbase_".$baza_name."><b>Добавить в базу данных</b></a>";
 }
 ###########################################################
 // Добавление строки в базу данных
 function addbase($base,$name,$spa=0) {
-  global $soderganie, $tip, $DBName, $db, $prefix, $cookie, $module_name, $user, $admin, $tema, $tema_name, $tema_title, $tema_opis, $post;
+  global $soderganie, $tip, $DBName, $db, $prefix, $cookie, $module_name, $admin, $tema, $tema_name, $tema_title, $tema_opis, $post;
   if ($spa == 1) $soderganie .= "<b>Спасибо.</b><br>В ближайшее время ваша информация будет проверена и размещена на сайте.";
   else {
   # Настройка-----------------
@@ -2023,7 +2017,7 @@ function addbase($base,$name,$spa=0) {
 // Сохранение добавления строки в базу данных
 function savebase ($name, $basename, $type, $text) {
   $link = getenv("REMOTE_HOST");
-  global $_SESSION, $_POST, $soderganie, $tip, $DBName, $db, $prefix, $module_name, $user, $post, $captcha_ok;
+  global $_SESSION, $_POST, $soderganie, $tip, $DBName, $db, $prefix, $module_name, $post, $captcha_ok;
   // Ввести проверку на активность - проверка постов администратором
   if ($post==1) $active = 1;
   if ($post==2) $active = 0;
@@ -2054,7 +2048,7 @@ function addpost($cid) {
   # Настройка-----------------
   $usercomm=1; # писать неюзерам нельзя РЕАЛИЗОВАТЬ!!!
   # Настройка-----------------
-  global $soderganie, $tip, $show_add_post_fileform, $DBName, $db, $prefix, $cookie, $module_name, $user, $admin, $tema, $tema_name, $tema_title, $tema_opis, $post;
+  global $soderganie, $tip, $show_add_post_fileform, $DBName, $db, $prefix, $cookie, $module_name, $admin, $tema, $tema_name, $tema_title, $tema_opis, $post;
   $cid = intval($cid);
 
   $sql = "select id, shablon from ".$prefix."_mainpage where `tables`='pages' and name='$DBName' and type='2'";
@@ -2066,15 +2060,7 @@ function addpost($cid) {
   if (isset($shablon[1])) $shablon2 = $shablon[1]; else $shablon2 = "";
   $ret .= "<br>";
   $anonymous="";
-  #if (is_user($user)) {
-  #cookiedecode($user);
-  #$avt = $cookie[1];
-  #$avt_key="<input type=hidden name='avtor' id='avtor' value=\"".$avt."\" size=17> [ ".$avt." ]";
-  #} else {
   $avt = $anonymous;
-  #}
-  #if (is_user($user)) getusrinfo($user);
-  //$ver = mt_rand(10001, 99998); // получили случайное число
 
   $chars = array('&nbsp;', '&brvbar;', '&sect;', '&raquo;', '&para;', '&copy;', '&reg;', '&micro;', '&laquo;', '&not;', '&shy;', '&plusmn;', '&middot;'); 
  
@@ -2241,7 +2227,7 @@ function savepost ($avtor, $post_title, $info, $num, $cid, $add){
   global $ip;
 
   $link = getenv("REMOTE_HOST");
-  global $_POST, $soderganie, $tip, $DBName, $db, $prefix, $module_name, $user, $post, $admin, $tema_zapret;
+  global $_POST, $soderganie, $tip, $DBName, $db, $prefix, $module_name, $post, $admin, $tema_zapret;
   // Ввести проверку на активность - проверка постов администратором
   // СДЕЛАТЬ ЗАЩИТУ!!!
 
@@ -2478,27 +2464,9 @@ function addcomm_reiting($pid, $cid) {
   //$usercomm=1; # писать неюзерам нельзя РЕАЛИЗОВАТЬ!!!
   //$commentagain=1; // У рейтингов только один раз можно!!!
   # Настройка-----------------
-    global $soderganie, $tip, $DBName, $db, $prefix, $cookie, $module_name, $user, $admin, $reiting_data;
+    global $soderganie, $tip, $DBName, $db, $prefix, $cookie, $module_name, $admin, $reiting_data;
     $pid = intval($pid);
-  // Понадобится если будут спамить в обход капче! Тогда использовать проверку времени!!!
-  //$sql = "SELECT gid FROM ".$prefix."_".$tip."_golos WHERE ip='$ip'";
-  //$resnum = $db->sql_query($sql);
-  //$numgolos = $db->sql_numrows($resnum);
-  /*
-  $soderganie .= "<br>";
-  $anonymous="";
-  if (is_user($user)) {
-  cookiedecode($user);
-  $avt = $cookie[1];
-  $avt_key="<input type=hidden name='avtor' id='avtor' value=\"".$avt."\" size=17> [ ".$avt." ]";
-  } else {
   $avt = $anonymous;
-  $avt_key="<input type=text name='avtor' id='avtor' value=\"".$avt."\" size=17 style='width:99%;'> ";
-  }
-  if (is_user($user)) getusrinfo($user);
-  */
-  $avt = $anonymous;
-  //$ver = mt_rand(10000, 99999); // получили случайное число
   $reiting = "";
   if ($cid != 0) {
     $sql4 = "SELECT description FROM ".$prefix."_".$tip."_categories where cid='$cid' and `tables`='pages'";
@@ -2605,7 +2573,7 @@ function addcomm_reiting($pid, $cid) {
 function savereiting ($avtor, $info, $num, $cid, $gol, $date1, $minus, $plus){
   # Запрет комментариев повторно - перевести в функции!!!
   $link = getenv("REMOTE_HOST");
-  global $now, $_SESSION, $_POST, $soderganie, $tip, $DBName, $db, $prefix, $module_name, $user, $admin, $captcha_ok ;
+  global $now, $_SESSION, $_POST, $soderganie, $tip, $DBName, $db, $prefix, $module_name, $admin, $captcha_ok ;
   //$date_time = date(" H:i:s");
   //$date = $date1.".".$date2.".".$date3.$date_time;
   $ip = getenv("REMOTE_ADDR"); // IP
@@ -2613,7 +2581,6 @@ function savereiting ($avtor, $info, $num, $cid, $gol, $date1, $minus, $plus){
   $avtor = trim(str_replace("  "," ",filter($avtor)));
   $minus = trim(str_replace("  "," ",filter($minus)));
   $plus = trim(str_replace("  "," ",filter($plus)));
-  #if (!is_user($user)) $avtor=trim("Прохожий ".$avtor);
 
   if ($avtor != "" AND $info != "") {
     if( (isset($_SESSION['captcha_keystring']) && $_SESSION['captcha_keystring'] == $_POST['keystring']) or $captcha_ok == 1){
@@ -2714,7 +2681,7 @@ function savecomm($avtor, $avtory, $info, $num, $comm_otvet, $maily, $mail, $adr
   $active = 1;
   $commentagain = 0; # 1 = Запрет комментариев повторно - перевести в функции!!!
   //echo $avtory;
-  global $admin, $_SESSION, $_POST, $soderganie, $tip, $DBName, $db, $prefix, $module_name, $user, $comments_add, $captcha_ok, $tema_zapret_comm, $now, $ip, $adminmail, $comment_send, $siteurl;
+  global $admin, $_SESSION, $_POST, $soderganie, $tip, $DBName, $db, $prefix, $module_name, $comments_add, $captcha_ok, $tema_zapret_comm, $now, $ip, $adminmail, $comment_send, $siteurl;
 
   // переопределение ip
   if (isset($_COOKIE["comment"])) {
@@ -2732,11 +2699,9 @@ function savecomm($avtor, $avtory, $info, $num, $comm_otvet, $maily, $mail, $adr
   $num = intval($num);
   $comm_otvet = intval($comm_otvet);
   $avtory = trim(str_replace("  "," ",filter($avtory)));
-  //echo $avtory;
   $maily = trim(str_replace("  "," ",filter($maily)));
   $adres = trim(str_replace("  "," ",filter($adres)));
   $tel = trim(str_replace("  "," ",filter($tel)));
-  #if (!is_user($user)) $avtor=trim("Прохожий ".$avtor);
   $info = bbcode(trim(str_replace("document.cookie","",$info)));
 
   $info = str_replace("http://".$siteurl, $siteurl, $info);
@@ -2746,8 +2711,6 @@ function savecomm($avtor, $avtory, $info, $num, $comm_otvet, $maily, $mail, $adr
   $info = str_replace(":(", "<img src=/images/smilies/11.gif>", $info);
 
   $info = str_replace(" ,", ",", $info);
-  //$info = str_replace(":", ": ", str_replace(" :", ":", $info));
-  //$info = str_replace("?", "? ", str_replace(" ?", "?", $info));
   $info = str_replace("!", "! ", str_replace(" !", "!", $info));
   $info = str_replace("! !", "!", str_replace("! ! !", "!!!", $info));
 

@@ -1,18 +1,14 @@
 <?php
 	define('MODULE_FILE', true);
 	require_once("mainfile.php");
-	global $strelka, $siteurl, $user, $cookie, $prefix, $module_name, $name, $db, $sitekey, $admin, $sitename, $pagetitle, $pagetitle2, $registr, $pogoda, $flash, $keywords, $description, $counter, $startdate, $adminmail, $keywords2, $description2, $stopcopy, $nocash, $blocks, $http_siteurl, $display_errors;
+	global $strelka, $siteurl, $cookie, $prefix, $module_name, $name, $db, $sitekey, $admin, $sitename, $pagetitle, $pagetitle2, $registr, $pogoda, $flash, $keywords, $description, $counter, $startdate, $adminmail, $keywords2, $description2, $stopcopy, $nocash, $blocks, $http_siteurl, $display_errors;
 	$nocash = false;
 	if ($name == "") $name = "index";
 	
 		$agent=" ".getenv("HTTP_USER_AGENT"); # Защита от скачивания
 		if (strpos($agent,"DISCo Pump") || strpos($agent,"Offline Explorer") || strpos($agent,"Teleport") || strpos($agent,"WebZIP") || strpos($agent,"WebCopier") || strpos($agent,"Wget") || strpos($agent,"FlashGet") || strpos($agent,"CIS TE") || strpos($agent,"DTS Agent") || strpos($agent,"WebReaper") || strpos($agent,"HTTrack") || strpos($agent,"Web Downloader")) { die("Хорош уже скачивать!"); } 
 
-    if ($user != "") { // Определение пользователя
-	    cookiedecode($user);
-	    $username = $cookie[1];
-	    //if ($username == "") { $username = "Аноним"; }
-    } //else $username = "Аноним";
+    $username = "Аноним"; // удалить
 
 if ($name=="-email") { // занесение мыла как скрытого комментария
 	global $DBName, $prefix, $db, $now, $ip;
@@ -20,7 +16,7 @@ if ($name=="-email") { // занесение мыла как скрытого к
 	$mail = trim(str_replace("  "," ",filter($mail, "", 1)));
 	if (!strpos($mail, "@")) {
 		echo "<h2>Вы указали неправильный Email.</h2>Попробуйте еще раз
-		<form method=POST action=\"/--email\" style='display:inline;' class=main_mail_form><table><tr><td align=right>Email: </td><td><input type=text name=mail class=main_mail_input size=10 style='width:100%;'></td></tr><tr><td align=right>Имя: </td><td><input type=text name=avtor value='".$avtor."' class=main_mail_input size=10 style='width:100%;'></td></tr><tr><td colspan=2 align=right><input type='submit' name='ok' value='Подписаться на рассылку'></td></tr></table></form>";
+		<form method=POST action=\"/--email\" class=main_mail_form><table><tr><td align=right>Email: </td><td><input type=text name=mail class=main_mail_input size=10></td></tr><tr><td align=right>Имя: </td><td><input type=text name=avtor value='".$avtor."' class=main_mail_input size=10></td></tr><tr><td colspan=2 align=right><input type='submit' name='ok' value='Подписаться на рассылку'></td></tr></table></form>";
 	} else {
 		// проверка наличия такого email в БД 
 		$numrows = $db->sql_numrows($db->sql_query("SELECT `cid` from ".$prefix."_pages_comments where `mail`='$mail' and `num`='0'"));
@@ -144,7 +140,7 @@ if ($name=="-email") { // занесение мыла как скрытого к
 		$m_title[$m_name] = $row3['title'];
 	}
 	
-	$soderganie .= "<div class='main_search_line'><form method=POST action=\"--search\" style='display:inline;' class=main_search_form><input type='search' placeholder='Поиск по сайту' name=slovo class='main_search_input' value=\"".$slov."\"><input type='submit' name='ok' value='Найти' class='main_search_button'> <a href='/'>Вернуться на Главную страницу</a></form></div>";
+	$soderganie .= "<div class='main_search_line'><form method=POST action=\"--search\" class=main_search_form><input type='search' placeholder='Поиск по сайту' name=slovo class='main_search_input' value=\"".$slov."\"><input type='submit' name='ok' value='Найти' class='main_search_button'> <a href='/'>Вернуться на Главную страницу</a></form></div>";
 	
 	// Заголовок
 	$pagetitle = $slovo." — Поиск — ";
@@ -183,15 +179,15 @@ if ($name=="-email") { // занесение мыла как скрытого к
 			$res2 = $db->sql_query("SELECT `pid`,`module`,`cid`,`title` FROM ".$prefix."_pages where `tables`='pages'".$papka." and active='1' and (copy='0' or copy=pid) and title LIKE '%".$slovo."%'");
 			$numrows1 = $db->sql_numrows($res2);
 			if ($numrows1 == 0) $nu = "не найдены"; else $nu = $numrows1;
-			$soderganie .= "<p><b>Совпадения в названии страницы: $nu</b><ol>";
+			$soderganie .= "<p><b>Совпадения в названии страницы: ".$nu."</b><ol>";
 			$admintip = "base_pages";
 			while ($row = $db->sql_fetchrow($res2)) {
 				$p_pid = $row['pid'];
 				$p_title = $row['title'];
 				$p_module = $row['module'];
 				$p_cid = $row['cid'];
-				if ($p_cid != 0) $cat = "<a style='color:green;' href=-".$p_module."_cat_".$p_cid.">".$c_name[$p_cid]."</a> $strelka "; else $cat = "";
-				$soderganie .= "<li><a href=-".$p_module.">".$m_title[$p_module]."</a> $strelka ".$cat."<a style='font-size:15px;' href=-".$p_module."_page_".$p_pid.">$p_title.</a>";
+				if ($p_cid != 0) $cat = "<a class='search_cat_link' href='/-".$p_module."_cat_".$p_cid."'>".$c_name[$p_cid]."</a> ".$strelka." "; else $cat = "";
+				$soderganie .= "<li><a href='/-".$p_module."'>".$m_title[$p_module]."</a> ".$strelka." ".$cat."<a class='search_page_link' href=-".$p_module."_page_".$p_pid.">".$p_title.".</a>";
 	
 				if (is_admin($admin)) $soderganie .= "&nbsp; <a href=sys.php?op=".$admintip."_edit_page&name=".$p_module."&pid=".$p_pid." title=\"Изменить страницу в Редакторе\"><img src=images/sys/edit_1.png title=\"Изменить страницу в Редакторе\"></a><a href=sys.php?op=".$admintip."_edit_page&name=".$p_module."&pid=".$p_pid."&red=1 title=\"Изменить страницу (быстрый HTML режим)\"><img src=images/sys/edit_0.png title=\"Изменить страницу (быстрый HTML режим)\"></a>";
 				// Заносим в список
@@ -207,9 +203,9 @@ if ($name=="-email") { // занесение мыла как скрытого к
 				$p_title = $row['title'];
 				$p_module = $row['module'];
 				$p_cid = $row['cid'];
-				if ($p_cid != 0) $cat = "<a style='color:green;' href=-".$p_module."_cat_".$p_cid.">".$c_name[$p_cid]."</a> $strelka "; else $cat = "";
+				if ($p_cid != 0) $cat = "<a class='search_cat_link' href=-".$p_module."_cat_".$p_cid.">".$c_name[$p_cid]."</a> $strelka "; else $cat = "";
 					if (!in_array($p_pid,$pids)) {
-						$soderganie .= "<li><a href=-".$p_module.">".$m_title[$p_module]."</a> $strelka ".$cat."<a style='font-size:15px;' href=-".$p_module."_page_".$p_pid.">$p_title.</a>";
+						$soderganie .= "<li><a href=-".$p_module.">".$m_title[$p_module]."</a> $strelka ".$cat."<a class='search_page_link' href=-".$p_module."_page_".$p_pid.">$p_title.</a>";
 						if (is_admin($admin)) $soderganie .= "&nbsp; <a href=sys.php?op=".$admintip."_edit_page&name=".$p_module."&pid=".$p_pid." title=\"Изменить страницу в Редакторе\"><img src=images/sys/edit_1.png title=\"Изменить страницу в Редакторе\"></a><a href=sys.php?op=".$admintip."_edit_page&name=".$p_module."&pid=".$p_pid."&red=1 title=\"Изменить страницу (быстрый HTML режим)\"><img src=images/sys/edit_0.png title=\"Изменить страницу (быстрый HTML режим)\"></a>";
 					}
 			}
@@ -893,21 +889,21 @@ case "4": # Блок папок раздела
 	foreach ($title as $id => $nam) {
 	if ($papki_numbers==1) {
 		$and2=""; 
-		if (vhodyagie($id,$par,$num)>0) $and2 = "<div class=add style='display:inline;'>+".vhodyagie($id,$par,$num)."</div>";
+		if (vhodyagie($id,$par,$num)>0) $and2 = "<div class='add'>+".vhodyagie($id,$par,$num)."</div>";
 		$and="";
 		if ( $num[$id]>0 ) $and = " (".$num[$id].$and2.")";
 	} else $and="";
 		if ($par[$id]==0) {
 			if ($noli == 0) {
-				$textX .= "<li id=block_li_title_".$useitX." class=\"block_li_title\"><a class=\"papki_".$useitX."\" href=-".$useitX."_cat_".$id.">".$nam."</a>".$and."";
+				$textX .= "<li id='block_li_title_".$useitX."' class='block_li_title'><a class='papki_".$useitX."' href=-".$useitX."_cat_".$id.">".$nam."</a>".$and."";
 			} else {
-				$textX .= "<a class=\"papki_$useitX\" href=-".$useitX."_cat_".$id.">$nam</a>".$and." | ";
+				$textX .= "<a class='papki_$useitX' href=-".$useitX."_cat_".$id.">".$nam."</a>".$and." | ";
 			}
 		}
 	}
 	if ($noli == 0) $textX .= "</ul>";
 	// Вставим шаблон из блока!!!
-	$block = str_replace("[$titleX]", $design_open.$textX.$design_close, $block);
+	$block = str_replace("[".$titleX."]", $design_open.$textX.$design_close, $block);
 	$type = ""; break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 case "5": # Блок голосования
@@ -919,7 +915,7 @@ case "5": # Блок голосования
 	  }
 	  $(showopros".$idX."(1, 0));
 	  </script><div id='show_opros".$idX."'>Загружается опрос...</div>";
-	$block = str_replace("[$titleX]", $design_open.$textX.$design_close, $block);
+	$block = str_replace("[".$titleX."]", $design_open.$textX.$design_close, $block);
 	$type = ""; break; 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 case "6": # Фотогалерея
@@ -1011,7 +1007,7 @@ case "8": # Блок папок ОТКРЫТОГО раздела
 	foreach ($title as $id => $nam) {
 		if ($papki_numbers==1 or $shablon != "") {
 		$and2=""; 
-		if (vhodyagie($id,$par,$num)>0) $and2 = "<div class=add style='display:inline;'>+".vhodyagie($id,$par,$num)."</div>";
+		if (vhodyagie($id,$par,$num)>0) $and2 = "<div class='add'>+".vhodyagie($id,$par,$num)."</div>";
 		$and="";
 		if ($num[$id]>0) $and = " ($num[$id]".$and2.")";
 		} else $and="";
@@ -1305,8 +1301,7 @@ case "13": # ОБЛАКО ТЕГОВ
 	$textX .= str_replace( "pt","px", $tagcloud2);
 	$textX .= "<br><br><center><div id=show_oblako style='font-size: 11px; cursor:pointer;' OnClick=\"show('text_tags'); show('flash_tags'); show('show_tags'); show('all_tags');\"><font style='border-bottom:1px dotted;'>Вернуть облако тегов</font></div></center> 
 	</div>
-	<div id=\"all_tags\" style='text-align:justify;'>
-	<p>Облако тегов требует для просмотра <noindex><a href=\"http://www.adobe.com/go/getflashplayer\" target=\"_blank\" rel=\"nofollow\">Flash Player 9</a></noindex> или выше. <a href=\"http://www.adobe.com/go/getflashplayer\" target=\"_blank\" rel=\"nofollow\"><b>Скачать</b></a></p></div>
+	<div id=\"all_tags\"></div>
 	<div id=flash_tags><script>
 	var rnumber = Math.floor(Math.random()*9999999);
 	var widget_so = new SWFObject(\"/includes/tagcloud.swf?r=\"+rnumber, \"tagcloudflash\", \"100%\", \"250\", \"9\", \"#ffffff\");
@@ -1460,10 +1455,10 @@ case "30": # Статистика раздела, выводит кол-во п�
 		$mailer = "
 		<table width=100% border=0> 
 		<form action=send.php enctype='multipart/form-data' method=post name=formsend> 
-		<tr><td><nobr>Ф.И.О., компания:</nobr><br><input type=text name=mail_subject maxlength=32 size=40 style='width:100%;'></td></tr> 
-		<tr><td><nobr>E-mail:</nobr><br><input type=text name=mail_to maxlength=64 size=40 style='width:100%;'></td></tr> 
-		<tr><td><nobr>Телефон:</nobr><br><input type=text name=mail_tel maxlength=30 size=40 style='width:100%;'></td></tr> 
-		<tr><td>Заявка:<br><textarea cols=50 rows=4 name=mail_msg style='width:100%;'></textarea><br>
+		<tr><td><nobr>Ф.И.О., компания:</nobr><br><input type=text name=mail_subject maxlength=32 size=40 class=all_width></td></tr> 
+		<tr><td><nobr>E-mail:</nobr><br><input type=text name=mail_to maxlength=64 size=40 class=all_width></td></tr> 
+		<tr><td><nobr>Телефон:</nobr><br><input type=text name=mail_tel maxlength=30 size=40 class=all_width></td></tr> 
+		<tr><td>Заявка:<br><textarea cols=50 rows=4 name=mail_msg class=all_width></textarea><br>
 		<input type=hidden name=mail_file></td> 
 		</tr><tr><td>
 		<span class=small>* Все поля обязательны к заполнению</span>
@@ -1478,14 +1473,14 @@ case "30": # Статистика раздела, выводит кол-во п�
 		$mailer = "
 		<table width=100% border=0> 
 		<form action=send.php enctype='multipart/form-data' method=post name=formsend> 
-		<tr><td><nobr><b>Фамилия, имя*:</b></nobr></td><td width=60%><input type=text name=mail_subject maxlength=32 size=40 style='width:100%;'></td></tr> 
-		<tr><td><nobr><b>E-mail*:</b></nobr></td><td width=60%><input type=text name=mail_to maxlength=64 size=40 style='width:100%;'></td></tr> 
-		<tr><td><nobr><b>Телефон*:</b></nobr></td><td width=60%><input type=text name=mail_tel maxlength=30 size=40 style='width:100%;'></td></tr> 
-		<tr><td colspan=2><b>Текст письма*:</b><br><textarea cols=50 rows=8 name=mail_msg style='width:100%;'></textarea><br>
+		<tr><td><nobr><b>Фамилия, имя*:</b></nobr></td><td width=60%><input type=text name=mail_subject maxlength=32 size=40 class=all_width></td></tr> 
+		<tr><td><nobr><b>E-mail*:</b></nobr></td><td width=60%><input type=text name=mail_to maxlength=64 size=40 class=all_width></td></tr> 
+		<tr><td><nobr><b>Телефон*:</b></nobr></td><td width=60%><input type=text name=mail_tel maxlength=30 size=40 class=all_width></td></tr> 
+		<tr><td colspan=2><b>Текст письма*:</b><br><textarea cols=50 rows=8 name=mail_msg class=all_width></textarea><br>
 		<input type=hidden name=mail_file></td> 
 		</tr><tr><td colspan=2>
 		<span class=small>* Все поля обязательны к заполнению</span>
-		<p align=right><input style='standart_send_button' value=\"Отправить\" type=\"button\" onClick=\" al=''; if (document.formsend.mail_subject.value=='') al = al + 'Вы не заполнили поле &quot;Фамилия и имя&quot;. '; if (document.formsend.mail_to.value=='') al = al + 'Вы не заполнили поле &quot;E-mail&quot;. '; if (document.formsend.mail_tel.value=='') al = al + 'Вы не заполнили поле &quot;Телефон&quot;. '; if (document.formsend.mail_msg.value=='') al = al + 'Вы не заполнили поле &quot;Текст письма&quot;. '; if (al) alert(al); else submit();\" style=\"width:180px; height: 50px;\"></p>
+		<p align=right><input class='standart_send_button' value=\"Отправить\" type=\"button\" onClick=\" al=''; if (document.formsend.mail_subject.value=='') al = al + 'Вы не заполнили поле &quot;Фамилия и имя&quot;. '; if (document.formsend.mail_to.value=='') al = al + 'Вы не заполнили поле &quot;E-mail&quot;. '; if (document.formsend.mail_tel.value=='') al = al + 'Вы не заполнили поле &quot;Телефон&quot;. '; if (document.formsend.mail_msg.value=='') al = al + 'Вы не заполнили поле &quot;Текст письма&quot;. '; if (al) alert(al); else submit();\"></p>
 		</td></tr> 
 		</form> 
 		</table>"; 
@@ -1496,11 +1491,11 @@ case "30": # Статистика раздела, выводит кол-во п�
 		$mailer = "
 		<table width=400 border=0 align=center> 
 		<form action=send.php enctype='multipart/form-data' method=post name=formsend> 
-		<tr><td><nobr><b>Фамилия, имя*:</b></nobr></td><td width=60%><input type=text name=mail_subject maxlength=32 size=40 style='width:100%;'></td></tr> 
-		<tr><td><nobr><b>E-mail:</b></nobr></td><td width=60%><input type=text name=mail_to maxlength=64 size=40 style='width:100%;'></td></tr> 
-		<tr><td><nobr><b>Телефон*:</b></nobr></td><td width=60%><input type=text name=mail_tel maxlength=30 size=40 style='width:100%;'></td></tr> 
+		<tr><td><nobr><b>Фамилия, имя*:</b></nobr></td><td width=60%><input type=text name=mail_subject maxlength=32 size=40 class=all_width></td></tr> 
+		<tr><td><nobr><b>E-mail:</b></nobr></td><td width=60%><input type=text name=mail_to maxlength=64 size=40 class=all_width></td></tr> 
+		<tr><td><nobr><b>Телефон*:</b></nobr></td><td width=60%><input type=text name=mail_tel maxlength=30 size=40 class=all_width></td></tr> 
 		<tr><td colspan=2>* - поля обязательны к заполнению.
-		<p align=right><input style='micro_send_button' value=\"Отправить\" type=\"button\" onClick=\" al=''; if (document.formsend.mail_subject.value=='') al = al + 'Вы не заполнили поле &quot;Ваше имя&quot;. '; if (al) alert(al); else submit();\"></p>
+		<p align=right><input class='micro_send_button' value=\"Отправить\" type=\"button\" onClick=\" al=''; if (document.formsend.mail_subject.value=='') al = al + 'Вы не заполнили поле &quot;Ваше имя&quot;. '; if (al) alert(al); else submit();\"></p>
 		</td></tr> 
 		</form> 
 		</table>"; 
@@ -1511,15 +1506,15 @@ case "30": # Статистика раздела, выводит кол-во п�
 		$mailer2 = "
 		<table width=100% border=0> 
 		<form action=send.php enctype='multipart/form-data' method=post name=formsend> 
-		<tr><td><nobr><b>Фамилия, имя*:</b></nobr></td><td width=60%><input type=text name=mail_subject maxlength=32 size=40 style='width:100%;'></td></tr> 
-		<tr><td><nobr><b>E-mail*:</b></nobr></td><td width=60%><input type=text name=mail_to maxlength=64 size=40 style='width:100%;'></td></tr> 
-		<tr><td><nobr><b>Телефон*:</b></nobr></td><td width=60%><input type=text name=mail_tel maxlength=30 size=40 style='width:100%;'></td></tr> 
+		<tr><td><nobr><b>Фамилия, имя*:</b></nobr></td><td width=60%><input type=text name=mail_subject maxlength=32 size=40 class=all_width></td></tr> 
+		<tr><td><nobr><b>E-mail*:</b></nobr></td><td width=60%><input type=text name=mail_to maxlength=64 size=40 class=all_width></td></tr> 
+		<tr><td><nobr><b>Телефон*:</b></nobr></td><td width=60%><input type=text name=mail_tel maxlength=30 size=40 class=all_width></td></tr> 
 		<tr><td colspan=2><b>Комментарий*:</b><br>
-		<textarea cols=50 rows=2 name=mail_msg style='width:90%;'></textarea>
+		<textarea cols=50 rows=2 name=mail_msg class=all_width></textarea>
 		<br><input type=hidden name=mail_file></td> 
 		</tr><tr><td colspan=2>
 		<span class=small>* Все поля обязательны к заполнению</span>
-		<p align=right><input style='small_send_button' value=\"Отправить\" type=\"button\" onClick=\" al=''; if (document.formsend.mail_subject.value=='') al = al + 'Вы не заполнили поле &quot;Фамилия и имя&quot;. '; if (document.formsend.mail_to.value=='') al = al + 'Вы не заполнили поле &quot;E-mail&quot;. '; if (document.formsend.mail_tel.value=='') al = al + 'Вы не заполнили поле &quot;Телефон&quot;. '; if (document.formsend.mail_msg.value=='') al = al + 'Вы не заполнили поле &quot;Комментарий&quot;. '; if (al) alert(al); else submit();\" style=\"width:180px; height: 50px;\"></p>
+		<p align=right><input class='small_send_button' value=\"Отправить\" type=\"button\" onClick=\" al=''; if (document.formsend.mail_subject.value=='') al = al + 'Вы не заполнили поле &quot;Фамилия и имя&quot;. '; if (document.formsend.mail_to.value=='') al = al + 'Вы не заполнили поле &quot;E-mail&quot;. '; if (document.formsend.mail_tel.value=='') al = al + 'Вы не заполнили поле &quot;Телефон&quot;. '; if (document.formsend.mail_msg.value=='') al = al + 'Вы не заполнили поле &quot;Комментарий&quot;. '; if (al) alert(al); else submit();\"></p>
 		</td></tr> 
 		</form> 
 		</table>
@@ -1529,15 +1524,15 @@ case "30": # Статистика раздела, выводит кол-во п�
 	}
 
 	// Ставим поиск
-	$search = "<form method=POST action=\"/--search\" style='display:inline;' class='main_search_form'><input type='search' name=slovo placeholder='Поиск по сайту' class='main_search_input'><input type='submit' name='ok' value='Найти' class='main_search_button'></form>";
+	$search = "<form method=POST action=\"/--search\" class='main_search_form'><input type='search' name=slovo placeholder='Поиск по сайту' class='main_search_input'><input type='submit' name='ok' value='Найти' class='main_search_button'></form>";
 	$block=str_replace("[поиск]", $search, $block);
 
 	// Ставим подписку
-	$search = "<form method=POST action=\"/--email\" style='display:inline;' class=main_mail_form><table width=100%><tr><td align=right>Email: </td><td><input type=text name=mail class=main_mail_input size=10 style='width:100%;'></td></tr><tr><td align=right>Имя: </td><td><input type=text name=avtor class=main_mail_input size=10 style='width:100%;'></td></tr><tr><td colspan=2 align=right><input type='submit' name='ok' value='Подписаться'></td></tr></table></form>";
+	$search = "<form method=POST action=\"/--email\" class=main_mail_form><table width=100%><tr><td align=right>Email: </td><td><input type=text name=mail class=main_mail_input size=10 class=all_width></td></tr><tr><td align=right>Имя: </td><td><input type=text name=avtor class=main_mail_input size=10 class=all_width></td></tr><tr><td colspan=2 align=right><input type='submit' name='ok' value='Подписаться'></td></tr></table></form>";
 	$block=str_replace("[подписка]", $search, $block);
 
 // Ставим подписку в линию
-	$search = "<form method=POST action=\"/--email\" style='display:inline;' class=main_mail_form><table><tr><td><b>Рассылка: </b></td><td>&nbsp;Email:</td><td><input type=text name=mail class=main_mail_input size=10 style='width:100%;'></td><td>&nbsp;Имя:</td><td><input type=text name=avtor class=main_mail_input size=10 style='width:100%;'></td><td colspan=2 align=right><input type='submit' name='ok' value='Подписаться'></td></tr></table></form>";
+	$search = "<form method=POST action=\"/--email\" class=main_mail_form><table><tr><td><b>Рассылка: </b></td><td>&nbsp;Email:</td><td><input type=text name=mail class=main_mail_input size=10 class=all_width></td><td>&nbsp;Имя:</td><td><input type=text name=avtor class=main_mail_input size=10 class=all_width></td><td colspan=2 align=right><input type='submit' name='ok' value='Подписаться'></td></tr></table></form>";
 	$block=str_replace("[подписка_горизонт]", $search, $block);
 
 	// Ставим день и время
@@ -1558,7 +1553,7 @@ case "30": # Статистика раздела, выводит кол-во п�
 
 	//Ставим RSS
 	if (strpos($block, "[rss")) {
-		$block=str_replace("[rss]", "<a href=rss.php title=\"RSS-подписка позволит вам быстро узнать о всех новых статьях на этом сайте\" target=_blank style=\"text-decoration:none;\"><img src=images/rss_16.png></a>", $block);
+		$block=str_replace("[rss]", "<a href=rss.php title=\"RSS-подписка позволит вам быстро узнать о всех новых статьях на этом сайте\" target=_blank class=rss><img src=images/rss_16.png></a>", $block);
 		$block=str_replace("[rss32]", "<a href=rss.php target=_blank title='RSS-подписка. Нажми!'><img src=images/rss_32.gif></a>", $block);
 		$block=str_replace("[rss50]", "<a href=rss.php target=_blank title='RSS-подписка. Нажми!'><img src=images/rss_50.gif></a>", $block);
 		$block=str_replace("[rss100]", "<a href=rss.php target=_blank title='RSS-подписка. Нажми!'><img src=images/rss_100.gif></a>", $block);
@@ -1611,8 +1606,8 @@ case "30": # Статистика раздела, выводит кол-во п�
 		foreach( $title_mainpage2 as $key_name => $row_title ) {
 			$row_title = str_replace( "»","&raquo;", str_replace( "«","&laquo;", $row_title ) );
 			$row_title2 = predlogi($row_title);
-			$block = str_replace("{".$row_title."}", "<a class=auto_link style='text-decoration: underline;' href=-".$key_name.">".$row_title."</a>", $block);
-			$block = str_replace("{".$row_title2."}", "<a class=auto_link style='text-decoration: underline;' href=-".$key_name.">".$row_title."</a>", $block);
+			$block = str_replace("{".$row_title."}", "<a class=auto_link href=-".$key_name.">".$row_title."</a>", $block);
+			$block = str_replace("{".$row_title2."}", "<a class=auto_link href=-".$key_name.">".$row_title."</a>", $block);
 		}
 	if ($show_page_links == 1) {
 		// Определяем все страницы
@@ -1621,8 +1616,8 @@ case "30": # Статистика раздела, выводит кол-во п�
 		while ($rows = $db->sql_fetchrow($result)) {
 			$row_title = str_replace( "«","&laquo;", str_replace( "»","&raquo;", $rows['title'] ) );
 			$row_title2 = predlogi($row_title);
-			$block=str_replace("{".$row_title."}", "<a class=auto_link style='text-decoration: underline;' href=-".$rows['module']."_page_".$rows['pid'].">".$row_title."</a>", $block);
-			$block=str_replace("{".$row_title2."}", "<a class=auto_link style='text-decoration: underline;' href=-".$rows['module']."_page_".$rows['pid'].">".$row_title."</a>", $block);
+			$block=str_replace("{".$row_title."}", "<a class=auto_link href=-".$rows['module']."_page_".$rows['pid'].">".$row_title."</a>", $block);
+			$block=str_replace("{".$row_title2."}", "<a class=auto_link href=-".$rows['module']."_page_".$rows['pid'].">".$row_title."</a>", $block);
 		}
 	}
 
@@ -1670,14 +1665,12 @@ header ("Content-Type: text/html; charset=utf-8");
 // <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd\">
 echo "<!doctype html>\n<html lang=\"".$lang."\" dir=\"ltr\">\n<head>";
 if (file_exists("favicon.ico"))  echo "<link rel='shortcut icon' href='favicon.ico' />";
-elseif (file_exists("favicon.png")) echo "<link rel='icon' href='favicon.png' /><link rel='shortcut icon' href='favicon.png' />";
-if (file_exists("favicon_apple.png")) echo "<link rel='apple-touch-icon' href='favicon_apple.png' />";
+elseif (file_exists("favicon.png")) echo "<link rel='shortcut icon' href='favicon.png' />";
+//if (file_exists("favicon_apple.png")) echo "<link rel='apple-touch-icon' href='favicon_apple.png' />";
 
 // Основной JavaScript
 echo "<script src='includes/j.js'></script>\n
 <script src='includes/iepngfix_tilebg.js'></script>\n";
-// <link rel=\"stylesheet\" href=\"http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.3/themes/base/jquery-ui.css\" media=\"all\" />
-// http://code.jquery.com/jquery-latest.pack.js НЕЛЬЗЯ!!!
 
 echo "<title>".$pagetit.$sitename."</title>
 <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
@@ -1695,10 +1688,8 @@ echo "<title>".$pagetit.$sitename."</title>
 <script src=\"includes/jquery.innerfade.js\"></script>
 <script src=\"includes/ui.core.js\"></script>
 <script src=\"includes/ui.tabs.js\"></script>
-<script src=\"includes/jquery.ad-gallery.js\"></script>
-";
-// 1.8.1 - было 1.6.3, 1.8.9 - было 1.8.3
-// includes/swfobject.js
+<script src=\"includes/jquery.ad-gallery.js\"></script>";
+
 global $kickstart;
 if ($kickstart == 1) echo "<!--[if lt IE 9]><script src=\"http://html5shiv.googlecode.com/svn/trunk/html5.js\"></script><![endif]-->
 <script type=\"text/javascript\" src=\"includes/css-frameworks/kickstart/js/prettify.js\"></script>
@@ -1728,10 +1719,7 @@ echo "</head>\n<body".$notmenu.">";
 
 if ($kickstart == 1) echo "<a id=\"top-of-page\"></a><div id=\"wrap\" class=\"clearfix\">";
 
-
-
-
-// Исправляем старые ошибки: # удалить
+// Исправляем старые ошибки: # проверить и удалить
 $block = str_replace("»»»","\"",$block);
 $block = str_replace("\"\"\"","\"",$block);
 $block = str_replace("\"»","\"",$block);

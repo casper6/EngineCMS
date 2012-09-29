@@ -17,7 +17,7 @@
   if(!defined('END_TRANSACTION')) {
     define('END_TRANSACTION', 2);
   }
-  $phpver = phpversion();
+  //$phpver = phpversion();
   $_SERVER['HTTP_REFERER'] = isset($_SERVER['HTTP_REFERER'])?addslashes(stripslashes($_SERVER['HTTP_REFERER'])):'';
 
   $HTTP_GET_VARS = $_GET;
@@ -40,17 +40,25 @@
   }
 
   @require_once("config.php"); // Настройки сайта
-  global $zlib;
+  global $zlib, $ipban, $display_errors, $pid, $site_cash;
+
   if ($zlib == true) {
-    if (isset($_SERVER['HTTP_ACCEPT_ENCODING']) && !empty($_SERVER['HTTP_ACCEPT_ENCODING'])) {
-      if (strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) {
-        if (extension_loaded('zlib')) {
-          $do_gzip_compress = true;
-          ob_start(array('ob_gzhandler',5));
-          ob_implicit_flush(0);
-          header('Content-Encoding: gzip');
+    if ($phpver >= '4.0.4pl1' && isset($_SERVER['HTTP_USER_AGENT']) && strstr($_SERVER['HTTP_USER_AGENT'],'compatible')) {
+      if (extension_loaded('zlib')) {
+          @ob_end_clean();
+          ob_start('ob_gzhandler');
         }
-      }
+    } elseif ($phpver > '4.0' && isset($_SERVER['HTTP_ACCEPT_ENCODING']) && !empty($_SERVER['HTTP_ACCEPT_ENCODING'])) {
+        if (strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) {
+          if (extension_loaded('zlib')) {
+              $do_gzip_compress = true;
+              ob_start(array('ob_gzhandler',5));
+              ob_implicit_flush(0);
+              if (ereg("MSIE", $_SERVER['HTTP_USER_AGENT'])) {
+            header('Content-Encoding: gzip');
+              }
+          }
+        }
     }
   }
 
@@ -61,10 +69,12 @@
       $c_val = str_replace(".php","",$c_val);
       $_COOKIE[$c_key] = $c_val;
   }  
-   if (!ini_get('register_globals')) { 
-   extract($_POST, EXTR_SKIP); 
-   extract($_GET, EXTR_SKIP); 
-   extract($_COOKIE, EXTR_SKIP); 
+  
+  if (!ini_get('register_globals')) { 
+   @import_request_variables("GPC", "");
+   //extract($_POST, EXTR_SKIP); 
+   //extract($_GET, EXTR_SKIP); 
+   //extract($_COOKIE, EXTR_SKIP); 
   } 
 
   // Union Tap против UNION SQL Injections
@@ -80,19 +90,29 @@
     die("Попытка взлома, тип 2");
   }
 
-  // функция stripos (из ПХП5), клонированная для ПХП4
+  // функция stripos (из ПХП5), клонированная для ПХП4      # использовать
   if(!function_exists('stripos')) {
     function stripos_clone($haystack, $needle, $offset=0) {
-    return strpos(strtoupper($haystack), strtoupper($needle), $offset);
+      $return = strpos(strtoupper($haystack), strtoupper($needle), $offset);
+      if ($return === false) {
+        return false;
+      } else {
+        return true;
+      }
     }
   } else { // Но если это ПХП5 - используем оригинал!
     function stripos_clone($haystack, $needle, $offset=0) {
-    return stripos($haystack, $needle, $offset=0);
+      $return = stripos($haystack, $needle, $offset=0);
+      if ($return === false) {
+        return false;
+      } else {
+        return true;
+      }
     }
   }
 
   // Дополнительная безопасность (Union, CLike, XSS)
-  if(isset($_SERVER['QUERY_STRING'])) {
+  if ( isset($_SERVER['QUERY_STRING']) ) {
     $queryString = strtolower($_SERVER['QUERY_STRING']); // Если будут ошибки - убрать!
     if (stripos_clone($queryString,'0DUNION') OR stripos_clone($queryString,'%20union%20') OR stripos_clone($queryString,'/*') OR stripos_clone($queryString,'*/union/*') OR stripos_clone($queryString,'c2nyaxb0') OR stripos_clone($queryString,'+union+') OR stripos_clone($queryString,'http://') OR (stripos_clone($queryString,'cmd=') AND !stripos_clone($queryString,'&cmd')) OR (stripos_clone($queryString,'exec') AND !stripos_clone($queryString,'execu')) OR stripos_clone($queryString,'concat')) {
       die('Попытка взлома, тип 3');
@@ -109,12 +129,12 @@
     }
   }
   $postString = str_replace("%09", "%20", $postString);
-  $postString = str_replace("%20union%20", "crazy", $postString); // баг.
-  $postString = str_replace("%20Union%20", "crazy", $postString); // баг.
-  $postString = str_replace(" union ", "crazy", $postString); // баг.
-  $postString = str_replace(" Union ", "crazy", $postString); // баг.
+  //$postString = str_replace("%20union%20", "crazy", $postString); // баг.
+  //$postString = str_replace("%20Union%20", "crazy", $postString); // баг.
+  //$postString = str_replace(" union ", "crazy", $postString); // баг.
+  //$postString = str_replace(" Union ", "crazy", $postString); // баг.
   $postString_64 = base64_decode($postString);
-  if (stripos_clone($postString,'%20union%20') OR stripos_clone($postString,'*/union/*') OR stripos_clone($postString,' union ') OR stripos_clone($postString_64,'%20union%20') OR stripos_clone($postString_64,'*/union/*') OR stripos_clone($postString_64,' union ') OR stripos_clone($postString_64,'+union+') OR stripos_clone($postString_64,'http://') OR (stripos_clone($postString_64,'cmd=') AND !stripos_clone($postString_64,'&cmd')) OR (stripos_clone($postString_64,'exec') AND !stripos_clone($postString_64,'execu')) OR stripos_clone($postString_64,'concat')) {
+  if (stripos_clone($postString,'%20union%20') OR stripos_clone($postString,'*/union/*') OR stripos_clone($postString,' union ') OR stripos_clone($postString_64,'%20union%20') OR stripos_clone($postString_64,'*/union/*') OR stripos_clone($postString_64,' union ') OR stripos_clone($postString_64,'+union+') OR stripos_clone($postString_64,'http://') OR (stripos_clone($postString_64,'cmd=') AND !stripos_clone($postString_64,'&cmd')) OR (stripos_clone($postString_64,'exec') AND !stripos_clone($postString_64,'execu')) OR stripos_clone($postString_64,'concat') OR (stripos_clone($postString,'http-equiv')) OR (stripos_clone($postString_64,'http-equiv')) OR (stripos_clone($postString,'alert(')) OR (stripos_clone($postString_64,'alert(')) OR (stripos_clone($postString,'javascript:')) OR (stripos_clone($postString_64,'javascript:')) OR (stripos_clone($postString,'document.cookie')) OR (stripos_clone($postString_64,'document.cookie')) OR (stripos_clone($postString,'onmouseover=')) OR (stripos_clone($postString_64,'onmouseover=')) OR (stripos_clone($postString,'document.location')) OR (stripos_clone($postString_64,'document.location'))) {
     die('Попытка взлома, тип 4');
   }
 
@@ -124,10 +144,8 @@
     $admin = base64_encode($admin);
   }
 
-  // Сабжы для использующих вредоносный HTML-код
-  $htmltags = "<center><img src=\"/images/logo_admin.png\"><br><br><b>";
-  $htmltags .= "Вы использовали запрещенные символы HTML-кода. Вероятно вы - взломщик.</b><br><br>";
-  $htmltags .= "[ <a href=\"javascript:history.go(-1)\"><b>Вернитесь назад и больше не вводите HTML-теги.</b></a> ]";
+  // Сабж для использующих вредоносный HTML-код
+  $htmltags = "<center><img src=\"/images/logo_admin.png\"><br><br><b>Вы использовали запрещенные символы HTML-кода. Вероятно вы - взломщик.</b><br><br>[ <a href=\"javascript:history.go(-1)\"><b>Вернитесь назад и больше не вводите HTML-теги.</b></a> ]";
 
   if (!defined('ADMIN_FILE')) {
     foreach ($_GET as $secvalue) {
@@ -172,8 +190,7 @@
         (preg_match("/<[^>]*onreset*\"?[^>]*>/i", $secvalue)) ||
         (preg_match("/<[^>]*onresize*\"?[^>]*>/i", $secvalue)) ||
       (preg_match("/<[^>]*body*\"?[^>]*>/i", $secvalue)) ||
-      (preg_match("/\([^>]*\"?[^)]*\)/i", $secvalue))
-      ) {
+      (preg_match("/\([^>]*\"?[^)]*\)/i", $secvalue)) ) {
       die ($htmltags);
       }
     }
@@ -193,20 +210,17 @@
      die('Запрещено размещение информации с другого сервера');
     }
     } else {
-    die($posttags);
+     die($posttags);
     }
   }
      
      @require_once("includes/db.php"); // База данных (функции для работы)
      @require_once("includes/sql_layer.php");
-     global $ipban;
+     
      if ($ipban == true) @require_once("includes/ipban.php"); // Бан
      $admin_file = "sys"; # Название файла административной панели
 
   // Отображение ошибок сайта, настраивается в файле config.php
-  ini_set('safe_mode', 1); // проверить
-  ini_set('expose_php', 0);
-
   if($display_errors) { 
     ini_set('display_errors', 1);
     error_reporting(15); // Отображает основные ошибки
@@ -214,8 +228,6 @@
     ini_set('display_errors', 0);
     error_reporting(8191); // было 0, но 8191 - запрещает вывод всех ошибок PHP 4, 5 и 6
   }
-
-
 
   $now = date("Y.m.d H:i:s");
   $referer = getenv("HTTP_REFERER"); // REQUEST_URI
@@ -225,13 +237,12 @@
   $url0 = str_replace("http%3A%2F%2F".$siteurl."%2F","/",$url0);
 
   // Счетчик
-  global $pid, $site_cash;
   $pid = intval($pid);
 
   if (!isset($admin)) $admin = "";
   else if (isset($cash)) if($cash == "del") { 
     $result = $db->sql_query("TRUNCATE TABLE `".$prefix."_cash`"); 
-    die("Кеш удален. Можно закрыть эту вкладку."); 
+    die("Кеш удален. Можно <a href=\"javascript:self.close()\">закрыть</a> эту вкладку."); 
   }
   if ($pid > 0 and !is_admin($admin)) {
     $db->sql_query("UPDATE ".$prefix."_pages SET counter=counter+1 WHERE pid='$pid'");
@@ -522,38 +533,10 @@ function is_admin($admin) { // Проверка админа
     $pass = $db->sql_fetchrow($result);
     $db->sql_freeresult($result);
     if ($pass[0] == $pwd && !empty($pass[0])) {
-  ////// static $adminSave;
       return $adminSave = 1;
     }
   }
-  ////// static $adminSave;
   return $adminSave = 0;
-}
-/////////////////////////////////////////////////////////
-function is_user($user) {
-  if (!$user) { return 0; }
-  if (isset($userSave)) return $userSave;
-  if (!is_array($user)) {
-  $user = base64_decode($user);
-  $user = addslashes($user);
-  $user = explode(":", $user);
-  }
-  $uid = $user[0];
-  $pwd = $user[2];
-  $uid = intval($uid);
-  if (!empty($uid) AND !empty($pwd)) {
-  global $db, $user_prefix;
-  $sql = "SELECT user_password FROM ".$user_prefix."_users WHERE user_id='$uid'";
-  $result = $db->sql_query($sql);
-  $row = $db->sql_fetchrow($result);
-  $db->sql_freeresult($result);
-  if ($row[0] == $pwd && !empty($row[0])) {
-  static $userSave;
-  	return $userSave = 1;
-  }
-  }
-  static $userSave;
-  return $userSave = 0;
 }
 /////////////////////////////////////////////////////////
 function FixQuotes($what = "",$strip="") {
