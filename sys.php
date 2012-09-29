@@ -298,8 +298,7 @@ function GraphicAdmin() {
 			$size_off = $db->sql_numrows($result4);
 			} else { $size = 0; $size_off = 0; }
 
-		$type_opis = explode("|",switch_type($type,$nam,$id));
-		$type_opisX = $type_opis[0];
+		$type_opisX = "";
 		if ($nam!="index") {
 			if ($size < 1) $size = ""; 
 			if ($size_off < 1) $size_off = ""; else $size_off = "-".$size_off;
@@ -453,7 +452,56 @@ function GraphicAdmin() {
 	}
 	echo "</div>\n</body>\n</html>";
 }
+/////////////////////////////////////////////////////////
+function red_vybor() { // Выбор редактора (перенести в админку)
+  global $url;
+  $link = str_replace("&red=0","",str_replace("&red=1","",str_replace("&red=2","",str_replace("&red=3","",str_replace("&red=4","",$url)))));
+  echo "
+  <script>
+  $(function() { $( \"#rerurn\" ) .button() .click(function() { show('red_vybor'); }) .next() .button( { text: false, icons: {primary: \"ui-icon-triangle-1-s\"} }) .click(function() { show('red_vybor_small'); }) .parent() .buttonset(); });
+  </script>
+  <div class='vybor_redaktora' style='float:right; margin-top:5px;'><div>
+    <button id='rerurn'><img class='icon2 i35' src='/images/1.gif'>Выбрать редактор</button>
+    <button id='sel'>Быстрый выбор редактора</button>
+  </div></div>
 
+  <div id='red_vybor_small' style='position:absolute; top:105px; right:12px; z-index:666; width:225px; background:white; display:none; border:solid 1px gray;' class=radius>
+  <!-- <a href='".$link."&red=0' class=dark_pole3 style='width:162px'>Простой</a><br>
+  <a href='".$link."&red=2' class=dark_pole3 style='width:162px'>Навороченный</a><br>
+  <a href='".$link."&red=3' class=dark_pole3 style='width:162px'>Удобный</a><br> -->
+  <a href='".$link."&red=4' class=dark_pole3 style='width:162px'>Визуальный</a><br>
+  <a href='".$link."&red=1' class=dark_pole3 style='width:162px'>HTML</a><br>
+  <a onclick=show('red_vybor_small') style='cursor:pointer; float:right;' title='Закрыть'>Закрыть</a>
+  </div>
+
+  <div id='red_vybor' style='position: absolute; z-index:666; right:5px; top:5px; padding:5px; width:647px; background:white; display:none; border:solid 10px gray;' class=radius>
+  <a onclick=show('red_vybor') style='cursor:pointer; float:right;' title='Закрыть'><img class='icon2 i33' src='/images/1.gif'></a>
+  <h1>Выбор редактора</h1>
+  <!-- 
+  <b>У всех редакторов есть:</b> Вставка ссылок, фотографий и таблиц, Жирность, Наклонность, Цвет текста, Верхний индекс, Списки, Заголовки, Центрирование и HTML-код 
+
+<a href='".$link."&red=0' class='dark_pole3'>
+  <img src=/images/0.jpg><br>
+  <h2 style='display:inline'>Простой</h2> Разделительная черта, flash-ролики, Чистка HTML при вставке из Word'а или с сайтов</a>
+
+<a href='".$link."&red=2' class='dark_pole3'>
+  <img src=/images/2.jpg><br>
+  <h2 style='display:inline'>Навороченный</h2> Поиск/Замена, Размер текста, Цитата, Отступы списков, Подстрочный индекс, Зачеркнутый текст, flash-ролики, Смайлики, Спецсимволы, Разделительная черта, Цвет фона текста, Вставить из Word'а, Maximaze (во весь экран)</a>
+
+<a href='".$link."&red=3' class='dark_pole3'>
+  <img src=/images/3.jpg><br>
+  <h2 style='display:inline'>Удобный</h2> Быстрая вставка фотографий, Удобная работа с таблицами, Вставка видео-роликов и файлов, Автоматическая чистка! при вставке из Word'а, Во весь экран, Зачеркнутый текст, Заливка текста (Цвет фона), Отступы списков.</a>
+-->
+<a href='".$link."&red=4' class='dark_pole3'>
+  <img src=/images/4.jpg><br>
+  <h2 style='display:inline'>Визуальный</h2> Возможности редактора: Быстрая вставка фотографий, Удобная работа с таблицами, Вставка видео-роликов и файлов, Автоматическая чистка! при вставке из Word'а, Во весь экран, Зачеркнутый текст, Заливка текста (Цвет фона), Отступы списков, Загрузка файлов и фотографий путем переноса мышкой (Drag&Drop), Изменение размеров фотографий движением мышки после их удерживания, Автоматическое изменение размера окна редактора.</a>
+
+<a href='".$link."&red=1' class='dark_pole3'>
+  <img src=/images/1.jpg><br>
+  <h2 style='display:inline'>HTML-код</h2> Невизуальный редактор для понимающих HTML-разметку.</a>
+
+  </div>";
+}
 function adminMain() {
 	include("ad-header.php");
 	GraphicAdmin();

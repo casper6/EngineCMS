@@ -917,9 +917,8 @@ function edit_main($id) {
 			}
 	}
 	if (!isset($useit_module)) $useit_module = "";
-	$type_opis = explode("|",switch_type($type,$name,$id,$useit_module));
-	$color = $type_opis[1];
-	$type_opis = $type_opis[0];
+	$color = "#ffffff"; // убрать
+	$type_opis = "";
 
 	echo "<form method='POST' action=sys.php>";
 
@@ -2160,7 +2159,7 @@ function edit_main($id) {
 
 	if ($type == "5") { ############################### ОТКРЫТИЕ БАЗА ДАННЫХ
 	echo "<table width=100%><tr><td width=50%>
-	<table width=90%><tr><td align=right><b>Тип:</b></td><td style='background-color: ".$color.";'>".$type_opis."</td></tr>
+	<table width=90%><tr><td align=right><b>База данных:</b></td><td></td></tr>
 	<tr><td align=right><b>Название:</b></td><td style='background-color: ".$color.";'><input type=\"text\" name=\"title\" value=\"".$title."\" size=60></td></tr></table>
 	</td></tr></table>
 	<input type=\"hidden\" name=\"namo\" value=\"".$name."\">
@@ -2179,7 +2178,7 @@ function edit_main($id) {
 	<input type=submit value=\"Сохранить изменения\" style='width:300px; font-size: 22px;'>
 
 	<table width=100%><tr><td width=50%>
-	<h2 class='radius_top' style='background:#eeeeee;'>".$type_opis.". Название:<br>
+	<h2 class='radius_top' style='background:#eeeeee;'>Название:<br>
 	<textarea class='big' name='title' rows='1' cols='10' style='font-size:16pt; width:100%;'>".$title."</textarea></h2>
 	</td><td>
 	<h2 class='radius_top' style='background:#eeeeee;'>Обращение (англ, без пробелов)<br>

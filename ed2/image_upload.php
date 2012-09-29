@@ -1,4 +1,10 @@
 <?php
+
+if(!eregi('image/', $_FILES['file']['type'])) {
+  echo 'Это не фотография!';
+  exit(0);
+}
+
 foreach ($_FILES['file'] as $secvalue) {
     $secvalue = str_replace("(", "&#040;", str_replace(")", "&#041;", $secvalue));
     if ( (preg_match("/<[^>]*script*\"?[^>]*>/i", $secvalue)) ||

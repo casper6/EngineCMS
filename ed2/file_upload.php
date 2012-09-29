@@ -1,5 +1,51 @@
 <?php
 
+  foreach ($_GET as $secvalue) {
+    $secvalue = str_replace("(", "&#040;", str_replace(")", "&#041;", $secvalue));
+    if ( (preg_match("/<[^>]*script*\"?[^>]*>/i", $secvalue)) ||
+    (preg_match("/<[^>]*object*\"?[^>]*>/i", $secvalue)) ||
+    (preg_match("/<[^>]*iframe*\"?[^>]*>/i", $secvalue)) ||
+    (preg_match("/<[^>]*applet*\"?[^>]*>/i", $secvalue)) ||
+    (preg_match("/<[^>]*meta*\"?[^>]*>/i", $secvalue)) ||
+    (preg_match("/<[^>]*style*\"?[^>]*>/i", $secvalue)) ||
+    (preg_match("/<[^>]*form*\"?[^>]*>/i", $secvalue)) ||
+    (preg_match("/<[^>]*img*\"?[^>]*>/i", $secvalue)) ||
+    (preg_match("/<[^>]*onmouseover*\"?[^>]*>/i", $secvalue)) ||
+      (preg_match("/<[^>]*onmouseout*\"?[^>]*>/i", $secvalue)) ||
+      (preg_match("/<[^>]*onmousemove*\"?[^>]*>/i", $secvalue)) ||
+      (preg_match("/<[^>]*onmouseup*\"?[^>]*>/i", $secvalue)) ||
+      (preg_match("/<[^>]*onload*\"?[^>]*>/i", $secvalue)) ||
+      (preg_match("/<[^>]*onreset*\"?[^>]*>/i", $secvalue)) ||
+      (preg_match("/<[^>]*onresize*\"?[^>]*>/i", $secvalue)) ||
+    (preg_match("/<[^>]*body*\"?[^>]*>/i", $secvalue)) ||
+    (preg_match("/\([^>]*\"?[^)]*\)/i", $secvalue)) ||
+    (preg_match("/\"/i", $secvalue)) ) {
+    die ('Попытка взлома через GET');
+    }
+  }
+  foreach ($_FILES['file'] as $secvalue) {
+    $secvalue = str_replace("(", "&#040;", str_replace(")", "&#041;", $secvalue));
+    if ( (preg_match("/<[^>]*script*\"?[^>]*>/i", $secvalue)) ||
+    (preg_match("/<[^>]*object*\"?[^>]*>/i", $secvalue)) ||
+    (preg_match("/<[^>]*iframe*\"?[^>]*>/i", $secvalue)) ||
+    (preg_match("/<[^>]*applet*\"?[^>]*>/i", $secvalue)) ||
+    (preg_match("/<[^>]*meta*\"?[^>]*>/i", $secvalue)) ||
+    (preg_match("/<[^>]*style*\"?[^>]*>/i", $secvalue)) ||
+    (preg_match("/<[^>]*form*\"?[^>]*>/i", $secvalue)) ||
+    (preg_match("/<[^>]*img*\"?[^>]*>/i", $secvalue)) ||
+    (preg_match("/<[^>]*onmouseover*\"?[^>]*>/i", $secvalue)) ||
+      (preg_match("/<[^>]*onmouseout*\"?[^>]*>/i", $secvalue)) ||
+      (preg_match("/<[^>]*onmousemove*\"?[^>]*>/i", $secvalue)) ||
+      (preg_match("/<[^>]*onmouseup*\"?[^>]*>/i", $secvalue)) ||
+      (preg_match("/<[^>]*onload*\"?[^>]*>/i", $secvalue)) ||
+      (preg_match("/<[^>]*onreset*\"?[^>]*>/i", $secvalue)) ||
+      (preg_match("/<[^>]*onresize*\"?[^>]*>/i", $secvalue)) ||
+    (preg_match("/<[^>]*body*\"?[^>]*>/i", $secvalue)) ||
+    (preg_match("/\"/i", $secvalue)) ) {
+    die ('Попытка взлома через файл');
+    }
+  }
+
 function translit($cyr_str) { # Транслит
   $tr = array(
    "Ґ"=>"G","Ё"=>"YO","Є"=>"E","Ї"=>"YI","І"=>"I","і"=>"i","ґ"=>"g","ё"=>"yo","№"=>"#","є"=>"e",
@@ -14,11 +60,16 @@ function translit($cyr_str) { # Транслит
    return strtr($cyr_str,$tr);
 }
 
-
-copy($_FILES['file']['tmp_name'], '../img/'.translit($_FILES['file']['name']));
-$array = array(
-	'filelink' => '/img/'.translit($_FILES['file']['name']),
-	'filename' => $_FILES['file']['name']
-);
+if (!empty($_FILES['file']['name'])) {    
+  //$file_size = $_FILES['file']['size']; // Преобразовать для показа размера
+   $array = explode(".", $_FILES['file']['name']);
+   $file_type = end($array);
+  $file_id = md5(date('YmdHis'));
+  copy($_FILES['file']['tmp_name'], '../img/'.$file_id.".".$file_type);
+  $array = array(
+    'filelink' => '/img/'.$file_id.".".$file_type,
+    'filename' => $_FILES['file']['name']
+  );
 echo stripslashes(json_encode($array));
+}
 ?>

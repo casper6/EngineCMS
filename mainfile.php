@@ -39,7 +39,7 @@
     exit();
   }
 
-  @require_once("config.php"); // Настройки сайта
+  require_once("config.php"); // Настройки сайта
   global $zlib, $ipban, $display_errors, $pid, $site_cash;
 
   if ($zlib == true) {
@@ -214,10 +214,10 @@
     }
   }
      
-     @require_once("includes/db.php"); // База данных (функции для работы)
-     @require_once("includes/sql_layer.php");
+     require_once("includes/db.php"); // База данных (функции для работы)
+     require_once("includes/sql_layer.php");
      
-     if ($ipban == true) @require_once("includes/ipban.php"); // Бан
+     if ($ipban == true) require_once("includes/ipban.php"); // Бан
      $admin_file = "sys"; # Название файла административной панели
 
   // Отображение ошибок сайта, настраивается в файле config.php
@@ -422,7 +422,7 @@
 
 
 /////////////////////////////////////////////////////////
-function page_admin($txt, $pid) { // проверить вызов и/или перенести в админку
+function page_admin($txt, $pid) { // добавление функций админа к странице сайта
   global $db, $prefix, $module_name, $url, $name;
   if ( $pid > 0 ) $red = "
 <script src=includes/JsHttpRequest/JsHttpRequest.js></script>
@@ -446,70 +446,6 @@ function delpage(pid) {
   $url = getenv("REQUEST_URI");
   $txt = str_replace("</body>","<div id='redact_show' style='position:absolute; top:10px; floaf:right; right:20px; z-index:300; width:18px;'><a title='Показать настройки администратора' href=# style='cursor:pointer;' onclick=\"show('redact'); show('redact_show');\"><img class='icon2 i35' src='/images/1.gif'></a></div><div id='redact' style='background: white; color: black; position:absolute; top:5px; display:none; floaf:right; right:20px; z-index:300; width:290px;' class=show_block><div class=show_block_title><a title='Скрыть настройки администратора' href=# style='cursor:pointer;' onclick=\"show('redact_show'); show('redact');\"><img class='icon2 i33' src='/images/1.gif' align=right></a>Настройки администратора</div>".$red."<form method=post name=blocks_show action='".$url."' style='display:inline;'><input type='hidden' name=blocks value='1'><a href='javascript:document.blocks_show.submit();' title='Показать редактирование блоков на странице'>Показать редактирование блоков</a></form><br><a href='/sys.php?op=base_pages_re&amp;link=".$url."'>Обновить страницу</a></div></body>",$txt);
   return $txt;
-}
-/////////////////////////////////////////////////////////
-function red_vybor() { // Выбор редактора (перенести в админку)
-  global $url;
-  $link = str_replace("&red=0","",str_replace("&red=1","",str_replace("&red=2","",str_replace("&red=3","",str_replace("&red=4","",$url)))));
-  echo "
-  <script>
-  $(function() { $( \"#rerurn\" ) .button() .click(function() { show('red_vybor'); }) .next() .button( { text: false, icons: {primary: \"ui-icon-triangle-1-s\"} }) .click(function() { show('red_vybor_small'); }) .parent() .buttonset(); });
-  </script>
-  <div class='vybor_redaktora' style='float:right; margin-top:5px;'><div>
-    <button id='rerurn'><img class='icon2 i35' src='/images/1.gif'>Выбрать редактор</button>
-    <button id='sel'>Быстрый выбор редактора</button>
-  </div></div>
-
-  <div id='red_vybor_small' style='position:absolute; top:105px; right:12px; z-index:666; width:225px; background:white; display:none; border:solid 1px gray;' class=radius>
-  <a href='".$link."&red=0' class=dark_pole3 style='width:162px'>Простой</a><br>
-  <a href='".$link."&red=2' class=dark_pole3 style='width:162px'>Навороченный</a><br>
-  <a href='".$link."&red=3' class=dark_pole3 style='width:162px'>Удобный</a><br>
-  <a href='".$link."&red=4' class=dark_pole3 style='width:162px'><b>Лучший</b></a><br>
-  <a href='".$link."&red=1' class=dark_pole3 style='width:162px'>HTML</a><br>
-  <a onclick=show('red_vybor_small') style='cursor:pointer; float:right;' title='Закрыть'>Закрыть</a>
-  </div>
-
-  <div id='red_vybor' style='position: absolute; z-index:666; right:5px; top:5px; padding:5px; width:647px; background:white; display:none; border:solid 10px gray;' class=radius>
-  <a onclick=show('red_vybor') style='cursor:pointer; float:right;' title='Закрыть'><img class='icon2 i33' src='/images/1.gif'></a>
-  <h1>Выбор редактора</h1>
-  <b>У всех редакторов есть:</b> Вставка ссылок, фотографий и таблиц, Жирность, Наклонность, Цвет текста, Верхний индекс, Списки, Заголовки, Центрирование и HTML-код
-
-<a href='".$link."&red=0' class='dark_pole3'>
-  <img src=/images/0.jpg><br>
-  <h2 style='display:inline'>Простой</h2> Разделительная черта, flash-ролики, Чистка HTML при вставке из Word'а или с сайтов</a>
-
-<a href='".$link."&red=2' class='dark_pole3'>
-  <img src=/images/2.jpg><br>
-  <h2 style='display:inline'>Навороченный</h2> Поиск/Замена, Размер текста, Цитата, Отступы списков, Подстрочный индекс, Зачеркнутый текст, flash-ролики, Смайлики, Спецсимволы, Разделительная черта, Цвет фона текста, Вставить из Word'а, Maximaze (во весь экран)</a>
-
-<a href='".$link."&red=3' class='dark_pole3'>
-  <img src=/images/3.jpg><br>
-  <h2 style='display:inline'>Удобный</h2> Быстрая вставка фотографий, Удобная работа с таблицами, Вставка видео-роликов и файлов, Автоматическая чистка! при вставке из Word'а, Во весь экран, Зачеркнутый текст, Заливка текста (Цвет фона), Отступы списков.</a>
-
-<a href='".$link."&red=4' class='dark_pole3'>
-  <img src=/images/4.jpg><br>
-  <h2 style='display:inline'>Лучший</h2> Возможности редактора «Удобный» + Загрузка файлов и фотографий путем переноса мышкой (Drag&Drop), Изменение размеров фотографий движением мышки после их удерживания, Автоматическое изменение размера окна редактора.</a>
-
-<a href='".$link."&red=1' class='dark_pole3'>
-  <img src=/images/1.jpg><br>
-  <h2 style='display:inline'>HTML-код</h2> Невизуальный редактор для понимающих HTML-разметку.</a>
-
-  </div>";
-}
-/////////////////////////////////////////////////////////
-function makePass() { // Создать пароль
-	$cons = "bcdfghjklmnpqrstvwxyz";
-	$vocs = "aeiou";
-	for ($x=0; $x < 6; $x++) {
-		mt_srand ((double) microtime() * 1000000);
-		$con[$x] = substr($cons, mt_rand(0, strlen($cons)-1), 1);
-		$voc[$x] = substr($vocs, mt_rand(0, strlen($vocs)-1), 1);
-	}
-	mt_srand((double)microtime()*1000000);
-	$num1 = mt_rand(0, 9);
-	$num2 = mt_rand(0, 9);
-	$makepass = $con[0] . $voc[0] .$con[2] . $num1 . $num2 . $con[3] . $voc[3] . $con[4];
-	return($makepass);
 }
 /////////////////////////////////////////////////////////
 global $adminSave; // Замена
@@ -646,23 +582,6 @@ function filter($what, $strip="") {
 	return($what);
 }
 /////////////////////////////////////////////////////////
-if (isset($gf)){ // удалить
-  switch($gf) {
-  	case "gf":
-  	$datekey = date("F j");
-  	$rcode = hexdec(md5($_SERVER['HTTP_USER_AGENT'] . $sitekey . intval($random) . $datekey));
-  	$code = substr($rcode, 2, 6);
-  	$image = ImageCreateFromJPEG("images/code_bg.jpg");
-  	$text_color = ImageColorAllocate($image, 80, 80, 80);
-  	Header("Content-type: image/jpeg");
-  	ImageString ($image, 5, 12, 2, $code, $text_color);
-  	ImageJPEG($image, '', 75);
-  	ImageDestroy($image);
-  	die('main2');
-  	break;
-  }
-}
-/////////////////////////////////////////////////////////
 function getuseragent() { // удалить
   return htmlspecialchars($_SERVER["HTTP_USER_AGENT"]);
 }
@@ -721,12 +640,10 @@ function findMonthName($m) { # ИМЯ МЕСЯЦА
   }
 ///////////////////////////////////////////////////////////////
 function tipograf($text, $p=0) { // типографика - все основные знаки препинания
-
   if ($p==0) $text = "<p>".trim($text)."</p>";
   // Смайлы (с легкостью можно добавить замену смайлов на картинки!)
   $text=str_replace(":)", "<img src=/images/smilies/04.gif>", $text);
   $text=str_replace(":(", "<img src=/images/smilies/11.gif>", $text);
-
   $zamena = array(
   "<div><br /> 
   </div>"=>"<br>",
@@ -826,71 +743,6 @@ function zamena_predlog($text) { # Замена предлогов
   $zamena = array(" а "=>" ","А "=>""," в "=>" ","В "=>""," и "=>" ","И "=>""," к "=>" ","К "=>""," о "=>" ","О "=>""," с "=>" ","С "=>""," у "=>" ","У "=>""," я "=>" ","Я "=>""," во "=>" ","Во "=>""," до "=>" ","До "=>""," за "=>" ","За "=>""," из "=>" ","Из "=>""," на "=>" ","На "=>""," не "=>" ","Не "=>""," ни "=>" ","Ни "=>""," но "=>" ","Но "=>""," по "=>" ","По "=>""," об "=>" ","Об "=>""," то "=>" ","То "=>""," для "=>" ","Для "=>""," или "=>" ","Или "=>""," над "=>" ","Над "=>""," обо "=>" ","Обо "=>""," про "=>" ","Про "=>""," же "=>" ");
   $text = strtr($text,$zamena);
   return $text;
-}
-///////////////////////////////////////////////////////////////
-function switch_type($type,$name,$useit,$useit_module=0) { // убрать !!!
-  global $tip, $admintip, $prefix, $db, $spaw_show;
-  $spaw_show = 1;
-  $title_razdel="";
-  switch ($type) {
-  case "0": $type = "Дизайн"; 		$color = "#FFCC99";	$icon = "|design_editor|design_noeditor|4|5|design_delete"; break;
-  case "1": $type = "Стиль&nbsp;CSS"; 	$color = "#FFFFCC";	$icon = "|style_noeditor|3|4|5|style_delete"; break;
-  case "2": $type = "Раздел $name"; 	$color = "#90ee90";	$icon = "|pages_editor|pages_noeditor|pages_show|pages_allpages|pages_delete|pages_allpages_time|pages_allpages_base|pages_allpages_nastroi"; break;
-  case "3": $type = "Блок"; 		$color = "#8ee5ee";	$icon = "|blocks_editor|blocks_noeditor|blocks_nastroi|5|blocks_delete";
-  	switch ($name) {
-  	case "0": #################################################
-    if ($useit_module=="") $type = "Страницы всех разделов"; else 
-  	$type = "Страницы&nbsp;раздела \"".$useit_module."\""; $spaw_show = 0; break;
-  	case "1": #################################################
-  	if ($useit_module=="") $type = "Комментарии всех разделов"; else 
-    $type = "Комментарии&nbsp;раздела \"".$useit_module."\""; $spaw_show = 0; break;
-  	case "2": #################################################
-  	$type = "Текст&nbsp;или&nbsp;HTML"; break;
-  	case "3": #################################################
-  	$type = "Ротатор (при&nbsp;обновлении страницы)"; $spaw_show = 0; break;
-  	case "4": #################################################
-  	$type = "Папки&nbsp;раздела"; $spaw_show = 0; break;
-  	case "5": #################################################
-  	$type = "Голосование&nbsp;(Опрос)"; $spaw_show = 0; break;
-  	case "6": #################################################
-  	$type = "Фотогалерея"; $spaw_show = 0; break;
-  	case "7": #################################################
-  	$type = "PHP-код"; $spaw_show = 0; break;
-  	case "8": #################################################
-  	$type = "Папки&nbsp;открытого&nbsp;раздела"; $spaw_show = 0; break;
-  	case "9": #################################################
-  	$sql = "select title, useit from ".$prefix."_mainpage where id='$useit'";
-  	$result = $db->sql_query($sql);
-  	$row = $db->sql_fetchrow($result);
-  	$title = $row['title'];
-  	$type = "Мини-фото&nbsp;раздела \"".$title."\""; $spaw_show = 0; break;
-  	case "10": #################################################
-  	$type = "Меню&nbsp;сайта"; $spaw_show = 0; break;
-  	case "11": #################################################
-  	$type = "Календарь"; $spaw_show = 0; break;
-  	case "13": #################################################
-  	$type = "Облако&nbsp;тегов (ключевых&nbsp;слов)"; $spaw_show = 0; break;
-  	case "20": #################################################
-  	$type = "База&nbsp;данных (количество по&nbsp;1&nbsp;колонке верт.)"; $spaw_show = 0; break;
-  	case "21": #################################################
-  	$type = "База&nbsp;данных (количество по&nbsp;1&nbsp;колонке гор.)"; $spaw_show = 0; break;
-  	case "22": #################################################
-  	$type = "База&nbsp;данных (количество по&nbsp;2&nbsp;колонкам)"; $spaw_show = 0; break;
-  	case "23": #################################################
-  	$type = "База&nbsp;данных (список колонок)"; $spaw_show = 0; break;
-    case "30": #################################################
-    $type = "Кол-во&nbsp;посещений&nbsp;раздела"; $spaw_show = 0; break;
-    case "31": #################################################
-    $type = "JavaScript"; $spaw_show = 0; break;
-  	} #########################################################
-  	$name = ""; 
-  	//$title = "[".$title."]";
-  break;
-  case "4": $type = "Список"; 		$color = "#99CCFF";	$icon = "|spisok_editor|3|4|spisok_allpages|spisok_delete"; break;
-  case "5": $type = "База данных"; 	$color = "#f9a3f6";	$icon = "|base_editor|3|4|base_allpages|base_delete"; break;
-  case "6": $type = "Шаблон для раздела или блока"; $color = "#dddddd";	$icon = "|spisok_editor|spisok_noeditor|4|spisok_allpages|spisok_delete"; break;
-  }
-  return $type."|".$color.$icon;
 }
 ///////////////////////////////////////////////////////////////
 function strtolow($txt, $t=1) { # Большие буквы в маленькие
