@@ -2247,7 +2247,7 @@ function savepost ($avtor, $post_title, $info, $num, $cid, $add){
 
   $ok = false;
   if (function_exists('mb_strlen')) {
-  if(mb_strlen($_POST['keystring']) == 1) $ok = true;
+  if(mb_strlen($_POST['keystring']) == 2) $ok = true;
   } else $ok = true;
 
   $pattern = "/onlinedisk.ru\/image\/"."(\d+)"."\/IMG"."(\d+)".".jpg"."/i";
@@ -2261,9 +2261,9 @@ function savepost ($avtor, $post_title, $info, $num, $cid, $add){
   $result3 = $db->sql_query($sql3);
   $row3 = $db->sql_fetchrow($result3);
   if (trim($row3['text'])!="") {
-  $main_file = explode("|",$row3['text']);
-  $main_options = $main_file[1];
-  parse_str($main_options);
+    $main_file = explode("|",$row3['text']);
+    $main_options = $main_file[1];
+    parse_str($main_options);
   }
 
   if ($tema_zapret == 1) {
@@ -2438,10 +2438,10 @@ function savepost ($avtor, $post_title, $info, $num, $cid, $add){
 
   $location = "/-".$DBName.""; // _cat_".$num."#comm
   } else {
-  //mb_internal_encoding('utf-8'); 
-  //$xx = mb_strlen($_POST['keystring']); 
-  //$len = strlen($_POST['keystring']);
-  die("<b>Ошибка:</b> По всей видимости - вы используете программу для отправки сообщений. Вводите всё вручную.");
+    //mb_internal_encoding('utf-8'); 
+    //$xx = mb_strlen($_POST['keystring']); 
+    //$len = strlen($_POST['keystring']);
+    die("<b>Ошибка:</b> По всей видимости - вы используете программу для отправки сообщений. Вводите всё вручную.");
   }
 
 
