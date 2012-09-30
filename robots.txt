@@ -7,13 +7,9 @@ Disallow: /resize.php
 Disallow: /rss.php
 Disallow: /send.php
 Disallow: /ad/
-Disallow: /ed/
 Disallow: /ed2/
 Disallow: /backup/
-Disallow: /ckeditor/
-Disallow: /ckfinder/
 Disallow: /images/
 Disallow: /includes/
-Disallow: /modules/
-Disallow: /spaw2/
+Disallow: /page/
 Disallow: /kcaptcha/

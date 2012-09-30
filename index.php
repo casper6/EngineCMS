@@ -379,8 +379,8 @@ if ($name=="-email") { // занесение мыла как скрытого к
 	$DBName = $name; // важно не менять!
 	$tip = $main_file;
 
-	if (file_exists("modules/".$main_file."/page.php") and $main_options != "no") {
-		require_once("modules/".$main_file."/page.php");
+	if (file_exists("page/main.php") and $main_options != "no") {
+		require_once("page/main.php");
 
 		$soda = explode("[следующий]",$soda);
 		// $soda[0] - для всех
@@ -1783,6 +1783,4 @@ echo str_replace("</table></table>","</table>",str_replace("</tr></div>","</tr>"
 	}
 	// Запуск антивируса
 	antivirus(); 
-// проверить
-ob_end_flush(); // Сплевываем и нервно курим...
 ?>
