@@ -4,7 +4,6 @@ if (stristr($_SERVER['PHP_SELF'], "db.php")) {
 	Header("Location: index.php");
 	die();
 }
-//include("db/mysql.php");
 if(!defined("SQL_LAYER")) {
 define("SQL_LAYER","mysql");
 class sql_db {
@@ -96,31 +95,11 @@ class sql_db {
 			return $result;
 		} else return false;
 	}
-	/*
-	function sql_fetchrow($query_id = 0) {
-		if( !$query_id ) {
-			$query_id = $this->result;
-		}
-		if( $query_id ) {
-			empty($row);
-			$row = @mssql_fetch_array($query_id);
-			while( list($key, $value) = @each($row) ) {
-				$row[$key] = ($value === ' ') ? '' : stripslashes($value);
-			}
-			@reset($row);
-			return $row;
-		} else {
-			return false;
-		}
-	}
-	*/
 
 	function sql_fetchrow($query_id = 0) {
 		if(!$query_id) $query_id = $this->query_result;
 		if($query_id and !is_integer($query_id)) {
-return mysql_fetch_array($query_id);
-			//$this->row[$query_id] = @mysql_fetch_array($query_id);
-			//return $this->row[$query_id];
+		return mysql_fetch_array($query_id);
 		} else return false;
 	}
 
@@ -180,12 +159,10 @@ return mysql_fetch_array($query_id);
 } // class sql_db
 
 } // if ... define
-///////////////////////////
+
 $db = new sql_db($dbhost, $dbuname, $dbpass, $dbname, false);
 mysql_query ("set character_set_client='utf8'");
 mysql_query ("set character_set_results='utf8'");
 mysql_query ("set collation_connection='utf8_general_ci'");
-if(!$db->db_connect_id) {
-	die("<br><br><center><br><br><b>В данный момент проводится техническое обслуживание сервера.<br><br>Приносим свои извинения и просим Вас зайти немного позже.</center></b>");
-}
+if(!$db->db_connect_id) die("<br><br><center><br><br><b>В данный момент проводится техническое обслуживание сервера.<br><br>Приносим свои извинения и просим Вас зайти немного позже.</center></b>");
 ?>
