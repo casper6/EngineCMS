@@ -29,10 +29,10 @@ function show(obj) {
 function show_animate(obj) {
 	with (document.getElementById(obj).style) {
 	   if (display == "none") { 
-		   $(document.getElementById(obj)).show("slow");  
+		   $(document.getElementById(obj)).show();  
 		   $(".nothing").fadeTo('slow', 0.4); 
 		} else {
-		   $(document.getElementById(obj)).slideUp();  
+		   $(document.getElementById(obj)).hide();  
 		   $(".nothing").fadeTo('slow', 1); 
 		}
 	}
