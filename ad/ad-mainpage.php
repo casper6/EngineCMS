@@ -2242,7 +2242,7 @@ $sql = "select name from ".$prefix."_mainpage where `id`='$id'";
 $result = $db->sql_query($sql);
 $row = $db->sql_fetchrow($result);
 $mod_name = $row['name'];
-recash("/-".$mod_name); // Обновление кеша ##
+recash("/-".$mod_name); // Удаление кеша раздела
 
 if ($nastroi == 1) { // Настройка раздела или блока
 	global $options, $module_name;
@@ -2488,28 +2488,23 @@ function mainpage_recycle_spiski() {
 function mainpage_create_block($title, $name, $text, $modul, $useit, $design) {
 	global $tip, $admintip, $prefix, $db;
 	# id type name title text useit shablon
-	$title = trim($title);
-	$useit = "|".trim($useit);
-	if (trim($title) == "") { 
-		echo "Блок без названия! Вернитесь назад и назовите блок.";
-		die;
-	}
-
-	if ($name == "666" or $name == "6666" or $name == "66666" or $name == "666666") { 
-		echo "Не выбран тип блока! Вернитесь назад и выберите.";
-		die;
-	} 
+	$title = trim($title); // Название блока
+	$name = intval($name); // тип блока
+	$useit = "|".trim($useit); // настройки блока
+	if (trim($title) == "") $title = "Вы забыли ввести название для этого блока! ОТРЕДАКТИРУЙТЕ!";
 	if ($modul != 0) {
 		$sql = "select name from ".$prefix."_mainpage where `tables`='pages' and id='$modul'";
 		$result = $db->sql_query($sql);
 		$row = $db->sql_fetchrow($result);
 		$modul_name = $row['name'];
 		$useit = $modul_name.$useit;
-		$shablon = "block-".$modul_name;
+		$shablon = "block-".$modul_name."-".$name; // css блока имеет вид: block-англ.имя раздела-тип блока
 	} else $shablon = "block-".trans($title);
 	if ($design != 0) $useit .= "&design=$design";
-	$useit = str_replace("|&","|",$useit);
-	$db->sql_query("INSERT INTO ".$prefix."_mainpage VALUES (NULL, '3', '".$name."', '".$title."', '".$text."', '".$useit."', '".$shablon."', '0', 'pages', '0', '', '')") or die("Не удалось создать блок. INSERT INTO ".$prefix."_mainpage VALUES (NULL, '3', '".$name."', '".$title."', '".$text."', '', '".$useit."', '".$shablon."', '0', 'pages', '0', '', '') ");;
+	$title = mysql_real_escape_string($title);
+	$text = mysql_real_escape_string($text);
+	$useit = mysql_real_escape_string(str_replace("|&","|",$useit));
+	$db->sql_query("INSERT INTO ".$prefix."_mainpage VALUES (NULL, '3', '".$name."', '".$title."', '".$text."', '".$useit."', '".$shablon."', '0', 'pages', '0', '', '')") or die("Не удалось создать блок. INSERT INTO ".$prefix."_mainpage VALUES (NULL, '3', '".$name."', '".$title."', '".$text."', '', '".$useit."', '".$shablon."', '0', 'pages', '0', '', '') ");
 	Header("Location: sys.php?op=".$admintip."&type=element");
 }
 #####################################################################################################################

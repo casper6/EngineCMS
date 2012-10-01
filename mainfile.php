@@ -134,13 +134,16 @@
     }
     
     $id_mainpage2 = array(); // список ID разделов
-    $title_mainpage2 = array(); // список названий разделов
+    $title_mainpage2 = array(); // список рус. названий разделов
     $text_mainpage2 = array(); // список содержания разделов
     $useit_mainpage2 = array(); // список настроек разделов
+    $name_mainpage2 = array(); // список англ. названий разделов
     $sqlY = "SELECT `id`,`name`,`title`,`text`,`useit` from `".$prefix."_mainpage` where `tables`='pages' and (`type`='2' or `type`='5')";
     $resultY = $db->sql_query($sqlY);
     while ($rowY = $db->sql_fetchrow($resultY)) {
       $nameX = $rowY['name'];
+      $idX = $rowY['id'];
+      $name_mainpage2[$idX] = $rowY['name']; 
       $id_mainpage2[$nameX] = $rowY['id']; 
       $title_mainpage2[$nameX] = $rowY['title']; 
       $text_mainpage2[$nameX] = $rowY['text'];
