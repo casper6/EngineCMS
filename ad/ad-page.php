@@ -1497,7 +1497,7 @@ $('#main_text').editor({ css: ['/ed/js/editor/css/editor.css'], toolbar: 'classi
         button_more: {title: 'Вставка ссылки на полное содержание (для предисловия)',callback: ButtonMore},
         button_link: {title: 'Вставка блока (например, галереи фотографий)',callback: ButtonBlock},
         button_block: {title: 'Вставка быстрой ссылки на страницу или раздел',callback: ButtonLink}
-      }, mobile: false, ".$red4_div_convert." imageUpload: 'ed2/image_upload.php',fileUpload: 'ed2/file_upload.php' }); } );
+      }, ".$red4_div_convert." imageUpload: 'ed2/image_upload.php',fileUpload: 'ed2/file_upload.php' }); } );
     </script>
 <textarea id=\"open_text\" class='redactor' name=\"open_text\" rows=\"8\" cols=\"80\" style='width:100%;'>".$open_text."</textarea>";
 }

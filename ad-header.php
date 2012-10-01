@@ -71,8 +71,6 @@ if ($op == "mainpage" and $type == "stat") {$title = "Общая статист�
 if ($op == "mainpage" and $type == "stat_page") {$title = "Статистика посещений страниц"; $color1="gray"; $color2="gray"; $color4="blue";}
 if ($op == "mainpage" and $type == "stat_search") {$title = "Статистика поисковых запросов"; $color1="gray"; $color2="gray"; $color4="blue";}
 header ("Content-Type: text/html; charset=utf-8");
-//echo "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd\">";
-// includes/jquery-1.6.3.js 1.8.1
 echo "<!doctype html>
 <html lang=\"ru-RU\" dir=\"ltr\">
 <head><title>".$title."</title>\n
@@ -89,16 +87,7 @@ echo "<!doctype html>
 <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.6.3/jquery.min.js'></script>
 <script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js'></script> 
 <script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/i18n/jquery-ui-i18n.min.js'></script> 
-<script src='includes/jquery.innerfade.js'></script>
-";
-if ($red==0) include("spaw2/spaw.inc.php"); //spaw2 !!!
-if ($red==2) echo "<script type=\"text/javascript\" src=\"ckeditor/ckeditor.js\"></script>";
-if ($red==3) echo "<script type=\"text/javascript\" src=\"ed/js/editor/editor.js\"></script> 
-<link rel=\"stylesheet\" href=\"ed/js/editor/css/editor.css\" type=\"text/css\" media=\"screen, projection\" /> ";
-if ($red==4) echo "<script src=\"ed2/redactor.js\"></script>
-<link rel=\"stylesheet\" href=\"ed2/redactor.css\" /> ";
-
-//if ($red==5) echo "";
+<script src='includes/jquery.innerfade.js'></script>";
 
 if (!$op) {
 	echo "\n<script type=\"text/javascript\" src=\"includes/jeditable.js\"></script>
@@ -111,8 +100,16 @@ echo "<link rel=\"stylesheet\" href=\"http://ajax.googleapis.com/ajax/libs/jquer
 <link rel=\"stylesheet\" type=\"text/css\" href=\"includes/css-frameworks/kickstart/css/kickstart-forms.css\" media=\"all\" />
 <link rel=\"stylesheet\" type=\"text/css\" href=\"includes/css-frameworks/kickstart/css/kickstart-icons.css\" media=\"all\" />
 <link rel=\"stylesheet\" type=\"text/css\" href=\"includes/css-frameworks/kickstart/css/kickstart-buttons.css\" media=\"all\" />";
+
+
+if ($red==3) echo "<script type=\"text/javascript\" src=\"ed/js/editor/editor.js\"></script> 
+<link rel=\"stylesheet\" href=\"ed/js/editor/css/editor.css\" type=\"text/css\" media=\"screen, projection\" /> ";
+if ($red==4) echo "<script src=\"ed2/redactor.js\"></script><link rel=\"stylesheet\" href=\"ed2/redactor.css\" /> ";
+
 // УДАЛЕНО
 /* 
+if ($red==0) include("spaw2/spaw.inc.php"); //spaw2 !!!
+if ($red==2) echo "<script type=\"text/javascript\" src=\"ckeditor/ckeditor.js\"></script>";
 <script src='includes/ui.core.js'></script>
 <script src='includes/ui.tabs.js'></script>
 

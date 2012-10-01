@@ -586,7 +586,7 @@ $kol_num = 0;
 
 if ($nu >0 and $view==4 and $cid != 0) {
   $soderganieALL = "<div class='venzel'></div>
-  <table cellspacing='0' cellpadding='0' width='100%''><tr valign='top'><td>".$tema_title."</td>";
+  <table cellspacing='0' cellpadding='0' width='100%'><tr valign='top'><td>".$tema_title."</td>";
   if ( $tema_name != "no" ) $soderganieALL .= "<td class='reiting_text'>".$tema_name."</td>"; else $soderganieALL .= "<td></td>";
   $soderganieALL .= "<td align='center'>Средний балл</td><td align='center'>Всего голосов</td><td align='center'>+</td><td align='center'>?</td><td align='center'>-</td></tr>";
 }
@@ -747,13 +747,9 @@ $color = 1;
       $pagelink = "#";
       $pagelinktitle = "<h1 class='cat_page_title'>".$title."</h1>";
     }
-//if (is_admin($admin)) $pagelinktitle .= " <a target=_blank title='Изменить страницу в Редакторе' href='/sys.php?op=base_pages_edit_page&name=".$DBName."&pid=".$p_pid."'><img src='/images/sys/edit_1.png' align=bottom width=14></a><a target=_blank title='Изменить страницу в режиме HTML' href='/sys.php?op=base_pages_edit_page&name=".$DBName."&pid=".$p_pid."&red=1'><img src='/images/sys/edit_0.png' align=bottom width=14></a>";
 
   $golosraz = "";
   if ($golosrazdel != 0) {
-    //$sql23 = "SELECT golos FROM ".$prefix."_pages_golos WHERE num='$p_pid'";
-    //$result23 = $db->sql_query($sql23);
-    //$numrows23 = $db->sql_numrows($result23);
     $golos_id = $prefix.'golos'.$p_pid;
     
     if (isset($golos_id) and isset($GLOBALS[$golos_id])) $tmp = $GLOBALS[$golos_id]; else $tmp = "";
@@ -761,29 +757,20 @@ $color = 1;
     global $pages_golos, $pages_golos_num;
     if (!isset($pages_golos_num[$p_pid])) $pages_golos_num[$p_pid] = 0;
     if ($golostype == 0) {
-      //$golo=array();
-      //while($row23 = $db->sql_fetchrow($result23)) {
-      //  $golo[] = $row23['golos'];
-      //}
       if (!isset($pages_golos[$p_pid])) $pages_golos[$p_pid] = 0;
       if (isset($pages_golos_num[$p_pid]) and $pages_golos[$p_pid] != 0) $proc = $pages_golos[$p_pid] / $pages_golos_num[$p_pid] * 10;
       else {$pages_golos_num[$p_pid] = 0; $proc = 1;}
-      //$proc = array_sum($golo)/$numrows23*10; 
-      //$ser = (int) (intval(array_sum($golo))/$numrows23); - old del
       $sersv = $proc*2;
       $sersv2 = number_format($proc,2)/10;
       $sersv1 = number_format($sersv2,2)." из 5";
       if ($sersv1 == "0.10 из 5") $sersv1 = "Никто не голосовал";
       else $sersv1 .= "</b> <img src=\"/images/sys/007.png\" width=16 style='margin-right:3px;' title='Голосовали:' /><b>".$pages_golos_num[$p_pid];
-      //$lolo = 100 - $sersv;
       $sersv = 90*$sersv/100;
     }
     $gol = "<script src=/includes/JsHttpRequest/JsHttpRequest.js></script><div id=golos".$p_pid.">";
   
     if ($golostype == 0) 
       $gol .= "<table border=0 width=100% cellspacing=0 cellpadding=0><tr valign=top><td width=90 style=\"background:url(/images/zvezda_hide.gif) #FF6600 ".$sersv."px repeat-y; width:90px;\"><a onclick=\"page_golos(".$p_pid.",'".$DBName."',1,".$golostype.")\" title='+1 балл' style='cursor:pointer;'><img src=\"/images/zvezda_golos.gif\" width=18 /></a><a onclick=\"page_golos(".$p_pid.",'".$DBName."',2,".$golostype.")\" title='+2 балла' style='cursor:pointer;'><img src=\"/images/zvezda_golos.gif\" width=18 /></a><a onclick=\"page_golos(".$p_pid.",'".$DBName."',3,".$golostype.")\" title='+3 балла' style='cursor:pointer;'><img src=\"/images/zvezda_golos.gif\" width=18 /></a><a onclick=\"page_golos(".$p_pid.",'".$DBName."',4,".$golostype.")\" title='+4 балла' style='cursor:pointer;'><img src=\"/images/zvezda_golos.gif\" width=18 /></a><a onclick=\"page_golos(".$p_pid.",'".$DBName."',5,".$golostype.")\" title='+5 баллов' style='cursor:pointer;'><img src=\"/images/zvezda_golos.gif\" width=18 /></a></td><td width=3></td><td><img src=\"/images/sys/082.png\" width=16 style='margin-right:3px;' title='Оценка:' /><b>".$sersv1."</b></td></tr></table>";
-    //global $admin;
-    //if (is_admin($admin)) $gol .= "Администратор: <a onclick=\"page_golos(".$p_pid.",'".$DBName."',6,".$golostype.")\" style='cursor:pointer;'>Удалить все голоса</a><br>";
   
     if ($golostype == 1) 
       $gol .= "<a onclick=\"page_golos(".$p_pid.",'".$DBName."',1,".$golostype.")\" title='Проголосовать' style='cursor:pointer;'><img src=\"/images/sys/102.png\" width=16 style='margin-right:3px;' /><u>Проголосовать</u></a> <img src=\"/images/sys/082.png\" width=16 style='margin-right:3px;' title='Голоса:' /><b>".$golos."</b></nobr>";
@@ -1751,8 +1738,6 @@ $sha = shablon_show("page", $view);
       }
     }
 }
-
-//if (is_admin($admin)) $page_title .= " <a target=_blank title='Изменить страницу в Редакторе' href='/sys.php?op=base_pages_edit_page&name=".$DBName."&pid=".$pid."'><img src='/images/sys/edit_1.png' align=bottom width=14></a><a target=_blank title='Изменить страницу в режиме HTML' href='/sys.php?op=base_pages_edit_page&name=".$DBName."&pid=".$pid."&red=1'><img src='/images/sys/edit_0.png' align=bottom width=14></a>";
 
 // Если в тексте зачены комментарии - заменять их, а в самой странице - убирать.
 if (!isset($page_add_comments)) $page_add_comments = "";

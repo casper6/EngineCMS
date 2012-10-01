@@ -43,12 +43,13 @@ function shablon_show($shablon_type, $shablon_id) {
 				<td class=reiting_golos align=center style='background: rgb(252, 192, 198);'>[minus_golos]"; break;
 				############################################################################################
 				default: return "<div class=venzel></div>
-				<table width=100%><tr><td>
-				[page_link_title]
-				[page_open_text]</td></tr></table>
-				<table width=100%><tr><td>
-				<div class=cat_page_counter>[all_cat_link] [all_page_counter]</div></td><td>
-				[all_page_data]</td><td>[all_page_comments]</td><td>[cat_golos]</td></tr></table>
+				<div class=page_link_title>[page_link_title]</div>
+				<div class=page_open_text>[page_open_text]</div>
+				<div class=page_nums>
+				<div class=cat_page_counter>[all_cat_link] [all_page_counter]</div>
+				<div class=all_page_data>[all_page_data]</div>
+				<div class=all_page_comments>[all_page_comments]</div>
+				<div class=cat_golos>[cat_golos]</div>
 				<div class=cat_razdel></div>"; break;
 				############################################################################################
 			}

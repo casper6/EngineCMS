@@ -405,7 +405,7 @@ function create_main($type) {
 	<!--[if lt IE 9]><script src=\"http://html5shim.googlecode.com/svn/trunk/html5.js\"></script><![endif]-->
 
 	    <form id=\"fileupload\" action=\"includes/upload/server/php/\" method=\"POST\" enctype=\"multipart/form-data\">
-	    <label for=\"show_oldnames\"><input type=\"checkbox\" id=\"show_oldnames\" checked><b>Добавлять имя файла</b> фотографии как её описание (<i>подходит для осмысленных и/или русских имен</i>)</label>
+	    <label for=\"show_oldnames\"><input type=\"checkbox\" id=\"show_oldnames\"><b>Добавлять имя файла</b> фотографии как её описание (<i>подходит для осмысленных и/или русских имен</i>)</label>
 	    <br><div class='notice warning green'><span class='icon green medium' data-icon='('></span>Фотографии можно перенести из любой папки вашего компьютера, даже не нажимая кнопку «Добавить файлы...»</div>
 	        <div class=\"row fileupload-buttonbar\">
 	            <div style=\"padding:10px; padding-left:30px; margin-bottom:30px;\">
@@ -1105,7 +1105,14 @@ function edit_main($id) {
 	$options = str_replace($module_name."|","",$text);
 
 	// обнулили все опции от греха подальше
-	$media=$folder=$col=$view=$golos=$golosrazdel=$post=$comments=$datashow=$favorites=$socialnetwork=$search=$search_papka=$put_in_blog=$base=$vetki=$citata=$media_comment=$no_html_in_opentext=$no_html_in_text=$show_add_post_on_first_page=$show_add_post_fileform=$razdel_shablon=$page_shablon=$comment_shablon=$comments_all=$comments_num=$comments_mail=$comments_adres=$comments_tel=$comments_desc=$golostype=$pagenumbers=$comments_main=$tags_type=$tema_zapret_comm=$pagekol=$table_light=$designpages=0;
+	$media=$folder=$col=$view=$golos=$golosrazdel=$post=$comments=$datashow=$favorites=$socialnetwork=$search=$search_papka=$put_in_blog=$base=$vetki=$citata=$media_comment=$no_html_in_opentext=$no_html_in_text=$show_add_post_on_first_page=$show_add_post_fileform=$razdel_shablon=$page_shablon=$comments_all=$comments_num=$comments_mail=$comments_adres=$comments_tel=$comments_desc=$golostype=$pagenumbers=$comments_main=$tags_type=$tema_zapret_comm=$pagekol=$table_light=$designpages=$comments_add=0;
+
+	$menushow=$titleshow=$razdel_link=$peopleshow=$design=$tags=$podrobno=$podrazdel_active_show=$podrazdel_show=$tipograf=$limkol=$tags_show=$tema_zapret=1;
+
+	$comment_shablon=2;
+
+	$where=$order=$calendar=$reclama="";
+
 	$sort="date desc";
 	$tema = "Открыть новую тему";
 	$tema_name = "Ваше имя";
@@ -1120,11 +1127,9 @@ function edit_main($id) {
 	$comments_7 = "Ваш вопрос или комментарий:";
 	$comments_8 = "Раскрыть все комментарии";
 	$tag_text_show = "Ключевые слова";
-	$menushow=$titleshow=$razdel_link=$peopleshow=$design=$tags=$comments_add=$podrobno=$podrazdel_active_show=$podrazdel_show=$tipograf=$limkol=$tags_show=$tema_zapret=1;
-	$where=$order=$calendar=$reclama="";
 	$lim=20;
 
-	parse_str($options); // раскладка всех настроек модуля
+	parse_str($options); // раскладка всех настроек раздела
 
 	echo "
 	".input("nastroi", "1", "1", "hidden")."
@@ -1296,7 +1301,7 @@ function edit_main($id) {
 	</tr>
 	<tr>
 	<td><strong>Показывать Количество посещений?</strong></td>
-	<td>".select("options[peopleshow]", "1,0", "ДА,НЕТ", $peopleshow)."</td>
+	<td>".select("options[peopleshow]", "0,1", "НЕТ,ДА", $peopleshow)."</td>
 	</tr>
 	<tr>
 	<td><strong>Показывать Добавление страниц в Интернет-закладки?</strong> <img src=/images/favorit.gif align=bottom></td>
@@ -1323,7 +1328,7 @@ function edit_main($id) {
 	<table width=100% class='table_light'>
 	<tr>
 	<td>Показывать Комментарии на страницах</td>
-	<td>".select("options[comments]", "1,0", "ДА,НЕТ", $comments)."</td>
+	<td>".select("options[comments]", "0,1", "НЕТ,ДА", $comments)."</td>
 	</tr>
 	<tr>
 	<td>Показывать Комментарии на Главной странице Раздела</td>
@@ -1331,7 +1336,7 @@ function edit_main($id) {
 	</tr>
 	<tr>
 	<td>Разрешить пользователям Добавлять комментарии на страницы?</td>
-	<td>".select("options[comments_add]", "2,1,0", "с проверкой администратора,без проверки,НЕТ", $comments_add)."</td>
+	<td>".select("options[comments_add]", "0,2,1", "НЕТ,с проверкой администратора,без проверки", $comments_add)."</td>
 	</tr>
 	<tr>
 	<td>Включить ветки (возможность отвечать на комментарии на страницах со смещением ответа на комментарий вправо)</td>
@@ -2486,17 +2491,14 @@ function mainpage_recycle_spiski() {
 }
 #####################################################################################################################
 function mainpage_create_block($title, $name, $text, $modul, $useit, $design) {
-	global $tip, $admintip, $prefix, $db;
+	global $tip, $admintip, $prefix, $db, $name_mainpage2;
 	# id type name title text useit shablon
 	$title = trim($title); // Название блока
 	$name = intval($name); // тип блока
 	$useit = "|".trim($useit); // настройки блока
 	if (trim($title) == "") $title = "Вы забыли ввести название для этого блока! ОТРЕДАКТИРУЙТЕ!";
 	if ($modul != 0) {
-		$sql = "select name from ".$prefix."_mainpage where `tables`='pages' and id='$modul'";
-		$result = $db->sql_query($sql);
-		$row = $db->sql_fetchrow($result);
-		$modul_name = $row['name'];
+		$modul_name = $name_mainpage2[$modul];
 		$useit = $modul_name.$useit;
 		$shablon = "block-".$modul_name."-".$name; // css блока имеет вид: block-англ.имя раздела-тип блока
 	} else $shablon = "block-".trans($title);
@@ -2510,8 +2512,8 @@ function mainpage_create_block($title, $name, $text, $modul, $useit, $design) {
 #####################################################################################################################
 function trans($txt) { // Транслит
     $from = "абвгдеёжзийклмнопрстуфхцчшщъьыэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЬЫЭЮЯABCDEFGHIJKLMNOPQRSTUVWXYZ .,";
-	$to = "abvgdeegziiklmnoprstufhchss___euyabvgdeegziiklmnoprstufhchss___euyabcdefghijklmnopqrstuvwxyz___";
-	$txt = strtr($txt, $from, $to);
+	$to = 	"abvgdeegziiklmnoprstufhchss___euyabvgdeegziiklmnoprstufhchss___euyabcdefghijklmnopqrstuvwxyz___";
+	$txt = str_replace("__","_",str_replace("___","_",strtr($txt, $from, $to))); // Убираем лишние подчеркивания
 	return $txt;
 }
 #####################################################################################################################
