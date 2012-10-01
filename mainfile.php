@@ -10,8 +10,11 @@
   require_once ('includes/sql_layer.php'); // Функции для работы с БД: MySQL, mSQL, postgres и postgres_local
     if ( isset($admin) ) {
     if (is_admin($admin)) {
-      if (isset($cash)) if ($cash == "del") del_cash(); // Удаление всего кеша админом
       require_once ('ad/ad-functions.php'); // Функции для администрирования
+      if (isset($cash)) if ($cash == "del") { // Удаление всего кеша админом
+        $db->sql_query("TRUNCATE TABLE `".$prefix."_cash`") or die('Не удалось стереть кеш...'); 
+        die("Кеш удален. Можно <a href=\"javascript:self.close()\">закрыть</a> эту вкладку."); 
+      }
     }
   } else $admin = "";
   global $zlib, $ipban, $display_errors, $pid, $site_cash;

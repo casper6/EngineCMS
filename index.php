@@ -1691,6 +1691,10 @@ echo "<title>".$pagetit.$sitename."</title>
 <script src=\"includes/jquery.ad-gallery.js\"></script>";
 
 global $kickstart;
+// 1,2,3,4,5,6,7,8 — KickStart,CSSframework,Skeleton,Kube,Bootstrap,1140 Grid,Toast,Blueprint
+if ($kickstart == 4) echo "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
+<link rel=\"stylesheet\" type=\"text/css\" href=\"includes/css-frameworks/kube100/kube.min.css\" /> 	
+<link rel=\"stylesheet\" type=\"text/css\" href=\"includes/css-frameworks/kube100/master.css\" />";
 if ($kickstart == 1) echo "<!--[if lt IE 9]><script src=\"http://html5shiv.googlecode.com/svn/trunk/html5.js\"></script><![endif]-->
 <script type=\"text/javascript\" src=\"includes/css-frameworks/kickstart/js/prettify.js\"></script>
 <script type=\"text/javascript\" src=\"includes/css-frameworks/kickstart/js/kickstart.js\"></script>
@@ -1712,22 +1716,23 @@ echo "
 <link rel='stylesheet' href='includes/carusel.css' media='screen' />
 <link rel='stylesheet' href='".$stil.".css' />";
 
-################ НАЧАЛО ТЕЛА
-$notmenu = "";
-if ($stopcopy == 1) echo $notmenu = " oncontextmenu='notmenu();'";
-echo "</head>\n<body".$notmenu.">";
+	################ НАЧАЛО ТЕЛА
+	$notmenu = "";
+	if ($stopcopy == 1) echo $notmenu = " oncontextmenu='notmenu();'";
+	echo "</head>\n<body".$notmenu.">";
 
-if ($kickstart == 1) echo "<a id=\"top-of-page\"></a><div id=\"wrap\" class=\"clearfix\">";
+	if ($kickstart == 1) echo "<a id=\"top-of-page\"></a><div id=\"wrap\" class=\"clearfix\">";
+	if ($kickstart == 4) echo "<div id=\"page\">";
 
-// Исправляем старые ошибки: # проверить и удалить
-$block = str_replace("»»»","\"",$block);
-$block = str_replace("\"\"\"","\"",$block);
-$block = str_replace("\"»","\"",$block);
-$block = str_replace("%C2%BB%C2%BB%C2%BB","",$block);
-$block = str_replace("%22%22%22","",$block);
+	// Исправляем старые ошибки: # проверить и удалить
+	$block = str_replace("»»»","\"",$block);
+	$block = str_replace("\"\"\"","\"",$block);
+	$block = str_replace("\"»","\"",$block);
+	$block = str_replace("%C2%BB%C2%BB%C2%BB","",$block);
+	$block = str_replace("%22%22%22","",$block);
 
-//Подставляем получившееся в HTML + поправка для IE. // удалить
-echo str_replace("</table></table>","</table>",str_replace("</tr></div>","</tr>",$block)); 
+	//Подставляем получившееся в HTML + поправка для IE. // удалить
+	echo str_replace("</table></table>","</table>",str_replace("</tr></div>","</tr>",$block)); 
 
 		// Если включена погодная анимация
 		global $url;
@@ -1754,7 +1759,8 @@ echo str_replace("</table></table>","</table>",str_replace("</tr></div>","</tr>"
 	
 	global $admin, $pid, $now, $nocash;
 
-	if ($kickstart == 1) echo "</div>";
+	if ($kickstart == 1 or $kickstart == 4) echo "</div>";
+
 	echo "\n</body>\n</html>"; // Кончаем! )
 
 	$txt = ob_get_contents(); // собираем файл для вывода на экран и сохранения в кеше

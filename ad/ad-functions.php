@@ -108,13 +108,5 @@ function show_cids($cid_papka, $cids=array()) { // получим cid вложе
   }
   return $cids;
 }
-/////////////////////////////////////////////////////////////// Удаление кеша
-function del_cash() {
-	global $admin;
-	if (is_admin($admin)) {
-		$db->sql_query("TRUNCATE TABLE `".$prefix."_cash`") or die('Не удалось стереть кеш...'); 
-    	die("Кеш удален. Можно <a href=\"javascript:self.close()\">закрыть</a> эту вкладку."); 
-	}
-}
 ##########################################################################################
 ?>
