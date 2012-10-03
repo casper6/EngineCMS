@@ -4,11 +4,9 @@ header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache"); // HTTP/1.0
-//require_once("mainfile.php");
 @require_once("config.php"); // Настройки сайта
 @require_once("includes/db.php"); // База данных (функции для работы)
 @require_once("includes/sql_layer.php");
-//require_once("shablon.php");
 global $prefix, $db, $opros, $otpravka_pic; 
 
 if (isset($_COOKIE['admin'])) {
@@ -49,7 +47,6 @@ if ($opros_res != 1 and $opros_res != 3) {
         } // for закончился
         $db->sql_query("UPDATE ".$prefix."_mainpage SET text='$txt' WHERE id='$opros_num' and name='5' and type='3'");
       }
-  //} else $otvet = "<b><font color=red>Ошибка. Ваш голос не добавлен.</font></b>";
 }
 
 // Загрузка информации об опросе

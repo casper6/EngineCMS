@@ -92,9 +92,7 @@ box-shadow: 0 0 5px rgba(81, 203, 238, 1);
 
 .cat_page_comments {margin-right: 10px;}
 
-.main_search, .main_search_line {float:center; text-align:left; width: 90%;}
-.main_search_input {width: 200px; }
-.main_search_button {margin:0; padding:0; margin-left:5px; padding-bottom:-5px;}
+.main_search_form {float:right;}
 
 a img {border:0;}
 

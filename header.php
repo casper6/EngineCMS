@@ -66,362 +66,134 @@ if ($name=="-email") { // занесение мыла как скрытого к
 		Header("Location: $referer");
 	}
 
-} elseif ($name=="-search") { // Поиск по всем разделам
-	###################################################### ПОИСК ПОИСК 
-	global $soderganie, $tip, $DBName, $prefix, $db, $module_name, $ModuleName, $slovo, $design, $now, $ip, $papka;
-	echo $slovo;
-	$slov = str_replace("  "," ",str_replace(";"," ",str_replace("—"," ",str_replace("`"," ",str_replace("№ ","№",str_replace("№"," №",str_replace(",",", ",str_replace("ё","е",trim(strip_tags($slovo))))))))));
-
-	if (strpos($slov,"@")) {
-		echo "E-mail адреса не стоит искать на этом сайте, лучше использовать их для написания писем в почтовых программах или на почтовых сайтах, на которых вы зарегистрированы.";
-		exit;
-	}
-	if (strpos(" ".$slov,"www.") or strpos($slov,".ru")) {
-		echo "Адреса сайтов нужно писать не в поиске по сайту, а в адресной строке вашего браузера (той программы, через которую вы смотрите этот сайт)!";
-		exit;
-	}
-	if (strpos(" ".$slov,"dir")) {
-		echo "Рискну предположить, что ты — начинающий хакер. Если просто хочется взломать какой-то сайт — найди себе другой полигон. А если заинтересовал именно этот, пиши мне — 13i@list.ru";
-		exit;
-	}
-	if (strpos(" ".$slov,"ИНН") or strpos(" ".$slov,"инн")) {
-		echo "Не стоит искать ИНН на этом сайте.";
-		exit;
-	}
-	if (strpos(" ".$slov,"голые") or strpos(" ".$slov,"порн") or strpos(" ".$slov,"эротика")) {
-		echo "Не стоит искать голых, эротику и порно.";
-		exit;
-	}
-
-	if ($slov == "мыло" and is_admin($admin)) {
-		$sql5 = "SELECT num, avtor, mail from ".$prefix."_pages_comments where `mail`!='' order by num";
-		$result5 = $db->sql_query($sql5);
-		$numrows = $db->sql_numrows($result5);
-		$nu = 0; // счетчик email для разбиения по 25 штук
-		$nu2 = 0; // счетчик подписанных на рассылку
-		$echo = ""; 
-		$mails2 = array();
-		while ($row5 = $db->sql_fetchrow($result5)) {
-			$avtor = $row5['avtor'];
-			
-			$mails = trim(strip_tags($row5['mail']));
-			if ( !in_array($mails,$mails2) and strpos($mails, "@") and strpos($mails, ".") ) {
-				$nu++;
-				$mails2[] = $mails;
-				if ($row5['num'] == 0) { $nu2++; $echo .= "\"<b>".$avtor."</b>\" &lt;".$mails."&gt;, "; }
-				else $echo .= "\"".$avtor."\" &lt;".$mails."&gt;, ";
-				if ($nu == 25) { $echo .= "<hr>"; $nu = 0; }
-			}
-		}
-		echo "<h1>Адреса Email из комментариев, всего ".count($mails2).", разбито по 25 штук.</h1>";
-		if ($nu2 > 0) echo "<h2>Подписавшиеся на рассылку выделены жирным, всего: ".$nu2.".</h2>";
-		echo "<p>Можно вставлять для отправки сразу после исправления имен, если они набраны неправильно.</p>
-		<p><b>Внимание!</b> Рассылку лучше всего делать со специально зарегистрированного для этого email адреса. Не желательно писать в письме рассылки адрес сайта со ссылкой только на одну страницу. Ни в коем случае не делать рекламные рассылки! Это может быть расценено как спам, а сайт могут просто закрыть!</p><p><b>Разрешается делать:</b>
-		<li>Обзорные рассылки — много ссылок на разные материалы
-		<li>Извещение о начале какого-то конкурса или массового события
-		<li>Поздравительные праздничные рассылки
-		<hr>".$echo;
-		exit;
-	}
-	
-	$papka = intval($papka);
-	if ($papka == 0) $papka = ""; // search_papka
-	else $papka = " and cid = '".$papka."'";
-	$slov = str_replace("  "," ",trim($slov));
-	
-	// Определение названий всех разделов
-	$sql3 = "select `name`, `title` from `".$prefix."_mainpage` where `tables`='pages' and `type`='2'";
-	$result3 = $db->sql_query($sql3);
-	while ($row3 = $db->sql_fetchrow($result3)) {
-		$m_name = $row3['name'];
-		$m_title[$m_name] = $row3['title'];
-	}
-	
-	$soderganie .= "<div class='main_search_line'><form method=POST action=\"--search\" class=main_search_form><input type='search' placeholder='Поиск по сайту' name=slovo class='main_search_input' value=\"".$slov."\"><input type='submit' name='ok' value='Найти' class='main_search_button'> <a href='/'>Вернуться на Главную страницу</a></form></div>";
-	
-	// Заголовок
-	$pagetitle = $slovo." — Поиск — ";
-	$slovo = zamena_predlog($slov);
-	$slovo = explode(" ",$slovo);
-	for ( $i=0; $i < count($slovo); $i++ ) { 
-	$sl = strlen($slovo[$i]);
-		if ($sl > 4) $slovo[$i] = obrez($slovo[$i]);
-	}
-	$slovo = trim(implode("%",$slovo));
-
-	$numrows = $db->sql_numrows( $db->sql_query("SELECT `pid` FROM ".$prefix."_pages where `tables`='pages'".$papka." and active='1' and (copy='0' or copy=pid) and (main_text LIKE '%".$slovo."%' or title LIKE '%".$slovo."%' or open_text LIKE '%".$slovo."%' or description LIKE '%".$slovo."%') order by date desc") );
-	$nu = "";
-	if ($numrows==0 or strlen($slovo) == 0) {
-		$numrows = "ничего не найдено...";
-		$nu = explode(" ",$slov);
-		if ($nu>1) {
-			$nu = "<br><br><h3>Данное сочетание не обнаружено. Попробуйте поискать по другим словам.<br>В слове должно быть как минимум 3 буквы!</h3>"; 
-			$numrows1 = 0;
-			$numrows2 = 0;
-		}
-	}
-	
-	$soderganie .= "&nbsp; Найдено: <b>$numrows</b> <br>".$nu."<div class=main_search>";
-		if ($numrows!=0) {
-			// Список всех папок (массив)
-			$c_name = array();
-			$sql = "SELECT cid,title FROM ".$prefix."_pages_categories where `tables`='pages'";
-			$result = $db->sql_query($sql) or die('Не удалось собрать список всех папок');
-			while ($row = $db->sql_fetchrow($result)) {
-				$x_cid = $row['cid'];
-				$c_name[$x_cid] = strip_tags($row['title']);
-			}
-
-			$pids = array(); // Список похожих
-			$res2 = $db->sql_query("SELECT `pid`,`module`,`cid`,`title` FROM ".$prefix."_pages where `tables`='pages'".$papka." and active='1' and (copy='0' or copy=pid) and title LIKE '%".$slovo."%'");
-			$numrows1 = $db->sql_numrows($res2);
-			if ($numrows1 == 0) $nu = "не найдены"; else $nu = $numrows1;
-			$soderganie .= "<p><b>Совпадения в названии страницы: ".$nu."</b><ol>";
-			$admintip = "base_pages";
-			while ($row = $db->sql_fetchrow($res2)) {
-				$p_pid = $row['pid'];
-				$p_title = $row['title'];
-				$p_module = $row['module'];
-				$p_cid = $row['cid'];
-				if ($p_cid != 0) $cat = "<a class='search_cat_link' href='/-".$p_module."_cat_".$p_cid."'>".$c_name[$p_cid]."</a> ".$strelka." "; else $cat = "";
-				$soderganie .= "<li><a href='/-".$p_module."'>".$m_title[$p_module]."</a> ".$strelka." ".$cat."<a class='search_page_link' href=-".$p_module."_page_".$p_pid.">".$p_title.".</a>";
-	
-				if (is_admin($admin)) $soderganie .= "&nbsp; <a href=sys.php?op=".$admintip."_edit_page&name=".$p_module."&pid=".$p_pid." title=\"Изменить страницу в Редакторе\"><img src=images/sys/edit_1.png title=\"Изменить страницу в Редакторе\"></a><a href=sys.php?op=".$admintip."_edit_page&name=".$p_module."&pid=".$p_pid."&red=1 title=\"Изменить страницу (быстрый HTML режим)\"><img src=images/sys/edit_0.png title=\"Изменить страницу (быстрый HTML режим)\"></a>";
-				// Заносим в список
-				$pids[] = $p_pid;
-			}
-
-			$res3 = $db->sql_query("SELECT `pid`,`module`,`cid`,`title` FROM ".$prefix."_pages where `tables`='pages'".$papka." and active='1' and (copy='0' or copy=pid) and (main_text LIKE '%".$slovo."%' or open_text LIKE '%".$slovo."%')");
-			$numrows2 = $db->sql_numrows($res3);
-			if ($numrows2 == 0) $nu = "не найдены"; else $nu = $numrows2;
-			$soderganie .= "</ol><hr noshade=noshade><p><b>Совпадения в содержании (или описании) страницы: $nu</b><ol>";
-			while ($row = $db->sql_fetchrow($res3)) {
-				$p_pid = $row['pid'];
-				$p_title = $row['title'];
-				$p_module = $row['module'];
-				$p_cid = $row['cid'];
-				if ($p_cid != 0) $cat = "<a class='search_cat_link' href=-".$p_module."_cat_".$p_cid.">".$c_name[$p_cid]."</a> $strelka "; else $cat = "";
-					if (!in_array($p_pid,$pids)) {
-						$soderganie .= "<li><a href=-".$p_module.">".$m_title[$p_module]."</a> $strelka ".$cat."<a class='search_page_link' href=-".$p_module."_page_".$p_pid.">$p_title.</a>";
-						if (is_admin($admin)) $soderganie .= "&nbsp; <a href=sys.php?op=".$admintip."_edit_page&name=".$p_module."&pid=".$p_pid." title=\"Изменить страницу в Редакторе\"><img src=images/sys/edit_1.png title=\"Изменить страницу в Редакторе\"></a><a href=sys.php?op=".$admintip."_edit_page&name=".$p_module."&pid=".$p_pid."&red=1 title=\"Изменить страницу (быстрый HTML режим)\"><img src=images/sys/edit_0.png title=\"Изменить страницу (быстрый HTML режим)\"></a>";
-					}
-			}
-			$soderganie .= "</ol><p>Одинаковые с совпадениями в названии результаты не показываются.<hr noshade=noshade>";
-		}
-		if (is_admin($admin)) $soderganie .= "<h3>Редактирование страниц и эта надпись видны только вам — Администратору.</h3>";
-	$soderganie .= "</div>";
-	$block = $soderganie;
-
-	// Занесение слова в БД
-	if ($db->sql_numrows($db->sql_query("SELECT `id` FROM ".$prefix."_search where `slovo`='$slov' and ip='$ip'")) == 0 and trim($slov) != '' and !is_admin($admin)) $db->sql_query("INSERT INTO `".$prefix."_search` (`id`,`ip`,`slovo`,`data`,`pages`) VALUES (NULL, '$ip', '$slov', '$now', '$numrows1 | $numrows2');");
-
-	// Стили (основной)
-	$sql = "select id from ".$prefix."_mainpage where `tables`='pages' and `type`='1' and `name`='index'";
-	$result = $db->sql_query($sql);
-	$row = $db->sql_fetchrow($result);
-	$style_id = trim($row['id']);
-	$stil = "/css_$style_id";
-
-} elseif ($name=="-slovo") { // Поиск по ключ. словам
-	###################################################### ТЕГИ
-	global $soderganie, $tip, $DBName, $prefix, $db, $slovo, $design;
-	$slov = trim(strip_tags(urldecode(str_replace( "-","%", $slovo))));
-	$slov = str_replace("  "," ",trim($slov));
-	$slovo = str_replace(" ","%",$slov);
-	
-	// Определение названий всех разделов
-	$sql3 = "select `name`, `title` from `".$prefix."_mainpage` where `tables`='pages' and `type`='2'";
-	$result3 = $db->sql_query($sql3);
-	while ($row3 = $db->sql_fetchrow($result3)) {
-	$m_name = $row3['name'];
-	$m_title[$m_name] = $row3['title'];
-	}
-	
-	$res1 = $db->sql_query("SELECT `pid` FROM ".$prefix."_pages where `tables`='pages' and active='1' and (copy='0' or copy=pid) and (search LIKE '% ".$slovo." %') order by date desc");
-	$numrows = $db->sql_numrows($res1);
-	if ($numrows==0) {
-	$numrows = "ничего не найдено...";
-	$nu = explode(" ",$slov);
-	if ($nu>1) $numrows .= "<br>Данный тег не обнаружен.";
-	}
-	$soderganie .= "<center><div class=main_search_line align=left><table border=0 cellspacing=1 cellpadding=0><tr><td><b>Вы выбрали тег</b> (ключевое слово): <b>$slov.</b> Найдено: $numrows</td></tr></table></div><br><div class=main_search align=left><ol>
-	";
-		if ($numrows!=0) {
-		$pids = array(); // Список похожих
-		$res2 = $db->sql_query("SELECT `pid`,`module`,`cid`,`title` FROM ".$prefix."_pages where `tables`='pages' and active='1' and (copy='0' or copy=pid) and search LIKE '% ".$slovo." %'");
-		$admintip = "base_pages";
-		while ($row = $db->sql_fetchrow($res2)) {
-			$p_pid = $row['pid'];
-			$p_title = $row['title'];
-			$p_module = $row['module'];
-			$p_cid = $row['cid'];
-			$soderganie .= "<li><a href=-".$p_module.">".$m_title[$p_module]."</a> $strelka <a href=-".$p_module."_page_".$p_pid.">$p_title</a>";
-		
-			if (is_admin($admin)) $soderganie .= "&nbsp; <a href=sys.php?op=".$admintip."_edit_page&name=".$p_module."&pid=".$p_pid." title=\"Изменить страницу в Редакторе\"><img src=images/sys/edit_1.png title=\"Изменить страницу в Редакторе\"></a>&nbsp; <a href=sys.php?op=".$admintip."_edit_page&name=".$p_module."&pid=".$p_pid."&red=1 title=\"Изменить страницу (быстрый HTML режим)\"><img src=images/sys/edit_0.png title=\"Изменить страницу (быстрый HTML режим)\"></a>";
-			// Заносим в список
-			$pids[] = $p_pid;
-		}
-	$soderganie .= "</ol><hr noshade=noshade>";
-		}
-		if (is_admin($admin)) $soderganie .= "<h2>Редактирование страниц доступно только вам — администратору.</h2>";
-	$soderganie .= "</div></center>";
-	$block = $soderganie;
-	
-	// Заголовок
-	$pagetitle = $slovo." — Поиск — ";
-	
-	// Стили (основной)
-	$sql = "select id from ".$prefix."_mainpage where `tables`='pages' and `type`='1' and `name`='index'";
-	$result = $db->sql_query($sql);
-	$row = $db->sql_fetchrow($result);
-	$style_id = trim($row['id']);
-	$stil = "/css_$style_id";
-
 } else { // Сборка дизайна с разделом и Блоки
 	###################################################### БЛОКИ
 	$block = ""; // Определение раздела
-	global $title_mainpage2, $text_mainpage2, $useit_mainpage2, $pid;
 
-	// Настройки раздела по-умолчанию
-	$designpages = 0; // т.е. дизайн для страниц = дизайну разделов
-
-	if (!isset($title_mainpage2[$name])) $title_mainpage2[$name] = "";
-
-	if ($title_mainpage2[$name] == "") {
-		$main_title = ""; // ИЗМЕНА на mainfile
-		$main_file = "";
-		$main_options = "";
+	if ($name=="-slovo") {
+		list($block, $stil) = include('page/tags.php');
+		$pagetitle = $slovo." — Тэги — ";
+	} elseif ($name=="-search") {
+		list($block, $stil) = include('page/search.php');
+		$pagetitle = $slovo." — Поиск — ";
 	} else {
-		$main_title = $title_mainpage2[$name];
-		$main_file = array();
-		if (trim($text_mainpage2[$name])!="") {
-			$main_file = explode("|",  $text_mainpage2[$name]);
-			$main_options = $main_file[1];
-			$main_file = $main_file[0];
-		} else {
-			$main_options = "";
+		global $title_razdels, $txt_razdels, $useit_razdels, $pid;
+
+		// Настройки раздела по-умолчанию
+		$designpages = 0; // т.е. дизайн для страниц = дизайну разделов
+
+		if (!isset($title_razdels[$name])) $title_razdels[$name] = "";
+
+		if ($title_razdels[$name] == "") {
+			$main_title = ""; // ИЗМЕНА на mainfile
 			$main_file = "";
-		}
-	}
-	// Содержание главной страницы раздела
-	if (isset ($useit_mainpage2[$name]) ) $soda = $useit_mainpage2[$name]; else $soda = "";
-
-	parse_str($main_options); // Включили все настройки раздела
-
-	// Выбор дизайна: для страниц или раздела
-	if ($designpages != 0 and $pid != 0) $design = $designpages;
-
-	// Разберемся со стилями id, type, name, opis, sort, pages, parent
-	$style_type = array();
-	$style_name = array();
-	$style_pages = array();
-	$sql7 = "SELECT id, type, name, pages from ".$prefix."_spiski";
-	$result7 = $db->sql_query($sql7);
-	while ($row7 = $db->sql_fetchrow($result7)) {
-		$style_id = $row7['id'];
-		$style_type[$style_id] = $row7['type'];
-		$style_name[$style_id] = $row7['name'];
-		$style_pages[$style_id] = $row7['pages'];
-	}
-
-	// Определение дизайна
-	if (isset($design)) {
-		$sql4 = "select `text`, `useit` from ".$prefix."_mainpage where `tables`='pages' and `id`='$design' and type='0'";
-		$result4 = $db->sql_query($sql4);
-		$numrows = $db->sql_numrows($result4);
-	} else $numrows = 0;
-	if ($numrows > 0) {
-		$row4 = $db->sql_fetchrow($result4);
-		$block = $row4['text'];
-		$style_useit = trim($row4['useit']);
-
-		// ОТКРЫТО Определение использованных стилей в дизайне
-		$useit = explode(" ", $style_useit);
-		$n = count($useit);
-		$stil = "";
-			 for ($x=0; $x < $n; $x++) {
-				 $stil .= " $useit[$x]";
-				 $sql = "select title from ".$prefix."_mainpage where `tables`='pages' and `id`='$useit[$x]'";
-				 $result = $db->sql_query($sql);
-				 $row = $db->sql_fetchrow($result);
-				 $title = trim($row['title']);
-			 }
-		$stil = str_replace(" ","-",trim($stil));
-		$stil = "/css_$stil";
-	// ЗАКРЫТО Определение использованных стилей в дизайне
-
-	} else {
-		//global $nocash;
-		//$nocash = true;
-		die("Ошибка: «Адрес раздела» (".$name.") введен неправильно. Перейдите на <a href=/>Главную страницу</a>.");
-	}
-
-	// Получаем список всех категорий
-	global $cid_title, $cid_module;
-
-	// Определяем Главный модуль
-	if ($name == "index") {
-		// Смотрим чему равно значение Главной страницы
-		global $useit_mainpage2; // ЗАМЕНА mainpage2
-		$name13 = $useit_mainpage2[$name];
-
-		// Ставим содержание главной страницы
-		$main_file = $name13;
-		$main_options = "no";
-	}
-
-	global $soderganie, $soderganie2, $options, $ModuleName, $tip, $DBName, $page_cat, $http_siteur, $cid, $pid, $pic_ramka;
-	$options = $main_options;
-	$ModuleName = $main_title;
-	$DBName = $name; // важно не менять!
-	$tip = $main_file;
-
-	if (file_exists("page/main.php") and $main_options != "no") {
-		require_once("page/main.php");
-
-		$soda = explode("[следующий]",$soda);
-		// $soda[0] - для всех
-		// $soda[1] - только для главной страницы
-		// $soda[2] - только для папок
-		// $soda[3] - только для страниц
-
-		$soda_col = count($soda);
-		if (strpos(" ".$soda[0],"[содержание]")) $soderganie = str_replace("[содержание]", $soderganie, $soda[0]);
-		else {
-			$soderganie = str_replace("[название]", "<div class=cat_title><font class=cat_categorii_link>".$ModuleName."</font></div><div class=polosa></div>", $soda[0]);
-			$soderganie = str_replace("[страницы]", $soderganie2, $soderganie);
-		}
-
-		if ($cid=="" and $pid=="" and $soda_col > 1) {
-			if (strpos(" ".$soda[1],"[содержание]")) $soderganie = str_replace("[содержание]", $soderganie, $soda[1]);
-			else {
-				$soderganie = str_replace("[название]", "<div class=cat_title><A class=cat_categorii_link href=-".$DBName.">".$ModuleName."</a></div><div class=polosa></div>", $soda[1]);
-				$soderganie = str_replace("[страницы]", $soderganie2, $soderganie);
+			$main_options = "";
+		} else {
+			$main_title = $title_razdels[$name];
+			$main_file = array();
+			if (trim($txt_razdels[$name])!="") {
+				$main_file = explode("|",  $txt_razdels[$name]);
+				$main_options = $main_file[1];
+				$main_file = $main_file[0];
+			} else {
+				$main_options = "";
+				$main_file = "";
 			}
 		}
-
-		//if ($cid=="" and $pid=="" and $soda_col > 1) $soderganie = str_replace("[содержание]", $soderganie, $soda[1]); 
 		// Содержание главной страницы раздела
+		if (isset ($useit_razdels[$name]) ) $soda = $useit_razdels[$name]; else $soda = "";
 
-		if ($cid!="" and $pid=="" and $soda_col > 2) $soderganie = str_replace("[содержание]", $soderganie, $soda[2]); 
-		// Содержание главной страницы раздела
+		parse_str($main_options); // Включили все настройки раздела
 
-		if ($cid=="" and $pid!="" and $soda_col > 3) $soderganie = str_replace("[содержание]", $soderganie, $soda[3]); 
-		// Содержание главной страницы раздела
+		// Выбор дизайна: для страниц или раздела
+		if ($designpages != 0 and $pid != 0) $design = $designpages;
 
-		$block = str_replace("[содержание]", $soderganie, $block); 
-		// Тело раздела ставится в дизайн
-
-		// Нумерация страниц ставится в дизайн
-		if (strpos(" ".$block, "[нумерация]")) {
-			global $topic_links_global;
-			$block = str_replace("[нумерация]", $topic_links_global, $block);
+		// Разберемся со стилями id, type, name, opis, sort, pages, parent
+		$style_type = array();
+		$style_name = array();
+		$style_pages = array();
+		$sql7 = "SELECT id, type, name, pages from ".$prefix."_spiski";
+		$result7 = $db->sql_query($sql7);
+		while ($row7 = $db->sql_fetchrow($result7)) {
+			$style_id = $row7['id'];
+			$style_type[$style_id] = $row7['type'];
+			$style_name[$style_id] = $row7['name'];
+			$style_pages[$style_id] = $row7['pages'];
 		}
 
-	// Ставим содержание модуля
-	} else {
-		$block = str_replace("[содержание]", $main_file, $block);
-	}
+		// Определение дизайна и использованных стилей в дизайне
+		if (isset($design)) list($block, $stil) = design_and_style($design); else $block = "0";
+		if ($block == "0") die("Ошибка: «Адрес раздела» (".$name.") введен неправильно. Перейдите на <a href=/>Главную страницу</a>.");
+
+		// Получаем список всех папок
+		$titles_papka = titles_papka();
+
+		// Определяем Главный раздел
+		if ($name == "index") {
+			// Смотрим чему равно значение Главной страницы
+			global $useit_razdels; // ЗАМЕНА mainpage2
+			$name13 = $useit_razdels[$name];
+
+			// Ставим содержание главной страницы
+			$main_file = $name13;
+			$main_options = "no";
+		}
+
+		global $soderganie, $soderganie2, $options, $ModuleName, $tip, $DBName, $page_cat, $http_siteur, $cid, $pid, $pic_ramka;
+		$options = $main_options;
+		$ModuleName = $main_title;
+		$DBName = $name; // важно не менять!
+		$tip = $main_file;
+
+		if (file_exists("page/main.php") and $main_options != "no") {
+			require_once("page/main.php");
+
+			$soda = explode("[следующий]",$soda);
+			// $soda[0] - для всех
+			// $soda[1] - только для главной страницы
+			// $soda[2] - только для папок
+			// $soda[3] - только для страниц
+
+			$soda_col = count($soda);
+			if (strpos(" ".$soda[0],"[содержание]")) $soderganie = str_replace("[содержание]", $soderganie, $soda[0]);
+			else {
+				$soderganie = str_replace("[название]", "<div class=cat_title><font class=cat_categorii_link>".$ModuleName."</font></div><div class=polosa></div>", $soda[0]);
+				$soderganie = str_replace("[страницы]", $soderganie2, $soderganie);
+			}
+
+			if ($cid=="" and $pid=="" and $soda_col > 1) {
+				if (strpos(" ".$soda[1],"[содержание]")) $soderganie = str_replace("[содержание]", $soderganie, $soda[1]);
+				else {
+					$soderganie = str_replace("[название]", "<div class=cat_title><A class=cat_categorii_link href=-".$DBName.">".$ModuleName."</a></div><div class=polosa></div>", $soda[1]);
+					$soderganie = str_replace("[страницы]", $soderganie2, $soderganie);
+				}
+			}
+
+			//if ($cid=="" and $pid=="" and $soda_col > 1) $soderganie = str_replace("[содержание]", $soderganie, $soda[1]); 
+			// Содержание главной страницы раздела
+
+			if ($cid!="" and $pid=="" and $soda_col > 2) $soderganie = str_replace("[содержание]", $soderganie, $soda[2]); 
+			// Содержание главной страницы раздела
+
+			if ($cid=="" and $pid!="" and $soda_col > 3) $soderganie = str_replace("[содержание]", $soderganie, $soda[3]); 
+			// Содержание главной страницы раздела
+
+			$block = str_replace("[содержание]", $soderganie, $block); 
+			// Тело раздела ставится в дизайн
+
+			// Нумерация страниц ставится в дизайн
+			if (strpos(" ".$block, "[нумерация]")) {
+				global $topic_links_global;
+				$block = str_replace("[нумерация]", $topic_links_global, $block);
+			}
+
+		// Ставим содержание модуля
+		} else {
+			$block = str_replace("[содержание]", $main_file, $block);
+		}
+
+	} // крышка определения поиска и тегов
+
 /////////////////////////////////////////////////////////////////////////////////////////
 
 	# НАЧАЛО Определение блоков и их заполнение
@@ -548,7 +320,7 @@ for ($iii=0; $iii < 2; $iii++) {
 	if (trim($shablon) != "") {
 		// Доступ к шаблону
 		if (intval($shablon) == trim($shablon)) {
-			global $text_shablon;
+			$text_shablon = text_shablon();
 			if ($shablon == 0) $shablon = "";
 			else $shablon = $text_shablon[$shablon];
 		}
@@ -557,6 +329,7 @@ for ($iii=0; $iii < 2; $iii++) {
 	###########################################
 
 	// Работа с разными типами блоков
+	if (!isset($cid)) $cid = 0;
 	if (($show_in_razdel != $name and $show_in_razdel != "все") or $no_show_in_razdel == $name or ($show_in_papka != $cid and $show_in_papka != "")) {
 		$block = str_replace("[$titleX]", "", $block);
 		$nameX = "-1";
@@ -624,8 +397,8 @@ if ($media==2) { // удалить
 		$s_names = array();
 		$s_opts = array();
 		// Определим № раздела
-		global $id_mainpage2; // ЗАМЕНА mainpage2 №2
-		$r_id = $id_mainpage2[$useitX];
+		global $id_razdel_and_bd; // ЗАМЕНА mainpage2 №2
+		$r_id = $id_razdel_and_bd[$useitX];
 		
 		$result5 = $db->sql_query("SELECT id, name, text FROM ".$prefix."_mainpage WHERE `tables`='pages' and (useit = '$r_id' or useit = '0') and type='4'");
 		while ($row5 = $db->sql_fetchrow($result5)) {
@@ -747,7 +520,7 @@ if ($media==2) { // удалить
 		///////////////////////////////////////////////////////////////////////////////////
 		} else { // если без шаблона
 			 // Если показывать название папки
-			if (($catshow == 1 or $shablon != "") and $p_cid != 0) $cat = "<span class=\"block_li_cat ".$class."\">".$cid_title[$p_cid]."</span> $strelka "; else $cat = "";
+			if (($catshow == 1 or $shablon != "") and $p_cid != 0) $cat = "<span class=\"block_li_cat ".$class."\">".$titles_papka[$p_cid]."</span> $strelka "; else $cat = "";
 			global $class;
 					if ($openshow > 0) { // Если показывать предописание
 						$textX .= "<div id=venzel class=\"venzel ".$class."\"></div>";
@@ -859,8 +632,8 @@ case "4": # Блок папок раздела
 	if ($noli == 0) $textX = "<ul id=block_ul_title_$useitX class=\"block_ul_title\">"; 
 	// В эту переменную входит содержание блока
 
-	global $text_mainpage2; // ЗАМЕНА mainpage2 №3
-	$textXX = explode("|", $text_mainpage2[$useitX] );
+	global $txt_razdels; // ЗАМЕНА mainpage2 №3
+	$textXX = explode("|", $txt_razdels[$useitX] );
 	$pages = $textXX[0]; // получили название файла модуля, например, pages
 	// Определяем отношение страниц к папкам
 	if ($papki_numbers==1) {
@@ -971,8 +744,8 @@ case "8": # Блок папок ОТКРЫТОГО раздела
 	$block_title = "";
 	if ($titleshow != 2 and $titleshow != 3) $block_title .= "<h3 class=h3_block_title>".$ModuleName."</h3><div class=polosa></div>";
 	$textX = "";
-		global $text_mainpage2; // ЗАМЕНА mainpage2 №4
-		$textXX = explode("|", $text_mainpage2[$DBName] );
+		global $txt_razdels; // ЗАМЕНА mainpage2 №4
+		$textXX = explode("|", $txt_razdels[$DBName] );
 	$pages = $textXX[0]; // получили название файла модуля, например, pages
 	$num = array();
 	// Определяем отношение страниц к папкам
@@ -1372,9 +1145,9 @@ case "23": # База данных (список по нескольким ко�
 		if ($text != "") $textX .= "<tr class=base_first><td>".$text."</td></tr>";
 
 		// узнать имя БД по номеру
-		global $id_mainpage2;
-		$base_name = WhatArrayElement($id_mainpage2, $base);
-		$razdel_name = WhatArrayElement($id_mainpage2, $useitX);
+		global $id_razdel_and_bd;
+		$base_name = WhatArrayElement($id_razdel_and_bd, $base);
+		$razdel_name = WhatArrayElement($id_razdel_and_bd, $useitX);
 
 		$sql = "SELECT id, ".$col." FROM ".$prefix."_base_".$base_name." ".$where." order by ".$sort." limit ".$number.",".$size."";
 		$result = $db->sql_query($sql);
@@ -1596,11 +1369,10 @@ case "30": # Статистика раздела, выводит кол-во п�
 	}
 	
 	// Получить заголовки всех страниц и разделов
-	global $title_mainpage2, $show_page_links;
+	global $title_razdels, $show_page_links;
 	// НАЙТИ ЗАМЕНУ, к примеру функцию поиска между скобками.
-	
 		// Определяем все разделы
-		foreach( $title_mainpage2 as $key_name => $row_title ) {
+		foreach( $title_razdels as $key_name => $row_title ) {
 			$row_title = str_replace( "»","&raquo;", str_replace( "«","&laquo;", $row_title ) );
 			$row_title2 = predlogi($row_title);
 			$block = str_replace("{".$row_title."}", "<a class=auto_link href=-".$key_name.">".$row_title."</a>", $block);

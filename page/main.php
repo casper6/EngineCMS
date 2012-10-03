@@ -2769,46 +2769,47 @@ function savecomm($avtor, $avtory, $info, $num, $comm_otvet, $maily, $mail, $adr
             $db->sql_query("INSERT INTO ".$prefix."_".$tip."_comments ( `cid` , `num` , `avtor` , `mail` , `text` , `ip` , `data`, `drevo`, `adres`, `tel`, `active` ) VALUES ('', '$num', '$avtory', '$maily', '$info', '$ip', '$now', '$comm_otvet', '$adres', '$tel', '$active')");
             $db->sql_query("UPDATE ".$prefix."_".$tip." SET comm=comm+1 WHERE pid='$num'");
       }
+  
+    //global $siteurl; #######################################################################
+    //recash(str_replace("http://".$siteurl,"",getenv("HTTP_REFERER"))); // Обновление кеша ##
+    //recash(str_replace("http://".$siteurl,"",getenv("REQUEST_URI")),0); ####################
+    //    $sql = "select module from ".$prefix."_".$tip." where pid = '$num'";
+    //    $result = $db->sql_query($sql);
+    //    $row = $db->sql_fetchrow($result);
+    //    $mod = $row['module'];
+    //recash("/-".$mod."_page_".$num,0); ####################
+    ########################################################################################
+    // Отправка извещения на mail в случае ответа на коммент
+
+    // получим название модуля
+      $sql4 = "SELECT `module` from ".$prefix."_pages where `pid` = '$num'";
+      $result4 = $db->sql_query($sql4);
+      $row4 = $db->sql_fetchrow($result4);
+      $mod = $row4['module'];
+
+    if ( $comm_otvet != 0 and $active != 0 ) { // отправка уведомления о комментарии автору предыдущего коммента - ответ
+      # берем mail из коммента $comm_otvet
+      $sql = "SELECT `avtor`, `mail`, `text` FROM ".$prefix."_pages_comments WHERE `cid`='$comm_otvet'";
+      $result = $db->sql_query($sql);
+      $row = $db->sql_fetchrow($result);
+      $avtor2 = $row['avtor'];
+      $mail2 = $row['mail'];
+      $text2 = $row['text'];
+        if (trim($maily)=="") $maily = "e-mail не сообщил(а)";
+        if (trim($mail2)!="") mail($mail2, '=?koi8-r?B?'.base64_encode(convert_cyr_string($avtor2.", получен ответ на ваш комментарий на сайте ".$siteurl, "w","k")).'?=', "<h3>Здравствуйте, ".$avtor2."!</h3><b>Вы писали:</b><br><br>".str_replace("\r\n","<br>",$text2)."<br><br><b>Вам ответил(а) ".$avtory.", ".$maily.":</b><br><br>".str_replace("\r\n","<br>",$info)."<br><br>Чтобы ответить на комментарий, перейдите на сайт по <a href=http://".$siteurl."/-".$mod."_page_".$num."#comm_".$comm_otvet.">этой ссылке</a>.<br><br><br><br><b>Отвечать на это письмо не нужно</b> - оно было создано сайтом автоматически!", "Content-Type: text/html; charset=utf-8\r\nFrom: ".$maily."\r\n");
+    }
+
+    if ( $comment_send == 1 and $active != 0 ) { // отправка уведомления о комментарии администратору
+      $sql = "SELECT `cid` FROM ".$prefix."_pages_comments WHERE `avtor`='$avtory' and `text`='$info'";
+      $result = $db->sql_query($sql);
+      $row = $db->sql_fetchrow($result);
+      $cid_num = $row['cid'];
+      mail($adminmail, '=?koi8-r?B?'.base64_encode(convert_cyr_string("Комментарий на ".$siteurl." [".$now."]", "w","k")).'?=', "<b>Написал(а) ".$avtory." <".$maily.">:</b><br><br>".str_replace("\r\n","<br>",$info)."<br><br>Чтобы ответить на комментарий, перейдите <a href='http://".$siteurl."/-".$mod."_page_".$num."#comm_".$cid_num."'>на сайт</a> или в его <a href='http://".$siteurl."/red'>администрирование</a>.<br><br><br><br>Письмо создано сайтом автоматически.", "Content-Type: text/html; charset=utf-8\r\nFrom: ".$adminmail."\r\n");
+    }
   } else die('Размещать комментарии в этом разделе запрещено');
-  //global $siteurl; #######################################################################
-  //recash(str_replace("http://".$siteurl,"",getenv("HTTP_REFERER"))); // Обновление кеша ##
-  //recash(str_replace("http://".$siteurl,"",getenv("REQUEST_URI")),0); ####################
-  //    $sql = "select module from ".$prefix."_".$tip." where pid = '$num'";
-  //    $result = $db->sql_query($sql);
-  //    $row = $db->sql_fetchrow($result);
-  //    $mod = $row['module'];
-  //recash("/-".$mod."_page_".$num,0); ####################
-  ########################################################################################
-  // Отправка извещения на mail в случае ответа на коммент
-
-  // получим название модуля
-    $sql4 = "SELECT `module` from ".$prefix."_pages where `pid` = '$num'";
-    $result4 = $db->sql_query($sql4);
-    $row4 = $db->sql_fetchrow($result4);
-    $mod = $row4['module'];
-
-  if ( $comm_otvet != 0 and $active != 0 ) { // отправка уведомления о комментарии автору предыдущего коммента - ответ
-    # берем mail из коммента $comm_otvet
-    $sql = "SELECT `avtor`, `mail`, `text` FROM ".$prefix."_pages_comments WHERE `cid`='$comm_otvet'";
-    $result = $db->sql_query($sql);
-    $row = $db->sql_fetchrow($result);
-    $avtor2 = $row['avtor'];
-    $mail2 = $row['mail'];
-    $text2 = $row['text'];
-      if (trim($maily)=="") $maily = "e-mail не сообщил(а)";
-      if (trim($mail2)!="") mail($mail2, '=?koi8-r?B?'.base64_encode(convert_cyr_string($avtor2.", получен ответ на ваш комментарий на сайте ".$siteurl, "w","k")).'?=', "<h3>Здравствуйте, ".$avtor2."!</h3><b>Вы писали:</b><br><br>".str_replace("\r\n","<br>",$text2)."<br><br><b>Вам ответил(а) ".$avtory.", ".$maily.":</b><br><br>".str_replace("\r\n","<br>",$info)."<br><br>Чтобы ответить на комментарий, перейдите на сайт по <a href=http://".$siteurl."/-".$mod."_page_".$num."#comm_".$comm_otvet.">этой ссылке</a>.<br><br><br><br><b>Отвечать на это письмо не нужно</b> - оно было создано сайтом автоматически!", "Content-Type: text/html; charset=utf-8\r\nFrom: ".$maily."\r\n");
-  }
-
-  if ( $comment_send == 1 and $active != 0 ) { // отправка уведомления о комментарии администратору
-    $sql = "SELECT `cid` FROM ".$prefix."_pages_comments WHERE `avtor`='$avtory' and `text`='$info'";
-    $result = $db->sql_query($sql);
-    $row = $db->sql_fetchrow($result);
-    $cid_num = $row['cid'];
-    mail($adminmail, '=?koi8-r?B?'.base64_encode(convert_cyr_string("Комментарий на ".$siteurl." [".$now."]", "w","k")).'?=', "<b>Написал(а) ".$avtory." <".$maily.">:</b><br><br>".str_replace("\r\n","<br>",$info)."<br><br>Чтобы ответить на комментарий, перейдите <a href='http://".$siteurl."/-".$mod."_page_".$num."#comm_".$cid_num."'>на сайт</a> или в его <a href='http://".$siteurl."/red'>администрирование</a>.<br><br><br><br>Письмо создано сайтом автоматически.", "Content-Type: text/html; charset=utf-8\r\nFrom: ".$adminmail."\r\n");
-  }
 
   unset($_SESSION['captcha_keystring']);
-  Header("Location: $location");
+  Header("Location: ".$location);
 }
 ###########################################
 // Сохранение голосования

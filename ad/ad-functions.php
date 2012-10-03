@@ -108,5 +108,20 @@ function show_cids($cid_papka, $cids=array()) { // получим cid вложе
   }
   return $cids;
 }
+/////////////////////////////////////////////////////////////// 
+function titles_design() { // Дизайн: список
+    global $prefix, $db;
+    $titles_design = array();
+    $sqlX = "SELECT `id`,`title` from ".$prefix."_mainpage where `type`='0'";
+    $resultX = $db->sql_query($sqlX);
+    while ($rowX = $db->sql_fetchrow($resultX)) {
+      $idX = $rowX['id'];
+      $titles_design[$idX] = $rowX['title'];
+    }
+    return $titles_design;
+}
+/////////////////////////////////////////////////////////////// 
+
 ##########################################################################################
+
 ?>

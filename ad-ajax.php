@@ -728,8 +728,8 @@ if ($addpapka != 0) { // добавление папки / создание па
       $papka_name = $papka_name[0];
       if ($papka!="") $db->sql_query("INSERT INTO ".$prefix."_pages_categories VALUES (NULL, '$name_raz', '$papka_name', '$papka_opis', '', '0', '0', '$cid', 'pages')");
   }
-  global $title_mainpage2;
-  $GLOBALS['_RESULT'] = array("addpapka" => $title_mainpage2[$name_raz],);
+  global $title_razdel_and_bd;
+  $GLOBALS['_RESULT'] = array("addpapka" => $title_razdel_and_bd[$name_raz],);
   exit;
 }
 ##########################################################################################################################
@@ -755,7 +755,7 @@ exit;
 }
 ##########################################################################################################################
 if ($opengarbage != 0) { // Открытие вкладок Содержания
-  global $title_mainpage2;
+  global $title_razdel_and_bd;
   $color=""; $nowork = "";
   if ($opengarbage == 3 or $opengarbage == 4 or $opengarbage == 5 or $opengarbage == 6 or $opengarbage == 7) $pageslistdel = "<div class=block>";
   else $pageslistdel = "<div class=block_red>";
@@ -772,8 +772,8 @@ if ($opengarbage == 5) { // НОВОЕ
       $date = date2normal_view(str_replace(".","-",$row6['redate']), 2, 1);
       $gray_date = " gray";
       if (date2normal_view(str_replace(".","-",$row6['redate'])) == date2normal_view(str_replace(".","-",$row6['date']))) $gray_date = "";
-      if (!isset($module)) $title_mainpage2[$module] = "РАЗДЕЛ УДАЛЁН! &rarr; $module";
-      $m_title = $title_mainpage2[$module];
+      if (!isset($module)) $title_razdel_and_bd[$module] = "РАЗДЕЛ УДАЛЁН! &rarr; $module";
+      $m_title = $title_razdel_and_bd[$module];
       if ($row6['active'] == 1) $p_active_color = "white";
       else {
         $p_active_color = "#dddddd";
@@ -792,9 +792,9 @@ if ($opengarbage == 5) { // НОВОЕ
       if (trim($title) == "") $title = "< страница без названия >";
     if (strlen($row7['module']) >= 22) $module = substr($row7['module'],0,20)."...";
     else $module = $row7['module'];
-    if (!isset($module)) $title_mainpage2[$module] = "РАЗДЕЛ УДАЛЁН! &rarr; $module";
+    if (!isset($module)) $title_razdel_and_bd[$module] = "РАЗДЕЛ УДАЛЁН! &rarr; $module";
     $date = date2normal_view(str_replace(".","-",$row7['date']), 2, 1);
-    $pageslistdel .= "<tr id=2page".$pid." bgcolor=#ffffff class='tr_hover'><td class='polosa gray'><nobr>".$date."</nobr></td><td class='polosa gray'>".$title_mainpage2[$module]."</td><td class='polosa'><a title='Удалить страницу в Корзину' onclick=delpage(".$pid.") style=\"cursor:pointer;\"><img class=\"icon2 i33\" src=/images/1.gif align=right></a><a title='Изменить страницу в Редакторе' href='sys.php?op=base_pages_edit_page&name=".$module."&pid=".$pid."'><img class=\"icon2 i35\" src=/images/1.gif></a> <a title='Открыть страницу на сайте' target=_blank href=-".$module."_page_".$pid.">".$title."</a>&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>";
+    $pageslistdel .= "<tr id=2page".$pid." bgcolor=#ffffff class='tr_hover'><td class='polosa gray'><nobr>".$date."</nobr></td><td class='polosa gray'>".$title_razdel_and_bd[$module]."</td><td class='polosa'><a title='Удалить страницу в Корзину' onclick=delpage(".$pid.") style=\"cursor:pointer;\"><img class=\"icon2 i33\" src=/images/1.gif align=right></a><a title='Изменить страницу в Редакторе' href='sys.php?op=base_pages_edit_page&name=".$module."&pid=".$pid."'><img class=\"icon2 i35\" src=/images/1.gif></a> <a title='Открыть страницу на сайте' target=_blank href=-".$module."_page_".$pid.">".$title."</a>&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>";
   }
 $pageslistdel .= "</table><i>Максимум отображения: 10.000 страниц.</i>";
 
@@ -863,7 +863,7 @@ $pageslistdel .= "</table><i>Максимум отображения: 10.000 с�
     else $avtor2 = $avtor;
     if ($num != 0) {
       if (!isset($module)) $titl_mainpage = "РАЗДЕЛ УДАЛЁН! &rarr; $module";
-      else $titl_mainpage = trim($title_mainpage2[$module]);
+      else $titl_mainpage = trim($title_razdel_and_bd[$module]);
       if ($del == true) $del = "<a title='Удалить отключенный комментарий' onclick=delcomm(".$cid.") class=punkt><img class='icon2 i21' src='/images/1.gif' align=right></a>"; else $del = "";
       $pageslistdel .= "<tr onclick=show('comm".$cid."') title='Показать комментарий...' valign=top style='cursor:pointer;' class='tr_hover' id=1comm".$cid.$bgcolor."><td class='gray'><nobr>".$data."</nobr></td><td>".$del."<a onclick=offcomm(".$cid.") class=punkt>".$vkl."</a>
 
@@ -901,12 +901,12 @@ $pageslistdel .= "</table><i>Максимум отображения: 10.000 с�
               $title = strip_tags($row6['title'], '<b><strong><em><i>');
               if (trim($title) == "") $title = "< страница без названия >";
               $module = $row6['module'];
-              if ($title_mainpage2[$module] == "") $title_mainpage2[$module] = "РАЗДЕЛ УДАЛЁН! &rarr; $module";
+              if ($title_razdel_and_bd[$module] == "") $title_razdel_and_bd[$module] = "РАЗДЕЛ УДАЛЁН! &rarr; $module";
               
               $date = date2normal_view(str_replace(".","-",$row6['redate']), 2, 1);
               if ($opengarbage == 1) $recreate = "<a title='Восстановить страницу...\nЕсли её раздел или папка удалены, сначала отредактируйте и восстановите из резервных копий!' onclick=resetpage(".$pid.") style=\"cursor:pointer;\"><img class=\"icon2 i37\" src=/images/1.gif></a>";
               if ($opengarbage == 2) $recreate = "<a title='Заменить этой копией оригинал...\nПодумайте, прежде чем нажимать!' onclick=resetpage(".$pid.") style=\"cursor:pointer;\"><img class=\"icon2 i24\" src=/images/1.gif></a>";
-              $pageslistdel .= "<tr valign=top id=".$iid.$pid." bgcolor=#ffffff class='tr_hover'><td class='polosa gray'><nobr>".$date."</nobr></td><td class='polosa gray'>".$title_mainpage2[$module]."</td><td class='polosa'><a title='Удалить страницу (без возможности восстановления)' onclick=deletepage(".$pid.") style=\"cursor:pointer;\"><img class=\"icon2 i21\" src=/images/1.gif align=right></a>			
+              $pageslistdel .= "<tr valign=top id=".$iid.$pid." bgcolor=#ffffff class='tr_hover'><td class='polosa gray'><nobr>".$date."</nobr></td><td class='polosa gray'>".$title_razdel_and_bd[$module]."</td><td class='polosa'><a title='Удалить страницу (без возможности восстановления)' onclick=deletepage(".$pid.") style=\"cursor:pointer;\"><img class=\"icon2 i21\" src=/images/1.gif align=right></a>			
               <a target=_blank title='Изменить страницу' href='sys.php?op=base_pages_edit_page&name=".$module."&pid=".$pid."'><img class=\"icon2 i35\" src=/images/1.gif class=left></a><a target=_blank title='Изменить страницу в HTML' href='sys.php?op=base_pages_edit_page&name=".$module."&pid=".$pid."&red=1'><img class=\"icon2 i34\" src=/images/1.gif class=left></a>
              ".$title."&nbsp;&nbsp;".$recreate."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               <div style='display:none;' id=comm".$cid."><br><div class=block_white2>".$txt."</div></div>

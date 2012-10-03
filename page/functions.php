@@ -683,5 +683,65 @@ function time_otschet($tim, $txt, $do) { // JavaScript обратного отс
   </div>
   <script language='javascript'>fulltime();</script>";
 }
+/////////////////////////////////////////////////////////////// 
+function text_shablon() { // список шаблонов
+    global $prefix, $db;
+    $text_shablon = array(); 
+    $sqlZ = "SELECT `id`,`text` from ".$prefix."_mainpage where `tables`='pages' and type='6'";
+    $resultZ = $db->sql_query($sqlZ);
+    while ($rowZ = $db->sql_fetchrow($resultZ)) {
+      $idZ = $rowZ['id'];
+      $text_shablon[$idZ] = $rowZ['text'];
+    }
+    return $text_shablon;
+}
+/////////////////////////////////////////////////////////////// 
+function titles_papka() { // список названий папок
+    global $prefix, $db;
+    $titles_papka = array(); 
+    //$cid_module = array(); // список принадлежности папок к разделам
+    $sql55="SELECT `cid`,`module`,`title` from ".$prefix."_pages_categories where `tables`='pages' and parent_id='0' order by `title`";
+    $result55 = $db->sql_query($sql55);
+    while ($row55 = $db->sql_fetchrow($result55)) {
+      $id55 = $row55['cid'];
+      $titles_papka[$id55] = $row55['title'];
+      //$cid_module[$id55] = $row55['module'];
+    }
+    return $titles_papka;
+}
+/////////////////////////////////////////////////////////////// 
+function design_and_style($design) { // Определение дизайна
+  global $prefix, $db;
+  if (isset($design)) {
+    $sql4 = "select `text`, `useit` from ".$prefix."_mainpage where `tables`='pages' and `id`='$design' and type='0'";
+    $result4 = $db->sql_query($sql4);
+    $numrows = $db->sql_numrows($result4);
+  } else $numrows = 0;
+  if ($numrows > 0) {
+    $row4 = $db->sql_fetchrow($result4);
+    $block = $row4['text'];
+    $style_useit = trim($row4['useit']);
+
+    // ОТКРЫТО Определение использованных стилей в дизайне
+    $useit = explode(" ", $style_useit);
+    $n = count($useit);
+    $stil = "";
+       for ($x=0; $x < $n; $x++) {
+         $stil .= " ".$useit[$x];
+         //$sql = "select title from ".$prefix."_mainpage where `tables`='pages' and `id`='$useit[$x]'";
+         //$result = $db->sql_query($sql);
+         //$row = $db->sql_fetchrow($result);
+         //$title = trim($row['title']);
+         //echo $title;
+       }
+    $stil = str_replace(" ","-",trim($stil));
+    $stil = "/css_".$stil;
+  } else $block = $stil = "0";
+    return array($block, $stil);
+}
+///////////////////////////////////////////////////////////////
+
+
+
 ##########################################################################################
 ?>

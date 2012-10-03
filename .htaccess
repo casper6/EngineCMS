@@ -6,6 +6,18 @@ ErrorDocument 403 header.php?name=-error&code=403
 ErrorDocument 404 header.php?name=-error&code=404
 ErrorDocument 500 header.php?name=-error&code=500
 
+# Запрет отображения ошибок
+php_flag display_errors Off
+php_flag ignore_repeated_errors On
+php_flag ignore_repeated_source On
+
+# Запрет «волшебных» кавычек
+php_flag magic_quotes_gpc 0
+php_flag magic_quotes_runtime 0
+
+# Запрет глобальных переменных
+php_flag register_globals Off
+
 RewriteEngine On
 RewriteBase /
 

@@ -295,15 +295,16 @@ function create_main($type) {
 	break;
 
 	case "block": $type_opis = "блока (элемент содержания)";
-		
-		$razdels = array(); // Выборка разделов
-		$sql = "select id, type, title from ".$prefix."_mainpage where `tables`='pages' and (type='2' or type='5') and name!='index' order by type,title";
-		$result = $db->sql_query($sql);
-		while ($row = $db->sql_fetchrow($result)) {
-			$modul_title = $row['title'];
-			if ($row['type']==5) $razdels .=  "<option value='".$row['id']."' class='baza'>База данных «".$modul_title."»</option>";
-			else $razdels .= "<option value='".$row['id']."' class='razdely'>".$modul_title."</option>";
+		global $title_razdel_and_bd;
+		$bd_show = false;
+		$razdels = "";
+		foreach ($title_razdel_and_bd as $key => $modul_title) {
+			if (strpos(" ".$modul_title, "База данных")) {
+				$razdels .=  "<option value='".$key."' class='baza'>".$modul_title."</option>";
+				$bd_show = true;
+			} else $razdels .= "<option value='".$key."' class='razdely'>".$modul_title."</option>";
 		}
+		if ($bd_show == false) $bd_show = " disabled"; else $bd_show = "";
 
 	$typeX = array();
 	$typeX[2]  = "Текст или HTML"; 
@@ -332,11 +333,8 @@ function create_main($type) {
 	$typeX[23] = "БД (список колонок)";
 
 			$styles = ""; // Выборка дизайнов
-			$sql2 = "select id, title from ".$prefix."_mainpage where `tables`='pages' and type='0'";
-			$result2 = $db->sql_query($sql2);
-			while ($row2 = $db->sql_fetchrow($result2)) {
-				$id_design = $row2['id'];
-				$title_design = trim($row2['title']);
+			$titles_design = titles_design();
+			foreach ($titles_design as $id_design => $title_design) {
 				if ($id_design != 1) $styles .= "<option value='".$id_design."'>".$title_design."</option>";
 			}
 
@@ -347,7 +345,7 @@ function create_main($type) {
 	<input type=\"submit\" value=\"Добавить\" style='float:left; margin-right:10px; margin-top:10px; width:210px; height:55px; font-size: 20px;'>
 
 	<p><b>Название блока:</b> <input type=\"text\" name=\"title\" value=\"\" size=60 style='width:55%;'><br>
-	<p>Выберите дизайн: <select name=design><option value=0> без дизайна </option>".$styles."</select> <span class=small>(html-обрамление блока, необязательно)</span>
+	<p>Выберите дизайн: <select name=design><option value=0> без дизайна </option>".$styles."</select>
 
 	<p><b>Выберите тип блока:</b> (справа увидите его параметры (не у всех блоков), а снизу — описание)
 	<table width=100% cellspacing=0 cellpadding=0><tr valign=top><td style='padding-right:10px;'>
@@ -374,7 +372,8 @@ function create_main($type) {
 	
 	\">";
 		foreach ($typeX as $key => $tit) {
-			$create .=  "<option value=".$key.">".$tit."</option>";
+			if ($key > 19 and $key < 24) $create .=  "<option value=".$key.$bd_show.">".$tit."</option>";
+			else $create .=  "<option value=".$key.">".$tit."</option>";
 		}
 	$create .=  "</select>
 	<input type='hidden' name='useit'>
@@ -617,7 +616,7 @@ function create_main($type) {
 	</td>
 
 	</tr></table>
-	<div id='opisanie_bloka' class='notice success' style='color:black;'><span class=\"icon large white\" data-icon=\"C\"></span></span>Здесь вы увидите описание блока...</div>";
+	<div id='opisanie_bloka' class='notice success' style='color:black;'><span class=\"icon large white\" data-icon=\"C\"></span></span>Здесь вы увидите описание блока...</div> <br> <div class='notice warning black'>В выбранном дизайне обязательно должен быть блок [содержание], выбирать дизайн необязательно.</div>";
 	break;
 	########################################################!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	case "spisok": $type_opis = "поля (дополнительное поле для страниц)";
@@ -2491,14 +2490,14 @@ function mainpage_recycle_spiski() {
 }
 #####################################################################################################################
 function mainpage_create_block($title, $name, $text, $modul, $useit, $design) {
-	global $tip, $admintip, $prefix, $db, $name_mainpage2;
+	global $tip, $admintip, $prefix, $db, $name_razdels;
 	# id type name title text useit shablon
 	$title = trim($title); // Название блока
 	$name = intval($name); // тип блока
 	$useit = "|".trim($useit); // настройки блока
 	if (trim($title) == "") $title = "Вы забыли ввести название для этого блока! ОТРЕДАКТИРУЙТЕ!";
 	if ($modul != 0) {
-		$modul_name = $name_mainpage2[$modul];
+		$modul_name = $name_razdels[$modul];
 		$useit = $modul_name.$useit;
 		$shablon = "block-".$modul_name."-".$name; // css блока имеет вид: block-англ.имя раздела-тип блока
 	} else $shablon = "block-".trans($title);

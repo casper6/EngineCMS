@@ -162,22 +162,6 @@ function GraphicAdmin() {
 	$soderganie_menu .= "<button id='new_razdel_button' title='Добавить страницу...' class='small green nothing' onclick='location.href=\"/sys.php?op=base_pages_add_page#1\"'><span class=\"icon white small\" data-icon=\"+\"></span>страницу</button>
 	</div>";
 
-	/*
-	if (date("Y-m-d", filectime("map.xml")) != date("Y-m-d")) {
-	global $siteurl;
-	$url = str_replace("http://","",$siteurl);
-	$url = str_replace("www.","",$url);
-	$url = str_replace(".ru","",$url);
-	$url = str_replace("/","",$url);
-	$url = str_replace(".","_",$url);
-	$strFileName = "BackUp";
-	$date_jour = str_replace(" ", "_", date2normal_view(date ("Y-m-d"),0,0,1));
-	$link = $strFileName."_".$url."_".$date_jour.".zip";
-	echo "<br><img src=spaw2/uploads/images/icons/zip.gif align=bottom> <a href='backup/$link' class='gray'>Скачать архив сайта</a><br>";
-	// Очистка кеша
-	/////////////////////////////////////////////
-	}
-	*/
 	echo "<table style='width:100%; background: #e2e5ea; margin-top:5px; padding:0;' cellspacing=0 cellpadding=5><tr valign=top><td id='razdel_td' class='radius nothing'><div id='razdels' style='background:#e7e9ec;'>";
 
 	// Сортировка разделов: 0 - цвет, 1 - алфавит, 2 - посещаемость

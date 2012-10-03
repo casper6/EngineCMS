@@ -184,12 +184,23 @@ if ($row['realadmin'] == 1) {
 		include ("ad-header.php");
 		$ok=intval($ok);
 		// Получаем настройки из mainfile
-		global $sitename, $startdate, $adminmail, $keywords, $description, $counter, $statlink, $postlink, $stopcopy, $registr, $pogoda, $flash, $sgatie, $ht_backup, $captcha_ok, $xnocashe, $ca, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $comment_send, $company_name, $company_fullname, $company_address, $company_time, $company_tel, $company_sot, $company_fax, $company_email, $company_map, $company_people;
-		$ad_fon_option = "";
+		global $sitename, $startdate, $adminmail, $keywords, $description, $counter, $statlink, $postlink, $stopcopy, $registr, $pogoda, $flash, $sgatie, $ht_backup, $captcha_ok, $xnocashe, $ca, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $comment_send, $company_name, $company_fullname, $company_address, $company_time, $company_tel, $company_sot, $company_fax, $company_email, $company_map, $company_people, $search_design, $tag_design;
+		
+		$ad_fon_option = ""; // Выбор фоновок для админки
 		for ($i=1; $i < 28; $i++) { // всего 27 фоновок + 1 по-умолчанию в папке images/ad-fon
 			if ($ad_fon == $i) $sel = " selected"; else $sel = "";
 			$ad_fon_option .= "<option value='".$i."'".$sel.">фон №".$i."</option>";
 		}
+
+		$titles_design = titles_design(); // Выборка дизайнов
+		$id_designs = array();
+		$title_designs = array();
+		foreach ($titles_design as $id_design => $title_design) {
+			$id_designs[] = $id_design;
+			$title_designs[] = str_replace(",","[|]",$title_design);
+		}
+		$id_designs = implode(",",$id_designs);
+		$title_designs = implode(",",$title_designs);
 
 echo "<form action='".$admin_file.".php' method='post' name=\"form\">
 <div class='block radius'>";
@@ -287,9 +298,19 @@ echo "<a class='nothing punkt dark_pole' onclick=\"show_animate('show_options');
 </td></tr>
 
 <tr valign=top><td>
+Дизайн для страницы поиска:</td><td>
+".select("options[search_design]", $id_designs, $title_designs, $search_design)." <div class='notice warning black'>В выбранном дизайне обязательно должен быть блок [содержание]</div>
+</td></tr>
+
+<tr valign=top><td>
+Дизайн для страницы тэгов (ключевых слов):</td><td class=small>
+".select("options[tag_design]", $id_designs, $title_designs, $tag_design)." В выбранном дизайне обязательно должен быть блок [содержание]
+</td></tr>
+
+<tr valign=top><td>
 Преобразование {Название раздела} и {Название страницы} в ссылки на эти раздел и страницу, соответственно:</td><td class=small>
 ".select("options[show_page_links]", "0,1", "НЕТ,ДА", $show_page_links)." 
-<br>По-умолчанию включено. Если вы создаете сайт с большим количеством страниц (более 500) — желательно отключить. В случае отключения останется возможность преобразования названий разделов.
+<br>По-умолчанию отключено. Если вы создаете сайт с большим количеством страниц (более 500) — желательно отключить. В случае отключения останется возможность преобразования названий разделов.
 </td></tr>
 
 </table>
@@ -764,7 +785,7 @@ Email(ы) компании: [почта компании1]
 		global $prefix, $db, $options;
 		$mini_blocks = $options['company_name']."|||||".$options['company_fullname']."|||||".$options['company_address']."|||||".$options['company_time']."|||||".$options['company_tel']."|||||".$options['company_sot']."|||||".$options['company_fax']."|||||".$options['company_email']."|||||".$options['company_map']."|||||".$options['company_people'];
 
-		$advanced = $options['ca']."|".$options['show_comments']."|".$options['show_userposts']."|".$options['show_page']."|".$options['show_reserv']."|".$options['uskorenie_blokov']."|".$options['kickstart']."|".$options['show_page_links']."|".$options['ad_fon'];
+		$advanced = $options['ca']."|".$options['show_comments']."|".$options['show_userposts']."|".$options['show_page']."|".$options['show_reserv']."|".$options['uskorenie_blokov']."|".$options['kickstart']."|".$options['show_page_links']."|".$options['ad_fon']."|".$options['search_design']."|".$options['tag_design'];
 		// sitename	startdate	adminmail	keywords	description	counter	statlink	postlink	registr	pogoda	flash	sgatie	stopcopy	nocashe	adminmes	red	comment	captcha_ok	ht_backup
 		$db->sql_query("UPDATE `".$prefix."_config` SET `sitename` = '".$options['sitename']."',`startdate` = '".$options['startdate']."',`adminmail` = '".$options['adminmail']."',`keywords` = '".$options['keywords']."',`description` = '".$options['description']."',`counter` = '".addslashes($options['counter'])."',`statlink` = '".$options['statlink']."',`postlink` = '".$options['postlink']."',`registr` = '".$options['registr']."',`pogoda` = '".$options['pogoda']."',`flash` = '".$options['flash']."',`sgatie` = '".$mini_blocks."',`stopcopy` = '".$options['stopcopy']."', `nocashe` = '".$advanced."', `comment` = '".$options['comment_send']."', `captcha_ok` = '".$options['captcha_ok']."', `ht_backup` = '".$options['ht_backup']."' LIMIT 1 ;") or die ('Настройки не сохранилось. Видимо забыли обновить базу данных или файл настройки администрирования.');
 		Header("Location: sys.php?op=Configure&save=1");

@@ -93,13 +93,15 @@
   $ht_backup = $row['ht_backup']; // Файл, в котором лежит резервная копия .htaccess
   $captcha_ok = $row['captcha_ok']; // отключение проверки комментариев
   $ca = $show_comments = $show_userposts = "";
-  list($ca, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon) = explode("|",trim($row['nocashe']));
+  list($ca, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $search_design, $tag_design) = explode("|",trim($row['nocashe']));
   if ($show_page == "") $show_page = "1";
   if ($show_reserv == "") $show_reserv = "0";
   if ($uskorenie_blokov == "") $uskorenie_blokov = "0";
   if ($kickstart == "") $kickstart = "0";
-  if ($show_page_links == "") $show_page_links = "1";
+  if ($show_page_links == "") $show_page_links = "0";
   if ($ad_fon == "") $ad_fon = "0";
+  if ($search_design == "") $search_design = "1";
+  if ($tag_design == "") $tag_design = "1";
   list($company_name, $company_fullname, $company_address, $company_time, $company_tel, $company_sot, $company_fax, $company_email, $company_map, $company_people) = explode("|||||",trim($row['sgatie']));
   $red_type = intval($row['red']); // редактор
   if (!isset($red) or $red=="") $red = $red_type;
@@ -111,7 +113,7 @@
 ##########################################################################################
   // Получение настроек дизайна, стиля, разделов, папок и шаблонов
 
-    // проверить
+    /*
     $pages_golos = array(); // сумма голосов
     $pages_golos_num = array(); // кол-во голосовавших
     $resultX = $db->sql_query("SELECT num,golos FROM ".$prefix."_pages_golos");
@@ -122,7 +124,8 @@
       $pages_golos[$idX] = $pages_golos[$idX] + $rowX['golos'];
       $pages_golos_num[$idX] = $pages_golos_num[$idX] + 1;
     }
-
+    */
+    /*
     $text_mainpage = array(); // Дизайн и стиль: список содержания
     $useit_mainpage = array(); // Дизайн и стиль: список настроек
     $sqlX = "SELECT `id`,`text`,`useit` from ".$prefix."_mainpage where `type`='0' or `type`='1'";
@@ -132,41 +135,30 @@
       $text_mainpage[$idX] = $rowX['text'];
       $useit_mainpage[$idX] = $rowX['useit'];
     }
-    
-    $id_mainpage2 = array(); // список ID разделов
-    $title_mainpage2 = array(); // список рус. названий разделов
-    $text_mainpage2 = array(); // список содержания разделов
-    $useit_mainpage2 = array(); // список настроек разделов
-    $name_mainpage2 = array(); // список англ. названий разделов
-    $sqlY = "SELECT `id`,`name`,`title`,`text`,`useit` from `".$prefix."_mainpage` where `tables`='pages' and (`type`='2' or `type`='5')";
+    */
+
+    $id_razdel_and_bd = array(); // список ID разделов
+    $title_razdel_and_bd = array(); // список рус. названий разделов и БД
+    $title_razdels = array(); // список рус. названий разделов и БД
+    $txt_razdels = array(); // список содержания разделов
+    $useit_razdels = array(); // список настроек разделов
+    $name_razdels = array(); // список англ. названий разделов
+    $sqlY = "SELECT `id`,`type`,`name`,`title`,`text`,`useit` from `".$prefix."_mainpage` where `tables`='pages' and (`type`='2' or `type`='5')";
     $resultY = $db->sql_query($sqlY);
     while ($rowY = $db->sql_fetchrow($resultY)) {
       $nameX = $rowY['name'];
       $idX = $rowY['id'];
-      $name_mainpage2[$idX] = $rowY['name']; 
-      $id_mainpage2[$nameX] = $rowY['id']; 
-      $title_mainpage2[$nameX] = $rowY['title']; 
-      $text_mainpage2[$nameX] = $rowY['text'];
-      $useit_mainpage2[$nameX] = $rowY['useit'];
+      $id_razdel_and_bd[$nameX] = $rowY['id']; 
+      $title_razdel_and_bd[$nameX] = $rowY['title']; 
+      if ($rowY['type'] == 5) $title_razdel_and_bd[$nameX] = "База данных «".$title_razdel_and_bd[$nameX]."»";
+      else {
+        $name_razdels[$idX] = $rowY['name'];
+        $title_razdels[$nameX] = $rowY['title']; 
+        $txt_razdels[$nameX] = $rowY['text'];
+        $useit_razdels[$nameX] = $rowY['useit'];
+      }
     }
     
-    $text_shablon = array(); // список шаблонов
-    $sqlZ = "SELECT `id`,`text` from ".$prefix."_mainpage where `tables`='pages' and type='6'";
-    $resultZ = $db->sql_query($sqlZ);
-    while ($rowZ = $db->sql_fetchrow($resultZ)) {
-      $idZ = $rowZ['id'];
-      $text_shablon[$idZ] = $rowZ['text'];
-    }
-
-    $cid_title = array(); // список названий папок
-    $cid_module = array(); // список принадлежности папок к разделам
-    $sql55="SELECT `cid`,`module`,`title` from ".$prefix."_pages_categories where `tables`='pages' and parent_id='0' order by `title`";
-    $result55 = $db->sql_query($sql55);
-    while ($row55 = $db->sql_fetchrow($result55)) {
-      $id55 = $row55['cid'];
-      $cid_title[$id55] = $row55['title'];
-      $cid_module[$id55] = $row55['module'];
-    }
   // отключение кеширования для выборочных страниц // доработать
   //$nocash = explode(" ",$mods."/?name=-search /--search ".trim(str_replace("  "," ",str_replace("\n"," ",$row['nocashe']))));
   ///////////////////////////////////////////////////////////////////////////////////////////////
