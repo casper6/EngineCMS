@@ -76,7 +76,7 @@ $c_title2 = array();
   $result = $db->sql_query($sql);
   while ($row = $db->sql_fetchrow($result)) {
     $c_cid = $row['cid'];
-    $c_title[$c_cid] = strip_tags($row['title']);
+    $c_title[$c_cid] = $row['title'];
     $c_description[$c_cid] = $row['description'];
     $c_parent[$c_cid] = $row['parent_id'];
   }
@@ -85,7 +85,7 @@ $c_title2 = array();
   $result = $db->sql_query($sql);
   while ($row = $db->sql_fetchrow($result)) {
     $c_cid2 = $row['cid'];
-    $c_title2[$c_cid2] = strip_tags($row['title']);
+    $c_title2[$c_cid2] = $row['title'];
   }
 //}
 #######
@@ -222,7 +222,7 @@ $links2 .= "<div class='main_cat_links'>";
         $result = $db->sql_query($sql);
         while ($row = $db->sql_fetchrow($result)) {
           $c_cid4 = $row['cid'];
-          $c_title4 = strip_tags($row['title']);
+          $c_title4 = $row['title'];
           //$c_description[$c_cid] = $row['description'];
 
           // Кол-во страниц в подразделах
@@ -287,7 +287,7 @@ $sql = "SELECT cid,title FROM ".$prefix."_".$tip."_categories where module='$DBN
 $result = $db->sql_query($sql) or die('Не удалось собрать список всех папок');
 while ($row = $db->sql_fetchrow($result)) {
 $x_cid = $row['cid'];
-$c_name[$x_cid] = strip_tags($row['title']);
+$c_name[$x_cid] = $row['title'];
 }
 
 // списки
@@ -319,7 +319,7 @@ while ($row2 = $db->sql_fetchrow($result2)) {
   $p_pid = $row2['pid'];
   $pсid = $row2['cid'];
   if ($pсid != 0) $p_name = "<div class='cat_page_cattitle'><a href='/-".$DBName."_cat_".$pсid."' class='cat_page_cattitle'>".$c_name[$pсid]."</a></div>"; else $p_name = "";
-  $title = strip_tags($row2['title']);
+  $title = $row2['title'];
   $text = $row2['open_text'];
   ///////////////////////////
   $text = str_replace("[заголовок]","",$text); // Убираем Заголовок, использованный в блоке!
@@ -554,10 +554,10 @@ $sql = "SELECT cid, title FROM ".$prefix."_pages_categories where module='$DBNam
 $result = $db->sql_query($sql);
 while ($row = $db->sql_fetchrow($result)) {
 $x_cid = $row['cid'];
-$c_name[$x_cid] = strip_tags($row['title']);
+$c_name[$x_cid] = $row['title'];
 //$c_pic[$x_cid] = $row['pic'];
   if ($cid==$x_cid) { // ?????????????????? может быть убрать!
-    $cid_title = strip_tags($row['title']);
+    $cid_title = $row['title'];
     //$cid_pic = $row['pic'];
   }
 }
@@ -655,7 +655,7 @@ $color = 1;
     $p_pid = $row2['pid'];
     $pсid = $row2['cid'];
     if ($pсid!=0 and $cid == 0) $p_name="<div class='cat_page_cattitle'><a href='/-".$DBName."_cat_".$pсid."' class='cat_page_cattitle'>".$c_name[$pсid]."</a></div>"; else $p_name = "";
-    $title = strip_tags(filter($row2['title']));
+    $title = filter($row2['title']);
     $open_text = filter($row2['open_text']);
     if (trim($open_text) == "<br><br>") $open_text = "";
     $text = filter($row2['main_text']);
@@ -1192,7 +1192,7 @@ if ( $cid=="" or ($active != 1 and !is_admin($admin))) {
   $search = filter(trim(str_replace("  "," ",$row['search'])));
   $keys = filter($row['keywords']);
   $desc = filter($row['description']);
-  $title = str_replace("<p>","",str_replace("</p>","",strip_tags($row['title'])));
+  $title = str_replace("<p>","",str_replace("</p>","",$row['title']));
   $titl = str_replace("\"","",$title); 
   $opentext = str_replace("jpg\"><img ","jpg\" class=\"lightbox\" rel=\"page\"><img ", filter(str_replace("<img ","<img title='$titl' ", $row['open_text'])));
   $bodytext = str_replace("jpg\"><img ","jpg\" class=\"lightbox\" rel=\"page\"><img ", filter(str_replace("<img ","<img title='$titl' ", $row['main_text'])));
@@ -1422,7 +1422,7 @@ $sql = "SELECT pid, title, date FROM ".$prefix."_".$tip." WHERE `tables`='pages'
 $page_search_news .= "<br><div class=page_another>В тему:</div> <div class=another_links>";
   while($row = $db->sql_fetchrow($result)) {
   $p_pid = $row['pid'];
-  $p_title = strip_tags($row['title'], '<b><i>');
+  $p_title = $row['title'];
   $dat2 = explode(" ",$row['date']);
   $dat2 = explode("-",$dat2[0]);
   $p_p_date = intval($dat2[2])." ".findMonthName($dat2[1])." ".$dat2[0];
@@ -2067,7 +2067,7 @@ function addpost($cid) {
     $ret .= "<label><b>Выберите раздел:</b></label> <select name='num'>".$main."";
     while ($row = $db->sql_fetchrow($result)) {
       $cid2 = $row['cid'];
-      $title = strip_tags($row['title']);
+      $title = $row['title'];
       $parentid = $row['parent_id'];
       $title = getparent_for_addpost($DBName,$parentid,$title);
       if ($parentid != 0) $title = "&bull; ".$title;
@@ -2111,7 +2111,7 @@ function addpost($cid) {
     $result = $db->sql_query($sql);
     while ($row = $db->sql_fetchrow($result)) {
       $s_id = $row['id'];
-      $s_title = strip_tags($row['title']);
+      $s_title = $row['title'];
       $s_name = $row['name'];
       $options = explode("|", $row['text']); $options = $options[1];
       $type=0; $shablon=""; 
@@ -2678,83 +2678,86 @@ function savecomm($avtor, $avtory, $info, $num, $comm_otvet, $maily, $mail, $adr
 
   if ($comments_add == 2) $active = 0;
 
-  $location = "/-".$DBName;
+  //$location = "/-".$DBName;
 
   if ($comments_add != 0) {
-  $num = intval($num);
-  $comm_otvet = intval($comm_otvet);
-  $avtory = trim(str_replace("  "," ",filter($avtory)));
-  $maily = trim(str_replace("  "," ",filter($maily)));
-  $adres = trim(str_replace("  "," ",filter($adres)));
-  $tel = trim(str_replace("  "," ",filter($tel)));
-  $info = bbcode(trim(str_replace("document.cookie","",$info)));
+    $num = intval($num);
+    $comm_otvet = intval($comm_otvet);
+    $avtory = trim(str_replace("  "," ",filter($avtory)));
+    $maily = trim(str_replace("  "," ",filter($maily)));
+    $adres = trim(str_replace("  "," ",filter($adres)));
+    $tel = trim(str_replace("  "," ",filter($tel)));
+    $info = bbcode(trim(str_replace("document.cookie","",$info)));
 
-  $info = str_replace("http://".$siteurl, $siteurl, $info);
-  $info = str_replace("http://www.onlinedisk.ru", "www.onlinedisk.ru", $info);
+    $info = str_replace("http://".$siteurl, $siteurl, $info);
+    $info = str_replace("http://www.onlinedisk.ru", "www.onlinedisk.ru", $info);
 
-  $info = str_replace(":)", "<img src=/images/smilies/04.gif>", $info);
-  $info = str_replace(":(", "<img src=/images/smilies/11.gif>", $info);
+    $info = str_replace(":)", "<img src=/images/smilies/04.gif>", $info);
+    $info = str_replace(":(", "<img src=/images/smilies/11.gif>", $info);
 
-  $info = str_replace(" ,", ",", $info);
-  $info = str_replace("!", "! ", str_replace(" !", "!", $info));
-  $info = str_replace("! !", "!", str_replace("! ! !", "!!!", $info));
+    $info = str_replace(" ,", ",", $info);
+    $info = str_replace("!", "! ", str_replace(" !", "!", $info));
+    $info = str_replace("! !", "!", str_replace("! ! !", "!!!", $info));
 
-  $cyr = range("А","я");
-  foreach($cyr as $lit) { 
-    $info = str_replace($lit.".", $lit.". ", $info);
-    $info = str_replace($lit.",", $lit.", ", $info);
-  }
-
-  $info = str_replace(". ..", "...", $info);
-
-  if ($tema_zapret_comm == 1) {
-    $avtory = str_replace("http://", "", $avtory);
-    $info = str_replace("http://", "", $info);
-    $adres = str_replace("http://", "", $adres);
-    $tel = str_replace("http://", "", $tel);
-  }
-  if ($tema_zapret_comm == 2 and ( strpos(" ".$avtory, "://") or strpos(" ".$info, "://") or strpos(" ".$maily, "://") or strpos(" ".$adres, "://") or strpos(" ".$tel, "://") ) ) die('Запрещено размещать информацию, содержащую ссылки.');
-
-  if ($avtor != "" or $mail != "" or !preg_match("#[а-яА-Я]#i",$info)) die('Запрещено размещать спам.');
-
-  //$open_mails = array(".hu","quantumwise.com",".hu","insproiws.com",".br",".nl",".fr",".cn","usa.net","nasimke.com","ymail.com","mail.com","yahoo.com","hotmail.com","msn.com","yandex.com","gmx.com","i.ua","meta.ua","yandex.ua","ukr.net","bigmir.net");
-  $open_mails2 = array("hu","br","nl","fr","cn","com","net","ua","uk","nl","de","fd");
-  $mail_server = explode("@",$maily);
-  $mail_server = $mail_server[1];
-  $mail_server2 = explode(".",$mail_server);
-  if ($mail_server2[2] != "") $mail_server2[2] = ".".$mail_server2[2];
-  $mail_server2 = $mail_server2[1].$mail_server2[2];
-  //if (in_array($mail_server,$open_mails)) $active = 0; 
-  if (in_array($mail_server2,$open_mails2)) $active = 0;
-  if ($mail_server == "gmail.com") $active = 1;
-
-  $pattern = "/www.onlinedisk.ru\/image\/"."(\d+)"."\/"."([а-яА-ЯA-Za-z0-9 _-]+)".".jpg"."/i";
-  $replacement = "<a href=http://www.onlinedisk.ru/get_image.php?id=$1 target=_blank><img src=/includes/phpThumb/phpThumb.php?src=http://www.onlinedisk.ru/get_image.php?id=$1&w=200&h=200&q=45 width=200 /></a> ";
-  $info =  preg_replace($pattern, $replacement, $info);
-
-  $location = "/-".$DBName."_page_".$num."#comm";
-  $addcomm = false;
-
-  $ok_mail = true; // Запрет отправки комментариев с некоторых e-mail
-  if ( strpos(" ".$maily, ".tv") ) $ok_mail = false;
-
-  if ($avtory != "" AND $info != "") {
-    if( ( (isset($_SESSION['captcha_keystring']) && $_SESSION['captcha_keystring'] == $_POST['keystring']) or $captcha_ok == 1) and ($ok_mail == true) ){
-      if ($commentagain==1) {
-        // Проверка существования комментария данного юзера
-        $sql = "SELECT cid FROM ".$prefix."_".$tip."_comments WHERE ip='$ip' and num='$num'";
-        $resnum = $db->sql_query($sql);
-          if ($numrows = $db->sql_numrows($resnum) > 0) {
-          // т.е. если уже есть - на страницу переброс
-          } else $addcomm = true;
-      } else $addcomm = true;
-    } else {
-      if (is_admin($admin)) { 
-        $addcomm = true;
-        $maily = $adminmail; // под вопросом!
-      } else die("<b>Ошибка: Вы неправильно ввели цифровой код, необходимый для подтверждения вашей человечности!</b><p>Нажмите кнопку Назад в браузере, чтобы вернуться на предыдущую страницу. Обновите страницу [клавиша F5], если код АнтиСпама не изменится на новый.");
+    $cyr = range("А","я");
+    foreach($cyr as $lit) { 
+      $info = str_replace($lit.".", $lit.". ", $info);
+      $info = str_replace($lit.",", $lit.", ", $info);
     }
-  } else die("<b>Ошибка: Вы не ввели сообщение или свое имя!</b><p>Нажмите кнопку Назад в браузере, чтобы вернуться на предыдущую страницу");
+
+    $info = str_replace(". ..", "...", $info);
+
+    if ($tema_zapret_comm == 1) {
+      $avtory = str_replace("http://", "", $avtory);
+      $info = str_replace("http://", "", $info);
+      $adres = str_replace("http://", "", $adres);
+      $tel = str_replace("http://", "", $tel);
+    }
+    if ($tema_zapret_comm == 2 and ( strpos(" ".$avtory.$info.$maily.$adres.$tel, "://") or strpos(" ".$avtory.$info.$maily.$adres.$tel, "www.") ) ) die('Запрещено размещать информацию, содержащую ссылки.');
+
+    if ($avtor != "" or $mail != "" or !preg_match("#[а-яА-Я]#i",$info)) die('Запрещено размещать спам.');
+
+    //$open_mails = array(".hu","quantumwise.com",".hu","insproiws.com",".br",".nl",".fr",".cn","usa.net","nasimke.com","ymail.com","mail.com","yahoo.com","hotmail.com","msn.com","yandex.com","gmx.com","i.ua","meta.ua","yandex.ua","ukr.net","bigmir.net");
+    //$open_mails2 = array("hu","br","nl","fr","cn","com","net","ua","uk","nl","de","fd");
+
+    // Разрешаем активацию входящих email для .ru и gmail.com
+    $mail_server = explode("@",$maily);
+    $mail_server = $mail_server[1];
+    $mail_server2 = explode(".",$mail_server);
+    if ($mail_server2[2] != "") $mail_server2[2] = ".".$mail_server2[2];
+    $mail_server2 = $mail_server2[1].$mail_server2[2];
+    //if (in_array($mail_server,$open_mails)) $active = 0; 
+    //if (in_array($mail_server2,$open_mails2)) $active = 0;
+    if ($mail_server == "gmail.com") $active = 1;
+    if ($mail_server2 == "ru") $active = 1;
+
+    //$pattern = "/www.onlinedisk.ru\/image\/"."(\d+)"."\/"."([а-яА-ЯA-Za-z0-9 _-]+)".".jpg"."/i";
+    //$replacement = "<a href=http://www.onlinedisk.ru/get_image.php?id=$1 target=_blank><img src=/includes/phpThumb/phpThumb.php?src=http://www.onlinedisk.ru/get_image.php?id=$1&w=200&h=200&q=45 width=200 /></a> ";
+    //$info =  preg_replace($pattern, $replacement, $info);
+
+    $location = "/-".$DBName."_page_".$num."#comm";
+    $addcomm = false;
+
+    $ok_mail = true; // Запрет отправки комментариев с некоторых e-mail
+    if ( strpos(" ".$maily, ".tv") ) $ok_mail = false;
+
+    if ($avtory != "" AND $info != "") {
+      if( ( (isset($_SESSION['captcha_keystring']) && $_SESSION['captcha_keystring'] == $_POST['keystring']) or $captcha_ok == 1) and ($ok_mail == true) ){
+        if ($commentagain==1) {
+          // Проверка существования комментария данного юзера
+          $sql = "SELECT cid FROM ".$prefix."_".$tip."_comments WHERE ip='$ip' and num='$num'";
+          $resnum = $db->sql_query($sql);
+            if ($numrows = $db->sql_numrows($resnum) > 0) {
+            // т.е. если уже есть - на страницу переброс
+            } else $addcomm = true;
+        } else $addcomm = true;
+      } else {
+        if (is_admin($admin)) { 
+          $addcomm = true;
+          $maily = $adminmail; // под вопросом!
+        } else die("<b>Ошибка: Вы неправильно ввели цифровой код, необходимый для подтверждения вашей человечности!</b><p>Нажмите кнопку Назад в браузере, чтобы вернуться на предыдущую страницу. Обновите страницу [клавиша F5], если код АнтиСпама не изменится на новый.");
+      }
+    } else die("<b>Ошибка: Вы не ввели сообщение или свое имя!</b><p>Нажмите кнопку Назад в браузере, чтобы вернуться на предыдущую страницу");
 
     // Проверка наличия подобного комментария.
     $sql = "SELECT cid FROM ".$prefix."_".$tip."_comments WHERE text='$info' and num='$num'";
@@ -2766,8 +2769,7 @@ function savecomm($avtor, $avtory, $info, $num, $comm_otvet, $maily, $mail, $adr
             $db->sql_query("INSERT INTO ".$prefix."_".$tip."_comments ( `cid` , `num` , `avtor` , `mail` , `text` , `ip` , `data`, `drevo`, `adres`, `tel`, `active` ) VALUES ('', '$num', '$avtory', '$maily', '$info', '$ip', '$now', '$comm_otvet', '$adres', '$tel', '$active')");
             $db->sql_query("UPDATE ".$prefix."_".$tip." SET comm=comm+1 WHERE pid='$num'");
       }
-
-  }
+  } else die('Размещать комментарии в этом разделе запрещено');
   //global $siteurl; #######################################################################
   //recash(str_replace("http://".$siteurl,"",getenv("HTTP_REFERER"))); // Обновление кеша ##
   //recash(str_replace("http://".$siteurl,"",getenv("REQUEST_URI")),0); ####################
@@ -2981,7 +2983,7 @@ function search($slovo="", $modul, $papka=0) {
   	$soderganie .= "<hr noshade=noshade><p><b>Совпадения в названии: $numrows</b><ol>";
   	while ($row = $db->sql_fetchrow($resultX)) {
     	$p_pid = $row['pid'];
-    	$p_title = strip_tags($row['title']);
+    	$p_title = $row['title'];
     	$soderganie .= "<li><a href=/-".$modul."_page_".$p_pid.">".$p_title."</a>";
     	// Заносим в список
     	$pids[] = $p_pid;
@@ -2993,7 +2995,7 @@ function search($slovo="", $modul, $papka=0) {
   	$soderganie .= "</ol><hr noshade=noshade><p><b>Совпадения в содержании: $numrows</b><ol>";
   	while ($row = $db->sql_fetchrow($resultX)) {
     	$p_pid = $row['pid'];
-    	$p_title = strip_tags($row['title']);
+    	$p_title = $row['title'];
     	if (!in_array($p_pid,$pids)) $soderganie .= "<li><a href=/-".$modul."_page_".$p_pid.">".$p_title."</a>";
   	}
   	$soderganie .= "</ol><p>Одинаковые с совпадениями в названии не показываются.<hr noshade=noshade>";
@@ -3046,22 +3048,13 @@ function getparent_for_addpost($name, $parentid, $title) {
   }
 }
 ##############################################################
-// Определяем, что будем показывать... Show time!
+// Определяем, что будем показывать...
 switch($go) {
 case "showcat":
 global $cid, $pag, $slovo; //, $tip, $prefix, $db, $ModuleName; //, $pagetitle, $pagetitle2
 //echo "$blocks";
 showcat($cid, $pag, $slovo);
 break;
-/*
-$c_titleX = "";
-if ($cid != 0) {
-  $sqlX = "SELECT title FROM ".$prefix."_".$tip."_categories WHERE cid='$cid' and `tables`='pages'";
-  $resultX = $db->sql_query($sqlX);
-  $rowX = $db->sql_fetchrow($resultX);
-  $c_titleX = strip_tags($rowX['title']);
-}
-*/
 
 case "page":
 page($pid, $all);

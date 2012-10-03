@@ -1,29 +1,14 @@
 <?php
 header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
 header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
+header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Cache-Control: post-check=0, pre-check=0", false);
-header("Pragma: no-cache"); // HTTP/1.0
-//require_once("mainfile.php");
+header("Pragma: no-cache");
 @require_once("config.php"); // Настройки сайта
 @require_once("includes/db.php"); // База данных (функции для работы)
 @require_once("includes/sql_layer.php");
 require_once("shablon.php");
 global $prefix, $db; // , $ad, $id, $desc, $sha, $vetki, $comments_num, $comments_all, $comments_mail, $comments_adres, $comments_tel;
-
-//, $ad, $id, $desc, $sha, $vetki, $comments_num, $comments_all, $comments_mail, $comments_adres, $comments_tel;
-//$admin = intval($_GET['adm']); 
-
-/*
-foreach ($_COOKIE AS $c_key => $c_val) { 
-    if (isset($_POST[$c_key]) OR isset($_GET[$c_key])) unset($_COOKIE[$c_key]); 
-}  
- if (!ini_get('register_globals')) { 
- extract($_POST, EXTR_SKIP); 
- extract($_GET, EXTR_SKIP); 
- extract($_COOKIE, EXTR_SKIP); 
-} 
-*/
 
 if (isset($_COOKIE['admin'])) {
   if ($_COOKIE['admin'] != "") $admin = 1; else $admin = 0;
@@ -42,16 +27,10 @@ $comments_adres = intval($_GET['adres']);
 $comments_tel = intval($_GET['tel']);
 
 $url = getenv("REQUEST_URI");
-//if ($comm > 0) {
-//if ($comments_num > 0) $lim = " limit 0,$comments_num"; else 
+
 $lim = ""; // доделать на аяксе
 if ($comments_desc == 1) $dat = " desc"; else $dat = "";
 
-//$sql_comm = "SELECT num FROM ".$prefix."_pages_comments WHERE num='$pid' and active='1'";
-//echo "<!-- $sql_comm -->";
-//$result = $db->sql_query($sql_comm);
-//$all_numrows = $db->sql_numrows($result);
-//if ($all_numrows > 0) {
   $sql_comm = "SELECT `cid`,`avtor`,`ava`,`mail`,`text`,`ip`,`data`,`drevo`,`adres`,`tel` FROM ".$prefix."_pages_comments WHERE `num`='$pid' and `active`='1' order by drevo, data".$dat.$lim;
   $result = $db->sql_query($sql_comm);
   $numrows = $db->sql_numrows($result);
@@ -139,7 +118,6 @@ $text2 = str_replace(',', ', ', $text[$comm_cid]);
     //$comm_citata = " <a href=\"#addcomm\" title='Вставить как цитату в комментарий №$comm_cid' onclick=\"var s=document.getElementById('comm_".$comm_cid."').innerHTML; clc_name(' [quote] ".$avtor[$comm_cid]." писал(а): ' + citata_shock(s) + '[/quote] ')\" class='no citata'>Цитата</a>";
 
     $avtor_type = "Гость";
-    //if(strpos($avtor_type,"<img")) $avtor_type = "Зарегистрированный";
 
     if ($admin==1) $comment_admin = "<a href=/sys.php?op=base_comments_edit_comments&cid=".$comm_cid."&red=1 title='Изменить в HTML'><img src='/images/sys/edit_0.png' align=bottom width=16></a> <a href=/sys.php?op=base_pages_delit_comm&cid=".$comm_cid."&ok=ok&pid=".$pid." title='Удалить'><img align=bottom src=/images/sys/del.png width=16></a> "; else $comment_admin = "";
 

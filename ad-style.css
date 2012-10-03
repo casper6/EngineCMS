@@ -208,7 +208,7 @@ img.bigicon {margin-bottom: 5px; width:128px; height:128px; border:0; float:left
 .white {color: #222;} 
 .white:hover {color: #111;} 
 
-#razdels { max-height: 600px; min-width:300px; padding-bottom:20px; overflow:auto;}
+#razdels { min-width:300px; padding-bottom:20px; overflow:auto;}
 
 div.b4f3b4 {background: #b4f3b4; border:1px solid gray;}
 .b4f3b4 {color: green;}

@@ -1,72 +1,24 @@
-Options -Indexes +FollowSymLinks
+AddDefaultCharset utf-8
 
-#Может вызывать Internal Server Error (осторожно!) - позволяет убирать слеши в конце ссылок
-#DirectorySlash off
-
-#Разрешаем выполнения Rewrite_mod 
-RewriteEngine On
-
-#Устанавливаем начальный адрес преобразования
-RewriteBase /
-
-#Опция настройки страниц ошибок 403, 404 и 500. Можно добавить другие ошибки.
+# Опция настройки страниц ошибок 401, 403, 404 и 500
+ErrorDocument 401 ?name=-error&code=401
 ErrorDocument 403 ?name=-error&code=403
 ErrorDocument 404 ?name=-error&code=404
 ErrorDocument 500 ?name=-error&code=500
 
-#Запрещения доступа к выбранным файлам
-RewriteRule ^.htaccess$ - [F]
+RewriteEngine On
+RewriteBase /
 
-#Опция позволяет блокировать пользователей либо роботов по адресу, маске или диапазону адресов ip
-#RewriteCond %{REMOTE_ADDR} ^217.0.0.1|127.0.0.1|10.0.0|10.0.0.([10-200]*)$
-#RewriteRule ^.*$ [R=404]
+RewriteRule ^index.php header.php
+RewriteRule ^index.htm header.php
+RewriteRule ^index.html header.php
 
-#Опция заставляющая сервер принудительно отправлять браузеру данные в нужной кодировке 
-AddDefaultCharset utf-8
-
-# Время жизни статичных файлов в кеше
-<IfModule mod_expires.c>
-   ExpiresActive on
-   ExpiresByType image/gif "access plus 50 days"
-   ExpiresByType image/jpeg "access plus 50 days"
-   ExpiresByType image/png "access plus 50 days"
-   ExpiresByType text/css "access plus 10 days"
-   ExpiresByType text/javascript "access plus 10 days"
-   ExpiresDefault "access plus 10 hours"
-</IfModule>
-
-#Опция настройки вывода ошибок выполнения скрипов (2047 => 4096)
-php_value error_reporting 4096
-
-# Запись лога ошибок
-#php_flag log_errors On
-#php_value error_log err.log
-
-# Запрет отображения ошибок
-php_flag display_errors Off
-php_flag ignore_repeated_errors On
-php_flag ignore_repeated_source On
-
-# Запрет «волшебных» кавычек
-php_flag magic_quotes_gpc 0
-php_flag magic_quotes_runtime 0
-
-# Запрет глобальных переменных
-php_flag register_globals Off
-
-# Защита от дурака
 RewriteRule ^admin/ /
 RewriteRule ^red/ /
-
-# Администрирование сайта
 RewriteRule ^admin sys.php
 RewriteRule ^red sys.php
-
-# RSS-канал
 RewriteRule ^rss rss.php
 
-# Правила обратного (теневого) преобразования
-#############################################
 RewriteRule ^--slovo_([а-яА-Яa-zA-Z0-9%+-]*) ?name=-slovo&slovo=$1
 RewriteRule ^--search ?name=-search
 RewriteRule ^--email ?name=-email

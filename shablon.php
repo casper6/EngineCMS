@@ -132,7 +132,7 @@ case "1": return "<DIV id=comments_1_commentbubble>
 <TR> 
 <TD background=/images/shablon/comments/left2.gif>&nbsp;</TD> 
 <TD colspan=2> 
-<DIV id=comments_1_commentbody2><img src=/spaw2/uploads/images/icons/user.gif align=bottom> <SPAN class=comment_avtor>[comment_avtor]</SPAN></DIV>
+<DIV id=comments_1_commentbody2><img src=/images/user.png align=bottom> <SPAN class=comment_avtor>[comment_avtor]</SPAN></DIV>
 <DIV id=comments_1_comment class=comment_text>[comment_text]<br>
 [comment_otvet]<span style='margin-left:10px;'>[comment_otvet_show]</span> [comment_admin]
 </DIV> 
@@ -156,7 +156,7 @@ case "2": return "<DIV id=comments_1_commentbubble><div class='comm_polosa'></di
 <DIV class='comment_otvet'>[comment_otvet] [comment_otvet_show]</DIV>
 </DIV>"; break;
 // Стандартные комментарии
-default: return "<A name=comment_[comment_id]></A><SPAN class=comments_1_commentnumber>[comment_num]. </SPAN> <img src=/spaw2/uploads/images/icons/user.gif align=bottom class=comments_1_commentavatar> <SPAN class=comment_avtor>[comment_avtor]</SPAN><SPAN style='margin-left:15px;' class=comment_data>[comment_data] в [comment_time]</SPAN><br>
+default: return "<A name=comment_[comment_id]></A><SPAN class=comments_1_commentnumber>[comment_num]. </SPAN> <img src=/images/user.png align=bottom class=comments_1_commentavatar> <SPAN class=comment_avtor>[comment_avtor]</SPAN><SPAN style='margin-left:15px;' class=comment_data>[comment_data] в [comment_time]</SPAN><br>
 				<div class=comment_mail>[comment_mail]</div>
 				<div class=comment_adres>[comment_adres]</div>
 				<div class=comment_tel>[comment_tel]</div>

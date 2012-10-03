@@ -7,6 +7,9 @@
     $GLOBALS[$key] = (!isset($value)) ? '' : $value;
   }
 
+  $agent=" ".getenv("HTTP_USER_AGENT"); # Защита от скачивания
+    if (strpos($agent,"DISCo Pump") || strpos($agent,"Offline Explorer") || strpos($agent,"Teleport") || strpos($agent,"WebZIP") || strpos($agent,"WebCopier") || strpos($agent,"Wget") || strpos($agent,"FlashGet") || strpos($agent,"CIS TE") || strpos($agent,"DTS Agent") || strpos($agent,"WebReaper") || strpos($agent,"HTTrack") || strpos($agent,"Web Downloader")) { die("Хорош уже скачивать!"); } 
+  
   unset($pagetitle); 
   if(!defined('END_TRANSACTION')) {
     define('END_TRANSACTION', 2);
@@ -117,7 +120,7 @@
   //$postString = str_replace(" Union ", "crazy", $postString); // баг.
   $postString_64 = base64_decode($postString);
   if (stripos_clone($postString,'%20union%20') OR stripos_clone($postString,'*/union/*') OR stripos_clone($postString,' union ') OR stripos_clone($postString_64,'%20union%20') OR stripos_clone($postString_64,'*/union/*') OR stripos_clone($postString_64,' union ') OR stripos_clone($postString_64,'+union+') OR stripos_clone($postString_64,'http://') OR (stripos_clone($postString_64,'cmd=') AND !stripos_clone($postString_64,'&cmd')) OR (stripos_clone($postString_64,'exec') AND !stripos_clone($postString_64,'execu')) OR stripos_clone($postString_64,'concat') OR (stripos_clone($postString,'http-equiv')) OR (stripos_clone($postString_64,'http-equiv')) OR (stripos_clone($postString,'alert(')) OR (stripos_clone($postString_64,'alert(')) OR (stripos_clone($postString,'javascript:')) OR (stripos_clone($postString_64,'javascript:')) OR (stripos_clone($postString,'document.cookie')) OR (stripos_clone($postString_64,'document.cookie')) OR (stripos_clone($postString,'onmouseover=')) OR (stripos_clone($postString_64,'onmouseover=')) OR (stripos_clone($postString,'document.location')) OR (stripos_clone($postString_64,'document.location'))) {
-    die('Попытка взлома, тип 4');
+    die('Попытка взлома, тип 4<br>Возможно, что вы ввели «javascript:» перед JS-запросом в ссылке. Делать этого не нужно, т.к. и без этого JS-код будет работать.');
   }
 
   if (isset($admin) && $admin == $_COOKIE['admin']) {
