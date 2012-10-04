@@ -299,12 +299,12 @@ echo "<a class='nothing punkt dark_pole' onclick=\"show_animate('show_options');
 
 <tr valign=top><td>
 Дизайн для страницы поиска:</td><td>
-".select("options[search_design]", $id_designs, $title_designs, $search_design)." <div class='notice warning black'>В выбранном дизайне обязательно должен быть блок [содержание]</div>
+".select("options[search_design]", $id_designs, $title_designs, $search_design)." В дизайне должен быть блок [содержание]
 </td></tr>
 
 <tr valign=top><td>
 Дизайн для страницы тэгов (ключевых слов):</td><td class=small>
-".select("options[tag_design]", $id_designs, $title_designs, $tag_design)." В выбранном дизайне обязательно должен быть блок [содержание]
+".select("options[tag_design]", $id_designs, $title_designs, $tag_design)." В дизайне должен быть блок [содержание]
 </td></tr>
 
 <tr valign=top><td>

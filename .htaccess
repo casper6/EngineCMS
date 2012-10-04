@@ -1,10 +1,30 @@
+# Сжатие №1 - через модуль deflate
+<ifmodule mod_deflate.c="">
+<filesmatch .(js|css)$="">
+SetOutputFilter DEFLATE
+</filesmatch>
+</ifmodule>
+
+# Сжатие №2 — Сжимаем компоненты сайта путем включения Gzip
+AddOutputFilterByType DEFLATE text/html text/plain text/xml application/xml application/xhtml+xml text/javascript text/css application/x-javascript
+BrowserMatch ^Mozilla/4 gzip-only-text/html
+BrowserMatch ^Mozilla/4.0[678] no-gzip
+BrowserMatch bMSIE !no-gzip !gzip-only-text/html
+
+# закрываем доступ к .htaccess
+<files .htaccess="">
+order allow,deny
+deny from all
+</files>
+
+# Кодировка по-умолчанию (временно необходима)
 AddDefaultCharset utf-8
 
 # Опция настройки страниц ошибок 401, 403, 404 и 500
-ErrorDocument 401 header.php?name=-error&code=401
-ErrorDocument 403 header.php?name=-error&code=403
-ErrorDocument 404 header.php?name=-error&code=404
-ErrorDocument 500 header.php?name=-error&code=500
+ErrorDocument 401 /error.php?code=401
+ErrorDocument 403 /error.php?code=403
+ErrorDocument 404 /error.php?code=404
+ErrorDocument 500 /error.php?code=500
 
 # Запрет отображения ошибок
 php_flag display_errors Off

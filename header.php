@@ -123,7 +123,8 @@ if ($name=="-email") { // занесение мыла как скрытого к
 
 		// Определение дизайна и использованных стилей в дизайне
 		if (isset($design)) list($block, $stil) = design_and_style($design); else $block = "0";
-		if ($block == "0") die("Ошибка: «Адрес раздела» (".$name.") введен неправильно. Перейдите на <a href=/>Главную страницу</a>.");
+		if ($block == "0") { Header("Location: error.php?code=666"); die; }
+		//die("Ошибка: «Адрес раздела» (".$name.") введен неправильно. Перейдите на <a href=/>Главную страницу</a>.");
 
 		// Получаем список всех папок
 		$titles_papka = titles_papka();
