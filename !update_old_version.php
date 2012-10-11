@@ -118,8 +118,34 @@ $db->sql_query("select ava from `".$prefix."_pages_comments`;") or $db->sql_quer
 $db->sql_query("DROP TABLE IF EXISTS `".$prefix."_shop`;");
 $db->sql_query("DROP TABLE IF EXISTS `".$prefix."_banner`;");
 $db->sql_query("DROP TABLE IF EXISTS `".$prefix."_session`;");
-$db->sql_query("DROP TABLE IF EXISTS `".$prefix."_users`;");
+//$db->sql_query("DROP TABLE IF EXISTS `".$prefix."_users`;");
 $db->sql_query("DROP TABLE IF EXISTS `".$prefix."_users_temp`;");
+
+$db->sql_query("DROP TABLE IF EXISTS `".$prefix."_users`;");
+$db->sql_query("CREATE TABLE `".$prefix."_users` (
+  `user_id` int(6) NOT NULL AUTO_INCREMENT,
+  `user_group` varchar(25) NOT NULL,
+  `name` varchar(25) NOT NULL,
+  `photo` varchar(225) NOT NULL,
+  `password` varchar(32) NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `remote_addr` varchar(16) NOT NULL,
+  `confirm_hash` varchar(32) NOT NULL,
+  `is_confirmed` smallint(2) NOT NULL,
+  `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`user_id`)
+);");
+$db->sql_query("DROP TABLE IF EXISTS `".$prefix."_users_group`;");
+$db->sql_query("CREATE TABLE `".$prefix."_users_group` (
+  `id` int(6) NOT NULL AUTO_INCREMENT,
+  `group` varchar(25) NOT NULL,
+  `html` varchar(255) NOT NULL,
+  `cat` varchar(225) NOT NULL,
+  `htmlstr` mediumtext NOT NULL,
+  `blok` mediumtext NOT NULL,
+  PRIMARY KEY (`id`)
+);");
+$db->sql_query("INSERT INTO `".$prefix."_users_group` VALUES ( '1', 'config', '1', '6', '0', '');");
 
 $db->sql_query("select `ht_backup` from `".$prefix."_config`;") or $db->sql_query("ALTER TABLE `".$prefix."_config` ADD `ht_backup` VARCHAR( 255 ) NOT NULL");
 $db->sql_query("UPDATE `".$prefix."_config` SET `ht_backup` = '.ht_backup' LIMIT 1 ;");

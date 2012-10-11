@@ -625,10 +625,19 @@ function create_main($type) {
 			$sql2 = "select id, title from ".$prefix."_mainpage where `tables`='pages' and type='2' and name!='index'";
 			$result2 = $db->sql_query($sql2);
 			while ($row2 = $db->sql_fetchrow($result2)) {
-			$id_modul = $row2['id'];
-			$title_modul = trim($row2['title']);
-			$modules .= "<option value='$id_modul'>$title_modul</option>";
+			   $id_modul = $row2['id'];
+			   $title_modul = $row2['title'];
+			   $modules .= "<option value='".$id_modul."'>".$title_modul."</option>";
 			}
+			// Добавлены пользователи USERAD
+			$sql3 = "select * from ".$prefix."_users_group where `group`!='rigion' and `group`!='config' and `group`!='obl'";
+			$result3 = $db->sql_query($sql3);
+			while ($row3 = $db->sql_fetchrow($result3)) {
+			   $id = "1,".$row3['id'];
+			   $title_group = $row3['group'];
+			   $modules .= "<option value='".$id."'>Группа пользователей: ".$title_group."</option>";
+			}
+			// Добавлены пользователи USERAD
 	$create.="
 	<SCRIPT language=JavaScript src=\"/includes/j.js\" type=text/javascript></SCRIPT>
 	<form method=POST action=sys.php style='display:inline;'>
@@ -2143,6 +2152,15 @@ function edit_main($id) {
 	$title_modul = trim($row['title']);
 	$modules .= "<option value=\"".$id_modul."\">".$title_modul."</option>";
 	}
+	// Добавлены пользователи USERAD
+	$sql3 = "select * from ".$prefix."_users_group where `group`!='rigion' and `group`!='config' and `group`!='obl'";
+	$result3 = $db->sql_query($sql3);
+	while ($row3 = $db->sql_fetchrow($result3)) {
+		$id = "1,".$row3['id'];
+		$title_group = $row3['group'];
+		$modules .= "<option value='$id'>Группа пользователей: $title_group</option>";
+	}
+	// Добавлены пользователи USERAD
 	echo "<h1><a href=sys.php?op=mainpage&amp;type=element>Оформление</a> &rarr; Редактирование поля</h1>
 	<table width=100%><tr><td width=50%>
 	<h2 class='radius_top' style='background:#eeeeee;'>Название поля<br>

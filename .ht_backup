@@ -1,10 +1,42 @@
+#Включаем отслеживание сим-ссылок
+Options +FollowSymLinks
+
+# Сжатие №1 - через модуль deflate
+<ifmodule mod_deflate.c="">
+<filesmatch .(js|css)$="">
+SetOutputFilter DEFLATE
+</filesmatch>
+</ifmodule>
+
+# Сжатие №2 — Сжимаем компоненты сайта путем включения Gzip
+AddOutputFilterByType DEFLATE text/html text/plain text/xml application/xml application/xhtml+xml text/javascript text/css application/x-javascript
+BrowserMatch ^Mozilla/4 gzip-only-text/html
+BrowserMatch ^Mozilla/4.0[678] no-gzip
+BrowserMatch bMSIE !no-gzip !gzip-only-text/html
+
+# закрываем доступ к .htaccess
+<files .htaccess="">
+order allow,deny
+deny from all
+</files>
+
+# Кодировка по-умолчанию (временно необходима)
 AddDefaultCharset utf-8
 
 # Опция настройки страниц ошибок 401, 403, 404 и 500
-ErrorDocument 401 ?name=-error&code=401
-ErrorDocument 403 ?name=-error&code=403
-ErrorDocument 404 ?name=-error&code=404
-ErrorDocument 500 ?name=-error&code=500
+ErrorDocument 401 /error.php?code=401
+ErrorDocument 403 /error.php?code=403
+ErrorDocument 404 /error.php?code=404
+ErrorDocument 500 /error.php?code=500
+
+#Блокируем все ссылки, содержащие <script>
+RewriteCond %{QUERY_STRING} (\<|%3C).*script.*(\>|%3E) [NC,OR]
+#Блокируем все скрипты, которые пытаются изменить переменные PHP Globals:
+RewriteCond %{QUERY_STRING} GLOBALS(=|\[|\%[0-9A-Z]{0,2}) [OR]
+#Блокируем все скрипты, которые пытаются изменить переменную _REQUEST:
+RewriteCond %{QUERY_STRING} _REQUEST(=|\[|\%[0-9A-Z]{0,2})
+#Перенаправляем все подобные на страницу с ошибкой 403 - запрещено
+RewriteRule ^(.*)$ /error.php?code=403 [F,L]
 
 # Запрет отображения ошибок
 php_flag display_errors Off
@@ -31,20 +63,21 @@ RewriteRule ^admin sys.php
 RewriteRule ^red sys.php
 RewriteRule ^rss rss.php
 
-RewriteRule ^--slovo_([а-яА-Яa-zA-Z0-9%+-]*) ?name=-slovo&slovo=$1
-RewriteRule ^--search ?name=-search
-RewriteRule ^--email ?name=-email
-RewriteRule ^-([а-яА-Яa-zA-Z0-9_-]*)_addbase_([0-9]*) ?go=addbase&name=$1&spa=$2
-RewriteRule ^-([а-яА-Яa-zA-Z0-9_-]*)_first_([A-F0-9+_|-]*)_second_([A-F0-9+_|-]*)_opt_([0-9]*) ?name=$1&go=showcat&first=$2&second=$3&option=$4
-RewriteRule ^-([а-яА-Яa-zA-Z0-9_-]*)_first_([A-F0-9+_|-]*)_opt_([0-9]*) ?name=$1&go=showcat&first=$2&option=$3
-RewriteRule ^-([а-яА-Яa-zA-Z0-9_-]*)_date_([0-9-]*) ?name=$1&go=showdate&showdate=$2
-RewriteRule ^-([а-яА-Яa-zA-Z0-9_-]*)_cat_([0-9]*)_slovo_([a-zA-Z0-9%+-]*) ?name=$1&go=showcat&cid=$2&slovo=$3
-RewriteRule ^-([а-яА-Яa-zA-Z0-9_-]*)_cat_([0-9]*)_page_([0-9]*) ?name=$1&go=showcat&cid=$2&pag=$3
-RewriteRule ^-([а-яА-Яa-zA-Z0-9_-]*)_cat_([0-9]*) ?name=$1&go=showcat&cid=$2
-RewriteRule ^-([а-яА-Яa-zA-Z0-9_-]*)_page_([0-9]*)_com_([0-9]*) ?name=$1&go=page&pid=$2&com=$3
-RewriteRule ^-([а-яА-Яa-zA-Z0-9_-]*)_page_([0-9]*)_comm ?name=$1&go=page&pid=$2&comm=ok
-RewriteRule ^-([а-яА-Яa-zA-Z0-9_-]*)_page_([0-9]*) ?name=$1&go=page&pid=$2
-RewriteRule ^-([а-яА-Яa-zA-Z0-9_-]*)_slovo_([a-zA-Z0-9%+-]*) ?name=$1&go=showcat&slovo=$2
-RewriteRule ^-([а-яА-Яa-zA-Z0-9_-]*) ?name=$1
+RewriteRule ^--slovo_([а-яА-Яa-zA-Z0-9%+-]*) header.php?name=-slovo&slovo=$1
+RewriteRule ^--search header.php?name=-search
+RewriteRule ^--email header.php?name=-email
+RewriteRule ^--user header.php?name=-user
+RewriteRule ^-([а-яА-Яa-zA-Z0-9_-]*)_addbase_([0-9]*) header.php?go=addbase&name=$1&spa=$2
+RewriteRule ^-([а-яА-Яa-zA-Z0-9_-]*)_first_([A-F0-9+_|-]*)_second_([A-F0-9+_|-]*)_opt_([0-9]*) header.php?name=$1&go=showcat&first=$2&second=$3&option=$4
+RewriteRule ^-([а-яА-Яa-zA-Z0-9_-]*)_first_([A-F0-9+_|-]*)_opt_([0-9]*) header.php?name=$1&go=showcat&first=$2&option=$3
+RewriteRule ^-([а-яА-Яa-zA-Z0-9_-]*)_date_([0-9-]*) header.php?name=$1&go=showdate&showdate=$2
+RewriteRule ^-([а-яА-Яa-zA-Z0-9_-]*)_cat_([0-9]*)_slovo_([a-zA-Z0-9%+-]*) header.php?name=$1&go=showcat&cid=$2&slovo=$3
+RewriteRule ^-([а-яА-Яa-zA-Z0-9_-]*)_cat_([0-9]*)_page_([0-9]*) header.php?name=$1&go=showcat&cid=$2&pag=$3
+RewriteRule ^-([а-яА-Яa-zA-Z0-9_-]*)_cat_([0-9]*) header.php?name=$1&go=showcat&cid=$2
+RewriteRule ^-([а-яА-Яa-zA-Z0-9_-]*)_page_([0-9]*)_com_([0-9]*) header.php?name=$1&go=page&pid=$2&com=$3
+RewriteRule ^-([а-яА-Яa-zA-Z0-9_-]*)_page_([0-9]*)_comm header.php?name=$1&go=page&pid=$2&comm=ok
+RewriteRule ^-([а-яА-Яa-zA-Z0-9_-]*)_page_([0-9]*) header.php?name=$1&go=page&pid=$2
+RewriteRule ^-([а-яА-Яa-zA-Z0-9_-]*)_slovo_([a-zA-Z0-9%+-]*) header.php?name=$1&go=showcat&slovo=$2
+RewriteRule ^-([а-яА-Яa-zA-Z0-9_-]*) header.php?name=$1
 RewriteRule ^css_([0-9-]*)_add_([a-z0-9_-]*).css combine.php?type=css&files=$1&add=$2
 RewriteRule ^css_([0-9-]*).css combine.php?type=css&files=$1

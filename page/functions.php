@@ -607,8 +607,8 @@ function getparent_spiski($name, $parent, $title) { // получение род
 function antivirus($x=0) { // антивирус для защиты от htaccess-вируса 
   // открываем .htaccess
   $htaccess = " ".implode(" ", file('.htaccess'));
-  // ищем [NC], HTTP_USER_AGENT и (.*)
-  if ( strpos($htaccess,"[NC]") or strpos($htaccess,"HTTP_USER_AGENT") or strpos($htaccess,"(.*)") ) {
+  // ищем [NC], HTTP_USER_AGENT и (.*)  or strpos($htaccess,"HTTP_USER_AGENT") or strpos($htaccess,"(.*)")
+  if ( strpos($htaccess,"[NC]") ) {
     // меняем .htaccess на .ht_backup
     global $ht_backup;
     if ( $ht_backup != "" and file_exists($ht_backup) ) {

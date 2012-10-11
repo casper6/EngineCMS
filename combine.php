@@ -103,6 +103,8 @@ A[target=\"_blank\"] {
 }
 */
 
+.opros_line, .opros_line2 {height:2px; margin:0px; padding:0px;}
+
 .editorbutton {PADDING-LEFT: 3px; FLOAT: left; CURSOR: pointer;}
 
 .text_link {color: #00f;}

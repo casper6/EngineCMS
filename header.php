@@ -76,7 +76,10 @@ if ($name=="-email") { // занесение мыла как скрытого к
 	} elseif ($name=="-search") {
 		list($block, $stil) = include('page/search.php');
 		$pagetitle = $slovo." — Поиск — ";
-	} else {
+	} elseif ($name=="-user") {
+        list($block, $stil) = include('page/user.php');
+        $pagetitle = "Страница пользователя";
+    } else {
 		global $title_razdels, $txt_razdels, $useit_razdels, $pid;
 
 		// Настройки раздела по-умолчанию
@@ -1488,7 +1491,7 @@ echo "
 
 	################ НАЧАЛО ТЕЛА
 	$notmenu = "";
-	if ($stopcopy == 1) echo $notmenu = " oncontextmenu='notmenu();'";
+	if ($stopcopy == 1) $notmenu = " oncontextmenu='notmenu();'";
 	echo "</head>\n<body".$notmenu.">";
 
 	if ($kickstart == 1) echo "<a id=\"top-of-page\"></a><div id=\"wrap\" class=\"clearfix\">";

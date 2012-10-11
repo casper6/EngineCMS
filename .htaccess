@@ -1,3 +1,6 @@
+#Включаем отслеживание сим-ссылок
+Options +FollowSymLinks
+
 # Сжатие №1 - через модуль deflate
 <ifmodule mod_deflate.c="">
 <filesmatch .(js|css)$="">
@@ -25,6 +28,15 @@ ErrorDocument 401 /error.php?code=401
 ErrorDocument 403 /error.php?code=403
 ErrorDocument 404 /error.php?code=404
 ErrorDocument 500 /error.php?code=500
+
+#Блокируем все ссылки, содержащие <script>
+RewriteCond %{QUERY_STRING} (\<|%3C).*script.*(\>|%3E) [NC,OR]
+#Блокируем все скрипты, которые пытаются изменить переменные PHP Globals:
+RewriteCond %{QUERY_STRING} GLOBALS(=|\[|\%[0-9A-Z]{0,2}) [OR]
+#Блокируем все скрипты, которые пытаются изменить переменную _REQUEST:
+RewriteCond %{QUERY_STRING} _REQUEST(=|\[|\%[0-9A-Z]{0,2})
+#Перенаправляем все подобные на страницу с ошибкой 403 - запрещено
+RewriteRule ^(.*)$ /error.php?code=403 [F,L]
 
 # Запрет отображения ошибок
 php_flag display_errors Off
@@ -54,6 +66,7 @@ RewriteRule ^rss rss.php
 RewriteRule ^--slovo_([а-яА-Яa-zA-Z0-9%+-]*) header.php?name=-slovo&slovo=$1
 RewriteRule ^--search header.php?name=-search
 RewriteRule ^--email header.php?name=-email
+RewriteRule ^--user header.php?name=-user
 RewriteRule ^-([а-яА-Яa-zA-Z0-9_-]*)_addbase_([0-9]*) header.php?go=addbase&name=$1&spa=$2
 RewriteRule ^-([а-яА-Яa-zA-Z0-9_-]*)_first_([A-F0-9+_|-]*)_second_([A-F0-9+_|-]*)_opt_([0-9]*) header.php?name=$1&go=showcat&first=$2&second=$3&option=$4
 RewriteRule ^-([а-яА-Яa-zA-Z0-9_-]*)_first_([A-F0-9+_|-]*)_opt_([0-9]*) header.php?name=$1&go=showcat&first=$2&option=$3

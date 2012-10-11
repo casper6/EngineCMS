@@ -97,7 +97,7 @@ parse_str($useit);
           }
           $proc2 = 100 - $proc;
           if ($proc==0) $proc==1;
-          $textX .= "<table width=100%><tr><td colspan=2 class=opros_otvet>".$line."</td></tr><tr><td bgcolor=red style='text-align:right; width:".$proc."%; height:16px;' class=opros_line><b>".$line1."</b></td><td style='text-align:left; width:".$proc2."%; height:16px;' class=opros_line2>".$line2."</td></tr></table>";
+          $textX .= "<table width=100%><tr><td colspan=2 class=opros_otvet>".$line."</td></tr><tr><td bgcolor=red style='text-align:right; width:".$proc."%;' class=opros_line><b>".$line1."</b></td><td style='text-align:left; width:".$proc2."%;' class=opros_line2>".$line2."</td></tr></table>";
         }
         $textX .= "";
       } else { // Если выбран графический вид результатов опроса

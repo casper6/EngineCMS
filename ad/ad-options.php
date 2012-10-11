@@ -143,12 +143,16 @@ if ($row['realadmin'] == 1) {
 		<input type=hidden name=op value='UpdateAuthor'>
 		<tr><td></td><td><input type=submit value=' Сохранить '>
 		</td></tr></table></form>
-		<br><br><div class=\"notice warning\"><a href='sys.php?op=AdminsList'>Список администраторов</a> (в разработке)</div>
+
+
+		<br><br><div class=\"notice warning hide\"><a href='sys.php?op=AdminsList'>Список администраторов</a></div>
 		</div>";
 
  echo "<br><br><a class='nothing punkt dark_pole' onclick=\"show_animate('show_options2'); trash_pics();\"><img class='icon2 i21' src='/images/1.gif'><img class='icon2 i6' src='/images/1.gif'>Удаление неиспользуемых фотографий</a><div id='show_options2' style='display:none;'>Загружаю...</div>
 
  <br><br><a class='nothing dark_pole' href='sys.php?op=subscribe'><img class='icon2 i5' src='/images/1.gif' valign=bottom>Рассылка (список адресатов и их email'ов)</a>
+
+ <br><br><a class='nothing dark_pole' href=\"sys.php?op=users\" title='Настройка пользователей'><img class='left icon i3' src='/images/1.gif' valign=bottom>Пользователи</a> (в разработке!)
 
 </div>
 </body>
@@ -207,7 +211,7 @@ echo "<form action='".$admin_file.".php' method='post' name=\"form\">
 
 if ($ok==1) echo "<span class=green>успешно сохранены</span><br>";
 
-echo "<a class='nothing punkt dark_pole' onclick=\"show_animate('show_options');\"><img class='icon2 i28' src='/images/1.gif' align=bottom>Общие настройки Сайта</a><div id='show_options' style='display:none;'>
+echo "<a class='nothing punkt dark_pole' onclick=\"show('show_options');\"><img class='icon2 i28' src='/images/1.gif' align=bottom>Общие настройки Сайта</a><div id='show_options' style='display:none;'>
 <h2>Общие настройки Сайта</h2>
 <table class=table_light>
 
@@ -319,7 +323,66 @@ echo "<a class='nothing punkt dark_pole' onclick=\"show_animate('show_options');
 
 </div>
 
-<a class='nothing punkt dark_pole' onclick=\"show_animate('show_options_company');\"><img class='icon2 i4' src='/images/1.gif' align=bottom>Карточка компании</a><div id='show_options_company' style='display:none;'>
+
+<a class='nothing punkt dark_pole' onclick=\"show('show_options_fonts');\"><img class='icon2 i4' src='/images/1.gif' align=bottom>Шрифты</a><div id='show_options_fonts' style='display:none;'>
+<h2>Подключение альтернативных <a href='http://www.google.com/webfonts/' target='_blank'>шрифтов</a> (в разработке!)</h2>
+<p>Вы можете выбрать дополнительные шрифты и эффекты для них.";
+
+$fonts_rus = explode(",","Andika,Anonymous Pro,Bad Script,Comfortaa,Cuprum,Didact Gothic,EB Garamond,Forum,Istok Web,Jura,Kelly Slab,Ledger,Lobster,Marck Script,Marmelad,Neucha,Open Sans,Open Sans Condensed,Oranienbaum,PT Mono,PT Sans,PT Sans Caption,PT Sans Narrow,PT Serif,PT Serif Caption,Philosopher,Play,Poiret One,Press Start 2P,Prosto One,Ruslan Display,Russo One,Scada,Stalinist One,Tenor Sans,Ubuntu,Ubuntu Condensed,Ubuntu Mono,Underdog,Yeseva One");
+$fonts_eng = explode(",","");
+$options = "";
+foreach ($fonts_rus as $font) {
+	$options .= "<option value='".$font."'>".$font."</option>";
+}
+$options .= "<option value='' disabled>- Английские шрифты -</option>";
+foreach ($fonts_eng as $font) {
+	$options .= "<option value='".$font."'>".$font."</option>";
+}
+
+// Chrome/Firefox/Opera/Safari
+$effects = explode(",","anaglyph,emboss,fire,fire-animation,neon,outline,shadow-multiple,3d,3d-float");
+
+// Chrome/Safari
+$effects2 = explode(",","brick-sign,canvas-print,crackle,decaying,destruction,distressed,distressed-wood,fragile,grass,ice,mitosis,putting-green,scuffed-steel,splintered,static,stonewash,vintage,wallpaper");
+
+$options2 = "";
+foreach ($effects as $effect) {
+	$options2 .= "<option value='".$effect."'>".$effect."</option>";
+}
+$options2 .= "<option value='' disabled>- Эффекты (Chrome/Safari) -</option>";
+foreach ($effects2 as $effect) {
+	$options2 .= "<option value='".$effect."'>".$effect."</option>";
+}
+echo "<script>
+function font() {
+	var font = $(\"#fonts\").val();
+	var effect = $(\"#effects\").val();
+	var effect_show = '';
+	var about_effect = '';
+	if (effect != null && effect != '') {
+		effect_show = '&effect=' + effect;
+		about_effect = '<br>Подключение эффекта: &lt;div class=\"font-effect-' + effect + '\"&gt;Пример текста&lt;div&gt;';
+	}
+	$('#font_preview').html('<link href=\"http://fonts.googleapis.com/css?family=' + font.replace(\" \", \"+\") + '&subset=latin,cyrillic' + effect_show + '\" rel=\"stylesheet\" type=\"text/css\"><h1 style=\"font-family: ' + '\'' + font + '\'' + ';\">' + $('#text_primer').val() + ' <br>Использование в CSS: font-family: \'' + font + '\' ' + about_effect + '</h1>');
+	if (effect != null && effect != '') $('#font_preview').toggleClass('font-effect-' + effect);
+}
+</script><br>
+<select id=fonts size=7 onchange='font()'><option value='' disabled>- Русские шрифты -</option>".$options."</select>
+<select id=effects size=7 onchange='font()'><option value='' disabled>- Эффекты (Chrome/Firefox/Opera/Safari) -</option><option value='' selected>Эффект не выбран</option>".$options2."</select><br>
+
+<div id='font_preview' onclick=\"show('text_primer');\" style='background:white;'>Здесь будет показан пример шрифта и его применения. Нажмите, чтобы изменить текст.</div>
+<input id='text_primer' style='width:80%; display:none;' type='text' value='Съешь ещё этих мягких французских булок, да выпей чаю. Нажмите, чтобы изменить текст.'><br>
+Не забудьте добавить шрифт в список используемых и сохранить.
+
+
+
+<div style='text-align:center;'><input type='submit' value=' Сохранить настройки ' style='width:300px; height:40px;'></div>
+<input type='hidden' name='op' value='ConfigSave'>
+
+</div>
+
+
+<a class='nothing punkt dark_pole' onclick=\"show('show_options_company');\"><img class='icon2 i4' src='/images/1.gif' align=bottom>Карточка компании</a><div id='show_options_company' style='display:none;'>
 <h2>Карточка компании</h2>
 <p>Основные данные компании для быстрой замены. Могут быть вставлены в любом месте сайта как мини-блоки.
 <p>Информация разделяется тремя символами «вертикальная черта», т.е. ||| Каждому последующему мини-блоку присваивается аналогичное имя с порядковым номером.
@@ -365,7 +428,7 @@ Email(ы) компании: [почта компании1]
 
 <br>
 
-<a class='nothing punkt dark_pole' onclick=\"show_animate('show_options_adspeed');\"><img class='icon2 i38' src='/images/1.gif' align=bottom>Настройки Администрирования</a><div id='show_options_adspeed' style='display:none;'>
+<a class='nothing punkt dark_pole' onclick=\"show('show_options_adspeed');\"><img class='icon2 i38' src='/images/1.gif' align=bottom>Настройки Администрирования</a><div id='show_options_adspeed' style='display:none;'>
 <h2>Настройки Администрирования</h2>
 <table class=table_light>
 <tr valign=top><td style='min-width:250px;'>

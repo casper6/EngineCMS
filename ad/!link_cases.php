@@ -87,5 +87,24 @@ switch($op) {
     case "backup":
     include("ad/ad-backup.php");
     break;
+// Добавлены пользователи
+    case "users":
+    case "add_group":
+    case "save_users":
+    case "del_group":
+    case "del_group2":
+    case "edit_group":
+    case "edit_group":
+    case "s_group":
+    case "s_html_group":
+    case "html_group":
+    case "blok_group":
+    case "add_obl":
+    case "del_obl":
+    case "add_raion":
+    case "del_raion":
+    case "raion":
+    include("ad/ad-users.php");
+    break;
 }
 ?>

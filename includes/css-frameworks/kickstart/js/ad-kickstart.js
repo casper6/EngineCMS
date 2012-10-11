@@ -6,6 +6,15 @@
 jQuery(document).ready(function($){
 
 	/*---------------------------------
+		ScrollTo/LocalScroll
+	-----------------------------------*/
+	$.localScroll({
+		filter: ':not(.tabs>li>a)',
+		lazy: true,
+		hash: true
+	});
+	
+	/*---------------------------------
 		Tabs
 	-----------------------------------*/
 	// tab setup

@@ -97,6 +97,7 @@ if (!$op) {
 }
 echo "<link rel=\"stylesheet\" href=\"http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.3/themes/base/jquery-ui.css\" media=\"all\" />
 <script type=\"text/javascript\" src=\"includes/css-frameworks/kickstart/js/ad-kickstart.js\"></script>
+<link rel=\"stylesheet\" type=\"text/css\" href=\"includes/css-frameworks/kickstart/css/ad-kickstart.css\" media=\"all\" />
 <link rel=\"stylesheet\" type=\"text/css\" href=\"includes/css-frameworks/kickstart/css/kickstart-forms.css\" media=\"all\" />
 <link rel=\"stylesheet\" type=\"text/css\" href=\"includes/css-frameworks/kickstart/css/kickstart-icons.css\" media=\"all\" />
 <link rel=\"stylesheet\" type=\"text/css\" href=\"includes/css-frameworks/kickstart/css/kickstart-buttons.css\" media=\"all\" />";
@@ -143,7 +144,14 @@ echo "<table width=100%><tr><td align=center width=170>
 	<a title=\"Перейти в Содержание\" href=\"sys.php\" class='nothing'><img src=images/logo_admin.png></a>
 </td><td width=570>
 	<div class='nothing noprint'>
-	<button style='margin:5px;' class='small' onclick='location.href=\"/\"' title='Перейти на сайт (откроется в новом окне)'><span class=\"icon small black\" data-icon=\"4\"></span>На сайт</button>".$post.$kick."<br><button class='medium ".$color1."' onclick='location.href=\"sys.php\"' title=\"Содержание сайта: разделы, папки, страницы и комментарии\" style=\"margin-left:5px;\"><span class=\"icon gray small\" data-icon=\",\"></span>Содержание</button><button class='medium ".$color2."' onclick='location.href=\"sys.php?op=mainpage&amp;type=element\"' title='Дизайн, стиль, блоки и прочие элементы оформления сайта'><span class=\"icon gray small\" data-icon=\"Y\"></span>Оформление</button><button class='medium ".$color3."' onclick='location.href=\"sys.php?op=Configure\"' title='Настройки сайта'><span class=\"icon gray small\" data-icon=\"=\"></span>Настройки</button><button class='medium ".$color4."' onclick='location.href=\"sys.php?op=mainpage&amp;type=stat\"' title='Открыть статистику сайта'><span class=\"icon gray small\" data-icon=\"j\"></span>Статистика</button> <button class='small gray' onclick='location.href=\"sys.php?op=logout\"' title='Выход из администрирования\n(мера безопасности)'><span style='margin-right: -2px;' class=\"icon red small\" data-icon=\"Q\"></span></button>
+	<nobr>
+	<button style='margin:5px;' class='small' onclick='location.href=\"/\"' title='Перейти на сайт (откроется в новом окне)'><span class=\"icon small black\" data-icon=\"4\"></span>На сайт</button>".$post.$kick."<br>
+	<button class='medium ".$color1."' onclick='location.href=\"sys.php\"' title=\"Содержание сайта: разделы, папки, страницы и комментарии\" style=\"margin-left:5px;\"><span class=\"icon gray small\" data-icon=\",\"></span>Содержание</button>
+	<button class='medium ".$color2."' onclick='location.href=\"sys.php?op=mainpage&amp;type=element\"' title='Дизайн, стиль, блоки и прочие элементы оформления сайта'><span class=\"icon gray small\" data-icon=\"Y\"></span>Оформление</button>
+	<button class='medium ".$color3."' onclick='location.href=\"sys.php?op=Configure\"' title='Настройки сайта'><span class=\"icon gray small\" data-icon=\"=\"></span>Настройки</button>
+	<button class='medium ".$color4."' onclick='location.href=\"sys.php?op=mainpage&amp;type=stat\"' title='Открыть статистику сайта'><span class=\"icon gray small\" data-icon=\"j\"></span>Статистика</button>
+	<button class='small gray' onclick='location.href=\"sys.php?op=logout\"' title='Выход из администрирования\n(мера безопасности)'><span style='margin-right: -2px;' class=\"icon red small\" data-icon=\"Q\"></span></button>
+	</nobr>
 	</div>
 </td><td>
 	<form method=post name=search action='/--search' style='display:inline;' class='nothing'><input type='search' placeholder='Поиск по сайту' name=slovo style='width:100%;'></form>
