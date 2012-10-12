@@ -362,6 +362,17 @@ function save_fonts() {
 <input id='text_primer' style='width:80%; display:none;' type='text' value='Съешь ещё этих мягких французских булок, да выпей чаю. Нажмите, чтобы изменить текст.<br>Grumpy wizards make toxic brew for the evil Queen and Jack.'><br>
 Не забудьте добавить шрифт в список используемых и сохранить.<br>
 Если при выборе эффекта (или шрифта с эффектом из списка выбранных шрифтов), вы не увидели эффекта в поле предпросмотра — выберите другой эффект и еще раз выберите первый.
+
+
+<p><b>Справка:</b> <a style='cursor:pointer;' class=punkt onclick=\"show('sgladit_shrift')\">Как сгладить шрифт через CSS</a> (подходит для больших заголовков)<br>
+<div id='sgladit_shrift' style=\"display:none;\"><pre>
+.title {
+   text-shadow:-1px -1px 1px rgba(255,255,255,0.2), /* наверх и влево */
+   1px 1px 1px rgba(255,255,255,0.2), /* вниз и вправо */
+   1px 1px 1px rgba(0,0,0,0.7); /* тёмная тень */
+}
+</pre></div>
+<p>
 <div style='text-align:center;'><input type='submit' value=' Сохранить настройки ' style='width:300px; height:40px;'></div>
 </div>
 
