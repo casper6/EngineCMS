@@ -132,18 +132,18 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
      $useit = explode(" ", trim($row['useit']));
      $css = "";
      foreach( $useit as $value ) {
-      if ($value) $css .= "".$module_title[$value]." <a href='/sys.php?op=".$admintip."&type=1&id=".$value."' title='Редактировать'><img class='icon2 i34' src='/images/1.gif'></a> ";
+      if ($value) $css .= $module_title[$value]." <a href='/sys.php?op=".$admintip."&type=1&id=".$value."' title='Редактировать'><img class='icon2 i34' src='/images/1.gif'></a> ";
      }
      if ($css == "") $css = "<i class='gray'>стиль не выбран</i><br>"; 
      else $css = "Подключенные стили (css): ".$css."<br>";
      if ($row['title'] != "Главный стиль") 
       $delx = "<a class='padleft30' href=/sys.php?op=".$admintip."_del&id=".$row['id']."&type=1&name=".$nam." title='Удалить стиль «".$row['title']."»'><img class='icon2 i21' src='/images/1.gif'></a>";
      else $delx = "<span class='padleft30'><img title='Основной стиль нельзя удалить' class='icon2 i44' src='/images/1.gif'>";
-     $info .= "<tr><td>".$row['title']."
+     $info .= "<tr><td><h2>".$row['title']."
      <div style='float:right; display: inline;'>
      <a href='sys.php?op=".$admintip."&type=1&id=".$row['id']."' title='Редактировать'><img class='icon2 i34' src='/images/1.gif'></a> 
      ".$delx."
-     </div>
+     </h2></div>
      </td></tr>";
    }
    $info .= "</table>";

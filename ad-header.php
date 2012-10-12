@@ -155,7 +155,7 @@ echo "<table width=100%><tr><td align=center width=170>
 <li class='".$color2."'><a title='Дизайн, стиль, блоки и прочие элементы оформления сайта' href='sys.php?op=mainpage&amp;type=element'><span class=\"icon gray small\" data-icon=\"Y\"></span> Оформление</a></li>
 <li class='".$color3."'><a title='Настройки сайта' href='sys.php?op=Configure'><span class=\"icon gray small\" data-icon=\"=\"></span> Настройки</a></li>
 <li class='".$color4."'><a title='Открыть статистику сайта' href='sys.php?op=mainpage&amp;type=stat'><span class=\"icon gray small\" data-icon=\"j\"></span> Статистика</a></li>
-<li class='last'><a title='Выход из администрирования\n(мера безопасности)' href='sys.php?op=logout'><span style='margin-right: -2px;' class=\"icon red small\" data-icon=\"Q\"></span></a></li>
+<li class='last'><a title='Выход из администрирования\n(мера безопасности)' href='sys.php?op=logout'><span class=\"icon red small\" data-icon=\"Q\"></span></a></li>
 </ul>
 
 	</div>
