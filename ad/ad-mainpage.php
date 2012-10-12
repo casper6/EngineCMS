@@ -13,7 +13,6 @@
 ##########################################################################################
 function menu() {
 	global $admintip, $siteurl, $type, $prefix, $db, $statlink;
-	//if ($type=="element") echo "<span class=h1 style='font-size:20pt;'>Оформление сайта</span>";
 	$stat_razdel = $stat_page = $stat_search = "";
 	##############################################################################
 	if ($type=="stat") {
@@ -172,7 +171,8 @@ function mainpage($name="") {
 		echo "<table style='width:100%; margin-top:5px; padding:0; background: #e2e5ea;' cellspacing=0 cellpadding=0><tr valign=top><td id='razdel_td' class='radius nothing'>
 
 			<div id='razdels' style='background:#e7e9ec;'>
-			<div class='black_grad'><button id=new_razdel_button title='Добавить раздел...' class='small inset' onclick=\"show_animate('addmain');\" style='float:right; margin:3px;'><span style='margin-right: -2px;' class=\"icon darkgrey small\" data-icon=\"+\"></button><span class='h1'>Оформление:</span>
+			<div class='black_grad'><button id=new_razdel_button title='Добавить оформление...' class='small black' onclick=\"show_animate('addmain');\" style='float:right; margin:3px;'><span style='margin-right: -2px;' class=\"icon darkgrey small\" data-icon=\"+\"></button>
+			<span class='h1'>Оформление:</span>
 			</div>";
 	     ////////////////////// ДИЗАЙН 0
 		 echo "<div id='mainrazdel0' class='dark_pole2'><a class='base_page' onclick=\"oformlenie_show('дизайн (html)','0','design','/sys.php?op=mainpage&amp;name=design&amp;type=0&amp;red=1')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"4\"></span><span class='plus20'>Дизайн разделов и блоков (html)</span></div></a></div>";

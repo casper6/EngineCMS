@@ -325,7 +325,7 @@ echo "<a class='nothing punkt dark_pole' onclick=\"show('show_options');\"><img 
 
 
 <a class='nothing punkt dark_pole' onclick=\"show('show_options_fonts');\"><img class='icon2 i4' src='/images/1.gif' align=bottom>Шрифты</a><div id='show_options_fonts' style='display:none;'>
-<h2>Подключение альтернативных <a href='http://www.google.com/webfonts/' target='_blank'>шрифтов</a> (в разработке!)</h2>
+<h2>Подключение альтернативных <a href='http://www.google.com/webfonts/' target='_blank'>шрифтов</a></h2>
 <p>Вы можете выбрать дополнительные шрифты и эффекты для них. Эффекты выбирать необязательно.";
 
 $fonts_rus = explode(",","Andika,Anonymous Pro,Bad Script,Comfortaa,Cuprum,Didact Gothic,EB Garamond,Forum,Istok Web,Jura,Kelly Slab,Ledger,Lobster,Marck Script,Marmelad,Neucha,Open Sans,Open Sans Condensed,Oranienbaum,PT Mono,PT Sans,PT Sans Caption,PT Sans Narrow,PT Serif,PT Serif Caption,Philosopher,Play,Poiret One,Press Start 2P,Prosto One,Ruslan Display,Russo One,Scada,Stalinist One,Tenor Sans,Ubuntu,Ubuntu Condensed,Ubuntu Mono,Underdog,Yeseva One");

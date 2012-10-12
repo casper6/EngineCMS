@@ -264,7 +264,7 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
   break;
 
   case "shablon": // 6 ========================================================
-  $sql = "select * from ".$prefix."_mainpage where `tables`='pages' and type = '6' order by type, title, name";
+  $sql = "select * from ".$prefix."_mainpage where `tables`='pages' and type='6' order by type, title, name";
      $result = $db->sql_query($sql);
      $current_type = "";
    $info .= "<table width=60% class=table_light>";
@@ -277,14 +277,9 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
          $useit_module = "";
          $text = $row['text'];
       global $admin_file;
-      $type_opis = explode("|",switch_type($type,$nam,$id,$useit_module));
-      $color = $type_opis[1];
-      $type_opisX = $type_opis[0];
-      //$info .= "</table><table>";
       $redactor = "<div style='float:right;'><a href='sys.php?op=".$admintip."&id=".$id."&red=1&type=6' title='Редактировать'><img class='icon2 i34' src='/images/1.gif'></a> ";
-      if ($type_opisX == "") $type_opisX = "&nbsp;";
       $redactor .= "<a class='padleft30' href='sys.php?op=mainpage_del&id=".$id."&type=6&name=$nam' title='Удалить'><img class='icon2 i33' src='/images/1.gif'></a></div>"; // удаление базы данных
-      $info .= "<tr><td>".$redactor."<h2>".$title."</h2>".$type_opisX."</td></tr>";
+      $info .= "<tr><td>".$redactor."<h2>".$title."</h2></td></tr>";
     }
     $info .= "</table>";
   break;
@@ -300,13 +295,9 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
          $nam = $row['name']; 
          $title = $row['title'];
          $useit = $row['useit'];
-         $useit_module = "";
          $text = $row['text'];
       $and = "";
       global $admin_file;
-      $type_opis = explode("|",switch_type($type,$nam,$id,$useit_module));
-      $color = $type_opis[1];
-      $type_opisX = "";
         $s_tip = explode("|",$text); $s_tip = explode("&",$s_tip[1]); $s_tip = explode("=",$s_tip[0]); 
         if ($s_tip[1]==0) $and = "список фраз на выбор";
         if ($s_tip[1]==1) $and = "текст";
@@ -316,11 +307,9 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
         $m_title = "<a href=/-".$useit.">".$module_title[$useit]."</a>";
         if ($useit==0) $m_title = "все разделы";
         $type_opisX = "Раздел: ".$m_title.".<br>Тип: ".$and.".</sup>";
-      //$info .= "</table><table>";
       $adres = "$title";
       $redactor = "<div style='float:right;'><a href='sys.php?op=".$admintip."&id=".$id."&red=1&type=4' title='Редактировать'><img class='icon2 i34' src='/images/1.gif'></a> 
       <a class='padleft30' href='sys.php?op=mainpage_del&id=".$id."&type=4&name=$nam' title='Удалить поле'><img class='icon2 i33' src='/images/1.gif'></a></div>";
-
       $info .= "<tr><td>".$redactor."<h2>".$title." &darr;</h2><sup style=\"color:#999999;\">Используется в шаблонах: [".$nam."]</sup><br>
       ".$type_opisX."</td></tr>";
     }
@@ -342,9 +331,6 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
          $text = $row['text'];
       $and = "";
       global $admin_file;
-      $type_opis = explode("|",switch_type($type,$nam,$id,$useit_module));
-      $color = $type_opis[1];
-      $type_opisX = "";
       $ti = "";
 
       $text = explode("|",$text);
@@ -356,19 +342,16 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
           if (!strpos(" ".$options,"base=")) $link = ""; 
           else $link = "<a href=/sys.php?op=base_base&name=$nam title='Раскрыть содержание раздела базы данных'><img src='images/admin/".$type_opis[8].".gif' style='background: green; width: 20px; height: 20px;'></a>&nbsp;"; 
         } else $link = "";
-
-      //$info .= "</table><table>";
         $adres = "$title";
         $link = "";
       $view2 = "";
       $adres = "$title";
       $view = "&nbsp;&nbsp;"; 
       $redactor = ""; //<a href=/sys.php?op=base_base&name=$nam title='Раскрыть содержание раздела базы данных'><img src='images/admin/".$type_opis[8].".gif' style='background: green; width: 20px; height: 20px;'></a>&nbsp;"; //<a href='sys.php?op=".$admintip."&id=".$id."' title='Редактировать'><img class='icon2 i35' src='/images/1.gif'></a>";
-      if ($type_opisX == "") $type_opisX = "&nbsp;";
       $and = "";
       $redactor .= "<div style='float:right;'><a class='padleft30' href='sys.php?op=mainpage_del&id=".$id."&type=5&name=$nam' title='Удалить базу данных'><img class='icon2 i33' src='/images/1.gif'></a></div>"; // удаление базы данных
       
-      $info .= "<tr><td>".$adres." <sup style=\"color:#999999;\">".$and."</sup>&nbsp;&nbsp;<font color=#dddddd>".$view2."</font> ".$type_opisX." ".$redactor."&nbsp;".$and2."".$view."&nbsp;&nbsp;".$link."</td></tr>";
+      $info .= "<tr><td>".$adres." <sup style=\"color:#999999;\">".$and."</sup>&nbsp;&nbsp;<font color=#dddddd>".$view2."</font> ".$redactor."&nbsp;".$and2."".$view."&nbsp;&nbsp;".$link."</td></tr>";
     }
     $info .= "</table><div class=green>Для редактирования таблицы подключите её к разделу через его настройки.</div>";
   break;
