@@ -7,18 +7,6 @@ $aid = substr("$aid", 0,25);
 $row = $db->sql_fetchrow($db->sql_query("SELECT realadmin FROM " . $prefix . "_authors WHERE aid='$aid'"));
 if ($row['realadmin'] == 1) {
 
-	function displayadmins() {
-		global $siteurl, $admin, $prefix, $db, $admin_file, $bgcolor2;
-		if (is_admin($admin)) {
-			$result = $db->sql_query("SELECT aid, name from " . $prefix . "_authors where name='BOG'");
-			$row = $db->sql_fetchrow($result);
-			$a_aid = filter($row['aid'], "nohtml");
-			$a_aid = strtolower(substr("$a_aid", 0,25));
-			modifyadmin($a_aid);
-		} else {
-			die('Доступ закрыт!');
-		}
-	}
 
 	function main_ban($ip=0) {
 		global $prefix, $db, $bgcolor2, $admin_file;
@@ -110,56 +98,7 @@ if ($row['realadmin'] == 1) {
 		else $db->sql_query("UPDATE ".$prefix."_banned_ip SET ip_address='$ip', reason='$reason' WHERE id='$id'");
 		Header("Location: ".$admin_file.".php?op=Configure");
 	}
-
 	///////////////////////////////////////////////////////////////////////////////////////
-	function modifyadmin($chng_aid) {
-	global $siteurl, $admin, $prefix, $db, $admin_file, $ipban;
-		if (!isset($ip)) $ip="";
-		if ($ipban != false) {
-			echo "<a class='nothing punkt dark_pole' onclick=\"show_animate('show_options3');\"><img class='icon2 i43' src='/images/1.gif' align=bottom>Блокировка посетителей</a><div id='show_options3' style='display:none;'>";
-			main_ban($ip);
-			echo "<br><br></div>";
-		}
-		echo "<a class='nothing punkt dark_pole' onclick=\"show_animate('show_options4');\"><img class='icon2 i24' src='/images/1.gif' align=bottom>Смена пароля</a><div id='show_options4' style='display:none;'>
-
-		<h2>Смена пароля администратора</h2>";
-		$adm_aid = filter($chng_aid, "nohtml");
-		$adm_aid = trim($adm_aid);
-		$row = $db->sql_fetchrow($db->sql_query("SELECT aid, name, pwd from " . $prefix . "_authors where name='BOG'"));
-		$chng_aid = filter($row['aid'], "nohtml");
-		$chng_name = filter($row['name'], "nohtml");
-		$chng_pwd = filter($row['pwd'], "nohtml");
-		$chng_aid = strtolower(substr("$chng_aid", 0,25));
-		$aid = $chng_aid;
-		echo "<form action=".$admin_file.".php method=post>
-		<table border=0><tr><td><input type=hidden name=chng_name value='".$chng_name."'></td></tr>
-		<tr><td align=right>Псевдоним:</td>
-		<td colspan=3><input type=text name=chng_aid value='".$chng_aid."' size=12 maxlength=25></td></tr>
-		<tr><td align=right>Пароль:</td>
-	    <td colspan=3><input type=password name=chng_pwd size=12 maxlength=40></td></tr>
-		<tr><td align=right>Еще раз:</td>
-		<td colspan=3><input type=password name=chng_pwd2 size=12 maxlength=40></td></tr>
-		<input type=hidden name=adm_aid value='".$adm_aid."'>
-		<input type=hidden name=op value='UpdateAuthor'>
-		<tr><td></td><td><input type=submit value=' Сохранить '>
-		</td></tr></table></form>
-
-
-		<br><br><div class=\"notice warning hide\"><a href='sys.php?op=AdminsList'>Список администраторов</a></div>
-		</div>";
-
- echo "<br><br><a class='nothing punkt dark_pole' onclick=\"show_animate('show_options2'); trash_pics();\"><img class='icon2 i21' src='/images/1.gif'><img class='icon2 i6' src='/images/1.gif'>Удаление неиспользуемых фотографий</a><div id='show_options2' style='display:none;'>Загружаю...</div>
-
- <br><br><a class='nothing dark_pole' href='sys.php?op=subscribe'><img class='icon2 i5' src='/images/1.gif' valign=bottom>Рассылка (список адресатов и их email'ов)</a>
-
- <br><br><a class='nothing dark_pole' href=\"sys.php?op=users\" title='Настройка пользователей'><img class='left icon i3' src='/images/1.gif' valign=bottom>Пользователи</a> (в разработке!)
-
-</div>
-</body>
-</html>";
-
-	}
-
 	function updateadmin($chng_aid, $chng_name, $chng_pwd, $chng_pwd2, $adm_aid) {
 		global $siteurl, $admin, $prefix, $db, $admin_file;
 			$chng_aid = trim($chng_aid);
@@ -184,11 +123,11 @@ if ($row['realadmin'] == 1) {
 	}
 ////////////////////////////////////////////////
 	function Configure($ok=0) {
-		global $prefix, $db, $admin_file, $siteurl;
+		global $prefix, $db, $admin_file, $siteurl, $admin, $ipban;
 		include ("ad-header.php");
 		$ok=intval($ok);
 		// Получаем настройки из mainfile
-		global $sitename, $startdate, $adminmail, $keywords, $description, $counter, $statlink, $postlink, $stopcopy, $registr, $pogoda, $flash, $sgatie, $ht_backup, $captcha_ok, $xnocashe, $ca, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $comment_send, $company_name, $company_fullname, $company_address, $company_time, $company_tel, $company_sot, $company_fax, $company_email, $company_map, $company_people, $search_design, $tag_design, $add_fonts;
+		global $sitename, $startdate, $adminmail, $keywords, $description, $counter, $statlink, $postlink, $stopcopy, $registr, $pogoda, $flash, $sgatie, $ht_backup, $captcha_ok, $xnocashe, $ca, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $comment_send, $company_name, $company_fullname, $company_address, $company_time, $company_tel, $company_sot, $company_fax, $company_email, $company_map, $company_people, $search_design, $tag_design, $add_fonts, $site_cash;
 		
 		$ad_fon_option = ""; // Выбор фоновок для админки
 		for ($i=1; $i < 28; $i++) { // всего 27 фоновок + 1 по-умолчанию в папке images/ad-fon
@@ -206,13 +145,26 @@ if ($row['realadmin'] == 1) {
 		$id_designs = implode(",",$id_designs);
 		$title_designs = implode(",",$title_designs);
 
-echo "<form action='".$admin_file.".php' method='post' name=\"form\">
-<div class='block radius'>";
+$opt_save = ":";
+if ($ok==1) $opt_save = " сохранены";
 
-if ($ok==1) echo "<span class=green>успешно сохранены</span><br>";
+echo "<table style='width:100%; margin-top:5px; padding:0; background: #e2e5ea;' cellspacing=0 cellpadding=0><tr valign=top><td id='razdel_td' class='radius nothing' width=340>
 
-echo "<a class='nothing punkt dark_pole' onclick=\"show('show_options');\"><img class='icon2 i28' src='/images/1.gif' align=bottom>Общие настройки Сайта</a><div id='show_options' style='display:none;'>
-<h2>Общие настройки Сайта</h2>
+			<div id='razdels' style='background:#e7e9ec;'>
+			<div class='black_grad'><span class='h1'>Настройки".$opt_save."</span></div>";
+
+		 echo "<div id='mainrazdel0' class='dark_pole2'><a class='base_page' onclick=\"options_show('0','show_options')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"Z\"></span><span class='plus20'>Общие настройки Сайта</span></div></a></div>";
+		 echo "<div id='mainrazdel1' class='dark_pole2'><a class='base_page' onclick=\"options_show('1','show_options_company')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"Y\"></span><span class='plus20'>Карточка компании</span></div></a></div>";
+		 echo "<div id='mainrazdel2' class='dark_pole2'><a class='base_page' onclick=\"options_show('2','show_options_fonts')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"i\"></span><span class='plus20'>Шрифты</span></div></a></div>";
+		 echo "<div id='mainrazdel3' class='dark_pole2'><a class='base_page' onclick=\"options_show('3','show_options_adspeed')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"z\"></span><span class='plus20'>Настройки Администрирования</span></div></a></div>";
+		 echo "<div id='mainrazdel4' class='dark_pole2'><a class='base_page' onclick=\"options_show('4','show_options_pass_block')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"O\"></span><span class='plus20'>Смена пароля и Блокировка по IP</span></div></a></div>";
+		 echo "<div id='mainrazdel7' class='dark_pole2'><a class='base_page' onclick=\"options_show('7','show_options_oldfotos'); trash_pics();\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"1\"></span><span class='plus20'>Удаление неиспользуемых фотографий</span></div></a></div>";
+		 echo "<div id='mainrazdel5' class='dark_pole2'><a class='base_page' href='sys.php?op=subscribe'><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"@\"></span><span class='plus20'>Рассылка (список адресатов)</span></div></a></div>";
+		 echo "<div id='mainrazdel6' class='dark_pole2'><a class='base_page' href='sys.php?op=users'><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"U\"></span><span class='plus20'>Пользователи (в разработке!)</span></div></a></div>";
+		echo "</div></td><td>
+			<form action='".$admin_file.".php' method='post' name=\"form\">";
+
+echo "<div id='show_options' class='show_pole' style='display:none;'>
 <table class=table_light>
 
 <tr valign=top><td style='min-width:250px;'>
@@ -320,11 +272,9 @@ echo "<a class='nothing punkt dark_pole' onclick=\"show('show_options');\"><img 
 </table>
 <div style='text-align:center;'><input type='submit' value=' Сохранить настройки ' style='width:300px; height:40px;'></div>
 <input type='hidden' name='op' value='ConfigSave'>
-
 </div>
 
-
-<a class='nothing punkt dark_pole' onclick=\"show('show_options_fonts');\"><img class='icon2 i4' src='/images/1.gif' align=bottom>Шрифты</a><div id='show_options_fonts' style='display:none;'>
+<div id='show_options_fonts' class='show_pole' style='display:none;'>
 <h2>Подключение альтернативных <a href='http://www.google.com/webfonts/' target='_blank'>шрифтов</a></h2>
 <p>Вы можете выбрать дополнительные шрифты и эффекты для них. Эффекты выбирать необязательно.";
 
@@ -398,26 +348,24 @@ function save_fonts() {
 	$('#fonts_spisok').val(all);
 }
 </script><br>
-<select id='fonts' size=17 onchange='font()'><option value='' disabled>- Русские шрифты -</option>".$options."</select>
-<select id='effects' size=17 onchange='font()'><option value='' disabled>- Эффекты (Chrome/Firefox/Opera/Safari) -</option><option value='' selected>Эффект не выбран</option>".$options2."</select>
-<nobr>
-<a class='button' onclick='add_font(); save_fonts();'>Добавить &rarr;</a>
-<select id=\"add_fonts\" onchange=\"font('show')\" size=\"17\">".$options3."</select>
+
+<select style='float:left; margin-right:5px;' id='fonts' size=17 onchange='font()'><option value='' disabled>- Русские шрифты -</option>".$options."</select>
+<select style='margin-bottom:5px;' id='effects' onchange='font()'><option value='' disabled>- Эффекты (Chrome/Firefox/Opera/Safari) -</option><option value='' selected>Эффект не выбран</option>".$options2."</select>
+
+<br><a class='button' onclick='add_font(); save_fonts();'>Добавить &darr;</a> <a class='button' onclick='del_font(); save_fonts();'>Удалить</a><br>
+<select style='margin-top:5px;' id=\"add_fonts\" onchange=\"font('show')\" size=\"13\">".$options3."</select>
 <input id='fonts_spisok' type=hidden name='options[add_fonts]' value='".$add_fonts."'>
-<a class='button' onclick='del_font(); save_fonts();'>Удалить</a></nobr>
+
+
 <br>
 <div id='font_preview' onclick=\"show('text_primer');\" style='background:white;'>Здесь будет показан пример шрифта и его применения. Нажмите, чтобы изменить текст.</div>
 <input id='text_primer' style='width:80%; display:none;' type='text' value='Съешь ещё этих мягких французских булок, да выпей чаю. Нажмите, чтобы изменить текст.<br>Grumpy wizards make toxic brew for the evil Queen and Jack.'><br>
 Не забудьте добавить шрифт в список используемых и сохранить.<br>
 Если при выборе эффекта (или шрифта с эффектом из списка выбранных шрифтов), вы не увидели эффекта в поле предпросмотра — выберите другой шрифт и еще раз выберите первый.
 <div style='text-align:center;'><input type='submit' value=' Сохранить настройки ' style='width:300px; height:40px;'></div>
-
-
 </div>
 
-
-<a class='nothing punkt dark_pole' onclick=\"show('show_options_company');\"><img class='icon2 i4' src='/images/1.gif' align=bottom>Карточка компании</a><div id='show_options_company' style='display:none;'>
-<h2>Карточка компании</h2>
+<div id='show_options_company' class='show_pole' style='display:none;'>
 <p>Основные данные компании для быстрой замены. Могут быть вставлены в любом месте сайта как мини-блоки.
 <p>Информация разделяется тремя символами «вертикальная черта», т.е. ||| Каждому последующему мини-блоку присваивается аналогичное имя с порядковым номером.
 <p>Пример: пишем в поле «Краткое название компании:» текст «АгроХолдинг|||Промышленная палата|||РусТранс»
@@ -449,22 +397,19 @@ Email(ы) компании: [почта компании1]
 ".input("options[company_map]", $company_map, 80, "txt")."</td><td>
 Контактное(ые) лицо(а): [лицо компании1]
 ".input("options[company_people]", $company_people, 80, "txt")."</td></tr>
-
-
 </table>
 <div style='text-align:center;'><input type='submit' value=' Сохранить настройки ' style='width:300px; height:40px;'></div>
-
 </div>
 
 <div class=hide>".select("options[ca]", "2,1", "НЕТ,ДА", $ca)." использовать подо что-нть!!! </div>
 
-<a class='nothing dark_pole' target='_blank' href='?cash=del'><img class='icon2 i33' src='/images/1.gif'>Очистить кеш</a>
 
-<br>
+<div id='show_options_adspeed' class='show_pole' style='display:none;'>";
 
-<a class='nothing punkt dark_pole' onclick=\"show('show_options_adspeed');\"><img class='icon2 i38' src='/images/1.gif' align=bottom>Настройки Администрирования</a><div id='show_options_adspeed' style='display:none;'>
-<h2>Настройки Администрирования</h2>
-<table class=table_light>
+if ($site_cash == true) echo "<a class='button' target='_blank' href='?cash=del' style='margin-bottom:5px;'><span class=\"icon medium gray\" data-icon=\"T\"></span>Очистить кеш</a>";
+else echo "<div class=\"notice warning\">Кеширование страниц отключено. Включить можно через config.php</div>";
+
+echo "<table class=table_light>
 <tr valign=top><td style='min-width:250px;'>
 Фоновая картинка Администрирования:</td><td class=small>
 <select name=options[ad_fon] onchange=\"$(body).css('backgroundImage', 'url(images/adfon/' + $(this).val() + '.png)')\"><option value='0'>по-умолчанию</option>".$ad_fon_option."</select>
@@ -495,6 +440,53 @@ Email(ы) компании: [почта компании1]
 <div style='text-align:center;'><input type='submit' value=' Сохранить настройки ' style='width:300px; height:40px;'></div>
 </div>
 </form>";
+
+///////////////////////////////////////////////////////////////////////////////////////////
+$result = $db->sql_query("SELECT aid, name from " . $prefix . "_authors where name='BOG'");
+$row = $db->sql_fetchrow($result);
+$adm_aid = filter($row['aid'], "nohtml");
+$adm_aid = trim(strtolower(substr("$adm_aid", 0,25)));
+echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>";
+		if (!isset($ip)) $ip="";
+		if ($ipban != false) {
+			echo "<a class='nothing punkt dark_pole' onclick=\"show_animate('show_options3');\"><img class='icon2 i43' src='/images/1.gif' align=bottom>Блокировка посетителей</a><div id='show_options3' style='display:none;'>";
+			main_ban($ip);
+			echo "<br><br></div>";
+		} else echo "<div class=\"notice warning\">Блокировка посетителей отключена. Включить можно через config.php</div>";
+		echo "
+
+		<h2>Смена пароля администратора:</h2>";
+		$row = $db->sql_fetchrow($db->sql_query("SELECT aid, name, pwd from " . $prefix . "_authors where name='BOG'"));
+		$chng_aid = filter($row['aid'], "nohtml");
+		$chng_name = filter($row['name'], "nohtml");
+		$chng_pwd = filter($row['pwd'], "nohtml");
+		$chng_aid = strtolower(substr("$chng_aid", 0,25));
+		$aid = $chng_aid;
+		echo "<form action=".$admin_file.".php method=post>
+		<table class=tight>
+		<tr><td align=right>Псевдоним:</td>
+		<td><input type=text name=chng_aid value='".$chng_aid."' size=20 maxlength=25></td></tr>
+		<tr><td align=right>Пароль:</td>
+	    <td><input type=password name=chng_pwd size=20 maxlength=40></td></tr>
+		<tr><td align=right>Пароль еще раз:</td>
+		<td><input type=password name=chng_pwd2 size=20 maxlength=40></td></tr>
+		<tr><td colspan=2><input type=submit value=' Сохранить '></td></tr></table>
+		<input type=hidden name=chng_name value='".$chng_name."'>
+		<input type=hidden name=adm_aid value='".$adm_aid."'>
+		<input type=hidden name=op value='UpdateAuthor'>
+		</form>
+
+
+		<br><br><div class=\"notice warning hide\"><a href='sys.php?op=AdminsList'>Список администраторов</a></div>
+		</div>";
+
+ echo "<div class='show_pole' id='show_options_oldfotos' style='display:none;'>Загружаю...</div>
+
+</div>
+
+</td></tr></table>
+</body>
+</html>";
 	}
 ///////////////////////////////////////////////////////////////////
 	function AdminsList() {
@@ -875,7 +867,6 @@ Email(ы) компании: [почта компании1]
 		case "Configure":
 		if (!isset($save)) $save = "";
 		Configure($save);
-		displayadmins();
 		break;
 
 		case "ConfigSave":
@@ -888,10 +879,10 @@ Email(ы) компании: [почта компании1]
 		Header("Location: sys.php?op=Configure&save=1");
 		break;
 		///////////////////////////////
-		case "modifyadmin":
-		if (!isset($chng_aid)) $chng_aid = "";
-		modifyadmin($chng_aid);
-		break;
+		//case "modifyadmin":
+		//if (!isset($chng_aid)) $chng_aid = "";
+		//modifyadmin($chng_aid);
+		//break;
 
 		case "UpdateAuthor":
 		if ($_POST['op'] != 'UpdateAuthor') exit;

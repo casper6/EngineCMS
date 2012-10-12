@@ -168,7 +168,7 @@ function mainpage($name="") {
 	elseif ($display_addmenu == false) echo "<center><br>Создание основных разделов сайта запрещено администратором.</center>";
 	else {
 		
-		echo "<table style='width:100%; margin-top:5px; padding:0; background: #e2e5ea;' cellspacing=0 cellpadding=0><tr valign=top><td id='razdel_td' class='radius nothing'>
+		echo "<table style='width:100%; margin-top:5px; padding:0; background: #e2e5ea;' cellspacing=0 cellpadding=0><tr valign=top><td id='razdel_td' class='radius nothing' width=300>
 
 			<div id='razdels' style='background:#e7e9ec;'>
 			<div class='black_grad'><button id=new_razdel_button title='Добавить оформление...' class='small black' onclick=\"show_animate('addmain');\" style='float:right; margin:3px;'><span style='margin-right: -2px;' class=\"icon darkgrey small\" data-icon=\"+\"></button>
@@ -187,7 +187,7 @@ function mainpage($name="") {
 		 ////////////////////// БАЗЫ ДАННЫХ 5
 		 echo "<div id='mainrazdel5' class='dark_pole2'><a class='base_page' onclick=\"oformlenie_show('БД','5','base','/sys.php?op=mainpage&amp;name=base&amp;type=5')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"D\"></span><span class='plus20'>Базы данных (таблицы)</span></div></a></div>";
 		 
-		echo "</div></td><td width=70%>
+		echo "</div></td><td>
 
 			<div style='display:none;' id=addmain>
 			<div class='block_white2 radius' style='width: 530px; height:500px; margin-bottom:20px; background: #dddddd;'>

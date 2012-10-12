@@ -38,9 +38,9 @@ function new_otvet(type, cid, sender, info, mail, mod) {
 	JsHttpRequest.query('ad-ajax.php', {'func': 'comm_otvet', 'comm_cid': cid, 'comm_type': type, 'comm_sender': sender, 'comm_otvet': info, 'comm_mail': mail, 'comm_mod': mod}, function(result, errors) {if (result) {document.getElementById('otvet_comm'+cid).innerHTML = result['func']; }},false);
 }
 function trash_pics() {
-	document.getElementById('show_options2').innerHTML = '<br><b>Загружаю список фотографий...</b>';
+	document.getElementById('show_options_oldfotos').innerHTML = '<br><b>Загружаю список фотографий...</b>';
 	var comm_otvet = 'comm_otvet';
-	JsHttpRequest.query('ad-ajax.php', {'func': 'trash_pics'}, function(result, errors) {if (result) {document.getElementById('show_options2').innerHTML = result['func']; }},false);
+	JsHttpRequest.query('ad-ajax.php', {'func': 'trash_pics'}, function(result, errors) {if (result) {document.getElementById('show_options_oldfotos').innerHTML = result['func']; }},false);
 }
 function replace(pid) {
 	document.getElementById('pid'+pid).innerHTML = '<br>Загрузка функций копирования/перемещения и создания ярлыков...';
@@ -54,18 +54,25 @@ function add_pole(minus, id) {
 	if (minus==false) document.getElementById('id0').innerHTML += '<div id=div'+id+'><table width=100% border=0 cellspacing=0 cellpadding=5><tr><td width=18%><input type=text name=pole_name['+id+'] size=15 style="width:100%;" /></td><td width=20%><input type=text name=pole_rusname['+id+'] size=15 style="width:100%;" /></td><td width=10%><label><select name=pole_tip['+id+'] style="width:100%;"><option value="строка" selected=selected>Строка (до 250 букв)</option><option value="строкабезвариантов">Строка без выбора вариантов</option><option value="число">Число</option><option value="список">Список</option><option value="текст">Текст</option><option value="дата">Дата</option><option value="датавремя">Дата-Время</option><option value="фото">Фото</option><option value="минифото">МиниФото</option><option value="файл">Файл</option><option value="ссылка">Ссылка</option></select></label></td><td width=15%><label><select name=pole_main['+id+'] style="width:100%;"><option value=0>не важно</option><option value=1>основная категория</option><option value=2>вторичная категория</option><option value=3>обязательно заполнять</option><option value=4>не важно и не печатать</option><option value=6>не важно, не печатать и не показывать</option><option value=7>обязательно, не печатать и не показывать</option><option value=5>пустая для печати</option></select></label></td><td width=15%><label><select name=pole_open['+id+'] style="width:100%;"><option value=0 selected=selected>видно везде</option><option value=1>не видно нигде</option><option value=2>видно только на странице</option><option value=3>видно только по паролю</option></select></label></td><td width=20%><label><input type=text name=pole_rename['+id+'] size=15 style="width:100%;" /></label></td><td></td></tr></table></div>';
 	else document.getElementById('id'+id).innerHTML = '';
 }
-function oformlenie_show(title,id,type,link) {
-	var txt;
+function select_button(id) {
 	$('.dark_pole2sel').attr('class', 'dark_pole2');
 	$('#mainrazdel' + id).attr('class', 'dark_pole2sel');
+}
+function options_show(id,type) {
+	select_button(id);
+	$('.show_pole').hide();
+	$('#'+type).show();
+}
+function oformlenie_show(title,id,type,link) {
+	var txt;
+	select_button(id);
 	txt = '<a class="button" style="margin-top:4px;margin-bottom:10px;" title="Добавить '+title+'" target=_blank href='+link+'#1><img class="icon2 i39" src=/images/1.gif>Добавить '+title+'</a><br>';
 	document.getElementById('podrazdel').innerHTML = txt+'<br>Загрузка...';
 	JsHttpRequest.query('ad-ajax.php', {'func': 'oformlenie_show', 'papka': type, 'xxx': (Math.floor( Math.random() * (10000 - 9) ) + 10)}, function(result, errors) {if (result) {document.getElementById('podrazdel').innerHTML = txt + result['replace']; }},false);
 }
 function razdel_show(title,id,name,type,xxx,sort) {
 	var txt;
-	$('.dark_pole2sel').attr('class', 'dark_pole2');
-	$('#mainrazdel' + id).attr('class', 'dark_pole2sel');
+	select_button(id);
 	xxx = Math.floor( Math.random() * (100000 - 9) ) + 10;
 	if (id == 0) txt = '<h1>'+title+'</h1>';
 	else {

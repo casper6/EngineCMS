@@ -371,7 +371,7 @@ if ($func == "delfile") { // Удаляем фото с сервера
 }
 ###########################################
 if ($func == "trash_pics") { // Создаем список неиспользуемых фото
-  $info = "<h1>Список неиспользованных фотографий</h1>";
+  $info = ""; //<h1>Список неиспользованных фотографий</h1>";
   $inf = array();
   // собираем адреса фотографий со всех страниц
 
@@ -434,7 +434,7 @@ $sql = "select text from ".$prefix."_mainpage where `tables`='pages' and `type`=
     $diff = array_diff($inf2, $inf);
     $diff = array_unique($diff);
     $diff_count = count($diff);
-    $info .= "Неиспользованных на сайте фотографий (из числа загруженных): <b>".$diff_count."</b>.<br><b>Вы можете удалить</b> те фотографии, которые не понадобятся в дальнейшем для этого сайта.<br>";
+    $info .= "Неиспользованных на сайте фотографий (из числа загруженных): <b>".$diff_count."</b>.<br><b>Вы можете удалить</b> те фотографии, которые не понадобятся в дальнейшем.<br>";
     $num = 1;
     foreach ($diff as $a) { 
       $info .= "<div id='file".$num."' class='delfoto'><a href='".$a."' target='_blank'><img src='includes/phpThumb/phpThumb.php?src=/".$a."&w=0&h=100&q=0'></a><br><a class='punkt' onclick=\"del_file('".$a."', '".$num."');\">Удалить фото</a></div>"; // <br>".$a."

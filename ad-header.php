@@ -65,6 +65,7 @@ if ($op == "mainpage" and $name == "base") {$title = "Добавление ба�
 if ($op == "mainpage" and $name == "shablon") {$title = "Добавление шаблона"; $color1="gray"; $color2="blue";}
 if ($op == "mainpage" and $nastroi == 1) {$title = "Настройка элемента сайта"; $color1="gray"; $color3="blue";}
 if ($op == "mainpage" and $nastroi == 1 and $type == 3) {$title = "Настройка блока"; $color1="gray"; $color3="blue";}
+if ($op == "users") {$title = "Настройка пользователей"; $color1="gray"; $color3="blue";}
 if ($op == "mainpage" and $nastroi == 1 and $type == 2) {$title = "Настройка раздела"; $color1="gray"; $color3="blue";}
 if ($op == "mainpage" and $type == "element") {$title = "Оформление сайта"; $color1="gray"; $color2="blue";}
 if ($op == "mainpage" and $type == "stat") {$title = "Общая статистика"; $color1="gray"; $color2="gray"; $color4="blue";}
