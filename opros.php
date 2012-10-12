@@ -120,7 +120,7 @@ function CheckForm".$re."(){
 }
 </script>
 <form method=post enctype=\"multipart/form-data\" onsubmit=\"return false\">".$textX2."<br><center>
-<input type='image' id=\"go\" name='go' src=\"".$otpravka_pic."\" title='Отправить' style='border:0;' class=\"ok opros\" onclick=\"CheckForm".$re."();\"></center></form>";
+<input type='submit' id=\"go\" name='go' value='Отправить' class=\"ok opros\" onclick=\"CheckForm".$re."();\"></center></form>";
 
 if ($opros_result == 1 or $admin == 1)  $textX .= "<br><a href=\"#golos$re\" onclick=\"$(showopros".$opros_num."(3, 0)); return false;\" class=opros_result_show>Посмотреть результаты</a>";
   }

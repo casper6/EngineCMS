@@ -144,14 +144,19 @@ echo "<table width=100%><tr><td align=center width=170>
 	<a title=\"Перейти в Содержание\" href=\"sys.php\" class='nothing'><img src=images/logo_admin.png></a>
 </td><td width=570>
 	<div class='nothing noprint'>
-	<nobr>
-	<button style='margin:5px;' class='small' onclick='location.href=\"/\"' title='Перейти на сайт (откроется в новом окне)'><span class=\"icon small black\" data-icon=\"4\"></span>На сайт</button>".$post.$kick."<br>
-	<button class='medium ".$color1."' onclick='location.href=\"sys.php\"' title=\"Содержание сайта: разделы, папки, страницы и комментарии\" style=\"margin-left:5px;\"><span class=\"icon gray small\" data-icon=\",\"></span>Содержание</button>
-	<button class='medium ".$color2."' onclick='location.href=\"sys.php?op=mainpage&amp;type=element\"' title='Дизайн, стиль, блоки и прочие элементы оформления сайта'><span class=\"icon gray small\" data-icon=\"Y\"></span>Оформление</button>
-	<button class='medium ".$color3."' onclick='location.href=\"sys.php?op=Configure\"' title='Настройки сайта'><span class=\"icon gray small\" data-icon=\"=\"></span>Настройки</button>
-	<button class='medium ".$color4."' onclick='location.href=\"sys.php?op=mainpage&amp;type=stat\"' title='Открыть статистику сайта'><span class=\"icon gray small\" data-icon=\"j\"></span>Статистика</button>
-	<button class='small gray' onclick='location.href=\"sys.php?op=logout\"' title='Выход из администрирования\n(мера безопасности)'><span style='margin-right: -2px;' class=\"icon red small\" data-icon=\"Q\"></span></button>
-	</nobr>
+
+<div style='margin: 0 5px 5px 0;'>
+<button class='small' onclick='location.href=\"/\"' title='Перейти на сайт (откроется в новом окне)'><span class=\"icon small black\" data-icon=\"4\"></span>На сайт</button> ".$post.$kick."
+</div>
+
+<ul class=\"button-bar\">
+<li class='first ".$color1."'><a title='Содержание сайта: разделы, папки, страницы и комментарии' href='sys.php'><span class=\"icon gray small\" data-icon=\",\"></span> Содержание</a></li>
+<li class='".$color2."'><a title='Дизайн, стиль, блоки и прочие элементы оформления сайта' href='sys.php?op=mainpage&amp;type=element'><span class=\"icon gray small\" data-icon=\"Y\"></span> Оформление</a></li>
+<li class='".$color3."'><a title='Настройки сайта' href='sys.php?op=Configure'><span class=\"icon gray small\" data-icon=\"=\"></span> Настройки</a></li>
+<li class='".$color4."'><a title='Открыть статистику сайта' href='sys.php?op=mainpage&amp;type=stat'><span class=\"icon gray small\" data-icon=\"j\"></span> Статистика</a></li>
+<li class='last'><a title='Выход из администрирования\n(мера безопасности)' href='sys.php?op=logout'><span style='margin-right: -2px;' class=\"icon red small\" data-icon=\"Q\"></span></a></li>
+</ul>
+
 	</div>
 </td><td>
 	<form method=post name=search action='/--search' style='display:inline;' class='nothing'><input type='search' placeholder='Поиск по сайту' name=slovo style='width:100%;'></form>

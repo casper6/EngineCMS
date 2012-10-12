@@ -70,16 +70,10 @@ if ($name=="-email") { // занесение мыла как скрытого к
 	###################################################### БЛОКИ
 	$block = ""; // Определение раздела
 
-	if ($name=="-slovo") {
-		list($block, $stil) = include('page/tags.php');
-		$pagetitle = $slovo." — Тэги — ";
-	} elseif ($name=="-search") {
-		list($block, $stil) = include('page/search.php');
-		$pagetitle = $slovo." — Поиск — ";
-	} elseif ($name=="-user") {
-        list($block, $stil) = include('page/user.php');
-        $pagetitle = "Страница пользователя";
-    } else {
+	if ($name=="-user") { 		list($block, $stil) = include('page/user.php');	$pagetitle = "Страница пользователя"; } 
+ 	elseif ($name=="-slovo") { 	list($block, $stil) = include('page/tags.php');		$pagetitle = $slovo." — Тэги — "; }
+	elseif ($name=="-search") {	list($block, $stil) = include('page/search.php');	$pagetitle = $slovo." — Поиск — "; }
+	else {
 		global $title_razdels, $txt_razdels, $useit_razdels, $pid;
 
 		// Настройки раздела по-умолчанию
@@ -1236,7 +1230,7 @@ case "30": # Статистика раздела, выводит кол-во п�
 		<input type=hidden name=mail_file></td> 
 		</tr><tr><td>
 		<span class=small>* Все поля обязательны к заполнению</span>
-		<p align=right><input class='standart_send_button' value=\"Отправить\" type=\"button\" onClick=\" al=''; if (document.formsend.mail_subject.value=='') al = al + 'Вы не заполнили поле &quot;Ф.И.О.&quot;. '; if (document.formsend.mail_to.value=='') al = al + 'Вы не заполнили поле &quot;E-mail&quot;. '; if (document.formsend.mail_tel.value=='') al = al + 'Вы не заполнили поле &quot;Телефон&quot;. '; if (document.formsend.mail_msg.value=='') al = al + 'Вы не заполнили поле &quot;Заявка&quot;. '; if (al) alert(al); else submit();\"></p>
+		<p align=right><input class='standart_send_button' value=\"Отправить\" type=\"button\" onClick=\" al=''; if (document.formsend.mail_subject.value=='') al = al + 'Вы не заполнили поле &quot;Ф.И.О.&quot;. '; if (document.formsend.mail_to.value=='') al = al + 'Вы не заполнили поле &quot;E-mail&quot;. '; if (document.formsend.mail_msg.value=='') al = al + 'Вы не заполнили поле &quot;Заявка&quot;. '; if (al) alert(al); else submit();\"></p>
 		</td></tr> 
 		</form> 
 		</table>"; 
@@ -1254,7 +1248,7 @@ case "30": # Статистика раздела, выводит кол-во п�
 		<input type=hidden name=mail_file></td> 
 		</tr><tr><td colspan=2>
 		<span class=small>* Все поля обязательны к заполнению</span>
-		<p align=right><input class='standart_send_button' value=\"Отправить\" type=\"button\" onClick=\" al=''; if (document.formsend.mail_subject.value=='') al = al + 'Вы не заполнили поле &quot;Фамилия и имя&quot;. '; if (document.formsend.mail_to.value=='') al = al + 'Вы не заполнили поле &quot;E-mail&quot;. '; if (document.formsend.mail_tel.value=='') al = al + 'Вы не заполнили поле &quot;Телефон&quot;. '; if (document.formsend.mail_msg.value=='') al = al + 'Вы не заполнили поле &quot;Текст письма&quot;. '; if (al) alert(al); else submit();\"></p>
+		<p align=right><input class='standart_send_button' value=\"Отправить\" type=\"button\" onClick=\" al=''; if (document.formsend.mail_subject.value=='') al = al + 'Вы не заполнили поле &quot;Фамилия и имя&quot;. '; if (document.formsend.mail_to.value=='') al = al + 'Вы не заполнили поле &quot;E-mail&quot;. '; if (document.formsend.mail_msg.value=='') al = al + 'Вы не заполнили поле &quot;Текст письма&quot;. '; if (al) alert(al); else submit();\"></p>
 		</td></tr> 
 		</form> 
 		</table>"; 
@@ -1288,7 +1282,7 @@ case "30": # Статистика раздела, выводит кол-во п�
 		<br><input type=hidden name=mail_file></td> 
 		</tr><tr><td colspan=2>
 		<span class=small>* Все поля обязательны к заполнению</span>
-		<p align=right><input class='small_send_button' value=\"Отправить\" type=\"button\" onClick=\" al=''; if (document.formsend.mail_subject.value=='') al = al + 'Вы не заполнили поле &quot;Фамилия и имя&quot;. '; if (document.formsend.mail_to.value=='') al = al + 'Вы не заполнили поле &quot;E-mail&quot;. '; if (document.formsend.mail_tel.value=='') al = al + 'Вы не заполнили поле &quot;Телефон&quot;. '; if (document.formsend.mail_msg.value=='') al = al + 'Вы не заполнили поле &quot;Комментарий&quot;. '; if (al) alert(al); else submit();\"></p>
+		<p align=right><input class='small_send_button' value=\"Отправить\" type=\"button\" onClick=\" al=''; if (document.formsend.mail_subject.value=='') al = al + 'Вы не заполнили поле &quot;Фамилия и имя&quot;. '; if (document.formsend.mail_to.value=='') al = al + 'Вы не заполнили поле &quot;E-mail&quot;. '; if (document.formsend.mail_msg.value=='') al = al + 'Вы не заполнили поле &quot;Комментарий&quot;. '; if (al) alert(al); else submit();\"></p>
 		</td></tr> 
 		</form> 
 		</table>
@@ -1488,6 +1482,16 @@ echo "
 <link rel='alternate' href='/rss/' title='".$siteurl." RSS' />
 <link rel='stylesheet' href='includes/carusel.css' media='screen' />
 <link rel='stylesheet' href='".$stil.".css' />";
+
+global $add_fonts;
+$add_fonts = explode(".",$add_fonts);
+foreach ($add_fonts as $font) {
+	$font = explode(",",$font);
+	$effect_show = "";
+	if (isset($font[1])) $effect_show = '&effect='.$font[1]; // эффект шрифта
+	$font = str_replace(" ", "+", $font[0]);
+	echo '<link href="http://fonts.googleapis.com/css?family='.$font.'&subset=latin,cyrillic'.$effect_show.'" rel="stylesheet" type="text/css">';
+}
 
 	################ НАЧАЛО ТЕЛА
 	$notmenu = "";

@@ -48,7 +48,7 @@ function users() {
 			  $result2 = $db->sql_query("select * from ".$prefix."_users_group where `group`='config'");
 				while ($row = $db->sql_fetchrow($result2)) {
 				$cat = $row['cat'];
-				$id = $row['html'];
+				$id = intval($row['html']);
 				$htmlstr = $row['htmlstr'];
 				echo '
 				<form action="sys.php?op=save_users"  method="post">
@@ -57,7 +57,7 @@ function users() {
 				while ($row = $db->sql_fetchrow($res)) {
 			   echo '<option value="'.$row['id'].'">'.$row['title'].'</option>'; 
 			   }
-			   $res2 = $db->sql_query("select * from ".$prefix."_mainpage where `type`='0' and `id`!='".$row['html']."");
+			   $res2 = $db->sql_query("select * from ".$prefix."_mainpage where `type`='0' and `id`!='".$row['html']."'");
 				while ($row = $db->sql_fetchrow($res2)) {
 				echo "<option value=\"".$row['id']."\">".$row['title']."</option>";
 				}
