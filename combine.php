@@ -92,8 +92,6 @@ box-shadow: 0 0 5px rgba(81, 203, 238, 1);
 
 .cat_page_comments {margin-right: 10px;}
 
-.main_search_form {float:right;}
-
 a img {border:0;}
 
 /* 
@@ -296,10 +294,43 @@ table[align=right] {margin-left: 10px;}
 .all_width, .main_mail_input {width:100%;}
 .main_mail_form, .main_search_form, .add, .main_search_form {display:inline;}
 
-
-
 .show_block { border: 2px solid black; padding:2px;  border-radius: 12px;  -moz-border-radius: 12px;  -webkit-border-radius: 12px;}
 .show_block_title {background: #7f7f7f; color: white; padding:2px; padding-left:5px; border: 0;  border-radius: 10px;  -moz-border-radius: 10px;  -webkit-border-radius: 10px;}
+
+input[type=search] {
+  -webkit-appearance: textfield;
+  -webkit-box-sizing: content-box;
+  font-family: inherit;
+  font-size: 100%;
+}
+input::-webkit-search-decoration,
+input::-webkit-search-cancel-button {
+  display: none;
+}
+
+input[type=search] {
+  background: #ededed url(images/view.gif) no-repeat 3px center;
+  border: solid 1px #ccc;
+  padding: 2px 3px 2px 20px;
+  width: 50px; /* Ширина по умолчанию */
+  -webkit-border-radius: 10em;
+  -moz-border-radius: 10em;
+  border-radius: 10em;
+  -webkit-transition: all .5s;
+  -moz-transition: all .5s;
+  transition: all .5s;
+}
+input[type=search]:focus {
+  width: 130px; /* Ширина при наличии фокуса ввода */
+  background-color: #fff;
+  border-color: #6dcff6;
+  -webkit-box-shadow: 0 0 5px rgba(109,207,246,.5);
+  -moz-box-shadow: 0 0 5px rgba(109,207,246,.5);
+  box-shadow: 0 0 5px rgba(109,207,246,.5); /* Эффект свечения */
+}
+.main_search_button {display:none !important;}
+
+
 ".$sha;
 
 $n = count($name);

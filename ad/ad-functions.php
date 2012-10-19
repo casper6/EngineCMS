@@ -3,10 +3,11 @@
 function page_admin($txt, $pid) { // добавление функций админа к странице сайта
   global $db, $prefix, $module_name, $url, $name;
   if ( $pid > 0 ) $red = "
-<script src=includes/JsHttpRequest/JsHttpRequest.js></script>
 <script>
-function delpage(pid) {
-  JsHttpRequest.query('ad-ajax.php', {'delpage': pid}, function(result, errors) {},false);
+function delpage(id) {
+  $.ajax({ url: 'a-ajax.php', cache: false, dataType : 'html',
+      data: {'func': 'delpage', 'id': id}
+  });
   $('#redact').html('Страница удалена в Корзину.');
 }
 </script>
@@ -63,6 +64,7 @@ function scandirectory($dir, $echoscan="", $images) {
 /////////////////////////////////////////////////////////////// Проверить вызов
 function foto_find($content) { // Поиск фотографий на странице
   global $http_siteurl;
+  $info = '';
   preg_match_all("/(?<=url\()[a-zA-Z.\/]*(?=\))/i", $content, $matches);
   foreach($matches[0] as $item) {
     $item = trim($item);

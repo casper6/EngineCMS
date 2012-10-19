@@ -127,13 +127,11 @@ function clc_name(t){
 /* ################################################################ */
 /* Функция для обработки цитат при их вставке в текст. редактор комментариев */
 function citata_shock(t){
-	//for (var i=0; i<50; i++) {
-		t = t.replace('<(/?)([i|b|u|hr|li]+)>','[$1$2]');
-		t = t.replace('[/li]',''); 
-		t = t.replace('<br>',' ');
-		t = t.replace('</a>','[/url]'); 
-		t = t.replace('<a href=','[url=');
-	//}
+	t = t.replace('<(/?)([i|b|u|hr|li]+)>','[$1$2]');
+	t = t.replace('[/li]',''); 
+	t = t.replace('<br>',' ');
+	t = t.replace('</a>','[/url]'); 
+	t = t.replace('<a href=','[url=');
 	t = t.replace(/\<div.*\>/gi,'');
 	t = t.replace(/\<table.*\>/gi,'');
 	t = t.replace(/\<span.*\>/gi,'');
@@ -147,11 +145,14 @@ function citata_shock(t){
 	return t;
 }
 
-function page_golos(pid,name,gol,type) {
+function page_golos(id,name,gol,type) {
 	if (type == 0) { if (gol != 1 & gol != 2 & gol != 3 & gol != 4 & gol != 5 & gol != 6 ) gol = 1; }
 	if (type == 1) { if (gol != 6 ) gol = 1; }
 	if (type == 2) { if (gol != 1 & gol != 6) gol = 0;}
 	if (type == 3) { if (gol != 1 & gol != 6) gol = 0;}
-	document.getElementById('golos'+pid).innerHTML = 'Секундочку...';
-	JsHttpRequest.query('ajax.php', {'savegolos': pid, 'razdel': name, 'gol': gol, 'purse': type}, function(result, errors) {if (result) {document.getElementById('golos'+pid).innerHTML = result['savegolos']; }},false);
+	$.ajax({ url: 'ajax.php', cache: false, dataType : "html",
+	    data: {'func': 'savegolos', 'type': type, 'id': id, 'string': name+'*@%'+gol},
+	    beforeSend: function(){ $('#golos'+id).html('Секундочку...'); },
+	    success: function(data){ $('#golos'+id).html(data); }
+	});
 }

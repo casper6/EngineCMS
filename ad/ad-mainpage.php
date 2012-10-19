@@ -245,6 +245,7 @@ function create_main($type) {
 [нумерация] - вывод нумерации раздела (если в настройках раздела выбрано такое отображение нумерации)
 [заголовок] - заголовок открытого раздела можно выводить в любом месте дизайна
 [заголовок-ссылка] - стандартный заголовок раздела
+[название папки] - имя открытой папки
 [твиттер] - кнопка «Твитнуть»
 [поиск] - поиск по всему сайту, по всем страницам всех разделов
 [год] - выводит промежуток между начальным и текущим годами существования сайта, например: © 2007-2012 или © 2012
@@ -795,6 +796,7 @@ function create_main($type) {
 	<option value='<b>Созданные блоки</b> (посмотреть их принадлежность вы можете во вкладке Оформление->Блоки):<br>".$blocks."<hr><b>Автоматические блоки</b> (не предназначены для шаблонов, но могут быть использованы):<br>
 	[заголовок] - заголовок открытого раздела можно выводить в любом месте дизайна<br>
 	[заголовок-ссылка] - стандартный заголовок раздела<br>
+	[название папки] - имя открытой папки<br>
 	[твиттер] - кнопка «Твитнуть»<br>
 	[поиск] - поиск по всему сайту, по всем страницам всех разделов<br>
 	[год] - выводит промежуток между начальным и текущим годами существования сайта, например: © 2007-2012 или © 2012<br>
@@ -981,7 +983,7 @@ function edit_main($id) {
 			$use_it = $row2['useit']; 
 			if ( isset($razdel_names[$use_it]) ) $use_it = $razdel_names[$use_it];
 			else $use_it = "поле всех разделов";
-		}
+		} else $use_it = "";
 		$spisok_var[] = $row2['name']; 
 		$spisok_names[] = trim($row2['title']." (".$use_it.")"); 
 	}
@@ -1077,6 +1079,7 @@ function edit_main($id) {
 	[нумерация] - вывод нумерации раздела (если в настройках раздела выбрано такое отображение нумерации)<br>
 	[заголовок] - заголовок открытого раздела можно выводить в любом месте дизайна<br>
 	[заголовок-ссылка] - стандартный заголовок раздела<br>
+	[название папки] - имя открытой папки<br>
 	[твиттер] - кнопка «Твитнуть»<br>
 	[поиск] - поиск по всему сайту, по всем страницам всех разделов<br>
 	[год] - выводит промежуток между начальным и текущим годами существования сайта, например: © 2007-2012 или © 2012<br>
@@ -1113,7 +1116,7 @@ function edit_main($id) {
 	$options = str_replace($module_name."|","",$text);
 
 	// обнулили все опции от греха подальше
-	$media=$folder=$col=$view=$golos=$golosrazdel=$post=$comments=$datashow=$favorites=$socialnetwork=$search=$search_papka=$put_in_blog=$base=$vetki=$citata=$media_comment=$no_html_in_opentext=$no_html_in_text=$show_add_post_on_first_page=$show_add_post_fileform=$razdel_shablon=$page_shablon=$comments_all=$comments_num=$comments_mail=$comments_adres=$comments_tel=$comments_desc=$golostype=$pagenumbers=$comments_main=$tags_type=$tema_zapret_comm=$pagekol=$table_light=$designpages=$comments_add=0;
+	$media=$folder=$col=$view=$golos=$golosrazdel=$post=$comments=$datashow=$favorites=$socialnetwork=$search=$search_papka=$put_in_blog=$base=$vetki=$citata=$media_comment=$no_html_in_opentext=$no_html_in_text=$show_add_post_on_first_page=$show_add_post_fileform=$razdel_shablon=$page_shablon=$comments_all=$comments_num=$comments_mail=$comments_adres=$comments_tel=$comments_desc=$golostype=$pagenumbers=$comments_main=$tags_type=$tema_zapret_comm=$pagekol=$table_light=$designpages=$comments_add=$div_or_table=0;
 
 	$menushow=$titleshow=$razdel_link=$peopleshow=$design=$tags=$podrobno=$podrazdel_active_show=$podrazdel_show=$tipograf=$limkol=$tags_show=$tema_zapret=1;
 
@@ -1169,9 +1172,13 @@ function edit_main($id) {
 	<td>".select("options[razdel_shablon]", $shablon_var."0", $shablon_names."без шаблона", $razdel_shablon)."</td>
 	</tr>
 	<tr>
-	<td>Если для всего раздела выбрано — без шаблона. <b>Тип раздела:</b><br>
+	<td><b>Формирование списка страниц</b> в разделе и папках. Разделение отдельных страниц</td>
+	<td>".select("options[div_or_table]", "1,0", "Безтабличное DIV,Табличное TABLE TR TD", $div_or_table)."</td>
+	</tr>
+	<tr>
+	<td><b>Тип раздела:</b><br>
 	<i class=red>Для типа раздела \"Анкеты-рейтинги\" необходимо выбрать в настройках ниже возможность комментировать и голосовать за страницы.</i></td>
-	<td>".select("options[view]", "5,4,3,2,1,6,0", "фотогалерея (не работает),анкеты-рейтинги,магазин (не работает),каталог предприятий (не работает),форум,статьи (на главной - разделы),статьи (на главной - страницы)", $view)."</td>
+	<td>".select("options[view]", "4,1,6,0", "анкеты-рейтинги,форум,статьи (на главной - разделы),статьи (на главной - страницы)", $view)."</td>
 	</tr>
 	<td><b>Шаблон для комментариев</b> на странице  [<a href=sys.php?op=mainpage&amp;name=shablon target=_blank>Добавить</a>] (пока нет полной поддержки)</td>
 	<td>".select("options[comment_shablon]", $shablon_var."2,1,0", $shablon_names."ДвижОк: ArtistStyle,ДвижОк: диалоговый аля Joomla,ДвижОк: стандартный", $comment_shablon)."</td>
@@ -1664,9 +1671,9 @@ function edit_main($id) {
 	$options = str_replace($module_name."|","",$useit);
 
 	// обнулили все опции от греха подальше
-	$media=$folder=$datashow=$tagdelete=$ipdatauser=$design=$open_all=$catshow=$main=$daleeshow=$openshow=$number=$add=$size=$papki_numbers=$zagolovokin=$menu=$notitlelink=$noli=$html=$show_title=$random=$showlinks=$open_new_window=$shablon=0;
+	$titleshow=$media=$folder=$datashow=$tagdelete=$ipdatauser=$design=$open_all=$catshow=$main=$daleeshow=$openshow=$number=$add=$size=$papki_numbers=$zagolovokin=$menu=$notitlelink=$noli=$html=$show_title=$random=$showlinks=$open_new_window=$shablon=0;
 
-	$titleshow=$opros_type=$limkol=$pageshow=$only_question=$opros_result=$foto_gallery_type=1;
+	$opros_type=$limkol=$pageshow=$only_question=$opros_result=$foto_gallery_type=1;
 	$addtitle="Добавить статью";
 	$dal="Далее...";
 	$first = "src=";
@@ -1674,7 +1681,7 @@ function edit_main($id) {
 	$third = " ";
 	$col_bukv = 50;
 	$img_width = 0;
-	$img_height = 100;
+	$img_height = 200;
 	$size=10;
 	$class=$alternative_title_link=$cid_open=$no_show_in_razdel=$watermark=$show_in_papka="";
 	$sort = "date desc";

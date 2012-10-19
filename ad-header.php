@@ -82,7 +82,6 @@ echo "<!doctype html>
 <meta name='viewport' content='width=device-width'>
 <link rel=\"stylesheet\" href=\"ad-style.css\" type=\"text/css\">
 <link rel=\"shortcut icon\" href=\"favicon_cms.ico\" type=\"image/x-icon\">
-<script src='includes/JsHttpRequest/JsHttpRequest.js'></script>
 <script src='includes/jad.js'></script>
 <script src='includes/j.js'></script>
 <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.6.3/jquery.min.js'></script>

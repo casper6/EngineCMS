@@ -1187,6 +1187,11 @@ case "30": # Статистика раздела, выводит кол-во п�
 		$block = str_replace("[заголовок]", "<div class=cat_title>".$main_title."</div>", $block); 
 		$block = str_replace("[заголовок-ссылка]", "<div class=cat_title><A class=cat_categorii_link href=-".$DBName.">".$main_title."</a></div>", $block); 
 	}
+	if (strpos($block, "[название папки]")) {
+		if (!isset($cid)) $cid = 0;
+		if ($cid > 0) $block = str_replace("[название папки]", "<div class=papka_title> &rarr; ".titles_papka($cid)."</div>", $block);
+		else $block = str_replace("[название папки]", "", $block); 
+	}
 
 	// Ставим годовой промежуток существования сайта
 	$god = $startdate;
@@ -1292,7 +1297,7 @@ case "30": # Статистика раздела, выводит кол-во п�
 	}
 
 	// Ставим поиск
-	$search = "<form method=POST action=\"/--search\" class='main_search_form'><input type='search' name=slovo placeholder='Поиск по сайту' class='main_search_input'><input type='submit' name='ok' value='Найти' class='main_search_button'></form>";
+	$search = "<form method=POST action=\"/--search\" class='main_search_form'><input type='search' name=slovo placeholder='Поиск'><input type='submit' name='ok' value='Найти' class='main_search_button'></form>";
 	$block=str_replace("[поиск]", $search, $block);
 
 	// Ставим подписку
@@ -1488,9 +1493,9 @@ $add_fonts = explode(".",$add_fonts);
 foreach ($add_fonts as $font) {
 	$font = explode(",",$font);
 	$effect_show = "";
-	if (isset($font[1])) $effect_show = '&effect='.$font[1]; // эффект шрифта
+	if (isset($font[1])) $effect_show = '&and;effect='.$font[1]; // эффект шрифта
 	$font = str_replace(" ", "+", $font[0]);
-	echo '<link href="http://fonts.googleapis.com/css?family='.$font.'&subset=latin,cyrillic'.$effect_show.'" rel="stylesheet" type="text/css">';
+	echo '<link href="http://fonts.googleapis.com/css?family='.$font.'&and;subset=latin,cyrillic'.$effect_show.'" rel="stylesheet" type="text/css">';
 }
 
 	################ НАЧАЛО ТЕЛА

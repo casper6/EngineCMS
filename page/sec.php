@@ -48,7 +48,7 @@
     exit();
   }
 
-  if ($zlib == true) {
+  if (isset($zlib)) if ($zlib == true) {
     if ($phpver >= '4.0.4pl1' && isset($_SERVER['HTTP_USER_AGENT']) && strstr($_SERVER['HTTP_USER_AGENT'],'compatible')) {
       if (extension_loaded('zlib')) {
           @ob_end_clean();

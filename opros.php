@@ -7,7 +7,7 @@ header("Pragma: no-cache"); // HTTP/1.0
 @require_once("config.php"); // Настройки сайта
 @require_once("includes/db.php"); // База данных (функции для работы)
 @require_once("includes/sql_layer.php");
-global $prefix, $db, $opros, $otpravka_pic; 
+global $prefix, $db, $otpravka_pic; 
 
 if (isset($_COOKIE['admin'])) {
   if ($_COOKIE['admin'] != "") $admin = 1; else $admin = 0;
@@ -40,7 +40,7 @@ if ($opros_res != 1 and $opros_res != 3) {
         $txt = "";
         foreach ($lines as $line_id => $line) {
           $line = explode("|",$line);
-          $col = $line[1]; if ($col=="") $col=0;
+          if (isset($line[1])) $col = $line[1]; else $col=0;
           $line = $line[0];
           if ($line_id == $opros_golos) $col = $col + 1;
           $txt .= $line."|".$col."\r\n";
@@ -67,7 +67,7 @@ parse_str($useit);
   
   foreach ($lines as $line_id => $line) {
     $line = explode("|",$line);
-    $col = $line[1]; if ($col=="") $col=0;
+    if (isset($line[1])) $col = $line[1]; else $col=0;
     $line = $line[0];
 
     if ($tmp == $opros_id or $opros_res != 1) { // Если голосовали - готовим результат
@@ -86,10 +86,10 @@ parse_str($useit);
     if ($opros_result == 1 or $opros_result == 2 or $admin == 1) { // Если результат можно видеть всем
       if ($opros_result == 0 and $admin == 1) $textX .= "<B>Результаты опроса видите только вы — администратор.</B>";
       $sto = array_sum($cols2);
-      if ($opros == 0) {
+      //if ($opros == 0) {
         $textX .= "";
         foreach ($lines2 as $line_id => $line) {
-          $proc = intval($cols2[$line_id] * 100 / $sto);
+          if ($sto > 0) $proc = intval($cols2[$line_id] * 100 / $sto); else $proc = $sto;
           if ($proc>50) { 
             $line1=$proc."%"; $line2=""; 
           } else {
@@ -100,10 +100,10 @@ parse_str($useit);
           $textX .= "<table width=100%><tr><td colspan=2 class=opros_otvet>".$line."</td></tr><tr><td bgcolor=red style='text-align:right; width:".$proc."%;' class=opros_line><b>".$line1."</b></td><td style='text-align:left; width:".$proc2."%;' class=opros_line2>".$line2."</td></tr></table>";
         }
         $textX .= "";
-      } else { // Если выбран графический вид результатов опроса
-        $ver = mt_rand(10000, 99999); // получили случайное число
-        $textX .= "<br><img src=ajax.php?diag=$opros_num&nu=$ver>";
-      }
+      //} else { // Если выбран графический вид результатов опроса
+        //$ver = mt_rand(10000, 99999); // получили случайное число
+        //$textX .= "<br><img src=ajax.php?diag=$opros_num&nu=$ver>";
+      //}
       $textX .= "<br><span class=opros_all>Всего проголосовало: $sto.</span>";
     } else {
       $textX .= "Вы уже проголосовали. Администратор запретил просмотр результатов голосования.";

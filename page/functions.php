@@ -102,7 +102,7 @@ function delQuotes($string) { # Фильтры текста
 }
 /////////////////////////////////////////////////////////
 function validate_mail($email) { // проверить вызов
-  if(strlen($email) < 7 || !preg_match("/^[_\.0-9a-z\-]+@([0-9a-z][0-9a-z\-]+\.)+[a-z]{2,6}$/i",$email)) {
+  if(strlen($email) < 7 || !eregi("^[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,6}$",$email)) {
     die("Ошибка в адресе Email. Вернитесь назад и исправьте.");
   } else {
     return $email;
@@ -696,18 +696,25 @@ function text_shablon() { // список шаблонов
     return $text_shablon;
 }
 /////////////////////////////////////////////////////////////// 
-function titles_papka() { // список названий папок
+function titles_papka($cid=0) { // список названий папок
     global $prefix, $db;
-    $titles_papka = array(); 
-    //$cid_module = array(); // список принадлежности папок к разделам
-    $sql55="SELECT `cid`,`module`,`title` from ".$prefix."_pages_categories where `tables`='pages' and parent_id='0' order by `title`";
-    $result55 = $db->sql_query($sql55);
-    while ($row55 = $db->sql_fetchrow($result55)) {
-      $id55 = $row55['cid'];
-      $titles_papka[$id55] = $row55['title'];
-      //$cid_module[$id55] = $row55['module'];
+    $cid = intval($cid);
+    if ($cid == 0) {
+      $titles_papka = array(); 
+      //$cid_module = array(); // список принадлежности папок к разделам
+      $result = $db->sql_query("SELECT `cid`,`title` from ".$prefix."_pages_categories where `tables`='pages' and parent_id='0' order by `title`");
+      while ($row = $db->sql_fetchrow($result)) {
+        $id = $row['cid'];
+        $titles_papka[$id] = $row['title'];
+        //$cid_module[$id] = $row['module'];
+      }
+      return $titles_papka;
+    } else {
+      $result = $db->sql_query("SELECT `title` from ".$prefix."_pages_categories where `cid`='".$cid."'");
+      $row = $db->sql_fetchrow($result);
+      $title_papka = $row['title'];
+      return $title_papka;
     }
-    return $titles_papka;
 }
 /////////////////////////////////////////////////////////////// 
 function design_and_style($design) { // Определение дизайна

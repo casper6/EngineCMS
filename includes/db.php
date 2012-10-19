@@ -1,5 +1,4 @@
 <?php
-/* (C) 2001 phpBB Group */
 if (stristr($_SERVER['PHP_SELF'], "db.php")) {
 	Header("Location: index.php");
 	die();
