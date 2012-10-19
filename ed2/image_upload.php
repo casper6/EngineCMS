@@ -41,4 +41,15 @@ if ($_FILES['file']['type'] == 'image/png'
 	);
 	echo stripslashes(json_encode($array));   
 }
+
+function is_image($image_path) { 
+    if (!$f = fopen($image_path, 'rb')) return false;
+    $data = fread($f, 8);
+    fclose($f);
+    // проверка сигнатуры
+    if (array_pop(unpack('H12', $data)) == '474946383961' || array_pop(unpack('H12', $data)) == '474946383761') return 'gif';
+    else if (array_pop(unpack('H4', $data)) == 'ffd8') return 'jpg';
+    else if (array_pop(unpack('H16', $data)) == '89504e470d0a1a0a') return 'png';
+    return false;
+}
 ?>

@@ -105,30 +105,10 @@ echo "<link rel=\"stylesheet\" href=\"http://ajax.googleapis.com/ajax/libs/jquer
 
 if ($red==3) echo "<script type=\"text/javascript\" src=\"ed/js/editor/editor.js\"></script> 
 <link rel=\"stylesheet\" href=\"ed/js/editor/css/editor.css\" type=\"text/css\" media=\"screen, projection\" /> ";
-if ($red==4) echo "<script src=\"ed2/redactor.js\"></script><link rel=\"stylesheet\" href=\"ed2/redactor.css\" /> ";
-
-// УДАЛЕНО
-/* 
-if ($red==2) echo "<script type=\"text/javascript\" src=\"ckeditor/ckeditor.js\"></script>";
-<script src='includes/ui.core.js'></script>
-<script src='includes/ui.tabs.js'></script>
-
-<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js'></script>
-<script src='includes/jquery-ui.min.js'></script> 
-<script src='includes/jquery-ui-i18n.min.js'></script> 
-
-<link rel=\"stylesheet\" type=\"text/css\" href=\"includes/css/kickstart-buttons.css\" media=\"all\" />
-<link rel='StyleSheet' href='includes/jquery-ui.css' type='text/css' />
-
-<script type=\"text/javascript\" src=\"includes/js/prettify.js\"></script>
-
-echo "<!-- calendar -->
-<LINK rel=\"stylesheet\" type=\"text/css\" media=\"all\" href=includes/calendar/calendar-win2k-cold-1.css title=\"win2k-cold-1\"> 
-<SCRIPT type=\"text/javascript\" src=includes/calendar/calendar.js></SCRIPT> 
-<SCRIPT type=\"text/javascript\" src=includes/calendar/calendar-en.js></SCRIPT> 
-<SCRIPT type=\"text/javascript\" src=includes/calendar/calendar-setup.js></SCRIPT>
-<!-- / calendar -->";
-*/
+if ($red==4) echo "<script src=\"ed2/redactor.js\"></script>
+<link rel=\"stylesheet\" href=\"ed2/redactor.css\" />
+<script src=\"ed2/ru.js\"></script>
+";
 
 global $ad_fon;
 if ($ad_fon == 0) $fon = "default.jpg"; else $fon = $ad_fon.".png";

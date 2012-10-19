@@ -1059,7 +1059,7 @@ function edit_main($id) {
         button_more: {title: 'Вставка ссылки на полное содержание (для предисловия)',callback: ButtonMore},
         button_link: {title: 'Вставка блока (например, галереи фотографий)',callback: ButtonBlock},
         button_block: {title: 'Вставка быстрой ссылки на страницу или раздел',callback: ButtonLink}
-      }, mobile: false, ".$red4_div_convert." imageUpload: 'ed2/image_upload.php',fileUpload: 'ed2/file_upload.php' }); } );
+      }, mobile: true, ".$red4_div_convert." imageUpload: 'ed2/image_upload.php',fileUpload: 'ed2/file_upload.php', lang: 'ru' }); } );
 	    </script><textarea class='redactor' id=text name=text rows=15 cols=80 style='width:100%; height:450px;'>".$text."</textarea>";
 	}
 	echo "</h2>
@@ -1599,20 +1599,16 @@ function edit_main($id) {
         button_more: {title: 'Вставка ссылки на полное содержание (для предисловия)',callback: ButtonMore},
         button_link: {title: 'Вставка блока (например, галереи фотографий)',callback: ButtonBlock},
         button_block: {title: 'Вставка быстрой ссылки на страницу или раздел',callback: ButtonLink}
-      }, mobile: false, ".$red4_div_convert." imageUpload: 'ed2/image_upload.php',fileUpload: 'ed2/file_upload.php' }); } );
+      }, mobile: false, ".$red4_div_convert." imageUpload: 'ed2/image_upload.php',fileUpload: 'ed2/file_upload.php', lang: 'ru' }); } );
 	    </script><textarea class='redactor' id=useit name=useit rows=15 cols=80 style='width:100%; height:450px;'>".$useit."</textarea>";
 	}
 
-		
-		echo "<br>
-	<input type=hidden name=text value=\"$text\">";
-
+	echo "<br><input type=hidden name=text value=\"$text\">";
 		$sql = "select name from ".$prefix."_mainpage where `tables`='pages' and id='$id'";
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result)) {
 			$mod_name = $row['name'];
 		}
-
 		if ($mod_name != "index") {
 			echo "<span style='font-size:14pt;'>Шаблон Предисловия и Содержания страниц</span>
 			<br>
@@ -2102,7 +2098,7 @@ function edit_main($id) {
         button_more: {title: 'Вставка ссылки на полное содержание (для предисловия)',callback: ButtonMore},
         button_link: {title: 'Вставка блока (например, галереи фотографий)',callback: ButtonBlock},
         button_block: {title: 'Вставка быстрой ссылки на страницу или раздел',callback: ButtonLink}
-      }, mobile: false, ".$red4_div_convert." imageUpload: 'ed2/image_upload.php',fileUpload: 'ed2/file_upload.php' }); } );
+      }, mobile: false, ".$red4_div_convert." imageUpload: 'ed2/image_upload.php',fileUpload: 'ed2/file_upload.php', lang: 'ru' }); } );
 	    </script><textarea class='redactor' id=text name=text rows=15 cols=80 style='width:100%; height:450px;'>".$text."</textarea>";
 	}
 	echo "</h2>";
@@ -2236,7 +2232,7 @@ function edit_main($id) {
         button_more: {title: 'Вставка ссылки на полное содержание (для предисловия)',callback: ButtonMore},
         button_link: {title: 'Вставка блока (например, галереи фотографий)',callback: ButtonBlock},
         button_block: {title: 'Вставка быстрой ссылки на страницу или раздел',callback: ButtonLink}
-      }, mobile: false, ".$red4_div_convert." imageUpload: 'ed2/image_upload.php',fileUpload: 'ed2/file_upload.php' }); } );
+      }, mobile: false, ".$red4_div_convert." imageUpload: 'ed2/image_upload.php',fileUpload: 'ed2/file_upload.php', lang: 'ru' }); } );
 	    </script><textarea class='redactor' id=text name=text rows=15 cols=80 style='width:100%; height:450px;'>".$text."</textarea>";
 	}
 	echo "</h2>";

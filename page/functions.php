@@ -35,15 +35,15 @@ function FixQuotes($what = "",$strip="") {
 function delQuotes($string) { # Фильтры текста
   /* no recursive function to add quote to an HTML tag if needed */
   /* and delete duplicate spaces between attribs. */
-  $tmp="";  # string buffer
-  $result=""; # result string
+  $tmp="";
+  $result="";
   $i=0;
   $attrib=-1; # Are us in an HTML attrib ?   -1: no attrib   0: name of the attrib   1: value of the atrib
   $quote=0;   # Is a string quote delimited opened ? 0=no, 1=yes
   $len = strlen($string);
   while ($i<$len) {
-    switch($string[$i]) { # What car is it in the buffer ?
-    case "\"": #"   # a quote.
+    switch($string[$i]) {
+    case "\"":
     if ($quote==0) {
       $quote=1;
     } else {
@@ -53,20 +53,20 @@ function delQuotes($string) { # Фильтры текста
       $attrib=-1;
     }
     break;
-    case "=":   # an equal - attrib delimiter
-    if ($quote==0) {  # Is it found in a string ?
+    case "=":
+    if ($quote==0) {
     $attrib=1;
     if ($tmp!="") $result.=" $tmp";
     $tmp="";
     } else $tmp .= '=';
     break;
-    case " ":   # a blank ?
-    if ($attrib>0) {  # add it to the string, if one opened.
+    case " ":
+    if ($attrib>0) {
     $tmp .= $string[$i];
     }
     break;
-    default:  # Other
-    if ($attrib<0)  # If we weren't in an attrib, set attrib to 0
+    default:
+    if ($attrib<0)
     $attrib=0;
     $tmp .= $string[$i];
     break;
@@ -75,18 +75,9 @@ function delQuotes($string) { # Фильтры текста
   }
   if (($quote!=0) && (!empty($tmp))) {
     if ($attrib==1) $result .= "=";
-    /* If it is the value of an atrib, add the '=' */
-    $result .= "\"".$tmp."\"";  /* Add quote if needed (the reason of the function ;-) */
+    $result .= "\"".$tmp."\"";
   }
   return $result;
-}
-/////////////////////////////////////////////////////////
-function validate_mail($email) { // проверить вызов
-  if(strlen($email) < 7 || !eregi("^[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,6}$",$email)) {
-    die("Ошибка в адресе Email. Вернитесь назад и исправьте.");
-  } else {
-    return $email;
-  }
 }
 /////////////////////////////////////////////////////////
 function check_html($str, $strip="") {
@@ -540,19 +531,19 @@ function recash($url, $main=1) { // Обновление кеша
   $db->sql_query("DELETE FROM ".$prefix."_cash WHERE `url`='".$url."'"); 
 }
 ///////////////////////////////////////////////////////////////
-function obrez($WORD) { // Функция обрезания окончаний
-  $RESULT = ''; $MAKE = 0;
-  $CLOSES = array('овая','овый','ная','ной','ный','ый','ий','ой','овое','ов','ах','ав','ях','ёвое','евое','ое','ям','ом','ем','ей','ёй','ай','ец'); //Окончания
-  foreach ($CLOSES AS $PART)
-    if (preg_match('/(.*)'.$PART.'/', $WORD)) $WORD = substr($WORD,0,strlen($WORD)-strlen($PART));
-    $CHARS = array('а','е','ё','й','и','о','у','ь','ы','э','ю','я'); //Буквы
-    for ($POSITION = strlen($WORD)-1; $POSITION >= 0; $POSITION--) {
-      $CHAR = substr($WORD, $POSITION, 1);
-      if (!in_array($CHAR,$CHARS)) $MAKE = 1;
-      if ($POSITION==2) $MAKE = 1;
-      if ($MAKE==1) $RESULT = $CHAR.$RESULT;
+function obrez($word) { // Функция обрезания окончаний
+  $result = ''; $make = 0;
+  $closes = array('овая','овый','ная','ной','ный','ый','ий','ой','овое','ов','ах','ав','ях','ёвое','евое','ое','ям','ом','ем','ей','ёй','ай','ец'); //Окончания
+  foreach ($closes AS $part)
+    if (preg_match('/(.*)'.$part.'/', $word)) $word = substr($word,0,strlen($word)-strlen($part));
+    $chars = array('а','е','ё','й','и','о','у','ь','ы','э','ю','я'); //Буквы
+    for ($position = strlen($word)-1; $position >= 0; $position--) {
+      $char = substr($word, $position, 1);
+      if (!in_array($char,$chars)) $make = 1;
+      if ($position==2) $make = 1;
+      if ($make==1) $result = $char.$result;
     }
-  return $RESULT;
+  return $result;
 }
 ///////////////////////////////////////////////////////////////
 function getparent($name, $parentid, $title) { // получение родительской папки

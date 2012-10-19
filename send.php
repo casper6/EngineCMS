@@ -1,23 +1,19 @@
 <?php 
-require_once("mainfile.php");
-global $adminmail, $siteurl;
+  require_once("mainfile.php");
+  global $adminmail, $siteurl;
   if(empty($_POST['mail_to'])) die("Введите свой почтовый адрес");
-
   // Если поле выбора вложения не пустое - закачиваем его на сервер 
   $thm = filter($_POST['mail_subject'], "nohtml");
   $msg = filter($_POST['mail_msg'], "nohtml");
   $tel = filter($_POST['mail_tel'], "nohtml");
-  
   if (strpos(" ".$msg, "[link") or strpos(" ".$msg, "[url") or strpos(" ".$msg, "[img")) {
     print "Попытка отправки спама.";   
     exit();   
   }
-  
-  $mail_to = validate_mail(str_replace(" ","",$_POST['mail_to']));
-
-  send_mail($mail_to, $thm, $msg, '', $tel);
-
-  // Вспомогательная функция для отправки почтового сообщения с вложением (Trianon)
+  if (filter_var($_POST['mail_to'], FILTER_VALIDATE_EMAIL)) {
+    $mail_to = $_POST['mail_to'];
+    send_mail($mail_to, $thm, $msg, '', $tel);
+  } else die('Неправильный email');
   function send_mail($mail_to, $thema, $html, $path, $telefon) { 
   global $adminmail, $siteurl;
 
@@ -42,7 +38,7 @@ global $adminmail, $siteurl;
     //if ($path != "") $headers   .= "Content-Type: multipart/mixed; boundary=\"$boundary\"$EOL
     //Content-Type: text/html; charset=utf-8$EOL";  
     //else 
-    $headers   .= "Content-Type: text/html; charset=utf-8$EOL";  
+    $headers   = "Content-Type: text/html; charset=utf-8$EOL";  
     $headers   .= "From: $mail_to$EOL";  
     //$headers .= "Bcc: $mail_to$EOL";
     /*
@@ -65,7 +61,7 @@ global $adminmail, $siteurl;
     //$multipart .= "Content-Type: text/html; charset=utf-8$EOL";   
     //$multipart .= "Content-Transfer-Encoding: base64$EOL";   
     //$multipart .= $EOL; // раздел между заголовками и телом html-части 
-    $multipart .= str_replace($EOL,"<br>",$html);
+    $multipart = str_replace($EOL,"<br>",$html);
     $multipart .= "<br>Ф.И.О.: ".$thema;
     $multipart .= "<br>Почта: ".$mail_to;
     if ($telefon) $multipart .= "<br>Телефон: ".$telefon;
