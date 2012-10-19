@@ -1,24 +1,4 @@
 <?php
-##########################################################################################
-if(!function_exists('stripos')) { // функция stripos (из ПХП5), клонированная для ПХП4      # использовать
-    function stripos_clone($haystack, $needle, $offset=0) {
-      $return = strpos(strtoupper($haystack), strtoupper($needle), $offset);
-      if ($return === false) {
-        return false;
-      } else {
-        return true;
-      }
-    }
-} else { // Но если это ПХП5 - используем оригинал!
-    function stripos_clone($haystack, $needle, $offset=0) {
-      $return = stripos($haystack, $needle, $offset=0);
-      if ($return === false) {
-        return false;
-      } else {
-        return true;
-      }
-    }
-}
 /////////////////////////////////////////////////////////
 function is_admin($admin) { // Проверка админа
   global $adminSave;
@@ -46,7 +26,7 @@ function is_admin($admin) { // Проверка админа
 }
 /////////////////////////////////////////////////////////
 function FixQuotes($what = "",$strip="") {
-  while (stripos_clone($what, "\\\\'")) { // stristr
+  while (stripos($what, "\\\\'")) { // stristr
     $what = str_replace("\\\\'","'",$what);
   }
   return $what;
@@ -214,7 +194,6 @@ function tipograf($text, $p=0) { // Типографика - все основн
   $zamena = array(
   "<div><br /> 
   </div>"=>"<br>",
-  "spaw2/empty/"=>"",
   "\"/>"=>"\">",
   "MsoNormalTable"=>"table_light",
   " class=\"Apple-style-span\""=>"",

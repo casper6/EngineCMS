@@ -9,7 +9,6 @@ $realadmin = $row['realadmin'];
 if ($realadmin==1) {
 $tip = "pages";
 $admintip = "base_comments";
-if ($red==3) include("spaw2/spaw.inc.php");
 ##################################################################################################
 function base_comments($name=0, $cid=0, $pid=0) {
     global $tip, $admintip, $prefix, $db, $bgcolor1, $bgcolor2, $spisoknum, $bgcolor3, $bgcolor4, $p;
@@ -213,7 +212,6 @@ echo "<br><label><input type=checkbox name=act value=1".$check."> <b>Включ�
 <b>Телефон:</b><br><input type=text size=60 name=tel value=\"".$comm_tel."\"> (лучше не менять!)<br><br>
 <b>Текст комментария:</b> (можно поправить ошибки)<br>";
 if ($red==0) {
-$spaw = new SpawEditor("text", $comm_text); $spaw->show();
 } elseif ($red==2) {
 echo "<textarea cols=80 id=editor name=text rows=10>".$comm_text."</textarea>
 <script type=\"text/javascript\">

@@ -115,9 +115,6 @@ function edit_base_pages_category($cid, $red=0) {
     <input type=\"text\" name=\"title\" value=\"$title\" size=\"60\"><br><br>
     ".$blok."";
     if ($red==0) {
-        $spaw = new SpawEditor("desc", $desc); 
-        //$spaw->setStylesheet("/css_20"); // В дальнейшем подключить стили!!!
-        $spaw->show();
     } elseif ($red==2) {
         echo "<textarea cols=80 id=editor name=desc rows=10>".$desc."</textarea>
     <script type=\"text/javascript\">
@@ -343,9 +340,6 @@ function base_pages_add_page($name, $razdel, $red=0, $new=0, $pid=0) {
 
   echo "<br><h2 class=radius_top style='background:#eeeeee;'>Предисловие (начальный текст)";
   if ($red==0) {
-      $spaw = new SpawEditor("open_text", $shablon1); 
-      $spaw->setDimensions("100%", "200");
-      $spaw->show();
   } elseif ($red==2) {
       echo "<textarea cols=80 id=editor name=open_text rows=10>".$shablon1."</textarea>
   <script type=\"text/javascript\">
@@ -384,9 +378,6 @@ function base_pages_add_page($name, $razdel, $red=0, $new=0, $pid=0) {
   }
   echo "</h2><br><h2 class=radius_top style='background:#eeeeee;'>Содержание (основной текст)";
   if ($red==0) {
-      $spaw = new SpawEditor("main_text", $shablon2);
-      $spaw->setDimensions("100%", "400"); 
-      $spaw->show();
   } elseif ($red==2) {
       echo "<textarea cols=80 id=edit name=main_text rows=15>".$shablon2."</textarea>
   <script type=\"text/javascript\">
@@ -410,7 +401,7 @@ function base_pages_add_page($name, $razdel, $red=0, $new=0, $pid=0) {
 
   // это галерея?
   if (strpos($tex,"view=5")) echo "<b>Фото (для фотогалереи):</b> <input type=file name=foto size=40><br>
-  <b>или ссылка:</b> <input type=text name=link_foto value=\"/spaw2/uploads/images/$tip/\" size=40><br>Ссылку на другие сайты начинать с http://<br>";
+  <b>или ссылка:</b> <input type=text name=link_foto value=\"/img/\" size=40><br>Ссылку на другие сайты начинать с http://<br>";
   else echo "<input type=hidden name=foto value=''>";
 
   // это магазин?
@@ -465,7 +456,7 @@ function base_pages_add_page($name, $razdel, $red=0, $new=0, $pid=0) {
   break;
   ///////////////////
   case "2": // файл
-    // file=pic&papka=/spaw/uploads/images/&mesto=verh&resizepic=x&file=&picsize=600&minipic=1&resizeminipic=x&minipicsize=100
+    // file=pic&papka=/img=verh&resizepic=x&file=&picsize=600&minipic=1&resizeminipic=x&minipicsize=100
 
     switch($fil) {
       case "pic": $type_fil = "картинка"; break;
@@ -526,8 +517,8 @@ function base_pages_save_page($cid, $module, $title, $open_text, $main_text, $fo
   $row = $db->sql_fetchrow($result);
   $tex = $row['text'];
   if (strpos($tex,"media=1")) {
-  $ImgDir="spaw2/uploads/images/$tip";
-  if (trim($link_foto)=="/spaw2/uploads/images/$tip/" or trim($link_foto)=="") {
+  $ImgDir="img";
+  if (trim($link_foto)=="/img/" or trim($link_foto)=="") {
   // Обработка имени файла: транслит и удаление пробелов
   $pic_name2 = date("Y-m-d_H-i-s_", time()).str_replace(" ","",translit($_FILES["foto"]["name"]));
   	if (Copy($_FILES["foto"]["tmp_name"],"$ImgDir/".basename($pic_name2))) {
@@ -903,10 +894,6 @@ $main_text = str_replace("td> valign","td valign",$main_text);
 $main_text = str_replace("td>>","td>",$main_text);
 
 if ($red==0) {
-$spaw = new SpawEditor("open_text", $open_text); 
-//$spaw->setStylesheet("/css_20"); // В дальнейшем подключить стили!!!
-$spaw->setDimensions("100%", "200"); 
-$spaw->show();
 } elseif ($red==2) {
 echo "
 <textarea cols=80 id=editor name=open_text rows=10>".$open_text."</textarea>
@@ -950,10 +937,6 @@ $('#main_text').editor({ css: ['/ed/js/editor/css/editor.css'], toolbar: 'classi
 echo "</h2><br><h2 class=radius_top style='background:#eeeeee;'>Содержание (основной текст)";
 
 if ($red==0) {
-  $spaw = new SpawEditor("main_text", $main_text); 
-  //$spaw->setStylesheet("/css_20"); // В дальнейшем подключить стили!!!
-  $spaw->setDimensions("100%", "450"); 
-  $spaw->show();
 } elseif ($red==2) {
   echo "<textarea cols=80 id=edit name=main_text rows=12>".$main_text."</textarea>
 <script type=\"text/javascript\">
@@ -1121,7 +1104,7 @@ function base_pages_edit_sv_page($pid, $module, $cid, $title, $open_text, $main_
   $row = $db->sql_fetchrow($result);
   $tex = $row['text'];
   if (strpos($tex,"media=1")) {
-  $ImgDir="spaw2/uploads/images/$tip";
+  $ImgDir="img";
   if ($_FILES["foto"]["name"]!="") {
   // Обработка имени файла: транслит и удаление пробелов
   $pic_name2 = date("Y-m-d_H-i-s_", time()).str_replace(" ","",translit($_FILES["foto"]["name"]));

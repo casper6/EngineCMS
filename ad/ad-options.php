@@ -694,19 +694,6 @@ echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>
 		$s_edit1=$s_edit2=$s_edit3=$s_edit0="";
 		$s_edit0="selected";
 
-		echo "	<tr>
-					<td>"._DEFAULTEDITOR.":</td>
-					<td colspan=\"3\">
-						<select name=\"chng_editor\">
-							<option name=\"add_editor\" value=\"0\" ".$s_edit0.">"._ADMIN_WITHOUTEDITOR."</option>
-							<option name=\"chng_editor\" value=\"Tiny_MCE\" ".$s_edit1.">Tiny MCE</option>
-							<option name=\"chng_editor\" value=\"CKEditor\" ".$s_edit2.">CKEditor</option>
-							<option name=\"chng_editor\" value=\"FCKEditor\" ".$s_edit3.">FCKEditor</option>
-							<option name=\"chng_editor\" value=\"Spaw2\" ".$s_edit4.">Spaw2</option>
-						</select>
-					</td>
-				</tr>
-		";
 		echo "<input type=\"hidden\" name=\"chng_admlanguage\" value=\"\">";
 		if ($row['name'] != "God") {
 			echo "	<tr>

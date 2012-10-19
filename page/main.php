@@ -1199,9 +1199,7 @@ if ($put_in_blog>0) {
   $title_blog = htmlspecialchars($title);
   $link = "http://".$siteurl."/-".$DBName."_page_".$pid."";
   $logo_link = "http://".$siteurl."/small_logo.jpg";
-  $opentext_blog = str_replace("/spaw2/","http://".$siteurl."/spaw2/",$opentext);
   $opentext_blog = str_replace("/img/","http://".$siteurl."/img/",$opentext_blog);
-  $opentext_blog = str_replace("/SPAW2/","http://".$siteurl."/spaw2/",$opentext_blog);
   $opentext_blog = str_replace("/IMG/","http://".$siteurl."/img/",$opentext_blog);
   $opentext_blog = str_replace("http://".$siteurl."http://".$siteurl,"http://".$siteurl,$opentext_blog);
   $opentext_blog = str_replace("<img","<img style='margin:5px;'",$opentext_blog);
@@ -2072,7 +2070,7 @@ function addpost($cid) {
           break;
 
         case "2": // файл
-          // file=pic&papka=/spaw/uploads/images/&mesto=verh&resizepic=x&file=&picsize=600&minipic=1&resizeminipic=x&minipicsize=100
+          // file=pic&papka=/img/=verh&resizepic=x&file=&picsize=600&minipic=1&resizeminipic=x&minipicsize=100
           /*
           switch($fil) {
           case "pic": $type_fil = "картинка"; break;

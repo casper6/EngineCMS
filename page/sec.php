@@ -8,9 +8,9 @@
   }
 
   $agent=" ".getenv("HTTP_USER_AGENT"); # Защита от скачивания
-    if (strpos($agent,"DISCo Pump") || strpos($agent,"Offline Explorer") || strpos($agent,"Teleport") || strpos($agent,"WebZIP") || strpos($agent,"WebCopier") || strpos($agent,"Wget") || strpos($agent,"FlashGet") || strpos($agent,"CIS TE") || strpos($agent,"DTS Agent") || strpos($agent,"WebReaper") || strpos($agent,"HTTrack") || strpos($agent,"Web Downloader")) { die("Хорош уже скачивать!"); } 
+    if (stripos($agent,"DISCo Pump") || stripos($agent,"Offline Explorer") || stripos($agent,"Teleport") || stripos($agent,"WebZIP") || stripos($agent,"WebCopier") || stripos($agent,"Wget") || stripos($agent,"FlashGet") || stripos($agent,"CIS TE") || stripos($agent,"DTS Agent") || stripos($agent,"WebReaper") || stripos($agent,"HTTrack") || stripos($agent,"Web Downloader")) { die("Хорош уже скачивать!"); } 
   
-  unset($pagetitle); 
+  unset($pagetitle);
   if(!defined('END_TRANSACTION')) {
     define('END_TRANSACTION', 2);
   }
@@ -19,7 +19,7 @@
   // Запрет использования других серверов
   if ($_SERVER['REQUEST_METHOD'] == "POST") {
     if (isset($_SERVER['HTTP_REFERER'])) {
-      if (!stripos_clone($_SERVER['HTTP_REFERER'], $_SERVER['HTTP_HOST'])) {
+      if (stripos($_SERVER['HTTP_REFERER'], $_SERVER['HTTP_HOST']) === false) {
        die('Запрещено размещение информации с другого сервера');
       }
     } else die("<b>Ошибка:</b> браузер не смог послать заголовок HTTP_REFERER для этого сайта.<br>
@@ -99,7 +99,7 @@
   // Дополнительная безопасность (Union, CLike, XSS)
   if ( isset($_SERVER['QUERY_STRING']) ) {
     $queryString = strtolower($_SERVER['QUERY_STRING']); // Если будут ошибки - убрать!
-    if (stripos_clone($queryString,'0DUNION') OR stripos_clone($queryString,'%20union%20') OR stripos_clone($queryString,'/*') OR stripos_clone($queryString,'*/union/*') OR stripos_clone($queryString,'c2nyaxb0') OR stripos_clone($queryString,'+union+') OR stripos_clone($queryString,'http://') OR (stripos_clone($queryString,'cmd=') AND !stripos_clone($queryString,'&cmd')) OR (stripos_clone($queryString,'exec') AND !stripos_clone($queryString,'execu')) OR stripos_clone($queryString,'concat')) {
+    if (stripos($queryString,'0DUNION') OR stripos($queryString,'%20union%20') OR stripos($queryString,'/*') OR stripos($queryString,'*/union/*') OR stripos($queryString,'c2nyaxb0') OR stripos($queryString,'+union+') OR stripos($queryString,'http://') OR (stripos($queryString,'cmd=') AND stripos($queryString,'&cmd') === false) OR (stripos($queryString,'exec') AND stripos($queryString,'execu')===false) OR stripos($queryString,'concat')) {
       die('Попытка взлома, тип 3');
     }
   }
@@ -119,7 +119,7 @@
   //$postString = str_replace(" union ", "crazy", $postString); // баг.
   //$postString = str_replace(" Union ", "crazy", $postString); // баг.
   $postString_64 = base64_decode($postString);
-  if (stripos_clone($postString,'%20union%20') OR stripos_clone($postString,'*/union/*') OR stripos_clone($postString,' union ') OR stripos_clone($postString_64,'%20union%20') OR stripos_clone($postString_64,'*/union/*') OR stripos_clone($postString_64,' union ') OR stripos_clone($postString_64,'+union+') OR stripos_clone($postString_64,'http://') OR (stripos_clone($postString_64,'cmd=') AND !stripos_clone($postString_64,'&cmd')) OR (stripos_clone($postString_64,'exec') AND !stripos_clone($postString_64,'execu')) OR stripos_clone($postString_64,'concat') OR (stripos_clone($postString,'http-equiv')) OR (stripos_clone($postString_64,'http-equiv')) OR (stripos_clone($postString,'alert(')) OR (stripos_clone($postString_64,'alert(')) OR (stripos_clone($postString,'javascript:')) OR (stripos_clone($postString_64,'javascript:')) OR (stripos_clone($postString,'document.cookie')) OR (stripos_clone($postString_64,'document.cookie')) OR (stripos_clone($postString,'onmouseover=')) OR (stripos_clone($postString_64,'onmouseover=')) OR (stripos_clone($postString,'document.location')) OR (stripos_clone($postString_64,'document.location'))) {
+  if (stripos($postString,'%20union%20') OR stripos($postString,'*/union/*') OR stripos($postString,' union ') OR stripos($postString_64,'%20union%20') OR stripos($postString_64,'*/union/*') OR stripos($postString_64,' union ') OR stripos($postString_64,'+union+') OR stripos($postString_64,'http://') OR (stripos($postString_64,'cmd=') AND stripos($postString_64,'&cmd')===false) OR (stripos($postString_64,'exec') AND stripos($postString_64,'execu')===false) OR stripos($postString_64,'concat') OR (stripos($postString,'http-equiv')) OR (stripos($postString_64,'http-equiv')) OR (stripos($postString,'alert(')) OR (stripos($postString_64,'alert(')) OR (stripos($postString,'javascript:')) OR (stripos($postString_64,'javascript:')) OR (stripos($postString,'document.cookie')) OR (stripos($postString_64,'document.cookie')) OR (stripos($postString,'onmouseover=')) OR (stripos($postString_64,'onmouseover=')) OR (stripos($postString,'document.location')) OR (stripos($postString_64,'document.location'))) {
     die('Попытка взлома, тип 4<br>Возможно, что вы ввели «javascript:» перед JS-запросом в ссылке. Делать этого не нужно, т.к. и без этого JS-код будет работать.');
   }
 

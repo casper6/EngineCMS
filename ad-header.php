@@ -109,7 +109,6 @@ if ($red==4) echo "<script src=\"ed2/redactor.js\"></script><link rel=\"styleshe
 
 // УДАЛЕНО
 /* 
-if ($red==0) include("spaw2/spaw.inc.php"); //spaw2 !!!
 if ($red==2) echo "<script type=\"text/javascript\" src=\"ckeditor/ckeditor.js\"></script>";
 <script src='includes/ui.core.js'></script>
 <script src='includes/ui.tabs.js'></script>

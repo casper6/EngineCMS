@@ -8,7 +8,6 @@ $realadmin = $row['realadmin'];
 if ($realadmin==1) {
 $tip = "spiski";
 $admintip = "base_spisok";
-if ($red!=1 and $red != 2) include("spaw2/spaw.inc.php");
 
 function getparent($name, $parent, $title) {
     global $tip, $admintip, $prefix,$db;
@@ -128,7 +127,7 @@ echo "</select><br><br><input type=submit value=\" Сохранить \" style='
 <b>Основной текст:</b><br>";
 
 if ($red==0) {
-$spaw = new SpawEditor("main_text", $shablon); $spaw->show();
+
 } elseif ($red==2) {
 echo "<textarea cols=80 id=editor name=main_text rows=10>".$shablon."</textarea>
 <script type=\"text/javascript\">
@@ -153,7 +152,8 @@ $result = $db->sql_query($sql);
 $row = $db->sql_fetchrow($result);
 $tex = $row['text'];
 if (strpos($tex,"media")) echo "<b>Фото (для фотогалереи):</b> <input type=file name=foto size=40> 
-<b>или ссылка:</b> <input type=text name=link_foto value=\"/spaw2/uploads/images/$tip/\" size=40><br>";
+<b>или ссылка:</b> <input type=text name=link_foto value=\"/img/\" size=40><br>";
+
 else echo "<input type=hidden name=foto value=\"\">";
 echo "<b>Схожие слова (теги):</b> <textarea name=\"search\" rows=\"2\" cols=\"60\"></textarea><p>
 <input type=checkbox name=mainspisok value=1 unchecked> <b>Ставить на Главную страницу </b><p>
@@ -176,8 +176,8 @@ $result = $db->sql_query($sql);
 $row = $db->sql_fetchrow($result);
 $tex = $row[text];
 if (strpos($tex,"media")) {
-$ImgDir="spaw2/uploads/images/$tip";
-if (trim($link_foto)=="/spaw2/uploads/images/$tip/" or trim($link_foto)=="") {
+$ImgDir="img";
+if (trim($link_foto)=="/img/" or trim($link_foto)=="") {
 // Обработка имени файла: транслит и удаление пробелов
 $pic_name2 = date("Y-m-d_H-i-s_", time()).str_replace(" ","",translit($_FILES["foto"]["name"]));
 	if (Copy($_FILES["foto"]["tmp_name"],"$ImgDir/".basename($pic_name2))) {
@@ -202,12 +202,6 @@ $pic_name2 = date("Y-m-d_H-i-s_", time()).str_replace(" ","",translit($_FILES["f
 Header("Location: sys.php?op=base_spisok_add_spisok&name=$module&razdel=$cid&red=$red");
 }
 
-/* Бороться сос тилями Гугл Хром !!!
-<span style=\"font-weight: bold; \" class=\"Apple-style-span\">1</span>
-*/
-
-#####################################################################################################################
-#####################################################################################################################
 #####################################################################################################################
 function base_spisok_edit_spisok($name, $pid, $red=0) {
 global $tip, $admintip, $prefix, $db; //, $redaktor, $toolbars;
@@ -257,7 +251,6 @@ echo "</select><br><br><input type=submit value=\" Сохранить\nизме�
 <b>Вступительный текст:</b><br><textarea name=\"open_text\" rows=\"5\" cols=\"60\">$open_text</textarea><br>
 <b>Основной текст:</b><br>";
 if ($red==0) {
-$spaw = new SpawEditor("main_text", $main_text); $spaw->show();
 } elseif ($red==2) {
 echo "<textarea cols=80 id=editor name=main_text rows=10>".$main_text."</textarea>
 <script type=\"text/javascript\">
@@ -307,14 +300,14 @@ $result = $db->sql_query($sql);
 $row = $db->sql_fetchrow($result);
 $tex = $row[text];
 if (strpos($tex,"media")) {
-$ImgDir="spaw2/uploads/images/$tip";
+$ImgDir="img";
 if ($_FILES["foto"]["name"]!="") {
 // Обработка имени файла: транслит и удаление пробелов
 $pic_name2 = date("Y-m-d_H-i-s_", time()).str_replace(" ","",translit($_FILES["foto"]["name"]));
 	if (Copy($_FILES["foto"]["tmp_name"],"$ImgDir/".basename($pic_name2))) {
 	unlink($_FILES["foto"]["tmp_name"]);
 	chmod("$ImgDir/".basename($pic_name2),0644);
-	$foto="http://life-tak.ru/$ImgDir/".basename($pic_name2);
+	$foto="/$ImgDir/".basename($pic_name2);
 	} else echo "ОШИБКА при копировании файла";
 } else $foto=trim($link_foto);
 } else $foto="";

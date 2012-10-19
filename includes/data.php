@@ -1,3 +1,0 @@
-{error:'', size:'87.4 KB', atime:'1254689491', ctime:'04 Oct 2009 20:51', mtime:'04 Oct 2009 20:51', path:'Z:/home/shop/www/spaw2/uploads/images/fotos/01_babushka.jpg', name:'01_babushka.jpg', is_writable:'1', is_readable:'1', cssClass:'filePicture', fileType:'image', preview:'1', type:'file', url:'http://shop/spaw2/uploads/images/fotos/01_babushka.jpg', tipedit:'Двойной клик для переименования...'}
-
-04/Oct/2009 20:51:32

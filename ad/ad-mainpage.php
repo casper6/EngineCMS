@@ -9,7 +9,6 @@
 	if ($realadmin==1) {
 		$tip = "mainpage";
 		$admintip = "mainpage";
-		if ($red==0) include("spaw2/spaw.inc.php"); // Использовать редактор SPAW, если он выбран
 ##########################################################################################
 function menu() {
 	global $admintip, $siteurl, $type, $prefix, $db, $statlink;
@@ -1026,10 +1025,6 @@ function edit_main($id) {
 	// [корзина] - общая корзина для всех разделов типа \"магазин\"<br>
 
 	if ($red==0) {
-	$spaw = new SpawEditor("text", $text);
-	$spaw->setStylesheet("/css_$stil&n=.css");
-	$spaw->setDimensions("100%", "450");
-	$spaw->show();
 	} elseif ($red==2) {
 	echo "<textarea cols=80 id=editor name=text rows=10>".$text."</textarea>
 	<script type=\"text/javascript\">
@@ -1567,10 +1562,6 @@ function edit_main($id) {
 
 	<h2 class='radius_top' style='background:#eeeeee;'>Содержание раздела:</h2>";
 	if ($red==0) {
-			$spaw = new SpawEditor("useit", $useit);
-			$spaw->setStylesheet("/css_20&n=.css"); // В дальнейшем подключить стили!!!
-			$spaw->setDimensions("100%", "300");
-			$spaw->show();
 	} elseif ($red==2) {
 		echo "<textarea cols=80 id=editor class=useit name=useit rows=10>".$useit."</textarea>
 		<script type=\"text/javascript\">
@@ -1626,29 +1617,27 @@ function edit_main($id) {
 			echo "<span style='font-size:14pt;'>Шаблон Предисловия и Содержания страниц</span>
 			<br>
 			Если у большинства страниц раздела особенный дизайн или какое-то первоначальное содержание для всех страниц раздела одинаково — его можно прописать ниже как Шаблон для страниц. Сначала идет шаблон для Предисловия страниц, затем — для Содержания, разделяются они служебным словом [следующий]. Если нужен только шаблон для Предисловия - слово [следующий] можно не писать, а если нужен только шаблон для Содержания - слово [следующий] надо написать перед ним.<br>";
-			if ($red==0) {
-				$spaw2 = new SpawEditor("shablon", $shablon);
-				$spaw2->setDimensions("100%", "250");
-				$spaw2->show();
+				if ($red==0) {
 				} elseif ($red==2) {
-					echo "<textarea cols=80 id=editor2 name=shablon rows=10>".$shablon."</textarea>
-					<script type=\"text/javascript\">
-					CKEDITOR.replace( 'editor2', {
-					 filebrowserBrowseUrl : '/ckfinder/ckfinder.html',
-					 filebrowserImageBrowseUrl : '/ckfinder/ckfinder.html?Type=Images',
-					 filebrowserFlashBrowseUrl : '/ckfinder/ckfinder.html?Type=Flash',
-					 filebrowserUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&amp;type=Files',
-					 filebrowserImageUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&amp;type=Images',
-					 filebrowserFlashUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&amp;type=Flash'
-					});
-					</script>";
+						echo "<textarea cols=80 id=editor2 name=shablon rows=10>".$shablon."</textarea>
+						<script type=\"text/javascript\">
+						CKEDITOR.replace( 'editor2', {
+						 filebrowserBrowseUrl : '/ckfinder/ckfinder.html',
+						 filebrowserImageBrowseUrl : '/ckfinder/ckfinder.html?Type=Images',
+						 filebrowserFlashBrowseUrl : '/ckfinder/ckfinder.html?Type=Flash',
+						 filebrowserUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&amp;type=Files',
+						 filebrowserImageUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&amp;type=Images',
+						 filebrowserFlashUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&amp;type=Flash'
+						});
+						</script>";
 				} elseif ($red==1) {
-					// Преобразование textarea (замена на русскую букву е, только для редактора)
-	  				$shablon = str_replace("textarea","tеxtarea",$shablon); // ireplace
-					echo "<textarea name=shablon rows=10 cols=30 style='width:100%; height:150px;'>".$shablon."</textarea>";
+						// Преобразование textarea (замена на русскую букву е, только для редактора)
+		  				$shablon = str_replace("textarea","tеxtarea",$shablon); // ireplace
+						echo "<textarea name=shablon rows=10 cols=30 style='width:100%; height:150px;'>".$shablon."</textarea>";
 				} else {
-					echo "<textarea id=shablon class='redactor' name=shablon rows=15 cols=80 style='width:100%; height:250px;'>".$shablon."</textarea>";
+						echo "<textarea id=shablon class='redactor' name=shablon rows=15 cols=80 style='width:100%; height:250px;'>".$shablon."</textarea>";
 				}
+
 			} else {
 				echo "<input type=hidden name=shablon value=\"".$shablon."\">";
 			}
@@ -2078,10 +2067,6 @@ function edit_main($id) {
 
 	echo "<h2 class='radius_top' style='background:#eeeeee;'>Содержание блока:";
 	if ($red == 0) {
-		$spaw = new SpawEditor("text", $text);
-		$spaw->setStylesheet("/css_".$stil."&n=.css");
-		$spaw->setDimensions("100%", "450");
-		$spaw->show(); 
 	} elseif ($red==2) {
 		echo "<textarea cols=80 id=editor name=text rows=10>".$text."</textarea>
 		<script type=\"text/javascript\">
@@ -2216,10 +2201,6 @@ function edit_main($id) {
 
 	<h2 class='radius_top' style='background:#eeeeee;'>Содержание шаблона:<br>";
 	if ($red==0) {
-		$spaw = new SpawEditor("text", $text);
-		$spaw->setStylesheet("/css_".$stil."&n=.css");
-		$spaw->setDimensions("100%", "450");
-		$spaw->show();
 	} elseif ($red==2) {
 		echo "<textarea cols=80 id=editor name=text rows=10>".$text."</textarea>
 		<script type=\"text/javascript\">
@@ -2548,11 +2529,11 @@ function spisok_help() { // проверить вызов
 
 	<div id=spisok_3 style='display:none;'><br><b>Выбран тип поля - \"файл\":</b><br>
 	прописывать параметры, разделяя их знаком &, указывать значения параметров через знак =, всё без пробелов!<br>
-	например: <b>fil=pic&papka=/spaw/uploads/images/&mesto=verh&align=left&resizepic=x&file=&picsize=600&minipic=1&resizeminipic=x&minipicsize=100</b><br>Очередность параметров значения не имеет.<br>
+	например: <b>fil=pic&papka=/img=verh&align=left&resizepic=x&file=&picsize=600&minipic=1&resizeminipic=x&minipicsize=100</b><br>Очередность параметров значения не имеет.<br>
 	<b>Список доступных параметров:</b><br> 
 	<table width=100% cellpadding=5 cellspacing=0 border=1> 
 	<tr><td><strong>fil=</strong></td><td>pic - картинка, doc - документ/архив, flash - flash-анимация, avi - видео-ролик</td></tr>
-	<tr><td><strong>papka=</strong></td><td>путь сохранения файла, например /spaw/uploads/images/</td></tr>
+	<tr><td><strong>papka=</strong></td><td>путь сохранения файла, например /img/</td></tr>
 	<tr><td><strong>align=</strong></td><td>left - слева, right - справа, center - по центру, no - без выравнивания</td></tr>
 	<tr><td><strong>mesto=</strong></td><td>verh - сверху, niz - снизу текста страницы, block - в блоке [Обращение] - то, что указано по англ. в обращении к полю, только в квадратных скобках <font color=red>(экспериментальное значение)</font></td></tr>
 	<tr><td><strong>resizepic=</strong></td><td>если file=pic, указываем как автоматически изменять размер изображения:<br>

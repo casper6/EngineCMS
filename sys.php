@@ -14,7 +14,7 @@ $checkurl = $_SERVER['REQUEST_URI'];
 if (preg_match("/AddAuthor/", $checkurl)) die ('Попытка взлома №6');
 if (preg_match("/UpdateAuthor/", $checkurl)) die ('Попытка взлома №7');
 
-if((stripos_clone($checkurl,'AddAuthor')) OR (stripos_clone($checkurl,'VXBkYXRlQXV0aG9y')) OR (stripos_clone($checkurl,'QWRkQXV0aG9y')) OR (stripos_clone($checkurl,'UpdateAuthor')) OR (stripos_clone($checkurl, "?admin")) OR (stripos_clone($checkurl, "&admin")) OR (stripos_clone($checkurl,'%20union%20') OR stripos_clone($checkurl,'*%2f*') OR stripos_clone($checkurl,'/*') OR stripos_clone($checkurl,'*/union/*') OR stripos_clone($checkurl,'c2nyaxb0') OR stripos_clone($checkurl,'+union+') OR (stripos_clone($checkurl,'cmd=') AND !stripos_clone($checkurl,'&cmd')) OR (stripos_clone($checkurl,'exec') AND !stripos_clone($checkurl,'execu')) OR stripos_clone($checkurl,'concat'))) die("Попытка взлома!");
+if((stripos($checkurl,'AddAuthor')) OR (stripos($checkurl,'VXBkYXRlQXV0aG9y')) OR (stripos($checkurl,'QWRkQXV0aG9y')) OR (stripos($checkurl,'UpdateAuthor')) OR (stripos($checkurl, "?admin")) OR (stripos($checkurl, "&admin")) OR (stripos($checkurl,'%20union%20') OR stripos($checkurl,'*%2f*') OR stripos($checkurl,'/*') OR stripos($checkurl,'*/union/*') OR stripos($checkurl,'c2nyaxb0') OR stripos($checkurl,'+union+') OR (stripos($checkurl,'cmd=') AND stripos($checkurl,'&cmd')===false) OR (stripos($checkurl,'exec') AND stripos($checkurl,'execu')===false) OR stripos($checkurl,'concat'))) die("Попытка взлома!");
 
 global $admin_file;
 

@@ -110,7 +110,7 @@ $text2 = str_replace(',', ', ', $text[$comm_cid]);
 
     $otvets = generate_comm_num($p_id, $drevo, $comm_cid);
     if ($position==0 and $otvets > 0 and $vetki == 1) {
-      $comment_otvet_show = " <div style=\"display:inline;\" id=\"show_otvet".$nus."\"><a class=\"no\" title=\"Показать ответы на это сообщение\" href=\"#big_otvet".$ver."\" onclick='show(\"big_otvet".$nus."\"); show(\"show_otvet".$nus."\"); show(\"hide_otvet".$nus."\");'><img src=/spaw2/uploads/images/icons/cross.gif></a> <a class=\"no showotvet\" title=\"Показать ответы на это сообщение\" href=\"#big_otvet".$ver."\" onclick='show(\"big_otvet".$nus."\"); show(\"show_otvet".$nus."\"); show(\"hide_otvet".$nus."\");'>Раскрыть ответ</a></div><div style=\"display:none;\" id=\"hide_otvet".$nus."\"><a class=\"no showotvet\" title=\"Убрать ответы на это сообщение\" href=\"#big_otvet".$ver."\" onclick='show(\"big_otvet".$nus."\"); show(\"show_otvet".$nus."\"); show(\"hide_otvet".$nus."\");'><img src=/spaw2/uploads/images/icons/minus.gif></a> <a class=\"no\" title=\"Убрать ответы на это сообщение\" href=\"#big_otvet".$ver."\" onclick='show(\"big_otvet".$nus."\"); show(\"show_otvet".$nus."\"); show(\"hide_otvet".$nus."\");'>Скрыть ответ</a></div>"; 
+      $comment_otvet_show = " <div style=\"display:inline;\" id=\"show_otvet".$nus."\"><a class=\"no\" title=\"Показать ответы на это сообщение\" href=\"#big_otvet".$ver."\" onclick='show(\"big_otvet".$nus."\"); show(\"show_otvet".$nus."\"); show(\"hide_otvet".$nus."\");'>+</a> <a class=\"no showotvet\" title=\"Показать ответы на это сообщение\" href=\"#big_otvet".$ver."\" onclick='show(\"big_otvet".$nus."\"); show(\"show_otvet".$nus."\"); show(\"hide_otvet".$nus."\");'>Раскрыть ответ</a></div><div style=\"display:none;\" id=\"hide_otvet".$nus."\"><a class=\"no showotvet\" title=\"Убрать ответы на это сообщение\" href=\"#big_otvet".$ver."\" onclick='show(\"big_otvet".$nus."\"); show(\"show_otvet".$nus."\"); show(\"hide_otvet".$nus."\");'>-</a> <a class=\"no\" title=\"Убрать ответы на это сообщение\" href=\"#big_otvet".$ver."\" onclick='show(\"big_otvet".$nus."\"); show(\"show_otvet".$nus."\"); show(\"hide_otvet".$nus."\");'>Скрыть ответ</a></div>"; 
       $all_show .= "show(\"big_otvet".$nus."\"); show(\"show_otvet".$nus."\"); show(\"hide_otvet".$nus."\"); ";
       $all_hide .= "show(\"big_otvet".$nus."\"); show(\"show_otvet".$nus."\"); show(\"hide_otvet".$nus."\"); ";
     } else $comment_otvet_show = "";
@@ -192,7 +192,7 @@ $sha2 = "";
     }
 }
 $and = "";
- if ( $position==0 and $vetki == 1) $and .= "<br><a class=\"no\" id=\"all_show\" title=\"Показать все ответы\" href=\"#comm\" onclick='".$all_show." show(\"all_hide\"); show(\"all_show\");'><img src=/spaw2/uploads/images/icons/cross.gif> Показать все ответы</a><a class=\"no\" id=\"all_hide\" style='display:none;' title=\"Показать все ответы\" href=#comm onclick='".$all_hide." show(\"all_hide\"); show(\"all_show\");'><img src=/spaw2/uploads/images/icons/minus.gif> Скрыть все ответы</a>";
+ if ( $position==0 and $vetki == 1) $and .= "<br><a class=\"no\" id=\"all_show\" title=\"Показать все ответы\" href=\"#comm\" onclick='".$all_show." show(\"all_hide\"); show(\"all_show\");'>+ Показать все ответы</a><a class=\"no\" id=\"all_hide\" style='display:none;' title=\"Показать все ответы\" href=#comm onclick='".$all_hide." show(\"all_hide\"); show(\"all_show\");'>- Скрыть все ответы</a>";
 return $and.$sha3;
 
 }

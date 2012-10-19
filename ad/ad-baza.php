@@ -9,7 +9,6 @@ $realadmin = $row['realadmin'];
 if ($realadmin==1) {
 $tip = "pages";
 $admintip = "base_base";
-if ($red!=1 and $red != 2) include("spaw2/spaw.inc.php");
 #####################################################################################################################
 function base_base($name) {
     global $tip, $admintip, $prefix, $db, $p, $sortir, $data_sort, $data_sort2, $men_sort, $firm_sort, $interval_sort, $search_sort, $doc;
@@ -448,7 +447,6 @@ global $tip, $admintip, $prefix, $db;
             case "текст": 
                 echo "<p><b>".$one[1].":</b><br>";
                 if ($red==0) {
-                $spaw = new SpawEditor("text[".$one[0]."]", $row[$x+1]); $spaw->setDimensions("100%", "450"); $spaw->show();
                 } elseif ($red==2) {
                 echo "<textarea cols=80 id=editor name=\"text[".$one[0]."]\" rows=10>".$row[$x+1]."</textarea>
                 <script type=\"text/javascript\">
@@ -644,7 +642,6 @@ for ($x=0; $x < $n+1; $x++) {
             case "текст": 
                 echo "<p><b>".$one[1].":</b><br>";
                 if ($red==0) {
-                    $spaw = new SpawEditor("text[".$one[0]."]", ""); $spaw->setDimensions("100%", "450"); $spaw->show();
                 } elseif ($red==2) {
                     echo "<textarea cols=80 id=\"".$one[0]."\" name=\"text[".$one[0]."]\" rows=10></textarea>
                     <script type=\"text/javascript\">

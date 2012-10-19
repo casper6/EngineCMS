@@ -114,25 +114,6 @@ A[target=\"_blank\"] {
 
 .block {border: 1px solid gray; background: #deffde; padding: 5px; }
 
-.question_link {padding-left:20px; background:url(/spaw2/uploads/images/icons/question.gif) no-repeat left;}
-.wtf_link {padding-left:20px; background:url(/spaw2/uploads/images/icons/wtf.gif) no-repeat left;}
-
-.zip_link {padding-left:20px; background:url(/spaw2/uploads/images/icons/zip.gif) no-repeat left;}
-.doc_link {padding-left:20px; background:url(/spaw2/uploads/images/icons/doc.gif) no-repeat left;}
-.avi_link {padding-left:20px; background:url(/spaw2/uploads/images/icons/avi.gif) no-repeat left;}
-.mp3_link {padding-left:20px; background:url(/spaw2/uploads/images/icons/mp3.gif) no-repeat left;}
-.jpg_link {padding-left:20px; background:url(/spaw2/uploads/images/icons/jpg.gif) no-repeat left;}
-.list_link {padding-left:20px; background:url(/spaw2/uploads/images/icons/list.gif) no-repeat left;}
-.pdf_link {padding-left:20px; background:url(/spaw2/uploads/images/icons/pdf.gif) no-repeat left;}
-.xls_link {padding-left:20px; background:url(/spaw2/uploads/images/icons/xls.gif) no-repeat left;}
-.love_link {padding-left:20px; background:url(/spaw2/uploads/images/icons/love.gif) no-repeat left;}
-.arrow_link {padding-left:20px; background:url(/spaw2/uploads/images/icons/arrow.gif) no-repeat left;}
-
-.progress_link {padding:1px; background:url(/spaw2/uploads/images/icons/progress.gif);}
-.video_link {padding-left:20px; background:url(/spaw2/uploads/images/icons/video.gif) no-repeat left;}
-.home_link {padding-left:20px; background:url(/spaw2/uploads/images/icons/domoi.gif) no-repeat left;}
-.user_link {padding-left:20px; background:url(/spaw2/uploads/images/icons/comment.gif) no-repeat left;}
-
 .small {font-size: 0.9em;}
 .red, .red a {color:red;}
 .black, .black a {color:black;}
