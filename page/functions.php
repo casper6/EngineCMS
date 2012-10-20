@@ -439,8 +439,9 @@ function my_calendar($fill='', $modul, $showdate='') { // Функция выв�
   return $calendar;
 }
 ////////////////////////////////////////////////////////////
-function select($name,$vars,$vars_name,$znachenie) { // генерация SELECT элемента формы
-  $return = "<select name=\"".$name."\">";
+function select($name,$vars,$vars_name,$znachenie,$add='') { // генерация SELECT элемента формы
+  // $add - добавление, например id или onchange...
+  $return = "<select name=\"".$name."\"".$add.">";
   $vars = explode(",",$vars);
   $vars_name = explode(",",$vars_name);
   $vybor = false; // если выбор не сделан - напишем этот невыбранный вариант!

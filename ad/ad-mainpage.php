@@ -375,6 +375,10 @@ function create_main($type) {
 			if ($key > 19 and $key < 24) $create .=  "<option value=".$key.$bd_show.">".$tit."</option>";
 			else $create .=  "<option value=".$key.">".$tit."</option>";
 		}
+
+
+		// ЗАмена http://blueimp.github.com/cdn/css/bootstrap-responsive.min.css
+		// Удалено 	<!--[if lt IE 7]><link rel=\"stylesheet\" href=\"http://blueimp.github.com/cdn/css/bootstrap-ie6.min.css\"><![endif]-->
 	$create .=  "</select>
 	<input type='hidden' name='useit'>
 	</td><td>
@@ -397,12 +401,10 @@ function create_main($type) {
 	<div id='photo_upload' style='display:none;'>
 	<!--[if IE]><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge,chrome=1\"><![endif]-->
 	<link rel=\"stylesheet\" href=\"includes/upload/css/bootstrap.min.css\">
-	<link rel=\"stylesheet\" href=\"http://blueimp.github.com/cdn/css/bootstrap-responsive.min.css\">
-	<!--[if lt IE 7]><link rel=\"stylesheet\" href=\"http://blueimp.github.com/cdn/css/bootstrap-ie6.min.css\"><![endif]-->
+	<link rel=\"stylesheet\" href=\"includes/css-frameworks/bootstrap/css/bootstrap.min.css\">
 	<link rel=\"stylesheet\" href=\"http://blueimp.github.com/Bootstrap-Image-Gallery/css/bootstrap-image-gallery.min.css\">
 	<link rel=\"stylesheet\" href=\"includes/upload/css/jquery.fileupload-ui.css\">
 	<!--[if lt IE 9]><script src=\"http://html5shim.googlecode.com/svn/trunk/html5.js\"></script><![endif]-->
-
 	    <form id=\"fileupload\" action=\"includes/upload/server/php/\" method=\"POST\" enctype=\"multipart/form-data\">
 	    <label for=\"show_oldnames\"><input type=\"checkbox\" id=\"show_oldnames\"><b>Добавлять имя файла</b> фотографии как её описание (<i>подходит для осмысленных и/или русских имен</i>)</label>
 	    <br><div class='notice warning green'><span class='icon green medium' data-icon='('></span>Фотографии можно перенести из любой папки вашего компьютера, даже не нажимая кнопку «Добавить файлы...»</div>

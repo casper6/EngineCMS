@@ -39,7 +39,7 @@ RewriteCond %{QUERY_STRING} _REQUEST(=|\[|\%[0-9A-Z]{0,2})
 RewriteRule ^(.*)$ /error.php?code=403 [F,L]
 
 # Запрет отображения ошибок
-php_flag display_errors Off
+php_flag display_errors On
 php_flag ignore_repeated_errors On
 php_flag ignore_repeated_source On
 

@@ -34,11 +34,16 @@ switch($kickstart) {
 	case 8:
 	$kick_link = "http://www.blueprintcss.org/tests/";
 	$kick_name = "Blueprint"; break;
+	case 9:
+	$kick_link = "http://necolas.github.com/normalize.css/";
+	$kick_name = "normalize"; break;
+
+	
 	default:
 	$kick_link = "";
 	$kick_name = ""; break;
 }
-if ($kickstart != 0) $kick = " <button class='small' onclick='location.href=\"".$kick_link."\"' title='Открыть сайт с примерами разметки CSS-фреймворка «".$kick_name."»'><span class=\"icon small black\" data-icon=\"S\"></span>".$kick_name."</button>";
+if ($kickstart != 0) $kick = " <button class='small' onclick='location.href=\"".$kick_link."\"' title='Открыть сайт CSS-фреймворка «".$kick_name."»'><span class=\"icon small black\" data-icon=\"S\"></span>".$kick_name."</button>";
 else $kick = "";
 
 
@@ -89,12 +94,14 @@ echo "<!doctype html>
 <script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/i18n/jquery-ui-i18n.min.js'></script> 
 <script src='includes/jquery.innerfade.js'></script>";
 
+/*
 if (!$op) {
 	echo "\n<script type=\"text/javascript\" src=\"includes/jeditable.js\"></script>
 	<script type=\"text/javascript\" src=\"includes/form.js\"></script>
 	<script type=\"text/javascript\" src=\"includes/select.js\"></script>
 	<script type=\"text/javascript\" src=\"includes/general.js\"></script>";
 }
+*/
 echo "<link rel=\"stylesheet\" href=\"http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.3/themes/base/jquery-ui.css\" media=\"all\" />
 <script type=\"text/javascript\" src=\"includes/css-frameworks/kickstart/js/ad-kickstart.js\"></script>
 <link rel=\"stylesheet\" type=\"text/css\" href=\"includes/css-frameworks/kickstart/css/ad-kickstart.css\" media=\"all\" />

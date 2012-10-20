@@ -155,7 +155,7 @@ echo "<table style='width:100%; margin-top:5px; padding:0; background: #e2e5ea;'
 
 		 echo "<div id='mainrazdel0' class='dark_pole2'><a class='base_page' onclick=\"options_show('0','show_options')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"Z\"></span><span class='plus20'>Общие настройки Сайта</span></div></a></div>";
 		 echo "<div id='mainrazdel1' class='dark_pole2'><a class='base_page' onclick=\"options_show('1','show_options_company')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"Y\"></span><span class='plus20'>Карточка компании (мини блоки)</span></div></a></div>";
-		 echo "<div id='mainrazdel2' class='dark_pole2'><a class='base_page' onclick=\"options_show('2','show_options_fonts')\"><div id='mainrazdel".$id."'><span class=\"icon social gray large\" data-icon=\"x\"></span><span class='plus20'>Подключение шрифтов</span></div></a></div>";
+		 echo "<div id='mainrazdel2' class='dark_pole2'><a class='base_page' onclick=\"options_show('2','show_options_fonts')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"i\"></span><span class='plus20'>Подключение шрифтов</span></div></a></div>";
 		 echo "<div id='mainrazdel3' class='dark_pole2'><a class='base_page' onclick=\"options_show('3','show_options_adspeed')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"z\"></span><span class='plus20'>Настройки Администрирования</span></div></a></div>";
 		 echo "<div id='mainrazdel4' class='dark_pole2'><a class='base_page' onclick=\"options_show('4','show_options_pass_block')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"O\"></span><span class='plus20'>Смена пароля и Блокировка по IP</span></div></a></div>";
 		 echo "<div id='mainrazdel7' class='dark_pole2'><a class='base_page' onclick=\"options_show('7','show_options_oldfotos'); trash_pics();\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"1\"></span><span class='plus20'>Удаление неиспользуемых фотографий</span></div></a></div>";
@@ -169,8 +169,25 @@ echo "<div id='show_options' class='show_pole' style='display:none;'>
 
 <tr valign=top><td style='min-width:250px;'>
 <b>Включить CSS-фреймворк</b>:</td><td class=small>
-".select("options[kickstart]", "0,1,2,3,4,5,6,7,8", "-- НЕТ --,KickStart,CSSframework,Skeleton,Kube,Bootstrap,1140 Grid,Toast,Blueprint", $kickstart)."
-<br>Ссылка на сайт фреймворка (для просмотра правил оформления CSS и HTML) появится сверху администрирования.
+".select("options[kickstart]", "0,1,2,3,4,5,6,7,8,9", "-- НЕТ --,KickStart,CSSframework,Skeleton,Kube,Bootstrap,1140 Grid,Toast,Blueprint,normalize.css", $kickstart, ' id=kickstart onchange="if ( $(\'#kickstart\').val() == 6) $(\'#frame6\').show(); else $(\'#frame6\').hide(); "')."
+<br>Ссылка на сайт фреймворка (для просмотра правил оформления CSS и HTML) появится наверху администрирования.
+
+<pre id='frame6' style='display:none;'>
+Вставьте в Главный стиль:
+/* Для обычной версии сайта */
+body {}
+
+/* Для мобильной версии */
+@media handheld, only screen and (max-width: 767px) {
+
+}
+
+/* Для более высокого разрешения iPhone 4 */
+@media only screen and (-webkit-min-device-pixel-ratio: 2) {
+
+}
+</pre>
+
 </td></tr>
 
 <tr valign=top><td>
