@@ -37,8 +37,16 @@ switch($kickstart) {
 	case 9:
 	$kick_link = "http://necolas.github.com/normalize.css/";
 	$kick_name = "normalize"; break;
+	case 10:
+	$kick_link = "http://yuilibrary.com/yui/docs/cssgrids/";
+	$kick_name = "YUI"; break;
+	case 11:
+	$kick_link = "http://960.gs";
+	$kick_name = "960gs"; break;
+	case 12:
+	$kick_link = "http://960.gs";
+	$kick_name = "960gs(24)"; break;
 
-	
 	default:
 	$kick_link = "";
 	$kick_name = ""; break;
@@ -90,10 +98,9 @@ echo "<!doctype html>
 <script src='includes/jad.js'></script>
 <script src='includes/j.js'></script>
 <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.6.3/jquery.min.js'></script>
-<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js'></script> 
-<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/i18n/jquery-ui-i18n.min.js'></script> 
+<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/jquery-ui.min.js'></script>
+<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/i18n/jquery-ui-i18n.min.js'></script> 
 <script src='includes/jquery.innerfade.js'></script>";
-
 /*
 if (!$op) {
 	echo "\n<script type=\"text/javascript\" src=\"includes/jeditable.js\"></script>
@@ -109,13 +116,11 @@ echo "<link rel=\"stylesheet\" href=\"http://ajax.googleapis.com/ajax/libs/jquer
 <link rel=\"stylesheet\" type=\"text/css\" href=\"includes/css-frameworks/kickstart/css/kickstart-icons.css\" media=\"all\" />
 <link rel=\"stylesheet\" type=\"text/css\" href=\"includes/css-frameworks/kickstart/css/kickstart-buttons.css\" media=\"all\" />";
 
-
 if ($red==3) echo "<script type=\"text/javascript\" src=\"ed/js/editor/editor.js\"></script> 
 <link rel=\"stylesheet\" href=\"ed/js/editor/css/editor.css\" type=\"text/css\" media=\"screen, projection\" /> ";
 if ($red==4) echo "<script src=\"ed2/redactor.js\"></script>
 <link rel=\"stylesheet\" href=\"ed2/redactor.css\" />
-<script src=\"ed2/ru.js\"></script>
-";
+<script src=\"ed2/ru.js\"></script>";
 
 global $ad_fon;
 if ($ad_fon == 0) $fon = "default.jpg"; else $fon = $ad_fon.".png";

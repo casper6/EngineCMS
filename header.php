@@ -1416,82 +1416,90 @@ var_dump($matches);
 */
 }
 
-############################################################################################################
-######################### ФОРМИРОВАНИЕ ДОКУМЕНТА ###########################################################
-############################################################################################################
+# ФОРМИРОВАНИЕ СТРАНИЦЫ
 $pagetit = str_replace("<br>","",$pagetitle);
 
-  if ($keywords2 == "") $keywords2 = $keywords;
-  if ($description2 == "") $description2 = $description;
-// При открытии модуля можно убирать определенные блоки через CSS
+if ($keywords2 == "") $keywords2 = $keywords;
+if ($description2 == "") $description2 = $description;
 
-global $add_css;
+// При открытии раздела можно убирать определенные блоки и через CSS
+global $add_css, $data_page, $lang;
 if (trim($add_css) != "") $stil .= "_add_".str_replace (" ","-", str_replace ("  "," ", trim($add_css))); 
 
 header("Cache-Control: public");
 header("Expires: " . date("r", time() + 3600));
-global $data_page, $lang; // 0, 24 Oct 2009 07:55:07
-if ($data_page != "") header ("Last-Modified: 0, $data_page GMT");
+if ($data_page != "") header ("Last-Modified: 0, ".$data_page." GMT");
 else header ("Last-Modified: ".gmdate("L, d M Y H:i:s")." GMT");
 header ("Content-Type: text/html; charset=utf-8");
-// <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd\">
 echo "<!doctype html>\n
-<!--[if lt IE 7 ]><html class=\"ie ie6\" lang=\"".$lang."\"> <![endif]-->
-<!--[if IE 7 ]><html class=\"ie ie7\" lang=\"".$lang."\"> <![endif]-->
-<!--[if IE 8 ]><html class=\"ie ie8\" lang=\"".$lang."\"> <![endif]-->
-<!--[if (gte IE 9)|!(IE)]><!--><html lang=\"".$lang."\" dir=\"ltr\"> <!--<![endif]-->
+<!--[if lt IE 7 ]><html class='ie ie6' lang='".$lang."'> <![endif]-->
+<!--[if IE 7 ]><html class='ie ie7' lang='".$lang."'> <![endif]-->
+<!--[if IE 8 ]><html class='ie ie8' lang='".$lang."'> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang='".$lang."' dir='ltr'> <!--<![endif]-->
 \n<head>";
 if (file_exists("favicon.ico"))  echo "<link rel='shortcut icon' href='favicon.ico' />";
 elseif (file_exists("favicon.png")) echo "<link rel='shortcut icon' href='favicon.png' />";
 /*
-	<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
-	<link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
-	<link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+// переделать в настройку
+if (file_exists("images/favicon_apple.png")) echo "<link rel='apple-touch-icon' href='images/apple-touch-icon.png' />
+	<link rel='apple-touch-icon' sizes='72x72' href='images/apple-touch-icon-72x72.png'>
+	<link rel='apple-touch-icon' sizes='114x114' href='images/apple-touch-icon-114x114.png'>";
 */
-//if (file_exists("favicon_apple.png")) echo "<link rel='apple-touch-icon' href='favicon_apple.png' />";
-
-// Основной JavaScript
-echo "<script src='includes/j.js'></script>\n
-<script src='includes/iepngfix_tilebg.js'></script>\n";
-
 echo "<title>".$pagetit.$sitename."</title>
 <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-<meta name=\"keywords\" content=\"".$keywords2."\">
-<meta name=\"description\" content=\"".$description2."\">
-<meta name=\"robots\" content=\"index, follow\">
-<meta http-equiv=\"Content-language\" content=\"".$lang."\"> 
-<meta name=\"copyright\" content=\"".$sitename."\">
-<meta name=\"author\" content=\"\">
-<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, maximum-scale=1\">
-<!--[if lt IE 9]><script src=\"http://html5shim.googlecode.com/svn/trunk/html5.js\"></script><![endif]-->
-<script src=\"http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js\"></script>
-<script src=\"http://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js\"></script>
-<script src=\"http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js\"></script> 
-<script src=\"http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/i18n/jquery-ui-i18n.min.js\"></script> 
-<script src=\"includes/jquery.lightbox.js\"></script>
-<script src=\"includes/jquery.innerfade.js\"></script>
-<script src=\"includes/ui.core.js\"></script>
-<script src=\"includes/ui.tabs.js\"></script>
-<script src=\"includes/jquery.ad-gallery.js\"></script>";
+<meta name='keywords' content='".$keywords2."'>
+<meta name='description' content='".$description2."'>
+<meta name='robots' content='index, follow'>
+<meta http-equiv='Content-language' content='".$lang."'> 
+<meta name='copyright' content='".$sitename."'>
+<meta name='author' content=''>
+<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1'>
+<!--[if lt IE 9]><script src='http://html5shim.googlecode.com/svn/trunk/html5.js'></script><![endif]-->
+<script src='includes/j.js'></script>
+<script src='includes/iepngfix_tilebg.js'></script>
+<script src='http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js'></script>
+<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js'></script>
+<script src='includes/jquery.lightbox.js'></script>
+<script src='includes/jquery.innerfade.js'></script>
+<script src='includes/jquery.ad-gallery.js'></script>";
 
-global $kickstart;
-// 1,2,3,4,5,6,7,8,9 — KickStart,CSSframework,Skeleton,Kube,Bootstrap,1140 Grid,Toast,Blueprint,normalize
-if ($kickstart == 1) echo "<script type=\"text/javascript\" src=\"includes/css-frameworks/kickstart/js/prettify.js\"></script><script type=\"text/javascript\" src=\"includes/css-frameworks/kickstart/js/kickstart.js\"></script><link rel=\"stylesheet\" type=\"text/css\" href=\"includes/css-frameworks/kickstart/css/kickstart.css\" media=\"all\" /><link rel=\"stylesheet\" type=\"text/css\" href=\"includes/css-frameworks/kickstart/style.css\" media=\"all\" />";
-else echo "<script>$(document).ready(function(){ $('.lightbox').lightbox({ fitToScreen: true, imageClickClose: false }); var galleries = $('.ad-gallery').adGallery(); $('#switch-effect').change( function() { galleries[0].settings.effect = $(this).val(); return false; } ); });</script><link rel='stylesheet' href='includes/lightbox.css' media='screen' />"; // при включенном kickstart, lightbox не нужен
-if ($kickstart == 2) echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"includes/css-frameworks/css-framework.css\" />";
-if ($kickstart == 3) echo "<link rel=\"stylesheet\" href=\"includes/css-frameworks/skeleton/base.css\"><link rel=\"stylesheet\" href=\"includes/css-frameworks/skeleton/skeleton.css\"><link rel=\"stylesheet\" href=\"includes/css-frameworks/skeleton/layout.css\">";
-if ($kickstart == 4) echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"includes/css-frameworks/kube100/kube.min.css\" /><link rel=\"stylesheet\" type=\"text/css\" href=\"includes/css-frameworks/kube100/master.css\" />";
-if ($kickstart == 5) echo "<link href=\"includes/css-frameworks/bootstrap/css/bootstrap.min.css\" rel=\"stylesheet\"><link href=\"includes/css-frameworks/bootstrap/css/bootstrap-responsive.min.css\" rel=\"stylesheet\"><script src=\"includes/css-frameworks/bootstrap/js/bootstrap.min.js\"></script>";
-if ($kickstart == 6) echo "<!--[if lte IE 9]><link rel=\"stylesheet\" href=\"includes/css-frameworks/1140_cssgrid/ie.css\" type=\"text/css\" media=\"screen\" /><![endif]--><link rel=\"stylesheet\" href=\"includes/css-frameworks/1140_cssgrid/1140.css\" type=\"text/css\" media=\"screen\" /><script type=\"text/javascript\" src=\"includes/css-frameworks/1140_cssgrid/css3-mediaqueries.js\"></script>";
-if ($kickstart == 7) echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"includes/css-frameworks/toast/toast.css\" />";
-if ($kickstart == 8) echo "<link rel=\"stylesheet\" href=\"includes/css-frameworks/blueprint/screen.css\" type=\"text/css\" media=\"screen, projection\"><link rel=\"stylesheet\" href=\"includes/css-frameworks/blueprint/print.css\" type=\"text/css\" media=\"print\"><!--[if lt IE 8]><link rel=\"stylesheet\" href=\"includes/css-frameworks/blueprint/ie.css\" type=\"text/css\" media=\"screen, projection\"><![endif]-->";
-if ($kickstart == 9) echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"includes/css-frameworks/normalize.css\" />";
+global $kickstart, $jqueryui;
+if ($jqueryui != 0) echo "<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/jquery-ui.min.js'></script>
+<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/i18n/jquery-ui-i18n.min.js'></script>
+<link rel='stylesheet' href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/base/jquery-ui.css' media='all' />";
 
-// http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.3/themes/base/jquery-ui.css — проверить
-echo "
-<link rel=\"stylesheet\" href=\"http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.3/themes/base/jquery-ui.css\" media=\"all\" />
-<link rel='stylesheet' href='includes/ui.tabs.css' media='print, projection, screen' /> 
-<link rel='alternate' href='/rss/' title='".$siteurl." RSS' />
+switch($kickstart) { // Выбор CSS-фреймворка
+	case 1: // KickStart
+	echo "<script type='text/javascript' src='includes/css-frameworks/kickstart/js/prettify.js'></script><script type='text/javascript' src='includes/css-frameworks/kickstart/js/kickstart.js'></script><link rel='stylesheet' type='text/css' href='includes/css-frameworks/kickstart/css/kickstart.css' media='all' /><link rel='stylesheet' type='text/css' href='includes/css-frameworks/kickstart/style.css' media='all' />"; break;
+	case 2: // CSSframework
+	echo "<link rel='stylesheet' type='text/css' href='includes/css-frameworks/css-framework.css' />"; break;
+	case 3: // Skeleton
+	echo "<link rel='stylesheet' href='includes/css-frameworks/skeleton/base.css'><link rel='stylesheet' href='includes/css-frameworks/skeleton/skeleton.css'><link rel='stylesheet' href='includes/css-frameworks/skeleton/layout.css'>"; break;
+	case 4: // Kube
+	echo "<link rel='stylesheet' type='text/css' href='includes/css-frameworks/kube100/kube.min.css' /><link rel='stylesheet' type='text/css' href='includes/css-frameworks/kube100/master.css' />"; break;
+	case 5: // Bootstrap
+	echo "<link href='includes/css-frameworks/bootstrap/css/bootstrap.min.css' rel='stylesheet'><link href='includes/css-frameworks/bootstrap/css/bootstrap-responsive.min.css' rel='stylesheet'><script src='includes/css-frameworks/bootstrap/js/bootstrap.min.js'></script>"; break;
+	case 6: // 1140 Grid
+	echo "<!--[if lte IE 9]><link rel='stylesheet' href='includes/css-frameworks/1140_cssgrid/ie.css' type='text/css' media='screen' /><![endif]--><link rel='stylesheet' href='includes/css-frameworks/1140_cssgrid/1140.css' type='text/css' media='screen' /><script type='text/javascript' src='includes/css-frameworks/1140_cssgrid/css3-mediaqueries.js'></script>"; break;
+	case 7: // Toast
+	echo "<link rel='stylesheet' type='text/css' href='includes/css-frameworks/toast/toast.css' />"; break;
+	case 8: // Blueprint
+	echo "<link rel='stylesheet' href='includes/css-frameworks/blueprint/screen.css' type='text/css' media='screen, projection'><link rel='stylesheet' href='includes/css-frameworks/blueprint/print.css' type='text/css' media='print'><!--[if lt IE 8]><link rel='stylesheet' href='includes/css-frameworks/blueprint/ie.css' type='text/css' media='screen, projection'><![endif]-->"; break;
+	case 9: // normalize
+	echo "<link rel='stylesheet' type='text/css' href='includes/css-frameworks/normalize.css' />"; break;
+	case 10: // YUI CSS Grids
+	echo "<link rel='stylesheet' href='http://yui.yahooapis.com/3.7.3/build/cssreset/reset-min.css' type='text/css'><link rel='stylesheet' href='http://yui.yahooapis.com/3.7.3/build/cssfonts/fonts-min.css' type='text/css'><link rel='stylesheet' href='http://yui.yahooapis.com/3.7.3/build/cssgrids/grids-min.css' type='text/css'><script src='http://yui.yahooapis.com/3.7.3/build/yui/yui-min.js'></script>"; break;
+	case 11: // 960gs (12 и/или 16 колонок)
+	echo "<link rel='stylesheet' href='includes/css-frameworks/960gs/reset.css' /><link rel='stylesheet' href='includes/css-frameworks/960gs/text.css' /><link rel='stylesheet' href='includes/css-frameworks/960gs/960.css' />"; break;
+	case 12: // 960gs (24 колонки)
+	echo "<link rel='stylesheet' href='includes/css-frameworks/960gs/reset.css' /><link rel='stylesheet' href='includes/css-frameworks/960gs/text.css' /><link rel='stylesheet' href='includes/css-frameworks/960gs/960_24_col.css' />"; break;
+
+	default:
+	break;
+}
+if ($kickstart != 1) echo "<script>$(document).ready(function(){ $('.lightbox').lightbox({ fitToScreen: true, imageClickClose: false }); var galleries = $('.ad-gallery').adGallery(); $('#switch-effect').change( function() { galleries[0].settings.effect = $(this).val(); return false; } ); });</script><link rel='stylesheet' href='includes/lightbox.css' media='screen' />"; // при включенном kickstart, lightbox не нужен
+
+echo "<link rel='alternate' href='/rss/' title='".$siteurl." RSS' />
 <link rel='stylesheet' href='includes/carusel.css' media='screen' />
 <link rel='stylesheet' href='".$stil.".css' />";
 
@@ -1504,25 +1512,26 @@ foreach ($add_fonts as $font) {
 	$font = str_replace(" ", "+", $font[0]);
 	echo '<link href="http://fonts.googleapis.com/css?family='.$font.'&and;subset=latin,cyrillic'.$effect_show.'" rel="stylesheet" type="text/css">';
 }
-
-	################ НАЧАЛО ТЕЛА
-	$notmenu = "";
-	if ($stopcopy == 1) $notmenu = " oncontextmenu='notmenu();'";
-	echo "</head>\n<body".$notmenu.">";
-
-	if ($kickstart == 1) echo "<a id=\"top-of-page\"></a><div id=\"wrap\" class=\"clearfix\">";
-	if ($kickstart == 3 or $kickstart == 8) echo "<div class=\"container\">";
-	if ($kickstart == 4) echo "<div id=\"page\">";
+	$add_body = "";
+	if ($stopcopy == 1) $add_body .= " oncontextmenu='notmenu();'"; // «защита» от глупых копипастеров
+	if ($kickstart == 10) $add_body .= " class='yui3-skin-sam'>";
+	# НАЧАЛО ТЕЛА
+	echo "</head>\n<body".$add_body.">";
+	if ($kickstart == 1) echo "<a id='top-of-page'></a><div id='wrap' class='clearfix'>";
+	if ($kickstart == 3 or $kickstart == 8) echo "<div class='container'>";
+	if ($kickstart == 4) echo "<div id='page'>";
 
 	// Исправляем старые ошибки: # проверить и удалить
+	/*
 	$block = str_replace("»»»","\"",$block);
 	$block = str_replace("\"\"\"","\"",$block);
 	$block = str_replace("\"»","\"",$block);
 	$block = str_replace("%C2%BB%C2%BB%C2%BB","",$block);
 	$block = str_replace("%22%22%22","",$block);
-
+	*/
 	//Подставляем получившееся в HTML + поправка для IE. // удалить
-	echo str_replace("</table></table>","</table>",str_replace("</tr></div>","</tr>",$block)); 
+	//echo str_replace("</table></table>","</table>",str_replace("</tr></div>","</tr>",$block)); 
+	echo $block; // Вывод страницы
 
 		// Если включена погодная анимация
 		global $url;

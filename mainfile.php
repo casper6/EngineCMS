@@ -3,6 +3,8 @@
   ob_implicit_flush(0); 
   session_start(); // Для капчи (проверочный код-картинка от спама) // проверить вызов
 ##########################################################################################
+  $phpversion = preg_replace('/[a-z-]/', '', phpversion());
+  if ($phpversion{0}==4) die ('Версия PHP — 4. Попросите хостинг-компанию установить PHP 5 версии.');
   require_once ('page/functions.php'); // Функции
   require_once ('page/sec.php'); // Функции безопасности
   require_once ('config.php'); // Настройки сайта
@@ -92,9 +94,10 @@
   $flash = $row['flash'];
   $ht_backup = $row['ht_backup']; // Файл, в котором лежит резервная копия .htaccess
   $captcha_ok = $row['captcha_ok']; // отключение проверки комментариев
-  $ca = $show_comments = $show_userposts = "";
-  list($ca, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $search_design, $tag_design, $add_fonts) = explode("|",trim($row['nocashe']));
+  $jqueryui = $show_comments = $show_userposts = "";
+  list($jqueryui, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $search_design, $tag_design, $add_fonts) = explode("|",trim($row['nocashe']));
   //if ($add_fonts != "") $add_fonts = explode(".",$add_fonts);
+  if ($jqueryui == "") $jqueryui = "1";
   if ($show_page == "") $show_page = "1";
   if ($show_reserv == "") $show_reserv = "0";
   if ($uskorenie_blokov == "") $uskorenie_blokov = "0";

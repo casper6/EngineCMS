@@ -173,7 +173,7 @@ function delcomm(id) {
 }
 function del_file(file, id) {
 	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
-	    data: {'func': 'delfile', 'file': file },
+	    data: {'func': 'delfile', 'type': file },
 	    beforeSend: function(){ $('#file'+id).html('Удаляю...'); },
 	    success: function(data){ $('#file'+id).hide(); }
 	});

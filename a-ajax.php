@@ -5,90 +5,89 @@ header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache"); // HTTP/1.0
 require_once("mainfile.php");
-global $soderganie, $DBName, $prefix, $db, $module_name, $ModuleName, $admin, $now, $adminmail, $ip, $siteurl;
+global $prefix, $db, $module_name, $admin, $now, $adminmail, $ip, $siteurl;
 if (is_admin($admin)) {
-  // Выбор функции
-  if (isset($_REQUEST['func']))   $func = $_REQUEST['func']; else die(); 
+  if (isset($_REQUEST['func']))   $func = $_REQUEST['func']; else die(); // Выбор функции
   if (isset($_REQUEST['type']))   $type = $_REQUEST['type'];
-  if (isset($_REQUEST['file']))   $file = $_REQUEST['file'];
   if (isset($_REQUEST['id']))     $id = intval($_REQUEST['id']);
   if (isset($_REQUEST['string'])) $string = $_REQUEST['string'];
-
-######################################################################################
+/* ===================================================================================================== */
 if ($func == "oformlenie_show") { // Выводим содержание различных оформлений
-     // Получаем названия -- заменить?
-     $sql = "select id, name, title, useit from ".$prefix."_mainpage where `tables`='pages' and type='2' or type='1' order by title";
-     $result = $db->sql_query($sql);
-     $module_title = array();
-     $module_name = array();
-     $module_name = array();
-     while ($row = $db->sql_fetchrow($result)) {
+  // Получаем названия -- заменить?
+  $sql = "select id, name, title, useit from ".$prefix."_mainpage where `tables`='pages' and type='2' or type='1' order by title";
+  $result = $db->sql_query($sql);
+  $module_title = array();
+  $module_name = array();
+  $module_name = array();
+  while ($row = $db->sql_fetchrow($result)) {
        $id = $row['id'];
        $name = $row['name'];
        $module_title[$id] = $row['title'];
        $module_name[$name] = $row['title'];
        $module_name2[$name] = $row['id'];
-     }
+  }
   $info = "";
   $admintip = "mainpage";
   switch($type) {
 
-  case "design": // ========================================================
+
+  case "design":
     $sql = "select id,title,useit from ".$prefix."_mainpage where `tables`='pages' and type='0' order by title, name";
     $result = $db->sql_query($sql);
     $info .= "<table width=100% class=table_light>";
     if (!isset($nam)) $nam = "";
     while ($row = $db->sql_fetchrow($result)) {
-     $useit = explode(" ", trim($row['useit']));
-     $css = "";
-     foreach( $useit as $value ) {
-      if ($value) $css .= " <a href='/sys.php?op=mainpage&id=".$value."' title='Редактировать' class='gray'><i>".$module_title[$value]."</i><img class='icon2 i34' src='/images/1.gif'></a> ";
-     }
-     if ($css == "") $css = "<i class='red'>стиль не выбран</i><br>"; else $css = "Подключенные стили (css): ".$css."<br>";
-     if ($row['title'] != "Главный дизайн") $delx = "<a class='padleft30' href=/sys.php?op=mainpage_del&id=".$row['id']."&type=0&name=".$nam." title='Удалить дизайн ".$row['title']."'><img class='icon2 i21' src='/images/1.gif'></a>";
-      else $delx = "<span class='padleft30'><img title='Основной дизайн нельзя удалить' class='icon2 i44' src='/images/1.gif'>";
-      
-     $info .= "<tr valign='top'><td><h2>".$row['title']." &darr;</h2>
-     <div style='float:right; display: inline;'>
-     <a href='sys.php?op=mainpage&id=".$row['id']."&red=1' title='Редактировать в HTML'><img class='icon2 i34' src='/images/1.gif'></a> 
-     ".$delx."
-     </div>";
-    ///////
-     $sql2 = "select id,name,title from ".$prefix."_mainpage where `tables`='pages' and type='2' and text like '%design=".$row['id']."&%' order by title, name";
-     $result2 = $db->sql_query($sql2);
-     $numrows2 = $db->sql_numrows($result2);
-     if ($numrows2 == 0) $razr = "";
-     else {
-      $razr = "<div style='overflow:auto; width:90%; height:70px;'>Используется в разделах: <br>";
-      while ($row2 = $db->sql_fetchrow($result2)) {
-        $id = $row2['id'];
-        $razr .= "<a href='/-".$row2['name']."' target='_blank' class='gray'>".$row2['title']."</a> ";
-      }
-      $razr .= "</div>";
-     }
-     ///////
-     $sql2 = "select id,name,title from ".$prefix."_mainpage where `tables`='pages' and type='3' and useit like '%design=".$row['id']."&%' order by title, name";
-     $result2 = $db->sql_query($sql2);
-     $numrows2 = $db->sql_numrows($result2);
-     if ($numrows2 == 0) $bloc = "";
-     else {
-      if ($razr != "") $razr .= "<br>";
-      $bloc = "Используется в блоках: ";
-      while ($row2 = $db->sql_fetchrow($result2)) {
-        $id = $row2['id'];
-        $bloc .= "[".$row2['title']."] ";
-      }
-     }
-     $info .= "".$css."".$razr.$bloc."</td></tr>";
-   }
-   $info .= "</table>";
+       $useit = explode(" ", trim($row['useit']));
+       $css = "";
+       foreach( $useit as $value ) {
+        if ($value) $css .= " <a href='/sys.php?op=mainpage&id=".$value."' title='Редактировать' class='gray'><i>".$module_title[$value]."</i><img class='icon2 i34' src='/images/1.gif'></a> ";
+       }
+       if ($css == "") $css = "<i class='red'>стиль не выбран</i><br>"; else $css = "Подключенные стили (css): ".$css."<br>";
+       if ($row['title'] != "Главный дизайн") $delx = "<a class='padleft30' href=/sys.php?op=mainpage_del&id=".$row['id']."&type=0&name=".$nam." title='Удалить дизайн ".$row['title']."'><img class='icon2 i21' src='/images/1.gif'></a>";
+        else $delx = "<span class='padleft30'><img title='Основной дизайн нельзя удалить' class='icon2 i44' src='/images/1.gif'>";
+        
+       $info .= "<tr valign='top'><td><h2>".$row['title']." &darr;</h2>
+       <div style='float:right; display: inline;'>
+       <a href='sys.php?op=mainpage&id=".$row['id']."&red=1' title='Редактировать в HTML'><img class='icon2 i34' src='/images/1.gif'></a> 
+       ".$delx."
+       </div>";
+      ///////
+       $sql2 = "select id,name,title from ".$prefix."_mainpage where `tables`='pages' and type='2' and text like '%design=".$row['id']."&%' order by title, name";
+       $result2 = $db->sql_query($sql2);
+       $numrows2 = $db->sql_numrows($result2);
+       if ($numrows2 == 0) $razr = "";
+       else {
+        $razr = "<div style='overflow:auto; width:90%; height:70px;'>Используется в разделах: <br>";
+        while ($row2 = $db->sql_fetchrow($result2)) {
+          $id = $row2['id'];
+          $razr .= "<a href='/-".$row2['name']."' target='_blank' class='gray'>".$row2['title']."</a> ";
+        }
+        $razr .= "</div>";
+       }
+      ///////
+       $sql2 = "select id,name,title from ".$prefix."_mainpage where `tables`='pages' and type='3' and useit like '%design=".$row['id']."&%' order by title, name";
+       $result2 = $db->sql_query($sql2);
+       $numrows2 = $db->sql_numrows($result2);
+       if ($numrows2 == 0) $bloc = "";
+       else {
+        if ($razr != "") $razr .= "<br>";
+        $bloc = "Используется в блоках: ";
+        while ($row2 = $db->sql_fetchrow($result2)) {
+          $id = $row2['id'];
+          $bloc .= "[".$row2['title']."] ";
+        }
+       }
+       $info .= "".$css."".$razr.$bloc."</td></tr>";
+    }
+    $info .= "</table>";
   break;
 
-  case "css": // ========================================================
-  $sql = "select * from ".$prefix."_mainpage where `tables`='pages' and type='1' order by title, name";
-   $result = $db->sql_query($sql);
-   $info = "<table class=table_light width=50% style='min-width:500px;'>";
-   while ($row = $db->sql_fetchrow($result)) {
+
+  case "css":
+    $sql = "select * from ".$prefix."_mainpage where `tables`='pages' and type='1' order by title, name";
+    $result = $db->sql_query($sql);
+    $info = "<table class=table_light width=50% style='min-width:500px;'>";
+    while ($row = $db->sql_fetchrow($result)) {
      $useit = explode(" ", trim($row['useit']));
      $css = "";
      foreach( $useit as $value ) {
@@ -96,20 +95,15 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
      }
      if ($css == "") $css = "<i class='gray'>стиль не выбран</i><br>"; 
      else $css = "Подключенные стили (css): ".$css."<br>";
-     if ($row['title'] != "Главный стиль") 
-      $delx = "<a class='padleft30' href=/sys.php?op=mainpage_del&id=".$row['id']."&type=1&name=".$nam." title='Удалить стиль «".$row['title']."»'><img class='icon2 i21' src='/images/1.gif'></a>";
+     if ($row['title'] != "Главный стиль") $delx = "<a class='padleft30' href=/sys.php?op=mainpage_del&id=".$row['id']."&type=1&name=".$nam." title='Удалить стиль «".$row['title']."»'><img class='icon2 i21' src='/images/1.gif'></a>";
      else $delx = "<span class='padleft30'><img title='Основной стиль нельзя удалить' class='icon2 i44' src='/images/1.gif'>";
-     $info .= "<tr><td><h2>".$row['title']."
-     <div style='float:right; display: inline;'>
-     <a href='sys.php?op=mainpage&type=1&id=".$row['id']."' title='Редактировать'><img class='icon2 i34' src='/images/1.gif'></a> 
-     ".$delx."
-     </h2></div>
-     </td></tr>";
-   }
-   $info .= "</table>";
+     $info .= "<tr><td><h2>".$row['title']."<div style='float:right; display: inline;'><a href='sys.php?op=mainpage&type=1&id=".$row['id']."' title='Редактировать'><img class='icon2 i34' src='/images/1.gif'></a> ".$delx."</h2></div></td></tr>";
+    }
+    $info .= "</table>";
   break;
 
-  case "block": // ========================================================
+
+  case "block":
     $block_names = array("-"=>"",
       "2"=>"Текст или HTML (<i>в том числе [другие блоки]</i>)", 
       "10"=>"Меню сайта", 
@@ -131,107 +125,101 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
       "22"=>"База данных (<i>количество по 2 колонкам</i>)", 
       "23"=>"База данных (<i>список колонок</i>)");
     global $uskorenie_blokov;
-    
-     $sql = "select id,name,title from ".$prefix."_mainpage where `tables`='pages' and type='3' order by name, title";
-     $result = $db->sql_query($sql);
-     $n = $blocks_no = $blocks_yes = "";
-     while ($row = $db->sql_fetchrow($result)) {
+    $sql = "select id,name,title from ".$prefix."_mainpage where `tables`='pages' and type='3' order by name, title";
+    $result = $db->sql_query($sql);
+    $n = $blocks_no = $blocks_yes = "";
+    while ($row = $db->sql_fetchrow($result)) {
       if ($uskorenie_blokov == 0) {
-       $sql2 = "select id,name,title,useit from ".$prefix."_mainpage where `tables`='pages' and type='0' and text like '%[".$row['title']."]%' order by title, name";
-       $result2 = $db->sql_query($sql2);
-       $numrows2 = $db->sql_numrows($result2);
-       if ($numrows2 == 0) $diz = "";
-       else {
-        $diz = "<span class='green'> &rarr; используется в дизайнах: |";
-        while ($row2 = $db->sql_fetchrow($result2)) {
-          $diz .= " ".$row2['title']." |";
-        }
-        $diz .= "</span>";
-       }
-
-       $sql2 = "select id,name,title from ".$prefix."_mainpage where `tables`='pages' and type='2' and useit like '%[".$row['title']."]%' order by title, name";
-       $result2 = $db->sql_query($sql2);
-       $numrows2 = $db->sql_numrows($result2);
-       if ($numrows2 == 0) $razr = "";
-       else {
-        if ($diz != "") $diz .= "<br>";
-        $razr = "<span class='green'> &rarr; используется в разделах: ";
-        while ($row2 = $db->sql_fetchrow($result2)) {
-          $id = $row2['id'];
-          $razr .= "<a href='/-".$row2['name']."' target='_blank' class='gray'>".$row2['title']."</a> ";
-        }
-        $razr .= "</span>";
-       }
-       ///////
-       $sql2 = "select id,name,title from ".$prefix."_mainpage where `tables`='pages' and type='3' and text like '%[".$row['title']."]%' order by title, name";
-       $result2 = $db->sql_query($sql2);
-       $numrows2 = $db->sql_numrows($result2);
-       if ($numrows2 == 0) $bloc = "";
-       else {
-        if ($razr != "") $razr .= "<br>";
-        $bloc = "<span class='green'> &rarr; используется в блоках: ";
-        while ($row2 = $db->sql_fetchrow($result2)) {
-          $id = $row2['id'];
-          $bloc .= "[".$row2['title']."] ";
-        }
-        $bloc .= "</span>";
-       }
-       ///////
-
-       $sql2 = "select pid, module, title from ".$prefix."_pages where `tables`='pages' and active='1' and (open_text like '%[".$row['title']."]%' or main_text like '%[".$row['title']."]%') order by title";
-       $result2 = $db->sql_query($sql2);
-       $numrows2 = $db->sql_numrows($result2);
-       if ($numrows2 == 0) $stri = "";
-       else {
-        if ($bloc != "") $bloc .= "<br>";
-        $stri = "<span class='green'> &rarr; используется в страницах: ";
-        if ($numrows2 < 6) {
+        $sql2 = "select id,name,title,useit from ".$prefix."_mainpage where `tables`='pages' and type='0' and text like '%[".$row['title']."]%' order by title, name";
+        $result2 = $db->sql_query($sql2);
+        $numrows2 = $db->sql_numrows($result2);
+        if ($numrows2 == 0) $diz = "";
+        else {
+          $diz = "<span class='green'> &rarr; используется в дизайнах: |";
           while ($row2 = $db->sql_fetchrow($result2)) {
-            $stri .= "<a href='/-".$row2['module']."_page_".$row2['pid']."' target='_blank' class='gray'>".$row2['title']."</a> ";
+            $diz .= " ".$row2['title']." |";
           }
-        } else $stri .= "$numrows2 страниц...";
-        $stri .= "</span>";
-       }
-       
-       if ($diz=="" and $razr=="" and $bloc=="" and $stri=="") 
-        $title = $row['title'].'<span class="gray"> &rarr; не используется</span>';
-       else 
-        $title = $row['title'].$diz.$razr.$bloc.$stri;
-      
-    } else $title = $row['title'];
+          $diz .= "</span>";
+        }
+        ///////
+        $sql2 = "select id,name,title from ".$prefix."_mainpage where `tables`='pages' and type='2' and useit like '%[".$row['title']."]%' order by title, name";
+        $result2 = $db->sql_query($sql2);
+        $numrows2 = $db->sql_numrows($result2);
+        if ($numrows2 == 0) $razr = "";
+        else {
+          if ($diz != "") $diz .= "<br>";
+          $razr = "<span class='green'> &rarr; используется в разделах: ";
+          while ($row2 = $db->sql_fetchrow($result2)) {
+            $id = $row2['id'];
+            $razr .= "<a href='/-".$row2['name']."' target='_blank' class='gray'>".$row2['title']."</a> ";
+          }
+          $razr .= "</span>";
+        }
+        ///////
+        $sql2 = "select id,name,title from ".$prefix."_mainpage where `tables`='pages' and type='3' and text like '%[".$row['title']."]%' order by title, name";
+        $result2 = $db->sql_query($sql2);
+        $numrows2 = $db->sql_numrows($result2);
+        if ($numrows2 == 0) $bloc = "";
+        else {
+          if ($razr != "") $razr .= "<br>";
+          $bloc = "<span class='green'> &rarr; используется в блоках: ";
+          while ($row2 = $db->sql_fetchrow($result2)) {
+            $id = $row2['id'];
+            $bloc .= "[".$row2['title']."] ";
+          }
+          $bloc .= "</span>";
+        }
+        ///////
+        $sql2 = "select pid, module, title from ".$prefix."_pages where `tables`='pages' and active='1' and (open_text like '%[".$row['title']."]%' or main_text like '%[".$row['title']."]%') order by title";
+        $result2 = $db->sql_query($sql2);
+        $numrows2 = $db->sql_numrows($result2);
+        if ($numrows2 == 0) $stri = "";
+        else {
+          if ($bloc != "") $bloc .= "<br>";
+          $stri = "<span class='green'> &rarr; используется в страницах: ";
+          if ($numrows2 < 6) {
+            while ($row2 = $db->sql_fetchrow($result2)) {
+              $stri .= "<a href='/-".$row2['module']."_page_".$row2['pid']."' target='_blank' class='gray'>".$row2['title']."</a> ";
+            }
+          } else $stri .= "$numrows2 страниц...";
+          $stri .= "</span>";
+        }
+        if ($diz=="" and $razr=="" and $bloc=="" and $stri=="") 
+          $title = $row['title'].'<span class="gray"> &rarr; не используется</span>';
+        else 
+          $title = $row['title'].$diz.$razr.$bloc.$stri;
+      } else $title = $row['title'];
 
-        if ($n == $row['name']) {$nu = "-";}
-        else {$n = $row['name']; $nu = $row['name'];}
-       
-       $bgcolor = "#FFeecc"; //FFddaa
+      if ($n == $row['name']) {$nu = "-";}
+      else {$n = $row['name']; $nu = $row['name'];}
+      $bgcolor = "#FFeecc"; //FFddaa
        if ($nu == "-") $block = "<td class='padleft30'>"; else $block = "<td style='background:white;'><br><h2>".$block_names[$nu]." &darr;</h2></td></tr><tr><td class='padleft30'>";
-
-       $title = $block.$title;
-
-    $blocks_ok = "<tr valign=top>".$title."<div style='margin-left:20px; display: inline; float:right;'>
-     <a href='sys.php?op=mainpage&type=3&id=".$row['id']."&red=1' title='Редактировать в HTML'><img class='icon2 i34' src='/images/1.gif'></a> 
-     <a href='sys.php?op=mainpage&type=3&id=".$row['id']."&nastroi=1' title='Настроить блок'><img class='icon2 i38' src='/images/1.gif'></a> 
-     <a class='padleft30' href='sys.php?op=mainpage_del&id=".$row['id']."&type=3' title='Удалить ".$row['title']."'><img class='icon2 i21' src='/images/1.gif'></a>
-     </div>
-     </td></tr>";
-    $blocks_no .= $blocks_ok;
-   }
-   $info .= "<span class=green>Названия блоков в [квадратных скобках] можно использовать для вставки в дизайн, разделы, папки, страницы или другие блоки (т.е. в любом месте сайта).</span><table width=100% class='table_light'>".$blocks_no."</table>";
+      $title = $block.$title;
+      $blocks_ok = "<tr valign=top>".$title."<div style='margin-left:20px; display: inline; float:right;'>
+       <a href='sys.php?op=mainpage&type=3&id=".$row['id']."&red=1' title='Редактировать в HTML'><img class='icon2 i34' src='/images/1.gif'></a> 
+       <a href='sys.php?op=mainpage&type=3&id=".$row['id']."&nastroi=1' title='Настроить блок'><img class='icon2 i38' src='/images/1.gif'></a> 
+       <a class='padleft30' href='sys.php?op=mainpage_del&id=".$row['id']."&type=3' title='Удалить ".$row['title']."'><img class='icon2 i21' src='/images/1.gif'></a>
+       </div>
+       </td></tr>";
+      $blocks_no .= $blocks_ok;
+    }
+    $info .= "<span class=green>Названия блоков в [квадратных скобках] можно использовать для вставки в дизайн, разделы, папки, страницы или другие блоки (т.е. в любом месте сайта).</span><table width=100% class='table_light'>".$blocks_no."</table>";
   break;
 
-  case "shablon": // 6 ========================================================
-  $sql = "select * from ".$prefix."_mainpage where `tables`='pages' and type='6' order by type, title, name";
-     $result = $db->sql_query($sql);
-     $current_type = "";
-   $info .= "<table width=60% class=table_light>";
-   while ($row = $db->sql_fetchrow($result)) {
-         $id = $row['id'];
-         $type = $row['type'];
-         $nam = $row['name']; 
-         $title = $row['title'];
-         $useit = $row['useit'];
-         $useit_module = "";
-         $text = $row['text'];
+
+  case "shablon": // 6
+    $sql = "select * from ".$prefix."_mainpage where `tables`='pages' and type='6' order by type, title, name";
+    $result = $db->sql_query($sql);
+    $current_type = "";
+    $info .= "<table width=60% class=table_light>";
+    while ($row = $db->sql_fetchrow($result)) {
+      $id = $row['id'];
+      $type = $row['type'];
+      $nam = $row['name']; 
+      $title = $row['title'];
+      $useit = $row['useit'];
+      $useit_module = "";
+      $text = $row['text'];
       global $admin_file;
       $redactor = "<div style='float:right;'><a href='sys.php?op=mainpage&id=".$id."&red=1&type=6' title='Редактировать'><img class='icon2 i34' src='/images/1.gif'></a> ";
       $redactor .= "<a class='padleft30' href='sys.php?op=mainpage_del&id=".$id."&type=6&name=$nam' title='Удалить'><img class='icon2 i33' src='/images/1.gif'></a></div>"; // удаление базы данных
@@ -240,29 +228,30 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
     $info .= "</table>";
   break;
 
-  case "pole": // 4 ========================================================
-  $sql = "select * from ".$prefix."_mainpage where `tables`='pages' and type = '4' order by type, title, name";
-     $result = $db->sql_query($sql);
-     $current_type = "";
-   $info .= "<table width=100% class=table_light>";
-   while ($row = $db->sql_fetchrow($result)) {
-         $id = $row['id'];
-         $type = $row['type']; 
-         $nam = $row['name']; 
-         $title = $row['title'];
-         $useit = $row['useit'];
-         $text = $row['text'];
+
+  case "pole": // 4
+    $sql = "select * from ".$prefix."_mainpage where `tables`='pages' and type = '4' order by type, title, name";
+    $result = $db->sql_query($sql);
+    $current_type = "";
+    $info .= "<table width=100% class=table_light>";
+    while ($row = $db->sql_fetchrow($result)) {
+      $id = $row['id'];
+      $type = $row['type']; 
+      $nam = $row['name']; 
+      $title = $row['title'];
+      $useit = $row['useit'];
+      $text = $row['text'];
       $and = "";
       global $admin_file;
-        $s_tip = explode("|",$text); $s_tip = explode("&",$s_tip[1]); $s_tip = explode("=",$s_tip[0]); 
-        if ($s_tip[1]==0) $and = "список фраз на выбор";
-        if ($s_tip[1]==1) $and = "текст";
-        if ($s_tip[1]==2) $and = "файл";
-        if ($s_tip[1]==3) $and = "период времени";
-        if ($s_tip[1]==4) $and = "строка";
-        $m_title = "<a href=/-".$useit.">".$module_title[$useit]."</a>";
-        if ($useit==0) $m_title = "все разделы";
-        $type_opisX = "Раздел: ".$m_title.".<br>Тип: ".$and.".</sup>";
+      $s_tip = explode("|",$text); $s_tip = explode("&",$s_tip[1]); $s_tip = explode("=",$s_tip[0]); 
+      if ($s_tip[1]==0) $and = "список фраз на выбор";
+      if ($s_tip[1]==1) $and = "текст";
+      if ($s_tip[1]==2) $and = "файл";
+      if ($s_tip[1]==3) $and = "период времени";
+      if ($s_tip[1]==4) $and = "строка";
+      $m_title = "<a href=/-".$useit.">".$module_title[$useit]."</a>";
+      if ($useit==0) $m_title = "все разделы";
+      $type_opisX = "Раздел: ".$m_title.".<br>Тип: ".$and.".</sup>";
       $adres = "$title";
       $redactor = "<div style='float:right;'><a href='sys.php?op=mainpage&id=".$id."&red=1&type=4' title='Редактировать'><img class='icon2 i34' src='/images/1.gif'></a> 
       <a class='padleft30' href='sys.php?op=mainpage_del&id=".$id."&type=4&name=$nam' title='Удалить поле'><img class='icon2 i33' src='/images/1.gif'></a></div>";
@@ -272,48 +261,47 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
     $info .= "</table><br><a class=\"dark_pole\" title=\"Очистить пустые поля\" href='sys.php?op=mainpage_recycle_spiski'><img class=\"icon2 i33\" src=/images/1.gif class=left>Очистить пустые поля</a>";
   break;
 
-  case "base": // 5 ========================================================
-  $sql = "select * from ".$prefix."_mainpage where `tables`='pages' and type = '5' order by type, title, name";
-     $result = $db->sql_query($sql);
-     $current_type = "";
-   $info .= "<table width=60% class=table_light>";
-   while ($row = $db->sql_fetchrow($result)) {
-         $id = $row['id'];
-         $type = $row['type']; 
-         $nam = $row['name']; 
-         $title = $row['title'];
-         $useit = $row['useit'];
-         $useit_module = "";
-         $text = $row['text'];
+
+  case "base": // 5
+    $sql = "select * from ".$prefix."_mainpage where `tables`='pages' and type = '5' order by type, title, name";
+    $result = $db->sql_query($sql);
+    $current_type = "";
+    $info .= "<table width=60% class=table_light>";
+    while ($row = $db->sql_fetchrow($result)) {
+      $id = $row['id'];
+      $type = $row['type']; 
+      $nam = $row['name']; 
+      $title = $row['title'];
+      $useit = $row['useit'];
+      $useit_module = "";
+      $text = $row['text'];
       $and = "";
       global $admin_file;
       $ti = "";
-
       $text = explode("|",$text);
-        $options = $text[1];
-        $text = $text[0];
-        if (strpos(" ".$options,"base=")) $text = "base";
-        $adres = "$title";
-        if ($nam != "index") {
-          if (!strpos(" ".$options,"base=")) $link = ""; 
-          else $link = "<a href=/sys.php?op=base_base&name=$nam title='Раскрыть содержание раздела базы данных'><img src='images/admin/".$type_opis[8].".gif' style='background: green; width: 20px; height: 20px;'></a>&nbsp;"; 
-        } else $link = "";
-        $adres = "$title";
-        $link = "";
+      $options = $text[1];
+      $text = $text[0];
+      if (strpos(" ".$options,"base=")) $text = "base";
+      $adres = "$title";
+      if ($nam != "index") {
+        if (!strpos(" ".$options,"base=")) $link = ""; 
+        else $link = "<a href=/sys.php?op=base_base&name=$nam title='Раскрыть содержание раздела базы данных'><img src='images/admin/".$type_opis[8].".gif' style='background: green; width: 20px; height: 20px;'></a>&nbsp;"; 
+      } else $link = "";
+      $adres = "$title";
+      $link = "";
       $view2 = "";
       $adres = "$title";
       $view = "&nbsp;&nbsp;"; 
       $redactor = "";
       $and = "";
       $redactor .= "<div style='float:right;'><a class='padleft30' href='sys.php?op=mainpage_del&id=".$id."&type=5&name=$nam' title='Удалить базу данных'><img class='icon2 i33' src='/images/1.gif'></a></div>"; // удаление базы данных
-      
       $info .= "<tr><td>".$adres." <sup style=\"color:#999999;\">".$and."</sup>&nbsp;&nbsp;<font color=#dddddd>".$view2."</font> ".$redactor."&nbsp;".$and2."".$view."&nbsp;&nbsp;".$link."</td></tr>";
     }
     $info .= "</table><div class=green>Для редактирования таблицы подключите её к разделу через его настройки.</div>";
   break;
 
   default:
-  $info = '?';
+    $info = '?';
   break;
   }
 
@@ -321,7 +309,7 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
 }
 ######################################################################################
 if ($func == "delfile") { // Удаляем фотографию с сервера
-  unlink ($file); exit; 
+  unlink ($type); exit; 
 }
 ######################################################################################
 if ($func == "trash_pics") { // Создаем список неиспользуемых фотографий
@@ -801,7 +789,9 @@ if ($func == "rep") { // Копия/Перемещения/Ярлык стран
     $price = $row['price'];
     $sort = $row['sort'];
   // создадим такую же
-    if ($copy == 0) $copy = $id;
+    if (isset($copy)) {
+      if ($copy == 0) $copy = $id;
+    } else $copy = $id;
   $db->sql_query("INSERT INTO ".$prefix."_pages VALUES (NULL, '$razdel', '$papka', '$title', '$opentext', '$bodytext', '$data', '$data2', '0', '$active', '0', '0', '$foto', '$search', '$mainpage', '$rss', '$price', '$desc', '$keys', 'pages', '0', '$sort');") or $info = "Скопировать не удалось."; 
   }
   //////////////////
@@ -867,7 +857,7 @@ if ($func == "replace") { // Перемещение страницы
             $first_opt[$parentid] = "";
             $list .= "<option value=".$cid3." ".$sel.">".$title3."</option>";
         }
-  $list .= "</select></div><input type=button value=\"OK\" style='width:55%; height:35px;' onclick=\"rep($id,document.getElementById('what".$id."').value,document.getElementById('to_razdel".$id."').value,document.getElementById('to_papka".$id."').value);\"><br>Жмём 1 раз, т.к. копирование и ярлыки при каждом нажатии создают новую страницу.
+  $list .= "</select></div><input type=button value=\"OK\" style='width:55%; height:35px;' onclick=\"rep($id,document.getElementById('what".$id."').value,document.getElementById('to_razdel".$id."').value,document.getElementById('to_papka".$id."').value); if ($('#what".$id."').val()==3) clo($id);\"><br>Жмём 1 раз, т.к. копирование и ярлыки при каждом нажатии создают новую страницу.
   </form>";
   $list = "<div class='block radius' style='width:95%;'>".$list."
   <p><strong>Справка:</strong> <a class=punkt onclick=\"show('yarlyk_help');\">Что такое Ярлык?</a> 
