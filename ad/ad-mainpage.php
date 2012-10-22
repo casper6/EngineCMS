@@ -1057,7 +1057,7 @@ function edit_main($id) {
         button_more: {title: 'Вставка ссылки на полное содержание (для предисловия)',callback: ButtonMore},
         button_link: {title: 'Вставка блока (например, галереи фотографий)',callback: ButtonBlock},
         button_block: {title: 'Вставка быстрой ссылки на страницу или раздел',callback: ButtonLink}
-      }, mobile: true, ".$red4_div_convert." imageUpload: 'ed2/image_upload.php',fileUpload: 'ed2/file_upload.php', lang: 'ru' }); } );
+      }, mobile: true, ".$red4_div_convert." imageUpload: 'ed2/image_upload.php',fileUpload: 'ed2/file_upload.php', lang: 'ru', autoresize: false }); } );
 	    </script><textarea class='redactor' id=text name=text rows=15 cols=80 style='width:100%; height:450px;'>".$text."</textarea>";
 	}
 	echo "</h2>
@@ -1597,7 +1597,7 @@ function edit_main($id) {
         button_more: {title: 'Вставка ссылки на полное содержание (для предисловия)',callback: ButtonMore},
         button_link: {title: 'Вставка блока (например, галереи фотографий)',callback: ButtonBlock},
         button_block: {title: 'Вставка быстрой ссылки на страницу или раздел',callback: ButtonLink}
-      }, mobile: false, ".$red4_div_convert." imageUpload: 'ed2/image_upload.php',fileUpload: 'ed2/file_upload.php', lang: 'ru' }); } );
+      }, mobile: false, ".$red4_div_convert." imageUpload: 'ed2/image_upload.php',fileUpload: 'ed2/file_upload.php', lang: 'ru', autoresize: false }); } );
 	    </script><textarea class='redactor' id=useit name=useit rows=15 cols=80 style='width:100%; height:450px;'>".$useit."</textarea>";
 	}
 
@@ -2096,7 +2096,7 @@ function edit_main($id) {
         button_more: {title: 'Вставка ссылки на полное содержание (для предисловия)',callback: ButtonMore},
         button_link: {title: 'Вставка блока (например, галереи фотографий)',callback: ButtonBlock},
         button_block: {title: 'Вставка быстрой ссылки на страницу или раздел',callback: ButtonLink}
-      }, mobile: false, ".$red4_div_convert." imageUpload: 'ed2/image_upload.php',fileUpload: 'ed2/file_upload.php', lang: 'ru' }); } );
+      }, mobile: false, ".$red4_div_convert." imageUpload: 'ed2/image_upload.php',fileUpload: 'ed2/file_upload.php', lang: 'ru', autoresize: false }); } );
 	    </script><textarea class='redactor' id=text name=text rows=15 cols=80 style='width:100%; height:450px;'>".$text."</textarea>";
 	}
 	echo "</h2>";
@@ -2230,7 +2230,7 @@ function edit_main($id) {
         button_more: {title: 'Вставка ссылки на полное содержание (для предисловия)',callback: ButtonMore},
         button_link: {title: 'Вставка блока (например, галереи фотографий)',callback: ButtonBlock},
         button_block: {title: 'Вставка быстрой ссылки на страницу или раздел',callback: ButtonLink}
-      }, mobile: false, ".$red4_div_convert." imageUpload: 'ed2/image_upload.php',fileUpload: 'ed2/file_upload.php', lang: 'ru' }); } );
+      }, mobile: false, ".$red4_div_convert." imageUpload: 'ed2/image_upload.php',fileUpload: 'ed2/file_upload.php', lang: 'ru', autoresize: false }); } );
 	    </script><textarea class='redactor' id=text name=text rows=15 cols=80 style='width:100%; height:450px;'>".$text."</textarea>";
 	}
 	echo "</h2>";

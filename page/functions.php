@@ -14,7 +14,7 @@ function is_admin($admin) { // Проверка админа
   $aid = substr(addslashes($aid), 0, 25);
   if (!empty($aid) && !empty($pwd)) {
     global $prefix, $db;
-    $sql = "SELECT pwd FROM ".$prefix."_authors WHERE aid='$aid'";
+    $sql = "SELECT pwd FROM ".$prefix."_authors WHERE aid='$aid' limit 1";
     $result = $db->sql_query($sql);
     $pass = $db->sql_fetchrow($result);
     $db->sql_freeresult($result);
@@ -80,11 +80,7 @@ function delQuotes($string) { # Фильтры текста
   return $result;
 }
 /////////////////////////////////////////////////////////
-function check_html($str, $strip="") {
-  $AllowableHTML = array("col"=>2,"td"=>2,"tr"=>2,"hr"=>2,"p"=>2,"font"=>2,"embed"=>2,"font color"=>2,"table"=>2,"b"=>2,"i"=>2,"strike"=>2,"div"=>2,"u"=>2,"a"=>2,"em"=>2,"br"=>2,"strong"=>2,"blockquote"=>2,"tt"=>2,"li"=>2,"ol"=>2,"ul"=>2,"img"=>2,"img src="=>2);
-  // Этот код — из phpslash (GPL)
-  if ($strip == "nohtml") $AllowableHTMLnow = array('');
-  else $AllowableHTMLnow = $AllowableHTML;
+function check_html($str) {
   $str = preg_replace("/<\s*([^>]*?)\s*>/i",'<\\1>',$str); // Удаляем все пробелы из html тегов.
   $str = preg_replace("/<a[^>]*href\s*=\s*\"?\s*([^\" >]*)\s*\"?[^>]*>/i",'<a href="\\1">', $str); // Удаляем все атрибуты ссылки, кроме href
   $str = preg_replace("/<\s*img\s*([^>]*)\s*>/i", '', $str); // Удаляем img
@@ -95,7 +91,6 @@ function check_html($str, $strip="") {
     $l = strlen($reg[0]);
     if ($reg[1][0] == "/") $tag = strtolower(substr($reg[1],1));
     else $tag = strtolower($reg[1]);
-    if ($a = (isset($AllowableHTMLnow[$tag])) ? $AllowableHTMLnow[$tag] : 0)
     if ($reg[1][0] == "/") $tag = "</".$tag.">";
     elseif (($a == 1) || (empty($reg[2]))) $tag = "<".$tag.">";
     else {
@@ -116,7 +111,7 @@ function check_html($str, $strip="") {
 /////////////////////////////////////////////////////////
 function filter($what, $strip="") {
   if ($strip == "nohtml") {
-   $what = trim( check_html( $what, $strip ) );
+   $what = trim( check_html( $what ) );
   }
   $what = stripslashes(FixQuotes($what));
   return($what);
