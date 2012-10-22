@@ -592,10 +592,10 @@ $color = 1;
     $p_pid = $row2['pid'];
     $pсid = $row2['cid'];
     if ($pсid!=0 and $cid == 0) $p_name="<div class='cat_page_cattitle'><a href='/-".$DBName."_cat_".$pсid."' class='cat_page_cattitle'>".$c_name[$pсid]."</a></div>"; else $p_name = "";
-    $title = filter($row2['title']);
-    $open_text = filter($row2['open_text']);
+    $title = $row2['title'];
+    $open_text = $row2['open_text'];
     if (trim($open_text) == "<br><br>") $open_text = "";
-    $text = filter($row2['main_text']);
+    $text = $row2['main_text'];
     if (trim($text) == "<br><br>") $text = "";
     $open_text = str_replace("[заголовок]","",$open_text); // Убираем Заголовок, использованный в блоке!
     $p_comm = $row2['comm'];
@@ -881,8 +881,8 @@ if (($post!=0 and $cid!=0) or ($cid == 0 and $show_add_post_on_first_page==1)) $
 
   global $first, $second, $option;
   $option = intval($option);
-  $first1 = filter(urldecode(str_replace("|","%",str_replace("-_-","-",str_replace("+_+","+",$first)))), "nohtml");
-  $second1 = filter(urldecode(str_replace("|","%",str_replace("-_-","-",str_replace("+_+","+",$second)))), "nohtml");
+  $first1 = urldecode(str_replace("|","%",str_replace("-_-","-",str_replace("+_+","+",$first))));
+  $second1 = urldecode(str_replace("|","%",str_replace("-_-","-",str_replace("+_+","+",$second))));
   $first = "";
   $second = "";
 
@@ -1117,13 +1117,13 @@ if ( $cid=="" or ($active != 1 and !is_admin($admin))) {
   global $titl; // для передачи заголовка в php-скрипт
 
   $p_pid = $pid;
-  $search = filter(trim(str_replace("  "," ",$row['search'])));
-  $keys = filter($row['keywords']);
-  $desc = filter($row['description']);
+  $search = trim(str_replace("  "," ",$row['search']));
+  $keys = $row['keywords'];
+  $desc = $row['description'];
   $title = str_replace("<p>","",str_replace("</p>","",$row['title']));
   $titl = str_replace("\"","",$title); 
-  $opentext = str_replace("jpg\"><img ","jpg\" class=\"lightbox\" rel=\"page\"><img ", filter(str_replace("<img ","<img title='$titl' ", $row['open_text'])));
-  $bodytext = str_replace("jpg\"><img ","jpg\" class=\"lightbox\" rel=\"page\"><img ", filter(str_replace("<img ","<img title='$titl' ", $row['main_text'])));
+  $opentext = str_replace("jpg\"><img ","jpg\" class=\"lightbox\" rel=\"page\"><img ", str_replace("<img ","<img title='$titl' ", $row['open_text']));
+  $bodytext = str_replace("jpg\"><img ","jpg\" class=\"lightbox\" rel=\"page\"><img ", str_replace("<img ","<img title='$titl' ", $row['main_text']));
   
   // Вырезание авто-ссылок
   $opentext = preg_replace('/ссылка-.*-ссылка/Uis', '', $opentext);
@@ -1915,19 +1915,13 @@ function addbase($base,$name,$spa=0) {
   }
 }
 ###########################################
-// Сохранение добавления строки в базу данных
-function savebase ($name, $basename, $type, $text) {
+function savebase ($name, $basename, $type, $text) { // Сохранение добавления строки в базу данных
   $link = getenv("REMOTE_HOST");
   global $_SESSION, $_POST, $soderganie, $tip, $DBName, $db, $prefix, $module_name, $post, $captcha_ok;
   // Ввести проверку на активность - проверка постов администратором
   if ($post==1) $active = 1;
   if ($post==2) $active = 0;
   if ($post==3) $active = 2;
-  //$date = date("Y.m.d H:i:s"); // для проверки
-  //$ip = getenv("REMOTE_ADDR"); // IP
-  //$basename = trim(str_replace(" ","",filter($base, "", 1)));
-  //$name = trim(str_replace(" ","",filter($name, "", 1)));
-  //if ($name != "" and $basename != 0) {
   if( (isset($_SESSION['captcha_keystring']) && $_SESSION['captcha_keystring'] == $_POST['keystring']) or $captcha_ok == 1) {
   $texts = implode("', '",$text);
   $types = array_keys($text);
@@ -1937,10 +1931,9 @@ function savebase ($name, $basename, $type, $text) {
   } else die("<b>Ошибка: Вы неправильно ввели цифровой код, необходимый для подтверждения вашей человечности!</b><p>Нажмите <a href=\"".$link."\">Вернуться назад</a>, а затем обновите страницу [клавиша F5], если код не изменится на новый.");
   //} else die("<b>Ошибка: вероятно попытка взлома или добавление в базу данных из сохраненной страницы. Вернитесь на сайт! name - $name, basename - $basename");
   unset($_SESSION['captcha_keystring']);
-  global $siteurl; #######################################################################
-  recash(str_replace("http://".$siteurl,"",getenv("HTTP_REFERER"))); // Обновление кеша ##
-  recash(str_replace("http://".$siteurl,"",getenv("REQUEST_URI")),0); ####################
-  ########################################################################################
+  global $siteurl;
+  recash(str_replace("http://".$siteurl,"",getenv("HTTP_REFERER"))); // Обновление кеша
+  recash(str_replace("http://".$siteurl,"",getenv("REQUEST_URI")),0);
   Header("Location: $location");
 }
 ########################################################################################
@@ -2142,9 +2135,9 @@ function savepost ($avtor, $post_title, $info, $num, $cid, $add){
   $date = date("Y-m-d H:i:s");
   //$ip = getenv("REMOTE_ADDR"); // IP
   $num = intval($num);
-  $avtor = trim(str_replace("  "," ",filter($avtor)));
-  $post_title = trim(str_replace("document.cookie","", str_replace("  "," ",filter($post_title))));
-  $info = bbcode(trim(str_replace("document.cookie","",$info)));
+  $avtor = trim(str_replace("  "," ",filter($avtor, "nohtml")));
+  $post_title = trim(str_replace("document.cookie","", str_replace("  "," ",filter($post_title, "nohtml"))));
+  $info = bbcode(trim(str_replace("document.cookie","",filter($info, "nohtml"))));
 
   $ok = false;
   if (function_exists('mb_strlen')) {
@@ -2479,9 +2472,9 @@ function savereiting ($avtor, $info, $num, $cid, $gol, $date1, $minus, $plus){
   //$date = $date1.".".$date2.".".$date3.$date_time;
   $ip = getenv("REMOTE_ADDR"); // IP
   $num = intval($num);
-  $avtor = trim(str_replace("  "," ",filter($avtor)));
-  $minus = trim(str_replace("  "," ",filter($minus)));
-  $plus = trim(str_replace("  "," ",filter($plus)));
+  $avtor = trim(str_replace("  "," ",filter($avtor, "nohtml")));
+  $minus = trim(str_replace("  "," ",filter($minus, "nohtml")));
+  $plus = trim(str_replace("  "," ",filter($plus, "nohtml")));
 
   if ($avtor != "" AND $info != "") {
     if( (isset($_SESSION['captcha_keystring']) && $_SESSION['captcha_keystring'] == $_POST['keystring']) or $captcha_ok == 1){
@@ -2599,14 +2592,14 @@ function savecomm($avtor, $avtory, $info, $num, $comm_otvet, $maily, $mail, $adr
   if ($comments_add != 0) {
     $num = intval($num);
     $comm_otvet = intval($comm_otvet);
-    $avtory = trim(str_replace("  "," ",filter($avtory)));
-    $maily = trim(str_replace("  "," ",filter($maily)));
-    $adres = trim(str_replace("  "," ",filter($adres)));
-    $tel = trim(str_replace("  "," ",filter($tel)));
-    $info = bbcode(trim(str_replace("document.cookie","",$info)));
+    $avtory = str_replace("  "," ",filter($avtory, "nohtml"));
+    $maily = str_replace("  "," ",filter($maily, "nohtml"));
+    $adres = str_replace("  "," ",filter($adres, "nohtml"));
+    $tel = str_replace("  "," ",filter($tel, "nohtml"));
+    $info = bbcode(str_replace("document.cookie","",$info));
 
     $info = str_replace("http://".$siteurl, $siteurl, $info);
-    $info = str_replace("http://www.onlinedisk.ru", "www.onlinedisk.ru", $info);
+    //$info = str_replace("http://www.onlinedisk.ru", "www.onlinedisk.ru", $info);
 
     $info = str_replace(":)", "<img src=/images/smilies/04.gif>", $info);
     $info = str_replace(":(", "<img src=/images/smilies/11.gif>", $info);
@@ -2686,15 +2679,6 @@ function savecomm($avtor, $avtory, $info, $num, $comm_otvet, $maily, $mail, $adr
             $db->sql_query("UPDATE ".$prefix."_".$tip." SET comm=comm+1 WHERE pid='$num'");
       }
   
-    //global $siteurl; #######################################################################
-    //recash(str_replace("http://".$siteurl,"",getenv("HTTP_REFERER"))); // Обновление кеша ##
-    //recash(str_replace("http://".$siteurl,"",getenv("REQUEST_URI")),0); ####################
-    //    $sql = "select module from ".$prefix."_".$tip." where pid = '$num'";
-    //    $result = $db->sql_query($sql);
-    //    $row = $db->sql_fetchrow($result);
-    //    $mod = $row['module'];
-    //recash("/-".$mod."_page_".$num,0); ####################
-    ########################################################################################
     // Отправка извещения на mail в случае ответа на коммент
 
     // получим название модуля
@@ -2731,10 +2715,9 @@ function savecomm($avtor, $avtory, $info, $num, $comm_otvet, $maily, $mail, $adr
 // Сохранение голосования
 function savegolos ($gol, $num){
   global $soderganie, $tip, $DBName, $db, $prefix, $module_name, $commentagain, $admin, $bangolosdays;
-  global $siteurl; #######################################################################
+  global $siteurl;
   recash(str_replace("http://".$siteurl,"",getenv("HTTP_REFERER"))); // Обновление кеша ##
-  recash(str_replace("http://".$siteurl,"",getenv("REQUEST_URI")),0); ####################
-  ########################################################################################
+  recash(str_replace("http://".$siteurl,"",getenv("REQUEST_URI")),0);
   $ip = getenv("REMOTE_ADDR"); // IP
   $num = intval($num);
   if ($gol>10) $gol=10;

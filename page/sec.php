@@ -47,7 +47,7 @@
     header("Location: index.php");
     exit();
   }
-
+/*
   if (isset($zlib)) if ($zlib == true) {
     if ($phpver >= '4.0.4pl1' && isset($_SERVER['HTTP_USER_AGENT']) && strstr($_SERVER['HTTP_USER_AGENT'],'compatible')) {
       if (extension_loaded('zlib')) {
@@ -67,7 +67,7 @@
         }
     }
   }
-
+*/
   foreach ($_COOKIE AS $c_key => $c_val) {
       if (isset($_POST[$c_key]) OR isset($_GET[$c_key])) unset($_COOKIE[$c_key]); 
       $c_val = str_replace("select ","",$c_val);

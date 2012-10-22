@@ -1,7 +1,7 @@
 <?php
   ob_start();  // Начался вывод страницы с кешированием
   ob_implicit_flush(0); 
-  session_start(); // Для капчи (проверочный код-картинка от спама) // проверить вызов
+  //session_start(); // Для капчи (проверочный код-картинка от спама) // проверить вызов
 ##########################################################################################
   $phpversion = preg_replace('/[a-z-]/', '', phpversion());
   if ($phpversion{0}==4) die ('Версия PHP — 4. Попросите хостинг-компанию установить PHP 5 версии.');
@@ -80,14 +80,14 @@
   $http_siteurl = "http://".$_SERVER['HTTP_HOST']; # Имя сайта
   $result = $db->sql_query("SELECT * FROM ".$prefix."_config");
   $row = $db->sql_fetchrow($result);
-  $sitename = filter($row['sitename'], "nohtml"); // Имя сайта (title)
-  $startdate = filter($row['startdate'], "nohtml");
-  $adminmail = filter($row['adminmail'], "nohtml");
-  $keywords = filter($row['keywords'], "nohtml");
-  $description = filter($row['description'], "nohtml");
-  $counter = stripslashes($row['counter']);
-  $statlink = filter($row['statlink'], "nohtml");
-  $postlink = filter($row['postlink'], "nohtml");
+  $sitename = $row['sitename']; // Имя сайта (title)
+  $startdate = $row['startdate'];
+  $adminmail = $row['adminmail'];
+  $keywords = $row['keywords'];
+  $description = $row['description'];
+  $counter = $row['counter'];
+  $statlink = $row['statlink'];
+  $postlink = $row['postlink'];
   $stopcopy = $row['stopcopy'];
   $registr = $row['registr'];
   $pogoda = $row['pogoda'];

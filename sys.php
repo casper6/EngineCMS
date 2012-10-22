@@ -28,26 +28,27 @@ if ($the_first == 0) {
 	die();
 }
 
-  if (isset($aid) && (ereg("[^a-zA-Zа-яА-Я0-9_-]",trim($aid)))) {
-   die("Begone");
-  }
-  if (isset($aid)) { $aid = substr($aid, 0,25);}
-  if (isset($pwd)) { $pwd = substr($pwd, 0,40);}
-  if ((isset($aid)) && (isset($pwd)) && (isset($op)) && ($op == "login")) {
-	$datekey = date("F j");
-	$rcode = hexdec(md5($_SERVER['HTTP_USER_AGENT'] . $sitekey . $_POST['random_num'] . $datekey)); // $_GET['random']
-	$code = substr($rcode, 2, 6);
-	if(!empty($aid) AND !empty($pwd)) {
-		$pwd = md5($pwd);
-		$result = $db->sql_query("SELECT pwd FROM ".$prefix."_authors WHERE aid='$aid'");
-		list($rpwd) = $db->sql_fetchrow($result);
-		if($rpwd == $pwd) {
-			$admin = base64_encode("$aid:$pwd");
-			setcookie("admin",$admin,time()+2592000);
-			unset($op);
+	if (!isset($_POST['random_num'])) $_POST['random_num'] = "";
+  	if (isset($aid) && (ereg("[^a-zA-Zа-яА-Я0-9_-]",trim($aid)))) {
+   		die("Begone");
+  	}
+  	if (isset($aid)) { $aid = substr($aid, 0,25);}
+  	if (isset($pwd)) { $pwd = substr($pwd, 0,40);}
+  	if ((isset($aid)) && (isset($pwd)) && (isset($op)) && ($op == "login")) {
+		$datekey = date("F j");
+		$rcode = hexdec(md5($_SERVER['HTTP_USER_AGENT'] . $sitekey . $_POST['random_num'] . $datekey)); // $_GET['random']
+		$code = substr($rcode, 2, 6);
+		if(!empty($aid) AND !empty($pwd)) {
+			$pwd = md5($pwd);
+			$result = $db->sql_query("SELECT pwd FROM ".$prefix."_authors WHERE aid='$aid'");
+			list($rpwd) = $db->sql_fetchrow($result);
+			if($rpwd == $pwd) {
+				$admin = base64_encode("$aid:$pwd");
+				setcookie("admin",$admin,time()+2592000);
+				unset($op);
+			}
 		}
 	}
-}
 
 $admintest = 0;
 
@@ -507,10 +508,9 @@ if($admintest) {
 		case "logout":
 			setcookie("admin", false);
 			$admin = "";
-			include("ad-header.php");
-			echo "<center><font class=title><b>Вы вышли из администрирования!</b></font></center>";
-			Header("Refresh: 2; url=".$admin_file.".php");
-			admin_footer();
+			die("Вы вышли из администрирования!");
+			//Header("Refresh: 2; url=".$admin_file.".php");
+			//admin_footer();
 			break;
 		case "login";
 			unset($op);

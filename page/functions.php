@@ -32,9 +32,8 @@ function FixQuotes($what = "",$strip="") {
   return $what;
 }
 /////////////////////////////////////////////////////////
+/*
 function delQuotes($string) { # Фильтры текста
-  /* no recursive function to add quote to an HTML tag if needed */
-  /* and delete duplicate spaces between attribs. */
   $tmp="";
   $result="";
   $i=0;
@@ -80,6 +79,7 @@ function delQuotes($string) { # Фильтры текста
   return $result;
 }
 /////////////////////////////////////////////////////////
+
 function check_html($str) {
   $str = preg_replace("/<\s*([^>]*?)\s*>/i",'<\\1>',$str); // Удаляем все пробелы из html тегов.
   $str = preg_replace("/<a[^>]*href\s*=\s*\"?\s*([^\" >]*)\s*\"?[^>]*>/i",'<a href="\\1">', $str); // Удаляем все атрибуты ссылки, кроме href
@@ -108,10 +108,11 @@ function check_html($str) {
   $str = str_replace("<?","",$str);
   return $str;
 }
+*/
 /////////////////////////////////////////////////////////
 function filter($what, $strip="") {
   if ($strip == "nohtml") {
-   $what = trim( check_html( $what ) );
+   $what = trim( strip_tags ( $what ) ); // check_html
   }
   $what = stripslashes(FixQuotes($what));
   return($what);

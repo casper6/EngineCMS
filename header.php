@@ -1,5 +1,9 @@
 <?php
 	define('MODULE_FILE', true);
+	//ob_start();  // Начался вывод страницы с кешированием
+  	//ob_implicit_flush(0); 
+  	session_start(); // Для капчи (проверочный код-картинка от спама) // проверить вызов
+
 	require_once("mainfile.php");
 	global $strelka, $siteurl, $cookie, $prefix, $module_name, $name, $db, $sitekey, $admin, $sitename, $pagetitle, $pagetitle2, $registr, $pogoda, $flash, $keywords, $description, $counter, $startdate, $adminmail, $keywords2, $description2, $stopcopy, $nocash, $blocks, $http_siteurl, $display_errors;
 	$nocash = false;
@@ -9,8 +13,8 @@
 
 if ($name=="-email") { // занесение мыла как скрытого комментария
 	global $DBName, $prefix, $db, $now, $ip;
-	$avtor = trim(str_replace("  "," ",filter($avtor, "", 1)));
-	$mail = trim(str_replace("  "," ",filter($mail, "", 1)));
+	$avtor = trim(str_replace("  "," ",filter($avtor, "nohtml")));
+	$mail = trim(str_replace("  "," ",filter($mail, "nohtml")));
 	if (!strpos($mail, "@")) {
 		echo "<h2>Вы указали неправильный Email.</h2>Попробуйте еще раз
 		<form method=POST action=\"/--email\" class=main_mail_form><table><tr><td align=right>Email: </td><td><input type=text name=mail class=main_mail_input size=10></td></tr><tr><td align=right>Имя: </td><td><input type=text name=avtor value='".$avtor."' class=main_mail_input size=10></td></tr><tr><td colspan=2 align=right><input type='submit' name='ok' value='Подписаться на рассылку'></td></tr></table></form>";
@@ -431,7 +435,7 @@ if ($media==2) { // удалить
 		$p_id = $row['pid'];
 		$module = $row['module'];
 		$p_cid = $row['cid'];
-		$title = filter($row['title'], "", 0);
+		$title = filter($row['title']);
 		$titl = str_replace("\"","",$title);
 		$open_text = filter(strip_tags(str_replace("<img ","<img title='$titl' ",$row['open_text']), '<b><br><i><img><table><tr><td><a><strong><em><embed><param><object><p><iframe><div>'), "", 0);
 		$main_text = filter(str_replace("<img ","<img title='$titl' ",$row['main_text']), "", 0);
@@ -1457,7 +1461,7 @@ echo "<title>".$pagetit.$sitename."</title>
 <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
 <!--[if lt IE 9]><script src='http://html5shim.googlecode.com/svn/trunk/html5.js'></script><![endif]-->
 <script src='includes/j.js'></script>
-<script src='includes/iepngfix_tilebg.js'></script>
+<!--[if IE]><script src='includes/iepngfix_tilebg.js'></script><![endif]-->
 <script src='http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js'></script>
 <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js'></script>
 <script src='includes/jquery.lightbox.js'></script>
@@ -1505,13 +1509,18 @@ echo "<link rel='alternate' href='/rss/' title='".$siteurl." RSS' />
 <link rel='stylesheet' href='".$stil.".css' />";
 
 global $add_fonts;
-$add_fonts = explode(".",$add_fonts);
-foreach ($add_fonts as $font) {
-	$font = explode(",",$font);
-	$effect_show = "";
-	if (isset($font[1])) $effect_show = '&and;effect='.$font[1]; // эффект шрифта
-	$font = str_replace(" ", "+", $font[0]);
-	echo '<link href="http://fonts.googleapis.com/css?family='.$font.'&and;subset=latin,cyrillic'.$effect_show.'" rel="stylesheet" type="text/css">';
+if (strlen($add_fonts)>1) {
+	$add_fonts = explode(".",$add_fonts);
+	if (count($add_fonts) > 0) {
+
+		foreach ($add_fonts as $font) {
+			$font = explode(",",$font);
+			$effect_show = "";
+			if (isset($font[1])) $effect_show = '&and;effect='.$font[1]; // эффект шрифта
+			$font = str_replace(" ", "+", $font[0]);
+			echo '<link href="http://fonts.googleapis.com/css?family='.$font.'&and;subset=latin,cyrillic'.$effect_show.'" rel="stylesheet" type="text/css">';
+		}
+	}
 }
 	$add_body = "";
 	if ($stopcopy == 1) $add_body .= " oncontextmenu='notmenu();'"; // «защита» от глупых копипастеров
