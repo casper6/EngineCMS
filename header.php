@@ -1432,10 +1432,10 @@ if ($data_page != "") header ("Last-Modified: 0, ".$data_page." GMT");
 else header ("Last-Modified: ".gmdate("L, d M Y H:i:s")." GMT");
 header ("Content-Type: text/html; charset=utf-8");
 echo "<!doctype html>\n
-<!--[if lt IE 7 ]><html class='ie ie6' lang='".$lang."'> <![endif]-->
-<!--[if IE 7 ]><html class='ie ie7' lang='".$lang."'> <![endif]-->
-<!--[if IE 8 ]><html class='ie ie8' lang='".$lang."'> <![endif]-->
-<!--[if (gte IE 9)|!(IE)]><!--><html lang='".$lang."' dir='ltr'> <!--<![endif]-->
+<!--[if lt IE 7 ]><html class='ie ie6 no-js lt-ie9 lt-ie8 lt-ie7' lang='".$lang."'> <![endif]-->
+<!--[if IE 7 ]><html class='ie ie7 no-js lt-ie9 lt-ie8' lang='".$lang."'> <![endif]-->
+<!--[if IE 8 ]><html class='ie ie8 no-js lt-ie9' lang='".$lang."'> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang='".$lang."' dir='ltr' class='no-js'> <!--<![endif]-->
 \n<head>";
 if (file_exists("favicon.ico"))  echo "<link rel='shortcut icon' href='favicon.ico' />";
 elseif (file_exists("favicon.png")) echo "<link rel='shortcut icon' href='favicon.png' />";
@@ -1454,6 +1454,7 @@ echo "<title>".$pagetit.$sitename."</title>
 <meta name='copyright' content='".$sitename."'>
 <meta name='author' content=''>
 <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <!--[if lt IE 9]><script src='http://html5shim.googlecode.com/svn/trunk/html5.js'></script><![endif]-->
 <script src='includes/j.js'></script>
 <script src='includes/iepngfix_tilebg.js'></script>
@@ -1463,7 +1464,9 @@ echo "<title>".$pagetit.$sitename."</title>
 <script src='includes/jquery.innerfade.js'></script>
 <script src='includes/jquery.ad-gallery.js'></script>";
 
-global $kickstart, $jqueryui;
+global $kickstart, $jqueryui, $normalize;
+if ($normalize != 0) echo "<link rel='stylesheet' type='text/css' href='includes/css-frameworks/normalize.css' />";
+
 if ($jqueryui != 0) echo "<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/jquery-ui.min.js'></script>
 <script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/i18n/jquery-ui-i18n.min.js'></script>
 <link rel='stylesheet' href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/base/jquery-ui.css' media='all' />";
@@ -1485,19 +1488,17 @@ switch($kickstart) { // Выбор CSS-фреймворка
 	echo "<link rel='stylesheet' type='text/css' href='includes/css-frameworks/toast/toast.css' />"; break;
 	case 8: // Blueprint
 	echo "<link rel='stylesheet' href='includes/css-frameworks/blueprint/screen.css' type='text/css' media='screen, projection'><link rel='stylesheet' href='includes/css-frameworks/blueprint/print.css' type='text/css' media='print'><!--[if lt IE 8]><link rel='stylesheet' href='includes/css-frameworks/blueprint/ie.css' type='text/css' media='screen, projection'><![endif]-->"; break;
-	case 9: // normalize
-	echo "<link rel='stylesheet' type='text/css' href='includes/css-frameworks/normalize.css' />"; break;
-	case 10: // YUI CSS Grids
+	case 9: // YUI CSS Grids
 	echo "<link rel='stylesheet' href='http://yui.yahooapis.com/3.7.3/build/cssreset/reset-min.css' type='text/css'><link rel='stylesheet' href='http://yui.yahooapis.com/3.7.3/build/cssfonts/fonts-min.css' type='text/css'><link rel='stylesheet' href='http://yui.yahooapis.com/3.7.3/build/cssgrids/grids-min.css' type='text/css'><script src='http://yui.yahooapis.com/3.7.3/build/yui/yui-min.js'></script>"; break;
-	case 11: // 960gs (12 и/или 16 колонок)
+	case 10: // 960gs (12 и/или 16 колонок)
 	echo "<link rel='stylesheet' href='includes/css-frameworks/960gs/reset.css' /><link rel='stylesheet' href='includes/css-frameworks/960gs/text.css' /><link rel='stylesheet' href='includes/css-frameworks/960gs/960.css' />"; break;
-	case 12: // 960gs (24 колонки)
+	case 11: // 960gs (24 колонки)
 	echo "<link rel='stylesheet' href='includes/css-frameworks/960gs/reset.css' /><link rel='stylesheet' href='includes/css-frameworks/960gs/text.css' /><link rel='stylesheet' href='includes/css-frameworks/960gs/960_24_col.css' />"; break;
 
 	default:
 	break;
 }
-if ($kickstart != 1) echo "<script>$(document).ready(function(){ $('.lightbox').lightbox({ fitToScreen: true, imageClickClose: false }); var galleries = $('.ad-gallery').adGallery(); $('#switch-effect').change( function() { galleries[0].settings.effect = $(this).val(); return false; } ); });</script><link rel='stylesheet' href='includes/lightbox.css' media='screen' />"; // при включенном kickstart, lightbox не нужен
+if ($kickstart != 1) echo "<script>$(document).ready(function(){ $('.lightbox').lightbox({ fitToScreen: true, imageClickClose: false }); var galleries = $('.ad-gallery').adGallery(); $('#switch-effect').change( function() { galleries[0].settings.effect = $(this).val(); return false; } ); });</script><link rel='stylesheet' href='includes/lightbox.css' media='screen' />"; // при включенном kickstart, lightbox не нужен, включается fancybox
 
 echo "<link rel='alternate' href='/rss/' title='".$siteurl." RSS' />
 <link rel='stylesheet' href='includes/carusel.css' media='screen' />

@@ -35,15 +35,12 @@ switch($kickstart) {
 	$kick_link = "http://www.blueprintcss.org/tests/";
 	$kick_name = "Blueprint"; break;
 	case 9:
-	$kick_link = "http://necolas.github.com/normalize.css/";
-	$kick_name = "normalize"; break;
-	case 10:
 	$kick_link = "http://yuilibrary.com/yui/docs/cssgrids/";
 	$kick_name = "YUI"; break;
-	case 11:
+	case 10:
 	$kick_link = "http://960.gs";
 	$kick_name = "960gs"; break;
-	case 12:
+	case 11:
 	$kick_link = "http://960.gs";
 	$kick_name = "960gs(24)"; break;
 
