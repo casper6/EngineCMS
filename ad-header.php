@@ -90,6 +90,8 @@ echo "<!doctype html>
 <meta http-equiv='no-cache' />
 <meta http-equiv='cache-control' content='no-cache' />
 <meta name='viewport' content='width=device-width'>
+<!--[if IE]><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge,chrome=1\"><![endif]-->
+<!--[if lt IE 9]><script src=\"http://html5shim.googlecode.com/svn/trunk/html5.js\"></script><![endif]-->
 <link rel=\"stylesheet\" href=\"ad-style.css\" type=\"text/css\">
 <link rel=\"shortcut icon\" href=\"favicon_cms.ico\" type=\"image/x-icon\">
 <script src='includes/jad.js'></script>

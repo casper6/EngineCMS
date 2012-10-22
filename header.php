@@ -1454,7 +1454,7 @@ echo "<title>".$pagetit.$sitename."</title>
 <meta name='copyright' content='".$sitename."'>
 <meta name='author' content=''>
 <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1'>
-<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
 <!--[if lt IE 9]><script src='http://html5shim.googlecode.com/svn/trunk/html5.js'></script><![endif]-->
 <script src='includes/j.js'></script>
 <script src='includes/iepngfix_tilebg.js'></script>

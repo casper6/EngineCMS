@@ -399,12 +399,8 @@ function create_main($type) {
 
 
 	<div id='photo_upload' style='display:none;'>
-	<!--[if IE]><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge,chrome=1\"><![endif]-->
-	<link rel=\"stylesheet\" href=\"includes/upload/css/bootstrap.min.css\">
-	<link rel=\"stylesheet\" href=\"includes/css-frameworks/bootstrap/css/bootstrap.min.css\">
 	<link rel=\"stylesheet\" href=\"http://blueimp.github.com/Bootstrap-Image-Gallery/css/bootstrap-image-gallery.min.css\">
 	<link rel=\"stylesheet\" href=\"includes/upload/css/jquery.fileupload-ui.css\">
-	<!--[if lt IE 9]><script src=\"http://html5shim.googlecode.com/svn/trunk/html5.js\"></script><![endif]-->
 	    <form id=\"fileupload\" action=\"includes/upload/server/php/\" method=\"POST\" enctype=\"multipart/form-data\">
 	    <label for=\"show_oldnames\"><input type=\"checkbox\" id=\"show_oldnames\"><b>Добавлять имя файла</b> фотографии как её описание (<i>подходит для осмысленных и/или русских имен</i>)</label>
 	    <br><div class='notice warning green'><span class='icon green medium' data-icon='('></span>Фотографии можно перенести из любой папки вашего компьютера, даже не нажимая кнопку «Добавить файлы...»</div>
@@ -413,7 +409,7 @@ function create_main($type) {
 	                <!-- The fileinput-button span is used to style the file input field as button -->
 	                <span class=\"btn btn-success fileinput-button\">
 	                    <i class=\"icon-plus icon-white\"></i>
-	                    <span>Добавить файлы...</span>
+	                    <a class=\"button\">Добавить файлы...</a>
 	                    <input type=\"file\" name=\"files[]\" multiple>
 	                </span>
 	                

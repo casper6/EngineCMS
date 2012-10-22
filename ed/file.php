@@ -52,25 +52,26 @@ if (isset($_GET['file'])) {
 }
 
 if (isset($_GET['delete'])) {
-	unlink('../img/'.$_GET['delete']);
+	unlink('../files/'.$_GET['delete']);
 	exit;
 }
 
 if (!empty($_FILES['file']['name'])) {		
 	$file_size = $_FILES['file']['size'];
 	$file_type = info($_FILES['file']['name'], 'type');
-	$file_name = str_replace('.'.$file_type, '', $_FILES['file']['name']);		
-	$file_id = md5(date('YmdHis'));
-	$file_name = get_filename('../img/', $_FILES['file']['name'], $file_type);
+	$file_name = str_replace('.'.$file_type, '', $_FILES['file']['name']);
+	$file_id = translit_name($file_name);
+	$file_name = get_filename('../files/', $_FILES['file']['name'], $file_type);
+	 // md5(date('YmdHis'));
 	$file_ico = get_ico($file_type);
-	$file = '/img/'.$file_id.".".$file_type; //file_name;
-	copy($_FILES['file']['tmp_name'], $file);
+	$file = '/files/'.$file_id.".".$file_type; //file_name;
+	copy($_FILES['file']['tmp_name'], "..".$file);
 	
 	echo '<a href="'.$file.'" target="_blank" rel="'.$file_id.'" class="editor_file_link editor_file_ico_'.$file_ico.'">'.$file_name.'</a>';
 }	
 
 function get_file($file) {
-	download('../img/'.$file);
+	download('../files/'.$file);
 }
 
 function get_ico($type)
@@ -152,5 +153,19 @@ function download($filename, $filenamef = false, $mimetype='application/octet-st
 	}
 	fclose($f);
 }
-	
+
+function translit_name($cyr_str) { # Транслит названий файлов
+  $tr = array(
+   "Ґ"=>"G","Ё"=>"YO","Є"=>"E","Ї"=>"YI","І"=>"I","і"=>"i","ґ"=>"g","ё"=>"yo","№"=>"","є"=>"e",
+   "ї"=>"yi","А"=>"A","Б"=>"B","В"=>"V","Г"=>"G","Д"=>"D","Е"=>"E","Ж"=>"ZH","З"=>"Z","И"=>"I",
+   "Й"=>"Y","К"=>"K","Л"=>"L","М"=>"M","Н"=>"N","О"=>"O","П"=>"P","Р"=>"R","С"=>"S","Т"=>"T",
+   "У"=>"U","Ф"=>"F","Х"=>"H","Ц"=>"TS","Ч"=>"CH","Ш"=>"SH","Щ"=>"SCH","Ъ"=>"","Ы"=>"YI","Ь"=>"",
+   "Э"=>"E","Ю"=>"YU","Я"=>"YA","а"=>"a","б"=>"b","в"=>"v","г"=>"g","д"=>"d","е"=>"e","ж"=>"zh",
+   "з"=>"z","и"=>"i","й"=>"y","к"=>"k","л"=>"l","м"=>"m","н"=>"n","о"=>"o","п"=>"p","р"=>"r",
+   "с"=>"s","т"=>"t","у"=>"u","ф"=>"f","х"=>"h","ц"=>"ts","ч"=>"ch","ш"=>"sh","щ"=>"sch","ъ"=>"",
+   "ы"=>"yi","ь"=>"","э"=>"e","ю"=>"yu","я"=>"ya",
+   "«"=>"","»"=>"","."=>"",","=>"","!"=>"",":"=>"",";"=>"","?"=>""," "=>"_"
+  );
+   return $str = iconv ( "UTF-8", "UTF-8//IGNORE", strtr ( $cyr_str, $tr ) );
+}
 ?>
