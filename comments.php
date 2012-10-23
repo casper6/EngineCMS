@@ -4,19 +4,13 @@ header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
-@require_once("config.php"); // Настройки сайта
-@require_once("includes/db.php"); // База данных (функции для работы)
-@require_once("includes/sql_layer.php");
+require_once("mainfile.php");
 require_once("shablon.php");
-global $prefix, $db; // , $ad, $id, $desc, $sha, $vetki, $comments_num, $comments_all, $comments_mail, $comments_adres, $comments_tel;
+global $prefix, $db, $admin; // , $ad, $id, $desc, $sha, $vetki, $comments_num, $comments_all, $comments_mail, $comments_adres, $comments_tel;
 
-if (isset($_COOKIE['admin'])) {
-  if ($_COOKIE['admin'] != "") $admin = 1; else $admin = 0;
-} else $admin = 0;
+if (is_admin($admin)) $admin_ok = 1; else $admin_ok = 0;
 
-if (isset($_GET['p_id'])) $pid = intval($_GET['p_id']);
-else die('Комментариев нет.');
-
+if (isset($_GET['p_id'])) $pid = intval($_GET['p_id']); else die('Комментариев нет.');
 $comments_desc = intval($_GET['desc']);
 $comment_shablon = intval($_GET['sha']);
 $vetki = intval($_GET['vetki']);
@@ -25,7 +19,6 @@ $comments_all = intval($_GET['all']);
 $comments_mail = intval($_GET['mail']);
 $comments_adres = intval($_GET['adres']);
 $comments_tel = intval($_GET['tel']);
-
 $url = getenv("REQUEST_URI");
 
 $lim = ""; // доделать на аяксе
@@ -66,13 +59,13 @@ if ($comments_desc == 1) $dat = " desc"; else $dat = "";
     $adres[$c_id] = $row['adres'];
     $tel[$c_id] = $row['tel'];
   }
-  if (count($p_id) > 0 and $c_id != 0) $comm = generate_comm($admin, $p_id, $avtor, $text, $mail, $adres, $tel, $date1, $date2, $ip, $drevo, $sha, "0", "", $vetki, $comments_num, $comments_all, $comments_mail, $comments_adres, $comments_tel, $ava);
+  if (count($p_id) > 0 and $c_id != 0) $comm = generate_comm($admin_ok, $p_id, $avtor, $text, $mail, $adres, $tel, $date1, $date2, $ip, $drevo, $sha, "0", "", $vetki, $comments_num, $comments_all, $comments_mail, $comments_adres, $comments_tel, $ava);
   header ("Content-Type: text/html; charset=utf-8");
   echo $comm;
 //}
 
 /////////////////////////////////////////////////////
-function generate_comm($admin, $p_id, $avtor, $text, $mail, $adres, $tel, $date1, $date2, $ip, $drevo, $sha, $position, $numb="", $vetki, $comments_num, $comments_all, $comments_mail, $comments_adres, $comments_tel, $ava) {
+function generate_comm($admin_ok, $p_id, $avtor, $text, $mail, $adres, $tel, $date1, $date2, $ip, $drevo, $sha, $position, $numb="", $vetki, $comments_num, $comments_all, $comments_mail, $comments_adres, $comments_tel, $ava) {
   $sha3 = "";
   global $db, $prefix;
   $ok = false;
@@ -119,7 +112,7 @@ $text2 = str_replace(',', ', ', $text[$comm_cid]);
 
     $avtor_type = "Гость";
 
-    if ($admin==1) $comment_admin = "<a href=/sys.php?op=base_comments_edit_comments&cid=".$comm_cid."&red=1 title='Изменить в HTML'><img src='/images/sys/edit_0.png' align=bottom width=16></a> <a href=/sys.php?op=base_pages_delit_comm&cid=".$comm_cid."&ok=ok&pid=".$pid." title='Удалить'><img align=bottom src=/images/sys/del.png width=16></a> "; else $comment_admin = "";
+    if ($admin_ok==1) $comment_admin = "<a href=/sys.php?op=base_comments_edit_comments&cid=".$comm_cid."&red=1 title='Изменить в HTML'><img src='/images/sys/edit_0.png' align=bottom width=16></a> <a href=/sys.php?op=base_pages_delit_comm&cid=".$comm_cid."&ok=ok&pid=".$pid." title='Удалить'><img align=bottom src=/images/sys/del.png width=16></a> "; else $comment_admin = "";
 
 if (strpos($sha,"[comment_ipbox]")) {
   $ipbox = explode(".",$ip[$comm_cid]);
@@ -183,7 +176,7 @@ $sha2 .= "<div class='comm_razdel'".$width.">".strtr($sha,$sha_zamena);
 $number = $numb.$nu."_";
 //if (count($p_id) > 0 and count($drevo) > 0)
 if (generate_comm_num($p_id, $drevo, $comm_cid) > 0) 
-$sha2 .= "<div class='comm_otvet'".$display." id=\"big_otvet".$nus."\">".generate_comm($admin, $p_id, $avtor, $text, $mail, $adres, $tel, $date1, $date2, $ip, $drevo, $sha, $comm_cid, $number, $vetki, $comments_num, $comments_all, $comments_mail, $comments_adres, $comments_tel, $ava)."</div>";
+$sha2 .= "<div class='comm_otvet'".$display." id=\"big_otvet".$nus."\">".generate_comm($admin_ok, $p_id, $avtor, $text, $mail, $adres, $tel, $date1, $date2, $ip, $drevo, $sha, $comm_cid, $number, $vetki, $comments_num, $comments_all, $comments_mail, $comments_adres, $comments_tel, $ava)."</div>";
 
 $sha2 .= "</div>";
 if ($comments_num>0 and $comments_all==1 and $numb.$nu == $comments_nu) $sha2 .= "</div>";
@@ -211,12 +204,6 @@ function generate_comm_num($p_id, $drevo, $position) {
     }
   }
   return $nu;
-}
-
-function findMonthName($m) { // Функция определения имени месяца по его числу
-  $m = intval($m);
-  $month = array("", "января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря");
-  return $month[$m];
 }
 
 function validate_gravatar($email, $cid) { // Проверка аватара

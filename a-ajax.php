@@ -580,7 +580,7 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
   $color=$pageslistdel=$nowork = "";
 
   if ($id == 5) { // НОВОЕ
-    $pageslistdel .= "<table width=100% class=table_light><tr><td>Дата последнего изменения</td><td>Раздел </td><td>Страница</td></tr>";
+    $pageslistdel .= "<table width=100% class=table_light><thead><tr><th>Дата последнего изменения</th><th>Раздел </th><th>Страница</th></tr></thead><tbody>";
     $result6 = $db->sql_query("SELECT `pid`, `module`, `title`, `active`, `date`, `redate` from ".$prefix."_pages where `tables`='pages' order by `redate` desc limit 0,1000");
     while ($row6 = $db->sql_fetchrow($result6)) {
         $pid = $row6['pid'];
@@ -600,10 +600,10 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
         }
         $pageslistdel .= "<tr id=1page".$pid." bgcolor=".$p_active_color." class='tr_hover'><td class='".$gray_date."'><nobr>".$date."</nobr></td><td>".$m_title."</td><td><a title='Удалить страницу в Корзину' onclick=delpage(".$pid.") style=\"cursor:pointer;\"><img class=\"icon2 i33\" src=/images/1.gif align=right></a><a title='Изменить страницу' href='sys.php?op=base_pages_edit_page&name=".$module."&pid=".$pid."'><img class=\"icon2 i35\" src=/images/1.gif></a> <a title='Открыть страницу на сайте' target=_blank href=-".$module."_page_".$pid.">".$title."</a>&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>";
     }
-    $pageslistdel .= "</table>";
+    $pageslistdel .= "</tbody></table>";
 
   } elseif ($id == 4) { // ДОБАВЛЕННОЕ ПОСЕТИТЕЛЯМИ
-    $pageslistdel .= "<table width=100% class=table_light><tr><td class='gray'>Дата создания</td><td class='gray'>Раздел </td><td class='gray'>Страница</td></tr>";
+    $pageslistdel .= "<table width=100% class=table_light><thead><tr><th class='gray'>Дата создания</th><th class='gray'>Раздел </th><th class='gray'>Страница</th></tr></thead><tbody>";
     $result7 = $db->sql_query("SELECT `pid`, `module`, `title`, `date` from ".$prefix."_pages where (`active`='2' or `active`='3') and `tables`!='del' order by `date` desc limit 0,10000");
     while ($row7 = $db->sql_fetchrow($result7)) {
       $pid = $row7['pid'];
@@ -615,7 +615,7 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
       $date = date2normal_view(str_replace(".","-",$row7['date']), 2, 1);
       $pageslistdel .= "<tr id=2page".$pid." bgcolor=#ffffff class='tr_hover'><td class='gray'><nobr>".$date."</nobr></td><td class='gray'>".$title_razdel_and_bd[$module]."</td><td><a title='Удалить страницу в Корзину' onclick=delpage(".$pid.") style=\"cursor:pointer;\"><img class=\"icon2 i33\" src=/images/1.gif align=right></a><a title='Изменить страницу в Редакторе' href='sys.php?op=base_pages_edit_page&name=".$module."&pid=".$pid."'><img class=\"icon2 i35\" src=/images/1.gif></a> <a title='Открыть страницу на сайте' target=_blank href=-".$module."_page_".$pid.">".$title."</a>&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>";
     }
-  $pageslistdel .= "</table><i>Максимум отображения: 10.000 страниц.</i>";
+  $pageslistdel .= "</tbody></table><i>Максимум отображения: 10.000 страниц.</i>";
 
   } elseif ($id == 3 or $id == 6 or $id == 7) { // КОММЕНТАРИИ
     $limit = 100;
@@ -639,7 +639,7 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
       $drevos = implode("' and `cid`!='",$drevos);
       $and = " and `num`!='0' and `active`!='0' and `drevo`='0' and (`cid`!='".$drevos."')";
     }
-    $pageslistdel .= "<table width=100% class=table_light><tr><td class='gray'><nobr>Дата и время</nobr></td><td class='gray'>Имя, раздел и комментарий</td></tr>";
+    $pageslistdel .= "<table width=100% class=table_light><thead><tr><th class='gray'><nobr>Дата и время</nobr></th><th class='gray'>Имя, раздел и комментарий</th></tr></thead><tbody>";
     $line_id = "";
     $sql5 = "SELECT `cid`, `num`, `avtor`, `mail`, `text`, `data`, `drevo`, `tel`, `active` from ".$prefix."_pages_comments where `tables`='pages'".$line_id.$and." order by `data` desc limit 0,".$limit;
     $result5 = $db->sql_query($sql5);
@@ -714,7 +714,7 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
     $iid = $deistvo."page";
         $result6 = $db->sql_query($sql6);
         $pageslistdel .= "Всего: ".$numrows.". Показаны только последние 500 штук. 
-        <table width=100% class=table_light><tr><td>".$slovo."</td><td>Раздел </td><td>Страница</td></tr>";
+        <table width=100% class=table_light><thead><tr><th>".$slovo."</th><th>Раздел </th><th>Страница</th></tr></thead><tbody>";
             while ($row6 = $db->sql_fetchrow($result6)) {
                 $pid = $row6['pid'];
                 $title = strip_tags($row6['title'], '<b><strong><em><i>');
@@ -731,7 +731,7 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
                 </td></tr>";
           }
   }
-  $pageslistdel .= "</table>";
+  $pageslistdel .= "</tbody></table>";
   echo $pageslistdel;
   exit;
 }

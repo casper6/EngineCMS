@@ -659,15 +659,14 @@ left:50%;
 
 
 /* Красивая таблица - стиль table_light */
-table.table_light { border-collapse: collapse; border: 1px solid white; }
-table.table_light td { border: 1px dashed #66bbdd; padding: 5px; padding-top: 5px; padding-bottom:5px; color: black; }
-table.table_light thead th, table.table_light tfoot th { border: 1px solid #A85070; text-align: left; background: #e9f2fc; color: black; padding-top:6px; }
-table.table_light tbody td a { background: transparent; color: #0e5db6; }
-table.table_light tbody td a:hover { background: transparent; color: red; }
-table.table_light tbody th a { background: transparent; color: #0e5db6; }
-table.table_light tbody th a:hover { background: transparent; color: #0e5db6; }
-table.table_light tbody th, table.table_light tbody td { vertical-align: top; text-align: left; }
-table.table_light tfoot td { border: 1px solid #38160C; padding-top:6px; }
+table.table_light td { font-size:13px; border: 0; padding: 4px; color: black; }
+table.table_light thead th, table.table_light tfoot th { font-size:14px; border-bottom: 1px dotted #666; color: black;}
+table.table_light tbody td a { color: #0e5db6; }
+table.table_light tbody td a:hover { color: red; }
+table.table_light tbody th a { color: #0e5db6; }
+table.table_light tbody th a:hover { color: #0e5db6; }
+table.table_light tbody th, table.table_light tbody td { vertical-align: top; }
+table.table_light tfoot td { padding-top:6px; }
 table.table_light tbody tr:hover { background: #e9f2fc; }
 table.table_light tbody tr:hover th, table.table_light tbody tr.odd:hover th { background: #e9f2fc; }
 

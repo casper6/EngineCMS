@@ -29,10 +29,10 @@ if ($opros_res != 1 and $opros_res != 3) {
       } else {
         $db->sql_query("INSERT INTO ".$prefix."_golos ( `gid` , `ip` , `golos`, `num`, `data`) VALUES ('', '$ip', '$opros_golos', '$opros_num', '$dat')");
         $otvet = "<b><font color=green>Ваш голос принят. Спасибо!</font></b>";
-        setcookie ("$opros_id", "$opros_id",time()+2678400,"/");
+        setcookie ($opros_id, $opros_id,time()+2678400,"/");
   
         // Получить из базы данных значения и прибавить к ним голоса
-        $sql2 = "select text from ".$prefix."_mainpage where type='3' and name='5' and id='$opros_num'"; // `name` != '$name' and 
+        $sql2 = "select text from ".$prefix."_mainpage where type='3' and name='5' and id='$opros_num'";
         $result2 = $db->sql_query($sql2);
         $row2 = $db->sql_fetchrow($result2);
         $textX = trim($row2['text']);

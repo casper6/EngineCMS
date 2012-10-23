@@ -948,7 +948,7 @@ if (($post!=0 and $cid!=0) or ($cid == 0 and $show_add_post_on_first_page==1)) $
     $s = explode("_",$GLOBALS["sort_data_base"]);
     $desc = $s[1];
     $s = $s[0];
-    SetCookie("$s","");
+    SetCookie($s,"");
   }
 
   foreach( $rus_names as $key => $value ) {

@@ -72,7 +72,12 @@
       if (isset($_POST[$c_key]) OR isset($_GET[$c_key])) unset($_COOKIE[$c_key]); 
       $c_val = str_replace("select ","",$c_val);
       $c_val = str_replace("union ","",$c_val);
+      $c_val = str_replace("from ","",$c_val);
       $c_val = str_replace(".php","",$c_val);
+      $c_val = str_replace(base64_encode("select "),"",$c_val);
+      $c_val = str_replace(base64_encode("union "),"",$c_val);
+      $c_val = str_replace(base64_encode("from "),"",$c_val);
+      $c_val = str_replace(base64_encode(".php"),"",$c_val);
       $_COOKIE[$c_key] = $c_val;
   }  
   

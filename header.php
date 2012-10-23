@@ -5,7 +5,7 @@
   	session_start(); // Для капчи (проверочный код-картинка от спама) // проверить вызов
 
 	require_once("mainfile.php");
-	global $strelka, $siteurl, $cookie, $prefix, $module_name, $name, $db, $sitekey, $admin, $sitename, $pagetitle, $pagetitle2, $registr, $pogoda, $flash, $keywords, $description, $counter, $startdate, $adminmail, $keywords2, $description2, $stopcopy, $nocash, $blocks, $http_siteurl, $display_errors;
+	global $strelka, $siteurl, $prefix, $module_name, $name, $db, $sitekey, $admin, $sitename, $pagetitle, $pagetitle2, $registr, $pogoda, $flash, $keywords, $description, $counter, $startdate, $adminmail, $keywords2, $description2, $stopcopy, $nocash, $blocks, $http_siteurl, $display_errors; // $cookie, 
 	$nocash = false;
 	if ($name == "") $name = "index";
 
@@ -1588,12 +1588,12 @@ if (strlen($add_fonts)>1) {
 		//$nocash = explode(" ","/?name=-search /--search ".trim(str_replace("  "," ",str_replace("\n"," ",$nocash))));
 		$url0 = str_replace("http://".$siteurl,"",$url);
 		$url0 = str_replace("http%3A%2F%2F".$siteurl."%2F","/",$url0);
-		$sql = "SELECT `text`, `data` FROM ".$prefix."_cash where `url`='$url0' limit 1";
+		$sql = "SELECT `data` FROM ".$prefix."_cash where `url`='$url0' limit 1";
 	    $result = $db->sql_query($sql);
 	    $numrows = $db->sql_numrows($result);
 	    if ($numrows == 0) {
 			// Добавление в кеш
-			if ( $nocash == false and !strpos($url0,"-search") and !strpos($url0,"_cat_") and !strpos($url0,"savecomm") and !strpos($url0,"savepost") ) $db->sql_query("INSERT INTO `".$prefix."_cash` (`id`, `url`, `data`, `text`) VALUES (NULL, '$url0', '$data', '$txt');") or die ("Обновите страницу, нажав F5 !!!");
+			if ( $nocash == false and !strpos($url0,"-search") and !strpos($url0,"_cat_") and !strpos($url0,"savecomm") and !strpos($url0,"savepost") ) $db->sql_query("INSERT INTO `".$prefix."_cash` (`id`, `url`, `data`, `text`) VALUES (NULL, '$url0', '$now', '$txt');") or die ("Обновите страницу, нажав F5 !!!");
 		}
 	}
 	// Запуск антивируса

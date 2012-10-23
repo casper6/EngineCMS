@@ -112,7 +112,7 @@ function check_html($str) {
 /////////////////////////////////////////////////////////
 function filter($what, $strip="") {
   if ($strip == "nohtml") {
-   $what = trim( strip_tags ( $what ) ); // check_html
+    $what = trim( strip_tags ( $what ) ); // check_html
   }
   $what = stripslashes(FixQuotes($what));
   return($what);
@@ -165,11 +165,11 @@ function getip() { // Получаем IP-адрес
   }
   return $user_ip;
 }
-///////////////////////////////////////////////////////// объединить в одну
+/////////////////////////////////////////////////////////
 function findMonthName($m, $language="") { // Функция определения имени месяца по его числу
   $m = intval($m);
-  if ($language == "english short") $month = array("1"=>"Jan","2"=>"Feb","3"=>"Mar","4"=>"Apr","5"=>"May","6"=>"Jun","7"=>"Jul","8"=>"Aug","9"=>"Sen","10"=>"Oct","11"=>"Nov","12"=>"Dec");
-  else $month = array("1"=>"января","2"=>"февраля","3"=>"марта","4"=>"апреля","5"=>"мая","6"=>"июня","7"=>"июля","8"=>"августа","9"=>"сентября","10"=>"октября","11"=>"ноября","12"=>"декабря");
+  if ($language == "english short") $month = array("","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sen","Oct","Nov","Dec");
+  else $month = array("", "января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря");
   return $month[$m];
 }
 ////////////////////////////////////////////////////////
@@ -188,50 +188,86 @@ function tipograf($text, $p=0) { // Типографика - все основн
   " w:st=\"on\""=>"",
   "&nbsp;"=>" ",
   "<B"=>"<b",
-  "<I"=>"<i","<BR"=>"<br",
-  "<P"=>"<p","</B>"=>"</b>",
-  "</I>"=>"</i>","</P>"=>"</p>",
-  "<HR"=>"<hr","SPAN"=>"span",
+  "<I"=>"<i",
+  "<BR"=>"<br",
+  "<P"=>"<p",
+  "</B>"=>"</b>",
+  "</I>"=>"</i>",
+  "</P>"=>"</p>",
+  "<HR"=>"<hr",
+  "SPAN"=>"span",
   " class=\"Apple-style-span\""=>"",
   " style=\"font-size: 11px; \""=>"",
-  "<b> </b>"=>"","<i> </i>"=>"",
-  "<br></b>"=>"</b><br>","<br></i>"=>"</i><br>",
-  "<p>\t</p>"=>"","<p> </p>"=>"",
-  "<p>\r\n</p>"=>"","\r\n"=>" ",
-  "\t"=>" ","На "=>"На&nbsp;",
+  "<b> </b>"=>"",
+  "<i> </i>"=>"",
+  "<br></b>"=>"</b><br>",
+  "<br></i>"=>"</i><br>",
+  "<p>\t</p>"=>"",
+  "<p> </p>"=>"",
+  "<p>\r\n</p>"=>"",
+  "\r\n"=>" ",
+  "\t"=>" ",
+  "На "=>"На&nbsp;",
   "<p></p>"=>" ",
-  "alt=\"\""=>"","class=\"\""=>"","style=\"\""=>"","height=\"\""=>"","width=\"\""=>"",
-  "</p></p>"=>"</p>","<p> <p>"=>"<p>",
-  "<p><p>"=>"<p>","То "=>"То&nbsp;",
-  "</p> </p>"=>"</p>","</p>&nbsp;</p>"=>"</p>",
-  "т. д."=>"т.д.","т. к."=>"т.к.",
-  "- "=>"—&nbsp;","&mdash; "=>"—&nbsp;",
-  "-&nbsp;"=>"—&nbsp;","&mdash;&nbsp;"=>"—&nbsp;",
-  "( "=>"("," )"=>")",
-  " %"=>"% "," ;"=>"; ",
-  " !"=>"!"," ?"=>"?",
-  " :"=>":"," ."=>".",
+  "alt=\"\""=>"",
+  "class=\"\""=>"",
+  "style=\"\""=>"",
+  "height=\"\""=>"",
+  "width=\"\""=>"",
+  "</p></p>"=>"</p>",
+  "<p> <p>"=>"<p>",
+  "<p><p>"=>"<p>",
+  "То "=>"То&nbsp;",
+  "</p> </p>"=>"</p>",
+  "</p>&nbsp;</p>"=>"</p>",
+  "т. д."=>"т.д.",
+  "т. к."=>"т.к.",
+  "- "=>"—&nbsp;",
+  "&mdash; "=>"—&nbsp;",
+  "-&nbsp;"=>"—&nbsp;",
+  "&mdash;&nbsp;"=>"—&nbsp;",
+  "( "=>"(",
+    " )"=>")",
+  " %"=>"% ",
+  " ;"=>"; ",
+  " !"=>"!",
+  " ?"=>"?",
+  " :"=>":",
+  " ."=>".",
   " ,"=>", ",
-  "..."=>"…","&hellip;"=>"…",
-  "FONT-WEIGHT"=>"font-weight","FONT-STYLE"=>"font-style",
-  "<p> <br><br> <p>"=>"<p>","<br><br></p>"=>"</p>",
-  "<b>"=>"<strong>","</b>"=>"</strong>",
-  "<i>"=>"<em>","</i>"=>"</em>",
-  "<div><hr>"=>"<hr>", "<p>&nbsp;</p>"=>"<br><br>","<p>&nbsp;"=>"<p>",
-  "<div><em>"=>"<em>","</em> 
+  "..."=>"…",
+  "&hellip;"=>"…",
+  "FONT-WEIGHT"=>"font-weight",
+  "FONT-STYLE"=>"font-style",
+  "<p> <br><br> <p>"=>"<p>",
+  "<br><br></p>"=>"</p>",
+  "<b>"=>"<strong>",
+  "</b>"=>"</strong>",
+  "<i>"=>"<em>",
+  "</i>"=>"</em>",
+  "<div><hr>"=>"<hr>", 
+  "<p>&nbsp;</p>"=>"<br><br>",
+  "<p>&nbsp;"=>"<p>",
+  "<div><em>"=>"<em>",
+  "</em> 
   </div>"=>"</em>",
-  "</em><br> <em>"=>"<br>","</strong><br> <strong>"=>"<br>",
-  "<p>&nbsp;</p> \n<ul>"=>"<ul>","</ul> \n<p>&nbsp;</p>"=>"</ul>",
+  "</em><br> <em>"=>"<br>",
+  "</strong><br> <strong>"=>"<br>",
+  "<p>&nbsp;</p> \n<ul>"=>"<ul>",
+  "</ul> \n<p>&nbsp;</p>"=>"</ul>",
   "<br/></strong></em></p>"=>"</strong></em></p>",
   "<br/></strong></p>"=>"</strong></p>",
   "<br/></p>"=>"</p>",
-  "    "=>" ","   "=>" ","  "=>" ","  "=>" "
+  "    "=>" ",
+  "   "=>" ",
+  "  "=>" ",
+  "  "=>" "
   );
   $text = strtr( strtr($text, $zamena), $zamena);
 
-  $pattern = "/http:\/\/www.onlinedisk.ru\/image\/"."(\d+)"."\/"."(\w+)".".jpg"."/i";
-  $replacement = "http://www.onlinedisk.ru/get_image.php?id=$1";
-  $text =  preg_replace($pattern, $replacement, $text);
+  //$pattern = "/http:\/\/www.onlinedisk.ru\/image\/"."(\d+)"."\/"."(\w+)".".jpg"."/i";
+  //$replacement = "http://www.onlinedisk.ru/get_image.php?id=$1";
+  //$text =  preg_replace($pattern, $replacement, $text);
 
   // Кавычки! («ёлочки» - &laquo; и &raquo или „лапки“ - &#132; и &#147;)
   //$text = preg_replace('/(^|\s)"(\S)/', '$1&laquo;$2', $text);

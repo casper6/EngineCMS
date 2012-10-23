@@ -1,8 +1,6 @@
 <?php
   ob_start();  // Начался вывод страницы с кешированием
-  ob_implicit_flush(0); 
-  //session_start(); // Для капчи (проверочный код-картинка от спама) // проверить вызов
-##########################################################################################
+  ob_implicit_flush(0);
   $phpversion = preg_replace('/[a-z-]/', '', phpversion());
   if ($phpversion{0}==4) die ('Версия PHP — 4. Попросите хостинг-компанию установить PHP 5 версии.');
   require_once ('page/functions.php'); // Функции
@@ -22,6 +20,7 @@
   global $zlib, $ipban, $display_errors, $pid, $site_cash;
   if ($ipban == true) require_once("includes/ipban.php"); // Бан
   $admin_file = "sys"; # Название файла панели администрирования
+  if (isset($_POST)) $num_post = count($_POST);
 ##########################################################################################
   // Отображение ошибок сайта, настраивается в файле config.php
   if ($display_errors) { 
@@ -50,7 +49,7 @@
   if ($pid > 0) $cashe_day = 30;  // если это страница
   else $cashe_day = 1; // если это главная страница, разделы и папки
 
-  if ($site_cash == true) { // проверка включения кеширования
+  if ($site_cash == true and $num_post == 0) { // проверка включения кеширования
     $sql = "SELECT `text`, `data` FROM ".$prefix."_cash where `url`='$url0' limit 1";
     $result = $db->sql_query($sql);
     $numrows = $db->sql_numrows($result);
