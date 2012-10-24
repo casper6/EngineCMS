@@ -61,7 +61,7 @@ RewriteRule ^admin/ /
 RewriteRule ^red/ /
 RewriteRule ^admin sys.php
 RewriteRule ^red sys.php
-RewriteRule ^rss rss.php
+RewriteRule ^rss page/rss.php
 
 RewriteRule ^--slovo_([а-яА-Яa-zA-Z0-9%+-]*) header.php?name=-slovo&slovo=$1
 RewriteRule ^--search header.php?name=-search

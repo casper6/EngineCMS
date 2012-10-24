@@ -4,14 +4,10 @@ header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache"); // HTTP/1.0
-@require_once("config.php"); // Настройки сайта
-@require_once("includes/db.php"); // База данных (функции для работы)
-@require_once("includes/sql_layer.php");
+require_once("mainfile.php");
 global $prefix, $db, $otpravka_pic; 
 
-if (isset($_COOKIE['admin'])) {
-  if ($_COOKIE['admin'] != "") $admin = 1; else $admin = 0;
-} else $admin = 0;
+if (is_admin($admin)) $admin_ok = 1; else $admin_ok = 0;
 
 $ip = getenv("REMOTE_ADDR"); // IP
 $opros_res = intval($_GET['res']); // Вывод: 1 - опрос, 2 - отправка, 3 - результаты
@@ -83,8 +79,8 @@ parse_str($useit);
   } // for закончился
 
   if ($tmp==$opros_id or $opros_res != 1) { // Если голосовали - показываем результат
-    if ($opros_result == 1 or $opros_result == 2 or $admin == 1) { // Если результат можно видеть всем
-      if ($opros_result == 0 and $admin == 1) $textX .= "<B>Результаты опроса видите только вы — администратор.</B>";
+    if ($opros_result == 1 or $opros_result == 2 or $admin_ok == 1) { // Если результат можно видеть всем
+      if ($opros_result == 0 and $admin_ok == 1) $textX .= "<B>Результаты опроса видите только вы — администратор.</B>";
       $sto = array_sum($cols2);
       //if ($opros == 0) {
         $textX .= "";
@@ -122,7 +118,7 @@ function CheckForm".$re."(){
 <form method=post enctype=\"multipart/form-data\" onsubmit=\"return false\">".$textX2."<br><center>
 <input type='submit' id=\"go\" name='go' value='Отправить' class=\"ok opros\" onclick=\"CheckForm".$re."();\"></center></form>";
 
-if ($opros_result == 1 or $admin == 1)  $textX .= "<br><a href=\"#golos$re\" onclick=\"$(showopros".$opros_num."(3, 0)); return false;\" class=opros_result_show>Посмотреть результаты</a>";
+if ($opros_result == 1 or $admin_ok == 1)  $textX .= "<br><a href=\"#golos$re\" onclick=\"$(showopros".$opros_num."(3, 0)); return false;\" class=opros_result_show>Посмотреть результаты</a>";
   }
   $textX .= "</div>";
 

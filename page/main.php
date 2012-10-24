@@ -952,9 +952,9 @@ if (($post!=0 and $cid!=0) or ($cid == 0 and $show_add_post_on_first_page==1)) $
   }
 
   foreach( $rus_names as $key => $value ) {
-    if ($s == $key and $desc == "") $link = "<a href='/set.php?name=sort_data_base&fill=".$key."_desc' title='Нажмите для сортировки'><b style='color:red;'>&darr;</b></a>";
-    elseif ($s == $key and $desc == "desc") $link = "<a href='/set.php?name=sort_data_base&fill=".$key."_' title='Нажмите для сортировки'><b style='color:green;'>&uarr;</b></a>";
-   else $link = "<a href='/set.php?name=sort_data_base&fill=".$key."_' title='Нажмите для сортировки'>&darr;</a>";
+    if ($s == $key and $desc == "") $link = "<a href='page/set.php?name=sort_data_base&fill=".$key."_desc' title='Нажмите для сортировки'><b style='color:red;'>&darr;</b></a>";
+    elseif ($s == $key and $desc == "desc") $link = "<a href='page/set.php?name=sort_data_base&fill=".$key."_' title='Нажмите для сортировки'><b style='color:green;'>&uarr;</b></a>";
+   else $link = "<a href='page/set.php?name=sort_data_base&fill=".$key."_' title='Нажмите для сортировки'>&darr;</a>";
    $rus_names_ok .= "<td><b>".$value."</b> ".$link."</td>";
   }
 
@@ -1775,7 +1775,7 @@ function addcomm($pid) {
   <div id=\"cont\" class=\"editorbutton\" OnClick=\"show('onoffsmilies0');\" style=\"cursor: pointer;\"><img title=\"Показать смайлы: эмоции\" src=\"images/smilies/07.gif\"></div>";
 
   global $more_smile;
-  if ($more_smile == 1) $ret .= "<div id=\"cont\" class=\"editorbutton\" OnClick=\"show('onoffsmilies1');\" style=\"cursor: pointer;\"><img title=\"Смайлы: альтернативная коллекция :)\" src=\"images/smilies/75.gif\"></div>
+  if ($more_smile == true) $ret .= "<div id=\"cont\" class=\"editorbutton\" OnClick=\"show('onoffsmilies1');\" style=\"cursor: pointer;\"><img title=\"Смайлы: альтернативная коллекция :)\" src=\"images/smilies/75.gif\"></div>
   <div id=\"cont\" class=\"editorbutton\" OnClick=\"show('onoffsmilies2');\" style=\"cursor: pointer;\"><img title=\"Смайлы: если эмоций маловато :)\" src=\"images/smilies/17.gif\"></div>
   <div id=\"cont\" class=\"editorbutton\" OnClick=\"show('onoffsmilies3');\" style=\"cursor: pointer;\"><img title=\"Смайлы: аниме-эмоции o_O\" src=\"images/smilies/18.gif\"></div>";
   $ret .= "</td></tr></table>
@@ -1790,7 +1790,7 @@ function addcomm($pid) {
   <div id=\"onoffsmilies0\" class=\"editor\" style=\"display:none;\"><br><div class=\"editorbutton\">
   ".smile_generate(array("01","02","03","04","05","06","07","08","09",10,11,12,13,14,15,16,17,18))." <div OnClick=\"show('onoffsmilies0');\" style=\"cursor: pointer;\">Закрыть</div></div><br></div>"; // убран лишний div
 
-  if ($more_smile == 1) $ret .= "
+  if ($more_smile == true) $ret .= "
   <div id=\"onoffsmilies1\" style=\"display:none;\"><br><br><div class=\"editorbutton\">".smile_generate(array(75,76,77,78,79,80,81,82,83,84,85,86,87,88))."</div></div>
   <div id=\"onoffsmilies2\" style=\"display:none;\"><br><br><div class=\"editorbutton\">".smile_generate(array(20,21,22,23,24,25,26,27,28,29,30,31,33,34,36,37,38,39,40,42,43,44,45,46,47,48,49,50,51,53,54,55,56,57,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74))."</div></div>
   <div id=\"onoffsmilies3\" style=\"display:none;\"><br><br><div class=\"editorbutton\">".smile_generate(array(90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162))."</div></div>

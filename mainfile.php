@@ -17,7 +17,7 @@
       }
     }
   } else $admin = "";
-  global $zlib, $ipban, $display_errors, $pid, $site_cash;
+  global $ipban, $display_errors, $pid, $site_cash;
   if ($ipban == true) require_once("includes/ipban.php"); // Бан
   $admin_file = "sys"; # Название файла панели администрирования
   if (isset($_POST)) $num_post = count($_POST);

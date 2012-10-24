@@ -141,7 +141,7 @@ if ($name=="-email") { // занесение мыла как скрытого к
 			$main_options = "no";
 		}
 
-		global $soderganie, $soderganie2, $options, $ModuleName, $tip, $DBName, $page_cat, $http_siteur, $cid, $pid, $pic_ramka;
+		global $soderganie, $soderganie2, $options, $ModuleName, $tip, $DBName, $page_cat, $http_siteur, $cid, $pid;
 		$options = $main_options;
 		$ModuleName = $main_title;
 		$DBName = $name; // важно не менять!
@@ -536,9 +536,9 @@ if ($media==2) { // удалить
 						} else $dalee = "";
 						$open_text = "<div id=block_open_text class=\"block_open_text ".$class."\">".$open_text.$dalee."</div>";
 						
-						if ($pic_ramka == 1) { // настройка используется для рамок изображений на сайте Самарских Родителей)
-							$open_text = str_replace("<img","<div id=for_pic class=\"for_pic".$class."\"><img", str_replace("<IMG","<img",$open_text));
-						}
+						//if ($pic_ramka == 1) { // настройка используется для рамок изображений на сайте Самарских Родителей)
+							//$open_text = str_replace("<img","<div id=for_pic class=\"for_pic".$class."\"><img", str_replace("<IMG","<img",$open_text));
+						//}
 							if ($zagolovokin == 0) {
 								$zagolovok = "<div class=\"block_title ".$class."\"><span class=\"block_li_data ".$class."\">".$data."</span>".$cat."<a class=\"block_title ".$class."\" href=-".$module."_page_".$p_id.$blank.">".$title."</a></div>";
 								$open_text = str_replace("[заголовок]", "", $open_text); 
@@ -973,11 +973,10 @@ case "10": # Блок меню
 		$class_menu = "menu-h"; break;
 		 ############################################
 		case "1": // Таблица гор выравнивание по всей таблице 1 уровень
-		GLOBAL $otstup_table_menu;
 		$tr = array( // без 3 уровней!
 		"[элемент открыть]"=>"<td align=center>","[элемент закрыть]"=>"</td>",
 		"[/url]"=>"</div></a>","[url="=>"<a class='table1menu_link' href=\"",
-		"[/URL]"=>"</div></a>","[URL="=>"<a class='table1menu_link' href=\"","]"=>"\"><div class=li2menu_div>".$otstup_table_menu.""
+		"[/URL]"=>"</div></a>","[URL="=>"<a class='table1menu_link' href=\"","]"=>"\"><div class=li2menu_div>"
 		);
 		$textXX = strtr($textX,$tr);
 		$textXX = "<table class='table1menu' width=100% cellspacing=0 cellpadding=0><tr valign=bottom>".$textXX."</tr></table>";

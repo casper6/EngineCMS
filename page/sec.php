@@ -47,27 +47,7 @@
     header("Location: index.php");
     exit();
   }
-/*
-  if (isset($zlib)) if ($zlib == true) {
-    if ($phpver >= '4.0.4pl1' && isset($_SERVER['HTTP_USER_AGENT']) && strstr($_SERVER['HTTP_USER_AGENT'],'compatible')) {
-      if (extension_loaded('zlib')) {
-          @ob_end_clean();
-          ob_start('ob_gzhandler');
-        }
-    } elseif ($phpver > '4.0' && isset($_SERVER['HTTP_ACCEPT_ENCODING']) && !empty($_SERVER['HTTP_ACCEPT_ENCODING'])) {
-        if (strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) {
-          if (extension_loaded('zlib')) {
-              $do_gzip_compress = true;
-              ob_start(array('ob_gzhandler',5));
-              ob_implicit_flush(0);
-              if (ereg("MSIE", $_SERVER['HTTP_USER_AGENT'])) {
-            header('Content-Encoding: gzip');
-              }
-          }
-        }
-    }
-  }
-*/
+
   foreach ($_COOKIE AS $c_key => $c_val) {
       if (isset($_POST[$c_key]) OR isset($_GET[$c_key])) unset($_COOKIE[$c_key]); 
       $c_val = str_replace("select ","",$c_val);
@@ -104,7 +84,7 @@
   // Дополнительная безопасность (Union, CLike, XSS)
   if ( isset($_SERVER['QUERY_STRING']) ) {
     $queryString = strtolower($_SERVER['QUERY_STRING']); // Если будут ошибки - убрать!
-    if (stripos($queryString,'0DUNION') OR stripos($queryString,'%20union%20') OR stripos($queryString,'/*') OR stripos($queryString,'*/union/*') OR stripos($queryString,'c2nyaxb0') OR stripos($queryString,'+union+') OR stripos($queryString,'http://') OR (stripos($queryString,'cmd=') AND stripos($queryString,'&cmd') === false) OR (stripos($queryString,'exec') AND stripos($queryString,'execu')===false) OR stripos($queryString,'concat')) {
+    if (stripos($queryString,'0dunion') OR stripos($queryString,'%20union%20') OR stripos($queryString,'/*') OR stripos($queryString,'*/union/*') OR stripos($queryString,'c2nyaxb0') OR stripos($queryString,'+union+') OR stripos($queryString,'http://') OR (stripos($queryString,'cmd=') AND stripos($queryString,'&cmd') === false) OR (stripos($queryString,'exec') AND stripos($queryString,'execu')===false) OR stripos($queryString,'concat') OR stripos($queryString,'*%2f*') OR stripos($queryString,'/*') OR stripos($queryString,'2%2f%2a') OR stripos($queryString,'--+')) {
       die('Попытка взлома, тип 3');
     }
   }
@@ -118,12 +98,8 @@
      $postString .= $postkey."=".$postvalue;
     }
   }
-  $postString = str_replace("%09", "%20", $postString);
-  //$postString = str_replace("%20union%20", "crazy", $postString); // баг.
-  //$postString = str_replace("%20Union%20", "crazy", $postString); // баг.
-  //$postString = str_replace(" union ", "crazy", $postString); // баг.
-  //$postString = str_replace(" Union ", "crazy", $postString); // баг.
-  $postString_64 = base64_decode($postString);
+  $postString = strtolower(str_replace("%09", "%20", $postString));
+  $postString_64 = strtolower(base64_decode($postString));
   if (stripos($postString,'%20union%20') OR stripos($postString,'*/union/*') OR stripos($postString,' union ') OR stripos($postString_64,'%20union%20') OR stripos($postString_64,'*/union/*') OR stripos($postString_64,' union ') OR stripos($postString_64,'+union+') OR stripos($postString_64,'http://') OR (stripos($postString_64,'cmd=') AND stripos($postString_64,'&cmd')===false) OR (stripos($postString_64,'exec') AND stripos($postString_64,'execu')===false) OR stripos($postString_64,'concat') OR (stripos($postString,'http-equiv')) OR (stripos($postString_64,'http-equiv')) OR (stripos($postString,'alert(')) OR (stripos($postString_64,'alert(')) OR (stripos($postString,'javascript:')) OR (stripos($postString_64,'javascript:')) OR (stripos($postString,'document.cookie')) OR (stripos($postString_64,'document.cookie')) OR (stripos($postString,'onmouseover=')) OR (stripos($postString_64,'onmouseover=')) OR (stripos($postString,'document.location')) OR (stripos($postString_64,'document.location'))) {
     die('Попытка взлома, тип 4<br>Возможно, что вы ввели «javascript:» перед JS-запросом в ссылке. Делать этого не нужно, т.к. и без этого JS-код будет работать.');
   }
