@@ -1508,75 +1508,72 @@ $page_add_comments = addcomm_reiting($pid, $cid); // Форма добавлен
 
 break; // Конец стандартных страниц
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////// БАЗА ДАННЫХ /////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////
 } else { // Если это база данных
-if (isset($cid)) {
-  $main_title .= top_menu($cid, 0);
-  //$link = getenv("REQUEST_URI");
-  $main_title .= "<br><a href=\"/-".$name."\">Вернуться назад</a><br>";
-} else $main_title = "";
-$page_text = "";
-$page_opentext = "";
+  if (isset($cid)) {
+    $main_title .= top_menu($cid, 0);
+    //$link = getenv("REQUEST_URI");
+    $main_title .= "<br><a href=\"/-".$name."\">Вернуться назад</a><br>";
+  } else $main_title = "";
+  $page_text = "";
+  $page_opentext = "";
 
-// Определяем имя и настройки раздела
-$sql = "SELECT id, title, text FROM ".$prefix."_mainpage where `tables`='pages' and type='2' and name='$name'";
-$result = $db->sql_query($sql);
-$row = $db->sql_fetchrow($result);
-$module_id = $row['id']; // номер раздела
-//$module_title = $row['title']; // Название раздела
-$module_options = explode("|",$row['text']); $module_options = $module_options[1]; 
+  // Определяем имя и настройки раздела
+  $sql = "SELECT id, title, text FROM ".$prefix."_mainpage where `tables`='pages' and type='2' and name='$name'";
+  $result = $db->sql_query($sql);
+  $row = $db->sql_fetchrow($result);
+  $module_id = $row['id']; // номер раздела
+  //$module_title = $row['title']; // Название раздела
+  $module_options = explode("|",$row['text']); $module_options = $module_options[1]; 
 
-$base = 0;
-parse_str($module_options); // Настройки раздела
+  $base = 0;
+  parse_str($module_options); // Настройки раздела
 
-$sql = "SELECT name, title, text FROM ".$prefix."_mainpage where `tables`='pages' and id='$base'";
-$result = $db->sql_query($sql);
-$row = $db->sql_fetchrow($result);
-//$baza_title  = $row['title']; // Название БД
-$baza_options  = $row['text']; 
-$baza_name  = $row['name']; // Название таблицы БД 
-parse_str($baza_options);
+  $sql = "SELECT name, title, text FROM ".$prefix."_mainpage where `tables`='pages' and id='$base'";
+  $result = $db->sql_query($sql);
+  $row = $db->sql_fetchrow($result);
+  //$baza_title  = $row['title']; // Название БД
+  $baza_options  = $row['text']; 
+  $baza_name  = $row['name']; // Название таблицы БД 
+  parse_str($baza_options);
 
-//echo $baza_options;
-$options = explode("/!/",$options); // $!$  ранее *
-$options_num = count($options);
-$names = array();
-$rus_names = array();
-$vagnost_names = array();
-$otkrytost_names = array();
-$zamena_names = array();
-$zapros_names = array();
-$type_names = array();
-for ($x=1; $x < $options_num; $x++) {
-  $option = explode("#!#",$options[$x]); // #!#  ранее !
-  $names[] = $option[0];
-  if ($option[4] == 0 or $option[4] == 2 or $option[4] == 3) $zapros_names[] = $option[0];
-  if ($option[4] == 0 or $option[4] == 2 or $option[4] == 3) $rus_names[] = $option[1];
-  $type_names[] = $option[2];
-  $vagnost_names[] = $option[3];
-  $otkrytost_names[] = $option[4];
-  $zamena_names[] = $option[5];
-}
+  //echo $baza_options;
+  $options = explode("/!/",$options); // $!$  ранее *
+  $options_num = count($options);
+  $names = array();
+  $rus_names = array();
+  $vagnost_names = array();
+  $otkrytost_names = array();
+  $zamena_names = array();
+  $zapros_names = array();
+  $type_names = array();
+  for ($x=1; $x < $options_num; $x++) {
+    $option = explode("#!#",$options[$x]); // #!#  ранее !
+    $names[] = $option[0];
+    if ($option[4] == 0 or $option[4] == 2 or $option[4] == 3) $zapros_names[] = $option[0];
+    if ($option[4] == 0 or $option[4] == 2 or $option[4] == 3) $rus_names[] = $option[1];
+    $type_names[] = $option[2];
+    $vagnost_names[] = $option[3];
+    $otkrytost_names[] = $option[4];
+    $zamena_names[] = $option[5];
+  }
 
-if ($podrobno == 1) $pod = "<td>Подробности</td>"; else $pod = "";
-$zapros_names = implode(", ",$zapros_names).", active";
-//$rus_names = implode("</td><td>",$rus_names);
-$and = "id='$pid' and (active='1' or active='3')";
+  if ($podrobno == 1) $pod = "<td>Подробности</td>"; else $pod = "";
+  $zapros_names = implode(", ",$zapros_names).", active";
+  $and = "id='$pid' and (active='1' or active='3')";
 
-if (isset($where)) if ($where != "") $where = "where ".stripcslashes($where)." and $and";
-else $where = "where $and";
-if ($order != "") $order = " order ".stripcslashes($order).""; // сортировка
-$page_opentext .= "<div class=venzel></div>
-<table width=100% cellspacing=0 cellpadding=5 class=main_base_table>";
+  if (isset($where)) if ($where != "") $where = "where ".stripcslashes($where)." and $and";
+  else $where = "where $and";
+  if ($order != "") $order = " order ".stripcslashes($order).""; // сортировка
+  $page_opentext .= "<div class=venzel></div>
+  <table width=100% cellspacing=0 cellpadding=5 class=main_base_table>";
 
-$sql = "SELECT $zapros_names FROM ".$prefix."_base_".$baza_name." ".$where."";
-$result = $db->sql_query($sql);
-$nu = $db->sql_numrows($result);
+  $sql = "SELECT $zapros_names FROM ".$prefix."_base_".$baza_name." ".$where."";
+  $result = $db->sql_query($sql);
+  $nu = $db->sql_numrows($result);
 
-$show_password = 0;
-global $siteurl, $oplata_kurier, $info_usluga;
+  $show_password = 0;
+  global $siteurl, $oplata_kurier, $info_usluga;
 	$sql = "SELECT $zapros_names FROM ".$prefix."_base_".$baza_name." ".$where."";
 	$result = $db->sql_query($sql);
 	$row = $db->sql_fetchrow($result);
@@ -1584,47 +1581,38 @@ global $siteurl, $oplata_kurier, $info_usluga;
 	$active = $row['active'];
 	for ($x=0; $x < $pass_num; $x++) {
 		if ($x != $pass_num-1) { // Если это не последний элемент - active, то покажем
-	$page_opentext .= "<tr valign=top><td align=right><b>".$rus_names[$x]."</b></td><td>";
-	if ($type_names[$x] == "дата") $row[$x] = date2normal_view($row[$x]);
-	if ($otkrytost_names[$x] == "3" and $active != "3") {
-      if ($zamena_names[$x] != "") $page_opentext .= "".$zamena_names[$x]."";
-      else {
-        if (1 != 1) { 
-        } else {
-          $page_opentext .= "<i><div id=info".$x."><a style='cursor:pointer;' onclick=\"show('pass2".$x."')\"><u>Раскрыть информацию</u></a>.</i><div style='display:none;' id=pass2".$x."><br>Информация станет доступна после ввода пароля.<br>
-          
-          <form method=post style=\"display:inline;\" onsubmit='return false'>
-          <b>Введите пароль: </b><input name=pass id='pass".$x."' size=30> <input type=button value=\"Готово\" onclick=\"open_info('$pid','$x',document.getElementById('pass".$x."').value,'$baza_name',$base);\"></form>
-<br><br><b>Получите пароль через: </b>";
-          if ($oplata_kurier == 1) $page_opentext .= "<a style='cursor:pointer;' onclick=\"show('curier".$x."')\"><u>курьера</u></a>";
-          $page_opentext .= "<div style='display:none;' id=curier".$x."><br><br>
-          ".$info_usluga["kurier"]."<br>
-          </div>";
+    	$page_opentext .= "<tr valign=top><td align=right><b>".$rus_names[$x]."</b></td><td>";
+    	if ($type_names[$x] == "дата") $row[$x] = date2normal_view($row[$x]);
+    	if ($otkrytost_names[$x] == "3" and $active != "3") {
+        if ($zamena_names[$x] != "") $page_opentext .= "".$zamena_names[$x]."";
+        else {
+            if (1 != 1) { 
+            } else {
+              $page_opentext .= "<i><div id=info".$x."><a style='cursor:pointer;' onclick=\"show('pass2".$x."')\"><u>Раскрыть информацию</u></a>.</i><div style='display:none;' id=pass2".$x."><br>Информация станет доступна после ввода пароля.<br>
+              
+              <form method=post style=\"display:inline;\" onsubmit='return false'>
+              <b>Введите пароль: </b><input name=pass id='pass".$x."' size=30> <input type=button value=\"Готово\" onclick=\"open_info('$pid','$x',document.getElementById('pass".$x."').value,'$baza_name',$base);\"></form><br><br><b>Получите пароль через: </b>";
+              if ($oplata_kurier == 1) $page_opentext .= "<a style='cursor:pointer;' onclick=\"show('curier".$x."')\"><u>курьера</u></a>";
+              $page_opentext .= "<div style='display:none;' id=curier".$x."><br><br>
+              ".$info_usluga["kurier"]."<br>
+              </div>";
+            }
         }
-      }
-		} else $page_opentext .= str_replace("\r\n","<br>",$row[$x]);
-	$page_opentext .= "</td></tr>";
-		}
+    	} else $page_opentext .= str_replace("\r\n","<br>",$row[$x]);
+    	$page_opentext .= "</td></tr>";
+	  }
 	}
-	// <div id=\"enter_pass\" class=\"enter_pass\" OnClick=\"show('onoffpassword');\" style=\"cursor: pointer; display:inline;\"><u>ввода пароля</u></div>
-	//if ($podrobno == 1) $soderganie .= "<td><a href=/-".$DBName."_page_".$x.">Подробнее...</a></td>";
 	$page_opentext .= "</table>";
-
-$page_opentext .= "<center>".topic_links($nu, $pag, "/-".$DBName."_cat_".$cid."_page_", $lim)."</center>";
+  $page_opentext .= "<center>".topic_links($nu, $pag, "/-".$DBName."_cat_".$cid."_page_", $lim)."</center>";
 }
-//////////////////////////////////////////////////////////////////
-//$soderganie .= "</td></tr></table>"; // all_page
-
-//////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////// ВЫВОД
-//////////////////////////////////////////////////////////////////
 if ($page_shablon == 0) { // Если используются внутренние шаблоны
-// Получаем шаблон
-$sha = shablon_show("page", $view);
-//$add_css .= " page_".$view;
-} else {
+  // Получаем шаблон
+  $sha = shablon_show("page", $view);
+  //$add_css .= " page_".$view;
+} else { // Если используются внешние шаблоны
   // Доступ к шаблону
-  $sql = "select text from ".$prefix."_mainpage where `tables`='pages' and id='$page_shablon' and type='6'";
+  $sql = "select text from ".$prefix."_mainpage where `tables`='pages' and id='".$page_shablon."' and type='6'";
   $result = $db->sql_query($sql);
   $row = $db->sql_fetchrow($result);
   $sha = $row['text'];
@@ -1634,11 +1622,14 @@ $sha = shablon_show("page", $view);
     $s_names = array();
     $s_opts = array();
     // Определим № раздела
-    $sql = "select id from ".$prefix."_mainpage where `tables`='pages' and name='$DBName' and type='2'";
-    $result7 = $db->sql_query($sql);
-    $row7 = $db->sql_fetchrow($result7);
-    $r_id = $row7['id'];
-    $result5 = $db->sql_query("SELECT id, name, text FROM ".$prefix."_mainpage WHERE `tables`='pages' and (useit = '$r_id' or useit = '0') and type='4'");
+    global $id_razdel_and_bd;
+    $r_id = $id_razdel_and_bd[$DBName];
+    //$sql = "select id from ".$prefix."_mainpage where `tables`='pages' and name='$DBName' and type='2'";
+    //$result7 = $db->sql_query($sql);
+    //$row7 = $db->sql_fetchrow($result7);
+    //$r_id = $row7['id'];
+
+    $result5 = $db->sql_query("SELECT `id`, `name`, `text` FROM ".$prefix."_mainpage WHERE `tables`='pages' and (useit = '".$r_id."' or useit = '0') and type='4'");
     while ($row5 = $db->sql_fetchrow($result5)) {
       $s_id = $row5['id'];
       $n = $row5['name'];

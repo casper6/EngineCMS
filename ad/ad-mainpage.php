@@ -485,7 +485,7 @@ function create_main($type) {
 	<b>Добавление формы:</b><br>
 	<select id='form_element' onchange='
 
-	if ( $(\"#form_element\").val() > 0 && $(\"#form_element\").val() != 10 ) {
+	if ( $(\"#form_element\").val() != 0 && $(\"#form_element\").val() != \"Отправить\" ) {
 		$(\".form_id\").show(\"slow\");
 		$(\".form_zvezda\").show(\"slow\");
 	} else {
@@ -493,73 +493,78 @@ function create_main($type) {
 		$(\".form_zvezda\").hide();
 	}
 
-	if ( $(\"#form_element\").val() > 0 ) {
+	if ( $(\"#form_element\").val() != 0 ) {
 		$(\".form_name\").show(\"slow\");
 	} else {
 		$(\".form_name\").hide();
 	}
 
-	if ( $(\"#form_element\").val() == 3 ) {
+	if ( $(\"#form_element\").val() == \"Список\" ) {
 		$(\".form_var\").show(\"slow\");
 	} else $(\".form_var\").hide();
 
-	if ( $(\"#form_element\").val() == 1 || $(\"#form_element\").val() == 2 ) {
+	if ( $(\"#form_element\").val() == \"Строка\" || $(\"#form_element\").val() == \"Текст\" ) {
 		$(\".form_placeholder\").show(\"slow\");
 	} else $(\".form_placeholder\").hide();
 
-	if ( $(\"#form_element\").val() == 1 || $(\"#form_element\").val() == 5 || $(\"#form_element\").val() == 6 ) {
+	if ( $(\"#form_element\").val() == \"Строка\" || $(\"#form_element\").val() == \"Email\" || $(\"#form_element\").val() == \"Телефон\" ) {
 		$(\".form_size_h\").show(\"slow\");
 	} else $(\".form_size_h\").hide();
 
-	if ( $(\"#form_element\").val() == 2 || $(\"#form_element\").val() == 3 || $(\"#form_element\").val() == 7 ) {
+	if ( $(\"#form_element\").val() == \"Текст\" || $(\"#form_element\").val() == \"Список\" || $(\"#form_element\").val() == \"Адрес\" ) {
 		$(\".form_size_v\").show(\"slow\");
 	} else $(\".form_size_v\").hide();
 	
 
-	if ( $(\"#form_element\").val() != 5 && $(\"#form_element\").val() != 6 && $(\"#form_element\").val() != 7 && $(\"#form_element\").val() != 10 ) {
+	if ( $(\"#form_element\").val() != \"Email\" && $(\"#form_element\").val() != \"Телефон\" && $(\"#form_element\").val() != \"Адрес\" && $(\"#form_element\").val() != \"Отправить\" ) {
 		$(\"#form_name\").val(\"\");
 		$(\"#form_id\").val(\"\");
 		$(\"#form_placeholder\").val(\"\");
 	} else {
-		if ( $(\"#form_element\").val() == 5 ) {
+		if ( $(\"#form_element\").val() == \"Email\" ) {
 			$(\"#form_name\").val(\"Email\");
 			$(\"#form_id\").val(\"email\");
 		}
-		if ( $(\"#form_element\").val() == 6 ) {
+		if ( $(\"#form_element\").val() == \"Телефон\" ) {
 			$(\"#form_name\").val(\"Телефон\");
 			$(\"#form_id\").val(\"tel\");
 		}
-		if ( $(\"#form_element\").val() == 7 ) {
+		if ( $(\"#form_element\").val() == \"Адрес\" ) {
 			$(\"#form_name\").val(\"Адрес\");
 			$(\"#form_id\").val(\"address\");
 		}
-		if ( $(\"#form_element\").val() == 10 ) {
+		if ( $(\"#form_element\").val() == \"Отправить\" ) {
 			$(\"#form_name\").val(\"Отправить\");
 		}
 	}
 	'>
 		<option value='0'> >> Выберите поле << </option>
-		<option value='1'>Строка</option>
-		<option value='2'>Текст</option>
-		<option value='3'>Выбор из списка</option>
-		<option value='4' disabled>Файл</option>
-		<option value='5'>Email</option>
-		<option value='6'>Телефон</option>
-		<option value='7'>Адрес</option>
-		<option value='8' disabled>Email</option>
-		<option value='9' disabled>Email</option>
-		<option value='10'>Кнопка «Отправить»</option>
+		<option value='Строка'>Строка</option>
+		<option value='Текст'>Текст</option>
+		<option value='Список'>Выбор из списка</option>
+		<option value='Файл'>Файл</option>
+		<option value='Email'>Email</option>
+		<option value='Телефон'>Телефон</option>
+		<option value='Адрес'>Адрес</option>
+		<option value='Отправить'>Кнопка «Отправить»</option>
 	</select> 
 	<a class='button small green' style='margin-left:20px;' onclick='
 
 	if ( $(\"#form_name\").val() == \"\" ) {
 		$(\"#form_name\").val(\"Заполните это поле\");
 	} else {
-
-		if ( $(\"#form_element\").val() == 1 ) {
-			$(\"#textarea\").val($(\"#textarea\").val()+ \"&lt;\" + \"p\" + \"&gt;\" + $(\"#form_name\").val() + \"&lt;input id=\" + $(\"#form_id\").val() + \" name=options[\" + $(\"#form_id\").val() + \"]\" + \"&gt;\\n\" );
-		}
-
+		var add;
+		var form_zvezda = 0;
+		if ($(\"#form_zvezda\").is(\":checked\")) form_zvezda = 1;
+		if ( $(\"#form_element\").val() == \"Строка\" ) add = $(\"#form_placeholder\").val() + \"|\" + $(\"#form_size_h\").val();
+		if ( $(\"#form_element\").val() == \"Текст\" ) add = $(\"#form_placeholder\").val() + \"|\" + $(\"#form_size_v\").val();
+		if ( $(\"#form_element\").val() == \"Список\" ) add = $(\"#form_var\").val().replace(new RegExp(\"\\n\",\"g\"),\"*\") + \"|\" + $(\"#form_size_v\").val();
+		if ( $(\"#form_element\").val() == \"Email\" ) add = $(\"#form_size_h\").val();
+		if ( $(\"#form_element\").val() == \"Телефон\" ) add = $(\"#form_size_h\").val();
+		if ( $(\"#form_element\").val() == \"Адрес\" ) add = $(\"#form_size_v\").val();
+		if ( $(\"#form_element\").val() != \"Отправить\" && $(\"#form_element\").val() != \"Файл\") add = \"|\" + $(\"#form_id\").val() + \"|\" + add + \"|\" + form_zvezda;
+		if ( $(\"#form_element\").val() == \"Файл\") add = \"|\" + $(\"#form_id\").val() + \"|\" + form_zvezda;
+		$(\"#textarea\").val($(\"#textarea\").val()+ $(\"#form_element\").val() + \"|\" + $(\"#form_name\").val() + add + \"\\n\" );
 	}
 	'><span class='icon white small' data-icon='+'></span>Добавить поле</a><br>
 	<table width=100%><tr valign=top><td width=50%>
@@ -576,7 +581,6 @@ function create_main($type) {
 	</td><td>
 	<div class='form_size_h' style='display:none'>Ширина <span class=small>(необязательно)</span>:<br>
 	<select id='form_size_h'>
-		<option value='0'>по-умолчанию, 90%</option>
 		<option value='10'>10%</option>
 		<option value='20'>20%</option>
 		<option value='30'>30%</option>
@@ -585,17 +589,16 @@ function create_main($type) {
 		<option value='60'>60%</option>
 		<option value='70'>70%</option>
 		<option value='80'>80%</option>
-		<option value='90'>90%</option>
+		<option value='90' selected>90%</option>
 		<option value='100'>100%</option>
 	</select></div>
 	<div class='form_size_v' style='display:none'>Высота <span class=small>(необязательно)</span>:<br>
 	<select id='form_size_v'>
-		<option value='0'>по-умолчанию, 5 строк</option>
 		<option value='1'>Одна строка</option>
 		<option value='2'>Две строки</option>
 		<option value='3'>Три строки</option>
 		<option value='4'>Четыре строки</option>
-		<option value='5'>Пять строк</option>
+		<option value='5' selected>Пять строк</option>
 		<option value='10'>10 строк</option>
 		<option value='15'>15 строк</option>
 		<option value='20'>20 строк</option>
@@ -843,9 +846,40 @@ function create_main($type) {
 	[page_price] — <hr>
 	'>Вставки для шаблона раздела</option>
 
-	<option value='[page_id] [main_title] [page_title] [page_opentext] [page_text] [page_data] [page_tags] [page_favorites] [page_socialnetwork] [page_blog] [venzel] [page_search_news] [page_reiting] [page_comments] [page_add_comments] \n\n Дополнительные вставки - англ. названия полей, относящихся к разделу.'>Вставки для шаблона страниц</option>
+	<option value='Вставки для шаблона <b>страниц</b>:<br>
+	[page_id] — <br>
+	[main_title] — <br>
+	[page_title] — <br>
+	[page_opentext] — <br>
+	[page_text] — <br>
+	[page_data] — <br>
+	[page_tags] — <br>
+	[page_favorites] — <br>
+	[page_socialnetwork] — <br>
+	[page_blog] — <br>
+	[venzel] — <br>
+	[page_search_news] — <br>
+	[page_reiting] — <br>
+	[page_comments] — <br>
+	[page_add_comments] — <br>
+	Возможны дополнительные вставки — это англ. названия полей, относящихся к этому же разделу.'>Вставки для шаблона страниц</option>
 
-	<option value='[comment_otvet] [comment_otvet_show] [comment_citata] [comment_id] [comment_num] [comment_text] [comment_avtor_type] [comment_avtor] [comment_data] [comment_time] [comment_admin] [comment_mail] [comment_tel] [comment_adres]'>Вставки для шаблона комментариев на странице</option>
+	<option value='Вставки для шаблона <b>комментариев на странице</b>:<br>
+	[comment_otvet] — <br>
+	[comment_otvet_show] — <br>
+	[comment_citata] — <br>
+	[comment_id] — <br>
+	[comment_num] — <br>
+	[comment_text] — <br>
+	[comment_avtor_type] — <br>
+	[comment_avtor] — <br>
+	[comment_data] — <br>
+	[comment_time] — <br>
+	[comment_admin] — <br>
+	[comment_mail] — <br>
+	[comment_tel] — <br>
+	[comment_adres]— <br>
+	'>Вставки для шаблона комментариев на странице</option>
 
 	<option value='Вставки для шаблона <b>блока страниц</b>:<br>
 	[№] — <br>
@@ -1005,7 +1039,7 @@ function edit_main($id) {
 				 for ($x=0; $x < $n; $x++) {
 					if ($useit_all[$x] == $title_id) $sel = " selected=\"selected\"";
 				 }
-				 $styles .= "<option value=\"$title_id\"$sel>$title_style</option>";
+				 $styles .= "<option value=\"".$title_id."\"".$sel.">".$title_style."</option>";
 			 }
 		global $http_siteurl;
 		$stil = str_replace(" ","-",trim($stil));

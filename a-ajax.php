@@ -427,7 +427,7 @@ if ($func == "izmenapapka") { // Отображение списка папок 
                $title3 = strip_tags($row['title'], '<b><i>');
                $module3 = $row['module'];
                $parentid = $row['parent_id'];
-               if ($parentid != 0) $title3 = "&bull; ".getparent($name_raz,$parentid,$title3);
+               if ($parentid != 0) $title3 = "&bull; ".getparent($razdel,$parentid,$title3);
                if ($papka == $cid3 and $razdel == $module3) $sel = "selected"; else $sel = "";
                if ($parentid == 0) { // занести в переменную
                    $first_opt[$cid3] = "<option value=".$cid3." ".$sel." style='background:#fdf;'>".$title3."</option>";
@@ -438,10 +438,10 @@ if ($func == "izmenapapka") { // Отображение списка папок 
                    $info .= "<option value=".$cid3." ".$sel.">".$title3."</option>";
                }
       }
-      if (count($first_opt)>0) 
-      foreach( $first_opt as $key => $value ) {
-        if ($first_opt[$key] != "") $info .= $first_opt[$key];
-      }
+      if (isset($first_opt)) if (count($first_opt) > 0) 
+        foreach( $first_opt as $key => $value ) {
+          if ($first_opt[$key] != "") $info .= $first_opt[$key];
+        }
   $info .= "</select>";
   echo $info; exit;
 }
@@ -720,7 +720,7 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
                 $title = strip_tags($row6['title'], '<b><strong><em><i>');
                 if (trim($title) == "") $title = "< страница без названия >";
                 $module = $row6['module'];
-                if ($title_razdel_and_bd[$module] == "") $title_razdel_and_bd[$module] = "РАЗДЕЛ УДАЛЁН! &rarr; $module";
+                if (!isset($title_razdel_and_bd[$module])) $title_razdel_and_bd[$module] = "РАЗДЕЛ УДАЛЁН! &rarr; $module";
                 
                 $date = date2normal_view(str_replace(".","-",$row6['redate']), 2, 1);
                 if ($id == 1) $recreate = "<a title='Восстановить страницу...\nЕсли её раздел или папка удалены, сначала отредактируйте и восстановите из резервных копий!' onclick=resetpage(".$pid.") style=\"cursor:pointer;\"><img class=\"icon2 i37\" src=/images/1.gif></a>";

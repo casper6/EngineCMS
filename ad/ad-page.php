@@ -145,7 +145,7 @@ function edit_base_pages_category($cid, $red=0) {
             button_more: {title: 'Вставка ссылки на полное содержание (для предисловия)',callback: ButtonMore},
             button_link: {title: 'Вставка блока (например, галереи фотографий)',callback: ButtonBlock},
             button_block: {title: 'Вставка быстрой ссылки на страницу или раздел',callback: ButtonLink}
-          }, mobile: false, ".$red4_div_convert." imageUpload: 'ed2/image_upload.php',fileUpload: 'ed2/file_upload.php', lang: 'ru' }); } );
+          }, mobile: false, ".$red4_div_convert." imageUpload: 'ed2/image_upload.php',fileUpload: 'ed2/file_upload.php', lang: 'ru', autoresize: false }); } );
         </script><textarea id=\"desc\" class='redactor' name=\"desc\" style='width: 100%; height: 300px;'>".$desc."</textarea>";
     }
 
@@ -272,10 +272,10 @@ function base_pages_add_page($name, $razdel, $red=0, $new=0, $pid=0) {
              echo "<option value=$cid2 $sel>$title</option>";
          }
              }
-        if (count($first_opt)>0) 
-        foreach( $first_opt as $key => $value ) {
-          if ($first_opt[$key] != "") echo $first_opt[$key];
-        }
+        if (isset($first_opt)) if (count($first_opt) > 0) 
+          foreach( $first_opt as $key => $value ) {
+            if ($first_opt[$key] != "") echo $first_opt[$key];
+          }
              
   echo "</select></div>";
 
@@ -372,7 +372,7 @@ function base_pages_add_page($name, $razdel, $red=0, $new=0, $pid=0) {
         button_more: {title: 'Вставка ссылки на полное содержание (для предисловия)',callback: ButtonMore},
         button_link: {title: 'Вставка блока (например, галереи фотографий)',callback: ButtonBlock},
         button_block: {title: 'Вставка быстрой ссылки на страницу или раздел',callback: ButtonLink}
-      }, mobile: false, ".$red4_div_convert." imageUpload: 'ed2/image_upload.php',fileUpload: 'ed2/file_upload.php', lang: 'ru' }); } );
+      }, mobile: false, ".$red4_div_convert." imageUpload: 'ed2/image_upload.php',fileUpload: 'ed2/file_upload.php', lang: 'ru', autoresize: false }); } );
     </script>
     <textarea id='open_text' class='redactor' name=open_text rows=7 cols=40 style='width:100%;'>".$shablon1."</textarea>";
   }
@@ -929,7 +929,7 @@ $('#main_text').editor({ css: ['/ed/js/editor/css/editor.css'], toolbar: 'classi
         button_more: {title: 'Вставка ссылки на полное содержание (для предисловия)',callback: ButtonMore},
         button_link: {title: 'Вставка блока (например, галереи фотографий)',callback: ButtonBlock},
         button_block: {title: 'Вставка быстрой ссылки на страницу или раздел',callback: ButtonLink}
-      }, ".$red4_div_convert." imageUpload: 'ed2/image_upload.php',fileUpload: 'ed2/file_upload.php', lang: 'ru' }); } );
+      }, ".$red4_div_convert." imageUpload: 'ed2/image_upload.php',fileUpload: 'ed2/file_upload.php', lang: 'ru', autoresize: false }); } );
     </script>
 <textarea id=\"open_text\" class='redactor' name=\"open_text\" rows=\"8\" cols=\"80\" style='width:100%;'>".$open_text."</textarea>";
 }

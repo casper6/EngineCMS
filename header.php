@@ -217,11 +217,11 @@ if ($name=="-email") { // занесение мыла как скрытого к
 		$shablonYYY[$idYYY] = trim($row2['shablon']);
 	}
 	// Вставить оптимизацию блоков
-for ($iii=0; $iii < 2; $iii++) {
+for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке блоков и вложенных блоков
 	foreach( $nameYYY as $idX => $nameX ) {
 		$titleX = trim($titleYYY[$idX]);
 		// поиск блока в тексте
-		if ( $block == str_replace("[".$titleX."]", "", $block) ) continue; // Переход к следующему!
+		if ( !strpos(" ".$block, "[".$titleX."]") ) continue; // Переход к следующему!
 		
 		$textX = trim($textYYY[$idX]);
 		$useitX = trim($useitYYY[$idX]);
@@ -267,12 +267,11 @@ for ($iii=0; $iii < 2; $iii++) {
 	}
 	
 	if ($random == 1) $sort = "RAND()";
-	########################################################################################
 
 	if ($alternative_title_link == "" and $useitX != "все") $alternative_title_link = "/-".$useitX."";
 	if ($cid_open=="все" or $cid_open=="") {} else {$alternative_title_link = "/-".$useitX."_cat_".$cid_open;}
 
-	// Определение дизайна блоков #############
+	// Определение дизайна блоков
 	$design_open=""; $design_close="";
 
 	$block_title = $titleX;
@@ -317,7 +316,6 @@ for ($iii=0; $iii < 2; $iii++) {
 	<a href='sys.php?op=mainpage&id=".$idX."&red=1' title='Редактировать в HTML'><img align=right class='icon2 i34' src='/images/1.gif'></a><a href='sys.php?op=mainpage&id=".$idX."&nastroi=1' title='Настроить блок'><img align=right class='icon2 i38' src='/images/1.gif'></a>
 	</div>".$design_open; }
 
-	###########################################
 	// Определяем наличие шаблонов
 	if (trim($shablon) != "") {
 		// Доступ к шаблону
@@ -328,7 +326,6 @@ for ($iii=0; $iii < 2; $iii++) {
 		}
 	// Выясняем наличие элементов шаблона
 	}
-	###########################################
 
 	// Работа с разными типами блоков
 	if (!isset($cid)) $cid = 0;
@@ -337,44 +334,16 @@ for ($iii=0; $iii < 2; $iii++) {
 		$nameX = "-1";
 	}
 
-switch ($nameX) { ###############################
+
+switch ($nameX) {
 
 case "0": # Блок модуля
 	if ($open_new_window == 1) $blank = " target='_blank'"; 
 	else $blank = "";
 
-$text_old = $textX;
-$textX = ""; // В эту переменную входит содержание блока
-if ($media==2) { // удалить
-	##################################################################################################
-	// ФЛЕШКА: в папке должно лежать три файла: файл флешки, текста и картинки 
-	$offset = 0;
-	$max2 = 6;
-	if (is_dir($folder)) {
-		$dir = dir($folder);
-		$list = array();
-		while($func=$dir->read()) {
-			if(strpos($func,".jpg")) $list[] = str_replace(".jpg","",$func);
-		}
-		closedir($dir->handle);
-		sort($list);
-		$nu=0; // счетчик кол-ва флешек для перехода к слудующей строке в таблице
-		$textX .= "<center><table class=flash_table><tr valign=top>";
-		for ($i=$offset; $i < $max2; $i++) { // выгружаем циклом $lim флешек
-			$pic_path = $dir->path."/$list[$i].jpg";
-			$txt_path = $dir->path."/$list[$i].txt";
-			$link = "/-".$useitX."_page_".$i."";
-			$OpenData=FOpen($txt_path,"r"); // читаем описания флешек из txt файлов
-			$txt=@FRead($OpenData,FileSize($txt_path)); 
-			$textX .= "<td align=center>
-			<a href=".$link.$blank."><img src=$pic_path title=\"".$txt."\" alt=\"".$txt."\"><div class=flash_text>".$txt."</div></a></td>";
-			$nu++;
-			if ($nu==3) { $nu=0; $textX .= "</tr><tr valign=top>"; }
-		}
-		$textX .= "</tr></table></center>";
-	}
-	##################################################################################################
-} else {
+	$text_old = $textX;
+	$textX = ""; // В эту переменную входит содержание блока
+
 	$and = "";
 	if ($main==1) $and = " and mainpage='1'";
 	if ($main==2) $and = " and mainpage!='1'";
@@ -566,21 +535,23 @@ if ($media==2) { // удалить
 	if ($add==1) $textX .= "<div id=add class=\"add".$class."\"><a href=-".$module."&add=true".$blank." id=add_link class=\"add_link".$class."\">$addtitle</a></div>";
 	
 	if ($open_all==1 and $razdel_open2_name != "" and $razdel_open2_name != "no") $textX .= "<br><div id=open_all class=\"open_all".$class."\"><a href=-".$module.$cid_open2.$blank." id='open_all_link' class=\"open_all_link".$class."\">".$razdel_open2_name."</a></div><br>";
-}
-$block = str_replace("[$titleX]", $design_open.$textX.$design_close, $block);
+
+	$block = str_replace("[$titleX]", $design_open.$textX.$design_close, $block);
 break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 case "1": # Блок комментариев модуля
-	$pages="pages";
+	$pages = "pages";
 	// Получим список № страниц
-	if ($useitX=="") $and = ""; else $and = " where `tables`='pages' and module='$useitX'"; 
+	if ($useitX == "") $and = "";
+	else $and = " where `tables`='pages' and module='$useitX'"; 
 	// Показывать ВСЕ разделы или выбранный
 
 	if ($only_question==0) $and2 = "";
 	elseif ($only_question==1) $and2 = " and drevo='0'"; 
 	elseif ($only_question==2) $and2 = " and drevo!='0'"; 
 	if (isset($size)) $limit = " limit $number,$size";
-	if ($shablon != "") $sel = "*"; else $sel = "cid, num, avtor, text, data"; 
+	if ($shablon != "") $sel = "*";
+	else $sel = "cid, num, avtor, text, data"; 
 	
 	$sql = "SELECT pid, title, module from ".$prefix."_".$pages.$and." order by date desc";
 
@@ -617,7 +588,7 @@ case "1": # Блок комментариев модуля
 	$type = ""; break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 case "2": # Блок текста 
-	$block=str_replace("[$titleX]", $design_open.$textX.$design_close, $block);
+	$block = str_replace("[$titleX]", $design_open.$textX.$design_close, $block);
 	break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 case "3": # Блок ротатор рекламы
@@ -625,7 +596,7 @@ case "3": # Блок ротатор рекламы
 	$lines = explode("|", $lines); // ЗАМЕНИТЬ!
 	$itogo = count($lines)-1;
 	srand((double) microtime()*1000000);
-	$i=rand(0,$itogo); // выбираем случайное число (0...MAX)
+	$i = rand(0,$itogo); // выбираем случайное число (0...MAX)
 	$textX = $lines[$i];
 	$block = str_replace("[$titleX]", $design_open.$textX.$design_close, $block);
 	$type = ""; break;
@@ -718,7 +689,6 @@ case "6": # Фотогалерея
         </div>
       </div>
     </div>";
-
 	$block = str_replace("[$titleX]", $design_open.$textX.$design_close, $block);
 	$type = ""; break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -766,7 +736,7 @@ case "8": # Блок папок ОТКРЫТОГО раздела
 		$cid = $row['cid'];
 	}
 	// Определяем отношение подпапок к папкам
-	$sql="SELECT cid, title, parent_id from ".$prefix."_".$pages."_categories where module='$DBName' and `tables`='pages' order by $papka_sort";
+	$sql = "SELECT cid, title, parent_id from ".$prefix."_".$pages."_categories where module='$DBName' and `tables`='pages' order by $papka_sort";
 	$result = $db->sql_query($sql);
 	$title = array();
 	while ($row = $db->sql_fetchrow($result)) {
@@ -778,10 +748,10 @@ case "8": # Блок папок ОТКРЫТОГО раздела
 	$papki = array();
 	foreach ($title as $id => $nam) {
 		if ($papki_numbers==1 or $shablon != "") {
-		$and2=""; 
-		if (vhodyagie($id,$par,$num)>0) $and2 = "<div class='add'>+".vhodyagie($id,$par,$num)."</div>";
-		$and="";
-		if ($num[$id]>0) $and = " ($num[$id]".$and2.")";
+			$and2=""; 
+			if (vhodyagie($id,$par,$num)>0) $and2 = "<div class='add'>+".vhodyagie($id,$par,$num)."</div>";
+			$and="";
+			if ($num[$id]>0) $and = " ($num[$id]".$and2.")";
 		} else $and="";
 		// Определение и выделение выбранной (текущей) папки
 		if (!isset($par[$cid])) $par[$cid] = 0;
@@ -884,14 +854,20 @@ case "9": # Блок мини-фото - экстрактор предописа
 		if ($limkol > 1) {
 			if ($limkol_num == $limkol) {
 				if ($kol_num == $size * $limkol) {
-				if ($showlinks > 0) $textX .= "</table>|+|+|<table cellspacing=0 cellpadding=0 width=100%><tr valign=top><td width=".$proc."%>";
-				else { $textX .= "</table>"; $close_table = true; }
-				$limkol_num = 0;
-				$kol_num = 0;
+					if ($showlinks > 0) $textX .= "</table>|+|+|<table cellspacing=0 cellpadding=0 width=100%><tr valign=top><td width=".$proc."%>";
+					else {
+						$textX .= "</table>";
+						$close_table = true;
+					}
+					$limkol_num = 0;
+					$kol_num = 0;
 				} else {
 					$limkol_num = 0;
 					if ($kol_num != $size * $limkol) $textX .= "</td></tr><tr valign=top><td width=".$proc."%>";
-					else { $textX .= "</td></tr></table>";  $close_table = true; }
+					else { 
+						$textX .= "</td></tr></table>";
+						$close_table = true;
+					}
 				}
 			} else {
 			  $textX .= "</td><td width=".$proc."%>"; $close_table = false;
@@ -899,7 +875,6 @@ case "9": # Блок мини-фото - экстрактор предописа
 		}
 	}
 	if ($showlinks > 0) $textX .= "</table>";
-		
 	if ($showlinks > 0) {
 		$sql = "SELECT `pid` from ".$prefix."_pages where `tables`='pages' and `module`='$useitX'".$and.$and2." and `active`='1' and (`open_text` like '%".$first."%' or `open_text` like '%".$first2."%')";
 		$result = $db->sql_query($sql) or die('Ошибка');
@@ -907,22 +882,22 @@ case "9": # Блок мини-фото - экстрактор предописа
 		$count = intval( $numrows2 / ($size * $limkol) );
 		$ostatok = $numrows2 - $count * $size * $limkol;
 		if ($ostatok > 0) $count++;
-	if ($count > 1) {
-	$matches = explode("|+|+|",$textX);
-	$textX = "";
-		$info_blocks = "";
-		$obzor = false;
-		$names_block = "";
-		for ( $i=0; $i < $count; $i++ ) { 
-			$info_blocks .= "<div id='fragment-".$i."'>".$matches[$i]."</div>";
-			$names_block .= "<li><a href='#fragment-".$i."'>".( $i + 1 )."</a></li>";
+		if ($count > 1) {
+			$matches = explode("|+|+|",$textX);
+			$textX = "";
+			$info_blocks = "";
+			$obzor = false;
+			$names_block = "";
+			for ( $i=0; $i < $count; $i++ ) { 
+				$info_blocks .= "<div id='fragment-".$i."'>".$matches[$i]."</div>";
+				$names_block .= "<li><a href='#fragment-".$i."'>".( $i + 1 )."</a></li>";
+			}
+			// 3,2,1,0 - сверху и снизу,снизу,сверху,не показывать
+			if ($showlinks == 1) $names_block = "<div id='rotate'><ul>".$names_block."</ul>".$info_blocks."</div>";
+			if ($showlinks == 2) $names_block = $info_blocks."<div id='rotate'><ul>".$names_block."</ul></div>";
+			if ($showlinks == 3) $names_block = "<div id='rotate'><ul>".$names_block."</ul>".$info_blocks."<ul>".$names_block."</ul><hr ></div>";
+			$textX .= "<script>$(function() { $('#rotate > ul').tabs({ fx: { opacity: 'toggle' } }); }); </script>".$names_block."";
 		}
-		// 3,2,1,0 - сверху и снизу,снизу,сверху,не показывать
-		if ($showlinks == 1) $names_block = "<div id='rotate'><ul>".$names_block."</ul>".$info_blocks."</div>";
-		if ($showlinks == 2) $names_block = $info_blocks."<div id='rotate'><ul>".$names_block."</ul></div>";
-		if ($showlinks == 3) $names_block = "<div id='rotate'><ul>".$names_block."</ul>".$info_blocks."<ul>".$names_block."</ul><hr ></div>";
-		$textX .= "<script>$(function() { $('#rotate > ul').tabs({ fx: { opacity: 'toggle' } }); }); </script>".$names_block."";
-	}
 	}
 	$block = str_replace("[$titleX]", $design_open.$textX.$design_close, $block);
 	$type = ""; break;
@@ -958,73 +933,65 @@ case "10": # Блок меню
 
 	switch ($menu) {
 		case "0": // гор влево 3 уровня
-		$class_menu = "menu-h-d"; break;
-		############################################
+			$class_menu = "menu-h-d"; break;
 		case "6": // верт 3 уровня
-		$class_menu = "menu-v-d"; break;
-		############################################
+			$class_menu = "menu-v-d"; break;
 		case "5": // верт 1 уровня
-		$class_menu = "menu-v"; break;
-		############################################
+			$class_menu = "menu-v"; break;
 		case "4": // гор влево 3 уровня вверх
-		$class_menu = "menu-h-d.d-up"; break;
-		 ############################################
+			$class_menu = "menu-h-d.d-up"; break;
 		case "3": // гор влево 1 уровень
-		$class_menu = "menu-h"; break;
-		 ############################################
+			$class_menu = "menu-h"; break;
 		case "1": // Таблица гор выравнивание по всей таблице 1 уровень
-		$tr = array( // без 3 уровней!
-		"[элемент открыть]"=>"<td align=center>","[элемент закрыть]"=>"</td>",
-		"[/url]"=>"</div></a>","[url="=>"<a class='table1menu_link' href=\"",
-		"[/URL]"=>"</div></a>","[URL="=>"<a class='table1menu_link' href=\"","]"=>"\"><div class=li2menu_div>"
-		);
-		$textXX = strtr($textX,$tr);
-		$textXX = "<table class='table1menu' width=100% cellspacing=0 cellpadding=0><tr valign=bottom>".$textXX."</tr></table>";
-		$textXX = str_replace("' href=\"".$url1."\">", " mainmenu_open' href=\"".$url1."\" >", $textXX);
-		$textXX = str_replace("' href=\"".$url2."\">", " mainmenu_open' href=\"".$url2."\" >", $textXX);
+			$tr = array( // без 3 уровней!
+			"[элемент открыть]"=>"<td align=center>","[элемент закрыть]"=>"</td>",
+			"[/url]"=>"</div></a>","[url="=>"<a class='table1menu_link' href=\"",
+			"[/URL]"=>"</div></a>","[URL="=>"<a class='table1menu_link' href=\"","]"=>"\"><div class=li2menu_div>"
+			);
+			$textXX = strtr($textX,$tr);
+			$textXX = "<table class='table1menu' width=100% cellspacing=0 cellpadding=0><tr valign=bottom>".$textXX."</tr></table>";
+			$textXX = str_replace("' href=\"".$url1."\">", " mainmenu_open' href=\"".$url1."\" >", $textXX);
+			$textXX = str_replace("' href=\"".$url2."\">", " mainmenu_open' href=\"".$url2."\" >", $textXX);
 		break;
-		 ############################################
 		case "2": // вертикальное 2 уровня
-		$tr = array( // без 3 уровней!
-		"[уровень открыть]"=>"<ul class=ul_tree>","[уровень закрыть]"=>"</ul>","[элемент открыть]"=>"<li>","[элемент закрыть]"=>"</li>", "[/url]"=>"</a>","[url="=>"<a class=li2menu_link href=\"","[/URL]"=>"</a>","[URL="=>"<a class=li2menu_link href=\"","]"=>"\">"
-		);
-		$textXX = strtr($textX,$tr);
-		$textXX = "<div class=suckerdiv><ul id=suckertree1>".$textXX."</ul></div>";
-		$textXX = str_replace("<li><a class=li2menu_link href=\"".$url1."\">", "<li class=li_openlink><a class=li2menu_openlink href=\"".$url1."\">", $textXX);
-		$textXX = str_replace("<li><a class=li2menu_link href=\"".$url2."\">", "<li class=li_openlink><a class=li2menu_openlink href=\"".$url2."\">", $textXX);
+			$tr = array( // без 3 уровней!
+			"[уровень открыть]"=>"<ul class=ul_tree>","[уровень закрыть]"=>"</ul>","[элемент открыть]"=>"<li>","[элемент закрыть]"=>"</li>", "[/url]"=>"</a>","[url="=>"<a class=li2menu_link href=\"","[/URL]"=>"</a>","[URL="=>"<a class=li2menu_link href=\"","]"=>"\">"
+			);
+			$textXX = strtr($textX,$tr);
+			$textXX = "<div class=suckerdiv><ul id=suckertree1>".$textXX."</ul></div>";
+			$textXX = str_replace("<li><a class=li2menu_link href=\"".$url1."\">", "<li class=li_openlink><a class=li2menu_openlink href=\"".$url1."\">", $textXX);
+			$textXX = str_replace("<li><a class=li2menu_link href=\"".$url2."\">", "<li class=li_openlink><a class=li2menu_openlink href=\"".$url2."\">", $textXX);
 		break;
-	 	############################################
 	 	case "7": // KickStart вертикальное 3 уровня (слева)
-		$class_menu = "menu vertical"; break;
+			$class_menu = "menu vertical"; break;
 		case "8": // KickStart вертикальное 3 уровня (справа)
-		$class_menu = "menu vertical right"; break;
+			$class_menu = "menu vertical right"; break;
 		case "9": // KickStart горизонтальное 3 уровня (слева)
-		$class_menu = "menu"; break;
+			$class_menu = "menu"; break;
 	}
 	if ($menu != "1" and $menu != "2") $textXX = "<ul id=\"menu\" class=\"".$class_menu."\">".$textXX."</ul>";
-	
 	$block = str_replace("[$titleX]", $design_open.$textXX.$design_close, $block);
 	$type = ""; break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 case "11": # КАЛЕНДАРЬ
 	global $showdate; // проверить
 	if (trim($showdate) != "0-00-00" and trim($showdate) != "") {
-	$showdate = explode("-",$showdate);
-	$showdate = intval($showdate[0])."-".(intval($showdate[1]) < 10 ? '0'.intval($showdate[1]) : $showdate[1])."-".(intval($showdate[2]) < 10 ? '0'.intval($showdate[2]) : $showdate[2]);
+		$showdate = explode("-",$showdate);
+		$showdate = intval($showdate[0])."-".(intval($showdate[1]) < 10 ? '0'.intval($showdate[1]) : $showdate[1])."-".(intval($showdate[2]) < 10 ? '0'.intval($showdate[2]) : $showdate[2]);
 	}
 	$calendar_dates = array();
 	if ($calendar == "") {
 		$sql = "select date from ".$prefix."_pages where `tables`='pages' and module='$useitX' and active!='0' order by date";
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result)) {
-		$dates = explode(" ",$row['date']);
-		$calendar_dates[] = $dates[0];
+			$dates = explode(" ",$row['date']);
+			$calendar_dates[] = $dates[0];
 		}
 	} else {
 		$sql = "select name from ".$prefix."_spiski where type='$calendar' and pages!='' order by name";
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result)) {
-		$calendar_dates[] = $row['name'];
+			$calendar_dates[] = $row['name'];
 		}	
 	}
 	$textX .= "".my_calendar($calendar_dates, $useitX, $showdate); 
@@ -1037,8 +1004,8 @@ case "13": # ОБЛАКО ТЕГОВ
 	$result = $db->sql_query($sql);
 	while ($row = $db->sql_fetchrow($result)) {
 		if (trim($row['search']) != "") {
-		$tag = array();
-		$tag = explode(" ",trim(str_replace("  "," ",$row['search'])));
+			$tag = array();
+			$tag = explode(" ",trim(str_replace("  "," ",$row['search'])));
 			foreach ($tag as $tag1) {
 				if (trim($tag1) != "" and strlen($tag1)>2 ) $tags[] = trim($tag1);
 			}
@@ -1063,7 +1030,7 @@ case "13": # ОБЛАКО ТЕГОВ
 	$tagcloud = "";
 	foreach ($tags as $tag_name => $tag_col) {
 		if ($tags3[$tag_col] != "1") {
-			$tagcloud .= "<a href='--slovo_".str_replace( "%","-",  $tag_name ) ."' style='font-size: ".$tags3[$tag_col]."px;'>".$tag_name."</a> "; //  class='slovo' title='$tag_col темы' rel=\"tag nofollow\"
+			$tagcloud .= "<a href='--slovo_".str_replace( "%","-",  $tag_name ) ."' style='font-size: ".$tags3[$tag_col]."px;'>".$tag_name."</a> ";
 			$tagcloud2 .= "<noindex><a class='slovo' href='--slovo_".str_replace( "%","-",  $tag_name ) ."' style='color:".$tags4[$tag_col]."; font-size: ".$tags3[$tag_col]."pt;' rel='nofollow'>".$tag_name."</a></noindex> ";
 		}
 	}
@@ -1097,38 +1064,38 @@ case "22": # База данных (количество по 2 колонкам
 	$firsts = array();
 	$result = $db->sql_query("SELECT ".$first." FROM ".$prefix."_base_".$base." where (active='1' or active='3')$and");
 	while ($row = $db->sql_fetchrow($result)) {
-	$firsts[] = $row[$first];
+		$firsts[] = $row[$first];
 	}
 	$firsts = array_unique($firsts);
 	
 	$seconds = array();
 	$result = $db->sql_query("SELECT ".$second." FROM ".$prefix."_base_".$base." where (active='1' or active='3')$and");
 	while ($row = $db->sql_fetchrow($result)) {
-	$seconds[] = $row[$second];
+		$seconds[] = $row[$second];
 	}
 	$seconds = array_unique($seconds);
 
 	$textX = "<table class=base_table width=100%><tr><td class=base_first>$text</td>";
 	foreach ($firsts as $first1) {
-	$textX .= "<td class=base_first>".$first1."</td>";
+		$textX .= "<td class=base_first>".$first1."</td>";
 	}
 	if ($all==1) {
 	$textX .= "<td class=base_first>Всего:</td>";
 	}
 	$textX .= "</tr>";
 	foreach ($seconds as $second1) {
-	$textX .= "<tr><td class=base_second>".$second1."</td>";
+		$textX .= "<tr><td class=base_second>".$second1."</td>";
 		foreach ($firsts as $first1) {
-		$numrows = $db->sql_numrows($db->sql_query("SELECT ".$first." FROM ".$prefix."_base_".$base." 
-		WHERE ".$first."='".$first1."' and ".$second."='".$second1."' and (active='1' or active='3')$and"));
-		$textX .= "<td class=base_second_first><a href=-".$useitX."_first_".str_replace("%","|",urlencode(str_replace("-","-_-",str_replace("+","+++",$second1))))."_second_".str_replace("%","|",urlencode(str_replace("-","---",str_replace("+","+_+",$first1))))."_opt_".$idX.">".$numrows."</a></td>";
+			$numrows = $db->sql_numrows($db->sql_query("SELECT ".$first." FROM ".$prefix."_base_".$base." 
+			WHERE ".$first."='".$first1."' and ".$second."='".$second1."' and (active='1' or active='3')$and"));
+			$textX .= "<td class=base_second_first><a href=-".$useitX."_first_".str_replace("%","|",urlencode(str_replace("-","-_-",str_replace("+","+++",$second1))))."_second_".str_replace("%","|",urlencode(str_replace("-","---",str_replace("+","+_+",$first1))))."_opt_".$idX.">".$numrows."</a></td>";
 		}
 		if ($all==1) {
-		$numrows = $db->sql_numrows($db->sql_query("SELECT ".$first." FROM ".$prefix."_base_".$base." 
-		WHERE ".$second."='".$second1."' and (active='1' or active='3')$and"));
-		$textX .= "<td class=base_second_first><a href=-".$useitX."_first_".str_replace("%","|",urlencode(str_replace("-","---",str_replace("+","+++",$second1))))."_opt_".$idX.">".$numrows."</a></td>";
+			$numrows = $db->sql_numrows($db->sql_query("SELECT ".$first." FROM ".$prefix."_base_".$base." 
+			WHERE ".$second."='".$second1."' and (active='1' or active='3')$and"));
+			$textX .= "<td class=base_second_first><a href=-".$useitX."_first_".str_replace("%","|",urlencode(str_replace("-","---",str_replace("+","+++",$second1))))."_opt_".$idX.">".$numrows."</a></td>";
 		}
-	$textX .= "</tr>";
+		$textX .= "</tr>";
 	}
 	$textX .= "</table>";
 
@@ -1144,12 +1111,10 @@ case "23": # База данных (список по нескольким ко�
 		if ($textX != "") $where = "where ".stripcslashes($textX)." and (active='1' or active='3')$and ";
 		$textX = "<table class='base_table table_light' width=100%>";
 		if ($text != "") $textX .= "<tr class=base_first><td>".$text."</td></tr>";
-
 		// узнать имя БД по номеру
 		global $id_razdel_and_bd;
 		$base_name = WhatArrayElement($id_razdel_and_bd, $base);
 		$razdel_name = WhatArrayElement($id_razdel_and_bd, $useitX);
-
 		$sql = "SELECT id, ".$col." FROM ".$prefix."_base_".$base_name." ".$where." order by ".$sort." limit ".$number.",".$size."";
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result)) {
@@ -1176,7 +1141,6 @@ case "30": # Статистика раздела, выводит кол-во п�
 	$textX = $row8['counter'];
 	$block = str_replace("[$titleX]", $design_open.$textX.$design_close, $block);
 	$type = ""; break;
-	
 //case "8": 
 //$type = ""; break;
 
@@ -1201,28 +1165,28 @@ case "30": # Статистика раздела, выводит кол-во п�
 	$year = date("Y");
 	$nextyear = $year+1;
 	if ($year != $startdate) $god .= "—$year";
-	$block=str_replace("[год]", "© ".$god, $block); // Промежуток лет ставится в дизайн
+	$block = str_replace("[год]", "© ".$god, $block); // Промежуток лет ставится в дизайн
 
 	// Ставим статистику
 	$block=str_replace("[статистика]", $counter, $block); 
 
 	// Ставим почту
 	$mailer = "<a href=\"/mail.php\">Отправить письмо</a>"; // ".str_replace("@","<nobr>@</nobr>",$adminmail)." ";
-	$soderganie=str_replace("[почта]", $mailer, $soderganie); 
-	$block=str_replace("[почта]", $mailer, $block); 
+	$soderganie = str_replace("[почта]", $mailer, $soderganie); 
+	$block = str_replace("[почта]", $mailer, $block); 
 
 	// Ставим Новый год
 	if (strpos($block, "[новый год]")) { //February 12, 2001
 		$newyaer = time_otschet("January 01, ".$nextyear, "C Новым годом!!!", "До Нового года осталось: ");
-		$soderganie=str_replace("[новый год]", $newyaer, $soderganie); 
-		$block=str_replace("[новый год]", $newyaer, $block); 
+		$soderganie = str_replace("[новый год]", $newyaer, $soderganie); 
+		$block = str_replace("[новый год]", $newyaer, $block); 
 	}
 	if (strpos($block, "[1 сентября]")) {
 		// Ставим 1 сентября 2011,1,1
 		if ( date("m") > 9 or ( date("m") == 9 and date("d") > 1 ) ) $year = $nextyear;
 		$sent = time_otschet("September 01, ".$year, "Время пришло!", "До нового учебного года осталось: ");
-		$soderganie=str_replace("[1 сентября]", $sent, $soderganie); 
-		$block=str_replace("[1 сентября]", $sent, $block); 
+		$soderganie = str_replace("[1 сентября]", $sent, $soderganie); 
+		$block = str_replace("[1 сентября]", $sent, $block); 
 	}
 
 	// Ставим почту
