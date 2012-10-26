@@ -226,39 +226,18 @@ function create_main($type) {
 	switch ($type) {
 	case "design": $type_opis = "дизайна (HTML-разметка, внешний вид сайта)";
 	$create.="<form method=\"POST\" action=\"sys.php\">
-	<div class=block2><b>Что такое Дизайн, HTML?</b> (<a name=metka href=#metka onClick=\"show('about')\">нажмите, чтобы узнать</a>)<div id=about style='display:none;'><br>
-	ОПИСАНИЕ
-	</div><br></div><br>
-	<div style='float:left; width:210px; height:40px;'><input type=\"submit\" value=\"Добавить\" style='width:95%; height:55px; font-size: 20px;'></div>
-	<b>Название:</b><br>
-	<input type=\"text\" name=\"title\" value=\"\" size=40> (по-русски, можно с пробелами)<br>
-	<br>
-	<b>Список возможных блоков (справка):</b> <select name=shablon_var2 onchange=\"document.getElementById('shablon_var').value = this.value;\">
-	<option value='Выберите другой объект из того же списка :)'>Выберите объект</option>
-
-	<option value='".block_names()."'>Все созданные блоки</option>
-
-	<option value='[содержание] - содержание раздела (не предназначено для шаблонов!)
-	[нумерация] - вывод нумерации раздела (если в настройках раздела выбрано такое отображение нумерации)
-	[заголовок] - заголовок открытого раздела можно выводить в любом месте дизайна
-	[заголовок-ссылка] - стандартный заголовок раздела
-	[название папки] - имя открытой папки
-	[твиттер] - кнопка «Твитнуть»
-	[поиск] - поиск по всему сайту, по всем страницам всех разделов
-	[год] - выводит промежуток между начальным и текущим годами существования сайта, например: © 2007-2012 или © 2012
-	[почта] - выводит ссылку на почтовую форму \"Написать нам\".
-	[день] - выводит сегодняшний день в формате \"3 Января 2009\".
-	[время] - выводит текущее время.
-	[rss] - выводит ссылку на RSS с картинкой 16х16 пикселей ([rss32] [rss50] 50х50, [rss100], [rss150], [rss200]).
-	Прямая ссылка на RSS: /rss'>Все автоматические блоки</option>
-
-	</select>
-	<textarea name=text id=shablon_var rows=3 cols=80 style='width:100%; height:100px;'></textarea><br>
+	<table width=100%><tr><td>
+	<input type=\"submit\" value=\"Добавить\" style='width:200px; height:55px; font-size: 20px;'>
+	<h2>Название:</h2>По-русски, можно с пробелами
+	<input type=\"text\" name=\"title\" value=\"\" size=40 style='width:100%'><br>
+	<br>".help_design()."<br>
 
 
 	<h2>Содержание дизайна (HTML):</h2>
-	<div class='red small'>[содержание] - автоматический блок для вывода страниц. Не использовать только в случае присоединения дизайна к разделу, состоящему из одной страницы.</div>
-	<textarea name=text rows=15 cols=86 style='width:99%;'></textarea><br>
+	<textarea name=text rows=15 cols=86 style='width:100%;'></textarea>
+	<div class=\"notice success\" style=\"color:black;\"><span class=\"icon large white\" data-icon=\"C\"></span>
+	Здесь вы можете вставить готовый HTML-код (от тега &lt;body&gt; до &lt;/body&gt;, не включительно) или набрать его с нуля.
+	<br><b>[содержание]</b> - автоматический блок для вывода страниц. Не использовать его можно лишь в случае присоединения дизайна к разделу, состоящему из одной страницы — в этом случае можно всю страницу поместить в дизайн или в раздел.</div>
 	<input type=hidden name=id value=0>
 	<input type=hidden name=namo value=''>
 	<input type=hidden name=useit value=''>
@@ -266,7 +245,7 @@ function create_main($type) {
 	<input type=hidden name=type value='0'>
 	<input type=hidden name=op value=\"".$admintip."_save\">
 	</form>
-	Здесь вы можете вставить готовый HTML-код (начиная с тега &lt;body&gt;, заканчивая тегом &lt;/body&gt;, не включительно) или набрать его HTML-код прямо в этом окне.";
+	</td></tr></table>";
 	########################################################
 	// [корзина] - общая корзина для всех разделов типа \"магазин\"
 
@@ -274,21 +253,21 @@ function create_main($type) {
 	break;
 	case "css": $type_opis = "стиля (CSS, настройка внешнего вида)";
 	$create.="<form method=\"POST\" action=\"sys.php\">
-	<div class=block2><b>Что такое Стиль, CSS?</b> (<a name=metka href=#metka onClick=\"show('about')\">нажмите, чтобы узнать</a>)<div id=about style='display:none;'><br>
-	ОПИСАНИЕ
-	</div><br></div><br>
-	<div style='float:left; width:210px; height:40px;'><input type=\"submit\" value=\"Добавить\" style='width:95%; height:55px; font-size: 20px;'></div>
-	<b>Название:</b> <input type=text name=title value=\"\" size=40> (по-русски, можно с пробелами)<br>
+	<table width=100%><tr><td>
+	<input type=\"submit\" value=\"Добавить\" style='width:200px; height:55px; font-size: 20px;'>
+	<h2>Название:</h2>По-русски, можно с пробелами<br>
+	<input type=text name=title value=\"\" size=40 style='width:100%;'>
 
-	<br><br><b>Содержание стиля:</b><br>
-	<textarea name=text rows=30 cols=86 style='width:99%;'></textarea><br>
+	<h2>Содержание стиля:</h2>
+	<textarea name=text rows=30 cols=86 style='width:100%;'></textarea><br>
 	<input type=hidden name=id value=0>
 	<input type=hidden name=type value='1'>
 	<input type=hidden name=namo value=''>
 	<input type=hidden name=useit value=''>
 	<input type=hidden name=shablon value=''>
 	<input type=hidden name=op value=\"".$admintip."_save\">
-	</form>";
+	</form>
+	</td></tr></table>";
 	########################################################
 	break;
 
@@ -337,22 +316,19 @@ function create_main($type) {
 			}
 
 	$create = "<form method=\"POST\" action=\"sys.php\" style='display:inline;'>
-	<div class=block2><b>Что такое Блок?</b> (<a name=metka href=#metka onClick=\"show('about')\">нажмите, чтобы узнать</a>)<div id=about style='display:none;'><br>
-	ОПИСАНИЕ временно отсутствует.
-	</div><br></div>
-	<input type=\"submit\" value=\"Добавить\" style='float:left; margin-right:10px; margin-top:10px; width:210px; height:55px; font-size: 20px;'>
-
-	<p><b>Название блока:</b> <input type=\"text\" name=\"title\" value=\"\" size=60 style='width:55%;'><br>
-	<p>Выберите дизайн: <select name=design><option value=0> без дизайна </option>".$styles."</select>
-
-	<p><b>Выберите тип блока:</b> (справа увидите его параметры (не у всех блоков), а снизу — описание)
+	<table width=100%><tr valign=bottom><td width=50%>
+	<input type=\"submit\" value=\"Добавить\" style='width:200px; height:55px; font-size: 20px;'>
+	<h2>Название блока:</h2><input type=\"text\" name=\"title\" value=\"\" size=60 style='width:100%;'></td><td>
+	<h2>Выберите дизайн:</h2><select name=design><option value=0> без дизайна </option>".$styles."</select>
+	</td></tr><tr><td colspan=2>
+	<h2>Выберите тип блока:</h2> (справа увидите его параметры (не у всех блоков), а снизу — описание)
 	<table width=100% cellspacing=0 cellpadding=0><tr valign=top><td style='padding-right:10px;'>
 	<select id=name size=10 name=\"name\" style='width:100%;' onchange=\"
 
 	var arr = [ 'Блок выводит несколько страниц выбранного раздела или всех разделов', 'Блок выводит несколько комментариев со страниц выбранного раздела или всех разделов', 'В этом блоке можно написать любой текст, использовать HTML, а также другие созданные блоки', '«Ротатор» используется для показа блоков, текста или html.<br>При каждом обновлении страницы будет показан один из написанных элементов, разделение списка ротации — через символ «|» (вертикальная черта)', 'Блок выводит папки выбранного раздела или всех разделов', 'Блок выводит голосование или опрос, для чего нужно ввести сам вопрос в названии блока, а список вопросов — в Содержании блока, через «Enter»', 'Блок «Фотогалерея» выводит фотографии в нужном месте сайта, для его создания используется список адресов закаченный фотографий, через «Enter».<br>А их описание ставится сразу после адреса через символ «|» (вертикальная черта), пример: /img/1.jpg|Фото 1. <br>— Имена файлов могут содержать любые символы. <br>— Загрузка автоматическая сразу после выбора файлов. <br>— Фотографии будут автоматически переименованы, развернуты в нужную сторону, сжаты и уменьшены по ширине до 1000 пикселей.<br><div class=red>— Если впоследствии вы захотите стереть какую-либо фотографию — просто удалите ее строчку из блока галереи (не забудьте сохранить блок), затем перейдите во вкладку «Настройки», откройте «Удаление неиспользуемых фотографий» и удалите эту фотографию.</div>', 'PHP-код пишется в Содержании блока.<br>PHP можно писать сразу, без начальных и конечных обозначений ( &lt; ?php ... ? &gt; ).<br>Вывод информации в блок производится через переменную <b>$"."txt</b>', 'Блок выводит папки открытого в данный момент раздела или ничего не выводит, если это Главная страница или папок в разделе не создано', 'Эта фотогалерея собирает первые фотографии из страниц выбранного раздела (или всех разделов).<br>Если в предисловии страницы не обнаружена фотография, эта страница пропускается.', 'Меню сайта создается по простым правилам (для того, чтобы быть универсальным и легко переключать варианты отображения):<br>[элемент открыть][url=/]Главная[/url][элемент закрыть]<br>[элемент открыть][url=#]Пункт меню 1[/url][элемент закрыть]<br>[элемент открыть][url=#]Пункт меню 2[/url]<br>&nbsp;&nbsp;[уровень открыть]<br>&nbsp;&nbsp;[элемент открыть][url=#]Подпункт 1[/url][элемент закрыть]<br>&nbsp;&nbsp;[элемент открыть][url=#]Подпункт 2[/url][элемент закрыть]<br>&nbsp;&nbsp;[уровень закрыть]<br>[элемент закрыть]<br><i>где # - это ссылка на страницу.</i><br>В меню может быть до 3-х уровней вложенности', 'Календарь на текущем месяце показывает ссылками те даты, за которые созданы страницы в выбранном разделе (или всех разделах).<br>Также показывает текущую дату', 'В РАЗРАБОТКЕ!!!!!!!!! Контактная форма может применяться для создания страницы Контакты, а также для отправки разнообразных анкет, заявок, жалоб и т.д', 'Облако тегов — это вращающийся трехмерный шар, состоящий из ключевых слов, взятых из страниц выбранного раздела (или всех разделов). Под ним есть ссылка на альтернативный текстовый вариант облака', '14', '15', '16', '17', '18', '19', 'База данных (количество по 1 колонке верт.)', 'База данных (количество по 1 колонке гор.)', 'База данных (количество по 2 колонкам)', 'База данных (список колонок)', '24', '25', '26', '27', '28', '29', 'Статистика раздела, выводит кол-во посещений выбранного раздела', 'JavaScript-блок автоматически встанет в HEAD и его не нужно где-либо специально размещать.', '32' ];
 
 	var add;
-	if (document.getElementById('name').value!=31) add = '.<br>После создания блока, необходимо его настроить.';
+	if (document.getElementById('name').value!=31) add = '.<br>После создания блока, необходимо его настроить — настройка откроется автоматически.';
 	else add = '';
 	$('#opisanie_bloka').html (arr[document.getElementById('name').value] + add);
 
@@ -367,16 +343,13 @@ function create_main($type) {
 	if (document.getElementById('name').value==30 || document.getElementById('name').value==20 || document.getElementById('name').value==21 || document.getElementById('name').value==22 || document.getElementById('name').value==23) { $('.allrazdely').attr('disabled', 'disabled'); } else { $('.allrazdely').removeAttr('disabled');  }
 
 	if (document.getElementById('name').value==12) { $('#form_block').show('slow'); } else { $('#form_block').hide(); }
-	
 	\">";
 		foreach ($typeX as $key => $tit) {
 			if ($key > 19 and $key < 24) $create .=  "<option value=".$key.$bd_show.">".$tit."</option>";
 			else $create .=  "<option value=".$key.">".$tit."</option>";
 		}
-
-
-		// ЗАмена http://blueimp.github.com/cdn/css/bootstrap-responsive.min.css
-		// Удалено 	<!--[if lt IE 7]><link rel=\"stylesheet\" href=\"http://blueimp.github.com/cdn/css/bootstrap-ie6.min.css\"><![endif]-->
+	// ЗАмена http://blueimp.github.com/cdn/css/bootstrap-responsive.min.css
+	// Удалено 	<!--[if lt IE 7]><link rel=\"stylesheet\" href=\"http://blueimp.github.com/cdn/css/bootstrap-ie6.min.css\"><![endif]-->
 	$create .=  "</select>
 	<input type='hidden' name='useit'>
 	</td><td>
@@ -395,7 +368,6 @@ function create_main($type) {
 	<input type=hidden name=id value=''>
 	</form>
 
-
 	<div id='photo_upload' style='display:none;'>
 	<link rel=\"stylesheet\" href=\"http://blueimp.github.com/Bootstrap-Image-Gallery/css/bootstrap-image-gallery.min.css\">
 	<link rel=\"stylesheet\" href=\"includes/upload/css/jquery.fileupload-ui.css\">
@@ -411,7 +383,6 @@ function create_main($type) {
 	                    <input type=\"file\" name=\"files[]\" multiple>
 	                </span>
 	                
-
 	                <button type=\"submit\" class=\"btn btn-primary start\" style=\"display:none\">
 	                    <i class=\"icon-upload icon-white\"></i>
 	                    <span>Загрузить файлы</span>
@@ -612,15 +583,13 @@ function create_main($type) {
 	При отсутствии английского названия, оно создается автоматически, транслитом русского.<br>
 	Не должно быть одинаковых английских названий!<br>
 	Кнопка «Отправить» обычно добавляется последней. Её можно и не добавлять, тогда она будет добавлена автоматически.
-	</td>
-
-	</tr></table>
-	<div id='opisanie_bloka' class='notice success' style='color:black;'><span class=\"icon large white\" data-icon=\"C\"></span></span>Здесь вы увидите описание блока...</div> <br> <div class='notice warning black'>В выбранном дизайне обязательно должен быть блок [содержание], выбирать дизайн необязательно.</div>";
+	</td></tr></table>
+	<div id='opisanie_bloka' class='notice success' style='color:black;'><span class=\"icon large white\" data-icon=\"C\"></span></span>Здесь вы увидите описание блока...</div> <br> <div class='notice warning black'>В выбранном дизайне обязательно должен быть блок [содержание], выбирать дизайн необязательно.</div></td></tr></table>";
 	break;
 	########################################################!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	case "spisok": $type_opis = "поля (дополнительное поле для страниц)";
 		$create.="";
-			$modules = ""; // Выборка разделов
+			$modules = ""; // Выборка разделов заменить!
 			$sql2 = "select id, title from ".$prefix."_mainpage where `tables`='pages' and type='2' and name!='index'";
 			$result2 = $db->sql_query($sql2);
 			while ($row2 = $db->sql_fetchrow($result2)) {
@@ -638,57 +607,59 @@ function create_main($type) {
 			}
 			// Добавлены пользователи USERAD
 	$create.="
-	<SCRIPT language=JavaScript src=\"/includes/j.js\" type=text/javascript></SCRIPT>
-	<form method=POST action=sys.php style='display:inline;'>
-	<div class=block2><b>Что такое Поле?</b> (<a name=metka href=#metka onClick=\"show('about')\">нажмите, чтобы узнать</a>)<div id=about style='display:none;'><br>
-	В Разделах сайта есть папки, в папках лежат страницы (статьи, новости и т.д.). У каждой страницы несколько полей для хранения информации: название, дата, предисловие, содержание и т.д. Если вдруг для какого либо раздела (или для всех разделов) не хватает подобного поля - его можно добавить. Примеры использования полей: отдельное поле для ввода автора (для статей), поле для загрузки фотографии (для фотогалереи), выбор из раскрывающегося списка определенного населенного пункта (для каталога предприятий), период времени (для афиши) и т.д. А для того, чтобы поля начали отображаться на страницах - есть произвольные шаблоны, которые можно создать и подключить к любому разделу (См. в настройках раздела - Шаблон для всего раздела или Шаблон для страницы).<br>
-	<b>Поле может принадлежать или какому-то одному разделу или сразу всем разделам.</b>
-
-	</div><br></div><br>
-
-	<div style='float:left; width:210px; height:70px;'><input type=\"submit\" value=\"Добавить\" style='width:95%; height:55px; font-size: 20px;'></div>
+	
+	<form method=POST action=sys.php>
+	
+	<table width=100%><tr><td colspan=2>
+		<a class='button' style='float:right' name=metka href=#metka onClick=\"show_animate('about')\">Справка</a><div id=about class=block style='display:none;'>В Разделах сайта есть папки, в папках лежат страницы (статьи, новости и т.д.). У каждой страницы несколько полей для хранения информации: название, дата, предисловие, содержание и т.д. Если вдруг для какого либо раздела (или для всех разделов) не хватает подобного поля - его можно добавить. Примеры использования полей: отдельное поле для ввода автора (для статей), поле для загрузки фотографии (для фотогалереи), выбор из раскрывающегося списка определенного населенного пункта (для каталога предприятий), период времени (для афиши) и т.д. А для того, чтобы поля начали отображаться на страницах - есть произвольные шаблоны, которые можно создать и подключить к любому разделу (См. в настройках раздела - Шаблон для всего раздела или Шаблон для страницы).<br><b>Поле может принадлежать или какому-то одному разделу или сразу всем разделам.</b><br></div>
+		<input type=\"submit\" value=\"Добавить\" style='width:200px; height:55px; font-size: 20px;'>
+	</td></tr>
+	<tr><td width=50%>
 	<input type=hidden name=type value='4'>
-	<b>Название поля</b> (рус.): <input type=text name=title size=40><br>
-	<b>Обращение</b> (англ., без пробелов): <input type=text name=namo size=40><br>
-	Используется в шаблонах для подключения вывода этого поля, пример: pole &rarr; [pole]<br>
+	<h2>Название поля</h2><input type=text name=title size=40 style='width:100%'><br>(рус.)</td><td>
+	<h2>Обращение</h2><input type=text name=namo size=40 style='width:100%'><br>(англ., без пробелов) Используется для вывода в шаблонах как: [обращение]</td></tr>
+	<tr><td width=50%>
 	<input type=hidden name=shablon value=''>
-	<b>Выберите раздел:</b> <select name=useit><option value='0'>все разделы</option>".$modules."</select> <br>
-	<b>Выберите тип поля:</b> <select name=s_tip id=s_tip onchange=\"
+	<h2>Выберите раздел:</h2><select name='useit' style='width:100%'><option value='0'>все разделы</option>".$modules."</select></td><td>
+	<h2>Выберите тип поля:</h2><select name='s_tip' style='width:100%' id=s_tip onchange=\"
 	if (document.getElementById('s_tip').value==0) { hide('spisok_5'); hide('spisok_2'); hide('spisok_3'); hide('spisok_4'); show('spisok_1'); }
 	if (document.getElementById('s_tip').value==1) { hide('spisok_5'); hide('spisok_3'); hide('spisok_4'); hide('spisok_1'); show('spisok_2'); }
 	if (document.getElementById('s_tip').value==2) { hide('spisok_5'); hide('spisok_4'); hide('spisok_1'); hide('spisok_2'); show('spisok_3'); }
 	if (document.getElementById('s_tip').value==4) { hide('spisok_3'); hide('spisok_4'); hide('spisok_1'); hide('spisok_2'); show('spisok_5'); }
-	if (document.getElementById('s_tip').value==3) { hide('spisok_5'); hide('spisok_1'); hide('spisok_2'); hide('spisok_3'); show('spisok_4'); }
+	if (document.getElementById('s_tip').value==3) { 
+		hide('spisok_5'); hide('spisok_1'); hide('spisok_2'); hide('spisok_3'); show('spisok_4');
+		$('#textarea').hide();
+	} else { $('#textarea').show(); }
 	\">
 	<option value='0'>список слов (словосочетания разделяются Enter'ом)</option>
 	<option value='1'>текст (можно написать шаблон)</option>
 	<option value='4'>строка (можно написать шаблон)</option>
-	<option value='2'>файл (указать какой, куда и что с ним делать) ПОКА НЕ РАБОТАЕТ</option>
+	<option value='2' disabled>файл (указать какой, куда и что с ним делать)</option>
 	<option value='3'>период времени (две даты, актуально для Афиши)</option>
-	</select>
+	</select></td></tr>
+	<tr><td colspan=2>
+	<h2>Содержание или Настройка поля:</h2>".spisok_help()."
 	<div id=textarea>
-
-
-	<br><b>Содержание или Настройка поля:</b> (справка - ниже)<br>
 	<textarea name=text rows=10 cols=86 style='width:99%;'></textarea></div>
 	<input type=hidden name=id value=''>
 	<input type=hidden name=op value=".$admintip."_save>
-	</form>".spisok_help()."<br><br>";
+	</form></td></tr></table>";
 	break;
-	########################################################!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	########################################################
 	case "base": $type_opis = "базы данных (таблица)";
 	$create.="<form method=POST action=sys.php style='display:inline;' enctype=\"multipart/form-data\">
-	<div class=block2><b>Что такое База данных?</b> (<a name=metka href=#metka onClick=\"show('about')\">нажмите, чтобы узнать</a>)<div id=about style='display:none;'><br>
-	ОПИСАНИЕ
-	</div><br></div><br>
-	<div style='float:left; width:210px; height:50px;'><input type=\"submit\" value=\"Добавить\" style='width:95%; height:55px; font-size: 20px;'></div>
+	<table width=100%><tr><td colspan=2>
+	<input type=\"submit\" value=\"Добавить\" style='width:200px; height:55px; font-size: 20px;'>
 	<input type=hidden name=type value='5'>
-	<b>Название:</b> <input type=text name=title size=30> (рус.)<br>
-	<b>Обращение:</b> <input type=text name=namo size=30> (англ., без пробелов, мал. буквами)<br>
-	<b>Удалить таблицу с таким же обращением (замена копии)?</b> <select name=delete_table><option value='1'>да</option><option value='0'>нет</option></select><br>
-	<input type=hidden name=shablon value=''>
-
-	<b>Тип базы данных:</b> <select name=s_tip>
+	<input type='hidden' name='shablon' value=''>
+	</td></tr>
+	<tr valign=top><td width=50%>
+	<h2>Название:</h2><input type=text name=title size=30 style='width:100%'><br>(рус.)</td><td>
+	<h2>Обращение:</h2><input type=text name=namo size=30 style='width:100%'><br>(англ., без пробелов, мал. буквами)<br>
+	<b>Удалить</b> таблицу с таким же обращением (замена копии)? <select name='delete_table'><option value='1'>да</option><option value='0'>нет</option></select>
+	</td></tr>
+	<tr><td colspan=2>
+	<h2>Тип базы данных:</h2><select name='s_tip' style='width:100%'>
 	<option value='1'>открытая база данных (ограниченный доступ, полный доступ по паролю)</option>
 	<option value='2'>закрытая база данных (доступ по паролю)</option>
 	<option value='3'>интернет-магазин</option>
@@ -752,17 +723,17 @@ function create_main($type) {
 	<br><br>Готовые фильтры для англ. названий: data (дата), data2 (дата 2), men (менеджер), company (фирма)
 	<input type=hidden name=id value=''>
 	<input type=hidden name=op value=".$admintip."_save>
-	</form>";
+	</form></td></tr></table>";
 	break;
 	########################################################!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	case "shablon": $type_opis = "шаблона (оформление раздела или блока)";
 		$create.="<form method=POST action=sys.php style='display:inline;'>
-		<div class=block2><b>Что такое Шаблон?</b> (<a name=metka href=#metka onClick=\"show('about')\">нажмите, чтобы узнать</a>)<div id=about style='display:none;'><br>
-		Шаблоны используются для изменения внешнего вида разделов, страниц и блоков. Используются либо стандартные поля страниц, либо дополнительно созданные Поля. Для страниц можно использовать любой дизайн, блоки и разделы используют табличную основу — начало < table >, соответственно сами шаблоны должны начинаться с < tr > и заканчиваться на < /tr >. Для того, чтобы в шаблоне раздела предусмотреть возможность именования столбцов таблицы, например: Дата, Название, Ссылка... после самого шаблона раздела нужна написать ключевое слово [следующий] и написать шаблон именования столбцов, т.е. по сути скопировать шаблон строк раздела, но вместо заготовок автоматических вставок поставить в него названия соответствующих полей-столбцов.
-		</div><br></div><br>
-		<div style='width:210px; height:50px;'><input type=\"submit\" value=\"Добавить\" style='width:95%; height:55px; font-size: 20px;'></div>
-		<input type=hidden name=type value='6'>
-		<table width=100%><tr><td width=50%>
+		<table width=100%><tr><td colspan=2>
+		<a class='button' style='float:right' name=metka href=#metka onClick=\"show_animate('about')\">Справка</a><div id=about class=block style='display:none;'>Шаблоны используются для изменения внешнего вида разделов, страниц и блоков. Используются либо стандартные поля страниц, либо дополнительно созданные Поля. Для страниц можно использовать любой дизайн, блоки и разделы используют табличную основу — начало < table >, соответственно сами шаблоны должны начинаться с < tr > и заканчиваться на < /tr >. Для того, чтобы в шаблоне раздела предусмотреть возможность именования столбцов таблицы, например: Дата, Название, Ссылка... после самого шаблона раздела нужна написать ключевое слово [следующий] и написать шаблон именования столбцов, т.е. по сути скопировать шаблон строк раздела, но вместо заготовок автоматических вставок поставить в него названия соответствующих полей-столбцов.
+		</div>
+		<input type=\"submit\" value=\"Добавить\" style='width:200px; height:55px; font-size: 20px;'></div>
+		</td></tr>
+		<tr><td width=50%>
 		<h2>Название шаблона</h2><input type=text name=title size=40 style='width:100%'> (рус.)</td><td>
 		<h2>Обращение:</h2><input type=text name=namo size=40 style='width:100%'> (англ., без пробелов)</td></tr>
 		<tr><td colspan=2>
@@ -771,6 +742,7 @@ function create_main($type) {
 		<textarea name=text rows=15 cols=80 style='width:100%; height:350px;'></textarea>
 		</td></tr></table>
 		<input type=hidden name=id value=''>
+		<input type=hidden name=type value='6'>
 		<input type=hidden name=op value=".$admintip."_save>
 		</form>";
 	break;
@@ -2400,11 +2372,11 @@ function trans($txt) { // Транслит
 }
 #####################################################################################################################
 function spisok_help() { // проверить вызов
-	return "<div id=spisok_1><br><b>Выбран тип поля - \"список слов\":</b> просто указываем список возможных вариантов выбора.<br></div>
+	return "<div id=spisok_1><b>«список слов»:</b> просто указываем список возможных вариантов выбора, разделяем их через Enter.<br></div>
 
-	<div id=spisok_2 style='display:none;'><br><b>Выбран тип поля - \"текст\":</b> можно написать заготовку-шаблон, которая будет использоваться по-умолчанию как значение данного поля.<br></div>
+	<div id=spisok_2 style='display:none;'><b>«текст»:</b> можно написать заготовку-шаблон, которая будет использоваться по-умолчанию как значение данного поля.<br></div>
 
-	<div id=spisok_3 style='display:none;'><br><b>Выбран тип поля - \"файл\":</b><br>
+	<div id=spisok_3 style='display:none;'><b>«файл»:</b><br>
 	прописывать параметры, разделяя их знаком &, указывать значения параметров через знак =, всё без пробелов!<br>
 	например: <b>fil=pic&papka=/img=verh&align=left&resizepic=x&file=&picsize=600&minipic=1&resizeminipic=x&minipicsize=100</b><br>Очередность параметров значения не имеет.<br>
 	<b>Список доступных параметров:</b><br> 
@@ -2422,10 +2394,9 @@ function spisok_help() { // проверить вызов
 	<tr><td><strong>minipicsize=</strong></td><td>число в пикселях, указывается размер, к которому приводится миниатюра изображение, если оно больше этого размера</td></tr>
 	</table></div>
 
-	<div id=spisok_4 style='display:none;'><br><b>Выбран тип поля - \"период времени\":</b> для него пока что нет никаких настроек и шаблон ему не нужен.</div>
+	<div id=spisok_4 style='display:none;'><b>«период времени»:</b> для него пока что нет никаких настроек и шаблон ему не нужен.</div>
 
-	<div id=spisok_5 style='display:none;'><br><b>Выбран тип поля - \"строка\":</b> можно написать заготовку-шаблон, которая будет использоваться по-умолчанию как значение данного поля.<br></div>
-	";
+	<div id=spisok_5 style='display:none;'><b>«строка»:</b> можно написать заготовку-шаблон, которая будет использоваться по-умолчанию как значение данного поля.<br></div>";
 }
 #####################################################################################################################
 function block_help() { // проверить вызов
