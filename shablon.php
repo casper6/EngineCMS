@@ -35,7 +35,7 @@ function shablon_show($shablon_type, $shablon_id) {
 				############################################################################################
 				// Рейтинги
 				case "4": return "<A href=[page_link]><div class=reiting_title[active_color]>[page_title]</div></A></td>
-				<td class=reiting_text[active_color]>[page_open_text]</td>
+				<td class=reiting_text[active_color]>[page_open_text][page_tags]</td>
 				<td class=reiting_golos align=center[active_color]>[sred_golos]</td>
 				<td class=reiting_golos align=center[active_color]>[all_golos]</td>
 				<td class=reiting_golos align=center style='background: rgb(173, 222, 173);'>[plus_golos]</td>
@@ -43,7 +43,7 @@ function shablon_show($shablon_type, $shablon_id) {
 				<td class=reiting_golos align=center style='background: rgb(252, 192, 198);'>[minus_golos]"; break;
 				############################################################################################
 				default: return "<div class=page_link_title>[page_link_title]</div>
-				<div class=page_open_text>[page_open_text]</div>
+				<div class=page_open_text>[page_open_text][page_tags]</div>
 				<div class=page_nums>
 				<div class=cat_page_counter>[all_cat_link] [all_page_counter]</div>
 				<div class=all_page_data>[all_page_data]</div>

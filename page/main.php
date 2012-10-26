@@ -755,7 +755,7 @@ if ($pсid==0) $c_name[$pсid] = "";
   "[page_razdel]"=>$DBName,
   "[page_link_title]"=>$pagelinktitle,
   "[page_link]"=>"/-".$DBName."_page_".$p_pid,
-  "[page_open_text]"=>$open_text.$page_tags,
+  "[page_open_text]"=>$open_text,
   "[page_title]"=>$title,
   "[page_text]"=>$text,
   "[page_data]"=>$p_date,
@@ -1210,7 +1210,7 @@ if ($put_in_blog>0) {
 $main_title = "[menushow]";
 if ($menushow != 0) {
   if ($cid != 0) $main_titleX = top_menu($cid, 2); 
-  else $main_titleX = "<div class=cat_title><h1 class=cat_categorii_link><a href=/-".$DBName.">".$ModuleName."</a></h1></div>";
+  else $main_titleX = "<div class=cat_title><h2 class=cat_categorii_link><a href=/-".$DBName.">".$ModuleName."</a></h2></div>";
   if (!isset($venzel)) $venzel = "";
   $venzel .= "<div class=venzel></div>";
 } else $main_titleX = "";
@@ -1352,7 +1352,7 @@ $page_search_news .= "<br><div class=page_another>В тему:</div> <div class=
   $dat2 = explode(" ",$row['date']);
   $dat2 = explode("-",$dat2[0]);
   $p_p_date = intval($dat2[2])." ".findMonthName($dat2[1])." ".$dat2[0];
-$page_search_news .= "<div class=another_link><img src='images/arrow-list.gif'> <a href=/-".$DBName."_page_".$p_pid.">".$p_title."</a>";
+$page_search_news .= "<div class=another_link><a href=/-".$DBName."_page_".$p_pid.">".$p_title."</a>";
 if ($datashow==1) $page_search_news .= "<br>".$p_p_date;
 $page_search_news .= "</div> ";
 }
@@ -1683,11 +1683,7 @@ if (!isset($venzel)) $venzel = "";
         if (trim($nam3)=="") { // Дополнение для скрытия заголовков в случае наличия пустых строк
         // Заголовки в шаблоне должны обрамляться знаками ! (первый слева, последний справа)
         preg_match('|!'.$nam2.'(.*)'.$nam2.'!|Uis', $sha2, $matches);
-        // preg_match_all("/\\".$raz[0]."[^\\".$raz[1]."]/s", $sha2, $matches);
-        //preg_match('/!$nam2?.*$nam2!/sUi', $sha2, $matches) ;
-        //$m = str_replace('&', '&amp', $matches[1]) ;
         $sha2 = str_replace($matches[1], "", $sha2) ;
-        //print_r($matches);
       }
       $sha2 = str_replace("!".$nam2, "", $sha2);
       $sha2 = str_replace($nam2."!", "", $sha2);

@@ -221,8 +221,6 @@ function mainpage($name="") {
 #####################################################################################################################
 function create_main($type) {
 	global $tip, $admintip, $prefix, $db;
-
-	$blocks = block_names();
 	echo "<a name=1></a>";
 	$create = ""; 
 	switch ($type) {
@@ -238,21 +236,21 @@ function create_main($type) {
 	<b>Список возможных блоков (справка):</b> <select name=shablon_var2 onchange=\"document.getElementById('shablon_var').value = this.value;\">
 	<option value='Выберите другой объект из того же списка :)'>Выберите объект</option>
 
-	<option value='".$blocks."'>Все созданные блоки</option>
+	<option value='".block_names()."'>Все созданные блоки</option>
 
-<option value='[содержание] - содержание раздела (не предназначено для шаблонов!)
-[нумерация] - вывод нумерации раздела (если в настройках раздела выбрано такое отображение нумерации)
-[заголовок] - заголовок открытого раздела можно выводить в любом месте дизайна
-[заголовок-ссылка] - стандартный заголовок раздела
-[название папки] - имя открытой папки
-[твиттер] - кнопка «Твитнуть»
-[поиск] - поиск по всему сайту, по всем страницам всех разделов
-[год] - выводит промежуток между начальным и текущим годами существования сайта, например: © 2007-2012 или © 2012
-[почта] - выводит ссылку на почтовую форму \"Написать нам\".
-[день] - выводит сегодняшний день в формате \"3 Января 2009\".
-[время] - выводит текущее время.
-[rss] - выводит ссылку на RSS с картинкой 16х16 пикселей ([rss32] [rss50] 50х50, [rss100], [rss150], [rss200]).
-Прямая ссылка на RSS: /rss'>Все автоматические блоки</option>
+	<option value='[содержание] - содержание раздела (не предназначено для шаблонов!)
+	[нумерация] - вывод нумерации раздела (если в настройках раздела выбрано такое отображение нумерации)
+	[заголовок] - заголовок открытого раздела можно выводить в любом месте дизайна
+	[заголовок-ссылка] - стандартный заголовок раздела
+	[название папки] - имя открытой папки
+	[твиттер] - кнопка «Твитнуть»
+	[поиск] - поиск по всему сайту, по всем страницам всех разделов
+	[год] - выводит промежуток между начальным и текущим годами существования сайта, например: © 2007-2012 или © 2012
+	[почта] - выводит ссылку на почтовую форму \"Написать нам\".
+	[день] - выводит сегодняшний день в формате \"3 Января 2009\".
+	[время] - выводит текущее время.
+	[rss] - выводит ссылку на RSS с картинкой 16х16 пикселей ([rss32] [rss50] 50х50, [rss100], [rss150], [rss200]).
+	Прямая ссылка на RSS: /rss'>Все автоматические блоки</option>
 
 	</select>
 	<textarea name=text id=shablon_var rows=3 cols=80 style='width:100%; height:100px;'></textarea><br>
@@ -758,173 +756,24 @@ function create_main($type) {
 	break;
 	########################################################!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	case "shablon": $type_opis = "шаблона (оформление раздела или блока)";
-	$create.="";
-		// Перечислим все базы данных
-		$bases = ""; // Выборка разделов
-		$sql2 = "select name, title, text from ".$prefix."_mainpage where `tables`='pages' and type='5'";
-		$result2 = $db->sql_query($sql2);
-		while ($row2 = $db->sql_fetchrow($result2)) {
-			$base_name = $row2['name'];
-			$base_title = $row2['title'];
-			$base_text = $row2['text']; // Необходимо разобрать и получить имена!
-			// Перечислим все их поля
-			$sql3 = "SHOW COLUMNS FROM ".$prefix."_base_".$base_name."";
-			$result3 = $db->sql_query($sql3);
-			$rowsX = "";
-			while ($row3 = mysql_fetch_assoc($result3)) {
-				$rowsX .= "[".$base_name."_".$row3['Field']."] — <br>";
-				// [Field] [Type] [Null] [Key] [Default] [Extra]
-			}
-			$add = "[подробнее]";
-			//if (strpos($base_text, "type=3")) $add .= " [добавить в корзину]";
-			$bases .= "<option value='".$rowsX.$add."'>Вставки для базы данных \"".$base_title."\"</option>";
-		}
-		
-	$create.="<form method=POST action=sys.php style='display:inline;'>
-	<div class=block2><b>Что такое Шаблон?</b> (<a name=metka href=#metka onClick=\"show('about')\">нажмите, чтобы узнать</a>)<div id=about style='display:none;'><br>
-	Шаблоны используются для изменения внешнего вида разделов, страниц и блоков. Используются либо стандартные поля страниц, либо дополнительно созданные Поля. Для страниц можно использовать любой дизайн, блоки и разделы используют табличную основу — начало < table >, соответственно сами шаблоны должны начинаться с < tr > и заканчиваться на < /tr >. Для того, чтобы в шаблоне раздела предусмотреть возможность именования столбцов таблицы, например: Дата, Название, Ссылка... после самого шаблона раздела нужна написать ключевое слово [следующий] и написать шаблон именования столбцов, т.е. по сути скопировать шаблон строк раздела, но вместо заготовок автоматических вставок поставить в него названия соответствующих полей-столбцов.
-	</div><br></div><br>
-	<div style='float:left; width:210px; height:50px;'><input type=\"submit\" value=\"Добавить\" style='width:95%; height:55px; font-size: 20px;'></div>
-	<input type=hidden name=type value='6'>
-	<b>Название шаблона</b>: <input type=text name=title size=40> (рус.)<br>
-	Обращение: <input type=text name=namo size=40> (англ., без пробелов)<br>
-	<br>
-	<h2>Справка: список блоков и вставок для шаблона:
-	<select name=shablon_var2 onchange=\"$('#shablon_var').html(this.value); $('#shablon_var').show(); $('#show_shablon_var').show();\"></h2>
-	<option value='Выберите другой объект из того же списка'>Выберите объект для шаблона</option>
-
-	<option value='<b>Созданные блоки</b> (посмотреть их принадлежность вы можете во вкладке Оформление->Блоки):<br>".$blocks."<hr><b>Автоматические блоки</b> (не предназначены для шаблонов, но могут быть использованы):<br>
-	[заголовок] - заголовок открытого раздела можно выводить в любом месте дизайна<br>
-	[заголовок-ссылка] - стандартный заголовок раздела<br>
-	[название папки] - имя открытой папки<br>
-	[твиттер] - кнопка «Твитнуть»<br>
-	[поиск] - поиск по всему сайту, по всем страницам всех разделов<br>
-	[год] - выводит промежуток между начальным и текущим годами существования сайта, например: © 2007-2012 или © 2012<br>
-	[почта] - выводит ссылку на почтовую форму \"Написать нам\".<br>
-	[день] - выводит сегодняшний день в формате \"3 Января 2009\".<br>
-	[время] - выводит текущее время.<br>
-	[rss] - выводит ссылку на RSS с картинкой 16х16 пикселей ([rss32] [rss50] 50х50, [rss100], [rss150], [rss200]).<br>
-	Прямая ссылка на RSS: /rss<hr>'>Все блоки</option>
-
-	<option value='<b>Вставки для шаблона раздела</b> (не подходят для других шаблонов):<br>
-	[page_id] — Идентификационный уникальный номер (ID) страницы<br>
-	[page_num] — Количество страниц<br>
-	[page_razdel] — Англ. наименование раздела<br>
-	[page_link_title] — Ссылка на страницу с H1, при отсутствии содержания — просто её название в H1, без ссылки<br>
-	[page_link] — Адрес страницы, вида: /-РАЗДЕЛ_page_НОМЕР-СТРАНИЦЫ<br>
-	[page_title] — Название страницы (заголовок)<br>
-	[page_open_text] — Предисловие (начальный текст)<br>
-	[page_text] — Содержание (основной текст)<br>
-	[page_data] — Дата создания страницы<br>
-	[all_page_data] — Дата создания в DIV-обрамлении с иконкой<br>
-	[page_counter] — Количество посещений страницы<br>
-	[all_page_counter] — Количество посещений в DIV-обрамлении с иконкой<br>
-	[page_comments] — Количество комментариев страницы<br>
-	[all_page_comments] — Количество комментариев в DIV-обрамлении с иконкой<br>
-	[cat_id] — Идентификационный уникальный номер (ID) папки, 0 — если корень раздела<br>
-	[cat_name] — Название папки, в которой лежит страница, НИЧЕГО — если страница в корне<br>
-	[cat_link] — Адрес папки, вида: /-РАЗДЕЛ_cat_НОМЕР-ПАПКИ<br>
-	[all_cat_link] — Ссылка на папку в DIV-обрамлении с иконкой<br>
-	[page_active] — Открытость страницы, варианты значений: «Открытая информация», «Информация ожидает проверки», «Информация ожидает проверки администратора» или «Доступ к странице ограничен»<br>
-	[page_golos] — Если голосование за страницу не «5 звезд» — выводит лишь оценку<br>
-	[cat_golos] — Вывод любого выбранного голосования<br>
-	[page_search] — Перечень тегов страницы<br>
-	[page_tags]— Перечень полноценных тегов-ссылок<br>
-	[page_rss] — Красный или Зеленый значок RSS — доступность этой страницы через RSS<br>
-
-	<br>Если в настройках Раздела выбран <b>«Тип раздела» — «анкеты-рейтинги»</b>:<br>
-	[sred_golos] — Средний балл голосования<br>
-	[all_golos] — Всего человек голосовало<br>
-	[plus_golos] — Сколько положительных голосов<br>
-	[neo_golos] — Сколько нейтральных голосов<br>
-	[minus_golos] — Сколько негативных голосов<br>
-	[active_color] — Цвет ячейки таблицы, вида: « style=\"background-color: #f1f1f1;\"»<br>
-
-	<br><b class=red>В разработке</b>:<br>
-	[page_foto_adres] — <br>
-	[page_foto] — <br>
-	[page_price] — <hr>
-	'>Вставки для шаблона раздела</option>
-
-	<option value='Вставки для шаблона <b>страниц</b>:<br>
-	[page_id] — <br>
-	[main_title] — <br>
-	[page_title] — <br>
-	[page_opentext] — <br>
-	[page_text] — <br>
-	[page_data] — <br>
-	[page_tags] — <br>
-	[page_favorites] — <br>
-	[page_socialnetwork] — <br>
-	[page_blog] — <br>
-	[venzel] — <br>
-	[page_search_news] — <br>
-	[page_reiting] — <br>
-	[page_comments] — <br>
-	[page_add_comments] — <br>
-	Возможны дополнительные вставки — это англ. названия полей, относящихся к этому же разделу.'>Вставки для шаблона страниц</option>
-
-	<option value='Вставки для шаблона <b>комментариев на странице</b>:<br>
-	[comment_otvet] — <br>
-	[comment_otvet_show] — <br>
-	[comment_citata] — <br>
-	[comment_id] — <br>
-	[comment_num] — <br>
-	[comment_text] — <br>
-	[comment_avtor_type] — <br>
-	[comment_avtor] — <br>
-	[comment_data] — <br>
-	[comment_time] — <br>
-	[comment_admin] — <br>
-	[comment_mail] — <br>
-	[comment_tel] — <br>
-	[comment_adres]— <br>
-	'>Вставки для шаблона комментариев на странице</option>
-
-	<option value='Вставки для шаблона <b>блока страниц</b>:<br>
-	[№] — <br>
-	[модуль] — <br>
-	[№ папки] — <br>
-	[название] — <br>
-	[ссылка] — <br>
-	[предисловие] — <br>
-	[содержание] — <br>
-	[дата] — <br>
-	[число посещения] — <br>
-	[открытость] — <br>
-	[число голосование] — <br>
-	[число комментарии] — <br>
-	[теги] — <br>
-	[rss доступность] — <br>
-
-	<br><b class=red>В разработке</b>:<br>
-	[адрес фото] — <br>
-	[фото] — <br>
-	[цена] — <hr>
-	'>Вставки для шаблона блока страниц</option>
-
-	<option value='Вставки для шаблона <b>блока папок открытого раздела</b>:<br>
-	[№] — Идентификационный уникальный номер (ID) папки<br>
-	[название] — Название папки<br>
-	[ссылка] — Адрес папки, вида: /-РАЗДЕЛ_cat_НОМЕР-ПАПКИ<br>
-	[полная ссылка] — Ссылка на папку<br>
-	[число страниц] — Количество страниц в папке (в скобках), если 0 — не выводится<br>
-	[css] — Класс css, варианты: «podpapki» или «papki» для вложенных и основных папок<br>
-	[активность] — Отступ для подпапок<hr>
-	'>Вставки для шаблона блока открытого раздела</option>
-
-	".$bases."
-	</select>
-	<a title='Закрыть/Открыть справочное окно' id='show_shablon_var' class=punkt onclick=\"show_animate('shablon_var');\" style='float:right; display:none;'><div class='radius' style='font-size:12pt; width:20px; height: 20px; color: white; text-align:center; float:right; margin:5px; margin-bottom:0; background: #bbbbbb;'>&nbsp;&uarr;&nbsp;</div></a><div id=shablon_var style='display:none; width:100%; height:300px; scroll:auto;' class=block></div>
-
-	<br><br><b>Содержание шаблона</b> (HTML-код и вставки шаблона):<br>";
-	$create.="<textarea name=text rows=15 cols=80 style='width:100%; height:450px;'></textarea>";
-	$create.="
-	<input type=hidden name=id value=''>
-	<input type=hidden name=op value=".$admintip."_save>
-	</form>";
+		$create.="<form method=POST action=sys.php style='display:inline;'>
+		<div class=block2><b>Что такое Шаблон?</b> (<a name=metka href=#metka onClick=\"show('about')\">нажмите, чтобы узнать</a>)<div id=about style='display:none;'><br>
+		Шаблоны используются для изменения внешнего вида разделов, страниц и блоков. Используются либо стандартные поля страниц, либо дополнительно созданные Поля. Для страниц можно использовать любой дизайн, блоки и разделы используют табличную основу — начало < table >, соответственно сами шаблоны должны начинаться с < tr > и заканчиваться на < /tr >. Для того, чтобы в шаблоне раздела предусмотреть возможность именования столбцов таблицы, например: Дата, Название, Ссылка... после самого шаблона раздела нужна написать ключевое слово [следующий] и написать шаблон именования столбцов, т.е. по сути скопировать шаблон строк раздела, но вместо заготовок автоматических вставок поставить в него названия соответствующих полей-столбцов.
+		</div><br></div><br>
+		<div style='width:210px; height:50px;'><input type=\"submit\" value=\"Добавить\" style='width:95%; height:55px; font-size: 20px;'></div>
+		<input type=hidden name=type value='6'>
+		<table width=100%><tr><td width=50%>
+		<h2>Название шаблона</h2><input type=text name=title size=40 style='width:100%'> (рус.)</td><td>
+		<h2>Обращение:</h2><input type=text name=namo size=40 style='width:100%'> (англ., без пробелов)</td></tr>
+		<tr><td colspan=2>
+		".help_shablon()."
+		<h2>Содержание шаблона (HTML-код и вставки шаблона):</h2>
+		<textarea name=text rows=15 cols=80 style='width:100%; height:350px;'></textarea>
+		</td></tr></table>
+		<input type=hidden name=id value=''>
+		<input type=hidden name=op value=".$admintip."_save>
+		</form>";
 	break;
-	#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	}
 	echo "<h1>Добавление ".$type_opis."</h1>".$create;
 }
@@ -933,7 +782,6 @@ function create_main($type) {
 function edit_main($id) {
 	global $tip, $admintip, $prefix, $db, $red, $nastroi;
 	if (intval($nastroi) != 1) red_vybor();
-	$blocks = block_names();
      $sql = "select type,name,title,text,useit,shablon,description,keywords from ".$prefix."_mainpage where id='$id'";
      // здесь учитываем и возможность редактирования удаленных и старых версий, поэтому нет «`tables`='pages'»
      $result = $db->sql_query($sql);
@@ -1048,10 +896,10 @@ function edit_main($id) {
 	<h1><a href=sys.php?op=mainpage&amp;type=element>Оформление</a> &rarr; Редактирование дизайна (HTML)</h1>
 	<input type=submit value=\"Сохранить изменения\" style='width:300px; font-size: 22px;'>
 
-	<h2 class='radius_top' style='background:#eeeeee;'>Название дизайна <span class=f12>Видит только администратор</span><br>
+	<h2>Название дизайна <span class=f12>Видит только администратор</span><br>
 	<textarea class='big' name='title' rows='1' cols='10' style='font-size:16pt; width:100%;'>".$title."</textarea></h2>
 
-	<h2 class='radius_top' style='background:#eeeeee;'>Содержание дизайна (HTML): 
+	<h2>Содержание дизайна (HTML): 
 	<span class=f12>[содержание] - автоматический блок, без него невозможны переходы по страницам.</span><br>";
 
 	// [корзина] - общая корзина для всех разделов типа \"магазин\"<br>
@@ -1095,12 +943,12 @@ function edit_main($id) {
 	    </script><textarea class='redactor' id=text name=text rows=15 cols=80 style='width:100%; height:450px;'>".$text."</textarea>";
 	}
 	echo "</h2>
-	<h2 class='radius_top' style='background:#eeeeee;'>Использованные в дизайне стили CSS <span class=f12>Зажмите Ctrl для выбора нескольких стилей</span><br><select name='useit[]' size=2 class=f12 multiple='multiple'>".$styles."</select></h2>
+	<h2>Использованные в дизайне стили CSS <span class=f12>Зажмите Ctrl для выбора нескольких стилей</span><br><select name='useit[]' size=2 class=f12 multiple='multiple'>".$styles."</select></h2>
 
 	<div class='dark_pole' style='float:right;' onclick=\"show('all_blocks')\">
 	    <img class='icon2 i26' src='/images/1.gif'>Список возможных блоков (справка)</div>
 	    <div id='all_blocks' style='display: none;'>
-	<p><b>Все созданные блоки:</b><br>".$blocks."</p>
+	<p><b>Все созданные блоки:</b><br>".block_names()."</p>
 	<p>
 	[содержание] - содержание раздела (не предназначено для шаблонов!)<br>
 	[нумерация] - вывод нумерации раздела (если в настройках раздела выбрано такое отображение нумерации)<br>
@@ -1123,10 +971,10 @@ function edit_main($id) {
 	<h1><a href=sys.php?op=mainpage&amp;type=element>Оформление</a> &rarr; Редактирование стиля (CSS)</h1>
 	<input type=submit value=\"Сохранить изменения\" style='width:300px; font-size: 22px;'>
 
-	<h2 class='radius_top' style='background:#eeeeee;'>Название стиля <span class=f12>Видит только администратор</span><br>
+	<h2>Название стиля <span class=f12>Видит только администратор</span><br>
 	<textarea class='big' name='title' rows='1' cols='10' style='font-size:16pt; width:100%;'>".$title."</textarea></h2>
 
-	<h2 class='radius_top' style='background:#eeeeee;'>Содержание стиля
+	<h2>Содержание стиля
 	<textarea class='f12' name='text' rows='30' cols='50' style='width:100%; background:#f2f2ff;'>".$text."</textarea></h2>
 
 	<input type=\"hidden\" name=\"namo\" value=\"$name\"><br>";
@@ -1535,10 +1383,10 @@ function edit_main($id) {
 		<input type=submit value=\"Сохранить изменения\" style='width:300px; font-size: 22px;'>
 
 		<table width='100%' border='0'><tr valign='top'><td width='50%'>
-		<h2 class='radius_top' style='background:#eeeeee;'>Название раздела
+		<h2>Название раздела
 		<textarea class='big' name='title' rows='2' cols='10' style='font-size:16pt; width:100%;'>".$title."</textarea></h2>
 		</td><td>
-		<h2 class='radius_top' style='background:#eeeeee;'>Адрес раздела на сайте
+		<h2>Адрес раздела на сайте
 		<textarea class='big' name='namo' rows='1' cols='10' style='font-size:16pt; width:100%;'>".$name."</textarea>
 		<span class='red f12'>НЕ изменять!</span> <span class=f12>Ссылка: <a href=/-".$name." target=_blank>/-".$name."</a></span></h2>
 		</td></tr></table>
@@ -1585,14 +1433,14 @@ function edit_main($id) {
 	</div><br>";
 
 	echo "<table width='100%' border='0'><tr valign='top'><td width='50%'>
-	<h2 class='radius_top' style='background:#eeeeee;'>Ключевые слова: <span class=f12><a onclick=\"show('help5')\" class=help>?</a></span><br><textarea name='keywordsX' class='big' rows='2' cols='10' style='width:100%;'>".$keywordsX."</textarea></h2>
+	<h2>Ключевые слова: <span class=f12><a onclick=\"show('help5')\" class=help>?</a></span><br><textarea name='keywordsX' class='big' rows='2' cols='10' style='width:100%;'>".$keywordsX."</textarea></h2>
 	<div id='help5' style='display:none;' class=f12>Это поле — для поисковых систем. Максимум 250 символов. Разделять запятой. Если пусто - используются ключевые словосочетания из <a href=/sys.php?op=Configure target=_blank>Настроек портала</a>).<br></div>
 	</td><td>
-	<h2 class='radius_top' style='background:#eeeeee;'>Описание: <span class=f12><a onclick=\"show('help6')\" class=help>?</a></span><br><textarea name='descriptionX' class='big' rows='2' cols='10' style='width:100%;'>".$descriptionX."</textarea></h2>
+	<h2>Описание: <span class=f12><a onclick=\"show('help6')\" class=help>?</a></span><br><textarea name='descriptionX' class='big' rows='2' cols='10' style='width:100%;'>".$descriptionX."</textarea></h2>
 	<div id='help6' style='display:none;' class=f12>Это поле — для поисковых систем. Максимум 250 символов. Если пусто - используется основное описание из <a href=/sys.php?op=Configure target=_blank>Настроек портала</a>.</div>
 	</td></tr></table>
 
-	<h2 class='radius_top' style='background:#eeeeee;'>Содержание раздела:</h2>";
+	<h2>Содержание раздела:</h2>";
 	if ($red==0) {
 	} elseif ($red==2) {
 		echo "<textarea cols=80 id=editor class=useit name=useit rows=10>".$useit."</textarea>
@@ -2075,14 +1923,14 @@ function edit_main($id) {
 	<input type=submit value=\"Сохранить изменения\" style='width:300px; font-size: 22px;'>
 
 	<table width='100%' border='0'><tr valign='top'><td width='50%'>
-	<h2 class='radius_top' style='background:#eeeeee;'>Название блока
+	<h2>Название блока
 	<textarea class='big' name='title' rows='1' cols='10' style='font-size:16pt; width:100%;'>".$title."</textarea></h2>
 	</td><td>
-	<h2 class='radius_top' style='background:#eeeeee;'>Название класса CSS
+	<h2>Название класса CSS
 	<textarea class='big' name='shablon' rows='1' cols='10' style='font-size:16pt; width:100%;'>".$shablon."</textarea></h2>
 	</td></tr></table>
 
-	<h2 class='radius_top' style='background:#eeeeee;'>
+	<h2>
 	<div class='dark_pole' onclick=\"show('nastroi')\"><img class='icon2 i26' src='/images/1.gif'>Настройки (для импорта/экспорта)</div>
 	    <div id='nastroi' style='display: none;'>
 	<br><span class=f12><a target='_blank' href=sys.php?op=mainpage&amp;type=3&amp;id=".$id."&nastroi=1>Перейти к визуальной настройке &rarr;</a></span><br>
@@ -2093,7 +1941,7 @@ function edit_main($id) {
 
 	if ($name == 10 or $name == 5 or $name == 7 or $name == 0) $red = 1; // дополнить список при необходимости
 
-	echo "<h2 class='radius_top' style='background:#eeeeee;'>Содержание блока:";
+	echo "<h2>Содержание блока:";
 	if ($red == 0) {
 	} elseif ($red==2) {
 		echo "<textarea cols=80 id=editor name=text rows=10>".$text."</textarea>
@@ -2183,17 +2031,17 @@ function edit_main($id) {
 	// Добавлены пользователи USERAD
 	echo "<h1><a href=sys.php?op=mainpage&amp;type=element>Оформление</a> &rarr; Редактирование поля</h1>
 	<table width=100%><tr><td width=50%>
-	<h2 class='radius_top' style='background:#eeeeee;'>Название поля<br>
+	<h2>Название поля<br>
 	<textarea class='big' name='title' rows='1' cols='10' style='font-size:16pt; width:100%;'>".$title."</textarea></h2>
 	</td><td>
-	<h2 class='radius_top' style='background:#eeeeee;'>Обращение (англ., без пробелов)<br>
+	<h2>Обращение (англ., без пробелов)<br>
 	<textarea class='big' name='namo' rows='1' cols='10' style='font-size:16pt; width:100%;'>".$name."</textarea></h2>
 	Используется в шаблонах для подключения вывода этого поля, пример: pole &rarr; [pole]
 	</td></tr><tr><td>
-	<h2 class='radius_top' style='background:#eeeeee;'>Принадлежит разделу:<br>
+	<h2>Принадлежит разделу:<br>
 	<select name='useit' style='width:100%;'><option value=\"0\">все разделы</option><option value=\"".$useit."\" selected>".$main_design_title."</option>".$modules."</select></h2>
 	</td><td>
-	<h2 class='radius_top' style='background:#eeeeee;'>Параметры поля:<br>
+	<h2>Параметры поля:<br>
 	<textarea name=\"text\" rows=\"1\" cols=\"100\" style='width:100%;'>".$text."</textarea></h2>
 	</td></tr></table>";
 
@@ -2220,14 +2068,14 @@ function edit_main($id) {
 	<input type=submit value=\"Сохранить изменения\" style='width:300px; font-size: 22px;'>
 
 	<table width=100%><tr><td width=50%>
-	<h2 class='radius_top' style='background:#eeeeee;'>Название:<br>
-	<textarea class='big' name='title' rows='1' cols='10' style='font-size:16pt; width:100%;'>".$title."</textarea></h2>
+	<h2>Название:</h2>
+	<textarea class='big' name='title' rows='1' cols='10' style='font-size:16pt; width:100%;'>".$title."</textarea>
 	</td><td>
-	<h2 class='radius_top' style='background:#eeeeee;'>Обращение (англ, без пробелов)<br>
-	<textarea class='big' name='namo' rows='1' cols='10' style='font-size:16pt; width:100%;'>".$name."</textarea></h2>
-	</td></tr></table>
-
-	<h2 class='radius_top' style='background:#eeeeee;'>Содержание шаблона:<br>";
+	<h2>Обращение (англ, без пробелов)</h2>
+	<textarea class='big' name='namo' rows='1' cols='10' style='font-size:16pt; width:100%;'>".$name."</textarea>
+	</td></tr><tr><td colspan=2>
+	".help_shablon()."
+	<h2>Содержание шаблона:</h2>";
 	if ($red==0) {
 	} elseif ($red==2) {
 		echo "<textarea cols=80 id=editor name=text rows=10>".$text."</textarea>
@@ -2267,7 +2115,7 @@ function edit_main($id) {
       }, mobile: false, ".$red4_div_convert." imageUpload: 'ed2/image_upload.php',fileUpload: 'ed2/file_upload.php', lang: 'ru', autoresize: false }); } );
 	    </script><textarea class='redactor' id=text name=text rows=15 cols=80 style='width:100%; height:450px;'>".$text."</textarea>";
 	}
-	echo "</h2>";
+	echo "</td></tr></table>";
 	} ############################### ЗАКРЫТИЕ ШАБЛОН
 
 	echo "<input type=submit value=\"Сохранить изменения\" style='width:300px; font-size: 22px;'>
@@ -2465,7 +2313,6 @@ function mainpage_razdel_color($id, $color) {
 }
 #####################################################################################################################
 function mainpage_del($id, $type, $name="") {
-	// &amp;id=288&amp;type=element&amp;name=
 	global $tip, $admintip, $prefix, $db;
 	switch ( $type ) {
 		case '0':
@@ -2540,7 +2387,9 @@ function mainpage_create_block($title, $name, $text, $modul, $useit, $design) {
 	$text = mysql_real_escape_string($text);
 	$useit = mysql_real_escape_string(str_replace("|&","|",$useit));
 	$db->sql_query("INSERT INTO ".$prefix."_mainpage VALUES (NULL, '3', '".$name."', '".$title."', '".$text."', '".$useit."', '".$shablon."', '0', 'pages', '0', '', '')") or die("Не удалось создать блок. INSERT INTO ".$prefix."_mainpage VALUES (NULL, '3', '".$name."', '".$title."', '".$text."', '', '".$useit."', '".$shablon."', '0', 'pages', '0', '', '') ");
-	Header("Location: sys.php?op=".$admintip."&type=element");
+	// узнаем id
+	$row = $db->sql_fetchrow($db->sql_query("select `id` from ".$prefix."_mainpage where `tables`='pages' and `type`='3' and `name`='".$name."' and `title`='".$title."' and `text`='".$text."' and `useit`='".$useit."' limit 1"));
+	Header("Location: sys.php?op=".$admintip."&type=3&id=".$row['id']."&nastroi=1");
 }
 #####################################################################################################################
 function trans($txt) { // Транслит
