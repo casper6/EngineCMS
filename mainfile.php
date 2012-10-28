@@ -94,8 +94,9 @@
   $ht_backup = $row['ht_backup']; // Файл, в котором лежит резервная копия .htaccess
   $captcha_ok = $row['captcha_ok']; // отключение проверки комментариев
   $jqueryui = $show_comments = $show_userposts = $normalize = "";
-  list($jqueryui, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $search_design, $tag_design, $add_fonts, $normalize) = explode("|",trim($row['nocashe']));
+  list($jqueryui, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $search_design, $tag_design, $add_fonts, $normalize, $project_logotip, $project_name) = explode("|",trim($row['nocashe']));
   //if ($add_fonts != "") $add_fonts = explode(".",$add_fonts);
+  if ($project_logotip == "") $project_logotip = "/img/logotip.png";
   if ($jqueryui == "") $jqueryui = "1";
   if ($normalize == "") $normalize = "0";
   if ($show_page == "") $show_page = "1";

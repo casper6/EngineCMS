@@ -127,7 +127,7 @@ if ($row['realadmin'] == 1) {
 		include ("ad-header.php");
 		$ok=intval($ok);
 		// Получаем настройки из mainfile
-		global $sitename, $startdate, $adminmail, $keywords, $description, $counter, $statlink, $postlink, $stopcopy, $registr, $pogoda, $flash, $sgatie, $ht_backup, $captcha_ok, $xnocashe, $jqueryui, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $comment_send, $company_name, $company_fullname, $company_address, $company_time, $company_tel, $company_sot, $company_fax, $company_email, $company_map, $company_people, $search_design, $tag_design, $add_fonts, $site_cash, $normalize;
+		global $sitename, $startdate, $adminmail, $keywords, $description, $counter, $statlink, $postlink, $stopcopy, $registr, $pogoda, $flash, $sgatie, $ht_backup, $captcha_ok, $xnocashe, $jqueryui, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $comment_send, $company_name, $company_fullname, $company_address, $company_time, $company_tel, $company_sot, $company_fax, $company_email, $company_map, $company_people, $search_design, $tag_design, $add_fonts, $site_cash, $normalize, $project_logotip, $project_name;
 		
 		$ad_fon_option = ""; // Выбор фоновок для админки
 		for ($i=1; $i < 28; $i++) { // всего 27 фоновок + 1 по-умолчанию в папке images/ad-fon
@@ -218,9 +218,17 @@ body {}
 <table class=table_light>
 
 <tr valign=top><td>
-Название сайта:</td><td class=small>
+Название сайта (для заголовка title):</td><td class=small>
 ".input("options[sitename]", $sitename, 60)."
-<br>Выводится в заголовке окна (Title)
+</td></tr><tr valign=top><td>
+Логотип сайта/компании:</td><td class=small>
+".input("options[project_logotip]", $project_logotip, 60)."
+<br>Можно вывести в дизайн через блок [лого_проекта]
+</td></tr><tr valign=top><td>
+Название проекта/компании:</td><td class=small>
+".input("options[project_name]", $project_name, 60)."
+<br>Можно вывести в дизайн через блок [название_проекта]. Обобщенный вариант через замену картинкой тега H1 — через блок [название_лого_проекта]. А настраивается всё через CSS за счет стилей, которые можно посомтреть в коде страницы.
+
 </td></tr><tr valign=top><td>
 Описание сайта:</td><td class=small>
 ".input("options[description]", $description, 60, "txt")."
@@ -913,7 +921,7 @@ echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>
 		global $prefix, $db, $options;
 		$mini_blocks = $options['company_name']."|||||".$options['company_fullname']."|||||".$options['company_address']."|||||".$options['company_time']."|||||".$options['company_tel']."|||||".$options['company_sot']."|||||".$options['company_fax']."|||||".$options['company_email']."|||||".$options['company_map']."|||||".$options['company_people'];
 
-		$advanced = $options['jqueryui']."|".$options['show_comments']."|".$options['show_userposts']."|".$options['show_page']."|".$options['show_reserv']."|".$options['uskorenie_blokov']."|".$options['kickstart']."|".$options['show_page_links']."|".$options['ad_fon']."|".$options['search_design']."|".$options['tag_design']."|".$options['add_fonts']."|".$options['normalize'];
+		$advanced = $options['jqueryui']."|".$options['show_comments']."|".$options['show_userposts']."|".$options['show_page']."|".$options['show_reserv']."|".$options['uskorenie_blokov']."|".$options['kickstart']."|".$options['show_page_links']."|".$options['ad_fon']."|".$options['search_design']."|".$options['tag_design']."|".$options['add_fonts']."|".$options['normalize']."|".$options['project_logotip']."|".$options['project_name'];
 		// sitename	startdate	adminmail	keywords	description	counter	statlink	postlink	registr	pogoda	flash	sgatie	stopcopy	nocashe	adminmes	red	comment	captcha_ok	ht_backup
 		$db->sql_query("UPDATE `".$prefix."_config` SET `sitename` = '".$options['sitename']."',`startdate` = '".$options['startdate']."',`adminmail` = '".$options['adminmail']."',`keywords` = '".$options['keywords']."',`description` = '".$options['description']."',`counter` = '".addslashes($options['counter'])."',`statlink` = '".$options['statlink']."',`postlink` = '".$options['postlink']."',`registr` = '".$options['registr']."',`pogoda` = '".$options['pogoda']."',`flash` = '".$options['flash']."',`sgatie` = '".$mini_blocks."',`stopcopy` = '".$options['stopcopy']."', `nocashe` = '".$advanced."', `comment` = '".$options['comment_send']."', `captcha_ok` = '".$options['captcha_ok']."', `ht_backup` = '".$options['ht_backup']."' LIMIT 1 ;") or die ('Настройки не сохранилось. Видимо забыли обновить базу данных или файл настройки администрирования.');
 		Header("Location: sys.php?op=Configure&save=1");

@@ -61,12 +61,12 @@
       $_COOKIE[$c_key] = $c_val;
   }  
   
-  if (!ini_get('register_globals')) { 
-   @import_request_variables("GPC", "");
-   //extract($_POST, EXTR_SKIP); 
-   //extract($_GET, EXTR_SKIP); 
-   //extract($_COOKIE, EXTR_SKIP); 
-  } 
+  //if (!ini_get('register_globals')) { не поддерживается в php 5.4
+   //@import_request_variables("GPC", "");
+   extract($_POST, EXTR_SKIP);
+   extract($_GET, EXTR_SKIP);
+   extract($_COOKIE, EXTR_SKIP);
+  //} 
 
   // Union Tap против UNION SQL Injections
   unset($matches);

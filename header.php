@@ -1285,6 +1285,11 @@ case "30": # Статистика раздела, выводит кол-во п�
 		$block=str_replace("[время]", $vremya, $block);
 	}
 
+	global $project_logotip, $project_name;
+	$block=str_replace("[лого_проекта]", "<img src='".$project_logotip."' class='project_logotip'>", $block);
+	$block=str_replace("[название_проекта]", "<h1 class='project_name'>".$project_name."</h1>", $block);
+	$block=str_replace("[название_лого_проекта]", "<h1 class=project_logotip_name><a href='/'' title='Главная страница'><span>".$project_name."</span><img src='".$project_logotip."' alt=''></a></h1>", $block);
+
 	// Ставим кнопку Твиттера
 	$block=str_replace("[твиттер]", "<div><a href=\"https://twitter.com/share\" class=\"twitter-share-button\" data-lang=\"ru\" data-size=\"large\">Твитнуть</a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=\"//platform.twitter.com/widgets.js\";fjs.parentNode.insertBefore(js,fjs);}}(document,\"script\",\"twitter-wjs\");</script></div>", $block);
 

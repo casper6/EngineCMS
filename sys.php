@@ -345,8 +345,13 @@ function GraphicAdmin() {
 	// ЗАПИСКИ
 	$row = $db->sql_fetchrow($db->sql_query("SELECT adminmes from ".$prefix."_config"));
 	$adminmes = $row['adminmes'];
-	global $op;
+	global $op, $project_logotip, $project_name;
 	if ($op == "mes") $mes_ok = "<span style='color:green;'>Записки сохранены</span>"; else $mes_ok = "";
+
+	echo "<div style='margin:50px;'>";
+	if (!empty($project_logotip)) echo "<img src='".$project_logotip."' width=300 class=center>";
+	if (!empty($project_name)) echo "<h1>".$project_name."</h1>";
+	echo "</div>";
 
 	echo "<table align=center width=100%><tr><td>
 		<h2>Записки администратора</h2></td><td align=center>
