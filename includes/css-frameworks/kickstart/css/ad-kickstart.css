@@ -132,7 +132,7 @@ font-size:0.9em;
 -----------------------------------*/
 table{margin:0 0 10px 0;border-collapse: collapse;}
 	thead, tbody{margin:0;padding:0;}
-	th, td{padding:7px 10px;font-size:0.9em;border-bottom:1px dotted #ddd;text-align:left;}
+	th, td{padding:7px 10px;font-size:0.9em;text-align:left;}
 	thead th{font-size:0.9em;padding:3px 10px;border-bottom:1px solid #ddd;}
 	tbody tr.last th,
 	tbody tr.last td{border-bottom:0;}
@@ -539,4 +539,5 @@ background:#f5f5f5;
 	.calendar td.other-month{color:#ccc;}
 	.calendar td.current-month{background:#fff;color:#777;}
 
-
+input[type="submit"] {color:green !important;}
+button[type="submit"] {font-size: 17px;}

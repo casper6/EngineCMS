@@ -138,15 +138,14 @@ function help_autoblocks() {
 }
 /////////////////////////////////////////////////////////////// 
 function help_design() {
-  return "<h2>Справка: блоки для дизайна
+  return "<h2>Справка: 
     <select name=shablon_var2 onchange=\"$('#shablon_var').html(this.value); $('#shablon_var').show(); $('#show_shablon_var').show();\"></h2>
     <option value='Выберите другой объект из того же списка'>Выберите объект для дизайна</option>
-
     <option value='<b>Созданные блоки</b> (посмотреть их принадлежность вы можете во вкладке Оформление->Блоки):<br>".block_names()."<hr><b>Автоматические блоки</b>:<br>
   [содержание] - содержание раздела<br>
   [нумерация] - вывод нумерации раздела (если в настройках раздела выбрано такое отображение нумерации)<br>
-    ".help_autoblocks()."'>Все блоки</option></select>
-    <a title='Закрыть/Открыть справочное окно' id='show_shablon_var' class=punkt onclick=\"show_animate('shablon_var');\" style='float:right; display:none;'><div class='radius' style='font-size:12pt; width:20px; height: 20px; color: white; text-align:center; float:right; margin:5px; margin-bottom:0; background: #bbbbbb;'>&nbsp;&uarr;&nbsp;</div></a><div id=shablon_var style='display:none; width:100%; height:300px; scroll:auto;' class=block></div>";
+    ".help_autoblocks()."'>блоки для вставки в дизайн</option></select>
+    <a title='Закрыть/Открыть справочное окно' id='show_shablon_var' class=punkt onclick=\"show_animate('shablon_var');\" style='float:right; display:none;'><div class='radius' style='font-size:12pt; width:20px; height: 20px; color: white; text-align:center; float:right; margin:5px; margin-bottom:0; background: #bbbbbb;'>&nbsp;&uarr;&nbsp;</div></a><div id=shablon_var style='display:none; width:95%; height:300px; scroll:auto;' class=block></div>";
 }
 /////////////////////////////////////////////////////////////// 
 function help_shablon() {
@@ -169,8 +168,7 @@ function help_shablon() {
       $add = "[подробнее]"; //if (strpos($base_text, "type=3")) $add .= " [добавить в корзину]";
       $bases .= "<option value='".$rowsX.$add."'>Вставки для базы данных \"".$base_title."\"</option>";
   }
-  return "<h2>Справка: блоки и вставки для шаблона
-    <select name=shablon_var2 onchange=\"$('#shablon_var').html(this.value); $('#shablon_var').show(); $('#show_shablon_var').show();\"></h2>
+  return "<h2>Справка: <select name=shablon_var2 onchange=\"$('#shablon_var').html(this.value); $('#shablon_var').show(); $('#show_shablon_var').show();\"></h2>
     <option value='Выберите другой объект из того же списка'>Выберите объект для шаблона</option>
 
     <option value='<b>Созданные блоки</b> (посмотреть их принадлежность вы можете во вкладке Оформление->Блоки):<br>".block_names()."<hr><b>Автоматические блоки</b> (не предназначены для шаблонов, но могут быть использованы):<br>
@@ -283,7 +281,7 @@ function help_shablon() {
     '>Вставки для шаблона блока открытого раздела</option>
     ".$bases."
     </select>
-    <a title='Закрыть/Открыть справочное окно' id='show_shablon_var' class=punkt onclick=\"show_animate('shablon_var');\" style='float:right; display:none;'><div class='radius' style='font-size:12pt; width:20px; height: 20px; color: white; text-align:center; float:right; margin:5px; margin-bottom:0; background: #bbbbbb;'>&nbsp;&uarr;&nbsp;</div></a><div id=shablon_var style='display:none; width:100%; height:300px; scroll:auto;' class=block></div>";
+    <a title='Закрыть/Открыть справочное окно' id='show_shablon_var' class=punkt onclick=\"show_animate('shablon_var');\" style='float:right; display:none;'><div class='radius' style='font-size:12pt; width:20px; height: 20px; color: white; text-align:center; float:right; margin:5px; margin-bottom:0; background: #bbbbbb;'>&nbsp;&uarr;&nbsp;</div></a><div id=shablon_var style='display:none; width:95%; height:300px; scroll:auto;' class=block></div>";
 }
 ##########################################################################################
 

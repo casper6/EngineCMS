@@ -442,22 +442,7 @@ function red_vybor() { // Выбор редактора (перенести в �
   global $url;
   $link = str_replace("&red=0","",str_replace("&red=1","",str_replace("&red=2","",str_replace("&red=3","",str_replace("&red=4","",$url)))));
   echo "
-  <script>
-  $(function() { $( \"#rerurn\" ) .button() .click(function() { show('red_vybor'); }) .next() .button( { text: false, icons: {primary: \"ui-icon-triangle-1-s\"} }) .click(function() { show('red_vybor_small'); }) .parent() .buttonset(); });
-  </script>
-  <div class='vybor_redaktora' style='float:right; margin-top:5px;'><div>
-    <button id='rerurn'><img class='icon2 i35' src='/images/1.gif'>Выбрать редактор</button>
-    <button id='sel'>Быстрый выбор редактора</button>
-  </div></div>
-
-  <div id='red_vybor_small' style='position:absolute; top:105px; right:12px; z-index:666; width:225px; background:white; display:none; border:solid 1px gray;' class=radius>
-  <!-- <a href='".$link."&red=0' class=dark_pole3 style='width:162px'>Простой</a><br>
-  <a href='".$link."&red=2' class=dark_pole3 style='width:162px'>Навороченный</a><br> -->
-  <a href='".$link."&red=3' class=dark_pole3 style='width:162px'>Визуальный №1</a><br>
-  <a href='".$link."&red=4' class=dark_pole3 style='width:162px'>Визуальный №2</a><br>
-  <a href='".$link."&red=1' class=dark_pole3 style='width:162px'>HTML</a><br>
-  <a onclick=show('red_vybor_small') style='cursor:pointer; float:right;' title='Закрыть'>Закрыть</a>
-  </div>
+  <button id='rerurn' class='medium orange' type=button onclick=\"show('red_vybor');\" style='float:right;margin:3px;'><span style='margin-right: -2px;' class=\"icon white medium\" data-icon=\"7\"></span></button>
 
   <div id='red_vybor' style='position: absolute; z-index:666; right:5px; top:5px; padding:5px; width:647px; background:white; display:none; border:solid 10px gray;' class=radius>
   <a onclick=show('red_vybor') style='cursor:pointer; float:right;' title='Закрыть'><img class='icon2 i33' src='/images/1.gif'></a>

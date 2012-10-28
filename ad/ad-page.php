@@ -1,58 +1,41 @@
 <?php
-if (strpos($_SERVER['PHP_SELF'], 'sys.php') === false) { die ("Доступ закрыт!"); }
-$aid = trim($aid);
-global $prefix, $db, $red;
-$sql = "select realadmin from ".$prefix."_authors where aid='$aid'";
-$result = $db->sql_query($sql);
-$row = $db->sql_fetchrow($result);
-$realadmin = $row['realadmin'];
-if ($realadmin==1) {
-$tip = "pages";
-$admintip = "base_pages";
+  if (strpos($_SERVER['PHP_SELF'], 'sys.php') === false) { die ("Доступ закрыт!"); }
+  $aid = trim($aid);
+  global $prefix, $db, $red;
+  $sql = "select realadmin from ".$prefix."_authors where aid='$aid'";
+  $result = $db->sql_query($sql);
+  $row = $db->sql_fetchrow($result);
+  $realadmin = $row['realadmin'];
+  if ($realadmin==1) {
+  $tip = "pages";
+  $admintip = "base_pages";
 
-function menu() {
-    global $module, $tip, $admintip, $prefix, $db, $op, $new;
-    if (trim($module)=="") 
-        $title = "";
-    else {
-        $sql = "SELECT title FROM ".$prefix."_mainpage where name='$module' and type='2'";
-        $result = $db->sql_query($sql);
-        $rows = $db->sql_fetchrow($result);
-        $title = $rows['title'];
-    }
-    $redact=false;
-    $h1 = "<h1><a href=sys.php>Разделы</a>  &rarr; ".$title."";
-    if ($op == "base_pages_edit_page") { $h1 .= " &rarr; Редактирование страницы"; $redact=true; }
-    if ($op == "base_pages_add_page" and $new != 1) { $h1 .= " Добавление страницы"; $redact=true; }
-    if ($op == "base_pages_add_page" and $new == 1) { $h1 .= " Добавим еще одну страницу"; $redact=true; }
-    if ($op == "edit_base_pages_category") { $h1 .= " &rarr; Редактирование папки"; $redact=true; }
-    $h1 .= "</h1>";
-    if ($redact==true) red_vybor();
-    echo $h1;
-}
-#####################################################################################################################
 function edit_base_pages_category($cid, $red=0) {
-    global $module, $name, $tip, $admintip, $prefix, $db; //, $toolbars;
-    include("ad-header.php");
-    $cid = intval($cid);
-    $red = intval($red);
-    $sql = "SELECT * FROM ".$prefix."_".$tip."_categories WHERE cid='$cid'";
-    $result = $db->sql_query($sql);
-    $row = $db->sql_fetchrow($result);
-    $name = $row['module'];
-    $title = $row['title'];
-    $module = $name;
-    $desc = $row['description'];
-    $sortirovka = $row['sort'];
-    $parent_id = $row['parent_id'];
+  global $module, $name, $tip, $admintip, $prefix, $db, $title_razdel_and_bd; //, $toolbars;
+  include("ad-header.php");
+  $cid = intval($cid);
+  $red = intval($red);
+  $sql = "SELECT * FROM ".$prefix."_".$tip."_categories WHERE cid='$cid'";
+  $result = $db->sql_query($sql);
+  $row = $db->sql_fetchrow($result);
+  $name = $row['module'];
+  $title = $row['title'];
+  $module = $name;
+  $desc = $row['description'];
+  $sortirovka = $row['sort'];
+  $parent_id = $row['parent_id'];
 
-    menu();
-    echo "<br>";
-        # cid module title description pic sort counter parent_id
-    echo "
-    <form action=\"sys.php\" method=\"post\">
-    <table width=100%><tr valign=top><td>
-    <input type=submit value=\"Сохранить изменения\" style='width:95%; height:45px; font-size: 20px;'>
+  echo "<form action='sys.php' method='post'>
+  <div style='background: #e2e5ea;'>
+  <div class='black_grad' style='height:45px;'>
+  <button type=submit id=new_razdel_button class='medium green' onclick=\"show('sortirovka');\" style='float:left; margin:3px;'><span style='margin-right: -2px;' class='icon white medium' data-icon='c'></span>Сохранить</button>
+  <span class='h1' style='padding-top:10px;'>
+    ".$title_razdel_and_bd[$module]." &rarr; Редактирование папки</span>";
+  if (intval($nastroi) != 1) red_vybor();
+  echo "</div>";
+
+  # cid module title description pic sort counter parent_id
+  echo "<table width=100%><tr valign=top><td bgcolor=#eeeeee>
     <h2>Раздел:</h2>";
                $sql = "select name, title, color from ".$prefix."_mainpage where type='2' and `tables`='pages' and name != 'index' order by color desc, title";
                $result = $db->sql_query($sql);
@@ -74,11 +57,12 @@ function edit_base_pages_category($cid, $red=0) {
       default: 
       $color = "ffffff"; break;  // Стандартный белый
     }
-               if ($name == $name2) $sel = "selected"; else $sel = "";
-    	   echo "<option style='background:".$color.";' value=\"$name2\" ".$sel.">".$title2."</option>";
-               }
-               if ($numrows > 10) $size = 20*16; else $size=($numrows+5)*16;
-    echo "</select><br><div style='display:inline; float:right;'><div id=showa style='display:inline; float:right;'><a style='cursor:pointer;' onclick=\"show('hidea'); show('showa'); document.getElementById('to_papka').style.width=500; document.getElementById('to_papka').style.height=400;\">развернуть &rarr;</a></div><div id=hidea style='display:none;'><a style='cursor:pointer;' onclick=\"show('showa'); show('hidea'); document.getElementById('to_papka').style.width=248; document.getElementById('to_papka').style.height=".$size.";\">&larr; свернуть</a></div></div><h2>Папка:</h2>";
+        if ($name == $name2) $sel = "selected"; else $sel = "";
+    	   echo "<option style='background:".$color.";' value='$name2' ".$sel.">".$title2."</option>";
+        }
+        if ($numrows > 10) $size = 20*16; else $size=($numrows+5)*16;
+        echo "</select><br>
+        <div style='display:inline; float:right;'><div id=showa style='display:inline; float:right;'><a style='cursor:pointer;' onclick=\"show('hidea'); show('showa'); $('#to_papka').width(500); $('#to_papka').height(400);\">развернуть &rarr;</a></div><div id=hidea style='display:none;'><a style='cursor:pointer;' onclick=\"show('showa'); show('hidea'); $('#to_papka').width(248); $('#to_papka').height(".$size.");\">&larr; свернуть</a></div></div><h2>Папка:</h2>";
                $sql = "select * from ".$prefix."_".$tip."_categories where module='$name' and `tables`='pages' and cid != '$cid' order by parent_id,cid";
                $result = $db->sql_query($sql);
                $numrows = $db->sql_numrows($result);
@@ -112,12 +96,12 @@ function edit_base_pages_category($cid, $red=0) {
     echo "</select>
     </td><td>
     <h2>Название папки:</h2>
-    <input type=\"text\" name=\"title\" value=\"$title\" size=\"60\"><br><br>
+    <input type='text' name='title' value='$title' size='60'><br><br>
     ".$blok."";
     if ($red==0) {
     } elseif ($red==2) {
         echo "<textarea cols=80 id=editor name=desc rows=10>".$desc."</textarea>
-    <script type=\"text/javascript\">
+    <script type='text/javascript'>
     CKEDITOR.replace( 'editor', {
      filebrowserBrowseUrl : '/ckfinder/ckfinder.html',
      filebrowserImageBrowseUrl : '/ckfinder/ckfinder.html?Type=Images',
@@ -128,15 +112,15 @@ function edit_base_pages_category($cid, $red=0) {
     });
     </script>";
     } elseif ($red==1) {
-        echo "<textarea id=\"desc\" name=\"desc\" rows=\"15\" cols=\"80\">".$desc."</textarea>";
+        echo "<textarea id='desc' name='desc' rows='15' cols='80'>".$desc."</textarea>";
     } elseif ($red==3) {
-        echo "<script type=\"text/javascript\"> 
+        echo "<script type='text/javascript'> 
     $(document).ready(function()
     {  $('#desc').editor({ focus: true, toolbar: 'classic', css: ['/ed/js/editor/css/editor.css'] });  });
-    </script><textarea id=\"desc\" name=\"desc\" rows=\"15\" cols=\"100\">".$desc."</textarea>";
+    </script><textarea id='desc' name='desc' rows='15' cols='100'>".$desc."</textarea>";
     } elseif ($red==4) {
         global $red4_div_convert;
-        echo "<script type=\"text/javascript\">
+        echo "<script type='text/javascript'>
         function ButtonMore(obj, event, key){ obj.insertHtml('<!--more-->'); }
         function ButtonBlock(obj, event, key){ obj.insertHtml('[Название блока]'); }
         function ButtonLink(obj, event, key){ obj.insertHtml('{Название страницы или раздела}'); }
@@ -146,13 +130,13 @@ function edit_base_pages_category($cid, $red=0) {
             button_link: {title: 'Вставка блока (например, галереи фотографий)',callback: ButtonBlock},
             button_block: {title: 'Вставка быстрой ссылки на страницу или раздел',callback: ButtonLink}
           }, mobile: false, ".$red4_div_convert." imageUpload: 'ed2/image_upload.php',fileUpload: 'ed2/file_upload.php', lang: 'ru', autoresize: false }); } );
-        </script><textarea id=\"desc\" class='redactor' name=\"desc\" style='width: 100%; height: 300px;'>".$desc."</textarea>";
+        </script><textarea id='desc' class='redactor' name='desc' style='width: 100%; height: 300px;'>".$desc."</textarea>";
     }
 
-    echo "<br><div style='float:left; '><h2>Сортировка:&nbsp;</h2></div> <input type=\"text\" name=\"sortirovka\" value=\"$sortirovka\" size=\"3\"><br><br><span class=small>Если вы решили отсортировать папки по-своему - лучше всего использовать десятичную разницу между числами сортировки для разных папок, например: 10, 20, 30, 40... Это нужно для того, чтобы в случае создания новой папки вы не изменяли сортировку для всех предыдущих, а легко присвоили ей следующий номер за сортировкой, стоящей перед ней папки, например: 11, 21, 31, 41... или 15, 25, 35 - чтобы можно было вклинить новые папки между ними.</span>
-      <input type=\"hidden\" name=\"cid\" value=\"$cid\">
-      <input type=\"hidden\" name=\"op\" value=\"".$admintip."_save_category\">
-      </table></form>";
+    echo "<br><div style='float:left; '><h2>Сортировка:&nbsp;</h2></div> <input type='text' name='sortirovka' value='$sortirovka' size='3'><br><br><span class=small>Если вы решили отсортировать папки по-своему - лучше всего использовать десятичную разницу между числами сортировки для разных папок, например: 10, 20, 30, 40... Это нужно для того, чтобы в случае создания новой папки вы не изменяли сортировку для всех предыдущих, а легко присвоили ей следующий номер за сортировкой, стоящей перед ней папки, например: 11, 21, 31, 41... или 15, 25, 35 - чтобы можно было вклинить новые папки между ними.</span>
+      <input type='hidden' name='cid' value='$cid'>
+      <input type='hidden' name='op' value='".$admintip."_save_category'>
+      </table></div></form>";
   admin_footer();
 }
 
@@ -199,9 +183,8 @@ function base_pages_add_page($name, $razdel, $red=0, $new=0, $pid=0) {
     $result = $db->sql_query($sql);
     $row = $db->sql_fetchrow($result);
     $new_title = $row['title'];
-    echo "<div style='text-align:center;'><span class='green'>Страница «<a target='_blank' class='green' href=/-".$name."_page_".$pid.">".$new_title."</a>» добавлена.</span> <a href=/sys.php?op=base_pages_edit_page&name=".$name."&pid=".$pid."><img class='icon2 i35' src='/images/1.gif'>Редактировать</a></div>";
+    echo "<div class='notice success'>Страница «<a target='_blank' class='green' href=/-".$name."_page_".$pid.">".$new_title."</a>» добавлена. <a href=/sys.php?op=base_pages_edit_page&name=".$name."&pid=".$pid."><img class='icon2 i35' src='/images/1.gif'>Редактировать</a>. <b>Добавим еще одну страницу?</b></div>";
   }
-  menu();
   $sql = "select id, title, shablon from ".$prefix."_mainpage where name='$name' and `tables`='pages' and type='2'";
   $result = $db->sql_query($sql);
   $row = $db->sql_fetchrow($result);
@@ -219,9 +202,15 @@ function base_pages_add_page($name, $razdel, $red=0, $new=0, $pid=0) {
       if ($shablon2=="") $shablon2 = "<p>&nbsp;</p>";
   if (!isset($shablon1)) $shablon1="";
   if (!isset($shablon2)) $shablon2="";
-  echo "<form method=\"POST\" action=\"sys.php\" enctype=\"multipart/form-data\">
-  <table width=99%><tr valign=top><td width=250 bgcolor=#eeeeee>
-  <input type=submit value=\"Добавить страницу\" class=radius style='width:250px; height:55px; font-size: 20px;' onClick=\" if (document.getElementById('to_razdel').value=='') { alert('Выберите раздел для страницы (слева сверху)!'); return false; } else { submit(); } \"><br><br>";
+  echo "<form action='sys.php' method='post' enctype='multipart/form-data'>
+    <div style='background: #e2e5ea;'>
+  <div class='black_grad' style='height:45px;'>
+  <button type=submit onClick=\" if (document.getElementById('to_razdel').value=='') { alert('Выберите раздел для страницы (слева сверху)!'); return false; } else { submit(); } \" id=new_razdel_button class='medium green' onclick=\"show('sortirovka');\" style='float:left; margin:3px;'><span style='margin-right: -2px;' class='icon white medium' data-icon='c'></span>Сохранить</button>
+  <span class='h1' style='padding-top:10px;'>
+  Добавление страницы</span>";
+  if (intval($nastroi) != 1) red_vybor();
+  echo "</div>";
+  echo "<table width=100%><tr valign=top><td width=250 bgcolor=#eeeeee>";
              $sql = "select name, title, color from ".$prefix."_mainpage where `tables`='pages' and type='2' and name != 'index' order by color desc, title";
              $result = $db->sql_query($sql);
              echo "<h1 style='color:darkgreen;'>Выберите раздел:</h1>
@@ -243,7 +232,7 @@ function base_pages_add_page($name, $razdel, $red=0, $new=0, $pid=0) {
                 $color = "ffffff"; break;  // Стандартный белый
               }
              if ($name == $name2) $sel = "selected"; else $sel = "";
-              echo "<option style='background:".$color.";' value=\"$name2\" ".$sel.">".$title2."</option>";
+              echo "<option style='background:".$color.";' value='$name2' ".$sel.">".$title2."</option>";
              }
              $sql = "select * from ".$prefix."_".$tip."_categories where module='$name' and `tables`='pages' order by parent_id,title";
              $result = $db->sql_query($sql);
@@ -291,14 +280,14 @@ function base_pages_add_page($name, $razdel, $red=0, $new=0, $pid=0) {
   <br><div class='help small'>?</div> <span class=small>Максимум 200 символов. Если пусто - используется <b>Название</b> страницы.</span><br><br>
     <h3>Тэги (слова для похожих по тематике страниц):</h3> <textarea name=search class=big rows=2 cols=10 style='width:97%;'></textarea>
   <br><div class='help small'>?</div> <span class=small>Разделять пробелами, а слова в словосочетаниях символом + <br>
-  Писать только существительные! НИКАКИХ ПРЕДЛОГОВ! Максимум неограничен. Разделять слова необходимо пробелом. Разделять слова в словосочетаниях символом +, например: игра+разума игротека game. Писать желательно в единственном числе и именительном падеже. Можно создать Блок \"Облако тегов\". Теги также могут выводиться на страницах (в настройках Раздела).</span><br><br>
+  Писать только существительные! НИКАКИХ ПРЕДЛОГОВ! Максимум неограничен. Разделять слова необходимо пробелом. Разделять слова в словосочетаниях символом +, например: игра+разума игротека game. Писать желательно в единственном числе и именительном падеже. Можно создать Блок «Облако тегов». Теги также могут выводиться на страницах (в настройках Раздела).</span><br><br>
   </div><br>
 
   <br><div id='dop2'><a onclick=\"show('dop'); show('dop2');\" class=help>Дополнительно...</a><br></div><div id='dop' style='display:none;'>
 
   <br><label><input type=checkbox name=rss value=1 checked> Добавить в RSS</label>  <a onclick=\"show('help2')\" class=help>?</a><br><div id='help2' style='display:none;'><br>Технология RSS похожа на e-mail подписку на новости — в RSS-программу, сайт RSS-читалки или встроенную систему чтения RSS в браузере добавляется ссылка на данный сайт, после чего название и предисловие всех новых страниц, отмеченных данной галочкой, будут видны подписавшемуся человеку и он сможет быстро ознакомиться с их заголовками, не заходя на сайт. Если что-то ему понравится — он откроет сайт и прочитает подробности. RSS используется для постепенного увеличения количества посетителей сайта путем их возвращения на сайт за интересной информацией. <a href=http://yandex.ru/yandsearch?text=Что+такое+RSS%3F target=_blank>Подробнее о RSS?</a><br><br></div>
   <br><label><input type=checkbox name=mainpage value=1 unchecked> На главную страницу</label> <a onclick=\"show('help1')\" class=help>?</a><br><div id='help1' style='display:none;'><br>Если отметить эту галочку, данная страница будет отображаться в блоке, который настроен на отображение только помеченных этой галочкой страниц, или не будет отображаться в блоке, который настроен на показ всех неотмеченных галочкой страниц.<br></div><br>
-  Очередность: <input type=text name=sor value='0' size=3 style='text-align:center;' onmouseover=\"this.style.background=&#39;lightgreen&#39;;\" onmouseout=\"this.style.background=&#39;&#39;\"><a onclick=\"show('help8')\" class=help>?</a><br><div id='help8' style='display:none;'><br>Настраивается в настройках раздела. Может быть равна цифре. Применяется для ручной сортировки страниц. Лучше всего делать кратной 10, например 20, 30, 40 и т.д. для того, чтобы было удобно вставлять страницы между двумя другими. Если очередность у двух страниц совпадает, сортировка происходит по дате.<br></div><br>";
+  Очередность: <input type=text name=sor value='0' size=3 style='text-align:center;'><a onclick=\"show('help8')\" class=help>?</a><br><div id='help8' style='display:none;'><br>Настраивается в настройках раздела. Может быть равна цифре. Применяется для ручной сортировки страниц. Лучше всего делать кратной 10, например 20, 30, 40 и т.д. для того, чтобы было удобно вставлять страницы между двумя другими. Если очередность у двух страниц совпадает, сортировка происходит по дате.<br></div><br>";
 
   $data1 = date2normal_view(date("Y-m-d", time()));
   $data2 = date("H", time());
@@ -308,7 +297,7 @@ function base_pages_add_page($name, $razdel, $red=0, $new=0, $pid=0) {
   <script> 
   $(function() { $.datepicker.setDefaults( $.datepicker.regional[ \"ru\" ] ); $( \"#f_date_c999\" ).datepicker({ changeMonth: true, changeYear: true, dateFormat: \"d MM yy\", showAnim: 'slide' }); });
   </script>
-  <INPUT type=text name=data1 id=\"f_date_c999\" value=\"".$data1."\" onchange=\"document.getElementById('add999').value=document.getElementById('f_date_c999').value+'|'+document.getElementById('f_date_c2999').value\" readonly=1 size=18 onmouseover=\"this.style.background=&#39;lightgreen&#39;;\" onmouseout=\"this.style.background=&#39;&#39;\"> <a onclick=\"show('help0')\" class=help>?</a><br>
+  <INPUT type=text name=data1 id=\"f_date_c999\" value=\"".$data1."\" onchange=\"document.getElementById('add999').value=document.getElementById('f_date_c999').value+'|'+document.getElementById('f_date_c2999').value\" readonly=1 size=18> <a onclick=\"show('help0')\" class=help>?</a><br>
   Время: ";
   echo "<select name=data2 style='font-size:12px;'>";
   for ($x=0; $x < 24; $x++) {
@@ -329,20 +318,20 @@ function base_pages_add_page($name, $razdel, $red=0, $new=0, $pid=0) {
   <option value='50'> 50 </option>
   <option value='55'> 55 </option>";
   echo "</select>м";
-  echo "<input type=text name=data4 value=\"".$data4."\" style='font-size:12px;' size=1 onclick=\"this.value='00'\" onmouseover=\"this.style.background=&#39;lightgreen&#39;;\" onmouseout=\"this.style.background=&#39;&#39;\">с
+  echo "<input type=text name=data4 value=\"".$data4."\" style='font-size:12px;' size=1 onclick=\"this.value='00'\">с
 
   <div id='help0' style='display:none;'><br>Для выбора даты из календаря нажмите по дате. Для обнуления секунд кликните по ним. Минуты представлены текущим вариантом или выбором из основного интервала для ускорения работы.<br></div>
   <br><br>";
   echo "</div>";
 
   echo "</td><td>
-  <h2 class=radius_top style='background:#eeeeee;'>Название страницы (заголовок)<textarea class=big name=title rows=1 cols=10 style='font-size:16pt; width:100%;'></textarea></h2>";
+  <h2>Название страницы (заголовок)</h2><textarea class=big name=title rows=1 cols=10 style='font-size:16pt; width:100%;'></textarea>";
 
-  echo "<br><h2 class=radius_top style='background:#eeeeee;'>Предисловие (начальный текст)";
+  echo "<br><h2>Предисловие (начальный текст)</h2>";
   if ($red==0) {
   } elseif ($red==2) {
       echo "<textarea cols=80 id=editor name=open_text rows=10>".$shablon1."</textarea>
-  <script type=\"text/javascript\">
+  <script type='text/javascript'>
   CKEDITOR.replace( 'editor', {
    filebrowserBrowseUrl : '/ckfinder/ckfinder.html',
    filebrowserImageBrowseUrl : '/ckfinder/ckfinder.html?Type=Images',
@@ -353,17 +342,17 @@ function base_pages_add_page($name, $razdel, $red=0, $new=0, $pid=0) {
   });
   </script>";
   } elseif ($red==1) {
-      echo "<textarea id=\"open_text\" name=open_text rows=7 cols=40 style='width:100%;'>".$shablon1."</textarea>";
+      echo "<textarea id='open_text' name=open_text rows=7 cols=40 style='width:100%;'>".$shablon1."</textarea>";
   } elseif ($red==3) {
-      echo "<script type=\"text/javascript\"> 
+      echo "<script type='text/javascript'> 
   $(function()
   {  $('#open_text').editor({ focus: true, toolbar: 'classic', css: ['/ed/js/editor/css/editor.css'], upload: 'upload.php' }); 
   $('#main_text').editor({ css: ['/ed/js/editor/css/editor.css'], toolbar: 'classic', upload: 'upload.php' });  });
   </script>
-  <textarea id=\"open_text\" name=open_text rows=7 cols=40 style='width:100%;'>".$shablon1."</textarea>";
+  <textarea id='open_text' name=open_text rows=7 cols=40 style='width:100%;'>".$shablon1."</textarea>";
   } elseif ($red==4) {
     global $red4_div_convert;
-    echo "<script type=\"text/javascript\">
+    echo "<script type='text/javascript'>
     function ButtonMore(obj, event, key){ obj.insertHtml('<!--more-->'); }
     function ButtonBlock(obj, event, key){ obj.insertHtml('[Название блока]'); }
     function ButtonLink(obj, event, key){ obj.insertHtml('{Название страницы или раздела}'); }
@@ -376,11 +365,11 @@ function base_pages_add_page($name, $razdel, $red=0, $new=0, $pid=0) {
     </script>
     <textarea id='open_text' class='redactor' name=open_text rows=7 cols=40 style='width:100%;'>".$shablon1."</textarea>";
   }
-  echo "</h2><br><h2 class=radius_top style='background:#eeeeee;'>Содержание (основной текст)";
+  echo "<br><h2>Содержание (основной текст)</h2>";
   if ($red==0) {
   } elseif ($red==2) {
       echo "<textarea cols=80 id=edit name=main_text rows=15>".$shablon2."</textarea>
-  <script type=\"text/javascript\">
+  <script type='text/javascript'>
   CKEDITOR.replace( 'edit', {
    filebrowserBrowseUrl : '/ckfinder/ckfinder.html',
    filebrowserImageBrowseUrl : '/ckfinder/ckfinder.html?Type=Images',
@@ -393,7 +382,6 @@ function base_pages_add_page($name, $razdel, $red=0, $new=0, $pid=0) {
   } else {
       echo "<textarea id='main_text' class='redactor' name=main_text rows=15 cols=40 style='width:100%;'>".$shablon2."</textarea>";
   }
-  echo "</h2>";
   $sql = "select text from ".$prefix."_mainpage where name='$name' and type='2'";
   $result = $db->sql_query($sql);
   $row = $db->sql_fetchrow($result);
@@ -401,7 +389,7 @@ function base_pages_add_page($name, $razdel, $red=0, $new=0, $pid=0) {
 
   // это галерея?
   if (strpos($tex,"view=5")) echo "<b>Фото (для фотогалереи):</b> <input type=file name=foto size=40><br>
-  <b>или ссылка:</b> <input type=text name=link_foto value=\"/img/\" size=40><br>Ссылку на другие сайты начинать с http://<br>";
+  <b>или ссылка:</b> <input type=text name=link_foto value='/img/' size=40><br>Ссылку на другие сайты начинать с http://<br>";
   else echo "<input type=hidden name=foto value=''>";
 
   // это магазин?
@@ -422,19 +410,19 @@ function base_pages_add_page($name, $razdel, $red=0, $new=0, $pid=0) {
   switch($type) {
   ///////////////////
   case "4": // строка
-    echo "<br><br><b>$s_title:</b><br><INPUT name=\"add[$s_name]\" type=text value='".$shablon."' style=\"width:98%;\">";
+    echo "<br><br><b>$s_title:</b><br><INPUT name='add[$s_name]' type=text value='".$shablon."' style='width:98%;'>";
   break;
   ///////////////////
   case "3": // период времени
     echo "<br><br><b>".$s_title.":</b> (выберите даты из меню, кликнув по значкам)<br>
-    <TABLE cellspacing=0 cellpadding=0 style=\"border-collapse: collapse\"><TBODY><TR> 
-    <TD><INPUT type=text name=\"text[".$s_name."]\" id=\"f_date_c[".$s_name."]\" value=\"\" onchange=\"document.getElementById('add[".$s_name."]').value=document.getElementById('f_date_c[".$s_name."]').value+'|'+document.getElementById('f_date_c2[".$s_name."]').value\" readonly=1 size=15></TD>
-    <TD><IMG src=/images/calendar.gif id=\"f_trigger_c[".$s_name."]\" title=\"Выбор даты\" onmouseover=\"this.style.background=&#39;red&#39;;\" onmouseout=\"this.style.background=&#39;&#39;\"></TD>
+    <TABLE cellspacing=0 cellpadding=0 style='border-collapse: collapse'><TBODY><TR> 
+    <TD><INPUT type=text name='text[".$s_name."]' id='f_date_c[".$s_name."]' value='' onchange=\"document.getElementById('add[".$s_name."]').value=document.getElementById('f_date_c[".$s_name."]').value+'|'+document.getElementById('f_date_c2[".$s_name."]').value\" readonly=1 size=15></TD>
+    <TD><IMG src=/images/calendar.gif id='f_trigger_c[".$s_name."]' title='Выбор даты'></TD>
     <TD width=20 align=center> - </TD>
-    <TD><INPUT type=text name=\"text[".$s_name."]\" id=\"f_date_c2[".$s_name."]\" value=\"\" onchange=\"document.getElementById('add[".$s_name."]').value=document.getElementById('f_date_c[".$s_name."]').value+'|'+document.getElementById('f_date_c2[".$s_name."]').value\" readonly=1 size=15></TD> 
-    <TD><IMG src=/images/calendar.gif id=\"f_trigger_c2[".$s_name."]\" title=\"Выбор даты\" onmouseover=\"this.style.background=&#39;red&#39;;\" onmouseout=\"this.style.background=&#39;&#39;\"></TD>
+    <TD><INPUT type=text name='text[".$s_name."]' id='f_date_c2[".$s_name."]' value='' onchange=\"document.getElementById('add[".$s_name."]').value=document.getElementById('f_date_c[".$s_name."]').value+'|'+document.getElementById('f_date_c2[".$s_name."]').value\" readonly=1 size=15></TD> 
+    <TD><IMG src=/images/calendar.gif id='f_trigger_c2[".$s_name."]' title='Выбор даты'></TD>
     </TR></TBODY></TABLE>
-    <SCRIPT type=\"text/javascript\"> 
+    <SCRIPT type='text/javascript'> 
         Calendar.setup({
             inputField     :    \"f_date_c[".$s_name."]\",     // id of the input field
             ifFormat       :    \"%e %B %Y\",      // format of the input field
@@ -443,7 +431,7 @@ function base_pages_add_page($name, $razdel, $red=0, $new=0, $pid=0) {
             singleClick    :    true
         });
     </SCRIPT>
-    <SCRIPT type=\"text/javascript\"> 
+    <SCRIPT type='text/javascript'> 
         Calendar.setup({
             inputField     :    \"f_date_c2[".$s_name."]\",     // id of the input field
             ifFormat       :    \"%e %B %Y\",      // format of the input field
@@ -452,7 +440,7 @@ function base_pages_add_page($name, $razdel, $red=0, $new=0, $pid=0) {
             singleClick    :    true
         });
     </SCRIPT>
-    <input type=hidden name=\"add[".$s_name."]\" id=\"add[".$s_name."]\" value=\"дата\">"; //
+    <input type=hidden name='add[".$s_name."]' id='add[".$s_name."]' value='дата'>"; //
   break;
   ///////////////////
   case "2": // файл
@@ -471,20 +459,20 @@ function base_pages_add_page($name, $razdel, $red=0, $new=0, $pid=0) {
     $type_mini="";
     if ($minipic==1) $type_mini = "Также будет создана миниатюра.";
 
-    echo "<br><br><b>$s_title:</b><br><input type=file name=\"add[$s_name]\" size=30> 
-    <b>или ссылка:</b> <input type=text name=\"add[$s_name]_link\" value=\"$papka\" size=30><br>
+    echo "<br><br><b>$s_title:</b><br><input type=file name='add[$s_name]' size=30> 
+    <b>или ссылка:</b> <input type=text name='add[$s_name]_link' value='$papka' size=30><br>
     Файл ($type_fil) сохранится в $papka, на странице будет $type_mesto. $type_mini";
   break;
   ///////////////////
   case "1": // текст
-    echo "<br><br><b>$s_title:</b><br><textarea name=\"add[$s_name]\" rows=\"4\" cols=\"60\" style=\"width:98%;\">".$shablon."</textarea>";
+    echo "<br><br><b>$s_title:</b><br><textarea name='add[$s_name]' rows='4' cols='60' style='width:98%;'>".$shablon."</textarea>";
   break;
   ///////////////////
   case "0": // список слов
   echo "<br><br><b>$s_title:</b><br>";
              $sql2 = "select * from ".$prefix."_spiski where type='$s_name' order by parent,id";
              $result2 = $db->sql_query($sql2);
-             echo "<select size=10 multiple=multiple name=\"add[$s_name][]\" style='font-size:11px;'><option value=0> не выбрано </option>";
+             echo "<select size=10 multiple=multiple name='add[$s_name][]' style='font-size:11px;'><option value=0> не выбрано </option>";
              while ($row2 = $db->sql_fetchrow($result2)) {
                $s_id2 = $row2['id'];
                $s_title2 = $row2['name'];
@@ -500,12 +488,8 @@ function base_pages_add_page($name, $razdel, $red=0, $new=0, $pid=0) {
   ///////////////////
   }
   }
-  echo "<br>
-  <input type=hidden name=op value=".$admintip."_save_page>
-  </td></tr>
-  <tr valign=bottom><td align=center bgcolor=#eeeeee>
-  </form>
-  </td></tr></table>";
+  echo "<input type=hidden name=op value=".$admintip."_save_page>
+  </td></tr></table></div></form>";
   admin_footer();
 }
 #####################################################################################################################
@@ -548,7 +532,7 @@ function base_pages_save_page($cid, $module, $title, $open_text, $main_text, $fo
 
   $open_text = mysql_real_escape_string(form($module, $open_text, "open"));
   $main_text = mysql_real_escape_string(form($module, $main_text, "main"));
-  $title = mysql_real_escape_string(form($module, $title, "title"));
+  $title = mysql_real_escape_string(form($module, trim($title), "title"));
 
   $keywords2 = trim(str_replace("  "," ",str_replace("   "," ",str_replace(" ,",", ",$keywords2))));
   $description2 = trim($description2);
@@ -713,12 +697,13 @@ function base_pages_save_page($cid, $module, $title, $open_text, $main_text, $fo
   }
   $db->sql_query("DELETE FROM ".$prefix."_spiski WHERE name='-00-00'"); 
   // Удаление ошибок. Потом поправить, чтобы не было их!!!
-  Header("Location: sys.php?op=base_pages_add_page&name=".$module."&razdel=".$cid."&red=".$red."&new=1&pid=".$page_id);
+  Header("Location: sys.php?op=base_pages_add_page&name=".$module."&razdel=".$cid."&red=".$red."&new=1&pid=".$page_id."#1");
 }
 #####################################################################################################################
 function base_pages_edit_page($pid, $red=0) {
-$page_id = $pid;
-global $tip, $module, $admintip, $red, $prefix, $db, $new;
+  echo "<a name=1></a>";
+  $page_id = $pid;
+  global $tip, $module, $admintip, $red, $prefix, $db, $new, $title_razdel_and_bd;
     $sql = "SELECT * FROM ".$prefix."_pages WHERE pid='$pid' limit 1";
     $result = $db->sql_query($sql);
     $row = $db->sql_fetchrow($result);
@@ -757,45 +742,52 @@ global $tip, $module, $admintip, $red, $prefix, $db, $new;
     $result = $db->sql_query($sql);
     $row = $db->sql_fetchrow($result);
     $new_pid = $row['pid'];
-    echo "<div id='backuppage".$new_pid."'><span class='green'>";
-    if ( $new > 0 ) echo "<a target='_blank' class='green' href=/-".$module."_page_".$pid.">Страница</a> отредактирована. "; else echo "Открыть страницу <a target='_blank' class='green' href=/-".$module."_page_".$pid.">на сайте</a>. ";
-    if ( $new_pid != 0 ) echo "Есть предыдущая версия. <a title='Заменить этой копией оригинал...' onclick='resetpage(".$new_pid."); setTimeout(\"location.reload()\", 2000);' class='punkt radius'><img class=\"icon2 i24\" src=\"/images/1.gif\"><nobr>Заменить на последнюю</nobr></a></span> </div>";
+    if ( $new > 0 ) echo "<div class='notice success'><a target='_blank' class='green' href=/-".$module."_page_".$pid.">Страница</a> отредактирована. "; 
+    else echo "<div class='notice warning'>Открыть страницу <a target='_blank' class='green' href=/-".$module."_page_".$pid.">на сайте</a>. ";
+    if ( $new_pid != 0 ) echo "Есть предыдущая версия: <button title='Заменить этой копией оригинал...' onclick='resetpage(".$new_pid."); setTimeout(\"location.reload()\", 2000);' class='small'><img class='icon2 i24' src='/images/1.gif'>Заменить на последнюю резервную копию</button>";
     else echo "Предыдущей версии нет.";
-    menu();
+    echo "</div>";
 
-echo "<form method=\"POST\" action=\"sys.php\" enctype=\"multipart/form-data\">
-<table width=99%><tr valign=top><td width=250 bgcolor=#eeeeee>
-<input type=submit value=\"Сохранить изменения\" class=radius style='width:250px; height:55px; font-size: 20px;'><br><br>
-<h2>Раздел:</h2>";
-           $sql = "select name, title, color from ".$prefix."_mainpage where type='2' and `tables`='pages' and name != 'index' order by color desc, title";
-           $result = $db->sql_query($sql);
-           echo "<select name=module id=to_razdel style='font-size:11px; width:100%;' size=1 onChange=\"izmenapapka(document.getElementById('to_razdel').value, '', '','','addpage');\">";
-           while ($row = $db->sql_fetchrow($result)) {
-               $name2 = $row['name'];
-               $title2 = $row['title'];
-               $color = $row['color'];
-switch ($color) {
-  case "1": // Частоупотребляемый зеленый
-  $color = "b4f3b4"; break;
-  case "2": // Редкоупотребляемый желтый
-  $color = "f3f3a3";  break;
-  case "3": // Закрытый или старый красный
-  $color = "ffa4ac"; break;
-  case "4": // Новый, в разработке
-  $color = "b8f4f2"; break;
-  default: 
-  $color = "ffffff"; break;  // Стандартный белый
-}
-               if ($module == $name2) $sel = "selected"; else $sel = "";
-               echo "<option style='background:".$color.";' value=\"$name2\" $sel>$title2</option>";
-           }
-           $sql = "select * from ".$prefix."_".$tip."_categories where module='$module' and `tables`='pages' order by parent_id, title";
-           $result = $db->sql_query($sql);
-           $numrows = $db->sql_numrows($result);
-           if ($numrows > 10) $size = 10*16; else $size=($numrows+2)*16;
-echo "</select><br>
-<div style='display:inline; float:right;'><div id=showa style='display:inline; float:right;'><a style='cursor:pointer;' onclick=\"show('hidea'); show('showa'); $('#to_papka').width(500); $('#to_papka').height(400);\">развернуть &rarr;</a></div><div id=hidea style='display:none;'><a style='cursor:pointer;' onclick=\"show('showa'); show('hidea'); $('#to_papka').width(248); $('#to_papka').height(".$size.");\">&larr; свернуть</a></div></div>
-<h2>Папка:</h2>";
+    echo "<form action='sys.php' method='post' enctype='multipart/form-data'>
+    <div style='background: #e2e5ea;'>
+  <div class='black_grad' style='height:45px;'>
+  <button type=submit id=new_razdel_button class='medium green' onclick=\"show('sortirovka');\" style='float:left; margin:3px;'><span style='margin-right: -2px;' class='icon white medium' data-icon='c'></span>Сохранить</button>
+  <span class='h1' style='padding-top:10px;'>
+  ".$title_razdel_and_bd[$module]." &rarr; Редактирование страницы</span>";
+  if (intval($nastroi) != 1) red_vybor();
+  echo "</div>";
+
+  echo "<table width=100%><tr valign=top><td width=250 bgcolor=#eeeeee>
+  <h2>Раздел:</h2>";
+  $sql = "select name, title, color from ".$prefix."_mainpage where type='2' and `tables`='pages' and name != 'index' order by color desc, title";
+  $result = $db->sql_query($sql);
+  echo "<select name=module id=to_razdel style='font-size:11px; width:100%;' size=1 onChange=\"izmenapapka(document.getElementById('to_razdel').value, '', '','','addpage');\">";
+  while ($row = $db->sql_fetchrow($result)) {
+    $name2 = $row['name'];
+    $title2 = $row['title'];
+    $color = $row['color'];
+    switch ($color) {
+      case "1": // Частоупотребляемый зеленый
+      $color = "b4f3b4"; break;
+      case "2": // Редкоупотребляемый желтый
+      $color = "f3f3a3";  break;
+      case "3": // Закрытый или старый красный
+      $color = "ffa4ac"; break;
+      case "4": // Новый, в разработке
+      $color = "b8f4f2"; break;
+      default: 
+      $color = "ffffff"; break;  // Стандартный белый
+    }
+    if ($module == $name2) $sel = "selected"; else $sel = "";
+    echo "<option style='background:".$color.";' value='$name2' $sel>$title2</option>";
+  }
+  $sql = "select * from ".$prefix."_".$tip."_categories where module='$module' and `tables`='pages' order by parent_id, title";
+  $result = $db->sql_query($sql);
+  $numrows = $db->sql_numrows($result);
+  if ($numrows > 10) $size = 10*16; else $size=($numrows+2)*16;
+  echo "</select><br>
+  <div style='display:inline; float:right;'><div id=showa style='display:inline; float:right;'><a style='cursor:pointer;' onclick=\"show('hidea'); show('showa'); $('#to_papka').width(500); $('#to_papka').height(400);\">развернуть &rarr;</a></div><div id=hidea style='display:none;'><a style='cursor:pointer;' onclick=\"show('showa'); show('hidea'); $('#to_papka').width(248); $('#to_papka').height(".$size.");\">&larr; свернуть</a></div></div>
+  <h2>Папка:</h2>";
          echo "<div id='izmenapapka'>
          <select name=cid id='to_papka' size=4 style='font-size:11px; width:248px; height:".$size."px;'><option value=0 selected>Основная папка («корень»)</option>";
            while ($row = $db->sql_fetchrow($result)) {
@@ -819,277 +811,262 @@ echo "</select><br>
       foreach( $first_opt as $key => $value ) {
         if ($first_opt[$key] != "") echo $first_opt[$key];
       }
-echo "</select></div>";
-global $siteurl;
-echo "<br><br>";
-if ($active==1) $check= " checked"; else $check= " unchecked";
-echo "<label><input type=checkbox name=active value=1".$check."> Включить страницу</label> <a onclick=\"show('help3')\" class=help>?</a><br><div id='help3' style='display:none;'><br>Если поставить эту галочку — ссылка на эту страницу будет видна в автоматическом списке страниц данного раздела, а также в блоках, которые выводят страницы данного раздела (если они созданы). Если галочку убрать — на эту страницу все равно можно поставить ссылку из любого места на сайте или с другого сайта и страница будет видна тем, кто перейдет по этой вручную созданной ссылке. Если вы хотите, чтобы в общем списке страниц данная страница не отображалась, а раскрывала более подробную информацию при переходе с другой страницы — отключите ее и сделайте на нее ссылку вручную.<br></div><br>";
-echo "<div id='dop2'><a onclick=\"show('dop'); show('dop2');\" class=help>Дополнительно...</a><br></div><div id='dop' style='display:none;'><br>";
-if ($rss==1) $check= " checked"; else $check= " unchecked";
-echo "<label><input type=checkbox name=rss value=1".$check."> Добавить в RSS</label>  <a onclick=\"show('help2')\" class=help>?</a><br><div id='help2' style='display:none;'><br>Технология RSS похожа на e-mail подписку на новости — в RSS-программу, сайт RSS-читалки или встроенную систему чтения RSS в браузере добавляется ссылка на данный сайт, после чего название и предисловие всех новых страниц, отмеченных данной галочкой, будут видны подписавшемуся человеку и он сможет быстро ознакомиться с их заголовками, не заходя на сайт. Если что-то ему понравится — он откроет сайт и прочитает подробности. RSS используется для постепенного увеличения количества посетителей сайта путем их возвращения на сайт за интересной информацией. <a href=http://yandex.ru/yandsearch?text=Что+такое+RSS%3F target=_blank>Подробнее о RSS?</a><br></div><br>";
-if ($mainpage==1) $check= " checked"; else $check= " unchecked";
-echo "<label><input type=checkbox name=mainpage value=1".$check."> На главную страницу</label> <a onclick=\"show('help1')\" class=help>?</a><br><div id='help1' style='display:none;'><br>Если отметить эту галочку, данная страница будет отображаться в блоке, который настроен на отображение только помеченных этой галочкой страниц, или не будет отображаться в блоке, который настроен на показ всех неотмеченных галочкой страниц.<br></div><br>";
-echo "Очередность: <INPUT type=text name=sor value=\"".$sor."\" style='text-align:center;' size=3 onmouseover=\"this.style.background=&#39;lightgreen&#39;;\" onmouseout=\"this.style.background=&#39;&#39;\"><a onclick=\"show('help8')\" class=help>?</a><div id='help8' style='display:none;'><br>Настраивается в настройках раздела. Может быть равна цифре. Применяется для ручной сортировки страниц. Лучше всего делать кратной 10, например 20, 30, 40 и т.д. для того, чтобы было удобно вставлять страницы между двумя другими. Если очередность у двух страниц совпадает, сортировка происходит по дате.<br></div><br><br>";
-$data = explode(" ",$data);
-$data1 = date2normal_view($data[0]);
-$data = explode(":",$data[1]);
-$data2 = $data[0];
-$data3 = $data[1];
-$data4 = $data[2];
-$data3_2 = date("i", time());
-echo "<h2>Дата создания:</h2>
-<script> 
-$(function() { $.datepicker.setDefaults( $.datepicker.regional[ \"ru\" ] ); $( \"#f_date_c999\" ).datepicker({ changeMonth: true, changeYear: true, dateFormat: \"d MM yy\", showAnim: 'slide' }); });
-</script>
-<INPUT type=text name=data1 id=\"f_date_c999\" value=\"".$data1."\" onchange=\"document.getElementById('add999').value=document.getElementById('f_date_c999').value+'|'+document.getElementById('f_date_c2999').value\" readonly=1 size=18 onmouseover=\"this.style.background=&#39;lightgreen&#39;;\" onmouseout=\"this.style.background=&#39;&#39;\"> <a onclick=\"show('help0')\" class=help>?</a><br>
-Время: ";
-echo "<select name=data2 style='font-size:12px;'>";
-for ($x=0; $x < 24; $x++) {
-if ($x<10) $xx = "0".$x; else $xx = $x;
-           $sel = ""; if ($xx == $data2) $sel = " selected";
-	   echo "<option value=".$xx."$sel> $xx </option>";
-           }
-echo "</select>ч";
-echo "<select name=data3 style='font-size:12px;'>
-<option value=".$data3."$sel> $data3 </option>
-<option value=".$data3_2."> $data3_2!</option>
-<option value='00'> 00 </option>
-<option value='10'> 10 </option>
-<option value='15'> 15 </option>
-<option value='20'> 20 </option>
-<option value='30'> 30 </option>
-<option value='40'> 40 </option>
-<option value='45'> 45 </option>
-<option value='50'> 50 </option>
-<option value='55'> 55 </option>";
-echo "</select>м";
-echo "<input type=text name=data4 value=\"".$data4."\" style='font-size:12px;' size=1 onclick=\"this.value='00'\" onmouseover=\"this.style.background=&#39;lightgreen&#39;;\" onmouseout=\"this.style.background=&#39;&#39;\">с
-<div id='help0' style='display:none;'><br>Для выбора даты из календаря нажмите по дате. Для обнуления секунд кликните по ним. Минуты представлены текущим вариантом или выбором из основного интервала для ускорения работы.<br></div>
-<br><br>";
-echo "<a onclick=\"show('slugebka')\" class=punkt>Скрытая информация</a>
-<br><div id='slugebka' style='display:none;'><div class=radius><span class=small>Лучше не менять.</span><br>
-<h3 style='display:inline'>Копия:</h3><INPUT type=text name=cop value=\"".$copy."\" size=3><a onclick=\"show('help18')\" class=help>?</a><br><div id='help18' style='display:none;'>У страниц-копий указывается один и тот же номер — номер оригинальной страницы. Если это не копия, а единственный оригинал, цифра равна 0.<br></div><br>
-<h3 style='display:inline'>Кол-во комментариев:</h3><INPUT type=text name=com value=\"".$comm."\" size=3><br><br>
-<h3 style='display:inline'>Кол-во посещений:</h3><INPUT type=text name=count value=\"".$counter."\" size=3>
-</div></div><br>
+  echo "</select></div>";
+  global $siteurl;
+  echo "<br><br>";
+  if ($active==1) $check= " checked"; else $check= " unchecked";
+  echo "<label><input type=checkbox name=active value=1".$check."> Включить страницу</label> <a onclick=\"show('help3')\" class=help>?</a><br><div id='help3' style='display:none;'><br>Если поставить эту галочку — ссылка на эту страницу будет видна в автоматическом списке страниц данного раздела, а также в блоках, которые выводят страницы данного раздела (если они созданы). Если галочку убрать — на эту страницу все равно можно поставить ссылку из любого места на сайте или с другого сайта и страница будет видна тем, кто перейдет по этой вручную созданной ссылке. Если вы хотите, чтобы в общем списке страниц данная страница не отображалась, а раскрывала более подробную информацию при переходе с другой страницы — отключите ее и сделайте на нее ссылку вручную.<br></div><br>";
+  echo "<div id='dop2'><a onclick=\"show('dop'); show('dop2');\" class=help>Дополнительно...</a><br></div><div id='dop' style='display:none;'><br>";
+  if ($rss==1) $check= " checked"; else $check= " unchecked";
+  echo "<label><input type=checkbox name=rss value=1".$check."> Добавить в RSS</label>  <a onclick=\"show('help2')\" class=help>?</a><br><div id='help2' style='display:none;'><br>Технология RSS похожа на e-mail подписку на новости — в RSS-программу, сайт RSS-читалки или встроенную систему чтения RSS в браузере добавляется ссылка на данный сайт, после чего название и предисловие всех новых страниц, отмеченных данной галочкой, будут видны подписавшемуся человеку и он сможет быстро ознакомиться с их заголовками, не заходя на сайт. Если что-то ему понравится — он откроет сайт и прочитает подробности. RSS используется для постепенного увеличения количества посетителей сайта путем их возвращения на сайт за интересной информацией. <a href=http://yandex.ru/yandsearch?text=Что+такое+RSS%3F target=_blank>Подробнее о RSS?</a><br></div><br>";
+  if ($mainpage==1) $check= " checked"; else $check= " unchecked";
+  echo "<label><input type=checkbox name=mainpage value=1".$check."> На главную страницу</label> <a onclick=\"show('help1')\" class=help>?</a><br><div id='help1' style='display:none;'><br>Если отметить эту галочку, данная страница будет отображаться в блоке, который настроен на отображение только помеченных этой галочкой страниц, или не будет отображаться в блоке, который настроен на показ всех неотмеченных галочкой страниц.<br></div><br>";
+  echo "Очередность: <INPUT type=text name=sor value='".$sor."' style='text-align:center;' size=3><a onclick=\"show('help8')\" class=help>?</a><div id='help8' style='display:none;'><br>Настраивается в настройках раздела. Может быть равна цифре. Применяется для ручной сортировки страниц. Лучше всего делать кратной 10, например 20, 30, 40 и т.д. для того, чтобы было удобно вставлять страницы между двумя другими. Если очередность у двух страниц совпадает, сортировка происходит по дате.<br></div><br><br>";
+  $data = explode(" ",$data);
+  $data1 = date2normal_view($data[0]);
+  $data = explode(":",$data[1]);
+  $data2 = $data[0];
+  $data3 = $data[1];
+  $data4 = $data[2];
+  $data3_2 = date("i", time());
+  echo "<h2>Дата создания:</h2>
+  <script> 
+  $(function() { $.datepicker.setDefaults( $.datepicker.regional[ \"ru\" ] ); $( \"#f_date_c999\" ).datepicker({ changeMonth: true, changeYear: true, dateFormat: \"d MM yy\", showAnim: 'slide' }); });
+  </script>
+  <INPUT type=text name=data1 id='f_date_c999' value='".$data1."' onchange=\"document.getElementById('add999').value=document.getElementById('f_date_c999').value+'|'+document.getElementById('f_date_c2999').value\" readonly=1 size=18> <a onclick=\"show('help0')\" class=help>?</a><br>
+  Время: ";
+  echo "<select name=data2 style='font-size:12px;'>";
+  for ($x=0; $x < 24; $x++) {
+  if ($x<10) $xx = "0".$x; else $xx = $x;
+             $sel = ""; if ($xx == $data2) $sel = " selected";
+  	   echo "<option value=".$xx."$sel> $xx </option>";
+             }
+  echo "</select>ч";
+  echo "<select name=data3 style='font-size:12px;'>
+  <option value=".$data3."$sel> $data3 </option>
+  <option value=".$data3_2."> $data3_2!</option>
+  <option value='00'> 00 </option>
+  <option value='10'> 10 </option>
+  <option value='15'> 15 </option>
+  <option value='20'> 20 </option>
+  <option value='30'> 30 </option>
+  <option value='40'> 40 </option>
+  <option value='45'> 45 </option>
+  <option value='50'> 50 </option>
+  <option value='55'> 55 </option>";
+  echo "</select>м";
+  echo "<input type=text name=data4 value='".$data4."' style='font-size:12px;' size=1 onclick=\"this.value='00'\">с
+  <div id='help0' style='display:none;'><br>Для выбора даты из календаря нажмите по дате. Для обнуления секунд кликните по ним. Минуты представлены текущим вариантом или выбором из основного интервала для ускорения работы.<br></div>
+  <br><br>";
+  echo "<a onclick=\"show('slugebka')\" class=punkt>Скрытая информация</a>
+  <br><div id='slugebka' style='display:none;'><div class=radius><span class=small>Лучше не менять.</span><br>
+  <h3 style='display:inline'>Копия:</h3><INPUT type=text name=cop value='".$copy."' size=3><a onclick=\"show('help18')\" class=help>?</a><br><div id='help18' style='display:none;'>У страниц-копий указывается один и тот же номер — номер оригинальной страницы. Если это не копия, а единственный оригинал, цифра равна 0.<br></div><br>
+  <h3 style='display:inline'>Кол-во комментариев:</h3><INPUT type=text name=com value='".$comm."' size=3><br><br>
+  <h3 style='display:inline'>Кол-во посещений:</h3><INPUT type=text name=count value='".$counter."' size=3>
+  </div></div><br>
 
-Горячие клавиши:<br>
-Ctrl+C&nbsp;-&nbsp;Копировать<br>
-Ctrl+V&nbsp;-&nbsp;Вставить<br>
-Ctrl+X&nbsp;-&nbsp;Вырезать<br>
-Ctrl+A&nbsp;-&nbsp;Выделить&nbsp;всё<br>
-Ctrl+Z&nbsp;-&nbsp;Отменить
-</div>
+  </div>
 
-</td><td>
-<h2 class=radius_top style='background:#eeeeee;'>Название страницы (заголовок)<textarea class=big name=title rows=1 cols=10 style='font-size:16pt; width:100%;'>".$titl."</textarea></h2>
-<br><h2 class=radius_top style='background:#eeeeee;'>Предисловие (начальный текст)";
+  </td><td>
+  <h2>Название страницы (заголовок)</h2><textarea class=big name=title rows=1 cols=10 style='font-size:16pt; width:100%;'>".$titl."</textarea>
+  <br><h2>Предисловие (начальный текст)</h2>";
 
-// Исправление сломанных таблиц
-$open_text = str_replace("td> nowrap","td nowrap",$open_text);
-$open_text = str_replace("td> valign","td valign",$open_text);
-$open_text = str_replace("td>>","td>",$open_text);
-$main_text = str_replace("td> nowrap","td nowrap",$main_text);
-$main_text = str_replace("td> valign","td valign",$main_text);
-$main_text = str_replace("td>>","td>",$main_text);
+  // Исправление сломанных таблиц
+  /*
+  $open_text = str_replace("td> nowrap","td nowrap",$open_text);
+  $open_text = str_replace("td> valign","td valign",$open_text);
+  $open_text = str_replace("td>>","td>",$open_text);
+  $main_text = str_replace("td> nowrap","td nowrap",$main_text);
+  $main_text = str_replace("td> valign","td valign",$main_text);
+  $main_text = str_replace("td>>","td>",$main_text);
+  */
+  if ($red==0) {
+  } elseif ($red==2) {
+  echo "<textarea cols=80 id=editor name=open_text rows=10>".$open_text."</textarea>
+  <script type='text/javascript'>
+  CKEDITOR.replace( 'editor', {
+   filebrowserBrowseUrl : '/ckfinder/ckfinder.html',
+   filebrowserImageBrowseUrl : '/ckfinder/ckfinder.html?Type=Images',
+   filebrowserFlashBrowseUrl : '/ckfinder/ckfinder.html?Type=Flash',
+   filebrowserUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
+   filebrowserImageUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images',
+   filebrowserFlashUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash'
+  });
+  </script>";
+  } elseif ($red==1) {
+    // Преобразование textarea (замена на русскую букву е, только для редактора)
+    $open_text = str_replace("textarea","tеxtarea",$open_text); // ireplace
+  echo "<textarea id='open_text' name='open_text' rows='8' cols='80' style='width:100%;'>".$open_text."</textarea>";
+  } elseif ($red==3) {
+  echo "<script type='text/javascript'> 
+  $(document).ready(function()
+  {  $('#open_text').editor({ focus: true, toolbar: 'classic', css: ['/ed/js/editor/css/editor.css'], upload: 'upload.php' }); 
+  $('#main_text').editor({ css: ['/ed/js/editor/css/editor.css'], toolbar: 'classic', upload: 'upload.php' });  });
+  </script>
+  <textarea id='open_text' name='open_text' rows='8' cols='80' style='width:100%;'>".$open_text."</textarea>";
+  } elseif ($red==4) {
+      global $red4_div_convert;
+      echo "<script type='text/javascript'>
+      function ButtonMore(obj, event, key){ obj.insertHtml('<!--more-->'); }
+      function ButtonBlock(obj, event, key){ obj.insertHtml('[Название блока]'); }
+      function ButtonLink(obj, event, key){ obj.insertHtml('{Название страницы или раздела}'); }
+      $(document).ready(function() { 
+        $('.redactor').redactor({ buttonsAdd: ['|', 'button_more', 'button_link', 'button_block'], buttonsCustom: {
+          button_more: {title: 'Вставка ссылки на полное содержание (для предисловия)',callback: ButtonMore},
+          button_link: {title: 'Вставка блока (например, галереи фотографий)',callback: ButtonBlock},
+          button_block: {title: 'Вставка быстрой ссылки на страницу или раздел',callback: ButtonLink}
+        }, ".$red4_div_convert." imageUpload: 'ed2/image_upload.php',fileUpload: 'ed2/file_upload.php', lang: 'ru', autoresize: false }); } );
+      </script>
+  <textarea id='open_text' class='redactor' name='open_text' rows='8' cols='80' style='width:100%;'>".$open_text."</textarea>";
+  }
 
-if ($red==0) {
-} elseif ($red==2) {
-echo "
-<textarea cols=80 id=editor name=open_text rows=10>".$open_text."</textarea>
-<script type=\"text/javascript\">
-CKEDITOR.replace( 'editor', {
- filebrowserBrowseUrl : '/ckfinder/ckfinder.html',
- filebrowserImageBrowseUrl : '/ckfinder/ckfinder.html?Type=Images',
- filebrowserFlashBrowseUrl : '/ckfinder/ckfinder.html?Type=Flash',
- filebrowserUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
- filebrowserImageUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images',
- filebrowserFlashUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash'
-});
-</script>";
-} elseif ($red==1) {
-  // Преобразование textarea (замена на русскую букву е, только для редактора)
-  $open_text = str_replace("textarea","tеxtarea",$open_text); // ireplace
-echo "<textarea id=\"open_text\" name=\"open_text\" rows=\"8\" cols=\"80\" style='width:100%;'>".$open_text."</textarea>";
-} elseif ($red==3) {
-echo "<script type=\"text/javascript\"> 
-$(document).ready(function()
-{  $('#open_text').editor({ focus: true, toolbar: 'classic', css: ['/ed/js/editor/css/editor.css'], upload: 'upload.php' }); 
-$('#main_text').editor({ css: ['/ed/js/editor/css/editor.css'], toolbar: 'classic', upload: 'upload.php' });  });
-</script>
-<textarea id=\"open_text\" name=\"open_text\" rows=\"8\" cols=\"80\" style='width:100%;'>".$open_text."</textarea>";
-} elseif ($red==4) {
-    global $red4_div_convert;
-    echo "<script type=\"text/javascript\">
-    function ButtonMore(obj, event, key){ obj.insertHtml('<!--more-->'); }
-    function ButtonBlock(obj, event, key){ obj.insertHtml('[Название блока]'); }
-    function ButtonLink(obj, event, key){ obj.insertHtml('{Название страницы или раздела}'); }
-    $(document).ready(function() { 
-      $('.redactor').redactor({ buttonsAdd: ['|', 'button_more', 'button_link', 'button_block'], buttonsCustom: {
-        button_more: {title: 'Вставка ссылки на полное содержание (для предисловия)',callback: ButtonMore},
-        button_link: {title: 'Вставка блока (например, галереи фотографий)',callback: ButtonBlock},
-        button_block: {title: 'Вставка быстрой ссылки на страницу или раздел',callback: ButtonLink}
-      }, ".$red4_div_convert." imageUpload: 'ed2/image_upload.php',fileUpload: 'ed2/file_upload.php', lang: 'ru', autoresize: false }); } );
-    </script>
-<textarea id=\"open_text\" class='redactor' name=\"open_text\" rows=\"8\" cols=\"80\" style='width:100%;'>".$open_text."</textarea>";
-}
+  echo "<br><h2>Содержание (основной текст)</h2>";
 
-echo "</h2><br><h2 class=radius_top style='background:#eeeeee;'>Содержание (основной текст)";
+  if ($red==0) {
+  } elseif ($red==2) {
+    echo "<textarea cols=80 id=edit name=main_text rows=12>".$main_text."</textarea>
+  <script type='text/javascript'>
+  CKEDITOR.replace( 'edit', {
+   filebrowserBrowseUrl : '/ckfinder/ckfinder.html',
+   filebrowserImageBrowseUrl : '/ckfinder/ckfinder.html?Type=Images',
+   filebrowserFlashBrowseUrl : '/ckfinder/ckfinder.html?Type=Flash',
+   filebrowserUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
+   filebrowserImageUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images',
+   filebrowserFlashUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash'
+  });
+  </script>";
+  } elseif ($red==1) {
+    // Преобразование textarea (замена на русскую букву е, только для редактора)
+    $main_text = str_replace("textarea","tеxtarea",$main_text); // ireplace
+    echo "<textarea id='main_text' name='main_text' rows='12' cols='80' style='width:100%;'>".$main_text."</textarea>";
+  } else {
+    echo "<textarea id='main_text' class='redactor' name='main_text' rows='12' cols='80' style='width:100%;'>".$main_text."</textarea>";
+  }
+  echo "<br>";
 
-if ($red==0) {
-} elseif ($red==2) {
-  echo "<textarea cols=80 id=edit name=main_text rows=12>".$main_text."</textarea>
-<script type=\"text/javascript\">
-CKEDITOR.replace( 'edit', {
- filebrowserBrowseUrl : '/ckfinder/ckfinder.html',
- filebrowserImageBrowseUrl : '/ckfinder/ckfinder.html?Type=Images',
- filebrowserFlashBrowseUrl : '/ckfinder/ckfinder.html?Type=Flash',
- filebrowserUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
- filebrowserImageUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images',
- filebrowserFlashUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash'
-});
-</script>";
-} elseif ($red==1) {
-  // Преобразование textarea (замена на русскую букву е, только для редактора)
-  $main_text = str_replace("textarea","tеxtarea",$main_text); // ireplace
-  echo "<textarea id=\"main_text\" name=\"main_text\" rows=\"12\" cols=\"80\" style='width:100%;'>".$main_text."</textarea>";
-} else {
-  echo "<textarea id=\"main_text\" class='redactor' name=\"main_text\" rows=\"12\" cols=\"80\" style='width:100%;'>".$main_text."</textarea>";
-}
-echo "</h2><br>";
+  // это галерея?
+  $sql = "select text from ".$prefix."_mainpage where name='$module' and type='2'";
+  $result = $db->sql_query($sql);
+  $row = $db->sql_fetchrow($result);
+  $tex = $row['text'];
+  if (strpos($tex,"view=5")) echo "<p><b>Фото (для фотогалереи):</b> <input type=file name=foto size=40> 
+  <b>или ссылка:</b> <input type=text name=link_foto value='$foto' size=40></p>";
+  else echo "<input type=hidden name=foto value='$foto'>";
 
-// это галерея?
-$sql = "select text from ".$prefix."_mainpage where name='$module' and type='2'";
-$result = $db->sql_query($sql);
-$row = $db->sql_fetchrow($result);
-$tex = $row['text'];
-if (strpos($tex,"view=5")) echo "<p><b>Фото (для фотогалереи):</b> <input type=file name=foto size=40> 
-<b>или ссылка:</b> <input type=text name=link_foto value='$foto' size=40></p>";
-else echo "<input type=hidden name=foto value='$foto'>";
+  // это магазин?
+  if (strpos($tex,"view=3")) echo "<p><b>Стоимость:</b> <input type=text name=price size=3 value='$price'> руб.</p>";
+  else echo "<input type=hidden name=price value='$price'>";
 
-// это магазин?
-if (strpos($tex,"view=3")) echo "<p><b>Стоимость:</b> <input type=text name=price size=3 value='$price'> руб.</p>";
-else echo "<input type=hidden name=price value='$price'>";
+  // Подсоединие списков ////////////////////////////////
+  if ($copy != 0) $page_id = $copy;
+  // Ищем все списки
+  $sql = "select * from ".$prefix."_mainpage where (useit='".$id."' or useit='0') and type='4' order by id";
+  $result = $db->sql_query($sql);
+  while ($row = $db->sql_fetchrow($result)) {
+    $s_id = $row['id'];
+    $s_title = $row['title'];
+    $s_name = $row['name'];
+    $options = explode("|", $row['text']); $options = $options[1];
+    $type=0; $shablon=""; 
+    parse_str($options); // раскладка всех настроек списка
+    switch($type) {
+      case "4": // строка
+        // Получаем значениЕ поля
+        $sql2 = "SELECT name FROM ".$prefix."_spiski WHERE type='".$s_name."' AND pages like '% ".$page_id." %'";
+        $result2 = $db->sql_query($sql2);
+        $row2 = $db->sql_fetchrow($result2);
+        $sp_name = $row2['name'];
+        echo "<br><br><b>$s_title:</b><br><INPUT type=text name='add[$s_name]' value='".$sp_name."'>";
+      break;
 
-// Подсоединие списков ////////////////////////////////
-if ($copy != 0) $page_id = $copy;
-// Ищем все списки
-$sql = "select * from ".$prefix."_mainpage where (useit='".$id."' or useit='0') and type='4' order by id";
-$result = $db->sql_query($sql);
-while ($row = $db->sql_fetchrow($result)) {
-$s_id = $row['id'];
-$s_title = $row['title'];
-$s_name = $row['name'];
-$options = explode("|", $row['text']); $options = $options[1];
-$type=0; $shablon=""; 
-parse_str($options); // раскладка всех настроек списка
-switch($type) {
-////////////////////////////////////////////////////////////////////////////
+      case "3": // период времени
+        // Получаем значениЕ поля
+        $sql2 = "SELECT name FROM ".$prefix."_spiski WHERE type='".$s_name."' AND pages like '% ".$page_id." %' order by name";
+        $result2 = $db->sql_query($sql2); $row2 = $db->sql_fetchrow($result2); $date1 = date2normal_view($row2['name']);
+        $sql2 = "SELECT name FROM ".$prefix."_spiski WHERE type='".$s_name."' AND pages like '% ".$page_id." %' order by name desc";
+        $result2 = $db->sql_query($sql2); $row2 = $db->sql_fetchrow($result2); $date2 = date2normal_view($row2['name']);
 
-case "4": // строка
-// Получаем значениЕ поля
-$sql2 = "SELECT name FROM ".$prefix."_spiski WHERE type='".$s_name."' AND pages like '% ".$page_id." %'";
-$result2 = $db->sql_query($sql2);
-$row2 = $db->sql_fetchrow($result2);
-$sp_name = $row2['name'];
-echo "<br><br><b>$s_title:</b><br><INPUT type=text name=\"add[$s_name]\" value='".$sp_name."'>";
-break;
-////////////////////////////////////////////////////////////////////////////
+        echo "<br><br><b>".$s_title.":</b> (выберите даты из меню, кликнув по значкам)<br>
+        <TABLE cellspacing=0 cellpadding=0 style='border-collapse: collapse'><TBODY><TR> 
+        <TD><INPUT type=text name='text[".$s_name."]' id='f_date_c[".$s_name."]' value='".$date1."' onchange=\"document.getElementById('add[".$s_name."]').value=document.getElementById('f_date_c[".$s_name."]').value+'|'+document.getElementById('f_date_c2[".$s_name."]').value\" readonly=1 size=15></TD>
+        <TD><IMG src=/images/calendar.gif id='f_trigger_c[".$s_name."]' title='Выбор даты'></TD>
+        <TD width=20 align=center> - </TD>
+        <TD><INPUT type=text name='text[".$s_name."]' id='f_date_c2[".$s_name."]' value='".$date2."' onchange=\"document.getElementById('add[".$s_name."]').value=document.getElementById('f_date_c[".$s_name."]').value+'|'+document.getElementById('f_date_c2[".$s_name."]').value\" readonly=1 size=15></TD> 
+        <TD><IMG src=/images/calendar.gif id='f_trigger_c2[".$s_name."]' title='Выбор даты'></TD>
+        </TR></TBODY></TABLE>
+        <SCRIPT type='text/javascript'> 
+            Calendar.setup({
+                inputField     :    \"f_date_c[".$s_name."]\",     // id of the input field
+                ifFormat       :    \"%e %B %Y\",      // format of the input field
+                button         :    \"f_trigger_c[".$s_name."]\",  // trigger for the calendar (button ID)
+                align          :    \"Tl\",           // alignment (defaults to \"Bl\")
+                singleClick    :    true
+            });
+        </SCRIPT>
+        <SCRIPT type='text/javascript'> 
+            Calendar.setup({
+                inputField     :    \"f_date_c2[".$s_name."]\",     // id of the input field
+                ifFormat       :    \"%e %B %Y\",      // format of the input field
+                button         :    \"f_trigger_c2[".$s_name."]\",  // trigger for the calendar (button ID)
+                align          :    \"Tl\",           // alignment (defaults to \"Bl\")
+                singleClick    :    true
+            });
+        </SCRIPT>
+        <input type=hidden name='add[".$s_name."]' id='add[".$s_name."]' value='".$date1."|".$date2."'>"; //
+      break;
 
-case "3": // период времени
-// Получаем значениЕ поля
-$sql2 = "SELECT name FROM ".$prefix."_spiski WHERE type='".$s_name."' AND pages like '% ".$page_id." %' order by name";
-$result2 = $db->sql_query($sql2); $row2 = $db->sql_fetchrow($result2); $date1 = date2normal_view($row2['name']);
-$sql2 = "SELECT name FROM ".$prefix."_spiski WHERE type='".$s_name."' AND pages like '% ".$page_id." %' order by name desc";
-$result2 = $db->sql_query($sql2); $row2 = $db->sql_fetchrow($result2); $date2 = date2normal_view($row2['name']);
+      case "2": // файл (НЕ_ГОТОВО!!!)
+      break;
 
-echo "<br><br><b>".$s_title.":</b> (выберите даты из меню, кликнув по значкам)<br>
-<TABLE cellspacing=0 cellpadding=0 style=\"border-collapse: collapse\"><TBODY><TR> 
-<TD><INPUT type=text name=\"text[".$s_name."]\" id=\"f_date_c[".$s_name."]\" value=\"".$date1."\" onchange=\"document.getElementById('add[".$s_name."]').value=document.getElementById('f_date_c[".$s_name."]').value+'|'+document.getElementById('f_date_c2[".$s_name."]').value\" readonly=1 size=15></TD>
-<TD><IMG src=/images/calendar.gif id=\"f_trigger_c[".$s_name."]\" title=\"Выбор даты\" onmouseover=\"this.style.background=&#39;red&#39;;\" onmouseout=\"this.style.background=&#39;&#39;\"></TD>
-<TD width=20 align=center> - </TD>
-<TD><INPUT type=text name=\"text[".$s_name."]\" id=\"f_date_c2[".$s_name."]\" value=\"".$date2."\" onchange=\"document.getElementById('add[".$s_name."]').value=document.getElementById('f_date_c[".$s_name."]').value+'|'+document.getElementById('f_date_c2[".$s_name."]').value\" readonly=1 size=15></TD> 
-<TD><IMG src=/images/calendar.gif id=\"f_trigger_c2[".$s_name."]\" title=\"Выбор даты\" onmouseover=\"this.style.background=&#39;red&#39;;\" onmouseout=\"this.style.background=&#39;&#39;\"></TD>
-</TR></TBODY></TABLE>
-<SCRIPT type=\"text/javascript\"> 
-    Calendar.setup({
-        inputField     :    \"f_date_c[".$s_name."]\",     // id of the input field
-        ifFormat       :    \"%e %B %Y\",      // format of the input field
-        button         :    \"f_trigger_c[".$s_name."]\",  // trigger for the calendar (button ID)
-        align          :    \"Tl\",           // alignment (defaults to \"Bl\")
-        singleClick    :    true
-    });
-</SCRIPT>
-<SCRIPT type=\"text/javascript\"> 
-    Calendar.setup({
-        inputField     :    \"f_date_c2[".$s_name."]\",     // id of the input field
-        ifFormat       :    \"%e %B %Y\",      // format of the input field
-        button         :    \"f_trigger_c2[".$s_name."]\",  // trigger for the calendar (button ID)
-        align          :    \"Tl\",           // alignment (defaults to \"Bl\")
-        singleClick    :    true
-    });
-</SCRIPT>
-<input type=hidden name=\"add[".$s_name."]\" id=\"add[".$s_name."]\" value=\"".$date1."|".$date2."\">"; //
-break;
-////////////////////////////////////////////////////////////////////////////
+      case "1": // текст
+        // Получаем значениЕ поля
+        $sql2 = "SELECT name FROM ".$prefix."_spiski WHERE type='".$s_name."' AND pages like '% ".$page_id." %'";
+        $result2 = $db->sql_query($sql2);
+        $row2 = $db->sql_fetchrow($result2);
+        $sp_name = $row2['name'];
+        echo "<br><br><b>$s_title:</b><br><textarea name='add[$s_name]' rows='1' cols='60'>".$sp_name."</textarea>";
+      break;
 
-case "2": // файл (НЕ_ГОТОВО!!!)
-break;
-////////////////////////////////////////////////////////////////////////////
+      case "0": // список
+        // Получаем значениЯ поля
+        $sql2 = "SELECT name FROM ".$prefix."_spiski WHERE type='".$s_name."' AND pages like '% ".$page_id." %'";
+        $result2 = $db->sql_query($sql2);
+        $sp_names = array();
+        while ($row2 = $db->sql_fetchrow($result2)) {
+        $sp_names[] = $row2['name'];
+        }
+        echo "<br><b>$s_title:</b><br>";
+                   $sql2 = "SELECT * FROM ".$prefix."_spiski WHERE type='$s_name' ORDER BY parent,id";
+                   $result2 = $db->sql_query($sql2);
+                   echo "<select size=10 multiple=multiple name='add[$s_name][]' style='font-size:11px;'><option value=0> не выбрано </option>";
+                   while ($row2 = $db->sql_fetchrow($result2)) {
+                   $s_id2 = $row2['id'];
+                   $s_title2 = $row2['name'];
+                   $s_opis = $row2['opis'];
+                   $s_parent = $row2['parent'];
+        	   $s_title2 = getparent_spiski($s_name,$s_parent,$s_title2);
+                   $sel = ""; if (in_array($s_title2,$sp_names)) $sel = " selected";
+        	   echo "<option value=".$s_id2.$sel."> $s_title2 ($s_opis)</option>";
+                   }
+        echo "</select>";
+      break;
+    }
+  }
 
-case "1": // текст
-// Получаем значениЕ поля
-$sql2 = "SELECT name FROM ".$prefix."_spiski WHERE type='".$s_name."' AND pages like '% ".$page_id." %'";
-$result2 = $db->sql_query($sql2);
-$row2 = $db->sql_fetchrow($result2);
-$sp_name = $row2['name'];
-echo "<br><br><b>$s_title:</b><br><textarea name=\"add[$s_name]\" rows=\"1\" cols=\"60\">".$sp_name."</textarea>";
-break;
-////////////////////////////////////////////////////////////////////////////
+  echo "<h3>Ключевые слова (для поисковых систем):</h3> <textarea name=keywords2 class=big rows=2 cols=10 style='width:100%;'>".$keywords."</textarea>
+  <br><div class='help small'>?</div> <span class=small>Максимум 1000 символов. Разделять словосочетания желательно запятой. Если пусто - используются <b>Теги</b> (если и они пустые - используются Ключевые словосочетания из <a href=/sys.php?op=Configure target=_blank>Настроек портала</a>).</span><br><br>
 
-case "0": // список
-// Получаем значениЯ поля
-$sql2 = "SELECT name FROM ".$prefix."_spiski WHERE type='".$s_name."' AND pages like '% ".$page_id." %'";
-$result2 = $db->sql_query($sql2);
-$sp_names = array();
-while ($row2 = $db->sql_fetchrow($result2)) {
-$sp_names[] = $row2['name'];
-}
-echo "<br><b>$s_title:</b><br>";
-           $sql2 = "SELECT * FROM ".$prefix."_spiski WHERE type='$s_name' ORDER BY parent,id";
-           $result2 = $db->sql_query($sql2);
-           echo "<select size=10 multiple=multiple name=\"add[$s_name][]\" style='font-size:11px;'><option value=0> не выбрано </option>";
-           while ($row2 = $db->sql_fetchrow($result2)) {
-           $s_id2 = $row2['id'];
-           $s_title2 = $row2['name'];
-           $s_opis = $row2['opis'];
-           $s_parent = $row2['parent'];
-	   $s_title2 = getparent_spiski($s_name,$s_parent,$s_title2);
-           $sel = ""; if (in_array($s_title2,$sp_names)) $sel = " selected";
-	   echo "<option value=".$s_id2.$sel."> $s_title2 ($s_opis)</option>";
-           }
-echo "</select>";
-break;
-///////////////////
-}
-}
+  <h3>Описание для поисковых систем:</h3> <textarea name=description2 class=big rows=2 cols=10 style='width:100%;'>".$description."</textarea><br>
+  <div class='help small'>?</div> <span class=small>Максимум 200 символов. Если пусто - используется <b>Название</b> страницы.</span>";
 
-echo "<h3>Ключевые слова (для поисковых систем):</h3> <textarea name=keywords2 class=big rows=2 cols=10 style='width:100%;'>".$keywords."</textarea>
-<br><div class='help small'>?</div> <span class=small>Максимум 1000 символов. Разделять словосочетания желательно запятой. Если пусто - используются <b>Теги</b> (если и они пустые - используются Ключевые словосочетания из <a href=/sys.php?op=Configure target=_blank>Настроек портала</a>).</span><br><br>
+  echo "<h3>Тэги (слова для похожих по тематике страниц):</h3> 
+  <textarea name=search class=big rows=2 cols=10 style='width:100%;'>".$search."</textarea>
+  <br><div class='help small'>?</div> <span class=small>Разделять пробелами, а слова в словосочетаниях символом + 
+  <br>Писать только существительные! НИКАКИХ ПРЕДЛОГОВ! Максимум неограничен. Разделять слова необходимо пробелом. Разделять слова в словосочетаниях символом +, например: игра+разума игротека game. Писать желательно в единственном числе и именительном падеже. Можно создать Блок «Облако тегов». Теги также могут выводиться на страницах (в настройках Раздела).</span><br><br>";
 
-<h3>Описание для поисковых систем:</h3> <textarea name=description2 class=big rows=2 cols=10 style='width:100%;'>".$description."</textarea><br>
-<div class='help small'>?</div> <span class=small>Максимум 200 символов. Если пусто - используется <b>Название</b> страницы.</span>";
-
-echo "<h3>Тэги (слова для похожих по тематике страниц):</h3> 
-<textarea name=search class=big rows=2 cols=10 style='width:100%;'>".$search."</textarea>
-<br><div class='help small'>?</div> <span class=small>Разделять пробелами, а слова в словосочетаниях символом + 
-<br>Писать только существительные! НИКАКИХ ПРЕДЛОГОВ! Максимум неограничен. Разделять слова необходимо пробелом. Разделять слова в словосочетаниях символом +, например: игра+разума игротека game. Писать желательно в единственном числе и именительном падеже. Можно создать Блок \"Облако тегов\". Теги также могут выводиться на страницах (в настройках Раздела).</span><br><br>";
-
-echo "<input type=hidden name=op value=".$admintip."_edit_sv_page>
-<input type=hidden name=pid value=$pid>
-</td></tr>
-</form></table>";
-admin_footer();
+  echo "<input type=hidden name=op value=".$admintip."_edit_sv_page><input type=hidden name=pid value=".$pid.">
+  </td></tr></table></div></form>";
+  admin_footer();
 }
 #####################################################################################################################
 function base_pages_edit_sv_page($pid, $module, $cid, $title, $open_text, $main_text, $foto, $link_foto, $search, $active, $mainpage, $rss, $price, $add, $data1, $data2, $data3, $data4, $keywords2, $description2, $com, $cop, $count, $sor, $open_text_mysor, $main_text_mysor) {
