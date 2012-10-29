@@ -998,6 +998,103 @@ case "11": # КАЛЕНДАРЬ
 	$block = str_replace("[$titleX]", $design_open.$textX.$design_close, $block);
 	$type = ""; break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////
+case "12": # Форма (для анкет, опросов и т.д.)
+	$text = explode("\n",$textX);
+	$textX = '';
+	$x = 0;
+	foreach ($text as $value) {
+		$value = explode("|",$value);
+		// автофокус в первый элемент формы
+		if ($x == 0) { $x=1; $autofocus = " autofocus"; } else $autofocus = "";
+		if ($value[ count($value)-1 ] == 1) { $autofocus .= " required"; }
+
+		$opis = $value[1];
+		if (!empty($value[2])) $name = $value[2];
+		switch ($value[0]) {
+			case 'Строка':
+				$textX .= "<p>".$opis."<input class='form_stroka' name=".$name." placeholder='".$value[3]."'".$autofocus.">";
+				break;
+			
+			case 'Текст':
+				# code...
+				break;
+
+			case 'Список':
+				# code...
+				break;
+
+			case 'Число':
+				$textX .= "<p>".$opis."<input type='number' min='0' max='10' step='2' value='6' class='form_stroka' name=".$name." placeholder='".$value[3]."'".$autofocus.">";
+				break;
+
+			case 'Файл':
+				$textX .= "<p>".$opis."<input type='file' class='form_stroka' name=".$name." placeholder='".$value[3]."'".$autofocus.">";
+				break;
+
+			case 'Email':
+				$textX .= "<p>".$opis."<input type='email' class='form_stroka' name=".$name." placeholder='".$value[3]."'".$autofocus.">";
+				break;
+
+			case 'Телефон':
+				$textX .= "<p>".$opis."<input class='form_stroka' name=".$name." placeholder='".$value[3]."'".$autofocus.">";
+				break;
+
+			case 'Адрес':
+				$textX .= "<p>".$opis."<input class='form_stroka' name=".$name." placeholder='".$value[3]."'".$autofocus.">";
+				break;
+
+			case 'Ссылка':
+				$textX .= "<p>".$opis."<input class='form_stroka' type='url' name=".$name." placeholder='".$value[3]."'".$autofocus.">";
+				break;
+
+			case 'Дата':
+				$textX .= "<p>".$opis."<input class='form_stroka' type='date' name=".$name." placeholder='".$value[3]."'".$autofocus.">";
+				break;
+			case 'ВремяДата':
+				$textX .= "<p>".$opis."<input class='form_stroka' type='datetime' name=".$name." placeholder='".$value[3]."'".$autofocus.">";
+				break;
+
+			case 'Месяц и год':
+				$textX .= "<p>".$opis."<input class='form_stroka' type='month' name=".$name." placeholder='".$value[3]."'".$autofocus.">";
+				break;
+
+			case 'Неделя':
+				$textX .= "<p>".$opis."<input class='form_stroka' type='week' name=".$name." placeholder='".$value[3]."'".$autofocus.">";
+				break;
+
+			case 'Время':
+				$textX .= "<p>".$opis."<input class='form_stroka' type='time' name=".$name." placeholder='".$value[3]."'".$autofocus.">";
+				break;
+
+			case 'Пароль':
+				# code...
+				break;
+
+			case 'Поиск':
+				$textX .= "<p>".$opis."<input class='form_stroka' type='search' name=".$name." placeholder='".$value[3]."'".$autofocus.">";
+				break;
+
+			case 'Отправить':
+				$textX .= "<input type='submit' class='form_submit' value='".$value[1]."'>";
+				break;
+			default:
+				break;
+		}
+	}
+	$textX = "<form name='' action='page/form.php' method='post' enctype='multipart/form-data'>".$textX."</form>";
+	$block = str_replace("[$titleX]", $design_open.$textX.$design_close, $block);
+	$type = ""; break;
+
+/*
+Строка|ФИО||Ваша фамилия|100|0
+Текст|Описание|opis|напишите что-нибудь|5|1
+Список|Вы русский?||конечно!/yes*неа/no*вы о чем?/what|3|1
+Email|Email|email|100|1
+Телефон|Телефон|tel|100|1
+Адрес|Адрес|address|2|1
+Отправить|Отправить анкету
+*/
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 case "13": # ОБЛАКО ТЕГОВ
 	$tags = array();
 	$sql = "select search from ".$prefix."_pages where `tables`='pages' and active='1'";
@@ -1419,11 +1516,11 @@ if (file_exists("images/favicon_apple.png")) echo "<link rel='apple-touch-icon' 
 */
 echo "<title>".$pagetit.$sitename."</title>
 <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-<meta name='keywords' content='".$keywords2."'>
-<meta name='description' content='".$description2."'>
+<meta name='keywords' content='".str_replace("'","",$keywords2)."'>
+<meta name='description' content='".str_replace("'","",$description2)."'>
 <meta name='robots' content='index, follow'>
 <meta http-equiv='Content-language' content='".$lang."'> 
-<meta name='copyright' content='".$sitename."'>
+<meta name='copyright' content='".str_replace("'","",$sitename)."'>
 <meta name='author' content=''>
 <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1'>
 <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->

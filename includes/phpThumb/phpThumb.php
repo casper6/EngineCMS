@@ -3,11 +3,6 @@
 ///  phpThumb() by James Heinrich <info@silisoftware.com>   //
 //        available at http://phpthumb.sourceforge.net     ///
 //////////////////////////////////////////////////////////////
-///                                                         //
-// See: phpthumb.changelog.txt for recent changes           //
-// See: phpthumb.readme.txt for usage instructions          //
-//                                                         ///
-//////////////////////////////////////////////////////////////
 
 //error_reporting(E_ALL);
 //ini_set('display_errors', '1');

@@ -40,10 +40,10 @@ if ($the_first == 0) {
 		$code = substr($rcode, 2, 6);
 		if(!empty($aid) AND !empty($pwd)) {
 			$pwd = md5($pwd);
-			$result = $db->sql_query("SELECT pwd FROM ".$prefix."_authors WHERE aid='$aid'");
+			$result = $db->sql_query("SELECT pwd FROM ".$prefix."_authors WHERE aid='".$aid."'");
 			list($rpwd) = $db->sql_fetchrow($result);
 			if($rpwd == $pwd) {
-				$admin = base64_encode("$aid:$pwd");
+				$admin = base64_encode($aid.":".$pwd);
 				setcookie("admin",$admin,time()+2592000);
 				unset($op);
 			}
@@ -62,7 +62,7 @@ if(isset($admin) && !empty($admin)) {
 		die("<html>\n<title>Да вы взломщик! (Get out!)</title>\n<body bgcolor=#FFFFFF text=#000000>\n\n<br><br><br>\n\n<center><br><br>\n<font size=\"+4\"><b>Да вы, вероятно, взломщик! (Get out!)</b><br>Если вы не взломщик, а администратор этого сайта, почистите, пожалуйста, куки (cookie). Например так: меню браузера Сервис -> Свойства обозревателя -> Удалить... -> Удалить \"Cookie\".</font></center>\n</body>\n</html>");
 	}
 	$aid = substr($aid, 0,25);
-	$result2 = $db->sql_query("SELECT name, pwd FROM ".$prefix."_authors WHERE aid='$aid'");
+	$result2 = $db->sql_query("SELECT name, pwd FROM ".$prefix."_authors WHERE aid='".$aid."'");
 	if (!$result2) {
 		die("Выбор из базы данных не удался!");
 	} else {
@@ -101,7 +101,7 @@ function login() {
 
 function GraphicAdmin() {
 	global $aid, $admin, $prefix, $db, $counter, $admin_file, $show_comments, $show_userposts, $razdel_sort, $registr, $show_page;
-	$row = $db->sql_fetchrow($db->sql_query("SELECT realadmin FROM ".$prefix."_authors WHERE aid='$aid'"));
+	$row = $db->sql_fetchrow($db->sql_query("SELECT realadmin FROM ".$prefix."_authors WHERE aid='".$aid."'"));
 	$realadmin = intval($row['realadmin']);
 	$inf_base = "";
 	if (file_exists("map.xml")) {
@@ -131,9 +131,9 @@ function GraphicAdmin() {
 	$date_now2 = date("Y.m.d",time()-86400);
 	$date_now3 = date("Y.m.d",time()-172800);
 	
-	$comm_segodnya = $db->sql_numrows($db->sql_query("select `cid` from ".$prefix."_".$pages."_comments where `tables`='pages' and data like '$date_now1 %'"));
-	$comm_vchera = $db->sql_numrows($db->sql_query("select `cid` from ".$prefix."_".$pages."_comments where `tables`='pages' and data like '$date_now2 %'"));
-	$comm_pozavchera = $db->sql_numrows($db->sql_query("select `cid` from ".$prefix."_".$pages."_comments where `tables`='pages' and data like '$date_now3 %'"));
+	$comm_segodnya = $db->sql_numrows($db->sql_query("select `cid` from ".$prefix."_".$pages."_comments where `tables`='pages' and data like '".$date_now1." %'"));
+	$comm_vchera = $db->sql_numrows($db->sql_query("select `cid` from ".$prefix."_".$pages."_comments where `tables`='pages' and data like '".$date_now2." %'"));
+	$comm_pozavchera = $db->sql_numrows($db->sql_query("select `cid` from ".$prefix."_".$pages."_comments where `tables`='pages' and data like '".$date_now3." %'"));
 		
 	if ($show_userposts != 0) {
 		$num_add_pages = $db->sql_numrows($db->sql_query("SELECT `pid` from ".$prefix."_pages where (`active`='2' or `active`='3') and `tables`!='del'"));
@@ -277,9 +277,9 @@ function GraphicAdmin() {
 		$tables = $row['tables'];
 
 		if ($show_page == 1) {
-			$result3 = $db->sql_query("select pid from ".$prefix."_pages where `active`='1' and `tables`='pages' and module='$nam'");
+			$result3 = $db->sql_query("select pid from ".$prefix."_pages where `active`='1' and `tables`='pages' and module='".$nam."'");
 			$size = $db->sql_numrows($result3);
-			$result4 = $db->sql_query("select pid from ".$prefix."_pages where `active`!='1' and `tables`='pages' and module='$nam'");
+			$result4 = $db->sql_query("select pid from ".$prefix."_pages where `active`!='1' and `tables`='pages' and module='".$nam."'");
 			$size_off = $db->sql_numrows($result4);
 			} else { $size = 0; $size_off = 0; }
 
@@ -316,12 +316,12 @@ function GraphicAdmin() {
 		if (strpos($options,"base=")) {
 			$title = "БД «".trim($title)."»";
 			// Узнаем название БД
-			$sql2 = "SELECT `text` FROM ".$prefix."_mainpage where type='2' and name='$nam'";
+			$sql2 = "SELECT `text` FROM ".$prefix."_mainpage where type='2' and name='".$nam."'";
 			$result2 = $db->sql_query($sql2);
 			$row2 = $db->sql_fetchrow($result2);
 			$module_options = explode("|",$row2['text']); $module_options = $module_options[1]; 
 			parse_str($module_options);
-			$sql2 = "SELECT name FROM ".$prefix."_mainpage where id='$base'";
+			$sql2 = "SELECT name FROM ".$prefix."_mainpage where id='".$base."'";
 			$result2 = $db->sql_query($sql2);
 			$row2 = $db->sql_fetchrow($result2);
 			$baza_name  = $row2['name']; // Название таблицы БД 
@@ -350,7 +350,7 @@ function GraphicAdmin() {
 
 	echo "<div style='margin:50px;'>";
 	if (!empty($project_logotip)) echo "<img src='".$project_logotip."' width=300 class=center>";
-	if (!empty($project_name)) echo "<h1>".$project_name."</h1>";
+	if (!empty($project_name)) echo "<br><font style='font-size:44px; color:gray;'>".$project_name."</font>";
 	echo "</div>";
 
 	echo "<table align=center width=100%><tr><td>
@@ -486,7 +486,7 @@ function adminMain() {
 if($admintest) {
 	switch($op) {
 		case "mes";
-			$db->sql_query("UPDATE `".$prefix."_config` SET `adminmes` = '$adminmes' LIMIT 1 ;") or die ('Не сохранилось...');
+			$db->sql_query("UPDATE `".$prefix."_config` SET `adminmes` = '".$adminmes."' LIMIT 1 ;") or die ('Не сохранилось...');
 			adminMain();
 			break;
 		case "GraphicAdmin":

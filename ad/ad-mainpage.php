@@ -3,7 +3,7 @@
 	if (strpos($_SERVER['PHP_SELF'], 'sys.php') === false) { die ("Доступ закрыт!"); }
 	$aid = trim($aid);
 	global $prefix, $db, $red;
-	$sql = "select realadmin from ".$prefix."_authors where aid='$aid'";
+	$sql = "select realadmin from ".$prefix."_authors where aid='".$aid."'";
 	$result = $db->sql_query($sql);
 	$row = $db->sql_fetchrow($result);
 	$realadmin = $row['realadmin'];
@@ -55,7 +55,7 @@ function menu() {
 		<strong>В средней колонке</strong> также выводится предполагаемое имя, e-mail и телефон человека, искавшего этот запрос.<br>
 		<strong>В последней колонке:</strong> первое число - найдено в названии страниц, второе - в содержании.";
 		
-		if ($statlink != "") echo "<h2><img class='icon2 i41' src='/images/1.gif'><a href=".$statlink." target=_blank>Сторонняя статистика</a></h2>"; else echo "<div class=\"notice warning\">Сторонняя статистика не настроена. См. <a href='sys.php?op=Configure'>Настройки</a></div>";
+		if ($statlink != "") echo "<h2><img class='icon2 i41' src='/images/1.gif'><a href=".$statlink." target=_blank>Сторонняя статистика</a></h2>"; else echo "<div class='notice warning'>Сторонняя статистика не настроена. См. <a href='sys.php?op=Configure'>Настройки</a></div>";
 		echo "<h2><img class='icon2 i41' src='/images/1.gif' style='margin-top:10px'>Встроенная статистика:</h2>
 		<table cellpadding=2 width=100% class='block radius'><tr valign=top><td width=25%>".$stat_razdel."</td><td width=30%>".$stat_page."</td><td>".$stat_search."</td></tr></table></div>
 		</body>
@@ -83,7 +83,7 @@ function menu() {
 		$stat_search1 = $stat_search2 = $stat_search3 = $stat_search4 = array();
 		while ($row = $db->sql_fetchrow($result)) {
 			$id = $row['id'];
-			$del = " <div id='s_".$id."' style='display:inline;'><a onclick=delslovo('".$id."') class=\"punkt\" title=\"Удалить слово\"><img class='icon2 i21' src='/images/1.gif'></a></div>";
+			$del = " <div id='s_".$id."' style='display:inline;'><a onclick=delslovo('".$id."') class='punkt' title='Удалить слово'><img class='icon2 i21' src='/images/1.gif'></a></div>";
 			$user_ip = $row['ip'];
 			$user_info = "";
 			if (isset($user_name[$user_ip])) if ($user_name[$user_ip] != '') $user_info .= "Имя: ".$user_name[$user_ip]." [".date2normal_view($row['data'], 2)."]";
@@ -171,21 +171,21 @@ function mainpage($name="") {
 		echo "<table style='width:100%; margin-top:5px; padding:0; background: #e2e5ea;' cellspacing=0 cellpadding=0><tr valign=top><td id='razdel_td' class='radius nothing' width=300>
 
 			<div id='razdels' style='background:#e7e9ec;'>
-			<div class='black_grad'><button id=new_razdel_button title='Добавить оформление...' class='small black' onclick=\"show_animate('addmain');\" style='float:right; margin:3px;'><span style='margin-right: -2px;' class=\"icon darkgrey small\" data-icon=\"+\"></button>
+			<div class='black_grad'><button id=new_razdel_button title='Добавить оформление...' class='small black' onclick=\"show_animate('addmain');\" style='float:right; margin:3px;'><span style='margin-right: -2px;' class='icon darkgrey small' data-icon='+'></button>
 			<span class='h1'>Оформление:</span>
 			</div>";
 	     ////////////////////// ДИЗАЙН 0
-		 echo "<div id='mainrazdel0' class='dark_pole2'><a class='base_page' onclick=\"oformlenie_show('дизайн (html)','0','design','/sys.php?op=mainpage&amp;name=design&amp;type=0&amp;red=1')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"4\"></span><span class='plus20'>Дизайн разделов и блоков (html)</span></div></a></div>";
+		 echo "<div id='mainrazdel0' class='dark_pole2'><a class='base_page' onclick=\"oformlenie_show('дизайн (html)','0','design','/sys.php?op=mainpage&amp;name=design&amp;type=0&amp;red=1')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='4'></span><span class='plus20'>Дизайн разделов и блоков (html)</span></div></a></div>";
 		 ////////////////////// СТИЛЬ 1
-		 echo "<div id='mainrazdel1' class='dark_pole2'><a class='base_page' onclick=\"oformlenie_show('стиль (css)','1','css','/sys.php?op=mainpage&amp;name=css&amp;type=1')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"#\"></span><span class='plus20'>Стиль для дизайна (css)</span></div></a></div>";
+		 echo "<div id='mainrazdel1' class='dark_pole2'><a class='base_page' onclick=\"oformlenie_show('стиль (css)','1','css','/sys.php?op=mainpage&amp;name=css&amp;type=1')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='#'></span><span class='plus20'>Стиль для дизайна (css)</span></div></a></div>";
 		 ////////////////////// БЛОКИ 3
-		 echo "<div id='mainrazdel3' class='dark_pole2'><a class='base_page' onclick=\"oformlenie_show('блок','3','block','/sys.php?op=mainpage&amp;name=block&amp;type=3')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"R\"></span><span class='plus20'>Блоки (небольшие элементы)</span></div></a></div>";
+		 echo "<div id='mainrazdel3' class='dark_pole2'><a class='base_page' onclick=\"oformlenie_show('блок','3','block','/sys.php?op=mainpage&amp;name=block&amp;type=3')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='R'></span><span class='plus20'>Блоки (небольшие элементы)</span></div></a></div>";
 		 ////////////////////// ШАБЛОНЫ 6
-		 echo "<div id='mainrazdel6' class='dark_pole2'><a class='base_page' onclick=\"oformlenie_show('шаблон','6','shablon','/sys.php?op=mainpage&amp;name=shablon&amp;type=6&amp;red=1')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"v\"></span><span class='plus20'>Шаблоны (внешний вид)</span></div></a></div>";
+		 echo "<div id='mainrazdel6' class='dark_pole2'><a class='base_page' onclick=\"oformlenie_show('шаблон','6','shablon','/sys.php?op=mainpage&amp;name=shablon&amp;type=6&amp;red=1')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='v'></span><span class='plus20'>Шаблоны (внешний вид)</span></div></a></div>";
 		 ////////////////////// ПОЛЯ 4
-		 echo "<div id='mainrazdel4' class='dark_pole2'><a class='base_page' onclick=\"oformlenie_show('поле','4','pole','/sys.php?op=mainpage&amp;name=spisok&amp;type=4')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"S\"></span><span class='plus20'>Поля (для страниц)</span></div></a></div>";
+		 echo "<div id='mainrazdel4' class='dark_pole2'><a class='base_page' onclick=\"oformlenie_show('поле','4','pole','/sys.php?op=mainpage&amp;name=spisok&amp;type=4')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='S'></span><span class='plus20'>Поля (для страниц)</span></div></a></div>";
 		 ////////////////////// БАЗЫ ДАННЫХ 5
-		 echo "<div id='mainrazdel5' class='dark_pole2'><a class='base_page' onclick=\"oformlenie_show('БД','5','base','/sys.php?op=mainpage&amp;name=base&amp;type=5')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"D\"></span><span class='plus20'>Базы данных (таблицы)</span></div></a></div>";
+		 echo "<div id='mainrazdel5' class='dark_pole2'><a class='base_page' onclick=\"oformlenie_show('БД','5','base','/sys.php?op=mainpage&amp;name=base&amp;type=5')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='D'></span><span class='plus20'>Базы данных (таблицы)</span></div></a></div>";
 		 
 		echo "</div></td><td>
 
@@ -209,8 +209,8 @@ function mainpage($name="") {
 			<br><br>
 			</div></div>
 
-			<div style='margin:5px;'><button id='new_razdel_button' class='small nothing' onclick='location.href=\"/sys.php?op=mainpage&amp;type=0&amp;id=1&amp;red=1\"' title='Редактировать главный дизайн'><span class=\"icon gray small\" data-icon=\"7\"></span>главный дизайн</button> 
-			<button id='new_razdel_button' class='small nothing' onclick='location.href=\"/sys.php?op=mainpage&amp;type=1&amp;id=20\"' title='Редактировать главный стиль'><span class=\"icon gray small\" data-icon=\"7\"></span>главный стиль</button>
+			<div style='margin:5px;'><button id='new_razdel_button' class='small nothing' onclick='location.href=\"/sys.php?op=mainpage&amp;type=0&amp;id=1&amp;red=1\"' title='Редактировать главный дизайн'><span class='icon gray small' data-icon='7'></span>главный дизайн</button> 
+			<button id='new_razdel_button' class='small nothing' onclick='location.href=\"/sys.php?op=mainpage&amp;type=1&amp;id=20\"' title='Редактировать главный стиль'><span class='icon gray small' data-icon='7'></span>главный стиль</button>
 
 			<div class='podrazdel radius nothing' id='podrazdel'></div>
 			</td></tr></table>";
@@ -226,17 +226,14 @@ function create_main($type) {
 	$create = ""; 
 	switch ($type) {
 	case "design": $type_opis = "дизайна (HTML-разметка, внешний вид сайта)";
-	$create.="<form method=\"POST\" action=\"sys.php\">
+	$create.="<div id=about class=block style='display:none;'>Дизайн — это обрамление страниц сайта, всё, что окружает контент, содержание. В дизайне могут быть блоки, которые выводят необходимую информацию. Например созданный вами блок меню или автоматический блок [статистика], который выводит счетчик статистики из настроек сайта. В общем, дизайн — это весь html-код, от body до /body (невключительно), а сама страница заменена на служебное слово [содержание] - блок, который выводит содержание подключенных разделов и их страниц. После создания дизайна, откройте его редактирование и присвойте необходимые стили (css).<br></div>
 	<table width=100%><tr><td>
-	<input type=\"submit\" value=\"Сохранить\" style='width:200px; height:55px; font-size: 20px;'>
 	<h2>Название:</h2>По-русски, можно с пробелами
-	<input type=\"text\" name=\"title\" value=\"\" size=40 style='width:100%'><br>
+	<input type='text' name='title' value='' size=40 style='width:100%' autofocus><br>
 	<br>".help_design()."<br>
-
-
 	<h2>Содержание дизайна (HTML):</h2>
 	<textarea name=text rows=15 cols=86 style='width:100%;'></textarea>
-	<div class=\"notice success\" style=\"color:black;\"><span class=\"icon large white\" data-icon=\"C\"></span>
+	<div class='notice success' style='color:black;'><span class='icon large white' data-icon='C'></span>
 	Здесь вы можете вставить готовый HTML-код (от тега &lt;body&gt; до &lt;/body&gt;, не включительно) или набрать его с нуля.
 	<br><b>[содержание]</b> - автоматический блок для вывода страниц. Не использовать его можно лишь в случае присоединения дизайна к разделу, состоящему из одной страницы — в этом случае можно всю страницу поместить в дизайн или в раздел.</div>
 	<input type=hidden name=id value=0>
@@ -244,21 +241,18 @@ function create_main($type) {
 	<input type=hidden name=useit value=''>
 	<input type=hidden name=shablon value=''>
 	<input type=hidden name=type value='0'>
-	<input type=hidden name=op value=\"".$admintip."_save\">
-	</form>
+	<input type=hidden name=op value='".$admintip."_save'>
 	</td></tr></table>";
 	########################################################
-	// [корзина] - общая корзина для всех разделов типа \"магазин\"
-
+	// [корзина] - общая корзина для всех разделов типа 'магазин'
 
 	break;
 	case "css": $type_opis = "стиля (CSS, настройка внешнего вида)";
-	$create.="<form method=\"POST\" action=\"sys.php\">
+	$create.="
+	<div id=about class=block style='display:none;'>Стили - это CSS (каскадные таблицы стилей), описание оформления элементов сайта. Стили подключаются к дизайну (при его редактировании). В дизайне может быть использовано сразу несколько стилей. При подключении стилей они объединяются в один стиль и сжимаются.<br></div>
 	<table width=100%><tr><td>
-	<input type=\"submit\" value=\"Сохранить\" style='width:200px; height:55px; font-size: 20px;'>
 	<h2>Название:</h2>По-русски, можно с пробелами<br>
-	<input type=text name=title value=\"\" size=40 style='width:100%;'>
-
+	<input type=text name=title value='' size=40 style='width:100%;' autofocus>
 	<h2>Содержание стиля:</h2>
 	<textarea name=text rows=30 cols=86 style='width:100%;'></textarea><br>
 	<input type=hidden name=id value=0>
@@ -266,8 +260,7 @@ function create_main($type) {
 	<input type=hidden name=namo value=''>
 	<input type=hidden name=useit value=''>
 	<input type=hidden name=shablon value=''>
-	<input type=hidden name=op value=\"".$admintip."_save\">
-	</form>
+	<input type=hidden name=op value='".$admintip."_save'>
 	</td></tr></table>";
 	########################################################
 	break;
@@ -316,15 +309,14 @@ function create_main($type) {
 				if ($id_design != 1) $styles .= "<option value='".$id_design."'>".$title_design."</option>";
 			}
 
-	$create = "<form method=\"POST\" action=\"sys.php\" style='display:inline;'>
+	$create = "<div id=about class=block style='display:none;'>Блок — это дополнительный элемент сайта, который может быть вставлен в любом его месте. Блоки бывают автоматические (заранее заданные системой), полуавтоматические (создаваемые с последующей настройкой того, что будет в них отображаться) и ручные (текст, HTML, JavaScript или PHP-код).<br></div>
 	<table width=100%><tr valign=bottom><td width=50%>
-	<input type=\"submit\" value=\"Сохранить\" style='width:200px; height:55px; font-size: 20px;'>
-	<h2>Название блока:</h2><input type=\"text\" name=\"title\" value=\"\" size=60 style='width:100%;'></td><td>
+	<h2>Название блока:</h2><input type='text' name='title' value='' size=60 style='width:100%;' autofocus></td><td>
 	<h2>Выберите дизайн:</h2><select name=design><option value=0> без дизайна </option>".$styles."</select>
 	</td></tr><tr><td colspan=2>
 	<h2>Выберите тип блока:</h2> (справа увидите его параметры (не у всех блоков), а снизу — описание)
 	<table width=100% cellspacing=0 cellpadding=0><tr valign=top><td style='padding-right:10px;'>
-	<select id=name size=10 name=\"name\" style='width:100%;' onchange=\"
+	<select id=name size=10 name='name' style='width:100%;' onchange=\"
 
 	var arr = [ 'Блок выводит несколько страниц выбранного раздела или всех разделов', 'Блок выводит несколько комментариев со страниц выбранного раздела или всех разделов', 'В этом блоке можно написать любой текст, использовать HTML, а также другие созданные блоки', '«Ротатор» используется для показа блоков, текста или html.<br>При каждом обновлении страницы будет показан один из написанных элементов, разделение списка ротации — через символ «|» (вертикальная черта)', 'Блок выводит папки выбранного раздела или всех разделов', 'Блок выводит голосование или опрос, для чего нужно ввести сам вопрос в названии блока, а список вопросов — в Содержании блока, через «Enter»', 'Блок «Фотогалерея» выводит фотографии в нужном месте сайта, для его создания используется список адресов закаченный фотографий, через «Enter».<br>А их описание ставится сразу после адреса через символ «|» (вертикальная черта), пример: /img/1.jpg|Фото 1. <br>— Имена файлов могут содержать любые символы. <br>— Загрузка автоматическая сразу после выбора файлов. <br>— Фотографии будут автоматически переименованы, развернуты в нужную сторону, сжаты и уменьшены по ширине до 1000 пикселей.<br><div class=red>— Если впоследствии вы захотите стереть какую-либо фотографию — просто удалите ее строчку из блока галереи (не забудьте сохранить блок), затем перейдите во вкладку «Настройки», откройте «Удаление неиспользуемых фотографий» и удалите эту фотографию.</div>', 'PHP-код пишется в Содержании блока.<br>PHP можно писать сразу, без начальных и конечных обозначений ( &lt; ?php ... ? &gt; ).<br>Вывод информации в блок производится через переменную <b>$"."txt</b>', 'Блок выводит папки открытого в данный момент раздела или ничего не выводит, если это Главная страница или папок в разделе не создано', 'Эта фотогалерея собирает первые фотографии из страниц выбранного раздела (или всех разделов).<br>Если в предисловии страницы не обнаружена фотография, эта страница пропускается.', 'Меню сайта создается по простым правилам (для того, чтобы быть универсальным и легко переключать варианты отображения):<br>[элемент открыть][url=/]Главная[/url][элемент закрыть]<br>[элемент открыть][url=#]Пункт меню 1[/url][элемент закрыть]<br>[элемент открыть][url=#]Пункт меню 2[/url]<br>&nbsp;&nbsp;[уровень открыть]<br>&nbsp;&nbsp;[элемент открыть][url=#]Подпункт 1[/url][элемент закрыть]<br>&nbsp;&nbsp;[элемент открыть][url=#]Подпункт 2[/url][элемент закрыть]<br>&nbsp;&nbsp;[уровень закрыть]<br>[элемент закрыть]<br><i>где # - это ссылка на страницу.</i><br>В меню может быть до 3-х уровней вложенности', 'Календарь на текущем месяце показывает ссылками те даты, за которые созданы страницы в выбранном разделе (или всех разделах).<br>Также показывает текущую дату', 'В РАЗРАБОТКЕ!!!!!!!!! Контактная форма может применяться для создания страницы Контакты, а также для отправки разнообразных анкет, заявок, жалоб и т.д', 'Облако тегов — это вращающийся трехмерный шар, состоящий из ключевых слов, взятых из страниц выбранного раздела (или всех разделов). Под ним есть ссылка на альтернативный текстовый вариант облака', '14', '15', '16', '17', '18', '19', 'База данных (количество по 1 колонке верт.)', 'База данных (количество по 1 колонке гор.)', 'База данных (количество по 2 колонкам)', 'База данных (список колонок)', '24', '25', '26', '27', '28', '29', 'Статистика раздела, выводит кол-во посещений выбранного раздела', 'JavaScript-блок автоматически встанет в HEAD и его не нужно где-либо специально размещать.', '32' ];
 
@@ -350,7 +342,7 @@ function create_main($type) {
 			else $create .=  "<option value=".$key.">".$tit."</option>";
 		}
 	// ЗАмена http://blueimp.github.com/cdn/css/bootstrap-responsive.min.css
-	// Удалено 	<!--[if lt IE 7]><link rel=\"stylesheet\" href=\"http://blueimp.github.com/cdn/css/bootstrap-ie6.min.css\"><![endif]-->
+	// Удалено 	<!--[if lt IE 7]><link rel='stylesheet' href='http://blueimp.github.com/cdn/css/bootstrap-ie6.min.css'><![endif]-->
 	$create .=  "</select>
 	<input type='hidden' name='useit'>
 	</td><td>
@@ -369,86 +361,8 @@ function create_main($type) {
 	<input type=hidden name=id value=''>
 	</form>
 
-	<div id='photo_upload' style='display:none;'>
-	<link rel=\"stylesheet\" href=\"http://blueimp.github.com/Bootstrap-Image-Gallery/css/bootstrap-image-gallery.min.css\">
-	<link rel=\"stylesheet\" href=\"includes/upload/css/jquery.fileupload-ui.css\">
-	    <form id=\"fileupload\" action=\"includes/upload/server/php/\" method=\"POST\" enctype=\"multipart/form-data\">
-	    <label for=\"show_oldnames\"><input type=\"checkbox\" id=\"show_oldnames\"><b>Добавлять имя файла</b> фотографии как её описание (<i>подходит для осмысленных и/или русских имен</i>)</label>
-	    <br><div class='notice warning green'><span class='icon green medium' data-icon='('></span>Фотографии можно перенести из любой папки вашего компьютера, даже не нажимая кнопку «Добавить файлы...»</div>
-	        <div class=\"row fileupload-buttonbar\">
-	            <div style=\"padding:10px; padding-left:30px; margin-bottom:30px;\">
-	                <!-- The fileinput-button span is used to style the file input field as button -->
-	                <span class=\"btn btn-success fileinput-button\">
-	                    <i class=\"icon-plus icon-white\"></i>
-	                    <a class=\"button\">Добавить файлы...</a>
-	                    <input type=\"file\" name=\"files[]\" multiple>
-	                </span>
-	                
-	                <button type=\"submit\" class=\"btn btn-primary start\" style=\"display:none\">
-	                    <i class=\"icon-upload icon-white\"></i>
-	                    <span>Загрузить файлы</span>
-	                </button>
-	                <button type=\"reset\" class=\"btn btn-warning cancel\" style=\"display:none\">
-	                    <i class=\"icon-ban-circle icon-white\"></i>
-	                    <span>Отменить загрузку</span>
-	                </button>
-	                <button type=\"button\" class=\"btn btn-danger delete\" style=\"display:none\">
-	                    <i class=\"icon-trash icon-white\"></i>
-	                    <span>Удалить</span>
-	                </button>
-	                <input type=\"checkbox\" class=\"toggle\" style=\"display:none\">
-	            </div>
-	            <!-- The global progress information -->
-	            <div class=\"span5 fileupload-progress fade\">
-	                <!-- The global progress bar -->
-	                <div class=\"progress progress-success progress-striped active\" role=\"progressbar\" aria-valuemin=\"0\" aria-valuemax=\"100\">
-	                    <div class=\"bar\" style=\"width:0%;\"></div>
-	                </div>
-	                <!-- The extended global progress information -->
-	                <div class=\"progress-extended\">&nbsp;</div>
-	            </div>
-	        </div>
-	        <!-- The loading indicator is shown during file processing -->
-	        <div class=\"fileupload-loading\"></div>
-	        <br>
-	        <!-- The table listing the files available for upload/download -->
-	        <table role=\"presentation\" class=\"table table-striped\"><tbody class=\"files\" data-toggle=\"modal-gallery\" data-target=\"#modal-gallery\"></tbody></table>
-	    </form>
-	<!-- The template to display files available for upload -->
-	<script id=\"template-upload\" type=\"text/x-tmpl\">
-	</script>
-	<!-- Действия после загрузки -->
-	<script>$(function () { $('#fileupload').fileupload({
-	    autoUpload: true,
-	    dataType: 'json',
-	    done: function (e, data) {
-	        data.context.text('Загрузка завершена.');
-	        $.each(data.result, function (index, file) {
-				if (document.getElementById(\"show_oldnames\").checked == true) $(\"#textarea\").append(\"/img/\" + file.name + \"|\" + file.oldname + \"\\n\");
-				else $(\"#textarea\").append(\"/img/\" + file.name + \"|\\n\");
-	        });
-			$(\"#textarea_block\").show();
-	    }
-	});});</script>
-	<!-- The template to display files available for download -->
-	<script id=\"template-download\" type=\"text/x-tmpl\">
-	</script>
-	<script src=\"includes/upload/js/vendor/jquery.ui.widget.js\"></script>
-	<script src=\"includes/upload/js/jquery.iframe-transport.js\"></script>
-	<script src=\"includes/upload/js/jquery.fileupload.js\"></script>
-	<script src=\"includes/upload/js/jquery.fileupload-fp.js\"></script>
-	<script src=\"includes/upload/js/jquery.fileupload-ui.js\"></script>
-	<script src=\"includes/upload/js/main.js\"></script>
-	<!--[if gte IE 8]><script src=\"includes/upload/js/cors/jquery.xdr-transport.js\"></script><![endif]-->
-	</div>
-	<!-- 
-		<script src=\"includes/upload/js/locale.js\"></script>
-		script src=\"http://blueimp.github.com/JavaScript-Templates/tmpl.min.js\"></script>
-		script src=\"http://blueimp.github.com/JavaScript-Load-Image/load-image.min.js\"></script>
-		script src=\"http://blueimp.github.com/JavaScript-Canvas-to-Blob/canvas-to-blob.min.js\"></script>
-		script src=\"http://blueimp.github.com/cdn/js/bootstrap.min.js\"></script>
-		script src=\"http://blueimp.github.com/Bootstrap-Image-Gallery/js/bootstrap-image-gallery.min.js\"></script>
-	-->
+	<div id='photo_upload' style='display:none;'>".add_file_upload_form()."</div>
+
 	</td>
 	<td id='form_block' style='display:none;' width=500 class=block>
 	<a onclick=\"$('#form_block').hide();\" class=help style='float:right;'>x</a>
@@ -585,7 +499,7 @@ function create_main($type) {
 	Не должно быть одинаковых английских названий!<br>
 	Кнопка «Отправить» обычно добавляется последней. Её можно и не добавлять, тогда она будет добавлена автоматически.
 	</td></tr></table>
-	<div id='opisanie_bloka' class='notice success' style='color:black;'><span class=\"icon large white\" data-icon=\"C\"></span></span>Здесь вы увидите описание блока...</div> <br> <div class='notice warning black'>В выбранном дизайне обязательно должен быть блок [содержание], выбирать дизайн необязательно.</div></td></tr></table>";
+	<div id='opisanie_bloka' class='notice success' style='color:black;'><span class='icon large white' data-icon='C'></span></span>Здесь вы увидите описание блока...</div> <br> <div class='notice warning black'>В выбранном дизайне обязательно должен быть блок [содержание], выбирать дизайн необязательно.</div></td></tr></table>";
 	break;
 	########################################################!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	case "spisok": $type_opis = "поля (дополнительное поле для страниц)";
@@ -607,17 +521,10 @@ function create_main($type) {
 			   $modules .= "<option value='".$id."'>Группа пользователей: ".$title_group."</option>";
 			}
 			// Добавлены пользователи USERAD
-	$create.="
-	
-	<form method=POST action=sys.php>
-	
-	<table width=100%><tr><td colspan=2>
-		<a class='button' style='float:right' name=metka href=#metka onClick=\"show_animate('about')\">Справка</a><div id=about class=block style='display:none;'>В Разделах сайта есть папки, в папках лежат страницы (статьи, новости и т.д.). У каждой страницы несколько полей для хранения информации: название, дата, предисловие, содержание и т.д. Если вдруг для какого либо раздела (или для всех разделов) не хватает подобного поля - его можно добавить. Примеры использования полей: отдельное поле для ввода автора (для статей), поле для загрузки фотографии (для фотогалереи), выбор из раскрывающегося списка определенного населенного пункта (для каталога предприятий), период времени (для афиши) и т.д. А для того, чтобы поля начали отображаться на страницах - есть произвольные шаблоны, которые можно создать и подключить к любому разделу (См. в настройках раздела - Шаблон для всего раздела или Шаблон для страницы).<br><b>Поле может принадлежать или какому-то одному разделу или сразу всем разделам.</b><br></div>
-		<input type=\"submit\" value=\"Сохранить\" style='width:200px; height:55px; font-size: 20px;'>
-	</td></tr>
-	<tr><td width=50%>
+	$create.="<div id=about class=block style='display:none;'>В Разделах сайта есть папки, в папках лежат страницы (статьи, новости и т.д.). У каждой страницы несколько полей для хранения информации: название, дата, предисловие, содержание и т.д. Если вдруг для какого либо раздела (или для всех разделов) не хватает подобного поля - его можно добавить. Примеры использования полей: отдельное поле для ввода автора (для статей), поле для загрузки фотографии (для фотогалереи), выбор из раскрывающегося списка определенного населенного пункта (для каталога предприятий), период времени (для афиши) и т.д. А для того, чтобы поля начали отображаться на страницах - есть произвольные шаблоны, которые можно создать и подключить к любому разделу (См. в настройках раздела - Шаблон для всего раздела или Шаблон для страницы).<br><b>Поле может принадлежать или какому-то одному разделу или сразу всем разделам.</b><br></div>
+	<table width=100%><tr><td width=50%>
 	<input type=hidden name=type value='4'>
-	<h2>Название поля</h2><input type=text name=title size=40 style='width:100%'><br>(рус.)</td><td>
+	<h2>Название поля</h2><input type=text name=title size=40 style='width:100%' autofocus><br>(рус.)</td><td>
 	<h2>Обращение</h2><input type=text name=namo size=40 style='width:100%'><br>(англ., без пробелов) Используется для вывода в шаблонах как: [обращение]</td></tr>
 	<tr><td width=50%>
 	<input type=hidden name=shablon value=''>
@@ -644,18 +551,17 @@ function create_main($type) {
 	<textarea name=text rows=10 cols=86 style='width:100%;'></textarea></div>
 	<input type=hidden name=id value=''>
 	<input type=hidden name=op value=".$admintip."_save>
-	</form></td></tr></table>";
+	</td></tr></table>";
 	break;
 	########################################################
 	case "base": $type_opis = "базы данных (таблица)";
-	$create.="<form method=POST action=sys.php style='display:inline;' enctype=\"multipart/form-data\">
+	$create.="<div id=about class=block style='display:none;'>База данных — это таблица с удобным редактированием (по типу БД, а не электронных таблиц), поиском и фильтрами. Таблица может содержать любые поля и выводиться на страницы сайта или использоваться для внутреннего документооборота компании (доступно через администрирование).</b><br></div>
 	<table width=100%><tr><td colspan=2>
-	<input type=\"submit\" value=\"Сохранить\" style='width:200px; height:55px; font-size: 20px;'>
-	<input type=hidden name=type value='5'>
+	<input type='hidden' name='type' value='5'>
 	<input type='hidden' name='shablon' value=''>
 	</td></tr>
 	<tr valign=top><td width=50%>
-	<h2>Название:</h2><input type=text name=title size=30 style='width:100%'><br>(рус.)</td><td>
+	<h2>Название:</h2><input type=text name=title size=30 style='width:100%' autofocus><br>(рус.)</td><td>
 	<h2>Обращение:</h2><input type=text name=namo size=30 style='width:100%'><br>(англ., без пробелов, мал. буквами)<br>
 	<b>Удалить</b> таблицу с таким же обращением (замена копии)? <select name='delete_table'><option value='1'>да</option><option value='0'>нет</option></select>
 	</td></tr>
@@ -670,7 +576,7 @@ function create_main($type) {
 	<div style='display:none;' id=excel><div class=block_white2>
 	<b>Файл CSV</b> (в формат .CSV можно сохранить таблицу Excel или экспортировать из 1С, формат - utf-8) <br>
 	Если файл не выбран - будет создана пустая структура базы данных на основании Названий полей<br>
-	<input type=file name=\"useit\" size=30><br>
+	<input type=file name='useit' size=30><br>
 	<b>Разделение строк:</b> <input type=text name=line_close size=5 value='\\r\\n'> возврат каретки: \\r, символ окончания линии: \\n<br>
 	<b>Разделение полей:</b> <select name=line_razdel><option value='##'>##</option><option value=';'>;</option><option value='#'>#</option></select> для 1С - ##, для Excel - ;<br>
 	<b>Экранирование полей:</b> <input type=text name=line_ekran size=5 value='\"'><br>
@@ -691,13 +597,13 @@ function create_main($type) {
 		<td width=2% align=center>-</td>
 	  </tr>
 
-	<tr id=pole><td width=18%><input type=text name=pole_name[] size=15 style=\"width:100%;\" /></td><td width=20%><input type=text name=pole_rusname[] size=15 style=\"width:100%;\" /></td><td width=10%><label><select name=pole_tip[] style=\"width:100%;\"><option value=\"строка\" selected=selected>Строка (до 250 букв)</option><option value=\"строкабезвариантов\">Строка без выбора вариантов</option><option value=\"число\">Число</option><option value=\"список\">Список</option><option value=\"текст\">Текст</option><option value=\"дата\">Дата</option><option value=\"датавремя\">Дата-Время</option><option value=\"фото\">Фото</option><option value=\"минифото\">МиниФото</option><option value=\"файл\">Файл</option><option value=\"ссылка\">Ссылка</option></select></label></td><td width=15%><label><select name=pole_main[] style=\"width:100%;\"><option value=0>не важно</option><option value=1>основная категория</option><option value=2>вторичная категория</option><option value=3>обязательно заполнять</option><option value=4>не важно и не печатать</option><option value=6>не важно, не печатать и не показывать</option><option value=7>обязательно, не печатать и не показывать</option><option value=5>пустая для печати</option></select></label></td><td width=15%><label><select name=pole_open[] style=\"width:100%;\"><option value=0 selected=selected>видно везде</option><option value=1>не видно нигде</option><option value=2>видно только на странице</option><option value=3>видно только по паролю</option></select></label></td><td width=20%><label><input type=text name=pole_rename[] size=15 style=\"width:100%;\" /></label></td><td><!-- <a href=# class=dark_pole id=del>X</a> --></td></tr>
+	<tr id=pole><td width=18%><input type=text name=pole_name[] size=15 style='width:100%;' /></td><td width=20%><input type=text name=pole_rusname[] size=15 style='width:100%;' /></td><td width=10%><label><select name=pole_tip[] style='width:100%;'><option value='строка' selected=selected>Строка (до 250 букв)</option><option value='строкабезвариантов'>Строка без выбора вариантов</option><option value='число'>Число</option><option value='список'>Список</option><option value='текст'>Текст</option><option value='дата'>Дата</option><option value='датавремя'>Дата-Время</option><option value='фото'>Фото</option><option value='минифото'>МиниФото</option><option value='файл'>Файл</option><option value='ссылка'>Ссылка</option></select></label></td><td width=15%><label><select name=pole_main[] style='width:100%;'><option value=0>не важно</option><option value=1>основная категория</option><option value=2>вторичная категория</option><option value=3>обязательно заполнять</option><option value=4>не важно и не печатать</option><option value=6>не важно, не печатать и не показывать</option><option value=7>обязательно, не печатать и не показывать</option><option value=5>пустая для печати</option></select></label></td><td width=15%><label><select name=pole_open[] style='width:100%;'><option value=0 selected=selected>видно везде</option><option value=1>не видно нигде</option><option value=2>видно только на странице</option><option value=3>видно только по паролю</option></select></label></td><td width=20%><label><input type=text name=pole_rename[] size=15 style='width:100%;' /></label></td><td><!-- <a href=# class=dark_pole id=del>X</a> --></td></tr>
 
 	</table>
 
 	  <div id=id0></div>
 	  
-	<input type=hidden id=nu size=3 value=\"1\">
+	<input type=hidden id=nu size=3 value='1'>
 	<div align=right><a href=#pole class=dark_pole id=add_pole>Добавить поле в таблицу</a> (например: название, описание, количество или стоимость...)</div>
 
 	<script type=text/javascript>
@@ -718,24 +624,19 @@ function create_main($type) {
 	<br><b>Добавить поле Голосование (golos, англ.)?</b> <select name=add_pole_golos><option value='1'>да</option><option value='0' selected>нет</option></select>
 	<br><b>Добавить поле Комментарии (comm, англ.)?</b> <select name=add_pole_comm><option value='1'>да</option><option value='0' selected>нет</option></select>
 	<br><b>Добавить поле Количество проданного товара (kol, англ.)?</b> <select name=add_pole_kol><option value='1'>да</option><option value='0' selected>нет</option></select>
-	<br><br>Если вы выбрали тип поля \"Список\" - в ячейке \"Замена информации\" напишите слова этого поля через запятую!
+	<br><br>Если вы выбрали тип поля «Список» - в ячейке «Замена информации» напишите слова этого поля через запятую!
 	<br><br>Поля id (порядковый номер) и active (состояние активности) будут добавлены к любой таблице автоматически.<br><br>
 	<b>После создания базы данных, создайте Раздел для нее и подключите базу в настройках раздела вместо его страниц и папок.</b>
 	<br><br>Готовые фильтры для англ. названий: data (дата), data2 (дата 2), men (менеджер), company (фирма)
 	<input type=hidden name=id value=''>
 	<input type=hidden name=op value=".$admintip."_save>
-	</form></td></tr></table>";
+	</td></tr></table>";
 	break;
-	########################################################!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	########################################################
 	case "shablon": $type_opis = "шаблона (оформление раздела или блока)";
-		$create.="<form method=POST action=sys.php style='display:inline;'>
-		<table width=100%><tr><td colspan=2>
-		<a class='button' style='float:right' name=metka href=#metka onClick=\"show_animate('about')\">Справка</a><div id=about class=block style='display:none;'>Шаблоны используются для изменения внешнего вида разделов, страниц и блоков. Используются либо стандартные поля страниц, либо дополнительно созданные Поля. Для страниц можно использовать любой дизайн, блоки и разделы используют табличную основу — начало < table >, соответственно сами шаблоны должны начинаться с < tr > и заканчиваться на < /tr >. Для того, чтобы в шаблоне раздела предусмотреть возможность именования столбцов таблицы, например: Дата, Название, Ссылка... после самого шаблона раздела нужна написать ключевое слово [следующий] и написать шаблон именования столбцов, т.е. по сути скопировать шаблон строк раздела, но вместо заготовок автоматических вставок поставить в него названия соответствующих полей-столбцов.
-		</div>
-		<input type=\"submit\" value=\"Сохранить\" style='width:200px; height:55px; font-size: 20px;'></div>
-		</td></tr>
-		<tr><td width=50%>
-		<h2>Название шаблона</h2><input type=text name=title size=40 style='width:100%'> (рус.)</td><td>
+		$create.="<div id=about class=block style='display:none;'>Шаблоны используются для изменения внешнего вида разделов, страниц и блоков. Используются либо стандартные поля страниц, либо дополнительно созданные Поля. Для страниц можно использовать любой дизайн, блоки и разделы используют табличную основу — начало < table >, соответственно сами шаблоны должны начинаться с < tr > и заканчиваться на < /tr >. Для того, чтобы в шаблоне раздела предусмотреть возможность именования столбцов таблицы, например: Дата, Название, Ссылка... после самого шаблона раздела нужна написать ключевое слово [следующий] и написать шаблон именования столбцов, т.е. по сути скопировать шаблон строк раздела, но вместо заготовок автоматических вставок поставить в него названия соответствующих полей-столбцов.<br></div>
+		<table width=100%><tr><td width=50%>
+		<h2>Название шаблона</h2><input type=text name=title size=40 style='width:100%' autofocus> (рус.)</td><td>
 		<h2>Обращение:</h2><input type=text name=namo size=40 style='width:100%'> (англ., без пробелов)</td></tr>
 		<tr><td colspan=2>
 		".help_shablon()."
@@ -744,20 +645,24 @@ function create_main($type) {
 		</td></tr></table>
 		<input type=hidden name=id value=''>
 		<input type=hidden name=type value='6'>
-		<input type=hidden name=op value=".$admintip."_save>
-		</form>";
+		<input type=hidden name=op value=".$admintip."_save>";
 	break;
 	}
-	echo "<div style='background: #e2e5ea;'>
-	<div class='black_grad'><span class='h1'>Добавление ".$type_opis."</span></div>".$create."
-	</div>";
+	echo "<form method='POST' action='sys.php' style='display:inline;' enctype='multipart/form-data'>
+	<div style='background: #e2e5ea;'>
+	<div class='black_grad' style='height:45px;'>
+	<button type='button' style='float:right;margin:3px;' class='medium orange' onClick=\"show_animate('about')\">?</button>
+	<button type=submit id=new_razdel_button class='medium green' style='float:left; margin:3px;'><span style='margin-right: -2px;' class='icon white medium' data-icon='c'></span>Сохранить</button>
+	<span class='h1'>Добавление ".$type_opis."</span></div>".$create."
+	</div>
+	</form>";
 }
 
 #####################################################################################################################
 function edit_main($id) {
 	global $tip, $admintip, $prefix, $db, $red, $nastroi;
 	
-     $sql = "select type,name,title,text,useit,shablon,description,keywords from ".$prefix."_mainpage where id='$id'";
+     $sql = "select type,name,title,text,useit,shablon,description,keywords from ".$prefix."_mainpage where id='".$id."'";
      // здесь учитываем и возможность редактирования удаленных и старых версий, поэтому нет «`tables`='pages'»
      $result = $db->sql_query($sql);
      $row = $db->sql_fetchrow($result);
@@ -774,7 +679,7 @@ function edit_main($id) {
 		$useit_module = explode("|",$useit); 
 		$useit_module = $useit_module[0]; 
 			if ($useit_module != "") {
-				$sql = "select title from ".$prefix."_mainpage where `tables`='pages' and name='$useit_module' and type='2'";
+				$sql = "select title from ".$prefix."_mainpage where `tables`='pages' and name='".$useit_module."' and type='2'";
 				$result = $db->sql_query($sql);
 				$row = $db->sql_fetchrow($result);
 				$useit_module = trim($row['title']);
@@ -784,7 +689,8 @@ function edit_main($id) {
 	$color = "#ffffff"; // убрать
 	$type_opis = "";
 
-	echo "<form method='POST' action=sys.php>";
+	echo "<form method='POST' action=sys.php>
+	<input type=hidden name=type value='".$type."'><input type=hidden name=id value='".$id."'><input type=hidden name=op value='".$admintip."_save'>";
 
 	// Определение дизайнов // проверить - возможно заменить на функции из mainfile
 	$design_var = array();
@@ -846,7 +752,7 @@ function edit_main($id) {
 
 	echo "<div style='background: #e2e5ea;'>
 	<div class='black_grad' style='height:45px;'>
-	<button type=submit id=new_razdel_button class='medium green' onclick=\"show('sortirovka');\" style='float:left; margin:3px;'><span style='margin-right: -2px;' class=\"icon white medium\" data-icon=\"c\"></span>Сохранить</button>
+	<button type=submit id=new_razdel_button class='medium green' style='float:left; margin:3px;'><span style='margin-right: -2px;' class='icon white medium' data-icon='c'></span>Сохранить</button>
 	<span class='h1' style='padding-top:10px;'>";
 
 	if ($type == "0") { ############################### ОТКРЫТИЕ ДИЗАЙН
@@ -864,9 +770,9 @@ function edit_main($id) {
 				 $title_style = trim($row5['title']);
 				 $sel="";
 				 for ($x=0; $x < $n; $x++) {
-					if ($useit_all[$x] == $title_id) $sel = " selected=\"selected\"";
+					if ($useit_all[$x] == $title_id) $sel = " selected='selected'";
 				 }
-				 $styles .= "<option value=\"".$title_id."\"".$sel.">".$title_style."</option>";
+				 $styles .= "<option value='".$title_id."'".$sel.">".$title_style."</option>";
 			 }
 		global $http_siteurl;
 		$stil = str_replace(" ","-",trim($stil));
@@ -886,7 +792,7 @@ function edit_main($id) {
 	if ($red==0) {
 	} elseif ($red==2) {
 		echo "<textarea cols=80 id=editor name=text rows=10>".$text."</textarea>
-		<script type=\"text/javascript\">
+		<script type='text/javascript'>
 		CKEDITOR.replace( 'editor', {
 		 filebrowserBrowseUrl : '/ckfinder/ckfinder.html',
 		 filebrowserImageBrowseUrl : '/ckfinder/ckfinder.html?Type=Images',
@@ -901,15 +807,15 @@ function edit_main($id) {
 	  	$text = str_replace("textarea","tеxtarea",$text); // ireplace
 		echo "<textarea name=text rows=15 cols=80 style='width:100%; height:350px;' class=f12>".$text."</textarea>";
 	} elseif ($red==3) {
-		echo "<script type=\"text/javascript\" src=\"ed/js/editor/editor.js\"></script> 
-		<link rel=\"stylesheet\" href=\"ed/js/editor/css/editor.css\" type=\"text/css\" media=\"screen, projection\" /> 
-		<script type=\"text/javascript\"> 
+		echo "<script type='text/javascript' src='ed/js/editor/editor.js'></script> 
+		<link rel='stylesheet' href='ed/js/editor/css/editor.css' type='text/css' media='screen, projection' /> 
+		<script type='text/javascript'> 
 		$(document).ready(function()
 		{  $('#text').editor({ focus: true, toolbar: 'classic', css: ['/ed/js/editor/css/writer.css'], upload: 'upload.php' });  });
 		</script><textarea id=text name=text rows=15 cols=80 style='width:100%; height:350px;'>".$text."</textarea>";
 	} elseif ($red==4) {
 		global $red4_div_convert;
-    	echo "<script type=\"text/javascript\">
+    	echo "<script type='text/javascript'>
 	    function ButtonMore(obj, event, key){ obj.insertHtml('<!--more-->'); }
 	    function ButtonBlock(obj, event, key){ obj.insertHtml('[Название блока]'); }
 	    function ButtonLink(obj, event, key){ obj.insertHtml('{Название страницы или раздела}'); }
@@ -935,7 +841,7 @@ function edit_main($id) {
 	<h2>Содержание стиля
 	<textarea class='f12' name='text' rows='30' cols='50' style='width:100%; background:#333333; color:white;'>".$text."</textarea></h2>
 
-	<input type=\"hidden\" name=\"namo\" value=\"$name\"><br>";
+	<input type='hidden' name='namo' value='".$name."'><br>";
 	} ############################### ЗАКРЫТИЕ СТИЛЬ
 
 	if ($type == "2") { ############################### ОТКРЫТИЕ РАЗДЕЛА
@@ -977,7 +883,7 @@ function edit_main($id) {
 
 	echo "
 	".input("nastroi", "1", "1", "hidden")."
-	".input("module_name", "$module_name", "1", "hidden")."
+	".input("module_name", $module_name, "1", "hidden")."
 
 	Настройка раздела «".trim($title)."»</span></div>
 	<p>Для настройки раздела внимательно прочитайте опции и выберите соответствующие варианты.</p><p class='red'>В текстовых полях нельзя писать символ &</p>
@@ -1010,7 +916,7 @@ function edit_main($id) {
 	</tr>
 	<tr>
 	<td><b>Тип раздела:</b><br>
-	<i class=red>Для типа раздела \"Анкеты-рейтинги\" необходимо выбрать в настройках ниже возможность комментировать и голосовать за страницы.</i></td>
+	<i class=red>Для типа раздела «Анкеты-рейтинги» необходимо выбрать в настройках ниже возможность комментировать и голосовать за страницы.</i></td>
 	<td>".select("options[view]", "4,1,6,0", "анкеты-рейтинги,форум,статьи (на главной - разделы),статьи (на главной - страницы)", $view)."</td>
 	</tr>
 	<td><b>Шаблон для комментариев</b> на странице  [<a href=sys.php?op=mainpage&amp;name=shablon target=_blank>Добавить</a>] (пока нет полной поддержки)</td>
@@ -1160,7 +1066,7 @@ function edit_main($id) {
 	<td>".select("options[socialnetwork]", "1,0", "ДА,НЕТ", $socialnetwork)."</td>
 	</tr>
 	<tr>
-	<td>Показывать Код для вставки в блоги? (Название и Предисловие страницы со ссылкой на сайт). При выборе варианта \"с логотипом\" небольшой логотип (small_logo.jpg) нужно разместить в корне сайта. Проще всего это будет сделать администратору (если у вас нет доступа к FTP серверу и достаточных знаний).</td>
+	<td>Показывать Код для вставки в блоги? (Название и Предисловие страницы со ссылкой на сайт). При выборе варианта «с логотипом» небольшой логотип (small_logo.jpg) нужно разместить в корне сайта. Проще всего это будет сделать администратору (если у вас нет доступа к FTP серверу и достаточных знаний).</td>
 	<td>".select("options[put_in_blog]", "2,1,0", "с логотипом,без логотипа,НЕТ", $put_in_blog)."</td>
 	</tr>
 	<tr bgcolor=#ddffdd>
@@ -1274,19 +1180,19 @@ function edit_main($id) {
 	<td>".select("options[show_add_post_fileform]", "1,0", "ДА,НЕТ", $show_add_post_fileform)."</td>
 	</tr>
 	<tr>
-	<td>Замена названия кнопки \"Открыть новую тему\". Например: \"Добавить новость\", \"Разместить статью\", \"Добавить фото\", \"Добавить организацию\".</td>
+	<td>Замена названия кнопки «Открыть новую темую». Например: «Добавить новость», «Разместить статью», «Добавить фото», «Добавить организацию».</td>
 	<td>".input("options[tema]", $tema)."</td>
 	</tr>
 	<tr>
-	<td>Замена названия текстового поля \"Ваше имя\". Например: \"Ваш ник\", \"Ваши Ф.И.О.\", \"Автор сообщения\", \"Адрес\". Если написать \"no\" - это поле не будет отображаться.</td>
+	<td>Замена названия текстового поля «Ваше имя». Например: «Ваш ник», «Ваши Ф.И.О.», «Автор сообщения», «Адрес». Если написать «no» - это поле не будет отображаться.</td>
 	<td>".input("options[tema_name]", $tema_name)."</td>
 	</tr>
 	<tr>
-	<td>Замена названия текстового поля \"Название темы\". Например: \"Заголовок статьи\", \"Название фото\", \"Название и/или № организации\".</td>
+	<td>Замена названия текстового поля «Название темы». Например: «Заголовок статьи», «Название фото», «Название и/или № организации».</td>
 	<td>".input("options[tema_title]", $tema_title)."</td>
 	</tr>
 	<tr>
-	<td>Замена названия текстового поля \"Подробнее (содержание темы)\". Например: \"Описание фото\", \"Текст статьи\", \"Сообщение\". Если написать \"no\" - это поле не будет отображаться.</td>
+	<td>Замена названия текстового поля «Подробнее (содержание темы)». Например: «Описание фото», «Текст статьи», «Сообщение». Если написать «no» - это поле не будет отображаться.</td>
 	<td>".input("options[tema_opis]", $tema_opis)."</td>
 	</tr>
 	<tr bgcolor=#f79779>
@@ -1351,7 +1257,7 @@ function edit_main($id) {
 		</td></tr></table>
 
 	<b>Справка:</b> <a style='cursor:pointer;' class=punkt onclick=\"show('structura_razdela')\">Раскрыть описание структуры раздела</a><br>
-	<div id=structura_razdela style=\"display:none;\"><p><img src=/images/structura_razdela.png align=right>На рисунке справа вы видите внешний вид любого раздела или его страниц (правее). Раздел состоит из заголовка (его названия) и списка страниц раздела. Эта информации создается на странице раздела автоматически, исходя из его названия и созданных страниц. Чтобы эта информация выводилась, достаточно наличия служебного слова [содержание] в «Содержании раздела». Если нужно чтобы какая-либо информация выводилась в разделе сверху или снизу от содержания (названия и списка страниц) — напишите эту информацию в «Содержании раздела» соответственно сверху или снизу от слова [содержание]. На рисунке расположение верха и низа показано зеленым цветом. <br><br>Иногда требуется вставить информацию посередине, между заголовком и списком страниц (желтый цвет) — для этого нужно использовать вместо служебного слова [содержание] (в первой обязательной строке, выделенной ниже) два других служебных слова — [название] и [страницы], между которых написать всё, что вы хотите поставить между Заголовком и Списком страниц.<br><br>
+	<div id=structura_razdela style='display:none;'><p><img src=/images/structura_razdela.png align=right>На рисунке справа вы видите внешний вид любого раздела или его страниц (правее). Раздел состоит из заголовка (его названия) и списка страниц раздела. Эта информации создается на странице раздела автоматически, исходя из его названия и созданных страниц. Чтобы эта информация выводилась, достаточно наличия служебного слова [содержание] в «Содержании раздела». Если нужно чтобы какая-либо информация выводилась в разделе сверху или снизу от содержания (названия и списка страниц) — напишите эту информацию в «Содержании раздела» соответственно сверху или снизу от слова [содержание]. На рисунке расположение верха и низа показано зеленым цветом. <br><br>Иногда требуется вставить информацию посередине, между заголовком и списком страниц (желтый цвет) — для этого нужно использовать вместо служебного слова [содержание] (в первой обязательной строке, выделенной ниже) два других служебных слова — [название] и [страницы], между которых написать всё, что вы хотите поставить между Заголовком и Списком страниц.<br><br>
 	Если вы хотите, чтобы вместо Названия и Страниц в разделе отображалась только одна основная страница — начальная страница раздела, да еще и с произвольным содержанием — просто сотрите всё «Содержание раздела» и напишите то, что вам нужно.
 	<br><br>
 
@@ -1403,7 +1309,7 @@ function edit_main($id) {
 	if ($red==0) {
 	} elseif ($red==2) {
 		echo "<textarea cols=80 id=editor class=useit name=useit rows=10>".$useit."</textarea>
-		<script type=\"text/javascript\">
+		<script type='text/javascript'>
 		CKEDITOR.replace( 'editor', {
 		 filebrowserBrowseUrl : '/ckfinder/ckfinder.html',
 		 filebrowserImageBrowseUrl : '/ckfinder/ckfinder.html?Type=Images',
@@ -1419,9 +1325,9 @@ function edit_main($id) {
 	  	$useit = str_replace("textarea","tеxtarea",$useit); // ireplace
 		echo "<textarea name=useit rows=15 cols=80 style='width:100%; height:450px;'>".$useit."</textarea>";
 	} elseif ($red==3) {
-		echo "<script type=\"text/javascript\" src=\"ed/js/editor/editor.js\"></script> 
-	<link rel=\"stylesheet\" href=\"ed/js/editor/css/editor.css\" type=\"text/css\" media=\"screen, projection\" /> 
-	<script type=\"text/javascript\"> 
+		echo "<script type='text/javascript' src='ed/js/editor/editor.js'></script> 
+	<link rel='stylesheet' href='ed/js/editor/css/editor.css' type='text/css' media='screen, projection' /> 
+	<script type='text/javascript'> 
 	$(document).ready(function(){
 	 $('#useit').editor({ focus: true, toolbar: 'classic', css: ['/ed/js/editor/css/writer.css'], upload: 'upload.php' });
 	 $('#shablon').editor({ focus: true, toolbar: 'classic', css: ['/ed/js/editor/css/writer.css'], upload: 'upload.php' });
@@ -1429,7 +1335,7 @@ function edit_main($id) {
 	</script><textarea id=useit name=useit rows=15 cols=80 style='width:100%; height:450px;'>".$useit."</textarea>";
 	} elseif ($red==4) {
 		global $red4_div_convert;
-    	echo "<script type=\"text/javascript\">
+    	echo "<script type='text/javascript'>
 	    function ButtonMore(obj, event, key){ obj.insertHtml('<!--more-->'); }
 	    function ButtonBlock(obj, event, key){ obj.insertHtml('[Название блока]'); }
 	    function ButtonLink(obj, event, key){ obj.insertHtml('{Название страницы или раздела}'); }
@@ -1442,8 +1348,8 @@ function edit_main($id) {
 	    </script><textarea class='redactor' id=useit name=useit rows=15 cols=80 style='width:100%; height:450px;'>".$useit."</textarea>";
 	}
 
-	echo "<br><input type=hidden name=text value=\"$text\">";
-		$sql = "select name from ".$prefix."_mainpage where `tables`='pages' and id='$id'";
+	echo "<br><input type=hidden name=text value='".$text."'>";
+		$sql = "select name from ".$prefix."_mainpage where `tables`='pages' and id='".$id."'";
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result)) {
 			$mod_name = $row['name'];
@@ -1455,7 +1361,7 @@ function edit_main($id) {
 				if ($red==0) {
 				} elseif ($red==2) {
 						echo "<textarea cols=80 id=editor2 name=shablon rows=10>".$shablon."</textarea>
-						<script type=\"text/javascript\">
+						<script type='text/javascript'>
 						CKEDITOR.replace( 'editor2', {
 						 filebrowserBrowseUrl : '/ckfinder/ckfinder.html',
 						 filebrowserImageBrowseUrl : '/ckfinder/ckfinder.html?Type=Images',
@@ -1474,7 +1380,7 @@ function edit_main($id) {
 				}
 
 			} else {
-				echo "<input type=hidden name=shablon value=\"".$shablon."\">";
+				echo "<input type=hidden name=shablon value='".$shablon."'>";
 			}
 			echo "";
 		} // конец редактирования раздела
@@ -1521,8 +1427,6 @@ function edit_main($id) {
 	$direct = "vert"; // направление, gor - горизонт., vert - вертикальное
 	$all = 0; // Указывать сколько всего элементов, по умолчанию 0 - не указывать, 1 - указывать.
 	$col = ""; // какие поля будут использоваться для вывода информации
-
-	// ".input("module_name", "$module_name", "1", "hidden")."
 
 	parse_str($options); // раскладка всех настроек блока
 
@@ -1851,29 +1755,29 @@ function edit_main($id) {
 
 	/////////////////
 	if ($name == 0) {
-	echo "<tr bgcolor=#FF6666>
-	<td>Показывать ссылку на добавление страницы пользователем (в разработке)</td>
-	<td>".select("options[add]", "1,0", "ДА,НЕТ", $add)."</td>
-	</tr>
-	<tr bgcolor=#FF6666>
-	<td>Изменить надпись ссылки на добавление страницы пользователем (в разработке)</td>
-	<td>".input("options[addtitle]", $addtitle)."</td>
-	</tr>
-	<tr bgcolor=#FF6666 class=hide>
-	<td>Использование медиа (по умолчанию - нет)</td>
-	<td>".select("options[media]", "4,3,2,1,0", "музыка,видео,flash,фото,нет", $media)."</td>
-	</tr>
-	<tr bgcolor=#FF6666 class=hide>
-	<td>Дополнительно: папка с медиа-файлами (по умолчанию - нет)</td>
-	<td>".input("options[folder]", $folder)."</td>
-	</tr>";
+		echo "<tr bgcolor=#FF6666>
+		<td>Показывать ссылку на добавление страницы пользователем (в разработке)</td>
+		<td>".select("options[add]", "1,0", "ДА,НЕТ", $add)."</td>
+		</tr>
+		<tr bgcolor=#FF6666>
+		<td>Изменить надпись ссылки на добавление страницы пользователем (в разработке)</td>
+		<td>".input("options[addtitle]", $addtitle)."</td>
+		</tr>
+		<tr bgcolor=#FF6666 class=hide>
+		<td>Использование медиа (по умолчанию - нет)</td>
+		<td>".select("options[media]", "4,3,2,1,0", "музыка,видео,flash,фото,нет", $media)."</td>
+		</tr>
+		<tr bgcolor=#FF6666 class=hide>
+		<td>Дополнительно: папка с медиа-файлами (по умолчанию - нет)</td>
+		<td>".input("options[folder]", $folder)."</td>
+		</tr>";
 	}
 	echo "</table>";
 
 	/////////////////////////////////////////////////////////
 	} else { // редактирование содержания блока
 		
-	echo input("namo", "$name", "1", "hidden")."
+	echo input("namo", $name, "1", "hidden")."
 	Редактирование содержания блока</span>";
 	if (intval($nastroi) != 1) red_vybor();
 	echo "</div>
@@ -1896,7 +1800,7 @@ function edit_main($id) {
 	if ($red == 0) {
 	} elseif ($red==2) {
 		echo "<textarea cols=80 id=editor name=text rows=10>".$text."</textarea>
-		<script type=\"text/javascript\">
+		<script type='text/javascript'>
 		CKEDITOR.replace( 'editor', {
 		 filebrowserBrowseUrl : '/ckfinder/ckfinder.html',
 		 filebrowserImageBrowseUrl : '/ckfinder/ckfinder.html?Type=Images',
@@ -1910,17 +1814,17 @@ function edit_main($id) {
 		$useit = str_replace("&","&amp;",$useit);
 		// Преобразование textarea (замена на русскую букву е, только для редактора)
 	  	$text = str_replace("textarea","tеxtarea",$text); // ireplace
-		echo "<textarea name=text rows=30 cols=80 style='width:100%; height:350px;'>".$text."</textarea>";
+		echo "<textarea id=textarea name=text rows=30 cols=80 style='width:100%; height:350px;'>".$text."\n</textarea>";
 	} elseif ($red==3) {
-		echo "<script type=\"text/javascript\" src=\"ed/js/editor/editor.js\"></script> 
-	<link rel=\"stylesheet\" href=\"ed/js/editor/css/editor.css\" type=\"text/css\" media=\"screen, projection\" /> 
-	<script type=\"text/javascript\"> 
+		echo "<script type='text/javascript' src='ed/js/editor/editor.js'></script> 
+	<link rel='stylesheet' href='ed/js/editor/css/editor.css' type='text/css' media='screen, projection' /> 
+	<script type='text/javascript'> 
 	$(document).ready(function()
 	{  $('#text').editor({ focus: true, toolbar: 'classic', css: ['/ed/js/editor/css/writer.css'], upload: 'upload.php' });  });
 	</script><textarea id=text name=text rows=30 cols=80 style='width:100%; height:450px;'>".$text."</textarea>";
 	} elseif ($red==4) {
 		global $red4_div_convert;
-    	echo "<script type=\"text/javascript\">
+    	echo "<script type='text/javascript'>
 	    function ButtonMore(obj, event, key){ obj.insertHtml('<!--more-->'); }
 	    function ButtonBlock(obj, event, key){ obj.insertHtml('[Название блока]'); }
 	    function ButtonLink(obj, event, key){ obj.insertHtml('{Название страницы или раздела}'); }
@@ -1938,6 +1842,8 @@ function edit_main($id) {
 	<textarea class='f12' name='useit' rows='2' cols='10' style='width:100%;'>".$useit."</textarea></div>
 
 	</td></tr></table>";
+
+	if ($name == 6) echo "</form>".add_file_upload_form();
 
 	if ($name == 10) echo "
 	<div class='dark_pole' style='float:right;' onclick=\"show('primer')\">
@@ -1974,7 +1880,7 @@ function edit_main($id) {
 	while ($row = $db->sql_fetchrow($result)) {
 	$id_modul = trim($row['id']);
 	$title_modul = trim($row['title']);
-	$modules .= "<option value=\"".$id_modul."\">".$title_modul."</option>";
+	$modules .= "<option value='".$id_modul."'>".$title_modul."</option>";
 	}
 	// Добавлены пользователи USERAD
 	$sql3 = "select * from ".$prefix."_users_group where `group`!='rigion' and `group`!='config' and `group`!='obl'";
@@ -1982,7 +1888,7 @@ function edit_main($id) {
 	while ($row3 = $db->sql_fetchrow($result3)) {
 		$id = "1,".$row3['id'];
 		$title_group = $row3['group'];
-		$modules .= "<option value='$id'>Группа пользователей: $title_group</option>";
+		$modules .= "<option value='".$id."'>Группа пользователей: $title_group</option>";
 	}
 	// Добавлены пользователи USERAD
 	
@@ -1996,10 +1902,10 @@ function edit_main($id) {
 	Используется в шаблонах для подключения вывода этого поля, пример: pole &rarr; [pole]
 	</td></tr><tr><td>
 	<h2>Принадлежит разделу:<br>
-	<select name='useit' style='width:100%;'><option value=\"0\">все разделы</option><option value=\"".$useit."\" selected>".$main_design_title."</option>".$modules."</select></h2>
+	<select name='useit' style='width:100%;'><option value='0'>все разделы</option><option value='".$useit."' selected>".$main_design_title."</option>".$modules."</select></h2>
 	</td><td>
 	<h2>Параметры поля:<br>
-	<textarea name=\"text\" rows=\"1\" cols=\"100\" style='width:100%;'>".$text."</textarea></h2>
+	<textarea name='text' rows='1' cols='100' style='width:100%;'>".$text."</textarea></h2>
 	</td></tr></table>";
 
 	} ############################### ЗАКРЫТИЕ ПОЛЕ
@@ -2009,9 +1915,9 @@ function edit_main($id) {
 	echo "</div>
 	<table width=100%><tr><td width=50%>
 	<table width=90%><tr><td align=right><b>База данных:</b></td><td></td></tr>
-	<tr><td align=right><b>Название:</b></td><td style='background-color: ".$color.";'><input type=\"text\" name=\"title\" value=\"".$title."\" size=60></td></tr></table>
+	<tr><td align=right><b>Название:</b></td><td style='background-color: ".$color.";'><input type='text' name='title' value='".$title."' size=60></td></tr></table>
 	</td></tr></table>
-	<input type=\"hidden\" name=\"namo\" value=\"".$name."\">
+	<input type='hidden' name='namo' value='".$name."'>
 	<h2>Содержание базы данных</h2>
 	<textarea name=text rows=15 cols=40 style='width:100%; height:250px;'>".$text."</textarea><br>
 	<b>Разделитель полей:</b> /!/ <br>
@@ -2039,7 +1945,7 @@ function edit_main($id) {
 	if ($red==0) {
 	} elseif ($red==2) {
 		echo "<textarea cols=80 id=editor name=text rows=10>".$text."</textarea>
-		<script type=\"text/javascript\">
+		<script type='text/javascript'>
 		CKEDITOR.replace( 'editor', {
 		 filebrowserBrowseUrl : '/ckfinder/ckfinder.html',
 		 filebrowserImageBrowseUrl : '/ckfinder/ckfinder.html?Type=Images',
@@ -2055,15 +1961,15 @@ function edit_main($id) {
 	  	$text = str_replace("textarea","tеxtarea",$text); // ireplace
 		echo "<textarea name=text rows=20 cols=80 style='width:100%; height:350px; background:#333333; color:white;'>".$text."</textarea>";
 	} elseif ($red==3) {
-		echo "<script type=\"text/javascript\" src=\"ed/js/editor/editor.js\"></script> 
-		<link rel=\"stylesheet\" href=\"ed/js/editor/css/editor.css\" type=\"text/css\" media=\"screen, projection\" /> 
-		<script type=\"text/javascript\"> 
+		echo "<script type='text/javascript' src='ed/js/editor/editor.js'></script> 
+		<link rel='stylesheet' href='ed/js/editor/css/editor.css' type='text/css' media='screen, projection' /> 
+		<script type='text/javascript'> 
 		$(document).ready(function()
 		{  $('#text').editor({ focus: true, toolbar: 'classic', css: ['/ed/js/editor/css/writer.css'], upload: 'upload.php' });  });
 		</script><textarea id=text name=text rows=30 cols=80 style='width:100%; height:450px;'>".$text."</textarea>";
 	} elseif ($red==4) {
 		global $red4_div_convert;
-    	echo "<script type=\"text/javascript\">
+    	echo "<script type='text/javascript'>
 	    function ButtonMore(obj, event, key){ obj.insertHtml('<!--more-->'); }
 	    function ButtonBlock(obj, event, key){ obj.insertHtml('[Название блока]'); }
 	    function ButtonLink(obj, event, key){ obj.insertHtml('{Название страницы или раздела}'); }
@@ -2078,12 +1984,12 @@ function edit_main($id) {
 	echo "</td></tr></table>";
 	} ############################### ЗАКРЫТИЕ ШАБЛОН
 
-	echo "</div><input type=hidden name=type value=\"".$type."\"><input type=hidden name=id value=\"$id\"><input type=hidden name=op value=\"".$admintip."_save\"></form>";
+	echo "</div></form>";
 }
 #####################################################################################################################
 function mainpage_save($id=0, $type, $namo, $title, $text, $useit, $shablon, $descriptionX, $keywordsX, $s_tip) {
 global $sgatie, $tip, $admintip, $prefix, $db, $nastroi;
-$sql = "select name from ".$prefix."_mainpage where `id`='$id'";
+$sql = "select name from ".$prefix."_mainpage where `id`='".$id."'";
 $result = $db->sql_query($sql);
 $row = $db->sql_fetchrow($result);
 $mod_name = $row['name'];
@@ -2093,17 +1999,17 @@ if ($nastroi == 1) { // Настройка раздела или блока
 	global $options, $module_name;
 	$text = array();
 	foreach ($options as $key => $option) {
-		if (($key=="base" and $option=="") or ($key=="base" and $option=="0") or $key=="module_name") {} else $text[] = "$key=$option";
+		if (($key=="base" and $option=="") or ($key=="base" and $option=="0") or $key=="module_name") {} else $text[] = $key."=".$option;
 		if ($key=="module_name") $module_name = $option;
 	}
-	if ($type!=2) $text = "$module_name|".implode("&",$text);
+	if ($type!=2) $text = $module_name."|".implode("&",$text);
 	else $text = "pages|".implode("&",$text);
 	// Обновление
 	global $siteurl;
 	if ($type!=2) {
-		$db->sql_query("UPDATE ".$prefix."_mainpage SET `useit`='$text', `tables`='pages' WHERE `id`='$id';") or die('Не удалось обновить содержание.');
+		$db->sql_query("UPDATE ".$prefix."_mainpage SET `useit`='".$text."', `tables`='pages' WHERE `id`='".$id."';") or die('Не удалось обновить содержание.');
 	} else {
-		$db->sql_query("UPDATE ".$prefix."_mainpage SET `text`='$text', `tables`='pages' WHERE `id`='$id';") or die('Не удалось обновить содержание.');
+		$db->sql_query("UPDATE ".$prefix."_mainpage SET `text`='".$text."', `tables`='pages' WHERE `id`='".$id."';") or die('Не удалось обновить содержание.');
 	}
 	if ($type == 3) Header("Location: sys.php?op=mainpage&type=element");
 	else Header("Location: sys.php");
@@ -2134,13 +2040,13 @@ $keywordsX = mysql_real_escape_string($keywordsX);
 $text = str_replace("tеxtarea","textarea",$text); // ireplace
 $useit = str_replace("tеxtarea","textarea",$useit); // ireplace
 
-$sql = "select text from ".$prefix."_mainpage where `tables`='pages' and id='$id'";
+$sql = "select text from ".$prefix."_mainpage where `tables`='pages' and id='".$id."'";
 $result = $db->sql_query($sql);
 
 if ($numrows = $db->sql_numrows($result) > 0) {
 	// Обновление
 	//if ($type==2) $useit = tipograf($useit, 2);
-	$db->sql_query("UPDATE ".$prefix."_mainpage SET `name`='$namo', `title`='$title', `text`='$text', `useit`='".$useit."', `shablon`='$shablon', `tables`='pages', `description`='$descriptionX', `keywords`='$keywordsX' WHERE `id`='$id';") or die('Не удалось обновить содержание. Попробуйте нажать в Редакторе на кнопку "Чистка HTML"');
+	$db->sql_query("UPDATE ".$prefix."_mainpage SET `name`='".$namo."', `title`='".$title."', `text`='".$text."', `useit`='".$useit."', `shablon`='".$shablon."', `tables`='pages', `description`='".$descriptionX."', `keywords`='".$keywordsX."' WHERE `id`='".$id."';") or die('Не удалось обновить содержание. Попробуйте нажать в Редакторе на кнопку "Чистка HTML"');
 
 	if ($type == 2) Header("Location: sys.php");
 	else Header("Location: sys.php?op=mainpage&type=element");
@@ -2160,7 +2066,7 @@ if ($numrows = $db->sql_numrows($result) > 0) {
 		if ($n > 0 and $s_tip==0) {
 			for ($x=0; $x < $n; $x++) {
 			$element = str_replace("  "," ",trim($elements[$x]));
-			if ($element != "") $db->sql_query("INSERT INTO ".$prefix."_spiski (`id`, `type`, `name`, `opis`, `sort`, `pages`, `parent`) VALUES (NULL, '$namo', '$element', '', '0', '', '0');") or die('Не удалось создать поле. Странно... Может быть где-то не тот символ вставлен, например одинарная кавычка - апостроф.');
+			if ($element != "") $db->sql_query("INSERT INTO ".$prefix."_spiski (`id`, `type`, `name`, `opis`, `sort`, `pages`, `parent`) VALUES (NULL, '".$namo."', '".$element."', '', '0', '', '0');") or die('Не удалось создать поле. Странно... Может быть где-то не тот символ вставлен, например одинарная кавычка - апостроф.');
 			}
 		}
 		$and = ""; 
@@ -2218,7 +2124,7 @@ if ($numrows = $db->sql_numrows($result) > 0) {
 		if ($delete_table == 1) $vozmogno = ", возможно такая таблица уже существует"; else $vozmogno = "";
 		$db->sql_query($sql) or die("Не удалось создать таблицу".$vozmogno.". SQL: $sql");
 
-		$line_close = str_replace('\"','"',str_replace("\\\\","\\",$line_close));
+		$line_close = str_replace('\"','"',str_replace("\\\\","\\",$line_close)); // убрать
 		$line_ekran = str_replace('\"','"',str_replace("\\\\","\\",$line_ekran));
 
 		// Создаем таблицу с именем $prefix_base_$namo
@@ -2267,7 +2173,7 @@ if ($numrows = $db->sql_numrows($result) > 0) {
 #####################################################################################################################
 function mainpage_razdel_color($id, $color) {
 	global $tip, $admintip, $prefix, $db;
-	$db->sql_query("UPDATE ".$prefix."_mainpage SET `color`='$color' WHERE `tables`='pages' and `id`='$id';");
+	$db->sql_query("UPDATE ".$prefix."_mainpage SET `color`='".$color."' WHERE `tables`='pages' and `id`='".$id."';");
 	Header("Location: sys.php");
 }
 #####################################################################################################################
@@ -2276,43 +2182,43 @@ function mainpage_del($id, $type, $name="") {
 	switch ( $type ) {
 		case '0':
 			# Дизайн - автомат. удалять из разделов и блоков -- ДОДЕЛАТЬ!!!
-			$db->sql_query("DELETE FROM ".$prefix."_mainpage WHERE id='$id'");
+			$db->sql_query("DELETE FROM ".$prefix."_mainpage WHERE id='".$id."'");
 			Header("Location: sys.php?op=".$admintip."&type=element");
 		break;
 		case '1':
 			# Стиль CSS - автоматически удалять из дизайнов -- ДОДЕЛАТЬ!!!
-			$db->sql_query("DELETE FROM ".$prefix."_mainpage WHERE id='$id'");
+			$db->sql_query("DELETE FROM ".$prefix."_mainpage WHERE id='".$id."'");
 			Header("Location: sys.php?op=".$admintip."&type=element");
 		break;
 		case '3':
 			# Стиль CSS - автоматически удалять из дизайнов -- ДОДЕЛАТЬ!!!
-			$db->sql_query("DELETE FROM ".$prefix."_mainpage WHERE id='$id'");
+			$db->sql_query("DELETE FROM ".$prefix."_mainpage WHERE id='".$id."'");
 			Header("Location: sys.php?op=".$admintip."&type=element");
 		break;
 		case '2':
 			# Раздел - удалять страницы и папки раздела
-			$db->sql_query("DELETE FROM ".$prefix."_pages WHERE module='$name'");
-			$db->sql_query("DELETE FROM ".$prefix."_pages_categories WHERE module='$name'");
-			$db->sql_query("DELETE FROM ".$prefix."_mainpage WHERE id='$id'");
+			$db->sql_query("DELETE FROM ".$prefix."_pages WHERE module='".$name."'");
+			$db->sql_query("DELETE FROM ".$prefix."_pages_categories WHERE module='".$name."'");
+			$db->sql_query("DELETE FROM ".$prefix."_mainpage WHERE id='".$id."'");
 			Header("Location: sys.php");
 		break;
 		case '4':
 			# Поле - удалять поля
-			$db->sql_query("DELETE FROM ".$prefix."_spiski WHERE type='$name'");
-			$db->sql_query("DELETE FROM ".$prefix."_mainpage WHERE id='$id'");
+			$db->sql_query("DELETE FROM ".$prefix."_spiski WHERE type='".$name."'");
+			$db->sql_query("DELETE FROM ".$prefix."_mainpage WHERE id='".$id."'");
 			Header("Location: sys.php?op=".$admintip."&type=element");
 		break;
 		case '5':
 			# База данных - удалять базу данных 
 			$db->sql_query("DROP TABLE ".$prefix."_base_".$name);
-			$db->sql_query("DELETE FROM ".$prefix."_mainpage WHERE id='$id'");
+			$db->sql_query("DELETE FROM ".$prefix."_mainpage WHERE id='".$id."'");
 			Header("Location: sys.php?op=".$admintip."&type=element");
 			# и упоминание в разделах -- ДОДЕЛАТЬ!!!
 
 		break;
 		case '6':
 			# Шаблонов - удалять из разделов и блоков -- ДОДЕЛАТЬ!!!
-			$db->sql_query("DELETE FROM ".$prefix."_mainpage WHERE id='$id'");
+			$db->sql_query("DELETE FROM ".$prefix."_mainpage WHERE id='".$id."'");
 			Header("Location: sys.php?op=".$admintip."&type=element");
 		break;
 	}
@@ -2324,7 +2230,7 @@ function mainpage_recycle_spiski() {
 	$result = $db->sql_query($sql);
 	while ($row = $db->sql_fetchrow($result)) {
 		$nam = $row['name'];
-		$db->sql_query("DELETE FROM ".$prefix."_spiski WHERE type='$nam' and pages=''");
+		$db->sql_query("DELETE FROM ".$prefix."_spiski WHERE type='".$nam."' and pages=''");
 	}
 	Header("Location: sys.php");
 }
@@ -2401,7 +2307,7 @@ function block_help() { // проверить вызов
 	<td> папка с файлами медиа: <font color=green>0 - нет</font>, <font color=red>указать папку с файлами</font></td></tr>
 
 	<tr><td><strong>daleeshow=</strong></td>
-	<td> показывать кнопку \"Далее\": 1 - да, <font color=green>0 - нет</font> </td></tr>
+	<td> показывать кнопку «Далее»: 1 - да, <font color=green>0 - нет</font> </td></tr>
 
 	<tr><td><strong>shablon=</strong></td>
 	<td> прикрепить шаблон к блоку. добавить № шаблона. полностью пока что не реализовано. </td></tr>
@@ -2420,13 +2326,13 @@ function block_help() { // проверить вызов
 	<td> НЕ показывать блок в определенном разделе: англ. название раздела. Если блок показывается во всех разделах.</td></tr>
 
 	<tr><td><strong>dal=</strong></td>
-	<td> заменить надпись на кнопке \"Далее...\" на другую или код HTML, например изображение кнопки</td></tr>
+	<td> заменить надпись на кнопке «Далее...» на другую или код HTML, например изображение кнопки</td></tr>
 	<tr><td><strong>zagolovokin=</strong></td>
 	<td> показывать заголовок новости внутри блока за счет использования [заголовок], 1 - да, <font color=green>0 - нет</font> </td></tr>
 	<tr><td><strong>notitlelink=</strong></td>
 	<td> убрать ссылку на раздел в заголовке, 1 - да, <font color=green>0 - нет</font> </td></tr>
 	<tr><td><strong>razdel_open_name=</strong></td>
-	<td> можно изменить название с <font color=green>\"Открыть раздел\"</font> на любое другое или вообще не показывать, заменив на \"no\"</td></tr>
+	<td> можно изменить название с <font color=green>«Открыть раздел»</font> на любое другое или вообще не показывать, заменив на «no»</td></tr>
 	<tr><td><strong>class=</strong></td>
 	<td> использование англ. названия поля для выбора стиля всего блока (каждый выбранный стиль задается в Главном стиля), <font color=green>по умолчанию - нет</font> </td></tr>
 	<tr><td><strong>design=</strong></td>
@@ -2434,13 +2340,13 @@ function block_help() { // проверить вызов
 	<tr><td><strong>add=</strong></td>
 	<td> <font color=red>1 - показывать ссылку на добавление страницы пользователем</font>, <font color=green>0 - не показывать</font> </td></tr>
 	<tr><td><strong>addtitle=</strong></td>
-	<td> если показывается ссылка на добавление - можно изменить ее название с <font color=green>\"Добавить статью\"</font> на <font color=red>любое другое</font></td></tr>
+	<td> если показывается ссылка на добавление - можно изменить ее название с <font color=green>«Добавить статью»</font> на <font color=red>любое другое</font></td></tr>
 	<tr><td><strong>number=</strong></td>
 	<td> с какого номера начинать вывод, <font color=green>0 - самый первый</font> </td></tr>
 	<tr><td><strong>size=</strong></td>
 	<td> кол-во выводимых ссылок на страницу, <font color=green>10 - по-умолчанию</font> </td></tr>
 	<tr><td><strong>open_all=</strong></td>
-	<td> 1 - показывать ссылку \"Открыть все\", <font color=green>0 - не показывать</font> </td></tr>
+	<td> 1 - показывать ссылку «Открыть все», <font color=green>0 - не показывать</font> </td></tr>
 
 	<tr><td><strong>html=</strong></td>
 	<td> 1 - использовать только содержание блока (без оформления и заголовка), <font color=green>0 - по-умолчанию</font> </td></tr>
@@ -2476,9 +2382,9 @@ function block_help() { // проверить вызов
 
 	<tr><td colspan=2><br><strong>Для блока мини-картинок из предописания:</strong></td></tr>
 	<tr><td><strong>first=</strong></td>
-	<td> указание на первый элемент, после которого следует изображение, <font color=green>по умолчанию = \"src=\"</font> (без кавычек) </td></tr>
+	<td> указание на первый элемент, после которого следует изображение, <font color=green>по умолчанию = «src=»</font> (без кавычек) </td></tr>
 	<tr><td><strong>second=</strong></td>
-	<td> указание на второй элемент, до которого следует изображение, <font color=green>по умолчанию = \">\"</font> (без кавычек) </td></tr>
+	<td> указание на второй элемент, до которого следует изображение, <font color=green>по умолчанию = «>»</font> (без кавычек) </td></tr>
 	<tr><td><strong>third=</strong></td>
 	<td> указание на третий, последний элемент, до которого следует изображение, <font color=green>по умолчанию = пробел</font> </td></tr>
 	<tr><td><strong>img_width=</strong></td>
@@ -2498,7 +2404,7 @@ function block_help() { // проверить вызов
 	<tr><td><strong>second=</strong></td>
 	<td> вторая колонка, не обязательно</td></tr>
 	<tr><td><strong>text=</strong></td>
-	<td> текст самой первой ячейки (для блока БД \"количество по 2 колонкам\"), <font color=green>пустой по умолчанию</font></td></tr>
+	<td> текст самой первой ячейки (для блока БД «количество по 2 колонкам»), <font color=green>пустой по умолчанию</font></td></tr>
 	<tr><td><strong>direct=</strong></td>
 	<td> направление, gor - горизонтальное, <font color=green>vert - вертикальное</font></td></tr>
 	<tr><td><strong>all=</strong></td>
@@ -2515,7 +2421,7 @@ function block_help() { // проверить вызов
 	    case "mainpage":
 		    if (isset($name)) { // узнать id
 		    	global $prefix, $db;
-				$row = $db->sql_fetchrow( $db->sql_query("select `id` from ".$prefix."_mainpage where `tables`='pages' and `name`='$name' and `type`='2'") );
+				$row = $db->sql_fetchrow( $db->sql_query("select `id` from ".$prefix."_mainpage where `tables`='pages' and `name`='".$name."' and `type`='2'") );
 				$id = $row['id'];
 		    }
 		    if (isset($id)) mainpage($id); else mainpage();

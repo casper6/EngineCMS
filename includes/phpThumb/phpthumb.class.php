@@ -1881,9 +1881,6 @@ class phpthumb {
 				$this->DebugMessage('deleting "'.$IMtempfilename.'"', __FILE__, __LINE__);
 				unlink($IMtempfilename);
 
-			} elseif (ini_get('safe_mode')) {
-				$this->DebugMessage('ImageMagickThumbnailToGD() aborting because PHP safe_mode is enabled and phpThumb_tempnam() failed', __FILE__, __LINE__);
-				$this->useRawIMoutput = false;
 			} else {
 				$this->DebugMessage('ImageMagickThumbnailToGD() aborting, phpThumb_tempnam() failed', __FILE__, __LINE__);
 			}
@@ -3286,9 +3283,6 @@ exit;
 			if ($this->md5s && ($this->md5s != md5($this->rawImageData))) {
 				return $this->ErrorImage('$this->md5s != md5($this->rawImageData)'."\n".'"'.$this->md5s.'" != '."\n".'"'.md5($this->rawImageData).'"');
 			}
-			//if (ini_get('safe_mode')) {
-			//	return $this->ErrorImage('Cannot generate thumbnails from raw image data when PHP SAFE_MODE enabled');
-			//}
 			$this->gdimg_source = $this->ImageCreateFromStringReplacement($this->rawImageData);
 			if (!$this->gdimg_source) {
 				if (substr($this->rawImageData, 0, 2) === 'BM') {
@@ -3329,14 +3323,7 @@ exit;
 				$this->DebugMessage('Not using EXIF thumbnail data because $this->exif_thumbnail_data is empty', __FILE__, __LINE__);
 				break;
 			}
-			if (ini_get('safe_mode')) {
-				if (!$this->SourceImageIsTooLarge($this->source_width, $this->source_height)) {
-					$this->DebugMessage('Using EXIF thumbnail data because source image too large and safe_mode enabled', __FILE__, __LINE__);
-					$this->aoe = true;
-				} else {
-					break;
-				}
-			} else {
+
 				if (!$this->config_use_exif_thumbnail_for_speed) {
 					$this->DebugMessage('Not using EXIF thumbnail data because $this->config_use_exif_thumbnail_for_speed is FALSE', __FILE__, __LINE__);
 					break;
@@ -3355,7 +3342,7 @@ exit;
 					$this->DebugMessage('not using EXIF thumbnail because $source_ar != $exif_ar ('.$source_ar.' != '.$exif_ar.')', __FILE__, __LINE__);
 					break;
 				}
-			}
+			
 
 			// EXIF thumbnail exists, and is equal to or larger than destination thumbnail, and will be use as source image
 			$this->DebugMessage('Trying to use EXIF thumbnail as source image', __FILE__, __LINE__);
@@ -3408,9 +3395,7 @@ exit;
 					if ($this->fatalerror) {
 						$errormessages[] = $this->fatalerror;
 					}
-					if (ini_get('safe_mode')) {
-						$errormessages[] = 'Safe Mode enabled, therefore ImageMagick is unavailable. (disable Safe Mode if possible)';
-					} elseif (!$this->ImageMagickVersion()) {
+					if (!$this->ImageMagickVersion()) {
 						$errormessages[] = 'ImageMagick is not installed (it is highly recommended that you install it).';
 					}
 					if ($this->SourceImageIsTooLarge($this->getimagesizeinfo[0], $this->getimagesizeinfo[1])) {
@@ -3424,7 +3409,7 @@ exit;
 					$this->ErrorImage(implode("\n", $errormessages));
 
 				} else {
-					$this->DebugMessage('All attempts to create GD image source failed ('.(ini_get('safe_mode') ? 'Safe Mode enabled, ImageMagick unavailable and source image probably too large for GD': ($GDreadSupport ? 'source image probably corrupt' : 'GD does not have read support for "'.$imageHeader.'"')).'), cannot generate thumbnail');
+					//$this->DebugMessage('All attempts to create GD image source failed ('.(ini_get('safe_mode') ? 'Safe Mode enabled, ImageMagick unavailable and source image probably too large for GD': ($GDreadSupport ? 'source image probably corrupt' : 'GD does not have read support for "'.$imageHeader.'"')).'), cannot generate thumbnail');
 					//$this->DebugMessage('All attempts to create GD image source failed ('.($GDreadSupport ? 'source image probably corrupt' : 'GD does not have read support for "'.$imageHeader.'"').'), outputing raw image', __FILE__, __LINE__);
 					//if (!$this->phpThumbDebug) {
 					//	header($imageHeader);
@@ -3583,7 +3568,7 @@ exit;
 		$DebugOutput[] = 'ini_get(allow_url_fopen)       = '.$this->phpThumbDebugVarDump(@ini_get('allow_url_fopen'));
 		$DebugOutput[] = 'ini_get(disable_functions)     = '.$this->phpThumbDebugVarDump(@ini_get('disable_functions'));
 		$DebugOutput[] = 'get_cfg_var(disable_functions) = '.$this->phpThumbDebugVarDump(@get_cfg_var('disable_functions'));
-		$DebugOutput[] = 'ini_get(safe_mode)             = '.$this->phpThumbDebugVarDump(@ini_get('safe_mode'));
+		//$DebugOutput[] = 'ini_get(safe_mode)             = '.$this->phpThumbDebugVarDump(@ini_get('safe_mode'));
 		$DebugOutput[] = 'ini_get(open_basedir)          = '.$this->phpThumbDebugVarDump(@ini_get('open_basedir'));
 		$DebugOutput[] = 'ini_get(max_execution_time)    = '.$this->phpThumbDebugVarDump(@ini_get('max_execution_time'));
 		$DebugOutput[] = 'ini_get(memory_limit)          = '.$this->phpThumbDebugVarDump(@ini_get('memory_limit'));
@@ -3885,18 +3870,14 @@ exit;
 				}
 			} else {
 				$ErrorMessage = 'Failed to fopen('.$tempnam.', "wb") in '.__FILE__.' on line '.__LINE__."\n".'You may need to set $PHPTHUMB_CONFIG[temp_directory] in phpThumb.config.php';
-				if (ini_get('safe_mode')) {
-					$ErrorMessage = 'ImageCreateFromStringReplacement() failed in '.__FILE__.' on line '.__LINE__.': cannot create temp file in SAFE_MODE';
-				}
+
 				$this->DebugMessage($ErrorMessage, __FILE__, __LINE__);
 			}
 			$this->DebugMessage('deleting "'.$tempnam.'"', __FILE__, __LINE__);
 			@unlink($tempnam);
 		} else {
 			$ErrorMessage = 'Failed to generate phpThumb_tempnam() in '.__FILE__.' on line '.__LINE__."\n".'You may need to set $PHPTHUMB_CONFIG[temp_directory] in phpThumb.config.php';
-			if (ini_get('safe_mode')) {
-				$ErrorMessage = 'ImageCreateFromStringReplacement() failed in '.__FILE__.' on line '.__LINE__.': cannot create temp file in SAFE_MODE';
-			}
+
 		}
 		if ($DieOnErrors && $ErrorMessage) {
 			return $this->ErrorImage($ErrorMessage);

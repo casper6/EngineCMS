@@ -3,8 +3,8 @@ if (!defined('ADMIN_FILE')) {
 	die ("Доступ закрыт!");
 }
 global $prefix, $db, $admin_file;
-$aid = substr("$aid", 0,25);
-$row = $db->sql_fetchrow($db->sql_query("SELECT realadmin FROM " . $prefix . "_authors WHERE aid='$aid'"));
+$aid = substr($aid, 0,25);
+$row = $db->sql_fetchrow($db->sql_query("SELECT realadmin FROM " . $prefix . "_authors WHERE aid='".$aid."'"));
 if ($row['realadmin'] == 1) {
 
 
@@ -16,17 +16,17 @@ if ($row['realadmin'] == 1) {
 			echo "<a class='punkt dark_pole' onclick=\"show_animate('show_stop_users');\"><img class='icon2 i3' src='/images/1.gif' align='bottom'>Заблокированные по IP-адресу посетители: $numrows</a><div id='show_stop_users' style='display:none;'>
 			"
 			."<table class=table_light>"
-			."<tr><td bgcolor=\"$bgcolor2\" align='left'><b>IP-адрес</b>&nbsp;</td>"
-			."<td bgcolor=\"$bgcolor2\" align='left'><b>Причина блокировки</b>&nbsp;</td>"
-			."<td bgcolor=\"$bgcolor2\" align='center'><b>Дата запрета</b>&nbsp;</td>"
-			."<td bgcolor=\"$bgcolor2\" align='center'><b>Функции</b>&nbsp;</td></tr>";
+			."<tr><td bgcolor='".$bgcolor2."' align='left'><b>IP-адрес</b>&nbsp;</td>"
+			."<td bgcolor='".$bgcolor2."' align='left'><b>Причина блокировки</b>&nbsp;</td>"
+			."<td bgcolor='".$bgcolor2."' align='center'><b>Дата запрета</b>&nbsp;</td>"
+			."<td bgcolor='".$bgcolor2."' align='center'><b>Функции</b>&nbsp;</td></tr>";
 			$result = $db->sql_query("SELECT * from ".$prefix."_banned_ip ORDER by date DESC");
 			while ($row = $db->sql_fetchrow($result)) {
 				$row['reason'] = filter($row['reason'], "nohtml");
-				echo "<tr><td bgcolor=\"$bgcolor2\" align='left'>".$row['ip_address']."</td>"
-				."<td bgcolor=\"$bgcolor2\">".$row['reason']."&nbsp;</td>"
-				."<td bgcolor=\"$bgcolor2\" align='center' nowrap>".date2normal_view($row['date'])."&nbsp;</td>"
-				."<td bgcolor=\"$bgcolor2\" align='center'><a href=\"".$admin_file.".php?op=ipban_edit&amp;id=".intval($row['id'])."\"><img class=\"icon2 i34\" src=/images/1.gif title=\"Редактировать\"></a>&nbsp;<a href=\"".$admin_file.".php?op=ipban_delete&amp;id=".intval($row['id'])."\"><img class=\"icon2 i21\" src=/images/1.gif title=\"Снять запрет\"></a>&nbsp;</td></tr>";
+				echo "<tr><td bgcolor='".$bgcolor2."' align='left'>".$row['ip_address']."</td>"
+				."<td bgcolor='".$bgcolor2."'>".$row['reason']."&nbsp;</td>"
+				."<td bgcolor='".$bgcolor2."' align='center' nowrap>".date2normal_view($row['date'])."&nbsp;</td>"
+				."<td bgcolor='".$bgcolor2."' align='center'><a href=\"".$admin_file.".php?op=ipban_edit&amp;id=".intval($row['id'])."\"><img class=\"icon2 i34\" src=/images/1.gif title=\"Редактировать\"></a>&nbsp;<a href=\"".$admin_file.".php?op=ipban_delete&amp;id=".intval($row['id'])."\"><img class=\"icon2 i21\" src=/images/1.gif title=\"Снять запрет\"></a>&nbsp;</td></tr>";
 			}
 			echo "</table></div>";
 		}
@@ -34,7 +34,7 @@ if ($row['realadmin'] == 1) {
 		<table><tr><td>Введите IP-адрес пользователя:</td><td width=20></td><td>Причина блокировки:</td></tr><tr><td>";
 		if ($ip != 0) {
 			$ip = explode(".", $ip);
-			echo "<input type='text' class=polosa name='ip1' size='4' maxlength='3' value='$ip[0]'> . <input type='text' class=polosa name='ip5' size='4' maxlength='3' value='$ip[1]'> . <input type='text' class=polosa name='ip3' size='4' maxlength='3' value='$ip[2]'> . <input type='text' class=polosa name='ip4' size='4' maxlength='3' value='$ip[3]'>";
+			echo "<input type='text' class=polosa name='ip1' size='4' maxlength='3' value='".$ip[0]."'> . <input type='text' class=polosa name='ip5' size='4' maxlength='3' value='".$ip[1]."'> . <input type='text' class=polosa name='ip3' size='4' maxlength='3' value='".$ip[2]."'> . <input type='text' class=polosa name='ip4' size='4' maxlength='3' value='".$ip[3]."'>";
 		} else {
 			echo "<input type='text' class=polosa name='ip1' size='3' maxlength='3'>.<input type='text' class=polosa name='ip5' size='3' maxlength='3'>.<input type='text' class=polosa name='ip3' size='3' maxlength='3'>.<input type='text' class=polosa name='ip4' size='3' maxlength='3'>";
 		}
@@ -52,7 +52,7 @@ if ($row['realadmin'] == 1) {
 	function ipban_edit($id) {
 		global $prefix, $db, $bgcolor2, $admin_file;
 		$id = intval($id);
-		$row = $db->sql_fetchrow($db->sql_query("SELECT * from ".$prefix."_banned_ip WHERE id='$id'"));
+		$row = $db->sql_fetchrow($db->sql_query("SELECT * from ".$prefix."_banned_ip WHERE id='".$id."'"));
 		include ("ad-header.php");
 		echo "<h3>Блокировка пользователей (запрет использования сайта)</h3><b>Измените IP-адрес пользователя:</b><br>";
 		echo "<form action='".$admin_file.".php' method='post'>";
@@ -94,8 +94,8 @@ if ($row['realadmin'] == 1) {
 		}
 		$reason = filter($reason, "nohtml");
 		$date = date("Y-m-d");
-		if ($id==0) $db->sql_query("INSERT INTO ".$prefix."_banned_ip VALUES (NULL, '$ip', '$reason', '$date')");
-		else $db->sql_query("UPDATE ".$prefix."_banned_ip SET ip_address='$ip', reason='$reason' WHERE id='$id'");
+		if ($id==0) $db->sql_query("INSERT INTO ".$prefix."_banned_ip VALUES (NULL, '".$ip."', '".$reason."', '".$date."')");
+		else $db->sql_query("UPDATE ".$prefix."_banned_ip SET ip_address='".$ip."', reason='".$reason."' WHERE id='".$id."'");
 		Header("Location: ".$admin_file.".php?op=Configure");
 	}
 	///////////////////////////////////////////////////////////////////////////////////////
@@ -113,11 +113,11 @@ if ($row['realadmin'] == 1) {
 					exit;
 				}
 				$chng_pwd = md5($chng_pwd);
-				$chng_aid = strtolower(substr("$chng_aid", 0,25));
-				$db->sql_query("update ".$prefix."_authors set aid='$chng_aid', pwd='$chng_pwd' where name='$chng_name' AND aid='$adm_aid'");
+				$chng_aid = strtolower(substr($chng_aid, 0,25));
+				$db->sql_query("update ".$prefix."_authors set aid='".$chng_aid."', pwd='".$chng_pwd."' where name='".$chng_name."' AND aid='".$adm_aid."'");
 				Header("Location: ".$admin_file.".php?op=Configure");
 			} else {
-				$db->sql_query("update ".$prefix."_authors set aid='$chng_aid' where name='$chng_name' AND aid='$adm_aid'");
+				$db->sql_query("update ".$prefix."_authors set aid='".$chng_aid."' where name='".$chng_name."' AND aid='".$adm_aid."'");
 				Header("Location: ".$admin_file.".php?op=Configure");
 			}
 	}
@@ -125,7 +125,7 @@ if ($row['realadmin'] == 1) {
 	function Configure($ok=0) {
 		global $prefix, $db, $admin_file, $siteurl, $admin, $ipban;
 		include ("ad-header.php");
-		$ok=intval($ok);
+		$ok = intval($ok);
 		// Получаем настройки из mainfile
 		global $sitename, $startdate, $adminmail, $keywords, $description, $counter, $statlink, $postlink, $stopcopy, $registr, $pogoda, $flash, $sgatie, $ht_backup, $captcha_ok, $xnocashe, $jqueryui, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $comment_send, $company_name, $company_fullname, $company_address, $company_time, $company_tel, $company_sot, $company_fax, $company_email, $company_map, $company_people, $search_design, $tag_design, $add_fonts, $site_cash, $normalize, $project_logotip, $project_name;
 		
@@ -291,7 +291,7 @@ body {}
 
 <tr valign=top class=p4><td>
 Получать письма о новых комментариях:</td><td class=small>
-".select("options[comment]", "0,1", "НЕТ,ДА", $comment_send)."
+".select("options[comment_send]", "0,1", "НЕТ,ДА", $comment_send)."
 <br>Отправка уведомлений о новых комментариях на почту администратору.
 </td></tr>
 
@@ -506,7 +506,7 @@ echo "<table class=table_light>
 $result = $db->sql_query("SELECT aid, name from " . $prefix . "_authors where name='BOG'");
 $row = $db->sql_fetchrow($result);
 $adm_aid = filter($row['aid'], "nohtml");
-$adm_aid = trim(strtolower(substr("$adm_aid", 0,25)));
+$adm_aid = trim(strtolower(substr($adm_aid, 0,25)));
 echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>";
 		if (!isset($ip)) $ip="";
 		if ($ipban != false) {
@@ -521,7 +521,7 @@ echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>
 		$chng_aid = filter($row['aid'], "nohtml");
 		$chng_name = filter($row['name'], "nohtml");
 		$chng_pwd = filter($row['pwd'], "nohtml");
-		$chng_aid = strtolower(substr("$chng_aid", 0,25));
+		$chng_aid = strtolower(substr($chng_aid, 0,25));
 		$aid = $chng_aid;
 		echo "<form action=".$admin_file.".php method=post>
 		<table class=tight>
@@ -923,7 +923,24 @@ echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>
 
 		$advanced = $options['jqueryui']."|".$options['show_comments']."|".$options['show_userposts']."|".$options['show_page']."|".$options['show_reserv']."|".$options['uskorenie_blokov']."|".$options['kickstart']."|".$options['show_page_links']."|".$options['ad_fon']."|".$options['search_design']."|".$options['tag_design']."|".$options['add_fonts']."|".$options['normalize']."|".$options['project_logotip']."|".$options['project_name'];
 		// sitename	startdate	adminmail	keywords	description	counter	statlink	postlink	registr	pogoda	flash	sgatie	stopcopy	nocashe	adminmes	red	comment	captcha_ok	ht_backup
-		$db->sql_query("UPDATE `".$prefix."_config` SET `sitename` = '".$options['sitename']."',`startdate` = '".$options['startdate']."',`adminmail` = '".$options['adminmail']."',`keywords` = '".$options['keywords']."',`description` = '".$options['description']."',`counter` = '".addslashes($options['counter'])."',`statlink` = '".$options['statlink']."',`postlink` = '".$options['postlink']."',`registr` = '".$options['registr']."',`pogoda` = '".$options['pogoda']."',`flash` = '".$options['flash']."',`sgatie` = '".$mini_blocks."',`stopcopy` = '".$options['stopcopy']."', `nocashe` = '".$advanced."', `comment` = '".$options['comment_send']."', `captcha_ok` = '".$options['captcha_ok']."', `ht_backup` = '".$options['ht_backup']."' LIMIT 1 ;") or die ('Настройки не сохранилось. Видимо забыли обновить базу данных или файл настройки администрирования.');
+		$db->sql_query("UPDATE `".$prefix."_config` SET 
+			`sitename` = '".mysql_real_escape_string($options['sitename'])."',
+			`startdate` = '".mysql_real_escape_string($options['startdate'])."',
+			`adminmail` = '".mysql_real_escape_string($options['adminmail'])."',
+			`keywords` = '".mysql_real_escape_string($options['keywords'])."',
+			`description` = '".mysql_real_escape_string($options['description'])."',
+			`counter` = '".mysql_real_escape_string($options['counter'])."',
+			`statlink` = '".mysql_real_escape_string($options['statlink'])."',
+			`postlink` = '".mysql_real_escape_string($options['postlink'])."',
+			`registr` = '".mysql_real_escape_string($options['registr'])."',
+			`pogoda` = '".mysql_real_escape_string($options['pogoda'])."',
+			`flash` = '".mysql_real_escape_string($options['flash'])."',
+			`sgatie` = '".mysql_real_escape_string($mini_blocks)."',
+			`stopcopy` = '".mysql_real_escape_string($options['stopcopy'])."',
+			`nocashe` = '".mysql_real_escape_string($advanced)."',
+			`comment` = '".mysql_real_escape_string($options['comment_send'])."',
+			`captcha_ok` = '".mysql_real_escape_string($options['captcha_ok'])."',
+			`ht_backup` = '".mysql_real_escape_string($options['ht_backup'])."' LIMIT 1 ;") or die ('Настройки не сохранилось. Видимо забыли обновить базу данных или файл настройки администрирования.');
 		Header("Location: sys.php?op=Configure&save=1");
 		break;
 		///////////////////////////////

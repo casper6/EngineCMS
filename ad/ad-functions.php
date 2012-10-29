@@ -128,6 +128,9 @@ function help_autoblocks() {
     [заголовок-ссылка] - стандартный заголовок раздела<br>
     [название папки] - имя открытой папки<br>
     [твиттер] - кнопка «Твитнуть»<br>
+    [лого_проекта] - логотип проекта, настраивается в Настройках сайта<br>
+    [название_проекта] - название проекта, настраивается в Настройках сайта<br>
+    [название_лого_проекта] - логотип + название — через замену картинкой тега H1<br>
     [поиск] - поиск по всему сайту, по всем страницам всех разделов<br>
     [год] - выводит промежуток между начальным и текущим годами существования сайта, например: © 2007-2012 или © 2012<br>
     [почта] - выводит ссылку на почтовую форму \"Написать нам\".<br>
@@ -284,5 +287,46 @@ function help_shablon() {
     <a title='Закрыть/Открыть справочное окно' id='show_shablon_var' class=punkt onclick=\"show_animate('shablon_var');\" style='float:right; display:none;'><div class='radius' style='font-size:12pt; width:20px; height: 20px; color: white; text-align:center; float:right; margin:5px; margin-bottom:0; background: #bbbbbb;'>&nbsp;&uarr;&nbsp;</div></a><div id=shablon_var style='display:none; width:95%; height:300px; scroll:auto;' class=block></div>";
 }
 ##########################################################################################
-
+function add_file_upload_form() {
+  return "<link rel='stylesheet' href='http://blueimp.github.com/Bootstrap-Image-Gallery/css/bootstrap-image-gallery.min.css'>
+  <link rel='stylesheet' href='includes/upload/css/jquery.fileupload-ui.css'>
+      <form id='fileupload' action='includes/upload/server/php/' method='POST' enctype='multipart/form-data'>
+      <label for='show_oldnames'><input type='checkbox' id='show_oldnames'><b>Добавлять имя файла</b> фотографии как её описание (<i>подходит для осмысленных и/или русских имен</i>)</label>
+      <br><div class='notice warning green'><span class='icon green medium' data-icon='('></span>Фотографии можно перенести из любой папки вашего компьютера, даже не нажимая кнопку «Добавить файлы...»</div>
+          <div class='row fileupload-buttonbar'>
+              <div style='padding:10px; padding-left:30px; margin-bottom:30px;'>
+                  <span class='btn btn-success fileinput-button'>
+                      <a class='button'>Добавить файлы...</a>
+                      <input type='file' name='files[]' multiple>
+                  </span>
+              </div>
+              <div class='span5 fileupload-progress fade'>
+                  <div class='progress progress-success progress-striped active' role='progressbar' aria-valuemin='0' aria-valuemax='100'>
+                      <div class='bar' style='width:0%;'></div>
+                  </div>
+                  <div class='progress-extended'>&nbsp;</div>
+              </div>
+          </div>
+          <div class='fileupload-loading'></div>
+  <!-- Действия после загрузки -->
+  <script>$(function () { $('#fileupload').fileupload({
+      autoUpload: true,
+      dataType: 'json',
+      done: function (e, data) {
+          data.context.text('Загрузка завершена.');
+          $.each(data.result, function (index, file) {
+        if (document.getElementById(\"show_oldnames\").checked == true) $(\"#textarea\").append(\"/img/\" + file.name + \"|\" + file.oldname + \"\\n\");
+        else $(\"#textarea\").append(\"/img/\" + file.name + \"|\\n\");
+          });
+      $(\"#textarea_block\").show();
+      }
+  });});</script>
+  <script src='includes/upload/js/vendor/jquery.ui.widget.js'></script>
+  <script src='includes/upload/js/jquery.iframe-transport.js'></script>
+  <script src='includes/upload/js/jquery.fileupload.js'></script>
+  <script src='includes/upload/js/jquery.fileupload-fp.js'></script>
+  <script src='includes/upload/js/jquery.fileupload-ui.js'></script>
+  <script src='includes/upload/js/main.js'></script>
+  <!--[if gte IE 8]><script src='includes/upload/js/cors/jquery.xdr-transport.js'></script><![endif]-->";
+}
 ?>

@@ -431,10 +431,6 @@ class phpthumb_functions {
 			foreach ($disable_functions_global as $key => $value) {
 				$DisabledFunctions[trim($value)] = 'global';
 			}
-			if (@ini_get('safe_mode')) {
-				$DisabledFunctions['shell_exec']     = 'local';
-				$DisabledFunctions['set_time_limit'] = 'local';
-			}
 		}
 		return isset($DisabledFunctions[strtolower($function)]);
 	}

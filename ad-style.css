@@ -677,3 +677,5 @@ table.table_light tbody tr:hover th, table.table_light tbody tr.odd:hover th { b
 .icon.lightblue{color:#78e4e2;}
 .icon.lightred{color:#ffa4ac;}
 .icon.lightyellow{color:#f3f373;}
+
+input[type="search"] { -webkit-appearance: textfield; }
