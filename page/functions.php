@@ -719,13 +719,14 @@ function text_shablon() { // список шаблонов
     return $text_shablon;
 }
 /////////////////////////////////////////////////////////////// 
-function titles_papka($cid=0) { // список названий папок
+function titles_papka($cid=0,$all=0) { // список названий папок
     global $prefix, $db;
     $cid = intval($cid);
     if ($cid == 0) {
       $titles_papka = array(); 
+      if ($all==0) $and = " and parent_id='0'"; else $and = "";
       //$cid_module = array(); // список принадлежности папок к разделам
-      $result = $db->sql_query("SELECT `cid`,`title` from ".$prefix."_pages_categories where `tables`='pages' and parent_id='0' order by `title`");
+      $result = $db->sql_query("SELECT `cid`,`title` from ".$prefix."_pages_categories where `tables`='pages'".$and." order by `title`");
       while ($row = $db->sql_fetchrow($result)) {
         $id = $row['cid'];
         $titles_papka[$id] = $row['title'];
