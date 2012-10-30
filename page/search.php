@@ -3,7 +3,7 @@
   global $soderganie, $tip, $DBName, $prefix, $db, $module_name, $ModuleName, $slovo, $design, $now, $ip, $papka, $title_razdels;
   $admintip = "base_pages";
 
-  $slov = filter($slovo, "nohtml");
+  $slov = filter($slovo);
   $soderganiemain = "<h1>Вы искали: ".$slov."</h1>";
 
   $slov = str_replace("—","-",str_replace("."," ",str_replace(","," ",str_replace(":"," ",str_replace(";"," ",str_replace("!"," ",str_replace("?"," ",$slov))))))); // меняя знаки пепинания на пробелы, чтобы потом слова не слились
@@ -23,7 +23,7 @@ else {
   else $papka = " and cid = '".$papka."'";
 
   
-  if (is_admin($admin)) $soderganie .= "<h3>Справка: Редактирование страниц доступно только Администратору.</h3>";
+  if (is_admin($admin)) $soderganie .= "<h3>Справка: Редактирование доступно только Администратору.</h3>";
   // Заголовок
   $slova = zamena_predlog($slov); // убираем предлоги
   $slovo = preg_split("/\s+/s",$slova);
@@ -139,7 +139,7 @@ else {
   }
   $add_razdel = implode("",$add_razdel);
 
-  $search_line = array_merge($search_line,$slovo); // поставить условие кол-ва слов!!!
+  $search_line = array_merge($search_line,$slovo);
 
   $soderganie .= "<div class=main_search><ol>";
   $c_name = titles_papka(0,1); // Список всех папок
@@ -171,7 +171,7 @@ else {
       $soderganie .= "<h2>В разделах: ".$nu."</h2>";
       foreach ($pids as $p_pid) {
         $p_title = $rr_title[$p_pid];
-        $soderganie .= "<li>раздел <a class='search_razdel_link' href='/-".$rr_name[$p_pid]."'>".$p_title."</a>";
+        $soderganie .= "<li>раздел <a class='search_page_link' href='/-".$rr_name[$p_pid]."'>".$p_title."</a>";
         if (is_admin($admin)) $soderganie .= "&nbsp; <a href='sys.php?op=mainpage&type=2&id=".$p_pid."' title='Изменить раздел в Редакторе'><img src=images/sys/edit_1.png></a><a href='sys.php?op=mainpage&type=2&id=".$p_pid."&red=1' title='Изменить раздел (быстрый HTML режим)'><img src='images/sys/edit_0.png'></a>";
         foreach ($slovo as $s_line) {
           $txt = strchop(strip_tags(str_replace("&nbsp;"," ",str_replace("[содержание]"," ",str_replace("[следующий]"," ",str_replace("[название]"," ",str_replace("[страницы]"," ",str_replace("<br>"," ",str_replace("<p>"," ",$rr_useit[$p_pid])))))))),$s_line,100);
@@ -202,7 +202,7 @@ else {
       if ($numrows1 != 0) { $soderganie .= "<h2>В папках: ".$numrows1."</h2>"; $allnum += $nu; }
       
       foreach ($pids as $p_cid) {
-        $soderganie .= "<li>папка <a class='search_papka_link' href='/-".$rr_module[$p_cid]."_cat_".$p_cid."'>".$rr_title[$p_cid]."</a>";
+        $soderganie .= "<li>папка <a class='search_page_link' href='/-".$rr_module[$p_cid]."_cat_".$p_cid."'>".$rr_title[$p_cid]."</a>";
         if (is_admin($admin)) $soderganie .= "&nbsp; <a href='sys.php?op=edit_base_pages_category&cid=".$p_cid."' title='Изменить папку в Редакторе'><img src=images/sys/edit_1.png></a><a href='sys.php?op=edit_base_pages_category&cid=".$p_cid."&red=1' title='Изменить папку (быстрый HTML режим)'><img src='images/sys/edit_0.png'></a>";
         foreach ($slovo as $s_line) {
           $txt = strchop(strip_tags(str_replace("&nbsp;"," ",str_replace("<br>"," ",str_replace("<p>"," ",$rr_description[$p_cid])))),$s_line,100);
