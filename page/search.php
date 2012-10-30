@@ -4,13 +4,13 @@
   $admintip = "base_pages";
 
   $slov = filter($slovo, "nohtml");
-  $soderganie .= "<h1>Вы искали: ".$slov."</h1>";
+  $soderganiemain = "<h1>Вы искали: ".$slov."</h1>";
 
   $slov = str_replace("—","-",str_replace("."," ",str_replace(","," ",str_replace(":"," ",str_replace(";"," ",str_replace("!"," ",str_replace("?"," ",$slov))))))); // меняя знаки пепинания на пробелы, чтобы потом слова не слились
   $slov = preg_replace("/[^(\w)|(\x7F-\xFF)|(\s)(\-)]/","",$slov); // чистим поисковое слово
   $slov = trim(preg_replace("/  +/"," ",$slov)); // убираем лишние пробелы
 
-$soderganie .= "<div class='main_search_line'><form method=POST action='--search' class=main_search_form><input type='search' placeholder='Поиск по сайту' style='width:98%' name=slovo class='main_search_input' value='".$slov."' autofocus><input type='submit' name='ok' value='Найти' class='main_search_button'></form></div>";
+  $soderganiemain .= "<div class='main_search_line'><form method=POST action='--search' class=main_search_form><input type='search' placeholder='Поиск по сайту' style='width:98%' name=slovo class='main_search_input' value='".$slov."' autofocus><input type='submit' name='ok' value='Найти' class='main_search_button'></form></div>";
 
 if ($slov == "") $soderganie .= "<p>Вы задали пустой поиск. Напишите что-нибудь в строке поиска выше.";
 else {
@@ -122,8 +122,6 @@ else {
     $search_line[] = $notbad[0]."%".$notbad[2];
   }
 
-  $nosearch_result = "<h3>Данное сочетание не обнаружено. Попробуйте поискать по другим словам.<br>В слове должно быть как минимум три буквы.</h3>"; // Значение по-умолчанию
-
   $add_pages = $add_razdel = $add_papka = array();
 
   foreach ($search_line as $s_line) {
@@ -201,8 +199,8 @@ else {
       }
       $pids = array_merge($pids1,$pids2,$pids3);
       $numrows1 = count($pids);
-      if ($numrows1 == 0) $nu = "не найдено"; else { $nu = $numrows1; $allnum += $nu; }
-      $soderganie .= "<h2>В папках: ".$nu."</h2>";
+      if ($numrows1 != 0) { $soderganie .= "<h2>В папках: ".$numrows1."</h2>"; $allnum += $nu; }
+      
       foreach ($pids as $p_cid) {
         $soderganie .= "<li>папка <a class='search_papka_link' href='/-".$rr_module[$p_cid]."_cat_".$p_cid."'>".$rr_title[$p_cid]."</a>";
         if (is_admin($admin)) $soderganie .= "&nbsp; <a href='sys.php?op=edit_base_pages_category&cid=".$p_cid."' title='Изменить папку в Редакторе'><img src=images/sys/edit_1.png></a><a href='sys.php?op=edit_base_pages_category&cid=".$p_cid."&red=1' title='Изменить папку (быстрый HTML режим)'><img src='images/sys/edit_0.png'></a>";
@@ -245,12 +243,15 @@ else {
         if (is_admin($admin)) $soderganie .= "&nbsp; <a href='sys.php?op=".$admintip."_edit_page&name=".$p_module."&pid=".$p_pid."' title='Изменить страницу в Редакторе'><img src=images/sys/edit_1.png></a><a href='sys.php?op=".$admintip."_edit_page&name=".$p_module."&pid=".$p_pid."&red=1' title='Изменить страницу (быстрый HTML режим)'><img src='images/sys/edit_0.png'></a>";
         $soderganie .= "<br><a class='search_razdel_link' href='/-".$p_module."'>".$title_razdels[$p_module]."</a> ".$cat;
         foreach ($slovo as $s_line) {
-          $txt = strchop(strip_tags(str_replace("&nbsp;","",$pp_open_text[$p_pid])),$s_line,100);
+          $txt = strchop(strip_tags(str_replace("&nbsp;"," ",str_replace("<br>"," ",str_replace("<p>"," ",$pp_open_text[$p_pid])))),$s_line,100);
           if ($txt != "......") $soderganie .= "<blockquote>".$txt."</blockquote>";
         }
       }
   ////////////////////////////////////////////////////////////////////////////////////////
   $soderganie .= "</ol></div>";
+
+  if ($allnum == 0) $soderganie = $soderganiemain."<h3>Данное словосочетание не обнаружено. Попробуйте поискать по другим словам.</h3>";
+  else $soderganie = $soderganiemain.$soderganie;
 }
   // Получаем дизайн для поиска
   global $search_design;
