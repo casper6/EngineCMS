@@ -32,89 +32,106 @@ function FixQuotes($what = "",$strip="") {
   return $what;
 }
 /////////////////////////////////////////////////////////
-/*
 function delQuotes($string) { # Фильтры текста
-  $tmp="";
-  $result="";
+  $tmp="";    # string buffer
+  $result=""; # result string
   $i=0;
   $attrib=-1; # Are us in an HTML attrib ?   -1: no attrib   0: name of the attrib   1: value of the atrib
   $quote=0;   # Is a string quote delimited opened ? 0=no, 1=yes
   $len = strlen($string);
   while ($i<$len) {
-    switch($string[$i]) {
-    case "\"":
+    switch($string[$i]) { # What car is it in the buffer ?
+    case "\"": #"       # a quote.
     if ($quote==0) {
       $quote=1;
     } else {
       $quote=0;
-      if (($attrib>0) && (!empty($tmp))) { $result .= "=\"".$tmp."\""; }
+      if (($attrib>0) && ($tmp != "")) { $result .= "=\"$tmp\""; }
       $tmp="";
       $attrib=-1;
     }
     break;
-    case "=":
-    if ($quote==0) {
+    case "=":           # an equal - attrib delimiter
+    if ($quote==0) {  # Is it found in a string ?
     $attrib=1;
     if ($tmp!="") $result.=" $tmp";
     $tmp="";
     } else $tmp .= '=';
     break;
-    case " ":
-    if ($attrib>0) {
+    case " ":           # a blank ?
+    if ($attrib>0) {  # add it to the string, if one opened.
     $tmp .= $string[$i];
     }
     break;
-    default:
-    if ($attrib<0)
+    default:            # Other
+    if ($attrib<0)    # If we weren't in an attrib, set attrib to 0
     $attrib=0;
     $tmp .= $string[$i];
     break;
     }
     $i++;
   }
-  if (($quote!=0) && (!empty($tmp))) {
+  if (($quote!=0) && ($tmp != "")) {
     if ($attrib==1) $result .= "=";
-    $result .= "\"".$tmp."\"";
+    /* If it is the value of an atrib, add the '=' */
+    $result .= "\"$tmp\"";  /* Add quote if needed (the reason of the function ;-) */
   }
   return $result;
 }
 /////////////////////////////////////////////////////////
-
-function check_html($str) {
-  $str = preg_replace("/<\s*([^>]*?)\s*>/i",'<\\1>',$str); // Удаляем все пробелы из html тегов.
-  $str = preg_replace("/<a[^>]*href\s*=\s*\"?\s*([^\" >]*)\s*\"?[^>]*>/i",'<a href="\\1">', $str); // Удаляем все атрибуты ссылки, кроме href
-  $str = preg_replace("/<\s*img\s*([^>]*)\s*>/i", '', $str); // Удаляем img
-  $str = preg_replace("/<a[^>]*?href\s*=\s*\"?javascript[[:punct:]]*\"?[^>]*>/i", '', $str); // Удаляем JS из «a href tags»
+function check_html ($str, $strip="") {
+  /* The core of this code has been lifted from phpslash */
+  /* which is licenced under the GPL. */
+  if ($strip == "nohtml")
+  $str = stripslashes($str);
+  $str = eregi_replace("<[[:space:]]*([^>]*)[[:space:]]*>",'<\\1>', $str);
+  $str = eregi_replace("<a[^>]*href[[:space:]]*=[[:space:]]*\"?[[:space:]]*([^\" >]*)[[:space:]]*\"?[^>]*>",'<a href="\\1">', $str);
+  $str = eregi_replace("<[[:space:]]* img[[:space:]]*([^>]*)[[:space:]]*>", '', $str);
+  $str = eregi_replace("<a[^>]*href[[:space:]]*=[[:space:]]*\"?javascript[[:punct:]]*\"?[^>]*>", '', $str);
   $tmp = "";
-  while (preg_match("/<(\/?[a-zA-Z0-9]*)\s*([^>]*)>/",$str,$reg)) {
+  while (ereg("<(/?[[:alpha:]]*)[[:space:]]*([^>]*)>",$str,$reg)) {
     $i = strpos($str,$reg[0]);
     $l = strlen($reg[0]);
     if ($reg[1][0] == "/") $tag = strtolower(substr($reg[1],1));
     else $tag = strtolower($reg[1]);
-    if ($reg[1][0] == "/") $tag = "</".$tag.">";
-    elseif (($a == 1) || (empty($reg[2]))) $tag = "<".$tag.">";
+    if ($reg[1][0] == "/") $tag = "</$tag>";
+    elseif ($reg[2] == "") $tag = "<$tag>";
     else {
-      # недостает функции поправки двойных кавычек
       $attrb_list=delQuotes($reg[2]);
-      $tag = "<".$tag.$attrb_list.">";
-    } # атрибуты в тегах разрешить
-    else $tag = "";
+      $tag = "<$tag" . $attrb_list . ">";
+    }
     $tmp .= substr($str,0,$i) . $tag;
     $str = substr($str,$i+$l);
   }
   $str = $tmp . $str;
   return $str;
   exit;
-  $str = str_replace("<?","",$str);
+  /* Squash PHP tags unconditionally */
+  $str = ereg_replace("<\?","",$str);
   return $str;
 }
-*/
 /////////////////////////////////////////////////////////
+/*
 function filter($what, $strip="") {
   if ($strip == "nohtml") {
     $what = trim( strip_tags ( $what ) ); // check_html
   }
   $what = stripslashes(FixQuotes($what));
+  return($what);
+}
+*/
+function filter($what, $strip="", $save="") {
+  if ($strip == "nohtml") {
+    $what = check_html($what, $strip);
+    $what = htmlentities(trim($what), ENT_QUOTES);
+  }
+  if ($save == 1) {
+    $what = check_html($what, $strip);
+    $what = addslashes($what);
+  } else {
+    $what = stripslashes(FixQuotes($what));
+    $what = check_html($what, $strip);
+  }
   return($what);
 }
 /////////////////////////////////////////////////////////
@@ -264,6 +281,9 @@ function tipograf($text, $p=0) { // Типографика - все основн
   "  "=>" "
   );
   $text = strtr( strtr($text, $zamena), $zamena);
+  $text = preg_replace('B"b([^"x84x93x94rn]+)b"B', '?1?', $text); // Замена кавычек
+  //$text = preg_replace("/.+/i", ".", $text);
+  $text = preg_replace('#(\.|\?|!|\(|\)){3,}#', '\1\1\1', $text); // замена повторяющихся знаков препинания, например двойные запятые
 
   //$pattern = "/http:\/\/www.onlinedisk.ru\/image\/"."(\d+)"."\/"."(\w+)".".jpg"."/i";
   //$replacement = "http://www.onlinedisk.ru/get_image.php?id=$1";

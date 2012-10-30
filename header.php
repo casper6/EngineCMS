@@ -662,7 +662,7 @@ case "5": # Блок голосования
 	$type = ""; break; 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 case "6": # Фотогалерея
-	$links = explode("\n",$textX);
+	$links = explode("\n", str_replace("\n\n", "\n", $textX) );
 	$textX = $textX0 = "";
 	global $siteurl;
 	for ( $i=0; $i < count($links); $i++ ) { 

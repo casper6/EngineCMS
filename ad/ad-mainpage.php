@@ -13,7 +13,7 @@
 ##########################################################################################
 function menu() {
 	global $admintip, $siteurl, $type, $prefix, $db, $statlink;
-	$stat_razdel = $stat_page = $stat_search = "";
+	$stat_razdel = $stat_page = $stat_search = $mail_list = "";
 	##############################################################################
 	if ($type=="stat") {
 		$sql = "select `name`, `title`, `counter` from ".$prefix."_mainpage where `tables`='pages' and `name`!='index' and `type`='2' order by counter desc";
@@ -29,7 +29,6 @@ function menu() {
 		$stat_page .= "<tr valign=top><td class='polosa gray'><a target='_blank' href='/-".$row['module']."_page_".$row['pid']."'>".strip_tags($row['title'], '<b><i>')."</a></td><td align=center class='polosa gray'>".$row['counter']."</td></tr>";
 		}
 		$stat_page = "<strong>и страниц:</strong> <a href='sys.php?op=mainpage&amp;type=stat_page'>См. популярные &rarr;</a><table width=100% class='table_light'>".$stat_page."</table>";
-		
 		$user_name = array();
 		$user_mail = array();
 		$user_tel = array();
@@ -60,8 +59,7 @@ function menu() {
 		<table cellpadding=2 width=100% class='block radius'><tr valign=top><td width=25%>".$stat_razdel."</td><td width=30%>".$stat_page."</td><td>".$stat_search."</td></tr></table></div>
 		</body>
 		</html>";
-
-		exit();
+		exit;
 	}
 	##############################################################################
 	if ($type=="stat_search") {
@@ -97,7 +95,6 @@ function menu() {
 				else $stat_search4[] = $row['slovo']." — ".$row['pages']." ".$del." <span class='gray'>".$user_info."</span>";
 			}
 		}
-
 		natcasesort($stat_search1);
 		natcasesort($stat_search2);
 		natcasesort($stat_search3);
@@ -106,15 +103,11 @@ function menu() {
 		$stat_search2 = "".implode("<br>",$stat_search2)."";
 		$stat_search3 = "".implode("<br>",$stat_search3)."";
 		$stat_search4 = "".implode("<br>",$stat_search4)."";
-
 		if ($stat_search1 != "") echo "<h2>Ничего не найдено (можно создать искомые страницы)</h2>".$stat_search1."<hr>";
-
 		if ($stat_search2 != "") echo "<h2>Найдено в содержании всего одной страницы (слишком мало информации по искомому слову)</h2>".$stat_search2."<hr>";
-
 		if ($stat_search3 != "") echo "<h2>Найдено только в содержании (можно изменить названия страниц или создать новые страницы)</h2>".$stat_search3."<hr>";
-
 		if ($stat_search4 != "") echo "<h2>Остальное (удовлетворяющее, найдено в названии и содержании)</h2>".$stat_search4."";
-		exit();
+		exit;
 	}
 	##############################################################################
 	if ($type=="stat_page") {
@@ -123,14 +116,11 @@ function menu() {
 		$proc = 0;
 		echo "<h1>Статистика посещений страниц</h1>
 		<a href=/sys.php?op=mainpage&amp;type=stat>Вернуться к общей статистике</a><br><br>";
-		
 		$sql = "SELECT pid, module, title, `date`, counter from ".$prefix."_pages where active='1' and `tables`='pages' and `counter` > 15 order by counter desc limit 0,1000000";
 		$result = $db->sql_query($sql); // or die('Ошибка при попытке прочитать названия разделов');
 		$numrows = $db->sql_numrows($result);
 		$nu = 0;
-		
 		while ($row = $db->sql_fetchrow($result)) {
-			
 			if ($proc == 0) {
 				$proc = 100; $count = $row['counter'];
 			} else {
@@ -154,7 +144,7 @@ function menu() {
 		else $pro = 0;
 		echo "<table width=100%><tr valign=bottom><td><nobr><strong>Страницы</strong> (всего: ".$numrows.", показано ниже: ".$nu.", эффективность: ".$pro."%)</nobr><br>
 		Новые (до 15 посещений) и малопосещаемые (меньше 3 в день) не отображаются.</td><td width=80><strong><nobr>Процент</nobr></strong></td><td><nobr>Посещения</nobr></td><td><strong><nobr>Среднее</nobr></strong></td><td><nobr>Время, дней</nobr></td></tr>".$stat_page."</table>";
-		exit();
+		exit;
 	}
 }
 ######################################################################################################

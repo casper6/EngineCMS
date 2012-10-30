@@ -79,22 +79,22 @@
   $http_siteurl = "http://".$_SERVER['HTTP_HOST']; # Имя сайта
   $result = $db->sql_query("SELECT * FROM ".$prefix."_config");
   $row = $db->sql_fetchrow($result);
-  $sitename = htmlspecialchars($row['sitename']); // Имя сайта (title)
-  $startdate = htmlspecialchars($row['startdate']);
-  $adminmail = htmlspecialchars($row['adminmail']);
-  $keywords = htmlspecialchars($row['keywords']);
-  $description = htmlspecialchars($row['description']);
+  $sitename = filter($row['sitename'], "nohtml"); // Имя сайта (title)
+  $startdate = filter($row['startdate'], "nohtml");
+  $adminmail = filter($row['adminmail'], "nohtml");
+  $keywords = filter($row['keywords'], "nohtml");
+  $description = filter($row['description'], "nohtml");
   $counter = $row['counter'];
-  $statlink = htmlspecialchars($row['statlink']);
-  $postlink = htmlspecialchars($row['postlink']);
+  $statlink = filter($row['statlink'], "nohtml");
+  $postlink = filter($row['postlink'], "nohtml");
   $stopcopy = intval($row['stopcopy']);
   $registr = intval($row['registr']);
   $pogoda = intval($row['pogoda']);
   $flash = intval($row['flash']);
-  $ht_backup = htmlspecialchars($row['ht_backup']); // Файл, в котором лежит резервная копия .htaccess
+  $ht_backup = filter($row['ht_backup'], "nohtml"); // Файл, в котором лежит резервная копия .htaccess
   $captcha_ok = intval($row['captcha_ok']); // отключение проверки комментариев
   $jqueryui = $show_comments = $show_userposts = $normalize = "";
-  list($jqueryui, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $search_design, $tag_design, $add_fonts, $normalize, $project_logotip, $project_name) = explode("|",trim(htmlspecialchars($row['nocashe'])));
+  list($jqueryui, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $search_design, $tag_design, $add_fonts, $normalize, $project_logotip, $project_name) = explode("|",trim(filter($row['nocashe'], "nohtml")));
   //if ($add_fonts != "") $add_fonts = explode(".",$add_fonts);
   if ($project_logotip == "") $project_logotip = "/img/logotip.png";
   if ($jqueryui == "") $jqueryui = "1";
@@ -107,15 +107,7 @@
   if ($ad_fon == "") $ad_fon = "0";
   if ($search_design == "") $search_design = "1";
   if ($tag_design == "") $tag_design = "1";
-  list($company_name, $company_fullname, $company_address, $company_time, $company_tel, $company_sot, $company_fax, $company_email, $company_map, $company_people) = explode("|||||",trim($row['sgatie']));
-  $company_name = htmlspecialchars($company_name);
-  $company_fullname = htmlspecialchars($company_fullname);
-  $company_address = htmlspecialchars($company_address);
-  $company_time = htmlspecialchars($company_time);
-  $company_tel = htmlspecialchars($company_tel);
-  $company_sot = htmlspecialchars($company_sot);
-  $company_email = htmlspecialchars($company_email);
-  $company_people = htmlspecialchars($company_people);
+  list($company_name, $company_fullname, $company_address, $company_time, $company_tel, $company_sot, $company_fax, $company_email, $company_map, $company_people) = explode("|||||",trim(filter($row['sgatie'], "nohtml")));
   $red_type = intval($row['red']); // редактор
   if (!isset($red) or $red=="") $red = $red_type;
   else {
