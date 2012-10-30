@@ -587,9 +587,8 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
         $pid = $row6['pid'];
         $title = strip_tags($row6['title'], '<b><strong><em><i>');
         if (trim($title) == "") $title = "< страница без названия >";
-        //if (strlen($row6['module']) >= 22) $module = substr($row6['module'],0,20)."...";
-        //else 
-          $module = $row6['module'];
+        if (strlen($row6['module']) >= 22) $module = substr($row6['module'],0,20)."...";
+        else $module = $row6['module'];
         $date = date2normal_view(str_replace(".","-",$row6['redate']), 2, 1);
         $gray_date = " gray";
         if (date2normal_view(str_replace(".","-",$row6['redate'])) == date2normal_view(str_replace(".","-",$row6['date']))) $gray_date = "";
@@ -611,9 +610,8 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
       $pid = $row7['pid'];
       $title = strip_tags($row7['title'], '<b><strong><em><i>');
         if (trim($title) == "") $title = "< страница без названия >";
-      //if (strlen($row7['module']) >= 22) $module = substr($row7['module'],0,20)."...";
-      //else 
-        $module = $row7['module'];
+      if (strlen($row7['module']) >= 22) $module = substr($row7['module'],0,20)."...";
+      else $module = $row7['module'];
       if (!isset($module)) $title_razdel_and_bd[$module] = "РАЗДЕЛ УДАЛЁН! &rarr; $module";
       $date = date2normal_view(str_replace(".","-",$row7['date']), 2, 1);
       $pageslistdel .= "<tr id=2page".$pid." bgcolor=#ffffff class='tr_hover'><td class='gray'><nobr>".$date."</nobr></td><td class='gray'>".$title_razdel_and_bd[$module]."</td><td><a title='Удалить страницу в Корзину' onclick=delpage(".$pid.") style=\"cursor:pointer;\"><img class=\"icon2 i33\" src=/images/1.gif align=right></a><a title='Изменить страницу в Редакторе' href='sys.php?op=base_pages_edit_page&name=".$module."&pid=".$pid."'><img class=\"icon2 i35\" src=/images/1.gif></a> <a title='Открыть страницу на сайте' target=_blank href=-".$module."_page_".$pid.">".$title."</a>&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>";
@@ -678,7 +676,7 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
         $bgcolor = " bgcolor='white'";
         $vkl = "<img class=\"icon2 i43\" src=/images/1.gif align=right title='Отключить комментарий'>";
       }
-      $textline = mb_substr(strip_tags($txt), 0, 45, 'UTF-8');
+      $textline = substr(strip_tags($txt), 0, 45);
       if (strlen($textline)<strlen($txt)) $textline .= "...";
       if ($avtor == "Администратор") $avtor2 = "<span class=red>".$avtor."</span>";
       else $avtor2 = $avtor;

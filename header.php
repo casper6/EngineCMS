@@ -76,7 +76,7 @@ if ($name=="-email") { // занесение мыла как скрытого к
 
 	if ($name=="-user") { 		list($block, $stil) = include('page/user.php');	$pagetitle = "Страница пользователя"; } 
  	elseif ($name=="-slovo") { 	list($block, $stil) = include('page/tags.php');		$pagetitle = $slovo." — Тэги — "; }
-	elseif ($name=="-search") {	list($block, $stil) = include('page/search.php');	$pagetitle = $slov." — Поиск — "; }
+	elseif ($name=="-search") {	list($block, $stil) = include('page/search.php');	$pagetitle = $slovo." — Поиск — "; }
 	else {
 		global $title_razdels, $txt_razdels, $useit_razdels, $pid;
 
