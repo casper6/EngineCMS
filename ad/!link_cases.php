@@ -94,17 +94,19 @@ switch($op) {
     case "del_group":
     case "del_group2":
     case "edit_group":
-    case "edit_group":
     case "s_group":
     case "s_html_group":
     case "html_group":
-    case "blok_group":
-    case "add_obl":
-    case "del_obl":
-    case "add_raion":
-    case "del_raion":
-    case "raion":
+	case "adduser":
     include("ad/ad-users.php");
+    break;
+	
+	case "regions_main":
+		case "regions_install":
+		case "regions_vibor":
+		case "regions_addbase":
+		case "regions_menu":
+    include("ad/ad-regions.php");
     break;
 }
 ?>

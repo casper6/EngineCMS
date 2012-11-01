@@ -209,6 +209,21 @@ img.bigicon {margin-bottom: 5px; width:128px; height:128px; border:0; float:left
 .white:hover {color: #111;} 
 
 #razdels { min-width:300px; padding-bottom:20px; overflow:auto;}
+.razdels {background:#e7e9ec;}
+.block_back {width:100%; margin-top:5px; padding:0; background: #e2e5ea;}
+.right3 {float:right; margin:3px;}
+.mr-2 {margin-right: -2px;}
+.add_oformlenir {width: 530px; height:500px; margin-bottom:20px; background: #dddddd;}
+.close_button {font-size:12pt; width:20px; height: 20px; color: white; text-align:center; float:right; margin:5px; margin-bottom:0; background: #bbbbbb;}
+.m5 {margin:5px;}
+.w100 {width:100%}
+.pr10 {padding-right:10px;}
+.mi50ma80 {min-width:50%; max-width:80%;}
+.h15 {height:15px;}
+.h70 {height: 70px;}
+.h155 {height: 155px;}
+.ml20 {margin-left:20px;}
+.black {color:black;}
 
 div.b4f3b4 {background: #b4f3b4; border:1px solid gray;}
 .b4f3b4 {color: green;}
@@ -218,6 +233,7 @@ div.ffa4ac {background: #ffa4ac; border:1px solid gray;}
 .ffa4ac {color: red; }
 div.b8f4f2 {background: #b8f4f2; border:1px solid gray;}
 .b8f4f2 {color: darkblue;}
+
 
 .delfoto {display:inline-block; padding: 2px; margin:3px; background: #666666; border: 1px solid #666666; font-size:11px; color: white;}
 

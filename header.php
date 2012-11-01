@@ -1285,8 +1285,29 @@ case "30": # Статистика раздела, выводит кол-во п�
 	if (strpos($block, "[название папки]")) {
 		if (!isset($cid)) $cid = 0;
 		if ($cid > 0) $block = str_replace("[название папки]", "<div class=papka_title> &rarr; ".titles_papka($cid)."</div>", $block);
-		else $block = str_replace("[название папки]", "", $block); 
+		else $block = str_replace("[название папки]", "", $block);
 	}
+
+	// Регистрация / Вход
+	$registr = "<div class='registration'>
+	<a class='button' onclick=\" 
+	$.ajax({ url: 'ajax.php', cache: false, dataType : 'html',
+	    data: {'func': 'registration_form'},
+	    beforeSend: function(){ $('.registr').show(); $('.registration').hide(); },
+	    success: function(data){ $('.registr').html(data); }
+	});\">Регистрация</a> 
+	<a class='button' onclick=\"$('.vhod').show(); $('.registration').hide();\">Вход</a>
+	</div>
+	<div class='registr hide'>
+	Загрузка...
+	</div>
+	<div class='vhod hide'>
+	<form class='regforma' action='--register' method='post'> 
+	<input class='regname' type='text' name='na' value='' placeholder='Email или имя'>
+	<br><input class='regpass' type='password' name='pa' value='' placeholder='Пароль'>
+	<br><input type='submit' name='submit' value='Войти'></form>
+	</div>";
+	$block = str_replace("[регистрация]", $registr, $block);
 
 	// Ставим годовой промежуток существования сайта
 	$god = $startdate;

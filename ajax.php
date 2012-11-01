@@ -6,15 +6,40 @@ header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache"); // HTTP/1.0
 require_once("mainfile.php");
 global $soderganie, $tip, $DBName, $prefix, $db, $module_name, $ModuleName, $admin;
-
 if (isset($_REQUEST['func']))   $func = $_REQUEST['func']; else die(); 
 if (isset($_REQUEST['type']))   $type = $_REQUEST['type']; else $type = 0;
 if (isset($_REQUEST['id']))     $id = intval($_REQUEST['id']); else $id = 0;
 if (isset($_REQUEST['string'])) $string = $_REQUEST['string'];
-
-if (isset($diag)) $diag = intval($diag); else $diag = 0;
-
-if ($func == "savegolos") {
+///////////////////////////////////////////////////////////
+if ($func == "registration_form") {
+	$info = "";
+	$result = $db->sql_query("SELECT `id`, `name` FROM ".$prefix."_mainpage where `name`!='config' and `type`='10'");
+	$cnt = $db->sql_numrows($result);
+	if ($cnt == 0) $info .= "Для регистрации необходимо создать группу.";
+	else {
+	    // Вывести форму на экран 
+	    $info .= "<form class='regforma' action='--register' method='post'> 
+	    <input class='regname' type='text' name='na' value='' placeholder='Имя или ник'>
+	    <br><input class='regpass' type='password' name='pa' value='' placeholder='Пароль'>
+	    <br><input class='regmail' type='email' name='em' value='' placeholder='Email'>";
+	    if ($cnt > 1) {
+	        $info .= "<br><select name='groups' class='groups'><option value='0'>Выберите группу</option>";
+	        while ($row = $db->sql_fetchrow($result)) {
+	          $info .= "<option value='".$row['id']."'>".$row['name']."</option>";
+	        }
+	        $info .= "</select>";
+	    }
+	    $row = $db->sql_fetchrow($db->sql_query("SELECT `useit` FROM ".$prefix."_mainpage where `name`='config' and `type`='10'"));
+	    if ($row['useit'] == 1) {
+	        $info .= "<br>Выберите местоположение";
+	        //$soderganie .= include("includes/regions/meny.html");
+	    }
+	    $info .= "<br><input type='submit' name='submit' value='Зарегистрироваться'></form>"; 
+	}
+	echo $info; exit();
+}
+///////////////////////////////////////////////////////////
+if ($func == "savegolos") { // Сохраняем голосование
 	$info = "";
 	if (isset($golos_id) and isset($GLOBALS[$golos_id])) $tmp = $GLOBALS[$golos_id]; else $tmp = ""; // поставлено от голосования
 	list($name, $gol) = explode("*@%", $string);
