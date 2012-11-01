@@ -145,11 +145,15 @@ $db->sql_query("CREATE TABLE `".$prefix."_users_group` (
   `blok` mediumtext NOT NULL,
   PRIMARY KEY (`id`)
 );");
-$db->sql_query("INSERT INTO `".$prefix."_users_group` VALUES ( '1', 'config', '1', '6', '0', '');");
+//$db->sql_query("INSERT INTO `".$prefix."_users_group` VALUES ( '1', 'config', '1', '6', '0', '');");
 
 $db->sql_query("select `ht_backup` from `".$prefix."_config`;") or $db->sql_query("ALTER TABLE `".$prefix."_config` ADD `ht_backup` VARCHAR( 255 ) NOT NULL");
 $db->sql_query("UPDATE `".$prefix."_config` SET `ht_backup` = '.ht_backup' LIMIT 1 ;");
 $db->sql_query("ALTER TABLE `".$prefix."_config` CHANGE `sgatie` `sgatie` MEDIUMTEXT NOT NULL;");
+
+$db->sql_query("DROP TABLE IF EXISTS `".$prefix."_users_group`;");
+
+$db->sql_query("INSERT INTO `".$prefix."_mainpage` VALUES ('', '10', 'config', '1', '60', '0', '', '', '','', '', '');");
 
 print ("<center><h2>Обновление базы данных окончено!</h2><br>");
 ?>

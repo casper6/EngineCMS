@@ -74,9 +74,10 @@ if ($name=="-email") { // занесение мыла как скрытого к
 	###################################################### БЛОКИ
 	$block = ""; // Определение раздела
 
-	if ($name=="-user") { 		list($block, $stil) = include('page/user.php');	$pagetitle = "Страница пользователя"; } 
- 	elseif ($name=="-slovo") { 	list($block, $stil) = include('page/tags.php');		$pagetitle = $slovo." — Тэги — "; }
-	elseif ($name=="-search") {	list($block, $stil) = include('page/search.php');	$pagetitle = $slov." — Поиск — "; }
+	if ($name=="-user") { 			list($block, $stil) = include('page/user.php');	$pagetitle = "Страница пользователя"; } 
+ 	elseif ($name=="-slovo") { 		list($block, $stil) = include('page/tags.php');	$pagetitle = $slovo." — Тэги — "; }
+	elseif ($name=="-search") {		list($block, $stil) = include('page/search.php'); $pagetitle = $slov." — Поиск — "; }
+	elseif ($name=="-register") { 	list($block, $stil) = include('page/reg.php'); $pagetitle = "Регистрация — "; }
 	else {
 		global $title_razdels, $txt_razdels, $useit_razdels, $pid;
 
@@ -553,6 +554,9 @@ case "0": # Блок модуля
 					}
 		}			
 	}
+
+	if ($numlock == 0 && $and4 != "" && !empty($useitX)) $textX .= "Пока что ничего нового. См. <a href='/-".$useitX."'>Архив</a>.";
+
 	if ($shablon == "") {
 		if ($openshow==0) $textX .= "</ul>";
 	}	

@@ -67,6 +67,7 @@ RewriteRule ^--slovo_([а-яА-Яa-zA-Z0-9%+-]*) header.php?name=-slovo&slovo=$1
 RewriteRule ^--search header.php?name=-search
 RewriteRule ^--email header.php?name=-email
 RewriteRule ^--user header.php?name=-user
+RewriteRule ^--register header.php?name=-register
 RewriteRule ^-([а-яА-Яa-zA-Z0-9_-]*)_addbase_([0-9]*) header.php?go=addbase&name=$1&spa=$2
 RewriteRule ^-([а-яА-Яa-zA-Z0-9_-]*)_first_([A-F0-9+_|-]*)_second_([A-F0-9+_|-]*)_opt_([0-9]*) header.php?name=$1&go=showcat&first=$2&second=$3&option=$4
 RewriteRule ^-([а-яА-Яa-zA-Z0-9_-]*)_first_([A-F0-9+_|-]*)_opt_([0-9]*) header.php?name=$1&go=showcat&first=$2&option=$3
