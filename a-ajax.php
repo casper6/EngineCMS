@@ -642,7 +642,7 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
       $drevos = implode("' and `cid`!='",$drevos);
       $and = " and `num`!='0' and `active`!='0' and `drevo`='0' and (`cid`!='".$drevos."')";
     }
-    $pageslistdel .= "<table width=100% class=table_light><thead><tr><th class='gray'><nobr>Дата и время</nobr></th><th class='gray'>Имя, раздел и комментарий</th></tr></thead><tbody>";
+    $pageslistdel .= "<table width=100% class=table_light><thead><tr><th class='gray'><nobr>Дата и время</nobr></th><th class='gray'>Имя, раздел и комментарий (нажмите, чтобы развернуть)</th></tr></thead><tbody>";
     $line_id = "";
     $sql5 = "SELECT `cid`, `num`, `avtor`, `mail`, `text`, `data`, `drevo`, `tel`, `active` from ".$prefix."_pages_comments where `tables`='pages'".$line_id.$and." order by `data` desc limit 0,".$limit;
     $result5 = $db->sql_query($sql5);

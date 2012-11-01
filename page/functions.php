@@ -550,7 +550,7 @@ function form($module, $text, $type="open") { // Функция для форм�
   if (strpos($text2,"table_light=1") > 0 and $type=="main") // Добавление класса table_light
     $text = str_replace("<table", "<table class='table_light'", $text);
   //if (get_magic_quotes_gpc($text)) $text = stripslashes($text);
-  $text = filter($text);
+  //$text = filter($text);
   return $text;
 }
 ///////////////////////////////////////////////////////////////// проверить дубликат
@@ -575,7 +575,7 @@ function upload_foto_file($text){ // доработать
 function recash($url, $main=1) { // Обновление кеша
   global $db, $prefix;
   if ($main == 1) $db->sql_query("DELETE FROM ".$prefix."_cash WHERE `url`='/'");
-  if (strpos($url,"_page_")) {
+  if (mb_strpos($url,"_page_")) {
     $u = explode("_page_",$url);
     $db->sql_query("DELETE FROM ".$prefix."_cash WHERE `url`='".$u[0]."'");
     $db->sql_query("DELETE FROM ".$prefix."_cash WHERE `url` LIKE '".$u[0]."_cat_%'");
@@ -585,16 +585,23 @@ function recash($url, $main=1) { // Обновление кеша
 ///////////////////////////////////////////////////////////////
 function obrez($word) { // Функция обрезания окончаний
   $result = ''; $make = 0;
-  $closes = array('овая','овый','ная','ной','ный','ый','ий','ой','овое','ов','ах','ав','ях','ёвое','евое','ое','ям','ом','ем','ей','ёй','ай','ец'); //Окончания
-  foreach ($closes AS $part)
-    if (preg_match('/(.*)'.$part.'/', $word)) $word = substr($word,0,strlen($word)-strlen($part));
+  //Окончания
+  $closes = array('овая','овый','овое','ёвое','евое','ная','ной','ный','ные','ый','ые','ий','ой','ая','ов','ах','ав','ях','ое','ям','ом','ем','ей','ёй','ай','ец','а','е','и','о','у','ь','ы','ю','я');
+  $word_count = mb_strlen($word);
+  if ($word_count >= 4) foreach ($closes AS $part) 
+    if (preg_match('/(.*)'.$part.' /', $word)) {
+      $wordX = mb_substr($word, 0, $word_count - mb_strlen($part));
+      if ($wordX != $word) { $word = $wordX; break; }
+    }
+
     $chars = array('а','е','ё','й','и','о','у','ь','ы','э','ю','я'); //Буквы
-    for ($position = strlen($word)-1; $position >= 0; $position--) {
-      $char = substr($word, $position, 1);
+    for ($position = $word_count-1; $position >= 0; $position--) {
+      $char = mb_substr($word, $position, 1);
       if (!in_array($char,$chars)) $make = 1;
       if ($position==2) $make = 1;
       if ($make==1) $result = $char.$result;
     }
+
   return $result;
 }
 ///////////////////////////////////////////////////////////////
@@ -626,7 +633,7 @@ function getparent_spiski($name, $parent, $title) { // получение род
     return $title;
 }
 /////////////////////////////////////////////////////////////// сделать настройку
-function antivirus($x=0) { // антивирус для защиты от htaccess-вируса 
+function antivirus($x=0) { // антивирус для защиты от htaccess-вируса (временные костыли)
   // открываем .htaccess
   $htaccess = " ".implode(" ", file('.htaccess'));
   // ищем [NC], HTTP_USER_AGENT и (.*)  or strpos($htaccess,"HTTP_USER_AGENT") or strpos($htaccess,"(.*)")
@@ -638,7 +645,7 @@ function antivirus($x=0) { // антивирус для защиты от htacce
       copy($ht_backup, '.htaccess');
       // Оповестим админа
       if ($x == 0) $subg = "Найден и обезврежен «.htaccess»-вирус."; 
-      elseif ($x == 1) $subg = "Вирус теперь поражает и резервную копию .htaccess — пора залезть в config.php и поменять название файла резервной копии.";
+      elseif ($x == 1) $subg = "Вирус теперь поражает и резервную копию .htaccess — пора залезть в Настройки Администрирования и поменять название файла резервной копии.";
       system_mes($subg);
       if ($x == 0) antivirus("1");
     }
@@ -751,7 +758,6 @@ function design_and_style($design) { // Определение дизайна
     $row4 = $db->sql_fetchrow($result4);
     $block = $row4['text'];
     $style_useit = trim($row4['useit']);
-
     // ОТКРЫТО Определение использованных стилей в дизайне
     $useit = explode(" ", $style_useit);
     $n = count($useit);
@@ -770,6 +776,8 @@ function design_and_style($design) { // Определение дизайна
     return array($block, $stil);
 }
 ///////////////////////////////////////////////////////////////
-
+function validate_email($email) { // Проверка мыла
+  return preg_match('/^[a-zA-Z0-9а-яА-ЯёЁ\x{0600}-\x{06FF}!#$%&\'*+\\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9а-яА-ЯёЁ\x{0600}-\x{06FF}!#$%&\'*+\\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9а-яА-ЯёЁ\x{0600}-\x{06FF}](?:[a-zA-Z0-9а-яА-ЯёЁ\x{0600}-\x{06FF}-]*[a-zA-Z0-9а-яА-ЯёЁ\x{0600}-\x{06FF}])?\.)+[a-zA-Z0-9а-яА-ЯёЁ\x{0600}-\x{06FF}](?:[a-zA-Z0-9а-яА-ЯёЁ\x{0600}-\x{06FF}-]*[a-zA-Z0-9а-яА-ЯёЁ\x{0600}-\x{06FF}])?$/u', trim($email));
+}
 ##########################################################################################
 ?>

@@ -1,5 +1,6 @@
 <?php
-  // Поиск по всем разделам
+  // Поиск по всем разделам, папкам и страницам
+  // Выставлен лимит на кол-во: 100 папок и 100 разделов, 500 страниц.
   global $soderganie, $tip, $DBName, $prefix, $db, $module_name, $ModuleName, $slovo, $design, $now, $ip, $papka, $title_razdels;
   $admintip = "base_pages";
 
@@ -34,7 +35,7 @@ else {
   $always = array(); // обязательные для поиска слова
   $notbad = array(); // необязательные для поиска слова
   for ( $i=0; $i < $count_slovo; $i++ ) {
-    if (strlen($slovo[$i]) >= 4) $slovo[$i] = obrez($slovo[$i]);
+    $slovo[$i] = obrez($slovo[$i]);
     if (preg_match("|^[\d]+$|", $slovo[$i])) $always[] = $slovo[$i]; // число - заносим в список обязательных
     else $notbad[] = $slovo[$i];
   }
@@ -147,7 +148,7 @@ else {
 
   if ($papka == "") { // если не выбрана определенная папка - ищем и по разделам
   ////////////////////////////////////////////////////////////////////////////////////////
-      $res2 = $db->sql_query("SELECT `id`,`name`,`title`,`useit` FROM ".$prefix."_mainpage where `tables`='pages' and type='2' and ( (`title` LIKE '%".$s."%' or `useit` LIKE '%".$s."%')".$add_razdel." )");
+      $res2 = $db->sql_query("SELECT `id`,`name`,`title`,`useit` FROM ".$prefix."_mainpage where `tables`='pages' and type='2' and ( (`title` LIKE '%".$s."%' or `useit` LIKE '%".$s."%')".$add_razdel." ) limit 100");
       $allpids = $pids1 = $pids2 = $pids3 = $rr_title = $rr_useit = $rr_name = array(); //  = $rr_name
       while ($row = $db->sql_fetchrow($res2)) {
         $id = $row['id'];
@@ -179,7 +180,7 @@ else {
         }
       }
   ////////////////////////////////////////////////////////////////////////////////////////
-      $res2 = $db->sql_query("SELECT `cid`,`module`,`title`,`description` FROM ".$prefix."_pages_categories where `tables`='pages' and ( (`title` LIKE '%".$s."%' or `description` LIKE '%".$s."%')".$add_papka." )");
+      $res2 = $db->sql_query("SELECT `cid`,`module`,`title`,`description` FROM ".$prefix."_pages_categories where `tables`='pages' and ( (`title` LIKE '%".$s."%' or `description` LIKE '%".$s."%')".$add_papka." ) limit 100");
       $allpids = $pids1 = $pids2 = $pids3 = $rr_title = $rr_description = $rr_module = array(); //  = $rr_name
       while ($row = $db->sql_fetchrow($res2)) {
         $id = $row['cid'];
@@ -211,7 +212,7 @@ else {
       }
   }
   ////////////////////////////////////////////////////////////////////////////////////////
-      $res2 = $db->sql_query("SELECT `pid`,`module`,`cid`,`title`,`open_text`,`main_text` FROM ".$prefix."_pages where `tables`='pages'".$papka." and `active`='1' and (`copy`='0' or `copy`=pid) and ( (`title` LIKE '%".$s."%' or `main_text` LIKE '%".$s."%' or `open_text` LIKE '%".$s."%')".$add_pages." )");
+      $res2 = $db->sql_query("SELECT `pid`,`module`,`cid`,`title`,`open_text`,`main_text` FROM ".$prefix."_pages where `tables`='pages'".$papka." and `active`='1' and (`copy`='0' or `copy`=pid) and ( (`title` LIKE '%".$s."%' or `main_text` LIKE '%".$s."%' or `open_text` LIKE '%".$s."%')".$add_pages." ) limit 500");
       $allpids = $pids1 = $pids2 = $pids3 = $pp_title = $pp_module = $pp_cid = $pp_open_text = array();
       while ($row = $db->sql_fetchrow($res2)) {
         $id = $row['pid'];
@@ -275,7 +276,9 @@ function strchop($data,$word,$interval,$ci=true) {
  $ci нечувствителен к регистру по умолчанию true
  @return string|false результат, если false - нет вхождения
  */
-  mb_internal_encoding('UTF-8');
+  $data = preg_replace('#\[(.*?)\]#ui', '', $data);
+  // вырезаем Script, Style и блоки
+
     //if($ci){$position=stripos($data,$word);}else{$position = strpos($data,$word);};
     $position = $ci?mb_stripos($data,$word):mb_strpos($data,$word);
     //ничего нет - вернули false
@@ -289,9 +292,7 @@ function strchop($data,$word,$interval,$ci=true) {
     //определяем длину новой строки 
     $len = $end_position - $start_position;
     $length = (mb_strlen($data) > $len) ? mb_strripos(mb_substr($data, 0, $len), ' ') : $len;
-    //вернули результат
-    $kusok = str_replace($word, "<b>".$word."</b>", '...'.mb_substr($data,$start_position,$length).'...');
-
-    return $kusok;
+    //вернули результат #([А-я]*струя[а-я]*)#i
+    return preg_replace('#([А-я]*'.mb_convert_case($word, MB_CASE_UPPER).'[а-я]*)#uis', '<b class=red>$1</b>', preg_replace('#([А-я]*'.mb_convert_case($word, MB_CASE_TITLE).'[а-я]*)#uis', '<b class=red>$1</b>', preg_replace('#([А-я]*'.mb_convert_case($word, MB_CASE_LOWER).'[а-я]*)#uis', '<b class=red>$1</b>', '...'.mb_substr($data,$start_position,$length).'...')));
 }
 ?>
