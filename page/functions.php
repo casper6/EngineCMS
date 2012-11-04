@@ -226,7 +226,6 @@ function tipograf($text, $p=0) { // Типографика - все основн
   "\t"=>" ",
   "На "=>"На&nbsp;",
   "<p></p>"=>" ",
-  "alt=\"\""=>"",
   "class=\"\""=>"",
   "style=\"\""=>"",
   "height=\"\""=>"",
@@ -281,9 +280,9 @@ function tipograf($text, $p=0) { // Типографика - все основн
   "  "=>" "
   );
   $text = strtr( strtr($text, $zamena), $zamena);
-  $text = preg_replace('B"b([^"x84x93x94rn]+)b"B', '?1?', $text); // Замена кавычек
+  //$text = preg_replace('B"b([^"x84x93x94rn]+)b"B', '?1?', $text); // Замена кавычек
   //$text = preg_replace("/.+/i", ".", $text);
-  $text = preg_replace('#(\.|\?|!|\(|\)){3,}#', '\1\1\1', $text); // замена повторяющихся знаков препинания, например двойные запятые
+  //$text = preg_replace('#(\.|\?|!|\(|\)){3,}#', '\1\1\1', $text); // замена повторяющихся знаков препинания, например двойные запятые
 
   //$pattern = "/http:\/\/www.onlinedisk.ru\/image\/"."(\d+)"."\/"."(\w+)".".jpg"."/i";
   //$replacement = "http://www.onlinedisk.ru/get_image.php?id=$1";
@@ -550,7 +549,7 @@ function form($module, $text, $type="open") { // Функция для форм�
   if (strpos($text2,"no_html_in_text=1") > 1 and $type=="main") strip_tags($text, '<a><img>'); // Удаление HTML из предисловия
   if (strpos($text2,"table_light=1") > 0 and $type=="main") // Добавление класса table_light
     $text = str_replace("<table", "<table class='table_light'", $text);
-  if (get_magic_quotes_gpc($text)) $text = stripslashes($text);
+  //if (get_magic_quotes_gpc($text)) $text = stripslashes($text);
   $text = filter($text);
   return $text;
 }

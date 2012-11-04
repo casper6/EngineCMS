@@ -107,7 +107,7 @@
   if ($ad_fon == "") $ad_fon = "0";
   if ($search_design == "") $search_design = "1";
   if ($tag_design == "") $tag_design = "1";
-  list($company_name, $company_fullname, $company_address, $company_time, $company_tel, $company_sot, $company_fax, $company_email, $company_map, $company_people) = explode("|||||",trim(filter($row['sgatie'], "nohtml")));
+  list($company_name, $company_fullname, $company_address, $company_time, $company_tel, $company_sot, $company_fax, $company_email, $company_map, $company_people) = explode("|||||",trim(filter($row['sgatie'])));
   $red_type = intval($row['red']); // редактор
   if (!isset($red) or $red=="") $red = $red_type;
   else {

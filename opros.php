@@ -5,7 +5,7 @@ header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache"); // HTTP/1.0
 require_once("mainfile.php");
-global $prefix, $db, $otpravka_pic; 
+global $prefix, $db, $otpravka_pic, $_COOKIE; 
 
 if (is_admin($admin)) $admin_ok = 1; else $admin_ok = 0;
 

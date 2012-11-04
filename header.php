@@ -5,7 +5,7 @@
   	session_start(); // Для капчи (проверочный код-картинка от спама) // проверить вызов
 
 	require_once("mainfile.php");
-	global $strelka, $siteurl, $prefix, $module_name, $name, $db, $sitekey, $admin, $sitename, $pagetitle, $pagetitle2, $registr, $pogoda, $flash, $keywords, $description, $counter, $startdate, $adminmail, $keywords2, $description2, $stopcopy, $nocash, $blocks, $http_siteurl, $display_errors; // $cookie, 
+	global $strelka, $siteurl, $prefix, $module_name, $name, $db, $sitekey, $admin, $sitename, $pagetitle, $pagetitle2, $registr, $pogoda, $flash, $keywords, $description, $counter, $startdate, $adminmail, $keywords2, $description2, $stopcopy, $nocash, $blocks, $http_siteurl, $display_errors;
 	$nocash = false;
 	if ($name == "") $name = "index";
 
@@ -228,7 +228,7 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 		$shablonX = trim($shablonYYY[$idX]);
 
 	// обнулили все опции блоков от греха подальше
-	$media=$folder=$datashow=$design=$open_all=$catshow=$main=$daleeshow=$openshow=$number=$add=$size=$papki_numbers=$zagolovokin=$menu=$notitlelink=$noli=$html=$show_title=$random=$showlinks=$open_new_window=0;
+	$media=$folder=$datashow=$design=$open_all=$catshow=$main=$daleeshow=$openshow=$number=$add=$size=$papki_numbers=$zagolovokin=$menu=$notitlelink=$noli=$html=$show_title=$random=$showlinks=$open_new_window=$show_new_pages=0;
 	$titleshow=$opros_type=$limkol=$pageshow=$only_question=$opros_result=$foto_gallery_type=1;
 	$addtitle="Добавить статью";
 	$dal="Далее...";
@@ -368,10 +368,10 @@ case "0": # Блок модуля
 		$s_names = array();
 		$s_opts = array();
 		// Определим № раздела
-		global $id_razdel_and_bd; // ЗАМЕНА mainpage2 №2
+		global $id_razdel_and_bd;
 		$r_id = $id_razdel_and_bd[$useitX];
 		
-		$result5 = $db->sql_query("SELECT id, name, text FROM ".$prefix."_mainpage WHERE `tables`='pages' and (useit = '$r_id' or useit = '0') and type='4'");
+		$result5 = $db->sql_query("SELECT `id`, `name`, `text` FROM ".$prefix."_mainpage WHERE `tables`='pages' and (`useit` = '$r_id' or `useit` = '0') and `type`='4'");
 		while ($row5 = $db->sql_fetchrow($result5)) {
 			$s_id = $row5['id'];
 			$n = $row5['name'];
@@ -389,7 +389,34 @@ case "0": # Блок модуля
 
 	} else $sel = "pid, module, cid, title, open_text, main_text, `date`"; 
 	
-	$sql = "SELECT ".$sel." from ".$prefix."_pages where `tables`='pages' and active='1'".$and.$and2.$and3." order by ".$sort."".$limit."";
+	$and4 = '';
+	// Если в настройках блока указано отображать только последние страницы
+	if ($show_new_pages == 1) {
+		global $_COOKIE; // Получаем дату куки
+		$dat = date("Y-m-d");
+		if (isset($_COOKIE['lastdate'])) {
+			$tmp = $_COOKIE['lastdate']; 
+			if (!preg_match("|^[\d-\|]+$|", $tmp)) die("Попытка взлома не удалась.");
+			$tmp = explode("|",$tmp);
+			$nowdate = $tmp[0];
+			$olddate = $tmp[1];
+		} else { 
+			$nowdate = "0"; 
+			$olddate = "0";
+		}
+		if ($nowdate == "0") { // Посетил первый раз - показываем всё
+			setcookie ('lastdate', $dat."|0",time()+2678400,"/");
+		} elseif ($nowdate == $dat && $olddate == "0") { // Посетил сегодня (первый раз) - показываем всё
+		} elseif ($nowdate == $dat && $olddate != "0") { // Посетил сегодня (ранее посещал) - показываем только свежее
+			if (!empty($useitX)) $textX .= "Показаны последние. Показать <a href='/-".$useitX."'>все</a>.";
+			$and4 = " and DATE(`date`) >= '".$nowdate."'";
+		} else { // Посетил не сегодня - показываем только свежее
+			setcookie ('lastdate', $dat."|".$nowdate,time()+2678400,"/");
+			$and4 = " and DATE(`date`) >= '".$nowdate."'";
+		}
+	}
+
+	$sql = "SELECT ".$sel." from ".$prefix."_pages where `tables`='pages' and active='1'".$and.$and2.$and3.$and4." order by ".$sort."".$limit."";
 	$result = $db->sql_query($sql);
 
 

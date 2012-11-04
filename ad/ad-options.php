@@ -198,6 +198,8 @@ body {}
 
 }
 </pre>
+
+<br>См. также <a href='http://csstemplater.com' target='_blank'>Генератор HTML+CSS шаблонов</a>
 </td></tr>
 
 <tr valign=top><td style='min-width:250px;'>

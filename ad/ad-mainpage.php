@@ -1389,7 +1389,7 @@ function edit_main($id) {
 	$options = str_replace($module_name."|","",$useit);
 
 	// обнулили все опции от греха подальше
-	$titleshow=$media=$folder=$datashow=$tagdelete=$ipdatauser=$design=$open_all=$catshow=$main=$daleeshow=$openshow=$number=$add=$size=$papki_numbers=$zagolovokin=$menu=$notitlelink=$noli=$html=$show_title=$random=$showlinks=$open_new_window=$shablon=0;
+	$titleshow=$media=$folder=$datashow=$tagdelete=$ipdatauser=$design=$open_all=$catshow=$main=$daleeshow=$openshow=$number=$add=$size=$papki_numbers=$zagolovokin=$menu=$notitlelink=$noli=$html=$show_title=$random=$showlinks=$open_new_window=$shablon=$show_new_pages=0;
 
 	$opros_type=$limkol=$pageshow=$only_question=$opros_result=$foto_gallery_type=1;
 	$addtitle="Добавить статью";
@@ -1660,6 +1660,11 @@ function edit_main($id) {
 	echo "<tr>
 	<td>Открывать ссылки в новом окне?</td>
 	<td>".select("options[open_new_window]", "1,0", "ДА,НЕТ", $open_new_window)."</td>
+	</tr>";
+
+	echo "<tr>
+	<td>Показывать только свежие страницы (на основании COOKIE)</td>
+	<td>".select("options[show_new_pages]", "1,0", "ДА,НЕТ", $show_new_pages)."</td>
 	</tr>";
 	}
 
