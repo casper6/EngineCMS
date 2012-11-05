@@ -1,0 +1,45 @@
+
+<script type="text/javascript" src="includes/regions/jquery.livequery.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function() {
+	
+	//$('#loader').hide();
+	
+	$('.parent').livequery('change', function() {
+		
+		$(this).nextAll('.parent').remove();
+		$(this).nextAll('label').remove();
+		
+		$('#show_sub_categories').append('<img src="includes/regions/loader.gif" style="float:left; margin-top:7px;" id="loader" alt="" />');
+		
+		$.post("get_chid_categories.php", {
+			parent_id: $(this).val(),
+		}, function(response){
+			
+			setTimeout("finishAjax('show_sub_categories', '"+escape(response)+"')", 400);
+		});
+		
+		return false;
+	});
+});
+
+function finishAjax(id, response){
+  $('#loader').remove();
+
+  $('#'+id).append(unescape(response));
+} 
+
+</script>
+<style>
+.parent{ padding:3px; width:150px; float:left; margin-right:12px;}
+.both{ float:left; margin:0 0px 0 0; padding:0px;}
+</style>
+<br clear="all" /><br clear="all" />
+	<div id="show_sub_categories">
+		<select name="id_regions" class="parent">
+		<option value="" selected="selected">Выберите область</option>
+		<?php include("includes/regions/list.html"); ?>
+		</select>
+	</div>
+	<br clear="all" /><br clear="all" />

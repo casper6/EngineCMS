@@ -213,7 +213,7 @@ img.bigicon {margin-bottom: 5px; width:128px; height:128px; border:0; float:left
 .block_back {width:100%; margin-top:5px; padding:0; background: #e2e5ea;}
 .right3 {float:right; margin:3px;}
 .mr-2 {margin-right: -2px;}
-.add_oformlenir {width: 530px; height:500px; margin-bottom:20px; background: #dddddd;}
+.add_oformlenie {width: 530px; height:500px; margin-bottom:20px; background: #dddddd;}
 .close_button {font-size:12pt; width:20px; height: 20px; color: white; text-align:center; float:right; margin:5px; margin-bottom:0; background: #bbbbbb;}
 .m5 {margin:5px;}
 .w100 {width:100%}
@@ -330,7 +330,7 @@ a.punkt:hover, a.punkt:hover span, .punkt:hover a {background: #e0e0dd; color: b
 img, table {border:0;}
 .b {}
 .red {color: red !important; display:inline;}
-.black {color: black !important; display:inline;}
+.black {color: black !important; }
 .white {color: white !important; display:inline;}
 .green2 {color: white; background: lightgreen; display:inline;}
 .red2 {color: white; background: red; display:inline;}

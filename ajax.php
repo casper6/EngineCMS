@@ -18,9 +18,7 @@ if ($func == "registration_form") {
 	if ($cnt == 0) $info .= "Для регистрации необходимо создать группу.";
 	else {
 	    // Вывести форму на экран 
-	    $info .= "<form class='regforma' action='--register' method='post'> 
-	    <input class='regname' type='text' name='na' value='' placeholder='Имя или ник'>
-	    <br><input class='regpass' type='password' name='pa' value='' placeholder='Пароль'>
+	    $info .= "<form class='regforma' action='--register' method='post'>
 	    <br><input class='regmail' type='email' name='em' value='' placeholder='Email'>";
 	    if ($cnt > 1) {
 	        $info .= "<br><select name='groups' class='groups'><option value='0'>Выберите группу</option>";
@@ -32,7 +30,7 @@ if ($func == "registration_form") {
 	    $row = $db->sql_fetchrow($db->sql_query("SELECT `useit` FROM ".$prefix."_mainpage where `name`='config' and `type`='10'"));
 	    if ($row['useit'] == 1) {
 	        $info .= "<br>Выберите местоположение";
-	        //$soderganie .= include("includes/regions/meny.html");
+	        $soderganie .= include("includes/regions/meny.html");
 	    }
 	    $info .= "<br><input type='submit' name='submit' value='Зарегистрироваться'></form>"; 
 	}

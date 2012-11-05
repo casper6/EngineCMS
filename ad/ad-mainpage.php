@@ -161,7 +161,7 @@ function mainpage($name="") {
 		echo "<table class='block_back' cellspacing=0 cellpadding=0><tr valign=top><td id='razdel_td' class='radius' width=300>
 
 			<div id='razdels' class='razdels'>
-			<div class='black_grad'><button id=new_razdel_button title='Добавить оформление...' class='small black' onclick=\"show_animate('addmain');\" class='right3'><span class='mr-2 icon darkgrey small' data-icon='+'></button>
+			<div class='black_grad'><button id=new_razdel_button title='Добавить оформление...' class='small black right3' onclick=\"show_animate('addmain');\"><span class='mr-2 icon darkgrey small' data-icon='+'></button>
 			<span class='h1'>Оформление:</span>
 			</div>";
 	     ////////////////////// ДИЗАЙН 0
@@ -180,7 +180,7 @@ function mainpage($name="") {
 		echo "</div></td><td>
 
 			<div style='display:none;' id=addmain>
-			<div class='block_white2 radius' class='add_oformlenir'>
+			<div class='block_white2 radius add_oformlenie'>
 			<a title='Закрыть это окно' class=punkt onclick=\"show_animate('addmain')\"><div class='radius close_button'>&nbsp;x&nbsp;</div></a>
 
 			<h1>Вы решили добавить:</h1>
@@ -489,7 +489,10 @@ function create_main($type) {
 	Не должно быть одинаковых английских названий!<br>
 	Кнопка «Отправить» обычно добавляется последней. Её можно и не добавлять, тогда она будет добавлена автоматически.
 	</td></tr></table>
-	<div id='opisanie_bloka' class='notice success black'><span class='icon large white' data-icon='C'></span></span>Здесь вы увидите описание блока...</div> <br> <div class='notice warning black'>В выбранном дизайне обязательно должен быть блок [содержание], выбирать дизайн необязательно.</div></td></tr></table>";
+	<div id='opisanie_bloka' class='notice success black'>
+	<span class='icon large white' data-icon='C'></span>Здесь вы увидите описание блока...
+	</div>
+	<br> <div class='notice warning black'>В выбранном дизайне обязательно должен быть блок [содержание], выбирать дизайн необязательно.</div></td></tr></table>";
 	break;
 	########################################################!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	case "spisok": $type_opis = "поля (дополнительное поле для страниц)";

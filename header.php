@@ -78,6 +78,8 @@ if ($name=="-email") { // занесение мыла как скрытого к
  	elseif ($name=="-slovo") { 		list($block, $stil) = include('page/tags.php');	$pagetitle = $slovo." — Тэги — "; }
 	elseif ($name=="-search") {		list($block, $stil) = include('page/search.php'); $pagetitle = $slov." — Поиск — "; }
 	elseif ($name=="-register") { 	list($block, $stil) = include('page/reg.php'); $pagetitle = "Регистрация — "; }
+	elseif ($name=="-login") { 	list($block, $stil) = include('page/login.php'); $pagetitle = "Вход — "; }
+	elseif ($name=="-users") { 	list($block, $stil) = include('page/users.php'); $pagetitle = "Моя страница — "; }
 	else {
 		global $title_razdels, $txt_razdels, $useit_razdels, $pid;
 
@@ -1302,9 +1304,9 @@ case "30": # Статистика раздела, выводит кол-во п�
 	Загрузка...
 	</div>
 	<div class='vhod hide'>
-	<form class='regforma' action='--register' method='post'> 
-	<input class='regname' type='text' name='na' value='' placeholder='Email или имя'>
-	<br><input class='regpass' type='password' name='pa' value='' placeholder='Пароль'>
+	<form class='reg_forma' action='--login' method='post'> 
+	<input class='reg_mail' type='text' name='em' value='' placeholder='Email'>
+	<br><input class='reg_pass' type='password' name='pa' value='' placeholder='Пароль'>
 	<br><input type='submit' name='submit' value='Войти'></form>
 	</div>";
 	$block = str_replace("[регистрация]", $registr, $block);

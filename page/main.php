@@ -1903,7 +1903,7 @@ function addbase($base,$name,$spa=0) {
 }
 ###########################################
 function savebase ($name, $basename, $type, $text) { // Сохранение добавления строки в базу данных
-  $link = getenv("REMOTE_HOST");
+  $link = getenv("HTTP_REFERER");
   global $_SESSION, $_POST, $soderganie, $tip, $DBName, $db, $prefix, $module_name, $post, $captcha_ok;
   // Ввести проверку на активность - проверка постов администратором
   if ($post==1) $active = 1;
@@ -1919,7 +1919,7 @@ function savebase ($name, $basename, $type, $text) { // Сохранение д�
   //} else die("<b>Ошибка: вероятно попытка взлома или добавление в базу данных из сохраненной страницы. Вернитесь на сайт! name - $name, basename - $basename");
   unset($_SESSION['captcha_keystring']);
   global $siteurl;
-  recash(str_replace("http://".$siteurl,"",getenv("HTTP_REFERER"))); // Обновление кеша
+  recash(str_replace("http://".$siteurl,"",$link)); // Обновление кеша
   recash(str_replace("http://".$siteurl,"",getenv("REQUEST_URI")),0);
   Header("Location: $location");
 }
@@ -2106,8 +2106,7 @@ function addpost($cid) {
 function savepost ($avtor, $post_title, $info, $num, $cid, $add){
   //mb_internal_encoding('utf-8'); 
   global $ip;
-
-  $link = getenv("REMOTE_HOST");
+  $link = getenv("HTTP_REFERER");
   global $_POST, $soderganie, $tip, $DBName, $db, $prefix, $module_name, $post, $admin, $tema_zapret;
   // Ввести проверку на активность - проверка постов администратором
   // СДЕЛАТЬ ЗАЩИТУ!!!
@@ -2453,7 +2452,7 @@ function addcomm_reiting($pid, $cid) {
 // Сохранение рейтинга
 function savereiting ($avtor, $info, $num, $cid, $gol, $date1, $minus, $plus){
   # Запрет комментариев повторно - перевести в функции!!!
-  $link = getenv("REMOTE_HOST");
+  $link = getenv("HTTP_REFERER");
   global $now, $_SESSION, $_POST, $soderganie, $tip, $DBName, $db, $prefix, $module_name, $admin, $captcha_ok ;
   //$date_time = date(" H:i:s");
   //$date = $date1.".".$date2.".".$date3.$date_time;
@@ -2558,7 +2557,7 @@ function savereiting ($avtor, $info, $num, $cid, $gol, $date1, $minus, $plus){
 ########################################### htmlspecialchars($text, ENT_QUOTES);
 // Сохранение комментария
 function savecomm($avtor, $avtory, $info, $num, $comm_otvet, $maily, $mail, $adres, $tel){
-  $link = getenv("REMOTE_HOST");
+  $link = getenv("HTTP_REFERER");
   $active = 1;
   $commentagain = 0; # 1 = Запрет комментариев повторно - перевести в функции!!!
   //echo $avtory;
@@ -2802,16 +2801,20 @@ function bbcode($text, $nolink=1) {
 }
 ##############################################################
 // Строчка выбора страниц < 1 2 3 >
-function topic_links($records,$r_start=0,$URL,$inpage=20) {
+function topic_links($records,$r_start=0,$URL,$inpage=20,$type=0,$names=0) {
 //$records - всего записей 
 //$r_start - текущая страница 
 //$URL - адрес, заканчивающийся на "=" 
 //$inpage - записей на страницу
+//$type - вид строки выбора
+//$names - вариант именований
     $str="";
     if ($records<=$inpage) return;
+
+        $str.="<div class=pages_links>";
     if ($r_start!=0 and $r_start > 5) {
-        $str.="<div class=pages_links> <a href=".$URL."0 title=\"первая страница\"><B>1</B></a> </div>";
-        //$str.="<a class=pages_links href=$URL".($r_start-1)." title=\"предыдущая страница\"><</a> ";
+        $str.="<a class=pages_links href=".$URL.($r_start-1)." title=\"предыдущая страница\"><</a>";
+        $str.=" <a href=".$URL."0 title=\"первая страница\"><B>1</B></a>";
         }
     if ($r_start==0) {$sstart=$r_start-0; $send=$r_start+10;}   if ($r_start==1) {$sstart=$r_start-1; $send=$r_start+9;}
     if ($r_start==2) {$sstart=$r_start-2; $send=$r_start+8;}    if ($r_start==3) {$sstart=$r_start-3; $send=$r_start+7;}
@@ -2820,16 +2823,17 @@ function topic_links($records,$r_start=0,$URL,$inpage=20) {
     if ($sstart<0) $sstart=0;
     if ($records%$inpage==0) $add=0; else $add=1;
     for ($i=$sstart; $i<$send; $i++) {
-        if ($i==$r_start) $str.=" <div class=pages_links> <B>".($i+1)."</B> </div>";
-        else $str.="<div class=pages_links> <a href=".$URL.$i." title=\"Перейти к странице ".($i+1)."\"><B>".($i+1)."</B></a> </div>";
+        if ($i==$r_start) $str.=" <B>".($i+1)."</B>";
+        else $str.=" <a href=".$URL.$i." title=\"Перейти к странице ".($i+1)."\"><B>".($i+1)."</B></a>";
         }
         $send=$records/$inpage;
         $send2 = intval($records/$inpage);
         if ($send2 != $send) $send2++;
     if ($r_start+(1-$add)<intval($records/$inpage) and $r_start < $send2-5) {
-        //$str.=" <a class=pages_links href=$URL".($r_start+1)." title=\"следующая страница\">></a>";
-        if ( ($r_start==0 and $send2<10) or ($i-1 == intval($records/$inpage)-(1-$add)) ) {} else $str.="<div class=pages_links> <a href=".$URL.(intval($records/$inpage)-(1-$add))." title=\"последняя страница\"><B>$send2</B></a> </div>";
+        $str.=" <a class=pages_links href=".$URL.($r_start+1)." title=\"следующая страница\">></a>";
+        if ( ($r_start==0 and $send2<10) or ($i-1 == intval($records/$inpage)-(1-$add)) ) {} else $str.=" <a href=".$URL.(intval($records/$inpage)-(1-$add))." title=\"последняя страница\"><B>$send2</B></a>";
         }
+        $str.="</div>";
     return($str);
 }
 ###########################################

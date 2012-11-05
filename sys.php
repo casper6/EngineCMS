@@ -217,7 +217,7 @@ function GraphicAdmin() {
 
 			if ($registr=='1') echo "&nbsp;&nbsp;&nbsp;<a href=".$admin_file.".php?op=MainUser>Пользователи</a> <a href=".$admin_file.".php?op=sortuser>Список</a>";
 
-			echo "<div class='black_grad'><button id=new_razdel_button title='Сортировка...' class='small black' onclick=\"show('sortirovka');\" style='float:left; margin:3px;'><span style='margin-right: -2px;' class=\"icon darkgrey small\" data-icon=\"|\"></span></button><button id=new_razdel_button title='Добавить раздел...' class='small black' onclick=\"show_animate('add');\" style='float:right; margin:3px;'><span style='margin-right: -2px;' class=\"icon darkgrey small\" data-icon=\"+\"></span></button><span class='h1'>Разделы:</span>
+			echo "<div class='black_grad'><button id=new_razdel_button title='Сортировка...' class='small black' onclick=\"show('sortirovka');\" style='float:left; margin:3px;'><span style='margin-right: -2px;' class=\"icon darkgrey small\" data-icon=\"|\"></span></button><button id=new_razdel_button title='Добавить раздел...' class='small black right3' onclick=\"show_animate('add');\"><span class=\"mr-2 icon darkgrey small\" data-icon=\"+\"></span></button><span class='h1'>Разделы:</span>
 				</div>".$razdel_txt."
 				<div id='sortirovka' style='color: green; display:none;'>
 				<p style=' margin-left:20px;'>Сортировка по: <br>".$razdel_sort_name[0].",<br>".$razdel_sort_name[1].",<br>".$razdel_sort_name[2]."</p></div>"; 

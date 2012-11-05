@@ -146,6 +146,7 @@
     $id_razdel_and_bd = array(); // список ID разделов
     $title_razdel_and_bd = array(); // список рус. названий разделов и БД
     $title_razdels = array(); // список рус. названий разделов и БД
+    $title_razdels_by_id = array(); // список рус. названий разделов по ID
     $txt_razdels = array(); // список содержания разделов
     $useit_razdels = array(); // список настроек разделов
     $name_razdels = array(); // список англ. названий разделов
@@ -159,6 +160,7 @@
       if ($rowY['type'] == 5) $title_razdel_and_bd[$nameX] = "База данных «".$title_razdel_and_bd[$nameX]."»";
       else {
         $name_razdels[$idX] = $rowY['name'];
+        $title_razdels_by_id[$idX] = $rowY['title'];
         $title_razdels[$nameX] = $rowY['title']; 
         $txt_razdels[$nameX] = $rowY['text'];
         $useit_razdels[$nameX] = $rowY['useit'];
