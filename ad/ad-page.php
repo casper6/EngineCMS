@@ -708,9 +708,9 @@ function base_pages_edit_page($pid, $red=0) {
     $result = $db->sql_query($sql);
     $row = $db->sql_fetchrow($result);
     $cid = $row['cid'];
-    $titl = filter($row['title']);
-    $open_text = filter($row['open_text']);
-    $main_text = filter($row['main_text']);
+    $titl = $row['title'];
+    $open_text = $row['open_text'];
+    $main_text = $row['main_text'];
     $module = $row['module'];
     $foto = $row['foto'];
     // узнать - это галерея или нет

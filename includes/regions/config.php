@@ -1,1 +1,1 @@
-<?php $stryktyra = 1;?>
+<?php $stryktyra = 4;?>
