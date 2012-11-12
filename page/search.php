@@ -1,4 +1,9 @@
 <?php
+  // Настройка поиска (будет вынесена в админку)
+  $col_razdel = 5; // ограничение кол-ва найденных результатов
+  $col_papka = 5;
+  $col_page = 100;
+
   // Поиск по всем разделам, папкам и страницам
   // Выставлен лимит на кол-во: 100 папок и 100 разделов, 500 страниц.
   global $soderganie, $tip, $DBName, $prefix, $db, $module_name, $ModuleName, $slovo, $design, $now, $ip, $papka, $title_razdels;
@@ -148,7 +153,7 @@ else {
 
   if ($papka == "") { // если не выбрана определенная папка - ищем и по разделам
   ////////////////////////////////////////////////////////////////////////////////////////
-      $res2 = $db->sql_query("SELECT `id`,`name`,`title`,`useit` FROM ".$prefix."_mainpage where `tables`='pages' and type='2' and ( (`title` LIKE '%".$s."%' or `useit` LIKE '%".$s."%')".$add_razdel." ) limit 100");
+      $res2 = $db->sql_query("SELECT `id`,`name`,`title`,`useit` FROM ".$prefix."_mainpage where `tables`='pages' and type='2' and ( (`title` LIKE '%".$s."%' or `useit` LIKE '%".$s."%')".$add_razdel." ) limit ".$col_razdel);
       $allpids = $pids1 = $pids2 = $pids3 = $rr_title = $rr_useit = $rr_name = array(); //  = $rr_name
       while ($row = $db->sql_fetchrow($res2)) {
         $id = $row['id'];
@@ -180,7 +185,7 @@ else {
         }
       }
   ////////////////////////////////////////////////////////////////////////////////////////
-      $res2 = $db->sql_query("SELECT `cid`,`module`,`title`,`description` FROM ".$prefix."_pages_categories where `tables`='pages' and ( (`title` LIKE '%".$s."%' or `description` LIKE '%".$s."%')".$add_papka." ) limit 100");
+      $res2 = $db->sql_query("SELECT `cid`,`module`,`title`,`description` FROM ".$prefix."_pages_categories where `tables`='pages' and ( (`title` LIKE '%".$s."%' or `description` LIKE '%".$s."%')".$add_papka." ) limit ".$col_papka);
       $allpids = $pids1 = $pids2 = $pids3 = $rr_title = $rr_description = $rr_module = array(); //  = $rr_name
       while ($row = $db->sql_fetchrow($res2)) {
         $id = $row['cid'];
@@ -212,7 +217,7 @@ else {
       }
   }
   ////////////////////////////////////////////////////////////////////////////////////////
-      $res2 = $db->sql_query("SELECT `pid`,`module`,`cid`,`title`,`open_text`,`main_text` FROM ".$prefix."_pages where `tables`='pages'".$papka." and `active`='1' and (`copy`='0' or `copy`=pid) and ( (`title` LIKE '%".$s."%' or `main_text` LIKE '%".$s."%' or `open_text` LIKE '%".$s."%')".$add_pages." ) limit 500");
+      $res2 = $db->sql_query("SELECT `pid`,`module`,`cid`,`title`,`open_text`,`main_text` FROM ".$prefix."_pages where `tables`='pages'".$papka." and `active`='1' and (`copy`='0' or `copy`=pid) and ( (`title` LIKE '%".$s."%' or `main_text` LIKE '%".$s."%' or `open_text` LIKE '%".$s."%')".$add_pages." ) limit ".$col_page);
       $allpids = $pids1 = $pids2 = $pids3 = $pp_title = $pp_module = $pp_cid = $pp_open_text = array();
       while ($row = $db->sql_fetchrow($res2)) {
         $id = $row['pid'];

@@ -2063,8 +2063,8 @@ if ($numrows = $db->sql_numrows($result) > 0) {
 		$n = count($elements);
 		if ($n > 0 and $s_tip==0) {
 			for ($x=0; $x < $n; $x++) {
-			$element = str_replace("  "," ",trim($elements[$x]));
-			if ($element != "") $db->sql_query("INSERT INTO ".$prefix."_spiski (`id`, `type`, `name`, `opis`, `sort`, `pages`, `parent`) VALUES (NULL, '".$namo."', '".$element."', '', '0', '', '0');") or die('Не удалось создать поле. Странно... Может быть где-то не тот символ вставлен, например одинарная кавычка - апостроф.');
+				$element = str_replace("  "," ",trim($elements[$x]));
+				if ($element != "") $db->sql_query("INSERT INTO ".$prefix."_spiski (`id`, `type`, `name`, `opis`, `sort`, `pages`, `parent`) VALUES (NULL, '".mysql_real_escape_string($namo)."', '".mysql_real_escape_string($element)."', '', '0', '', '0');") or die('Не удалось создать поле.');
 			}
 		}
 		$and = ""; 
@@ -2154,7 +2154,11 @@ if ($numrows = $db->sql_numrows($result) > 0) {
 		$text = "base|type=".$s_tip.$add."&options=".$text2;
 		$useit = "[содержание]";
 	} 
-
+	$namo = mysql_real_escape_string($namo);
+	$title = mysql_real_escape_string($title);
+	$text = mysql_real_escape_string($text);
+	$useit = mysql_real_escape_string($useit);
+	$shablon = mysql_real_escape_string($shablon);
 	$db->sql_query("INSERT INTO ".$prefix."_mainpage (`id`, `type`, `name`, `title`, `text`, `useit`, `shablon`, `counter`, `tables`, `color`, `description`, `keywords`) VALUES (NULL, '".$type."', '".$namo."', '".$title."', '".$text."', '".$useit."', '".$shablon."', '0', 'pages', '0', '', '');") or die('Не удалось создать. Попробуйте еще раз и в случае неудачи обратитесь к разработчику.');
 		}
 

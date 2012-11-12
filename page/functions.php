@@ -123,7 +123,7 @@ function filter($what, $strip="") {
 function filter($what, $strip="", $save="") {
   if ($strip == "nohtml") {
     $what = check_html($what, $strip);
-    $what = htmlentities(trim($what), ENT_QUOTES);
+    $what = htmlentities(trim($what), ENT_QUOTES, "UTF-8");
   }
   if ($save == 1) {
     $what = check_html($what, $strip);

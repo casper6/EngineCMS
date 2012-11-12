@@ -79,7 +79,10 @@ if ($name=="-email") { // занесение мыла как скрытого к
 	elseif ($name=="-search") {		list($block, $stil) = include('page/search.php'); $pagetitle = $slov." — Поиск — "; }
 	elseif ($name=="-register") { 	list($block, $stil) = include('page/reg.php'); $pagetitle = "Регистрация — "; }
 	elseif ($name=="-login") { 	list($block, $stil) = include('page/login.php'); $pagetitle = "Вход — "; }
-	elseif ($name=="-users") { 	list($block, $stil) = include('page/users.php'); $pagetitle = "Моя страница — "; }
+	elseif ($name=="-users") { 	list($block, $stil) = include('page/users.php'); $pagetitle = "Личная анкета — "; }
+	elseif ($name=="-adduser") { 	list($block, $stil) = include('page/adduser.php'); $pagetitle = "Добавление публикации — "; }
+	elseif ($name=="-edituser") { 	list($block, $stil) = include('page/edituser.php'); $pagetitle = "Редактирование личной анкеты — "; }
+	elseif ($name=="-logout") { 	list($block, $stil) = include('page/logout.php'); $pagetitle = "Вы вышли — "; }
 	else {
 		global $title_razdels, $txt_razdels, $useit_razdels, $pid;
 

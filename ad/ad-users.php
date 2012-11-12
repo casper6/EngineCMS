@@ -9,7 +9,7 @@
 	if ($realadmin==1) {
 ////////////////////////////////////////////////////////
 function users() {
-	global $prefix, $db;
+	global $prefix, $db, $title_razdels_by_id;
 	include("ad-header.php");
 
 	echo "<table style='width:100%; margin-top:5px; padding:0; background: #e2e5ea;' cellspacing=0 cellpadding=0><tr valign=top><td id='razdel_td' class='radius nothing' width=340>
@@ -29,21 +29,21 @@ echo "<div id='show_first' class='show_pole'>
 	$result = $db->sql_query("select * from ".$prefix."_mainpage where `type`='10' and `name`!='config'");
 	while ($row = $db->sql_fetchrow($result)) {
 		$html = $row['title'];
+		$gid = $row['id'];
 		$ids = explode(",", trim($row['text']));
 		echo '<tr><td><h2>'.$row['name'].'&darr;</h2>'; 
 		$res = $db->sql_query("select * from ".$prefix."_mainpage where `id`='".$html."'");
 		$row = $db->sql_fetchrow($res);
 		echo "<h3>Использует дизайн: ".$row['title']."</h3>
 		<h3>Можно добавлять материалы в разделы: ";
-		global $title_razdels_by_id;
 		$titles = array();
 		foreach($ids as $id) {
 			if ($id != '') $titles[] = $title_razdels_by_id[$id];
 		}
 		echo implode(", ",$titles).'</h3></td><td>
-		<a href="sys.php?op=edit_group&amp;id='.$row['id'].'" title="Настроить"><img class="icon2 i38" src="/images/1.gif"></a>
-		<a href="sys.php?op=html_group&amp;id='.$row['id'].'" title="Шаблон страницы пользователя"><img class="icon2 i34" src="/images/1.gif"></a>
-		<a href="sys.php?op=del_group2&amp;id='.$row['id'].'" title="Удалить"><img class="icon2 i21" src="/images/1.gif"></a></td></tr>';
+		<a href="sys.php?op=edit_group&amp;id='.$gid.'" title="Настроить"><img class="icon2 i38" src="/images/1.gif"></a>
+		<a href="sys.php?op=html_group&amp;id='.$gid.'" title="Шаблон страницы пользователя"><img class="icon2 i34" src="/images/1.gif"></a>
+		<a href="sys.php?op=del_group2&amp;id='.$gid.'" title="Удалить"><img class="icon2 i21" src="/images/1.gif"></a></td></tr>';
 	}
 	echo "</table></div><div id='show_recent' class='show_pole' style='display:none;'>";
 	$result2 = $db->sql_query("select * from ".$prefix."_mainpage where `type`='10' and `name`='config'");
@@ -240,9 +240,9 @@ function html_group() {
 		echo '<b>'.$row['title'].'</b>   ['.$row['name'].']<br>';
 	}
 	echo '<hr><form action="sys.php?op=s_html_group&id='.$id.'"  method="post">';
-	$result2 = $db->sql_query("select htmlstr from ".$prefix."_mainpage where `id`='".$id."'");
+	$result2 = $db->sql_query("select useit from ".$prefix."_mainpage where `id`='".$id."'");
 	$row = $db->sql_fetchrow($result2);
-	$html = $row['htmlstr'];
+	$html = $row['useit'];
 	echo "<textarea name=\"html\" rows=\"10\" cols=\"100\" style='width:100%;'>".$html."</textarea>";
 	echo '<Br><input type="submit" value="Сохранить"></form>';
 }

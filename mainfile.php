@@ -80,13 +80,13 @@
   $http_siteurl = "http://".$_SERVER['HTTP_HOST']; # Имя сайта
   $result = $db->sql_query("SELECT * FROM ".$prefix."_config");
   $row = $db->sql_fetchrow($result);
-  $sitename = $row['sitename']; // Имя сайта (title)
+  $sitename = filter($row['sitename'], 'nohtml'); // Имя сайта (title)
   $startdate = $row['startdate'];
   $adminmail = $row['adminmail'];
-  $keywords = $row['keywords'];
-  $description = $row['description'];
+  $keywords = filter($row['keywords'], 'nohtml');
+  $description = filter($row['description'], 'nohtml');
   $counter = $row['counter'];
-  $statlink = $row['statlink'];
+  $statlink = filter($row['statlink'], 'nohtml');
   $postlink = $row['postlink'];
   $stopcopy = intval($row['stopcopy']);
   $registr = intval($row['registr']);
@@ -97,6 +97,7 @@
   $jqueryui = $show_comments = $show_userposts = $normalize = "";
   list($jqueryui, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $search_design, $tag_design, $add_fonts, $normalize, $project_logotip, $project_name) = explode("|",trim($row['nocashe']));
   //if ($add_fonts != "") $add_fonts = explode(".",$add_fonts);
+  $project_name = filter($project_name, 'nohtml');
   if ($project_logotip == "") $project_logotip = "/img/logotip.png";
   if ($jqueryui == "") $jqueryui = "1";
   if ($normalize == "") $normalize = "0";
@@ -112,7 +113,7 @@
   $red_type = intval($row['red']); // редактор
   if (!isset($red) or $red=="") $red = $red_type;
   else {
-      $db->sql_query("UPDATE ".$prefix."_config SET red='$red' WHERE red='$red_type'");
+      if ($red != "1") $db->sql_query("UPDATE ".$prefix."_config SET red='$red' WHERE red='$red_type'");
   }
   $comment_send = intval($row['comment']); // отправка комментариев админу
   $ip = getip(); //getenv("REMOTE_ADDR"); // IP

@@ -334,7 +334,7 @@ function GraphicAdmin() {
 		}
 		$ver = mt_rand(10000, 99999); // получили случайное число
 
-		echo "<div id='mainrazdel".$id."' class='dark_pole2'><div style='float:right'>".$iconpage.$type_opisX."</div><a class='base_page' title='Нажмите для просмотра действий над этим разделом и его содержимым' onclick='razdel_show(\"".$title."\", ".$id.", \"".$nam."\", \"".$text."\");'><div id='mainrazdel".$id."'>
+		echo "<div id='mainrazdel".$id."' class='dark_pole2'><div style='float:right'>".$iconpage.$type_opisX."</div><a class='base_page' title='Нажмите для просмотра действий над этим разделом и его содержимым' onclick='razdel_show(\"\", ".$id.", \"".$nam."\", \"".$text."\");'><div id='mainrazdel".$id."'>
 		<span class='icon ".$color." ".$icon_size."' data-icon=','></span><span class='plus20'>".$title."</span>
 		
 		</div></a></div>";

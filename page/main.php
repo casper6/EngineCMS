@@ -1120,10 +1120,10 @@ if ( $cid=="" or ($active != 1 and !is_admin($admin))) {
   $search = trim(str_replace("  "," ",$row['search']));
   $keys = $row['keywords'];
   $desc = $row['description'];
-  $title = str_replace("<p>","",str_replace("</p>","",$row['title']));
+  $title = str_replace("<p>","",str_replace("</p>","",filter($row['title'])));
   $titl = str_replace("\"","",$title); 
-  $opentext = str_replace("jpg\"><img ","jpg\" class=\"lightbox\" rel=\"page\"><img ", str_replace("<img ","<img title='$titl' ", $row['open_text']));
-  $bodytext = str_replace("jpg\"><img ","jpg\" class=\"lightbox\" rel=\"page\"><img ", str_replace("<img ","<img title='$titl' ", $row['main_text']));
+  $opentext = str_replace("jpg\"><img ","jpg\" class=\"lightbox\" rel=\"page\"><img ", str_replace("<img ","<img title='$titl' ", filter($row['open_text'])));
+  $bodytext = str_replace("jpg\"><img ","jpg\" class=\"lightbox\" rel=\"page\"><img ", str_replace("<img ","<img title='$titl' ", filter($row['main_text'])));
   
   // Вырезание авто-ссылок
   $opentext = preg_replace('/ссылка-.*-ссылка/Uis', '', $opentext);
@@ -2578,13 +2578,13 @@ function savecomm($avtor, $avtory, $info, $num, $comm_otvet, $maily, $mail, $adr
   if ($comments_add != 0) {
     $num = intval($num);
     $comm_otvet = intval($comm_otvet);
-    $avtory = str_replace("  "," ",filter($avtory, "nohtml"));
-    $maily = str_replace("  "," ",filter($maily, "nohtml"));
-    $adres = str_replace("  "," ",filter($adres, "nohtml"));
-    $tel = str_replace("  "," ",filter($tel, "nohtml"));
-    $info = bbcode(str_replace("document.cookie","",$info));
+    $avtory = str_replace("  "," ",filter($avtory));
+    $maily = str_replace("  "," ",filter($maily));
+    $adres = str_replace("  "," ",filter($adres));
+    $tel = str_replace("  "," ",filter($tel));
+    $info = bbcode(str_replace("document.cookie","",filter($info)));
 
-    $info = str_replace("http://".$siteurl, $siteurl, $info);
+    //$info = str_replace("http://".$siteurl, $siteurl, $info);
     //$info = str_replace("http://www.onlinedisk.ru", "www.onlinedisk.ru", $info);
 
     $info = str_replace(":)", "<img src=/images/smilies/04.gif>", $info);
@@ -2594,13 +2594,13 @@ function savecomm($avtor, $avtory, $info, $num, $comm_otvet, $maily, $mail, $adr
     $info = str_replace("!", "! ", str_replace(" !", "!", $info));
     $info = str_replace("! !", "!", str_replace("! ! !", "!!!", $info));
 
-    $cyr = range("А","я");
-    foreach($cyr as $lit) { 
-      $info = str_replace($lit.".", $lit.". ", $info);
-      $info = str_replace($lit.",", $lit.", ", $info);
-    }
+    //$cyr = range("А","я");
+    //foreach($cyr as $lit) { 
+      //$info = str_replace($lit.".", $lit.". ", $info);
+      //$info = str_replace($lit.",", $lit.", ", $info);
+    //}
 
-    $info = str_replace(". ..", "...", $info);
+    //$info = str_replace(". ..", "...", $info);
 
     if ($tema_zapret_comm == 1) {
       $avtory = str_replace("http://", "", $avtory);
@@ -2661,7 +2661,7 @@ function savecomm($avtor, $avtory, $info, $num, $comm_otvet, $maily, $mail, $adr
       if ($addcomm != false) { 
             // добавим в куки имя, телефон, адрес и мыло
             setcookie("comment", "$avtory|$maily|$adres|$tel|$ip", time()+60*60*24*360);
-            $db->sql_query("INSERT INTO ".$prefix."_".$tip."_comments ( `cid` , `num` , `avtor` , `mail` , `text` , `ip` , `data`, `drevo`, `adres`, `tel`, `active` ) VALUES ('', '$num', '$avtory', '$maily', '$info', '$ip', '$now', '$comm_otvet', '$adres', '$tel', '$active')");
+            $db->sql_query("INSERT INTO ".$prefix."_".$tip."_comments ( `cid` , `num` , `avtor` , `mail` , `text` , `ip` , `data`, `drevo`, `adres`, `tel`, `active` ) VALUES ('', '".mysql_real_escape_string($num)."', '".mysql_real_escape_string($avtory)."', '".mysql_real_escape_string($maily)."', '".mysql_real_escape_string($info)."', '$ip', '$now', '".mysql_real_escape_string($comm_otvet)."', '".mysql_real_escape_string($adres)."', '".mysql_real_escape_string($tel)."', '$active')");
             $db->sql_query("UPDATE ".$prefix."_".$tip." SET comm=comm+1 WHERE pid='$num'");
       }
   
@@ -2682,7 +2682,7 @@ function savecomm($avtor, $avtory, $info, $num, $comm_otvet, $maily, $mail, $adr
       $mail2 = $row['mail'];
       $text2 = $row['text'];
         if (trim($maily)=="") $maily = "e-mail не сообщил(а)";
-        if (trim($mail2)!="") mail($mail2, '=?koi8-r?B?'.base64_encode(convert_cyr_string($avtor2.", получен ответ на ваш комментарий на сайте ".$siteurl, "w","k")).'?=', "<h3>Здравствуйте, ".$avtor2."!</h3><b>Вы писали:</b><br><br>".str_replace("\r\n","<br>",$text2)."<br><br><b>Вам ответил(а) ".$avtory.", ".$maily.":</b><br><br>".str_replace("\r\n","<br>",$info)."<br><br>Чтобы ответить на комментарий, перейдите на сайт по <a href=http://".$siteurl."/-".$mod."_page_".$num."#comm_".$comm_otvet.">этой ссылке</a>.<br><br><br><br><b>Отвечать на это письмо не нужно</b> - оно было создано сайтом автоматически!", "Content-Type: text/html; charset=utf-8\r\nFrom: ".$maily."\r\n");
+        if (trim($mail2)!="") mail($mail2, '=?utf-8?b?'.base64_encode($avtor2.", получен ответ на ваш комментарий на сайте ".$siteurl).'?=', "<h3>Здравствуйте, ".$avtor2."!</h3><b>Вы писали:</b><br><br>".str_replace("\r\n","<br>",$text2)."<br><br><b>Вам ответил(а) ".$avtory.", ".$maily.":</b><br><br>".str_replace("\r\n","<br>",$info)."<br><br>Чтобы ответить на комментарий, перейдите на сайт по <a href=http://".$siteurl."/-".$mod."_page_".$num."#comm_".$comm_otvet.">этой ссылке</a>.<br><br><br><br><b>Отвечать на это письмо не нужно</b> - оно было создано сайтом автоматически!", "Content-Type: text/html; charset=utf-8\r\nFrom: ".$maily."\r\n");
     }
 
     if ( $comment_send == 1 and $active != 0 ) { // отправка уведомления о комментарии администратору
@@ -2690,7 +2690,7 @@ function savecomm($avtor, $avtory, $info, $num, $comm_otvet, $maily, $mail, $adr
       $result = $db->sql_query($sql);
       $row = $db->sql_fetchrow($result);
       $cid_num = $row['cid'];
-      mail($adminmail, '=?koi8-r?B?'.base64_encode(convert_cyr_string("Комментарий на ".$siteurl." [".$now."]", "w","k")).'?=', "<b>Написал(а) ".$avtory." <".$maily.">:</b><br><br>".str_replace("\r\n","<br>",$info)."<br><br>Чтобы ответить на комментарий, перейдите <a href='http://".$siteurl."/-".$mod."_page_".$num."#comm_".$cid_num."'>на сайт</a> или в его <a href='http://".$siteurl."/red'>администрирование</a>.<br><br><br><br>Письмо создано сайтом автоматически.", "Content-Type: text/html; charset=utf-8\r\nFrom: ".$adminmail."\r\n");
+      mail($adminmail, '=?utf-8?b?'.base64_encode("Комментарий на ".$siteurl." [".$now."]").'?=', "<b>Написал(а) ".$avtory." <".$maily.">:</b><br><br>".str_replace("\r\n","<br>",$info)."<br><br>Чтобы ответить на комментарий, перейдите <a href='http://".$siteurl."/-".$mod."_page_".$num."#comm_".$cid_num."'>на сайт</a> или в его <a href='http://".$siteurl."/red'>администрирование</a>.<br><br><br><br>Письмо создано сайтом автоматически.", "Content-Type: text/html; charset=utf-8\r\nFrom: ".$adminmail."\r\n");
     }
   } else die('Размещать комментарии в этом разделе запрещено');
 
@@ -2746,7 +2746,7 @@ function savegolos ($gol, $num){
 ###########################################
 // BBCODE - преобразование --- ТИПОГРАФИКОЙ_ДОПОЛНИТЬ!!
 function bbcode($text, $nolink=1) {
-  $text = str_replace("жирный]","b]", str_replace("QUOTE","quote", str_replace("цитата]","quote]", str_replace("IMG","img", str_replace(">",")", str_replace("<","(", trim(filter($text, "nohtml"))))))));
+  $text = str_replace("жирный]","b]", str_replace("QUOTE","quote", str_replace("цитата]","quote]", str_replace("IMG","img", str_replace(">",")", str_replace("<","(", trim($text)))))));
   $quote1 = "<table border=0 align=center width=98% cellpadding=3 cellspacing=1><tr valign=top><td><b><span style=\"font-size: 10px\">Цитата</span></b></td></tr><tr valign=top><td bgcolor=#F5F5F5 style=\"border:1px solid #c0c0c0; padding:5px; margin:5px;\">";
   $quote2 = "</td></tr></table>";
   $q1 = substr_count($text, '[quote]');
@@ -2780,9 +2780,9 @@ function bbcode($text, $nolink=1) {
 
   $text = preg_replace('/\[(img)=("?)(.{9,}?)\2\]/', '<img style="margin:5px;" src="\3" />', $text);
 
-  $pattern = "/onlinedisk.ru\/image\/"."(\d+)"."\/IMG"."(\d+)".".jpg"."/i";
-  $replacement = "onlinedisk.ru/get_image.php?id=$1";
-  $text =  preg_replace($pattern, $replacement, $text);
+  //$pattern = "/onlinedisk.ru\/image\/"."(\d+)"."\/IMG"."(\d+)".".jpg"."/i";
+  //$replacement = "onlinedisk.ru/get_image.php?id=$1";
+  //$text =  preg_replace($pattern, $replacement, $text);
 
   // Замена смайлов
   for ($i=162; $i > 1; $i--) {
@@ -2792,9 +2792,9 @@ function bbcode($text, $nolink=1) {
   //$text = preg_replace("/\*(\d{3})/","<img src=/images/smilies/\\1.gif>",$text);
   //$text = preg_replace("/\*(\d{2})/","<img src=/images/smilies/\\1.gif>",$text);
   
-  $text = str_replace("viewer.php?file=","images/",$text);
+  //$text = str_replace("viewer.php?file=","images/",$text);
   
-  $text = str_replace("'","\"",$text);
+  //$text = str_replace("'","\"",$text);
   //$text = str_replace("]",">",$text);
   $text = str_replace("\n","<br>",$text);
   return $text;

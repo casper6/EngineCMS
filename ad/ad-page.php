@@ -452,10 +452,6 @@ function base_pages_add_page($name, $razdel, $red=0, $new=0, $pid=0) {
       case "flash": $type_fil = "flash-анимация"; break;
       case "avi": $type_fil = "видео-ролик"; break;
     }
-    switch($mesto) {
-      case "verh": $type_mesto = "сверху"; break;
-      case "niz": $type_mesto = "снизу"; break;
-    }
     $type_mini="";
     if ($minipic==1) $type_mini = "Также будет создана миниатюра.";
 
@@ -465,14 +461,14 @@ function base_pages_add_page($name, $razdel, $red=0, $new=0, $pid=0) {
   break;
   ///////////////////
   case "1": // текст
-    echo "<br><br><b>$s_title:</b><br><textarea name='add[$s_name]' rows='4' cols='60' style='width:98%;'>".$shablon."</textarea>";
+    echo "<br><br><b>".$s_title.":</b><br><textarea name='add[".$s_name."]' rows='4' cols='60' class='w100'>".$shablon."</textarea>";
   break;
   ///////////////////
   case "0": // список слов
-  echo "<br><br><b>$s_title:</b><br>";
-             $sql2 = "select * from ".$prefix."_spiski where type='$s_name' order by parent,id";
+  echo "<br><br><b>".$s_title.":</b><br>";
+             $sql2 = "select * from ".$prefix."_spiski where type='".$s_name."' order by parent,id";
              $result2 = $db->sql_query($sql2);
-             echo "<select size=10 multiple=multiple name='add[$s_name][]' style='font-size:11px;'><option value=0> не выбрано </option>";
+             echo "<select size=10 multiple=multiple name='add[".$s_name."][]'><option value=0 selected>ничего не выбрано</option>";
              while ($row2 = $db->sql_fetchrow($result2)) {
                $s_id2 = $row2['id'];
                $s_title2 = $row2['name'];
@@ -481,7 +477,8 @@ function base_pages_add_page($name, $razdel, $red=0, $new=0, $pid=0) {
     	         $s_title2 = getparent_spiski($s_name,$s_parent,$s_title2);
                $sel = ""; 
                if ($razdel == $s_id2) $sel = " selected";
-    	         echo "<option value=".$s_id2.$sel."> $s_title2 ($s_opis)</option>";
+               if ($s_opis != "") $s_opis = " (".$s_opis.")";
+    	         echo "<option value=".$s_id2.$sel."> ".$s_title2.$s_opis."</option>";
              }
   echo "</select>";
   break;
@@ -495,6 +492,7 @@ function base_pages_add_page($name, $razdel, $red=0, $new=0, $pid=0) {
 #####################################################################################################################
 function base_pages_save_page($cid, $module, $title, $open_text, $main_text, $foto, $link_foto, $search, $active, $mainpage, $rss, $price, $add, $data1, $data2, $data3, $data4, $keywords2, $description2, $sor, $open_text_mysor, $main_text_mysor) {
   global $red, $tip, $admintip, $prefix, $db, $admin_file, $now;
+  /*
   // это галерея?
   $sql = "select text from ".$prefix."_mainpage where name='".$module."' and type='2'";
   $result = $db->sql_query($sql);
@@ -511,7 +509,9 @@ function base_pages_save_page($cid, $module, $title, $open_text, $main_text, $fo
   	$foto="/".$ImgDir."/".basename($pic_name2);
   	} else echo "ОШИБКА при копировании файла";
   } else $foto=trim($link_foto);
-  } else $foto="";
+  } else 
+  */
+  $foto="";
   ##----------------------------------------------------##
   // это магазин?
     $price=intval($price);
@@ -1074,9 +1074,10 @@ function base_pages_edit_page($pid, $red=0) {
 function base_pages_edit_sv_page($pid, $module, $cid, $title, $open_text, $main_text, $foto, $link_foto, $search, $active, $mainpage, $rss, $price, $add, $data1, $data2, $data3, $data4, $keywords2, $description2, $com, $cop, $count, $sor, $open_text_mysor, $main_text_mysor) {
   global $tip, $admintip, $prefix, $db, $now;
   // Делаем резервную копию!
-  $sql = "SELECT module,cid,title,open_text,main_text,date,counter,active,golos,comm,foto,search,mainpage,rss,price,description,keywords,copy,sort FROM ".$prefix."_".$tip." WHERE pid='".$pid."'";
+  $sql = "SELECT `module`,`cid`,`title`,`open_text`,`main_text`,`date`,`counter`,`active`,`golos`,`comm`,`foto`,`search`,`mainpage`,`rss`,`price`,`description`,`keywords`,`copy`,`sort` FROM ".$prefix."_".$tip." WHERE `pid`='".$pid."'";
   $result = $db->sql_query($sql);
   list($p_module,$p_cid,$p_title,$p_open_text,$p_main_text,$p_date,$p_counter,$p_active,$p_golos,$p_comm,$p_foto,$p_search,$p_mainpage,$p_rss,$p_price,$p_description,$p_keywords,$p_sort) = $db->sql_fetchrow($result);
+  /*
   // узнать - это галерея или нет
   $sql = "select text from ".$prefix."_mainpage where name='".$module."' and type='2'";
   $result = $db->sql_query($sql);
@@ -1093,10 +1094,12 @@ function base_pages_edit_sv_page($pid, $module, $cid, $title, $open_text, $main_
   	$foto="/".$ImgDir."/".basename($pic_name2);
   	} else echo "ОШИБКА при копировании файла";
   } else $foto=trim($link_foto);
-  } else $foto="";
+  } else 
+  */
+  $foto = "";
   ##----------------------------------------------------##
   // это магазин?
-  $price=intval($price);
+  $price = intval($price);
   ##----------------------------------------------------##
   $search = str_replace(", "," ",$search);
   $search = str_replace(","," ",$search);
