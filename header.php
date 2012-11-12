@@ -1704,18 +1704,36 @@ if (strlen($add_fonts)>1) {
 	if ($display_errors == true) print("<!-- запросов: $db->num_queries \n $db->num_q -->");
 
 	// Проверка добавляемой информации
-	if ( !strpos(" ".$txt, "Ошибка: «Адрес раздела»" ) ) {
+	if ( !strpos(" ".$txt, "Ошибка: «Адрес раздела»" ) && $site_cash != false) {
+		$numrows = 0;
 		$txt = addslashes($txt);
 		// Запрет кеширования
 		//$nocash = explode(" ","/?name=-search /--search ".trim(str_replace("  "," ",str_replace("\n"," ",$nocash))));
 		$url0 = str_replace("http://".$siteurl,"",$url);
 		$url0 = str_replace("http%3A%2F%2F".$siteurl."%2F","/",$url0);
-		$sql = "SELECT `data` FROM ".$prefix."_cash where `url`='$url0' limit 1";
-	    $result = $db->sql_query($sql);
-	    $numrows = $db->sql_numrows($result);
-	    if ($numrows == 0) {
+		// если кеш на базе
+		if ($site_cash == "base") {
+		    $numrows = $db->sql_numrows($db->sql_query("SELECT `data` FROM ".$prefix."_cash where `url`='$url0' limit 1"));
+		}
+		// если кеш на файлах
+		if ($site_cash == "file") {
+			if ($url0 == '/') {
+				$url0 = "-index";
+				if (file_exists("cashe/".$url0.".txt")) $numrows = 1;
+			} else {
+				$url0 = str_replace("/","_",$url0); // «защита»
+				if (file_exists("cashe/".$url0.".txt")) $numrows = 1;
+			}
+		}
+	    if ($numrows == 0 and !strpos($url0,"-search") and !strpos($url0,"_cat_") and !strpos($url0,"savecomm") and !strpos($url0,"savepost")) {
 			// Добавление в кеш
-			if ( $nocash == false and !strpos($url0,"-search") and !strpos($url0,"_cat_") and !strpos($url0,"savecomm") and !strpos($url0,"savepost") ) $db->sql_query("INSERT INTO `".$prefix."_cash` (`id`, `url`, `data`, `text`) VALUES (NULL, '$url0', '$now', '$txt');") or die ("Обновите страницу, нажав F5 !!!");
+			if ($site_cash == "base") // если кеш в БД
+				$db->sql_query("INSERT INTO `".$prefix."_cash` (`id`, `url`, `data`, `text`) VALUES (NULL, '$url0', '$now', '$txt');") or die ("Обновите страницу, нажав F5 !!!");
+			else { // если кеш в файлах
+				$filestr = fopen ("cashe/".$url0.".txt","w+");
+				fwrite($filestr, $txt);
+				fclose ($filestr);
+			}
 		}
 	}
 	// Запуск антивируса

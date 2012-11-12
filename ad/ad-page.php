@@ -712,15 +712,15 @@ function base_pages_edit_page($pid, $red=0) {
     $open_text = $row['open_text'];
     $main_text = $row['main_text'];
     $module = $row['module'];
-    $foto = $row['foto'];
+    //$foto = $row['foto'];
     // узнать - это галерея или нет
-    $sql2 = "select id, title, text from ".$prefix."_mainpage where name='".$module."' and `tables`='pages' and type='2'";
-    $result2 = $db->sql_query($sql2);
-    $row2 = $db->sql_fetchrow($result2);
-    $id = $row2['id'];
-    $tex = $row2['text'];
-    $title = $row2['title'];
-    if (!strpos($tex,"media=1")) $foto = "";
+    //$sql2 = "select id, title from ".$prefix."_mainpage where name='".$module."' and `tables`='pages' and type='2'";
+    //$result2 = $db->sql_query($sql2);
+    //$row2 = $db->sql_fetchrow($result2);
+    //$id = $row2['id'];
+    //$tex = $row2['text'];
+    //$title = $row2['title'];
+    //if (!strpos($tex,"media=1")) $foto = "";
     #######################################
     $search = $row['search'];
     $data = $row['date'];
@@ -768,15 +768,15 @@ function base_pages_edit_page($pid, $red=0) {
     $color = $row['color'];
     switch ($color) {
       case "1": // Частоупотребляемый зеленый
-      $color = "b4f3b4"; break;
+        $color = "b4f3b4"; break;
       case "2": // Редкоупотребляемый желтый
-      $color = "f3f3a3";  break;
+        $color = "f3f3a3";  break;
       case "3": // Закрытый или старый красный
-      $color = "ffa4ac"; break;
+        $color = "ffa4ac"; break;
       case "4": // Новый, в разработке
-      $color = "b8f4f2"; break;
+        $color = "b8f4f2"; break;
       default: 
-      $color = "ffffff"; break;  // Стандартный белый
+        $color = "ffffff"; break;  // Стандартный белый
     }
     if ($module == $name2) $sel = "selected"; else $sel = "";
     echo "<option style='background:".$color.";' value='".$name2."' ".$sel.">".$title2."</option>";
@@ -790,27 +790,28 @@ function base_pages_edit_page($pid, $red=0) {
   <h2>Папка:</h2>";
          echo "<div id='izmenapapka'>
          <select name=cid id='to_papka' size=4 style='font-size:11px; width:248px; height:".$size."px;'><option value=0 selected>Основная папка («корень»)</option>";
-           while ($row = $db->sql_fetchrow($result)) {
-           $cid2 = $row['cid'];
-           $title = $row['title'];
-           $parentid = $row['parent_id'];
-       if ($parentid != 0) $title = "&bull; ".getparent($module,$parentid,$title);
-	   if ($cid == $cid2) $sel = "selected"; else $sel = "";
-	   if ($parentid == 0) {
-           // занести в переменную
-           $first_opt[$cid2] = "<option value=$cid2 $sel style='background:#fdf;'>$title</option>"; 
-       }
-       if ($parentid != 0) {
-           // вывести и очистить переменную
-           echo $first_opt[$parentid];
-           $first_opt[$parentid] = "";
-           echo "<option value=$cid2 $sel>$title</option>";
-       }
-           }
-      if (count($first_opt)>0) 
-      foreach( $first_opt as $key => $value ) {
-        if ($first_opt[$key] != "") echo $first_opt[$key];
-      }
+          while ($row = $db->sql_fetchrow($result)) {
+            $cid2 = $row['cid'];
+            $title = $row['title'];
+            $parentid = $row['parent_id'];
+            if ($parentid != 0) $title = "&bull; ".getparent($module,$parentid,$title);
+      	    if ($cid == $cid2) $sel = "selected"; else $sel = "";
+      	    if ($parentid == 0) {
+                 // занести в переменную
+                 $first_opt[$cid2] = "<option value='".$cid2."' ".$sel." style='background:#fdf;'>".$title."</option>"; 
+            }
+            if ($parentid != 0) {
+                 // вывести и очистить переменную
+                 echo $first_opt[$parentid];
+                 $first_opt[$parentid] = "";
+                 echo "<option value='".$cid2."' ".$sel.">".$title."</option>";
+            }
+          }
+      if (isset($first_opt))
+        if (count($first_opt)>0) 
+          foreach( $first_opt as $key => $value ) {
+            if ($first_opt[$key] != "") echo $first_opt[$key];
+          }
   echo "</select></div>";
   global $siteurl;
   echo "<br><br>";
@@ -958,7 +959,7 @@ function base_pages_edit_page($pid, $red=0) {
   if (strpos($tex,"view=3")) echo "<p><b>Стоимость:</b> <input type=text name=price size=3 value='".$price."'> руб.</p>";
   else echo "<input type=hidden name=price value='".$price."'>";
   */
-
+  echo "<input type=hidden name=foto value=''>";
   // Подсоединие списков ////////////////////////////////
   if ($copy != 0) $page_id = $copy;
   // Ищем все списки

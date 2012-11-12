@@ -9,16 +9,29 @@
   require_once ('config.php'); // Настройки сайта
   require_once ('includes/db.php'); // Работа с базой данных
   require_once ('includes/sql_layer.php'); // Функции для работы с БД: MySQL, mSQL, postgres и postgres_local
+  global $ipban, $display_errors, $pid, $site_cash;
     if ( isset($admin) ) {
     if (is_admin($admin)) {
       require_once ('ad/ad-functions.php'); // Функции для администрирования
       if (isset($cash)) if ($cash == "del") { // Удаление всего кеша админом
+	  if ( $site_cash == "base"){
         $db->sql_query("TRUNCATE TABLE `".$prefix."_cash`") or die('Не удалось стереть кеш...'); 
+		}
+		if ( $site_cash == "file"){
+		$files = glob("cashe/*");
+    $c = count($files);
+    if (count($files) > 0) {
+        foreach ($files as $file) {      
+            if (file_exists($file)) {
+            unlink($file);
+            }   
+        }
+    }}
         die("Кеш удален. Можно <a href=\"javascript:self.close()\">закрыть</a> эту вкладку."); 
       }
     }
   } else $admin = "";
-  global $ipban, $display_errors, $pid, $site_cash;
+  
   if ($ipban == true) require_once("includes/ipban.php"); // Бан
   $admin_file = "sys"; # Название файла панели администрирования
   if (isset($_POST)) $num_post = count($_POST);
@@ -50,21 +63,41 @@
   if ($pid > 0) $cashe_day = 30;  // если это страница
   else $cashe_day = 1; // если это главная страница, разделы и папки
 
-  if ($site_cash == true and $num_post == 0) { // проверка включения кеширования
+  $numrows = 0;
+  // если кеш на базе
+	if ($site_cash == "base" and $num_post == 0) {
     $sql = "SELECT `text`, `data` FROM ".$prefix."_cash where `url`='$url0' limit 1";
     $result = $db->sql_query($sql);
     $numrows = $db->sql_numrows($result);
-  } else $numrows = 0;
-
+  }
+	// если кеш на файлах
+	if ($site_cash == "file" and $num_post == 0) {
+  	if ($url0 == '/') { 
+    	$url0 = "-index";
+    	if (file_exists("cashe/".$url0.".txt")) $numrows = 1;
+  	} else {
+      $url0 = str_replace("/","_",$url0); // «защита»
+  		if (file_exists("cashe/".$url0.".txt")) $numrows = 1;
+  	}
+  }
   if ($numrows > 0) {
     // Ставим страницу из кеша
-    $row = $db->sql_fetchrow($result);
-    $dni = dateresize($row['data']) + $cashe_day; // Сколько хранить кеш
+	  // если кеш на базе
+		if ( $site_cash == "base") {
+      $row = $db->sql_fetchrow($result);
+      $dni = dateresize($row['data']) + $cashe_day; // Сколько хранить кеш
+    	$txt = $row['text'];
+  	}
+  	// если кеш на файлах
+  	if ( $site_cash == "file") {
+    	$dni = dateresize(date("Y.m.d H:i:s", fileatime("cashe/".$url0.".txt"))) + $cashe_day;
+    	$txt = stripcslashes(file_get_contents("cashe/".$url0.".txt"));
+  	}
     $nowX = dateresize(date("Y.m.d "));
     if ($dni <= $nowX) { // Обновление
       recash($url0, 0); // стираем страницу из кеша
     }
-    $txt = $row['text'];
+    
     if ( isset($admin) ) { // Если это администратор...
       if (is_admin($admin)) $txt = page_admin($txt, $pid); // добавляем на стр. кнопку её редактирования
     }
@@ -80,13 +113,13 @@
   $http_siteurl = "http://".$_SERVER['HTTP_HOST']; # Имя сайта
   $result = $db->sql_query("SELECT * FROM ".$prefix."_config");
   $row = $db->sql_fetchrow($result);
-  $sitename = filter($row['sitename'], 'nohtml'); // Имя сайта (title)
+  $sitename = filter($row['sitename']); // Имя сайта (title)
   $startdate = $row['startdate'];
   $adminmail = $row['adminmail'];
-  $keywords = filter($row['keywords'], 'nohtml');
-  $description = filter($row['description'], 'nohtml');
+  $keywords = filter($row['keywords']);
+  $description = filter($row['description']);
   $counter = $row['counter'];
-  $statlink = filter($row['statlink'], 'nohtml');
+  $statlink = filter($row['statlink']);
   $postlink = $row['postlink'];
   $stopcopy = intval($row['stopcopy']);
   $registr = intval($row['registr']);
@@ -97,7 +130,7 @@
   $jqueryui = $show_comments = $show_userposts = $normalize = "";
   list($jqueryui, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $search_design, $tag_design, $add_fonts, $normalize, $project_logotip, $project_name) = explode("|",trim($row['nocashe']));
   //if ($add_fonts != "") $add_fonts = explode(".",$add_fonts);
-  $project_name = filter($project_name, 'nohtml');
+  $project_name = filter($project_name);
   if ($project_logotip == "") $project_logotip = "/img/logotip.png";
   if ($jqueryui == "") $jqueryui = "1";
   if ($normalize == "") $normalize = "0";
