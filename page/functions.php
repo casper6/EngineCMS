@@ -574,17 +574,27 @@ function upload_foto_file($text){ // доработать
 ///////////////////////////////////////////////////////////////
 function recash($url, $main=1) { // Обновление кеша
   global $db, $prefix, $site_cash;
+  $u = explode("_page_",$url);
   if ($site_cash == "base") { // если кеш хранится в БД
     if ($main == 1) $db->sql_query("DELETE FROM ".$prefix."_cash WHERE `url`='/'");
     if (mb_strpos($url,"_page_")) {
-      $u = explode("_page_",$url);
       $db->sql_query("DELETE FROM ".$prefix."_cash WHERE `url`='".$u[0]."'");
       $db->sql_query("DELETE FROM ".$prefix."_cash WHERE `url` LIKE '".$u[0]."_cat_%'");
     }
     $db->sql_query("DELETE FROM ".$prefix."_cash WHERE `url`='".$url."'"); 
   } else { // если кеш файловый
-    if ($main == 1) unlink("cashe/-index.txt");
-    unlink("cashe/".$url.".txt");
+    if ($main == 1) unlink("cashe/-index");
+	if (mb_strpos($url,"_page_")) {
+      unlink("cashe/".$u[0]);
+	  	$files = glob("cashe/".$u[0]."_cat_*");
+    $c = count($files);
+    if (count($files) > 0) {
+        foreach ($files as $file) {
+            unlink($file);
+        }
+    } 
+    }
+    unlink("cashe/".$url);
   }
 }
 ///////////////////////////////////////////////////////////////

@@ -3,9 +3,17 @@
 	//ob_start();  // Начался вывод страницы с кешированием
   	//ob_implicit_flush(0); 
   	session_start(); // Для капчи (проверочный код-картинка от спама) // проверить вызов
-
+    // запрет пользователю посещать не свою страницу 
+	$urlus = getenv("REQUEST_URI");
+    if (substr_count($urlus, "--users" ) == 1 || substr_count($urlus, "--edituser" ) == 1) {
+	if ($_GET["user"] !== $_COOKIE['user_id']) {
+	Header("Location: error.php?code=123"); die; } }
+	if ( substr_count($urlus, "--adduser" ) == 1) {
+	if ( $_GET["group"] !== $_COOKIE['user_group']) {
+	Header("Location: error.php?code=123"); die; } }
 	require_once("mainfile.php");
 	global $strelka, $siteurl, $prefix, $module_name, $name, $db, $sitekey, $admin, $sitename, $pagetitle, $pagetitle2, $registr, $pogoda, $flash, $keywords, $description, $counter, $startdate, $adminmail, $keywords2, $description2, $stopcopy, $nocash, $blocks, $http_siteurl, $display_errors;
+	
 	$nocash = false;
 	if ($name == "") $name = "index";
 
@@ -1719,10 +1727,10 @@ if (strlen($add_fonts)>1) {
 		if ($site_cash == "file") {
 			if ($url0 == '/') {
 				$url0 = "-index";
-				if (file_exists("cashe/".$url0.".txt")) $numrows = 1;
+				if (file_exists("cashe/".$url0)) $numrows = 1;
 			} else {
 				$url0 = str_replace("/","_",$url0); // «защита»
-				if (file_exists("cashe/".$url0.".txt")) $numrows = 1;
+				if (file_exists("cashe/".$url0)) $numrows = 1;
 			}
 		}
 	    if ($numrows == 0 and !strpos($url0,"-search") and !strpos($url0,"_cat_") and !strpos($url0,"savecomm") and !strpos($url0,"savepost")) {
@@ -1730,7 +1738,7 @@ if (strlen($add_fonts)>1) {
 			if ($site_cash == "base") // если кеш в БД
 				$db->sql_query("INSERT INTO `".$prefix."_cash` (`id`, `url`, `data`, `text`) VALUES (NULL, '$url0', '$now', '$txt');") or die ("Обновите страницу, нажав F5 !!!");
 			else { // если кеш в файлах
-				$filestr = fopen ("cashe/".$url0.".txt","w+");
+				$filestr = fopen ("cashe/".$url0,"w+");
 				fwrite($filestr, $txt);
 				fclose ($filestr);
 			}

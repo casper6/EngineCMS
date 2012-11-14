@@ -74,10 +74,10 @@
 	if ($site_cash == "file" and $num_post == 0) {
   	if ($url0 == '/') { 
     	$url0 = "-index";
-    	if (file_exists("cashe/".$url0.".txt")) $numrows = 1;
+    	if (file_exists("cashe/".$url0)) $numrows = 1;
   	} else {
       $url0 = str_replace("/","_",$url0); // «защита»
-  		if (file_exists("cashe/".$url0.".txt")) $numrows = 1;
+  		if (file_exists("cashe/".$url0)) $numrows = 1;
   	}
   }
   if ($numrows > 0) {
@@ -90,8 +90,8 @@
   	}
   	// если кеш на файлах
   	if ( $site_cash == "file") {
-    	$dni = dateresize(date("Y.m.d H:i:s", fileatime("cashe/".$url0.".txt"))) + $cashe_day;
-    	$txt = stripcslashes(file_get_contents("cashe/".$url0.".txt"));
+    	$dni = dateresize(date("Y.m.d H:i:s", fileatime("cashe/".$url0))) + $cashe_day;
+    	$txt = stripcslashes(file_get_contents("cashe/".$url0));
   	}
     $nowX = dateresize(date("Y.m.d "));
     if ($dni <= $nowX) { // Обновление
