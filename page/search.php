@@ -12,7 +12,7 @@
   $slov = filter($slovo);
   $soderganiemain = "<h1>Вы искали: ".$slov."</h1>";
 
-  $slov = str_replace("—","-",str_replace("."," ",str_replace(","," ",str_replace(":"," ",str_replace(";"," ",str_replace("!"," ",str_replace("?"," ",$slov))))))); // меняя знаки пепинания на пробелы, чтобы потом слова не слились
+  $slov = str_replace("—","-",str_replace("."," ",str_replace(","," ",str_replace(":"," ",str_replace(";"," ",str_replace("!"," ",str_replace("?"," ",str_replace("\""," ",$slov)))))))); // меняя знаки пепинания на пробелы, чтобы потом слова не слились
   $slov = preg_replace("/[^(\w)|(\x7F-\xFF)|(\s)(\-)]/","",$slov); // чистим поисковое слово
   $slov = trim(preg_replace("/  +/"," ",$slov)); // убираем лишние пробелы
 
@@ -33,6 +33,18 @@ else {
   // Заголовок
   $slova = zamena_predlog($slov); // убираем предлоги
   $slovo = preg_split("/\s+/s",$slova);
+
+  //echo $slova;
+  $stemmer = new Lingua_Stem_Ru();
+  $ss = explode(" ", $slova);
+  $co = count($ss);
+  $slova = array();
+  for ($i=0; $i < $co; $i++) {
+    $slova[] = $stemmer->stem_word($ss[$i]);
+  }
+  $slova = implode(" ",$slova);
+  //echo " - ".$slova;
+  
 
   $s = implode("%", $slovo);
 
@@ -253,7 +265,6 @@ else {
           if ($txt != "......") $soderganie .= "<blockquote>".$txt."</blockquote>";
         }
       }
-  ////////////////////////////////////////////////////////////////////////////////////////
   $soderganie .= "</ol></div>";
 
   if ($allnum == 0) $soderganie = $soderganiemain."<h3>Данное словосочетание не обнаружено. Попробуйте поискать по другим словам.</h3>";
@@ -300,4 +311,88 @@ function strchop($data,$word,$interval,$ci=true) {
     //вернули результат #([А-я]*струя[а-я]*)#i
     return preg_replace('#([А-я]*'.mb_convert_case($word, MB_CASE_UPPER).'[а-я]*)#uis', '<b class=red>$1</b>', preg_replace('#([А-я]*'.mb_convert_case($word, MB_CASE_TITLE).'[а-я]*)#uis', '<b class=red>$1</b>', preg_replace('#([А-я]*'.mb_convert_case($word, MB_CASE_LOWER).'[а-я]*)#uis', '<b class=red>$1</b>', '...'.mb_substr($data,$start_position,$length).'...')));
 }
+///////////////////////////////////////////////////////////////
+function zamena_predlog($text) { # Замена предлогов
+  $zamena = array(" а "=>" "," в "=>" "," и "=>" "," к "=>" "," о "=>" "," с "=>" "," у "=>" "," я "=>" "," во "=>" "," до "=>" "," за "=>" "," из "=>" "," на "=>" "," не "=>" "," ни "=>" "," но "=>" "," по "=>" "," об "=>" "," то "=>" "," для "=>" "," или "=>" "," над "=>" "," обо "=>" "," про "=>" ","Про "=>""," же "=>" ", " около "=>" "," перед "=>" "," после "=>" "," против "=>" "," напротив "=>" "," кто такой "=>" "," что такое "=>" "," кто "=>" "," что "=>" "," какой "=>" "," зачем "=>" "," почему "=>" "," когда же "=>" "," когда будет "=>" "," когда "=>" "," разрешается ли "=>" "," можно ли "=>" "," как бы "=>" "," как "=>" "," с какими "=>" "," какими "=>" "," с какой "=>" "," какой "=>" "," с каким "=>" "," каким "=>" "," о ком "=>" "," о чем "=>" "," чем "=>" ");
+  $text = trim(strtr(" ".$text." ",$zamena));
+
+  return $text;
+}
+
+
+setlocale(LC_ALL, 'ru_RU.UTF-8', 'rus');
+class Lingua_Stem_Ru {
+    var $Stem_Caching = 0;
+    var $Stem_Cache = array();
+    var $VOWEL = '/аеиоуыэюя/u';
+    var $PERFECTIVEGROUND = '/((ив|ивши|ившись|ыв|ывши|ывшись)|((?<=[ая])(в|вши|вшись)))$/u';
+    var $REFLEXIVE = '/(с[яь])$/u';
+    var $ADJECTIVE = '/(ее|ие|ые|ое|ими|ыми|ей|ий|ый|ой|ем|им|ым|ом|его|ого|ему|ому|их|ых|ую|юю|ая|яя|ою|ею)$/u';
+    var $PARTICIPLE = '/((ивш|ывш|ующ)|((?<=[ая])(ем|нн|вш|ющ|щ)))$/u';
+    var $VERB = '/((ила|ыла|ена|ейте|уйте|ите|или|ыли|ей|уй|ил|ыл|им|ым|ен|ило|ыло|ено|ят|ует|уют|ит|ыт|ены|ить|ыть|ишь|ую|ю)|((?<=[ая])(ла|на|ете|йте|ли|й|л|ем|н|ло|но|ет|ют|ны|ть|ешь|нно)))$/u';
+    var $NOUN = '/(а|ев|ов|ие|ье|е|иями|ями|ами|еи|ии|и|ией|ей|ой|ий|й|иям|ям|ием|ем|ам|ом|о|у|ах|иях|ях|ы|ь|ию|ью|ю|ия|ья|я)$/u';
+    var $RVRE = '/^(.*?[аеиоуыэюя])(.*)$/u';
+    var $DERIVATIONAL = '/[^аеиоуыэюя][аеиоуыэюя]+[^аеиоуыэюя]+[аеиоуыэюя].*(?<=о)сть?$/u';
+    function s(&$s, $re, $to)
+    {
+        $orig = $s;
+        $s = preg_replace($re, $to, $s);
+        return $orig !== $s;
+    }
+    function m($s, $re)
+    {
+        return preg_match($re, $s);
+    }
+    function stem_word($word)
+    {
+       $word = mb_strtolower($word, 'UTF-8');
+       /*$word = strtr($word, 'ё', 'е');*/
+       $word = preg_replace('/ё/u', 'е', $word);
+        if ($this->Stem_Caching && isset($this->Stem_Cache[$word])) {
+            return $this->Stem_Cache[$word];
+        }
+        $stem = $word;
+        do {
+          if (!preg_match($this->RVRE, $word, $p)) break;
+          $start = $p[1];
+          $RV = $p[2];
+          if (!$RV) break;
+          if (!$this->s($RV, $this->PERFECTIVEGROUND, '')) {
+              $this->s($RV, $this->REFLEXIVE, '');
+              if ($this->s($RV, $this->ADJECTIVE, '')) {
+                  $this->s($RV, $this->PARTICIPLE, '');
+              } else {
+                  if (!$this->s($RV, $this->VERB, ''))
+                      $this->s($RV, $this->NOUN, '');
+              }
+          }
+          $this->s($RV, '/и$/u', '');
+          if ($this->m($RV, $this->DERIVATIONAL))
+              $this->s($RV, '/ость?$/u', '');
+          if (!$this->s($RV, '/ь$/u', '')) {
+              $this->s($RV, '/ейше?/u', '');
+              $this->s($RV, '/нн$/u', 'н');
+          }
+          $stem = $start.$RV;
+        } while(false);
+        if ($this->Stem_Caching) $this->Stem_Cache[$word] = $stem;
+        return $stem;
+    }
+    function stem_caching($parm_ref)
+    {
+        $caching_level = @$parm_ref['-level'];
+        if ($caching_level) {
+            if (!$this->m($caching_level, '/^[012]$/u')) {
+                die(__CLASS__ . "::stem_caching() - Legal values are '0','1' or '2'. '$caching_level' is not a legal value");
+            }
+            $this->Stem_Caching = $caching_level;
+        }
+        return $this->Stem_Caching;
+    }
+    function clear_stem_cache()
+    {
+        $this->Stem_Cache = array();
+    }
+}
+
 ?>

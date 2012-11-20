@@ -1648,7 +1648,7 @@ if (strlen($add_fonts)>1) {
 			$effect_show = "";
 			if (isset($font[1])) $effect_show = '&and;effect='.$font[1]; // эффект шрифта
 			$font = str_replace(" ", "+", $font[0]);
-			echo '<link href="http://fonts.googleapis.com/css?family='.$font.'&and;subset=latin,cyrillic'.$effect_show.'" rel="stylesheet" type="text/css">';
+			echo '<link href="http://fonts.googleapis.com/css?family='.$font.'&subset=latin,cyrillic'.$effect_show.'" rel="stylesheet" type="text/css">';
 		}
 	}
 }
