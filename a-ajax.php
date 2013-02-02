@@ -795,7 +795,7 @@ if ($func == "rep") { // Копия/Перемещения/Ярлык стран
     if (isset($copy)) {
       if ($copy == 0) $copy = $id;
     } else $copy = $id;
-  $db->sql_query("INSERT INTO ".$prefix."_pages VALUES (NULL, '$razdel', '$papka', '$title', '$opentext', '$bodytext', '$data', '$data2', '0', '$active', '0', '0', '$foto', '$search', '$mainpage', '$rss', '$price', '$desc', '$keys', 'pages', '0', '$sort');") or $info = "Скопировать не удалось."; 
+  $db->sql_query("INSERT INTO ".$prefix."_pages VALUES (NULL, '".mysql_real_escape_string($razdel)."', '$papka', '".mysql_real_escape_string($title)."', '".mysql_real_escape_string($opentext)."', '".mysql_real_escape_string($bodytext)."', '$data', '$data2', '0', '$active', '0', '0', '$foto', '".mysql_real_escape_string($search)."', '$mainpage', '$rss', '".mysql_real_escape_string($price)."', '".mysql_real_escape_string($desc)."', '".mysql_real_escape_string($keys)."', 'pages', '0', '$sort');") or $info = "Скопировать не удалось."; 
   }
   //////////////////
   if ($type == 3) { // переместить

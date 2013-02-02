@@ -132,9 +132,9 @@
         (preg_match("/<[^>]*onreset*\"?[^>]*>/i", $secvalue)) ||
         (preg_match("/<[^>]*onresize*\"?[^>]*>/i", $secvalue)) ||
       (preg_match("/<[^>]*body*\"?[^>]*>/i", $secvalue)) ||
-      (preg_match("/\([^>]*\"?[^)]*\)/i", $secvalue)) ||
-      (preg_match("/\"/i", $secvalue)) ) {
+      (preg_match("/\([^>]*\"?[^)]*\)/i", $secvalue))  ) {
       die ($htmltags);
+      // || (preg_match("/\"/i", $secvalue))
       }
     }
     

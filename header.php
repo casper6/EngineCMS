@@ -487,6 +487,8 @@ case "0": # Блок модуля
 		} else $class = " "; //no_class
 
 		if ($datashow == 1 or $shablon != "") { // Если показывать дату // доработать - функция из mainfile
+			$data = date2normal_view($row['date'])." ".$strelka." ";
+			/*
 			$dat = explode(" ",$row['date']);
 			$dat = explode("-",$dat[0]);
 			$p_date = intval($dat[2])." ".findMonthName($dat[1])." ".$dat[0];
@@ -498,6 +500,7 @@ case "0": # Блок модуля
 			if ($date_now2 == $p_date_1) $p_date = "Вчера";
 			if ($date_now3 == $p_date_1) $p_date = "Позавчера";
 			$data = "".$p_date." $strelka ";
+			*/
 		} else $data = "";
 
 		if ($shablon != "") {
@@ -1646,7 +1649,7 @@ if (strlen($add_fonts)>1) {
 		foreach ($add_fonts as $font) {
 			$font = explode(",",$font);
 			$effect_show = "";
-			if (isset($font[1])) $effect_show = '&and;effect='.$font[1]; // эффект шрифта
+			if (isset($font[1])) $effect_show = '&effect='.$font[1]; // эффект шрифта
 			$font = str_replace(" ", "+", $font[0]);
 			echo '<link href="http://fonts.googleapis.com/css?family='.$font.'&subset=latin,cyrillic'.$effect_show.'" rel="stylesheet" type="text/css">';
 		}

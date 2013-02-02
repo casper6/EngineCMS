@@ -2,7 +2,7 @@
 require_once("mainfile.php");
 global $prefix;
 
-
+$db->sql_query("select nocomm from `".$prefix."_pages`;") or $db->sql_query("ALTER TABLE `".$prefix."_pages` ADD `nocomm` INT( 1 ) DEFAULT '0' NOT NULL ;");
 
 /*
 $db->sql_query("select keywords from `".$prefix."_pages`;") or $db->sql_query("ALTER TABLE `".$prefix."_pages` ADD `description` VARCHAR( 200 ) NOT NULL , ADD `keywords` text NOT NULL ;");

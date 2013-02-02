@@ -150,7 +150,7 @@ function GraphicAdmin() {
 	}
 	if ($show_comments != 0) {
 		if ($show_comments == 2) $soderganie_menu .= "<a style='color: gray;' onclick=\"openbox('3','Комментарии');\">.</a>";
-		elseif ($show_comments == 1) $soderganie_menu .= "<button class='nothing small' onclick=\"openbox('3','Комментарии'); $('#hide_razdel').click();\" title='Комментарии за сегодня/вчера/позавчера'><span class=\"icon gray small\" data-icon=\"'\"></span><nobr>Комментарии: ".$comm_segodnya."/".$comm_vchera."/".$comm_pozavchera."</nobr></button>";
+		elseif ($show_comments == 1) $soderganie_menu .= "<button class='nothing medium' onclick=\"openbox('3','Комментарии'); $('#hide_razdel').click();\" title='Комментарии за сегодня/вчера/позавчера'><span class=\"icon gray small\" data-icon=\"'\"></span><nobr>Отзывы: ".$comm_segodnya."/".$comm_vchera."/".$comm_pozavchera."</nobr></button>";
 	}
 	$del_page = $db->sql_numrows($db->sql_query("SELECT pid from ".$prefix."_".$pages." where `tables`='del' limit 0,1"));
 	if ($del_page > 0) $soderganie_menu .= "<button class='nothing small' onclick=\"openbox('1','Корзина'); $('#hide_razdel').click();\" title='Удаленные страницы'><span class=\"icon gray small\" data-icon=\"T\"></span>Корзина</button>";
@@ -160,7 +160,7 @@ function GraphicAdmin() {
 
 	$soderganie_menu .= " <button class='nothing small' onclick=\"oformlenie_show('блок','3','block','/sys.php?op=mainpage&name=block&type=3'); $('#hide_razdel').click();\" title='Резервные копии созданных ранее страниц'><span class=\"icon gray small\" data-icon=\"R\"></span>Блоки</button> ";
 
-	$soderganie_menu .= "<button id='new_razdel_button' title='Добавить страницу...' class='small green nothing' onclick='location.href=\"/sys.php?op=base_pages_add_page#1\"'><span class=\"icon white small\" data-icon=\"+\"></span>страницу</button>
+	$soderganie_menu .= "<button id='new_razdel_button' title='Добавить страницу...' class='medium green nothing' onclick='location.href=\"/sys.php?op=base_pages_add_page#1\"'><span class=\"icon white small\" data-icon=\"+\"></span>страницу</button>
 	</div>";
 
 	echo "<table style='width:100%; background: #e2e5ea; margin-top:5px; padding:0;' cellspacing=0 cellpadding=5><tr valign=top><td id='razdel_td' class='radius nothing'><div id='razdels' style='background:#e7e9ec;'>";

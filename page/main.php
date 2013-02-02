@@ -704,7 +704,7 @@ $color = 1;
       else $sersv1 .= "</b> <img src=\"/images/sys/007.png\" width=16 style='margin-right:3px;' title='Голосовали:' /><b>".$pages_golos_num[$p_pid];
       $sersv = 90*$sersv/100;
     }
-    $gol = "<div id=golos".$p_pid.">";
+    $gol = "<div id=golos".$p_pid." class='golosa'>";
   
     if ($golostype == 0) 
       $gol .= "<table border=0 width=100% cellspacing=0 cellpadding=0><tr valign=top><td width=90 style=\"background:url(/images/zvezda_hide.gif) #FF6600 ".$sersv."px repeat-y; width:90px;\"><a onclick=\"page_golos(".$p_pid.",'".$DBName."',1,".$golostype.")\" title='+1 балл' style='cursor:pointer;'><img src=\"/images/zvezda_golos.gif\" width=18 /></a><a onclick=\"page_golos(".$p_pid.",'".$DBName."',2,".$golostype.")\" title='+2 балла' style='cursor:pointer;'><img src=\"/images/zvezda_golos.gif\" width=18 /></a><a onclick=\"page_golos(".$p_pid.",'".$DBName."',3,".$golostype.")\" title='+3 балла' style='cursor:pointer;'><img src=\"/images/zvezda_golos.gif\" width=18 /></a><a onclick=\"page_golos(".$p_pid.",'".$DBName."',4,".$golostype.")\" title='+4 балла' style='cursor:pointer;'><img src=\"/images/zvezda_golos.gif\" width=18 /></a><a onclick=\"page_golos(".$p_pid.",'".$DBName."',5,".$golostype.")\" title='+5 баллов' style='cursor:pointer;'><img src=\"/images/zvezda_golos.gif\" width=18 /></a></td><td width=3></td><td><img src=\"/images/sys/082.png\" width=16 style='margin-right:3px;' title='Оценка:' /><b>".$sersv1."</b></td></tr></table>";
@@ -1124,7 +1124,7 @@ if ( $cid=="" or ($active != 1 and !is_admin($admin))) {
   $titl = str_replace("\"","",$title); 
   $opentext = str_replace("jpg\"><img ","jpg\" class=\"lightbox\" rel=\"page\"><img ", str_replace("<img ","<img title='$titl' ", filter($row['open_text'])));
   $bodytext = str_replace("jpg\"><img ","jpg\" class=\"lightbox\" rel=\"page\"><img ", str_replace("<img ","<img title='$titl' ", filter($row['main_text'])));
-  
+  $nocomm = $row['nocomm'];
   // Вырезание авто-ссылок
   $opentext = preg_replace('/ссылка-.*-ссылка/Uis', '', $opentext);
   $opentext = str_replace('-ссылка-', '', $opentext);
@@ -1386,7 +1386,7 @@ $sersv = 90 * $sersv / 100;
 $golo = "";
 //if ($tmp==$golos_id) $golo .= "<b>Вы голосовали</b><br>";
 //if (is_admin($admin)) $gol .= "<b>Вы — администратор и можете голосовать повторно :)</b><br>";
-$golo .= "<div id=golos".$pid.">";
+$golo .= "<div id=golos".$pid." class='golosa'>";
 /*
 <table border=0 width=100% cellspacing=0 cellpadding=0><tr valign=top><td style=\"background:url(/images/zvezda_hide.gif) #FF6600 ".$sersv."px no-repeat; width:180px;\"><a onclick=\"page_golos(".$pid.",'".$DBName."',1)\" title='+1 балл' style='cursor:pointer;'><img src=\"/images/zvezda_golos.gif\" width=36 height=35 /></a><a onclick=\"page_golos(".$pid.",'".$DBName."',2)\" title='+2 балла' style='cursor:pointer;'><img src=\"/images/zvezda_golos.gif\" width=36 height=35 /></a><a onclick=\"page_golos(".$pid.",'".$DBName."',3)\" title='+3 балла' style='cursor:pointer;'><img src=\"/images/zvezda_golos.gif\" width=36 height=35 /></a><a onclick=\"page_golos(".$pid.",'".$DBName."',4)\" title='+4 балла' style='cursor:pointer;'><img src=\"/images/zvezda_golos.gif\" width=36 height=35 /></a><a onclick=\"page_golos(".$pid.",'".$DBName."',5)\" title='+5 баллов' style='cursor:pointer;'><img src=\"/images/zvezda_golos.gif\" width=36 height=35 /></a></td><td width=10></td><td>
 Общая оценка: ".$sersv1." из 5<br>Всего голосовало: ".$numrows2."</td></tr></table>";
@@ -1417,7 +1417,7 @@ global $comments;
 
 $page_comments = "";
 // Комментарии #######################################
-if ($comments>0 and $view!=4) { 
+if ($comments>0 and $view!=4 and $nocomm == 0) { 
   if (is_admin($admin)) { $adm = 1; } else { $adm = 0; }
   $add_css .= " comments_".$comment_shablon;
   $page_comments .= "<div class=page_comm><a name=comm id=comm></a>".$comments_1."</div>
@@ -1435,7 +1435,7 @@ if ($comments>0 and $view!=4) {
   // END OF Комментарии ################################
 
   $page_add_comments = "";
-  if ( $comments_add > 0 ) {
+  if ( $comments_add > 0) {
     //echo "<div id=addcomm>";
     $page_add_comments = addcomm($pid); // Форма добавления комментариев
     if ( $comments_add == 2 ) $page_add_comments .= "<br><b>Внимание!</b> Информация будет добавлена на сайт после проверки администратором.";
@@ -2125,10 +2125,11 @@ function savepost ($avtor, $post_title, $info, $num, $cid, $add){
   $post_title = trim(str_replace("document.cookie","", str_replace("  "," ",filter($post_title, "nohtml"))));
   $info = bbcode(trim(str_replace("document.cookie","",filter($info, "nohtml"))));
 
-  $ok = false;
-  if (function_exists('mb_strlen')) {
-  if(mb_strlen($_POST['keystring']) == 2) $ok = true;
-  } else $ok = true;
+  //$ok = false;
+  //if (function_exists('mb_strlen')) {
+  //if(mb_strlen($_POST['keystring']) == 2) $ok = true;
+  //} else 
+  $ok = true;
 
   $pattern = "/onlinedisk.ru\/image\/"."(\d+)"."\/IMG"."(\d+)".".jpg"."/i";
   $replacement = "onlinedisk.ru/get_image.php?id=$1";

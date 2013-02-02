@@ -88,6 +88,7 @@ function check_html ($str, $strip="") {
   $str = eregi_replace("<a[^>]*href[[:space:]]*=[[:space:]]*\"?[[:space:]]*([^\" >]*)[[:space:]]*\"?[^>]*>",'<a href="\\1">', $str);
   $str = eregi_replace("<[[:space:]]* img[[:space:]]*([^>]*)[[:space:]]*>", '', $str);
   $str = eregi_replace("<a[^>]*href[[:space:]]*=[[:space:]]*\"?javascript[[:punct:]]*\"?[^>]*>", '', $str);
+  /*
   $tmp = "";
   while (ereg("<(/?[[:alpha:]]*)[[:space:]]*([^>]*)>",$str,$reg)) {
     $i = strpos($str,$reg[0]);
@@ -104,6 +105,7 @@ function check_html ($str, $strip="") {
     $str = substr($str,$i+$l);
   }
   $str = $tmp . $str;
+  */
   return $str;
   exit;
   /* Squash PHP tags unconditionally */
@@ -243,15 +245,27 @@ function tipograf($text, $p=0) { // Типографика - все основн
   "-&nbsp;"=>"—&nbsp;",
   "&mdash;&nbsp;"=>"—&nbsp;",
   "( "=>"(",
-    " )"=>")",
+  "("=>" (",
+  " )"=>")",
+  ")"=>") ",
+  ") ."=>").",
+  ") ,"=>"),",
+  ") ;"=>");",
+  ") :"=>"):",
   " %"=>"% ",
   " ;"=>"; ",
   " !"=>"!",
   " ?"=>"?",
   " :"=>":",
   " ."=>".",
-  " ,"=>", ",
-  "..."=>"…",
+  " ,"=>",",
+  ","=>", ",
+  "...."=>"… ",
+  "..."=>"… ",
+  ".."=>"… ",
+  "…."=>"…",
+  "… ."=>"…",
+  "…"=>"… ",
   "&hellip;"=>"…",
   "FONT-WEIGHT"=>"font-weight",
   "FONT-STYLE"=>"font-style",
@@ -345,6 +359,10 @@ function dateresize($dat) { // Функция для приведения дат
 function date2normal_view($dat, $r=0, $t=0, $eng=0) { // Функция для приведения даты из формата 2012-02-20 в формат 20 Февраля 2012
   // $t = 1 - выводить также и время
   // $r = 2 - формат + Сегодня/Завтра/Послезавтра/Вчера/Позавчера
+  global $lang, $data_days;
+  if ($lang != "ru-RU") $eng = 1;
+  if ($data_days == true) $r = 2;
+
   if ($eng == 0) $months = array("?", "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь");
   else $months = array("?", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
   $year = date("Y");
@@ -365,7 +383,6 @@ function date2normal_view($dat, $r=0, $t=0, $eng=0) { // Функция для �
     //if ($y == 1) $data = str_replace(" ".$year, "", $data);
     if ($r == 2) { // Функция для приведения даты из формата 2012-02-20 в формат 20 Февраля 2012 + Сегодня/Вчера
       // доработать - настройка.
-      /*
       $datax1_1 = $d." ".$m." ".$y;
       $date_now = date("d m Y");
       $date_now2 = date("d m Y",time()-86400);
@@ -377,7 +394,6 @@ function date2normal_view($dat, $r=0, $t=0, $eng=0) { // Функция для �
       if ($date_now3 == $datax1_1) $data = "позавчера";
       if ($date_now4 == $datax1_1) $data = "завтра";
       if ($date_now5 == $datax1_1) $data = "послезавтра";
-      */
       $data = str_replace(" ".$year, "", $data);
     }
     if ($t != 0) $data .= $time;
