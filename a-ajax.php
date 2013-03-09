@@ -581,7 +581,7 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
   $color=$pageslistdel=$nowork = "";
 
   if ($id == 5) { // НОВОЕ
-    $pageslistdel .= "<table width=100% class=table_light><thead><tr><th>Дата последнего изменения</th><th>Раздел </th><th>Страница</th></tr></thead><tbody>";
+    $pageslistdel .= "<table width=100% class=table_light><thead><tr><th>Дата последнего изменения</th><th>Раздел </th><th class='gray'>Включение</th><th>Страница</th></tr></thead><tbody>";
     $result6 = $db->sql_query("SELECT `pid`, `module`, `title`, `active`, `date`, `redate` from ".$prefix."_pages where `tables`='pages' order by `redate` desc limit 0,1000");
     while ($row6 = $db->sql_fetchrow($result6)) {
         $pid = $row6['pid'];
@@ -595,17 +595,18 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
         if (date2normal_view(str_replace(".","-",$row6['redate'])) == date2normal_view(str_replace(".","-",$row6['date']))) $gray_date = "";
         if (!isset($module)) $title_razdel_and_bd[$module] = "РАЗДЕЛ УДАЛЁН! &rarr; $module";
         $m_title = $title_razdel_and_bd[$module];
-        if ($row6['active'] == 1) $p_active_color = "white";
+
+        if ($row6['active'] == 1) { $p_active_color = "white"; $vkl_title = ""; }
         else {
           $p_active_color = "#dddddd";
-          $m_title = "<a onclick=offpage(".$pid.",1) class=\"punkt\" title=\"Включение страницы\"><img class=\"icon2 i44\" src=/images/1.gif>Включить</a>";
+          $vkl_title = "<a onclick=offpage(".$pid.",1) class=\"punkt\" title=\"Включение страницы\"><img class=\"icon2 i44\" src=/images/1.gif>Включить</a>";
         }
-        $pageslistdel .= "<tr id=1page".$pid." bgcolor=".$p_active_color." class='tr_hover'><td class='".$gray_date."'><nobr>".$date."</nobr></td><td>".$m_title."</td><td><a title='Удалить страницу в Корзину' onclick=delpage(".$pid.") style=\"cursor:pointer;\"><img class=\"icon2 i33\" src=/images/1.gif align=right></a><a title='Изменить страницу' href='sys.php?op=base_pages_edit_page&name=".$module."&pid=".$pid."'><img class=\"icon2 i35\" src=/images/1.gif></a> <a title='Открыть страницу на сайте' target=_blank href=-".$module."_page_".$pid.">".$title."</a>&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>";
+        $pageslistdel .= "<tr id=1page".$pid." bgcolor=".$p_active_color." class='tr_hover'><td class='".$gray_date."'><nobr>".$date."</nobr></td><td>".$m_title."</td><td>".$vkl_title."</td><td><a title='Удалить страницу в Корзину' onclick=delpage(".$pid.") style=\"cursor:pointer;\"><img class=\"icon2 i33\" src=/images/1.gif align=right></a><a title='Изменить страницу' href='sys.php?op=base_pages_edit_page&name=".$module."&pid=".$pid."'><img class=\"icon2 i35\" src=/images/1.gif></a> <a title='Открыть страницу на сайте' target=_blank href=-".$module."_page_".$pid.">".$title."</a>&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>";
     }
     $pageslistdel .= "</tbody></table>";
 
   } elseif ($id == 4) { // ДОБАВЛЕННОЕ ПОСЕТИТЕЛЯМИ
-    $pageslistdel .= "<table width=100% class=table_light><thead><tr><th class='gray'>Дата создания</th><th class='gray'>Раздел </th><th class='gray'>Страница</th></tr></thead><tbody>";
+    $pageslistdel .= "<table width=100% class=table_light><thead><tr><th class='gray'>Дата создания</th><th class='gray'>Раздел </th><th class='gray'>Проверка</th><th class='gray'>Страница</th></tr></thead><tbody>";
     $result7 = $db->sql_query("SELECT `pid`, `module`, `title`, `date` from ".$prefix."_pages where (`active`='2' or `active`='3') and `tables`!='del' order by `date` desc limit 0,10000");
     while ($row7 = $db->sql_fetchrow($result7)) {
       $pid = $row7['pid'];
@@ -616,7 +617,7 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
         $module = $row7['module'];
       if (!isset($module)) $title_razdel_and_bd[$module] = "РАЗДЕЛ УДАЛЁН! &rarr; $module";
       $date = date2normal_view(str_replace(".","-",$row7['date']), 2, 1);
-      $pageslistdel .= "<tr id=2page".$pid." bgcolor=#ffffff class='tr_hover'><td class='gray'><nobr>".$date."</nobr></td><td class='gray'>".$title_razdel_and_bd[$module]."</td><td><a title='Удалить страницу в Корзину' onclick=delpage(".$pid.") style=\"cursor:pointer;\"><img class=\"icon2 i33\" src=/images/1.gif align=right></a><a title='Изменить страницу в Редакторе' href='sys.php?op=base_pages_edit_page&name=".$module."&pid=".$pid."'><img class=\"icon2 i35\" src=/images/1.gif></a> <a title='Открыть страницу на сайте' target=_blank href=-".$module."_page_".$pid.">".$title."</a>&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>";
+      $pageslistdel .= "<tr id=1page".$pid." bgcolor=#ffffff class='tr_hover'><td class='gray'><nobr>".$date."</nobr></td><td class='gray'>".$title_razdel_and_bd[$module]."</td><td><a onclick=offpage(".$pid.",1) class=\"punkt\" title=\"Включение страницы\"><img class=\"icon2 i44\" src=/images/1.gif>Включить</a></td><td><a title='Удалить страницу в Корзину' onclick=delpage(".$pid.") style=\"cursor:pointer;\"><img class=\"icon2 i33\" src=/images/1.gif align=right></a><a title='Изменить страницу в Редакторе' href='sys.php?op=base_pages_edit_page&name=".$module."&pid=".$pid."'><img class=\"icon2 i35\" src=/images/1.gif></a> <a title='Открыть страницу на сайте' target=_blank href=-".$module."_page_".$pid.">".$title."</a>&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>";
     }
   $pageslistdel .= "</tbody></table><i>Максимум отображения: 10.000 страниц.</i>";
 
@@ -763,11 +764,12 @@ if ($func == "rep") { // Копия/Перемещения/Ярлык стран
     $price = $row['price'];
     $copy = $row['copy'];
     $sort = $row['sort'];
+    $nocomm = $row['nocomm'];
     $re2 = $id;
     if ($copy == 0) $copy = $id;
     else $re2 = $copy;
   // создадим такую же
-  $db->sql_query("INSERT INTO ".$prefix."_pages VALUES (NULL, '$razdel', '$papka', '$title', '$opentext', '$bodytext', '$data', '$data2', '0', '$active', '0', '0', '$foto', '$search', '$mainpage', '$rss', '$price', '$desc', '$keys', 'pages', '$copy', '$sort');") or $info = "Создать копию не удалось."; 
+  $db->sql_query("INSERT INTO ".$prefix."_pages VALUES (NULL, '$razdel', '$papka', '$title', '$opentext', '$bodytext', '$data', '$data2', '0', '$active', '0', '0', '$foto', '$search', '$mainpage', '$rss', '$price', '$desc', '$keys', 'pages', '$copy', '$sort', '$nocomm');") or $info = "Создать копию не удалось."; 
   $db->sql_query("UPDATE ".$prefix."_pages SET `copy`='$re2' WHERE pid='$id'") or $info .= "Изменить номер в копируемой странице не удалось.";
   }
   //////////////////
@@ -791,11 +793,15 @@ if ($func == "rep") { // Копия/Перемещения/Ярлык стран
     $rss = $row['rss'];
     $price = $row['price'];
     $sort = $row['sort'];
+    $nocomm = $row['nocomm'];
   // создадим такую же
     if (isset($copy)) {
       if ($copy == 0) $copy = $id;
     } else $copy = $id;
-  $db->sql_query("INSERT INTO ".$prefix."_pages VALUES (NULL, '".mysql_real_escape_string($razdel)."', '$papka', '".mysql_real_escape_string($title)."', '".mysql_real_escape_string($opentext)."', '".mysql_real_escape_string($bodytext)."', '$data', '$data2', '0', '$active', '0', '0', '$foto', '".mysql_real_escape_string($search)."', '$mainpage', '$rss', '".mysql_real_escape_string($price)."', '".mysql_real_escape_string($desc)."', '".mysql_real_escape_string($keys)."', 'pages', '0', '$sort');") or $info = "Скопировать не удалось."; 
+
+  // `pid`,`module`,`cid`,`title`,`open_text`,`main_text`,`date`,`redate`,`counter`,`active`,`golos`,`comm`,`foto`,`search`,`mainpage`,`rss`,`price`,`description`,`keywords`,`tables`,`copy`,`sort`,`nocomm`
+    $sql = "INSERT INTO ".$prefix."_pages VALUES (NULL, '".mysql_real_escape_string($razdel)."', '$papka', '".mysql_real_escape_string($title)."', '".mysql_real_escape_string($opentext)."', '".mysql_real_escape_string($bodytext)."', '$data', '$data2', '0', '$active', '0', '0', '$foto', '".mysql_real_escape_string($search)."', '$mainpage', '$rss', '".mysql_real_escape_string($price)."', '".mysql_real_escape_string($desc)."', '".mysql_real_escape_string($keys)."', 'pages', '0', '$sort', '$nocomm');";
+  $db->sql_query($sql) or $info = "Скопировать не удалось."; 
   }
   //////////////////
   if ($type == 3) { // переместить

@@ -252,6 +252,9 @@ function tipograf($text, $p=0) { // Типографика - все основн
   ") ,"=>"),",
   ") ;"=>");",
   ") :"=>"):",
+  ") )"=>"))",
+  "– "=>" — ",
+  "- "=>" — ",
   " %"=>"% ",
   " ;"=>"; ",
   " !"=>"!",
@@ -502,7 +505,7 @@ function my_calendar($fill='', $modul, $showdate='') { // Функция выв�
 ////////////////////////////////////////////////////////////
 function select($name,$vars,$vars_name,$znachenie,$add='') { // генерация SELECT элемента формы
   // $add - добавление, например id или onchange...
-  $return = "<select name=\"".$name."\"".$add.">";
+  $return = "<select name='".$name."'".$add.">";
   $vars = explode(",",$vars);
   $vars_name = explode(",",$vars_name);
   $vybor = false; // если выбор не сделан - напишем этот невыбранный вариант!
@@ -519,11 +522,11 @@ function select($name,$vars,$vars_name,$znachenie,$add='') { // генераци
   return $return;
 }
 /////////////////////////////////////////////////////////////
-function input($name,$znachenie,$size="40",$type="text") { // генерация INPUT элемента формы
+function input($name,$znachenie,$size="40",$type="text",$add='') { // генерация INPUT элемента формы
   if ($type=="txt") 
-    return "<textarea name=\"".$name."\" rows=3 cols=80 style='width:100%; height:".$size."px;'>".$znachenie."</textarea>";
+    return "<textarea name='".$name."'".$add." rows=3 cols=80 style='width:100%; height:".$size."px;'>".$znachenie."</textarea>";
   else
-    return "<input type=\"".$type."\" name=\"".$name."\" value=\"".$znachenie."\" size=\"".$size."\">";
+    return "<input type='".$type."' name='".$name."'".$add." value='".$znachenie."' size='".$size."'>";
 }
 ////////////////////////////////////////////////////////////
 function smile_generate($smiles, $folder="") { // генерация полоски смайлов

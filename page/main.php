@@ -263,8 +263,8 @@ $ANDDATA="";
 
 $p_pid_last = 1; // последняя категория (для форума)
 
-
-$soderganieOPEN = "<table class='all_page' width='100%'><tr valign='top'><td>";
+$soderganieOPEN = "";
+//$soderganieOPEN = "<table class='all_page' width='100%'><tr valign='top'><td>";
 $soderganieMENU = top_menu(0,0);
 $soderganieALL = "<center><div class='polosa'></div></center>";
 $soderganieALL .= "на ".date2normal_view($showdate);
@@ -297,8 +297,8 @@ if ($nu > 0 and $view!=4) {
 
  # Если не выбран ни один каталог
 if ($div_or_table == 0) {
-  if ($view==1) $soderganieALL .= "<table cellspacing=0 cellpadding=3>";
-  else $soderganieALL .= "<table cellspacing=0 cellpadding=3>";
+  if ($view==1) $soderganieALL .= "<table cellspacing=0 cellpadding=3 width=100%>";
+  else $soderganieALL .= "<table cellspacing=0 cellpadding=3 width=100%>";
 }
 $sql2 = "SELECT * FROM ".$prefix."_".$tip." where `tables`='pages' and (copy='0' or copy=pid) and `module`='$DBName' AND `active`='1'$datavybor ORDER BY ".$sort."";
 $result2 = $db->sql_query($sql2);
@@ -343,8 +343,8 @@ while ($row2 = $db->sql_fetchrow($result2)) {
     $soderganieALL .= "</tr>";
 	} else { ////////////////////////////////////////////////////////	<div class=cat_page></div>
     $soderganieALL .= "<tr valign='top'><td>
-    <div class='cat_razdel'></div>
-    <div class='venzel'></div><A href='/-".$DBName."_page_".$p_pid."'><div class='cat_page_title'>".$title."</div></A>";
+
+    <div class='page_link_title'><A href='/-".$DBName."_page_".$p_pid."'><h1 class='cat_page_title'>".$title."</h1></A></div>";
     if (trim($text)!="") $soderganieALL .= "<div class='cat_page_text'>".$text."</div>";
     $soderganieALL .= "<div class='cat_page_counter'>";
     if ($pсid>0 and $c_name[$pсid]!="") $soderganieALL .= "<img width='16' src='/images/sys/papka.png' align='bottom' title='Раздел:' style='padding-right:5px;'><A href='/-".$DBName."_cat_".$pсid."'><b>".$c_name[$pсid]."</b></a> &nbsp; ";
@@ -358,10 +358,10 @@ while ($row2 = $db->sql_fetchrow($result2)) {
 $soderganieALL .= "</table>";
 
 }
-if ($div_or_table == 0) {
-  if ($view==1) $soderganieALL .= "</td></tr></table>";
-  else $soderganieALL .= "</td></tr></table>";
-}
+//if ($div_or_table == 0) {
+  //if ($view==1) $soderganieALL .= "</td></tr></table>";
+  //else $soderganieALL .= "</td></tr></table>";
+//}
 
 
 //////////////////////////////////////////////////////////////
@@ -470,8 +470,8 @@ if ($cid == 0 and $view!=2) {
   # Если не выбран ни один каталог
 
   if ($div_or_table == 0) {
-    if ($view==1) $soderganieALL .= "<table cellspacing=0 cellpadding=3>";
-    else $soderganieALL .= "<table cellspacing=0 cellpadding=3>";
+    if ($view==1) $soderganieALL .= "<table cellspacing=0 cellpadding=3 width=100%>";
+    else $soderganieALL .= "<table cellspacing=0 cellpadding=3 width=100%>";
   }
   $and_1_1 = "";
   $and_1_2 = "";
@@ -512,7 +512,7 @@ $result2 = $db->sql_query($sql2);
 
 $proc = intval(100 / $limkol);
 $soderganieALL2 = "";
-if ($limkol > 1) $soderganieALL2 = "<tr valign=top><td width=$proc>"; // <table width=100% border=0 class=proc_table><tr><td width=$proc>";
+if ($limkol > 1) $soderganieALL2 = "<tr valign=top><td width='".$proc."%'>"; // <table width=100% border=0 class=proc_table><tr><td width=$proc>";
 //} else 
 $limkol_num = 0;
 $kol_num = 0;
@@ -532,9 +532,9 @@ $numm = 0;
 if ($nu > 0) { //  and $view != 4
 
 if ($razdel_shablon == 0) { // Если используются внутренние шаблоны
-// Получаем шаблон
-$sha = shablon_show("razdel", $view);
-$add_css = " razdel_".$view;
+  // Получаем шаблон
+  $sha = shablon_show("razdel", $view);
+  $add_css = " razdel_".$view;
 } else {
   // Доступ к шаблону
   $sql = "select text from ".$prefix."_mainpage where `tables`='pages' and id='$razdel_shablon' and type='6'";
@@ -555,21 +555,22 @@ $add_css = " razdel_".$view;
     $result7 = $db->sql_query($sql);
     $row7 = $db->sql_fetchrow($result7);
     $r_id = $row7['id'];
-    $result5 = $db->sql_query("SELECT id, name, text FROM ".$prefix."_mainpage WHERE `tables`='pages' and (useit = '$r_id' or useit = '0') and type='4'");
+    $result5 = $db->sql_query("SELECT `id`, `name`, `text` FROM ".$prefix."_mainpage WHERE `tables`='pages' and (`useit` = '$r_id' or `useit` = '0') and type='4'");
     while ($row5 = $db->sql_fetchrow($result5)) {
       $s_id = $row5['id'];
       $n = $row5['name'];
       $s_names[$s_id] = $n;
       // Найдем значение всех полей для данных страниц
-      $result6 = $db->sql_query("SELECT name, pages FROM ".$prefix."_spiski WHERE type='$n'");
+      $result6 = $db->sql_query("SELECT `name`, `pages` FROM ".$prefix."_spiski WHERE type='$n'");
       while ($row6 = $db->sql_fetchrow($result6)) {
-      $n1 = $row6['name'];
-      $n2 = explode(" ", str_replace("  ", " ", trim($row6['pages'])));
+        $n1 = $row6['name'];
+        $n2 = explode(" ", str_replace("  ", " ", trim($row6['pages'])));
         foreach ($n2 as $n2_1 => $n2_2) {
           $s_opts[$n][$n2_2] = $n1;
         }
       }
     }
+//print_r ($s_opts);
 }
 //$soderganieALL2 = "";
 $color = 1;
@@ -822,7 +823,7 @@ if ($pсid==0) $c_name[$pсid] = "";
   } // end while
 if ($div_or_table == 0) {
   if ($cid == 0) $soderganieALL .= $soderganieALL2."</table>"; // </table>
-  elseif ($view != 4) $soderganieALL .= "<table cellspacing=0 cellpadding=3>".$soderganieALL2."</table>";
+  elseif ($view != 4) $soderganieALL .= "<table cellspacing=0 cellpadding=3 width=100%>".$soderganieALL2."</table>";
 } else $soderganieALL .= $soderganieALL2."<div style='clear:both;'></div>";
 
 if ($view!=4) {

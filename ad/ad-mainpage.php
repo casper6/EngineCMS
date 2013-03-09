@@ -699,7 +699,12 @@ function edit_main($id) {
 	$razdel_name = array();
 	$razdel_engname = array();
 	$result2 = $db->sql_query("select id, name, title from ".$prefix."_mainpage where `tables`='pages' and name!='users' and type='2' order by title");
-	while ($row2 = $db->sql_fetchrow($result2)) { $raz_id = $row2['id']; $razdel_engname[] = $row2['name']; $razdel_var[] = $row2['id']; $razdel_names[$raz_id] = str_replace(","," ",trim($row2['title'])); }
+	while ($row2 = $db->sql_fetchrow($result2)) { 
+		$raz_id = $row2['id']; 
+		$razdel_engname[] = $row2['name']; 
+		$razdel_var[] = $row2['id']; 
+		$razdel_names[$raz_id] = str_replace(","," ",trim($row2['title']));
+	}
 	$razdel_var = implode(",",$razdel_var);
 	$razdel_name = implode(",",$razdel_names);
 	$razdel_engname = implode(",",$razdel_engname);
@@ -1432,9 +1437,12 @@ function edit_main($id) {
 	<table width=100% class=table_light>";
 	if ($name == 4 or $name == 0 or $name == 1 or $name == 13 or $name == 11 or $name == 9 or $name == 30) {
 	echo "<tr>
-	<td><b>Блок использует содержание Раздела:</b></td>
-	<td>".select("options[module_name]", $razdel_engname."", $razdel_name."ко всем Разделам", $module_name)."</td>
-	</tr>";
+	<td><b>Блок использует содержание Раздела:</b><br>Всех разделов – оставьте поле пустым, определенного раздела — выберите этот раздел и нажмите «Добавить», нескольких разделов — добавьте несколько разделов через запятую.</td>
+	<td>".input("options[module_name]", $module_name, "25","input"," id='add_razdel'")." 
+<a class='button small' onclick='add_raz();'>&larr; Добавить</a><br>
+".select("razdels", $razdel_engname."", $razdel_name."ко всем Разделам", "", " id='razdels'")."
+<script>function add_raz() { if ($('#razdels').val() != '') $('#add_razdel').val( $('#add_razdel').val() + $('#razdels').val() + ',' ); }</script>
+	</td></tr>";
 	}
 	if ($name == 22 or $name == 23) {
 	echo "<tr>
@@ -1713,7 +1721,7 @@ function edit_main($id) {
 	if ($name == 0 or $name == 9 or $name == 23) {
 	echo "<tr>
 	<td>C какой страницы начинать вывод? Укажите ее номер в выводимой очередности. Используется для создания нескольких блоков, содержащих определенное кол-во выводимых ссылок на страницы: например, первый начинается с 1 по 5, а второй с 6 по 10. Если разместить эти блоки рядом — получатся 2 колонки.</td>
-	<td>".select("options[number]", "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,24,29,49,74,99,199,499,999,1999,2999,3999,4999,9999", "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,25,30,50,75,100,200,500,1000,2000,3000,4000,5000,10000", $number)."</td>
+	<td>".input("options[number]", $number)."</td>
 	</tr>";
 	}
 
@@ -1727,7 +1735,7 @@ function edit_main($id) {
 	if ($name == 0 or $name == 9 or $name == 13 or $name == 23) {
 	echo "<tr>
 	<td>Кол-во выводимых в блок ссылок на страницы (строк)</td>
-	<td>".select("options[size]", "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,25,30,50,75,100,200,500,1000", "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,25,30,50,75,100,200,500,1000", $size)."</td>
+	<td>".input("options[size]", $size)."</td>
 	</tr>";
 	}
 

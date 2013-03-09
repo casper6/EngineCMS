@@ -116,7 +116,7 @@ function offpage(id,on) {
 	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'offpage', 'id': id },
 	    success: function(data){
-	    	if (on == 1) $('#1page'+id).html('<td colspan=3 class="notice success"><h2 class=center>Страница включена</h2></td>');
+	    	if (on == 1) $('#1page'+id).html('<td colspan=4 class="notice success"><h2 class=center>Страница включена</h2></td>');
 	    	else $('#page'+id).html(data);
 	     }
 	});
@@ -149,7 +149,7 @@ function delpage(id) {
 	});
 	$('#page'+id).hide();
 	$('#1page'+id).hide();
-	$('#2page'+id).hide();
+	//$('#2page'+id).hide();
 }
 function deletepage(id) {
 	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",

@@ -112,12 +112,12 @@ function edit_base_pages_category($cid, $red=0) {
     });
     </script>";
     } elseif ($red==1) {
-        echo "<textarea id='desc' name='desc' rows='15' cols='80'>".$desc."</textarea>";
+        echo "<textarea id='desc' name='desc' style='width: 100%; height: 300px;'>".$desc."</textarea>";
     } elseif ($red==3) {
         echo "<script type='text/javascript'> 
     $(document).ready(function()
     {  $('#desc').editor({ focus: true, toolbar: 'classic', css: ['/ed/js/editor/css/editor.css'] });  });
-    </script><textarea id='desc' name='desc' rows='15' cols='100'>".$desc."</textarea>";
+    </script><textarea id='desc' name='desc' style='width: 100%; height: 300px;'>".$desc."</textarea>";
     } elseif ($red==4) {
         global $red4_div_convert;
         echo "<script type='text/javascript'>
@@ -717,10 +717,7 @@ function base_pages_edit_page($pid, $red=0) {
     $module = $row['module'];
     //$foto = $row['foto'];
     // узнать - это галерея или нет
-    //$sql2 = "select id, title from ".$prefix."_mainpage where name='".$module."' and `tables`='pages' and type='2'";
-    //$result2 = $db->sql_query($sql2);
-    //$row2 = $db->sql_fetchrow($result2);
-    //$id = $row2['id'];
+
     //$tex = $row2['text'];
     //$title = $row2['title'];
     //if (!strpos($tex,"media=1")) $foto = "";
@@ -971,6 +968,12 @@ function base_pages_edit_page($pid, $red=0) {
   // Подсоединие списков ////////////////////////////////
   if ($copy != 0) $page_id = $copy;
   // Ищем все списки
+
+  $sql2 = "select id from ".$prefix."_mainpage where name='".$module."' and `tables`='pages' and type='2'";
+    $result2 = $db->sql_query($sql2);
+    $row2 = $db->sql_fetchrow($result2);
+    $id = $row2['id'];
+      
   $sql = "select * from ".$prefix."_mainpage where (useit='".$id."' or useit='0') and type='4' order by id";
   $result = $db->sql_query($sql);
   while ($row = $db->sql_fetchrow($result)) {

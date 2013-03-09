@@ -365,6 +365,13 @@ case "0": # Блок модуля
 	if ($useitX=="все" or $useitX=="") { // Показывать ВСЕ разделы или выбранный
 		$and2 = ""; 
 		$pages="pages";
+	} elseif ( strpos($useitX, ",") ) { // Показывать определенные разделы, через «,»
+		$a = array();
+		$use = explode(",",$useitX);
+		foreach ($use as $value) {
+			if ($value != "") $a[] = "module='$value'";
+		}
+		$and2 = " and (".implode(" or ",$a).")";
 	} else $and2 = " and module='$useitX'"; 
 	if ($cid_open=="все" or $cid_open=="") { // Показывать ВСЕ папки или выбранную
 		$and3 = "";
@@ -447,15 +454,16 @@ case "0": # Блок модуля
 		$p_cid = $row['cid'];
 		$title = filter($row['title']);
 		$titl = str_replace("\"","",$title);
-		$open_text = filter(strip_tags(str_replace("<img ","<img title='$titl' ",$row['open_text']), '<b><br><i><img><table><tr><td><a><strong><em><embed><param><object><p><iframe><div>'), "", 0);
-		$main_text = filter(str_replace("<img ","<img title='$titl' ",$row['main_text']), "", 0);
-		
-		// Вырезание авто-ссылок
-	  $open_text = preg_replace('/ссылка-.*-ссылка/Uis', '', $open_text);
-	  $open_text = str_replace('-ссылка-', '', $open_text);
-	  $open_text = str_replace('<hr class="editor_cut">', '', $open_text);
-	  $main_text = str_replace('<!--more-->', '<hr>', $main_text);
-  
+
+		if ($openshow > 0 or $shablon != "") {
+			$open_text = filter(strip_tags(str_replace("<img ","<img title='$titl' ",$row['open_text']), '<b><br><i><ul><li><ol><dl><dt><img><table><tr><td><a><strong><em><embed><param><object><p><iframe><div>'), "", 0);
+			$main_text = filter(str_replace("<img ","<img title='$titl' ",$row['main_text']), "", 0);
+			// Вырезание авто-ссылок
+		  $open_text = preg_replace('/ссылка-.*-ссылка/Uis', '', $open_text);
+		  $open_text = str_replace('-ссылка-', '', $open_text);
+		  $open_text = str_replace('<hr class="editor_cut">', '', $open_text);
+		  $main_text = str_replace('<!--more-->', '<hr>', $main_text);
+	  	}
 		if ($shablon != "") {
 			$active = $row['active'];
 			switch ($active) {
@@ -1662,7 +1670,7 @@ if (strlen($add_fonts)>1) {
 	echo "</head>\n<body".$add_body.">";
 	if ($kickstart == 1) echo "<a id='top-of-page'></a><div id='wrap' class='clearfix'>";
 	if ($kickstart == 3 or $kickstart == 8) echo "<div class='container'>";
-	if ($kickstart == 4) echo "<div id='page'>";
+	//if ($kickstart == 4) echo "<div id='page'>";
 
 	// Исправляем старые ошибки: # проверить и удалить
 	/*
