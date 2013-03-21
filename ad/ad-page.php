@@ -272,11 +272,12 @@ function base_pages_add_page($name, $razdel, $red=0, $new=0, $pid=0) {
   echo "<br><br>
   <label><input type=checkbox name=active value=1 checked> Включить страницу</label> <a onclick=\"show('help3')\" class=help>?</a><br><div id='help3' style='display:none;'><br>Если поставить эту галочку — ссылка на эту страницу будет видна в автоматическом списке страниц данного раздела, а также в блоках, которые выводят страницы данного раздела (если они созданы). Если галочку убрать — на эту страницу все равно можно поставить ссылку из любого места на сайте или с другого сайта и страница будет видна тем, кто перейдет по этой вручную созданной ссылке. Если вы хотите, чтобы в общем списке страниц данная страница не отображалась, а раскрывала более подробную информацию при переходе с другой страницы — отключите ее и сделайте на нее ссылку вручную.<br></div>
 
-  <br><a onclick=\"show('key'); show('key_hide')\" class=help id='key_hide'>Заполнить ключевые слова...</a>
+  <br><a onclick=\"$('#key').show('slow'); $('#key_hide').hide(); $('#seoshow').show(); seo();\" class=help id='key_hide'>Заполнить ключевые слова...</a>
   <div id='key' style='display:none;'>
-    <h3>Ключевые слова для поисковых систем:</h3><textarea name=keywords2 class=big rows=2 cols=10 style='width:97%;'></textarea>
+    <h3>Ключевые слова для поисковых систем:</h3><textarea id=keywords2 name=keywords2 class=big rows=2 cols=10 style='width:97%;'></textarea>
   <br><div class='help small'>?</div> <span class=small>Максимум 1000 символов. Разделять словосочетания желательно запятой. Если пусто - используются <b>Теги</b> (если и они пустые - используются Ключевые словосочетания из <a href=/sys.php?op=Configure target=_blank>Настроек портала</a>).</span><br><br>
-    <h3>Описание для поисковых систем:</h3><textarea name=description2 class=big rows=2 cols=10 style='width:97%;'></textarea>
+
+    <h3>Описание для поисковых систем:</h3><textarea id=description2 name=description2 class=big rows=2 cols=10 style='width:97%;'></textarea>
   <br><div class='help small'>?</div> <span class=small>Максимум 200 символов. Если пусто - используется <b>Название</b> страницы.</span><br><br>
     <h3>Тэги (слова для похожих по тематике страниц):</h3> <textarea name=search class=big rows=2 cols=10 style='width:97%;'></textarea>
   <br><div class='help small'>?</div> <span class=small>Разделять пробелами, а слова в словосочетаниях символом + <br>
@@ -332,17 +333,7 @@ function base_pages_add_page($name, $razdel, $red=0, $new=0, $pid=0) {
   echo "<br><h2>Предисловие (начальный текст)</h2>";
   if ($red==0) {
   } elseif ($red==2) {
-      echo "<textarea cols=80 id=editor name=open_text rows=10>".$shablon1."</textarea>
-  <script type='text/javascript'>
-  CKEDITOR.replace( 'editor', {
-   filebrowserBrowseUrl : '/ckfinder/ckfinder.html',
-   filebrowserImageBrowseUrl : '/ckfinder/ckfinder.html?Type=Images',
-   filebrowserFlashBrowseUrl : '/ckfinder/ckfinder.html?Type=Flash',
-   filebrowserUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
-   filebrowserImageUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images',
-   filebrowserFlashUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash'
-  });
-  </script>";
+      // редактор CKE удален
   } elseif ($red==1) {
       echo "<textarea id='open_text' name=open_text rows=7 cols=40 style='width:100%;'>".$shablon1."</textarea>";
   } elseif ($red==3) {
@@ -370,17 +361,7 @@ function base_pages_add_page($name, $razdel, $red=0, $new=0, $pid=0) {
   echo "<br><h2>Содержание (основной текст)</h2>";
   if ($red==0) {
   } elseif ($red==2) {
-      echo "<textarea cols=80 id=edit name=main_text rows=15>".$shablon2."</textarea>
-  <script type='text/javascript'>
-  CKEDITOR.replace( 'edit', {
-   filebrowserBrowseUrl : '/ckfinder/ckfinder.html',
-   filebrowserImageBrowseUrl : '/ckfinder/ckfinder.html?Type=Images',
-   filebrowserFlashBrowseUrl : '/ckfinder/ckfinder.html?Type=Flash',
-   filebrowserUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
-   filebrowserImageUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images',
-   filebrowserFlashUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash'
-  });
-  </script>";
+      // редактор CKE удален
   } else {
       echo "<textarea id='main_text' class='redactor' name=main_text rows=15 cols=40 style='width:100%;'>".$shablon2."</textarea>";
   }
@@ -488,10 +469,58 @@ function base_pages_add_page($name, $razdel, $red=0, $new=0, $pid=0) {
   }
   }
   echo "<input type=hidden name=op value=".$admintip."_save_page>
+
+
+<script type='text/javascript'>
+function seo(){
+  var x=document.getElementById('open_text').value;
+  var y=document.getElementById('main_text').value;
+  var kolkey=document.getElementById('kolkey').value;
+  var geo=document.getElementById('geo').value;
+  var koldes=250;
+  var a = (x+y);
+  if ( (x + y).length >= 400) {
+    xps=new XMLHttpRequest();
+    xps.onreadystatechange=function() {
+      if (xps.readyState==4 && xps.status==200)
+        var key = document.getElementById('keywords2').innerHTML = xps.responseText;
+      if( key.length >= 3 )  {
+        $('#key').show('slow'); $('#key_hide').hide();
+        document.getElementById('wordstat').innerHTML = '<h2>Загружаю популярные подходящие словосочетания...</h2>';
+        zapros('metod=des&x='+a+'&key='+key+'&kol='+koldes,document.getElementById('description2'),'des');
+        zapros('metod=procent&x='+a+'&key='+key,document.getElementById('procent'),'proc');
+        zapros('metod=wordstat&x='+a+'&geo='+geo+'&key='+key,document.getElementById('wordstat'),'word');
+      } 
+    }
+    xps.open('POST','includes/seo.php',true);
+    xps.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+    xps.send('metod=newkey&x='+a+'&kol='+kolkey);
+  } else {
+    document.getElementById('ajax').innerHTML='Текст меньше 400 символов.';
+  }
+}
+function zapros(url,mesto,metod) {
+  metod=new XMLHttpRequest();
+  metod.onreadystatechange=function() {
+    if (metod.readyState==4 && metod.status==200) mesto.innerHTML= metod.responseText;
+  }
+  metod.open('POST','includes/seo.php',true);
+  metod.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+  metod.send(url);
+}
+</script>
+
+<span id='ajax'></span>
+<div id=seoshow style='display:none;'>
+<p><b>Регион:</b> <input id='geo' value='51' size=5> <a href='http://search.yaca.yandex.ru/geo.c2n' target='_blank'>Найти регион</a> <b>Ключевых слов:</b> <input id='kolkey' value='8' size=2></p>
+<input type='button' value='Пересчитать' onclick='seo()'>
+<p id='procent'></p><p id='wordstat'></p>
+</div>
+
   </td></tr></table></div></form>";
   admin_footer();
 }
-#####################################################################################################################
+######################################################################################################
 function base_pages_save_page($cid, $module, $title, $open_text, $main_text, $foto, $link_foto, $search, $active, $mainpage, $rss, $nocomm, $price, $add, $data1, $data2, $data3, $data4, $keywords2, $description2, $sor, $open_text_mysor, $main_text_mysor) {
   global $red, $tip, $admintip, $prefix, $db, $admin_file, $now;
   /*

@@ -596,18 +596,18 @@ function recash($url, $main=1) { // Обновление кеша
     }
     $db->sql_query("DELETE FROM ".$prefix."_cash WHERE `url`='".$url."'"); 
   } else { // если кеш файловый
-    if ($main == 1) unlink("cashe/-index");
+    if ($main == 1) if (file_exists("cashe/-index")) unlink("cashe/-index");
 	if (mb_strpos($url,"_page_")) {
-      unlink("cashe/".$u[0]);
+      if (file_exists("cashe/".$u[0])) unlink("cashe/".$u[0]);
 	  	$files = glob("cashe/".$u[0]."_cat_*");
     $c = count($files);
     if (count($files) > 0) {
         foreach ($files as $file) {
-            unlink($file);
+            if (file_exists($file)) unlink($file);
         }
     } 
     }
-    unlink("cashe/".$url);
+    if (file_exists("cashe/".$url)) unlink("cashe/".$url);
   }
 }
 ///////////////////////////////////////////////////////////////
@@ -669,7 +669,7 @@ function antivirus($x=0) { // антивирус для защиты от htacce
     // меняем .htaccess на .ht_backup
     global $ht_backup;
     if ( $ht_backup != "" and file_exists($ht_backup) ) {
-      unlink('.htaccess');
+      if (file_exists('.htaccess')) unlink('.htaccess');
       copy($ht_backup, '.htaccess');
       // Оповестим админа
       if ($x == 0) $subg = "Найден и обезврежен «.htaccess»-вирус."; 
