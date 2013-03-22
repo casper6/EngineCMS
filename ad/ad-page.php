@@ -173,7 +173,7 @@ function delete_all_pages($del="del") {
 
 # СТРАНИЦЫ
 function base_pages_add_page($name, $razdel, $red=0, $new=0, $pid=0) {
-  global $tip, $admintip, $prefix, $db, $red, $new, $pid, $redaktor, $toolbars;
+  global $tip, $admintip, $prefix, $db, $red, $new, $pid, $redaktor, $toolbars, $geo, $kolkey;
   include("ad-header.php");
   echo "<a name=1></a>";
   $id = intval ($id);
@@ -384,12 +384,12 @@ function base_pages_add_page($name, $razdel, $red=0, $new=0, $pid=0) {
   $sql = "select id, title, name, text from ".$prefix."_mainpage where (useit='$id' or useit='0') and type='4' order by title";
   $result = $db->sql_query($sql);
   while ($row = $db->sql_fetchrow($result)) {
-  $s_id = $row['id'];
-  $s_title = $row['title'];
-  $s_name = $row['name'];
-  $options = explode("|", $row['text']); $options = $options[1];
-  $type=0; $shablon=""; 
-  parse_str($options); // раскладка всех настроек списка
+    $s_id = $row['id'];
+    $s_title = $row['title'];
+    $s_name = $row['name'];
+    $options = explode("|", $row['text']); $options = $options[1];
+    $type=0; $shablon=""; 
+    parse_str($options); // раскладка всех настроек списка
   switch($type) {
   ///////////////////
   case "4": // строка
@@ -470,7 +470,6 @@ function base_pages_add_page($name, $razdel, $red=0, $new=0, $pid=0) {
   }
   echo "<input type=hidden name=op value=".$admintip."_save_page>
 
-
 <script type='text/javascript'>
 function seo(){
   var x=document.getElementById('open_text').value;
@@ -512,8 +511,7 @@ function zapros(url,mesto,metod) {
 
 <span id='ajax'></span>
 <div id=seoshow style='display:none;'>
-<p><b>Регион:</b> <input id='geo' value='51' size=5> <a href='http://search.yaca.yandex.ru/geo.c2n' target='_blank'>Найти регион</a> <b>Ключевых слов:</b> <input id='kolkey' value='8' size=2></p>
-<input type='button' value='Пересчитать' onclick='seo()'>
+<input type='button' value='Пересчитать' onclick='seo()'> <b>Регион:</b> <input id='geo' value='".$geo."' size=5> <a href='http://search.yaca.yandex.ru/geo.c2n' target='_blank'>Найти регион</a> <b>Ключевых слов:</b> <input id='kolkey' value='".$kolkey."' size=2>
 <p id='procent'></p><p id='wordstat'></p>
 </div>
 

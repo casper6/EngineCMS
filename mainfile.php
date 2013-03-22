@@ -128,7 +128,7 @@
   $ht_backup = $row['ht_backup']; // Файл, в котором лежит резервная копия .htaccess
   $captcha_ok = intval($row['captcha_ok']); // отключение проверки комментариев
   $jqueryui = $show_comments = $show_userposts = $normalize = "";
-  list($jqueryui, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $search_design, $tag_design, $add_fonts, $normalize, $project_logotip, $project_name) = explode("|",trim($row['nocashe']));
+  list($jqueryui, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $search_design, $tag_design, $add_fonts, $normalize, $project_logotip, $project_name, $geo, $kolkey) = explode("|",trim($row['nocashe']));
   //if ($add_fonts != "") $add_fonts = explode(".",$add_fonts);
   $project_name = filter($project_name);
   if ($project_logotip == "") $project_logotip = "/img/logotip.png";
@@ -142,6 +142,8 @@
   if ($ad_fon == "") $ad_fon = "0";
   if ($search_design == "") $search_design = "1";
   if ($tag_design == "") $tag_design = "1";
+  if ($geo == "") $geo = "51";
+  if ($kolkey == "") $kolkey = "8";
   list($company_name, $company_fullname, $company_address, $company_time, $company_tel, $company_sot, $company_fax, $company_email, $company_map, $company_people) = explode("|||||",trim($row['sgatie']));
   $red_type = intval($row['red']); // редактор
   if (!isset($red) or $red=="") $red = $red_type;
