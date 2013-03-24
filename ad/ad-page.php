@@ -487,6 +487,8 @@ function seo(){
         $('#key').show('slow'); $('#key_hide').hide();
         document.getElementById('wordstat').innerHTML = '<h2>Загружаю популярные подходящие словосочетания...</h2>';
         zapros('metod=des&x='+a+'&key='+key+'&kol='+koldes,document.getElementById('description2'),'des');
+		zapros('metod=open_text&x='+x+'&key='+key,document.getElementById('open_text'),'op');
+        zapros('metod=main_text&y='+y+'&key='+key,document.getElementById('main_text'),'te');
         zapros('metod=procent&x='+a+'&key='+key,document.getElementById('procent'),'proc');
         zapros('metod=wordstat&x='+a+'&geo='+geo+'&key='+key,document.getElementById('wordstat'),'word');
       } 

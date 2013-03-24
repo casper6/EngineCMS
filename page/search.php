@@ -14,7 +14,7 @@
 
   $slov = str_replace("—","-",str_replace("."," ",str_replace(","," ",str_replace(":"," ",str_replace(";"," ",str_replace("!"," ",str_replace("?"," ",str_replace("\""," ",$slov)))))))); // меняя знаки пепинания на пробелы, чтобы потом слова не слились
   $slov = preg_replace("/[^(\w)|(\x7F-\xFF)|(\s)(\-)]/","",$slov); // чистим поисковое слово
-  $slov = trim(preg_replace("/  +/"," ",$slov)); // убираем лишние пробелы
+  $slov = trim(mb_strtolower(preg_replace("/  +/"," ",$slov))); // убираем лишние пробелы и приводим к нижнему регистру
 
   $soderganiemain .= "<div class='main_search_line'><form method=POST action='--search' class=main_search_form><input type='search' placeholder='Поиск по сайту' style='width:98%' name=slovo class='main_search_input' value='".$slov."' autofocus><input type='submit' name='ok' value='Найти' class='main_search_button'></form></div>";
 
@@ -143,17 +143,17 @@ else {
   $add_pages = $add_razdel = $add_papka = array();
 
   foreach ($search_line as $s_line) {
-    $add_pages[] = " or (`title` LIKE '%".$s_line."%' or `main_text` LIKE '%".$s_line."%' or `open_text` LIKE '%".$s_line."%')";
+    $add_pages[] = " or (LOWER(`title`) LIKE '%".$s_line."%' or LOWER(`main_text`) LIKE '%".$s_line."%' or LOWER(`open_text`) LIKE '%".$s_line."%')";
   }
   $add_pages = implode("",$add_pages);
 
   foreach ($search_line as $s_line) {
-    $add_papka[] = " or (`title` LIKE '%".$s_line."%' or `description` LIKE '%".$s_line."%')";
+    $add_papka[] = " or (LOWER(`title`) LIKE '%".$s_line."%' or LOWER(`description`) LIKE '%".$s_line."%')";
   }
   $add_papka = implode("",$add_papka);
 
   foreach ($search_line as $s_line) {
-    $add_razdel[] = " or (`title` LIKE '%".$s_line."%' or `useit` LIKE '%".$s_line."%')";
+    $add_razdel[] = " or (LOWER(`title`) LIKE '%".$s_line."%' or LOWER(`useit`) LIKE '%".$s_line."%')";
   }
   $add_razdel = implode("",$add_razdel);
 
@@ -165,7 +165,7 @@ else {
 
   if ($papka == "") { // если не выбрана определенная папка - ищем и по разделам
   ////////////////////////////////////////////////////////////////////////////////////////
-      $res2 = $db->sql_query("SELECT `id`,`name`,`title`,`useit` FROM ".$prefix."_mainpage where `tables`='pages' and type='2' and ( (`title` LIKE '%".$s."%' or `useit` LIKE '%".$s."%')".$add_razdel." ) limit ".$col_razdel);
+      $res2 = $db->sql_query("SELECT `id`,`name`,`title`,`useit` FROM ".$prefix."_mainpage where `tables`='pages' and type='2' and ( (LOWER(`title`) LIKE '%".$s."%' or LOWER(`useit`) LIKE '%".$s."%')".$add_razdel." ) limit ".$col_razdel);
       $allpids = $pids1 = $pids2 = $pids3 = $rr_title = $rr_useit = $rr_name = array(); //  = $rr_name
       while ($row = $db->sql_fetchrow($res2)) {
         $id = $row['id'];
@@ -197,7 +197,7 @@ else {
         }
       }
   ////////////////////////////////////////////////////////////////////////////////////////
-      $res2 = $db->sql_query("SELECT `cid`,`module`,`title`,`description` FROM ".$prefix."_pages_categories where `tables`='pages' and ( (`title` LIKE '%".$s."%' or `description` LIKE '%".$s."%')".$add_papka." ) limit ".$col_papka);
+      $res2 = $db->sql_query("SELECT `cid`,`module`,`title`,`description` FROM ".$prefix."_pages_categories where `tables`='pages' and ( (LOWER(`title`) LIKE '%".$s."%' or LOWER(`description`) LIKE '%".$s."%')".$add_papka." ) limit ".$col_papka);
       $allpids = $pids1 = $pids2 = $pids3 = $rr_title = $rr_description = $rr_module = array(); //  = $rr_name
       while ($row = $db->sql_fetchrow($res2)) {
         $id = $row['cid'];
@@ -229,7 +229,7 @@ else {
       }
   }
   ////////////////////////////////////////////////////////////////////////////////////////
-      $res2 = $db->sql_query("SELECT `pid`,`module`,`cid`,`title`,`open_text`,`main_text` FROM ".$prefix."_pages where `tables`='pages'".$papka." and `active`='1' and (`copy`='0' or `copy`=pid) and ( (`title` LIKE '%".$s."%' or `main_text` LIKE '%".$s."%' or `open_text` LIKE '%".$s."%')".$add_pages." ) limit ".$col_page);
+      $res2 = $db->sql_query("SELECT `pid`,`module`,`cid`,`title`,`open_text`,`main_text` FROM ".$prefix."_pages where `tables`='pages'".$papka." and `active`='1' and (`copy`='0' or `copy`=pid) and ( (LOWER(`title`) LIKE '%".$s."%' or LOWER(`main_text`) LIKE '%".$s."%' or LOWER(`open_text`) LIKE '%".$s."%')".$add_pages." ) limit ".$col_page);
       $allpids = $pids1 = $pids2 = $pids3 = $pp_title = $pp_module = $pp_cid = $pp_open_text = array();
       while ($row = $db->sql_fetchrow($res2)) {
         $id = $row['pid'];

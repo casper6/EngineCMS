@@ -55,59 +55,40 @@ if ($metod == "wordstat") {
   }
   echo "</tr></table>";
 }
-
 function newkey($text,$kol) {
   # Чистим текст
-  $text = normaltext($text,0); // полная функция для ключевиков
-  # убираем стоп слова
-  $text = stopslov($text);
-  $text = sklonenie($text); // Удаление склонений
+  $text2 = normaltext($text,0); // полная функция для ключевиков
+$text = stopslov($text2);
+$text = sklonenie($text); // Удаление склонений
   # Получаем массив слов
-  $text = explode(" ", trim($text));
-  $text = delslov($text,4);  // удаляем слова в 3 и менее символа
-  $data='';
+ $text = explode(" ", trim($text));
+ $size1=count($text);
+    $text = delslov($text,4);  // удаляем слова в 3 и менее символа
+	$data='';
     foreach($text as $key=>$word) $data.=' '.strtolower($word);
     $text=explode(' ', trim($data)); $size=count($text);
     $arr1=array(); $arr2=array(); $arr3=array();
-
     ### Строим массив слов отсортированный по частоте вложений в тексте
     for($i=0; $i<$size; $i++) {
         $word=$text[$i];
-        if($arr1[$word])$arr1[$word]++; 
-        else $arr1[$word]=1;
+        if($arr1[$word])$arr1[$word]++; else $arr1[$word]=1;
     }
     arsort($arr1);
-    ### Строим массив фраз состоящих из двух слов отсортированный по частоте вложений в тексте
-  if ($a == 2) {
-    for($i=0; $i<$size-1; $i++) {
-      $word=$text[$i].' '.$text[$i+1];
-      if($arr2[$word])$arr2[$word]++; 
-      else $arr2[$word]=1; 
+    $data=array(); 
+    foreach($arr1 as $word=>$count) {
+        $data[$word]=$count;
     }
-    arsort($arr2);
-    ### Строим массив фраз состоящих из трех слов отсортированный по частоте вложений в тексте
-    for($i=0; $i<$size-2; $i++) {
-      $word=$text[$i].' '.$text[$i+1].' '.$text[$i+2];
-      if($arr3[$word])$arr3[$word]++; 
-      else $arr3[$word]=1;
-    }
-    arsort($arr3);
-  }
-    ### Выбираем $n первых слов с максимальной частотой вхожений
-  $n = $kol-1;
-  $data=array(); $i=0;
-  foreach($arr1 as $word=>$count) {
-    $data[$word]=$count;
-    if($i++==$n)break;
-  }
-  arsort($data); $text='';
-
-  ### Переводим массив фраз в текст, опять таки с учетом частот вложений
-  foreach($data as $word=>$count) $text.=', '.$word; $text=substr($text, 1);
-  ### Возвращаем полученный результат
-  return trim($text);
+    arsort($data); reset($data); $text='';
+    ### Возвращаем полученный результат
+foreach($data as $word=>$count) {
+$raz = mb_substr_count($text2, trim($word), "UTF-8");
+$rf += $raz*100/$size1;
+	$text.=', '.$word;
+    if($rf > $kol + 1) break;
+	++$rf;
+	}
+	return trim(substr($text, 1));
 }
-
 function newdesc($text,$key,$kol) {
   $text = normaltext($text,1);  // краткая функция для описания
   # убираем стоп слова
@@ -130,37 +111,36 @@ function newdesc($text,$key,$kol) {
   }
   return $newdesk;
 }
-
 function normaltext($text, $a) { // Нормализация текста - убираем все лишнее
-  $text= mb_strtolower($text); // все в нижний регистр
-  $text = preg_replace( "'<script[^>]*>.*?</script>'usi", '', $text );  
-  $text = preg_replace( "'<noindex[^>]*>.*?</noindex>'usi", '', $text ); // убераем noindex     
+  $text= mb_convert_case($text, MB_CASE_LOWER, "UTF-8"); // все в нижний регистр
+  $text = preg_replace( "'<script[^>]*>.*?</script>'usi", ' ', $text );  
+  $text = preg_replace( "'<noindex[^>]*>.*?</noindex>'usi", ' ', $text ); // убераем noindex     
   $text = preg_replace( '/<!--.+?-->/u', '', $text );
   $text = preg_replace( '/{.+?}/u', '', $text );
   $text = preg_replace( '/<a\s+.*?href="([^"]+)"[^>]*>([^<]+)<\/a>/uis', '\2 (\1)', $text );
   $text = preg_replace('/<[^>]*>/u', ' ', $text);
   // email 
   $regex = '/(([_A-Za-z0-9-]+)(\\.[_A-Za-z0-9-]+)*@([A-Za-z0-9-]+)(\\.[A-Za-z0-9-]+)*)/iex';
-  $text = preg_replace($regex, '', $text);
+  $text = preg_replace($regex, ' ', $text);
   $regex = "~<noscript[^>]*?>.*?</noscript>~usi";
   $text = preg_replace($regex, ' ', $text); // убираем ноуиндекс
   $regex = "~<table[^>]*?>.*?</table>~usi";
   $text = preg_replace($regex, ' ', $text);
   if ($a !== 1) { // для description не нужно
     // убираем ненужные знаки
-    $text = str_replace(array("&nbsp;", "\r\n", "\r", "\n", "\t", "-", ",", ".", "&", "%", "?", "/", "(", ")", ";", ":", "`", "_", "'", "=", "+", "*", "^", "#", "!", "]", "["), " ", $text);
+    $text = str_replace(array("&nbsp;", "\r\n", "\r", "\n", "\t", "-", ",", ".", "&", "%", "?", "/", "(", ")", ";", ":", "`", "_", "'", "=", "+", "*", "^", "#", "!", "]", "[", "\""), " ", $text);
   }
   return trim($text);
 }
 
 function stopslov($text) { // Удаление стоп слов
-  $name = 'common-words.txt';
-  if (file_exists($name)) {
-    $data = file($name);
-    foreach ($data as $value) {
-      $text = str_replace(trim($value), '', $text);
+  $name = 'common-words.txt'; // СВОЛОТА в ASCII а в общем хз
+  // поэтому пишем жестко
+     $data = file_get_contents($name);;
+	$data2 = explode("|", trim($data));
+    foreach ($data2 as $value) {
+      $text = str_replace(" ".trim($value)." ", ' ', $text);
     }
-  }
   return $text;
 }
   
@@ -170,56 +150,51 @@ function delslov($array,$n) { // Удаление слов до 4 символо
   }
   return $array;
 }
- 
+
 function sklonenie($text) { // Поиск склонений слов
-  $arr2 = explode(" ", trim($text));
-  $arr = delslov($arr2,4);
-  foreach($arr as $s11) { 
+  $arr2 = explode(" ", trim($text)); $arr2 = array_unique($arr2);
+  foreach($arr2 as $s11) { 
   // $s1 Наше слово по которому будем искать склонение для нормального слова (пример - стол)
    $s1 = trim($s11);
-   if (utf8_substr($s1, -1) == "а" || utf8_substr($s1, -1) == "ь") {
-   $s2 = preg_replace("/(.*).$/ui", "\\1", $s1); // удаляем последний символ из слова если требуется для склонения (пример - макулатура , рубль)
-   $zamena1 = array("/\b".$s2."ей\b/ui", "/\b".$s2."я\b/ui", "/\b".$s2."и\b/ui", "/\b".$s2."ем\b/ui", "/\b".$s2."ём\b/ui", "/\b".$s2."ы\b/ui", "/\b".$s2."у\b/ui", "/\b".$s2."ой\b/ui", "/\b".$s2."е\b/ui", "/\b".$s2."ю/u" );
-   $text = preg_replace($zamena1 , $s1, $text);
-   }
-  elseif (utf8_substr($s1, -2) == "ая" || utf8_substr($s1, -2) == "ые"){
-   $s3 = preg_replace("/(.*).$\b/ui", "\\2", $s1); // удаляем последних 2 символа из слова (пример - земляная , земляной, земляные)
-   $zamena2 = array("/\b".$s3."ые\b/ui","/\b".$s3."ая\b/ui","/\b".$s3."ую\b/ui", "/\b".$s3."ой\b/ui", "/\b".$s3."ий\b/ui", "/\b".$s3."ым\b/ui", "/\b".$s3."ых\b/ui" );
-   $text = preg_replace($zamena2 , $s1, $text);
-   } else {
-   $zamena = array("/\b".$s1."ов\b/ui", "/\b".$s1."а\b/ui", "/\b".$s1."у\b/ui", "/\b".$s1."ом\b/ui", "/\b".$s1."е\b/ui", "/\b".$s1."ы\b/ui", "/\b".$s1."и\b/ui" ); // Замена для простого как СТОЛ и СТУЛ 
-   $text = preg_replace($zamena , $s1, $text);
-   }
-  }
+   if(mb_strlen($s1, "UTF-8") > 3) {
+   $s4 = " ".mb_substr($s1, 0, -2, "UTF-8"); // удаляем последний символ из слова если требуется для склонения (пример - макулатура , рубль)
+   $zamena2 = array($s4."ев",$s4."ов",$s4."ье",$s4."иями",$s4."ями",$s4."ами",$s4."еи",$s4."ии",$s4."ией",$s4."ей",$s4."ой",$s4."ий",$s4."иям",$s4."ям",$s4."ием",$s4."ем",
+$s4."ам",$s4."ом",$s4."ах",$s4."иях",$s4."ях",$s4."ию",$s4."ью",$s4."ия",$s4."ья",$s4."ок", $s4."мва", $s4."яна", $s4."ровать",$s4."ег",$s4."ги",$s4."га",$s4."сть",$s4."сти");
+  $text = str_replace($zamena2 , " ".$s1." ", $text);
+     $s2 = " ".$s1." ";
+   $zamena = array($s2."ов ", $s2."а", $s2."у", $s2."ом", $s2."е", $s2."ы", $s2."и" ); // Замена для простого как СТОЛ и СТУЛ 
+   $text = str_replace($zamena , " ".$s1." ", $text);
+      $s3 = " ".mb_substr($s1, 0, -1, "UTF-8");  // удаляем последний символ из слова если требуется для склонения (пример - макулатура , рубль)
+   $zamena1 = array($s3."ев",$s3."ов",$s3."ье",$s3."иями",$s3."ями",$s3."ами",$s3."еи",$s3."ии",$s3."и",$s3."ией",$s3."ей",$s3."ой",$s3."ий",$s3."й",$s3."иям",$s3."ям",$s3."ием",$s3."ем",
+$s3."ам",$s3."ом",$s3."о",$s3."у",$s3."ах",$s3."иях",$s3."ях",$s3."ы",$s3."ию",$s3."ью",$s3."ю",$s3."ия",$s3."ья",$s3."я",$s3."ок", $s3."мва", $s3."яна", $s3."ровать",$s3."ег",$s3."ги",$s3."га",$s3."сть",$s3."сти");
+$text = str_replace($zamena1 , " ".$s1." ", $text);
+}}
   return $text;
 }
-
 function razmetka($text, $keys) { //Функция поика ключевых слов в тексте и бозначения их жирным шрифтом
   $text = str_replace(array("<b>", "</b>"), "", $text);
   $key = explode(",", trim($keys));
   foreach($key as $s1) {
-   $zamena = "/\b".trim($s1)."\b/ui";
-    $na = "<b>".$s1."</b>";
-   $text = preg_replace($zamena, $na, $text);
+   $zamena = trim($s1);
+    $na1 = "<b>".$s1."</b>";
+   $text = str_replace($zamena, $na1, $text);
    // также найдем склонения ключевых слов и тоже обозначим их жирным
-   if (utf8_substr($s1, -1) == "а" || utf8_substr($s1, -1) == "ь") {
-   $s2 = preg_replace("/(.*).$/ui", "\\1", $s1); // удаляем последний символ из слова если требуется для склонения (пример - макулатура , рубль)
-   $zamena1 = array("/\b".$s2."ей\b/ui", "/\b".$s2."я\b/ui", "/\b".$s2."и\b/ui", "/\b".$s2."ем\b/ui", "/\b".$s2."ём\b/ui", "/\b".$s2."ы\b/ui", "/\b".$s2."у\b/ui", "/\b".$s2."ой\b/ui", "/\b".$s2."е\b/ui", "/\b".$s2."ю\b/ui" );
-   $na = array("<b>".$s2."ей</b>", "<b>".$s2."я</b>", "<b>".$s2."и</b>", "<b>".$s2."ем</b>", "<b>".$s2."ём</b>", "<b>".$s2."ы</b>", "<b>".$s2."у</b>", "<b>".$s2."ой</b>", "<b>".$s2."е</b>", "<b>".$s2."ю</b>" );
-   $text = preg_replace($zamena1, $na, $text);
+    $s3 = " ".$s1;
+   $zamena = array($s3."ов", $s3."а", $s3."у", $s3."ом", $s3."е", $s3."ы", $s3."и" ); // Замена для простого как СТОЛ и СТУЛ
+   $na2 = array("<b>".$s3."ов</b>", "<b>".$s3."а</b>", "<b>".$s3."у</b>", "<b>".$s3."ом</b>", "<b>".$s3."е</b>", "<b>".$s3."ы</b>", "<b>".$s3."и</b>" );   
+   $text = str_replace($zamena , $na2, $text);
+   $s2 = " ".mb_substr($s1, 0, -1, "UTF-8"); // удаляем последний символ из слова если требуется для склонения (пример - макулатура , рубль)
+   $zamena1 = array($s2."ей", $s2."я", $s2."и", $s2."ем", $s2."ём", $s2."ы", $s2."у", $s2."ой", $s2."е", $s2."ю" );
+   $na3 = array("<b>".$s2."ей</b>", "<b>".$s2."я</b>", "<b>".$s2."и</b>", "<b>".$s2."ем</b>", "<b>".$s2."ём</b>", "<b>".$s2."ы</b>", "<b>".$s2."у</b>", "<b>".$s2."ой</b>", "<b>".$s2."е</b>", "<b>".$s2."ю</b>" );
+   $text = str_replace($zamena1 , $na3, $text);
+      $s4 = " ".mb_substr($s1, 0, -2, "UTF-8"); // ищем земляной, земляные заменяем на земляная
+   $zamena2 = array($s4."ие",$s4."ые",$s4."ое",$s4."ими",$s4."ыми",$s4."ей",$s4."ий",$s4."ый",$s4."ой",$s4."ем",$s4."им",$s4."ым",$s4."ом",
+$s4."его",$s4."ого",$s4."ему",$s4."ому",$s4."их",$s4."ых",$s4."ую",$s4."юю",$s4."ая",$s4."яя",$s4."ою",$s4."ею");
+$na4 = array("<b>".$s4."ие</b>", "<b>".$s4."ые</b>", "<b>".$s4."ое</b>", "<b>".$s4."ими</b>", "<b>".$s4."ыми</b>", "<b>".$s4."ей</b>", "<b>".$s4."ий</b>", "<b>".$s4."ый</b>", "<b>".$s4."ой</b>", "<b>".$s4."ем</b>", "<b>".$s4."им</b>", "<b>".$s4."ым</b>", "<b>".$s4."ом</b>", "<b>".$s4."его</b>", "<b>".$s4."ого</b>", "<b>".$s4."ему</b>", "<b>".$s4."ому</b>", "<b>".$s4."их</b>", "<b>".$s4."ых</b>", "<b>".$s4."ую</b>", "<b>".$s4."юю</b>", "<b>".$s4."ая</b>", "<b>".$s4."яя</b>", "<b>".$s4."ою</b>", "<b>".$s4."ею</b>");
+   $text = str_replace($zamena2 , $na4, $text);
    }
-  elseif (utf8_substr($s1, -2) == "ая" || utf8_substr($s1, -2) == "ые"){
-   $s3 = preg_replace("/(.*).$/ui", "\\2", $s1); // удаляем последних 2 символа из слова (пример - земляная , земляной, земляные)
-   $zamena2 = array("/\b".$s3."ая\b/ui","/\b".$s3."ую\b/ui", "/\b".$s3."ой\b/ui", "/\b".$s3."ий\b/ui", "/\b".$s3."ым\b/ui", "/\b".$s3."ых\b/ui" );
-   $na = array("<b>".$s3."ая</b>","<b>".$s3."ую</b>", "<b>".$s3."ой</b>", "<b>".$s3."ий</b>", "<b>".$s3."ым</b>", "<b>".$s3."ых</b>" );
-   $text = preg_replace($zamena2 , $na, $text);
-   } else {
-   $zamena1 = array("/\b".$s1."ов\b/ui", "/\b".$s1."а\b/ui", "/\b".$s1."у\b/ui", "/\b".$s1."ом\b/ui", "/\b".$s1."е\b/ui", "/\b".$s1."ы\b/ui", "/\b".$s1."и\b/ui" );
-   $na = array("<b>".$s1."ов</b>", "<b>".$s1."а</b>", "<b>".$s1."у</b>", "<b>".$s1."ом</b>", "<b>".$s1."е</b>", "<b>".$s1."ы</b>", "<b>".$s1."и</b>" ); // Замена для простого как СТОЛ и СТУЛ 
-   $text = preg_replace($zamena1, $na, $text);
-   }
-   }
-   $text = str_replace("</b> <b>", " ", $text);
+   $zamen = array("<b></b>", "<b> </b>", "</b></b>", "<b><b>");
+   $text = str_replace($zamen, " ", $text);
   return  $text; 
 }
 
@@ -235,13 +210,15 @@ function utf8_substr($str,$start) { // Функция substr для работы
 
 function procent($text,$keys) {
   # Чистим текст
-  $text = stopslov($text);
-  $text = normaltext($text,0); // полная функция для ключевиков
-  $text = sklonenie($text); // Удаление склонений
+  $text2 = normaltext($text,0); // полная функция для ключевиков
+$text = stopslov($text2);
+$text = sklonenie($text); // Удаление склонений
+
   # Получаем массив слов
   $textm = explode(" ", trim($text));
   $size=count($textm);
   $keys = explode(",", trim($keys));
+  $textm = delslov($textm,4);
   $result = 'Слово с наибольшим весом является самым главным в тексте, 
   чтобы повысить вес слова – употребите его чаще или поставьте ближе к началу текста.<br>';
   $result .= '<table class="table_light" width=600>';
@@ -249,6 +226,7 @@ function procent($text,$keys) {
     krsort($textm);
     $i= 1;
     $ves = array();
+	
       foreach($textm as $key=>$word) { 
      $ves[$word]+= $i;  
       ++$i;
@@ -284,7 +262,7 @@ function yapars($word, $geo) {
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
   curl_setopt($ch, CURLOPT_REFERER, 'http://wordstat.yandex.ru/');
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
-  curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 1.1.4322; .NET CLR 2.0.50727; .NET CLR 3.0.04506.30)");
+  curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
   curl_setopt($ch, CURLOPT_COOKIE, 'fuid01='.$fuid01);
   $contents = curl_exec($ch);
   curl_close($ch);
