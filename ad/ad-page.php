@@ -10,6 +10,55 @@
   $tip = "pages";
   $admintip = "base_pages";
 
+function seo($edit=false){
+  global $geo, $kolkey;
+  echo "<script type='text/javascript'>
+function seo(){
+  var x=document.getElementById('open_text').value;
+  var y=document.getElementById('main_text').value;
+  var kolkey=document.getElementById('kolkey').value;
+  var kolslov=document.getElementById('kolslov').value;
+  var geo=document.getElementById('geo').value;
+  var koldes=250;
+  var a = (x+y);
+  if ( (x + y).length >= 400) {
+    xps=new XMLHttpRequest();
+    xps.onreadystatechange=function() {
+      if (xps.readyState==4 && xps.status==200)
+        var key = document.getElementById('keywords2').innerHTML = xps.responseText;
+      if( key.length >= 3 )  {
+        $('#key').show('slow'); $('#key_hide').hide();
+    document.getElementById('procent').innerHTML = '<h2>Загружаю вычисления...</h2>';
+        document.getElementById('wordstat').innerHTML = '<h2>Загружаю популярные подходящие словосочетания...</h2>';
+        zapros('metod=des&x='+a+'&key='+key+'&kol='+koldes,document.getElementById('description2'),'des');
+        zapros('metod=procent&x='+a+'&key='+key,document.getElementById('procent'),'proc');
+        zapros('metod=wordstat&x='+a+'&geo='+geo+'&key='+key,document.getElementById('wordstat'),'word');
+      } 
+    }
+    xps.open('POST','includes/seo.php',true);
+    xps.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+    xps.send('metod=newkey&x='+a+'&kol='+kolkey+'&kolslov='+kolslov);
+  } else {
+    document.getElementById('ajax').innerHTML='Текст меньше 400 символов.';
+  }
+}
+function zapros(url,mesto,metod) {
+  metod=new XMLHttpRequest();
+  metod.onreadystatechange=function() {
+    if (metod.readyState==4 && metod.status==200) mesto.innerHTML= metod.responseText;
+  }
+  metod.open('POST','includes/seo.php',true);
+  metod.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+  metod.send(url);
+}
+</script>
+
+<span id='ajax'></span><div id=seoshow ";
+if ($edit == false) echo "style='display:none;'";
+echo "><input type='button' value='Пересчитать' onclick='seo()'> <b>Регион:</b> <input id='geo' value='".$geo."' size=5> <a href='http://search.yaca.yandex.ru/geo.c2n' target='_blank'>Найти регион</a> <b>Ключевых слов всего:</b> <input id='kolkey' value='".$kolkey."' size=2> <b>Из них словосочетаний:</b> <input id='kolslov' value='".$kolkey."' size=2><p id='procent'></p><p id='wordstat'></p>
+</div>";
+}
+
 function edit_base_pages_category($cid, $red=0) {
   global $module, $name, $tip, $admintip, $prefix, $db, $title_razdel_and_bd; //, $toolbars;
   include("ad-header.php");
@@ -274,14 +323,15 @@ function base_pages_add_page($name, $razdel, $red=0, $new=0, $pid=0) {
 
   <br><a onclick=\"$('#key').show('slow'); $('#key_hide').hide(); $('#seoshow').show(); seo();\" class=help id='key_hide'>Заполнить ключевые слова...</a>
   <div id='key' style='display:none;'>
-    <h3>Ключевые слова для поисковых систем:</h3><textarea id=keywords2 name=keywords2 class=big rows=2 cols=10 style='width:97%;'></textarea>
-  <br><div class='help small'>?</div> <span class=small>Максимум 1000 символов. Разделять словосочетания желательно запятой. Если пусто - используются <b>Теги</b> (если и они пустые - используются Ключевые словосочетания из <a href=/sys.php?op=Configure target=_blank>Настроек портала</a>).</span><br><br>
+    <h3>Ключевые слова для поисковых систем: <a onclick=\"show('help10')\" class='help'>?</a></h3><textarea id=keywords2 name=keywords2 class=big rows=2 cols=10 style='width:97%;'></textarea>
+  <br><div id='help10' style='display:none;'><span class=small>Максимум 1000 символов. Разделять словосочетания желательно запятой. Если пусто - используются <b>Теги</b> (если и они пустые - используются Ключевые словосочетания из <a href=/sys.php?op=Configure target=_blank>Настроек портала</a>).</span><br></div><br>
 
-    <h3>Описание для поисковых систем:</h3><textarea id=description2 name=description2 class=big rows=2 cols=10 style='width:97%;'></textarea>
-  <br><div class='help small'>?</div> <span class=small>Максимум 200 символов. Если пусто - используется <b>Название</b> страницы.</span><br><br>
-    <h3>Тэги (слова для похожих по тематике страниц):</h3> <textarea name=search class=big rows=2 cols=10 style='width:97%;'></textarea>
-  <br><div class='help small'>?</div> <span class=small>Разделять пробелами, а слова в словосочетаниях символом + <br>
-  Писать только существительные! НИКАКИХ ПРЕДЛОГОВ! Максимум неограничен. Разделять слова необходимо пробелом. Разделять слова в словосочетаниях символом +, например: игра+разума игротека game. Писать желательно в единственном числе и именительном падеже. Можно создать Блок «Облако тегов». Теги также могут выводиться на страницах (в настройках Раздела).</span><br><br>
+    <h3>Описание для поисковых систем: <a onclick=\"show('help11')\" class='help'>?</a></h3><textarea id=description2 name=description2 class=big rows=5 cols=10 style='width:97%;'></textarea>
+  <br><div id='help11' style='display:none;'><span class=small>Максимум 200 символов. Если пусто - используется <b>Название</b> страницы.</span><br></div><br>
+
+    <h3>Тэги (слова для похожих по тематике страниц): <a onclick=\"show('help12')\" class='help'>?</a></h3> <textarea name=search class=big rows=2 cols=10 style='width:97%;'></textarea>
+  <br><div id='help12' style='display:none;'><span class=small>Разделять пробелами, а слова в словосочетаниях символом + <br>
+  Писать только существительные! НИКАКИХ ПРЕДЛОГОВ! Максимум неограничен. Разделять слова необходимо пробелом. Разделять слова в словосочетаниях символом +, например: игра+разума игротека game. Писать желательно в единственном числе и именительном падеже. Можно создать Блок «Облако тегов». Теги также могут выводиться на страницах (в настройках Раздела).</span><br></div><br>
   </div><br>
 
   <br><div id='dop2'><a onclick=\"show('dop'); show('dop2');\" class=help>Дополнительно...</a><br></div><div id='dop' style='display:none;'>
@@ -468,59 +518,12 @@ function base_pages_add_page($name, $razdel, $red=0, $new=0, $pid=0) {
   ///////////////////
   }
   }
-  echo "<input type=hidden name=op value=".$admintip."_save_page>
-
-<script type='text/javascript'>
-function seo(){
-  var x=document.getElementById('open_text').value;
-  var y=document.getElementById('main_text').value;
-  var kolkey=document.getElementById('kolkey').value;
-  var geo=document.getElementById('geo').value;
-  var koldes=250;
-  var a = (x+y);
-  if ( (x + y).length >= 400) {
-    xps=new XMLHttpRequest();
-    xps.onreadystatechange=function() {
-      if (xps.readyState==4 && xps.status==200)
-        var key = document.getElementById('keywords2').innerHTML = xps.responseText;
-      if( key.length >= 3 )  {
-        $('#key').show('slow'); $('#key_hide').hide();
-        document.getElementById('wordstat').innerHTML = '<h2>Загружаю популярные подходящие словосочетания...</h2>';
-        zapros('metod=des&x='+a+'&key='+key+'&kol='+koldes,document.getElementById('description2'),'des');
-		zapros('metod=open_text&x='+x+'&key='+key,document.getElementById('open_text'),'op');
-        zapros('metod=main_text&y='+y+'&key='+key,document.getElementById('main_text'),'te');
-        zapros('metod=procent&x='+a+'&key='+key,document.getElementById('procent'),'proc');
-        zapros('metod=wordstat&x='+a+'&geo='+geo+'&key='+key,document.getElementById('wordstat'),'word');
-      } 
-    }
-    xps.open('POST','includes/seo.php',true);
-    xps.setRequestHeader('Content-type','application/x-www-form-urlencoded');
-    xps.send('metod=newkey&x='+a+'&kol='+kolkey);
-  } else {
-    document.getElementById('ajax').innerHTML='Текст меньше 400 символов.';
-  }
-}
-function zapros(url,mesto,metod) {
-  metod=new XMLHttpRequest();
-  metod.onreadystatechange=function() {
-    if (metod.readyState==4 && metod.status==200) mesto.innerHTML= metod.responseText;
-  }
-  metod.open('POST','includes/seo.php',true);
-  metod.setRequestHeader('Content-type','application/x-www-form-urlencoded');
-  metod.send(url);
-}
-</script>
-
-<span id='ajax'></span>
-<div id=seoshow style='display:none;'>
-<input type='button' value='Пересчитать' onclick='seo()'> <b>Регион:</b> <input id='geo' value='".$geo."' size=5> <a href='http://search.yaca.yandex.ru/geo.c2n' target='_blank'>Найти регион</a> <b>Ключевых слов:</b> <input id='kolkey' value='".$kolkey."' size=2>
-<p id='procent'></p><p id='wordstat'></p>
-</div>
-
-  </td></tr></table></div></form>";
+  echo "<input type=hidden name=op value=".$admintip."_save_page>";
+  seo();
+  echo "</td></tr></table></div></form>";
   admin_footer();
 }
-######################################################################################################
+####################################################################################
 function base_pages_save_page($cid, $module, $title, $open_text, $main_text, $foto, $link_foto, $search, $active, $mainpage, $rss, $nocomm, $price, $add, $data1, $data2, $data3, $data4, $keywords2, $description2, $sor, $open_text_mysor, $main_text_mysor) {
   global $red, $tip, $admintip, $prefix, $db, $admin_file, $now;
   /*
@@ -723,7 +726,7 @@ function base_pages_save_page($cid, $module, $title, $open_text, $main_text, $fo
               }
           }
   break;
-  ///////////////////
+  /////
   }
   }
   }
@@ -731,7 +734,7 @@ function base_pages_save_page($cid, $module, $title, $open_text, $main_text, $fo
   // Удаление ошибок. Потом поправить, чтобы не было их!!!
   Header("Location: sys.php?op=base_pages_add_page&name=".$module."&razdel=".$cid."&red=".$red."&new=1&pid=".$page_id."#1");
 }
-#####################################################################################################################
+#######################################################################################
 function base_pages_edit_page($pid, $red=0) {
   echo "<a name=1></a>";
   $page_id = $pid;
@@ -740,13 +743,12 @@ function base_pages_edit_page($pid, $red=0) {
     $result = $db->sql_query($sql);
     $row = $db->sql_fetchrow($result);
     $cid = $row['cid'];
-    $titl = $row['title'];
-    $open_text = $row['open_text'];
-    $main_text = $row['main_text'];
+    $titl = stripcslashes($row['title']);
+    $open_text = stripcslashes($row['open_text']);
+    $main_text = stripcslashes($row['main_text']);
     $module = $row['module'];
     //$foto = $row['foto'];
     // узнать - это галерея или нет
-
     //$tex = $row2['text'];
     //$title = $row2['title'];
     //if (!strpos($tex,"media=1")) $foto = "";
@@ -846,8 +848,21 @@ function base_pages_edit_page($pid, $red=0) {
   global $siteurl;
   echo "<br><br>";
   if ($active==1) $check= " checked"; else $check= " unchecked";
-  echo "<label><input type=checkbox name=active value=1".$check."> Включить страницу</label> <a onclick=\"show('help3')\" class=help>?</a><br><div id='help3' style='display:none;'><br>Если поставить эту галочку — ссылка на эту страницу будет видна в автоматическом списке страниц данного раздела, а также в блоках, которые выводят страницы данного раздела (если они созданы). Если галочку убрать — на эту страницу все равно можно поставить ссылку из любого места на сайте или с другого сайта и страница будет видна тем, кто перейдет по этой вручную созданной ссылке. Если вы хотите, чтобы в общем списке страниц данная страница не отображалась, а раскрывала более подробную информацию при переходе с другой страницы — отключите ее и сделайте на нее ссылку вручную.<br></div><br>";
-  echo "<div id='dop2'><a onclick=\"show('dop'); show('dop2');\" class=help>Дополнительно...</a><br></div><div id='dop' style='display:none;'><br>";
+  echo "<label><input type=checkbox name=active value=1".$check."> Включить страницу</label> <a onclick=\"show('help3')\" class=help>?</a><br><div id='help3' style='display:none;'><br>Если поставить эту галочку — ссылка на эту страницу будет видна в автоматическом списке страниц данного раздела, а также в блоках, которые выводят страницы данного раздела (если они созданы). Если галочку убрать — на эту страницу все равно можно поставить ссылку из любого места на сайте или с другого сайта и страница будет видна тем, кто перейдет по этой вручную созданной ссылке. Если вы хотите, чтобы в общем списке страниц данная страница не отображалась, а раскрывала более подробную информацию при переходе с другой страницы — отключите ее и сделайте на нее ссылку вручную.<br></div><br>
+
+
+  <h3>Ключевые слова для поисковых систем: <a onclick=\"show('help10')\" class='help'>?</a></h3><textarea id=keywords2 name=keywords2 class=big rows=3 cols=10 style='width:97%;'>".$keywords."</textarea>
+  <br><div id='help10' style='display:none;'><span class=small>Максимум 1000 символов. Разделять словосочетания желательно запятой. Если пусто - используются <b>Теги</b> (если и они пустые - используются Ключевые словосочетания из <a href=/sys.php?op=Configure target=_blank>Настроек портала</a>).</span><br></div><br>
+
+    <h3>Описание для поисковых систем: <a onclick=\"show('help11')\" class='help'>?</a></h3><textarea id=description2 name=description2 class=big rows=7 cols=10 style='width:97%;'>".$description."</textarea>
+  <br><div id='help11' style='display:none;'><span class=small>Максимум 200 символов. Если пусто - используется <b>Название</b> страницы.</span><br></div><br>
+
+    <h3>Тэги (слова для похожих по тематике страниц): <a onclick=\"show('help12')\" class='help'>?</a></h3> <textarea name=search class=big rows=2 cols=10 style='width:97%;'>".$search."</textarea>
+  <br><div id='help12' style='display:none;'><span class=small>Разделять пробелами, а слова в словосочетаниях символом + <br>
+  Писать только существительные! НИКАКИХ ПРЕДЛОГОВ! Максимум неограничен. Разделять слова необходимо пробелом. Разделять слова в словосочетаниях символом +, например: игра+разума игротека game. Писать желательно в единственном числе и именительном падеже. Можно создать Блок «Облако тегов». Теги также могут выводиться на страницах (в настройках Раздела).</span><br></div><br>
+
+
+  <div id='dop2'><a onclick=\"show('dop'); show('dop2');\" class=help>Дополнительно...</a><br></div><div id='dop' style='display:none;'><br>";
   if ($rss==1) $check= " checked"; else $check= " unchecked";
   if ($nocomm==1) $check2= " checked"; else $check2= " unchecked";
 
@@ -1096,18 +1111,9 @@ function base_pages_edit_page($pid, $red=0) {
     }
   }
 
-  echo "<h3>Ключевые слова (для поисковых систем):</h3> <textarea name=keywords2 class=big rows=2 cols=10 style='width:100%;'>".$keywords."</textarea>
-  <br><div class='help small'>?</div> <span class=small>Максимум 1000 символов. Разделять словосочетания желательно запятой. Если пусто - используются <b>Теги</b> (если и они пустые - используются Ключевые словосочетания из <a href=/sys.php?op=Configure target=_blank>Настроек портала</a>).</span><br><br>
-
-  <h3>Описание для поисковых систем:</h3> <textarea name=description2 class=big rows=2 cols=10 style='width:100%;'>".$description."</textarea><br>
-  <div class='help small'>?</div> <span class=small>Максимум 200 символов. Если пусто - используется <b>Название</b> страницы.</span>";
-
-  echo "<h3>Тэги (слова для похожих по тематике страниц):</h3> 
-  <textarea name=search class=big rows=2 cols=10 style='width:100%;'>".$search."</textarea>
-  <br><div class='help small'>?</div> <span class=small>Разделять пробелами, а слова в словосочетаниях символом + 
-  <br>Писать только существительные! НИКАКИХ ПРЕДЛОГОВ! Максимум неограничен. Разделять слова необходимо пробелом. Разделять слова в словосочетаниях символом +, например: игра+разума игротека game. Писать желательно в единственном числе и именительном падеже. Можно создать Блок «Облако тегов». Теги также могут выводиться на страницах (в настройках Раздела).</span><br><br>";
-
-  echo "<input type=hidden name=op value=".$admintip."_edit_sv_page><input type=hidden name=pid value=".$pid.">
+  echo "<input type=hidden name=op value=".$admintip."_edit_sv_page><input type=hidden name=pid value=".$pid.">";
+  seo(true);
+  echo "
   </td></tr></table></div></form>";
   admin_footer();
 }

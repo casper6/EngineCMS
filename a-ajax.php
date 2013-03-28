@@ -487,6 +487,7 @@ if ($func == "delrazdel") { // Удаление раздела
   $db->sql_query("UPDATE ".$prefix."_pages_categories SET `tables`='del' WHERE module='$name_raz'"); 
   $db->sql_query("UPDATE ".$prefix."_mainpage SET `tables`='del' WHERE id='$id'"); 
   //$db->sql_query("DELETE FROM ".$prefix."_mainpage WHERE id='$id'"); // окончательное удаление
+  //echo $name_raz."111";
   exit;
 }
 ######################################################################################
