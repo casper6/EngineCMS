@@ -126,7 +126,7 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
       "22"=>"База данных (<i>количество по 2 колонкам</i>)", 
       "23"=>"База данных (<i>список колонок</i>)");
     global $uskorenie_blokov;
-    $sql = "select id,name,title from ".$prefix."_mainpage where `tables`='pages' and type='3' order by name, title";
+    $sql = "select id,name,title,color from ".$prefix."_mainpage where `tables`='pages' and type='3' order by name, title";
     $result = $db->sql_query($sql);
     $n = $blocks_no = $blocks_yes = "";
     while ($row = $db->sql_fetchrow($result)) {
@@ -190,18 +190,23 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
         else 
           $title = $row['title'].$diz.$razr.$bloc.$stri;
       } else $title = $row['title'];
-
-      if ($n == $row['name']) {$nu = "-";}
-      else {$n = $row['name']; $nu = $row['name'];}
+      if ($row['color'] != "1") {
+        $icon_disable = "43"; $text_disable = "Отключить блок";
+      } else {
+        $icon_disable = "44"; $text_disable = "Включить блок";
+      }
+      if ($n == $row['name']) $nu = "-";  else { $n = $row['name']; $nu = $row['name']; }
       $bgcolor = "#FFeecc"; //FFddaa
-       if ($nu == "-") $block = "<td class='padleft30'>"; else $block = "<td style='background:white;'><br><h2>".$block_names[$nu]." &darr;</h2></td></tr><tr><td class='padleft30'>";
+       if ($nu == "-") $block = "<tr valign=top id='block".$row['id']."'><td class='padleft30'>"; else $block = "<tr valign=top><td style='background:white;'><br><h2>".$block_names[$nu]." &darr;</h2></td></tr><tr id='block".$row['id']."'><td class='padleft30'>";
       $title = $block.$title;
-      $blocks_ok = "<tr valign=top>".$title."<div style='margin-left:20px; display: inline; float:right;'>
+      $blocks_ok = "".$title."<div style='margin-left:20px; display: inline; float:right;'>
        <a href='sys.php?op=mainpage&type=3&id=".$row['id']."&red=1' title='Редактировать в HTML'><img class='icon2 i34' src='/images/1.gif'></a> 
        <a href='sys.php?op=mainpage&type=3&id=".$row['id']."&nastroi=1' title='Настроить блок'><img class='icon2 i38' src='/images/1.gif'></a> 
-       <a class='padleft30' href='sys.php?op=mainpage_del&id=".$row['id']."&type=3' title='Удалить ".$row['title']."'><img class='icon2 i21' src='/images/1.gif'></a>
+       <a class='punkt' onclick='offblock(".$row['id'].")' title='".$text_disable."'><img class='icon2 i".$icon_disable."' src='/images/1.gif'></a>  
+       <a class='padleft30 punkt' onclick='delblock(".$row['id'].")' title='Удалить блок'><img class='icon2 i21' src='/images/1.gif'></a>
        </div>
        </td></tr>";
+       // удалить блок sys.php?op=mainpage_del&id=".$row['id']."&type=3
       $blocks_no .= $blocks_ok;
     }
     $info .= "<span class=green>Названия блоков в [квадратных скобках] можно использовать для вставки в дизайн, разделы, папки, страницы или другие блоки (т.е. в любом месте сайта).</span><table width=100% class='table_light'>".$blocks_no."</table>";
@@ -491,6 +496,11 @@ if ($func == "delrazdel") { // Удаление раздела
   exit;
 }
 ######################################################################################
+if ($func == "delblock") { // Удаление блока
+  $db->sql_query("UPDATE ".$prefix."_mainpage SET `tables`='del' WHERE id='$id'"); 
+  exit;
+}
+######################################################################################
 if ($func == "delpapka") { // Удаление папки
   $cids = show_cids($id);
   $cids[] = $id;
@@ -535,10 +545,25 @@ if ($func == "resetpage") { // Восстановление страницы
 }
 ######################################################################################
 if ($func == "offcomm") { // Вкл./Выкл. комментария
-  $active = $db->sql_fetchrow($db->sql_query("SELECT cid, num, avtor, text, data, active FROM ".$prefix."_pages_comments where cid='$id'"));
-  if ($active['active'] == 1) { $act = 0; $comm = "Комментарий выключен"; $color="error"; } else { $act = 1; $comm = "Комментарий включен"; $color="success"; }
+  $active = $db->sql_fetchrow($db->sql_query("SELECT `active` FROM ".$prefix."_pages_comments where cid='$id'"));
+  if ($active['active'] == 1) { 
+    $act = 0; $comm = "Комментарий выключен"; $color="error"; 
+  } else { 
+    $act = 1; $comm = "Комментарий включен"; $color="success";
+  }
   $db->sql_query("UPDATE ".$prefix."_pages_comments SET `active`='$act' WHERE cid='$id'");
   echo "<td colspan=2 class='notice ".$color."'>".$comm."</td>"; exit;
+}
+######################################################################################
+if ($func == "offblock") { // Вкл./Выкл. блока
+  $active = $db->sql_fetchrow($db->sql_query("SELECT `color` FROM ".$prefix."_mainpage where id='$id'"));
+  if ($active['color'] != "1") { 
+    $act = "1"; $comm = "Блок выключен"; $color="error"; 
+  } else { 
+    $act = "0"; $comm = "Блок включен"; $color="success"; 
+  }
+  $db->sql_query("UPDATE ".$prefix."_mainpage SET `color`='$act' WHERE id='$id'");
+  echo "<td class='padleft30 notice ".$color."'>".$comm."</td>"; exit;
 }
 ######################################################################################
 if ($func == "add_papka") { // Создание папки

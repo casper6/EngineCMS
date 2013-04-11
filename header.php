@@ -92,7 +92,7 @@ if ($name=="-email") { // занесение мыла как скрытого к
 	elseif ($name=="-edituser") { 	list($block, $stil) = include('page/edituser.php'); $pagetitle = "Редактирование личной анкеты — "; }
 	elseif ($name=="-logout") { 	list($block, $stil) = include('page/logout.php'); $pagetitle = "Вы вышли — "; }
 	else {
-		global $title_razdels, $txt_razdels, $useit_razdels, $pid;
+		global $title_razdels, $txt_razdels, $useit_razdels, $pid, $class;
 
 		// Настройки раздела по-умолчанию
 		$designpages = 0; // т.е. дизайн для страниц = дизайну разделов
@@ -142,7 +142,7 @@ if ($name=="-email") { // занесение мыла как скрытого к
 		//die("Ошибка: «Адрес раздела» (".$name.") введен неправильно. Перейдите на <a href=/>Главную страницу</a>.");
 
 		// Получаем список всех папок
-		$titles_papka = titles_papka();
+		$titles_papka = titles_papka(0,1);
 
 		// Определяем Главный раздел
 		if ($name == "index") {
@@ -213,7 +213,7 @@ if ($name=="-email") { // занесение мыла как скрытого к
 /////////////////////////////////////////////////////////////////////////////////////////
 
 	# НАЧАЛО Определение блоков и их заполнение
-	$sql2 = "select id,name,title,text,useit,shablon from ".$prefix."_mainpage where type='3'"; 
+	$sql2 = "select id,name,title,text,useit,shablon,color from ".$prefix."_mainpage where type='3'"; 
 	// `name` != '$name' and 
 	// ИЗМЕНА: вынесено за пределы массива и вместо * замена
 	$result2 = $db->sql_query($sql2);
@@ -222,6 +222,7 @@ if ($name=="-email") { // занесение мыла как скрытого к
 	$textYYY = array();
 	$useitYYY = array();
 	$shablonYYY = array();
+	$block_colorYYY = array();
 	while ($row2 = $db->sql_fetchrow($result2)) {
 		$idYYY = $row2['id'];
 		$nameYYY[$idYYY] = $row2['name'];
@@ -229,6 +230,7 @@ if ($name=="-email") { // занесение мыла как скрытого к
 		$textYYY[$idYYY] = trim($row2['text']);
 		$useitYYY[$idYYY] = trim($row2['useit']);
 		$shablonYYY[$idYYY] = trim($row2['shablon']);
+		$block_colorYYY[$idYYY] = $row2['color'];
 	}
 	// Вставить оптимизацию блоков
 for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке блоков и вложенных блоков
@@ -236,13 +238,13 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 		$titleX = trim($titleYYY[$idX]);
 		// поиск блока в тексте
 		if ( !strpos(" ".$block, "[".$titleX."]") ) continue; // Переход к следующему!
-		
-		$textX = trim($textYYY[$idX]);
-		$useitX = trim($useitYYY[$idX]);
-		$shablonX = trim($shablonYYY[$idX]);
+		$textX = $textYYY[$idX];
+		$useitX = $useitYYY[$idX];
+		$shablonX = $shablonYYY[$idX];
+		$block_color = $block_colorYYY[$idX];
 
 	// обнулили все опции блоков от греха подальше
-	$media=$folder=$datashow=$design=$open_all=$catshow=$main=$daleeshow=$openshow=$number=$add=$size=$papki_numbers=$zagolovokin=$menu=$notitlelink=$noli=$html=$show_title=$random=$showlinks=$open_new_window=$show_new_pages=0;
+	$media=$folder=$datashow=$design=$open_all=$catshow=$main=$daleeshow=$openshow=$number=$add=$size=$papki_numbers=$zagolovokin=$menu=$notitlelink=$noli=$html=$show_title=$random=$showlinks=$open_new_window=$show_new_pages=$reload_link_show=$reload_link_time=0;
 	$titleshow=$opros_type=$limkol=$pageshow=$only_question=$opros_result=$foto_gallery_type=1;
 	$addtitle="Добавить статью";
 	$dal="Далее...";
@@ -259,6 +261,7 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 	$razdel_open2_name = "Открыть раздел";
 	$calendar = ""; // Календарь - перенаправление на дату из списка.
 	$show_in_razdel = "все";
+	$reload_link_text = "Показать еще...";
 
 	// Для базы данных
 	$base = ""; // Указываем название таблицы БД
@@ -348,10 +351,11 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 		$nameX = "-1";
 	}
 
+if ($block_color != "1") {
 
 switch ($nameX) {
 
-case "0": # Блок модуля
+case "0": # Блок страниц раздела
 	if ($open_new_window == 1) $blank = " target='_blank'"; 
 	else $blank = "";
 
@@ -517,8 +521,8 @@ case "0": # Блок модуля
 			"[модуль]"=>$module,
 			"[№ папки]"=>$p_cid,
 			"[название]"=>$title,
-			"[ссылка]"=>"<a href=-".$module."_page_".$p_id.$blank.">".$title."</a>",
-			"[предисловие]"=>$open_text,
+			"[ссылка]"=>"<a href=-".$module."_page_".$p_id.$blank." class='block_title ".$class."'>".$title."</a>",
+			"[предисловие]"=>"<span id=block_open_text class='block_open_text ".$class."'>".$open_text."</span>",
 			"[содержание]"=>$main_text,
 			"[дата]"=>$data,
 			"[число посещения]"=>$counterX,
@@ -544,10 +548,9 @@ case "0": # Блок модуля
 		} else { // если без шаблона
 			 // Если показывать название папки
 			if (($catshow == 1 or $shablon != "") and $p_cid != 0) $cat = "<span class=\"block_li_cat ".$class."\">".$titles_papka[$p_cid]."</span> $strelka "; else $cat = "";
-			global $class;
 					if ($openshow > 0) { // Если показывать предописание
-						$textX .= "<div id=venzel class=\"venzel ".$class."\"></div>";
-						if ($numlock > 1) $textX .= "<br>";
+						//$textX .= "<div id=venzel class=\"venzel ".$class."\"></div>";
+						//if ($numlock > 1) $textX .= "<br>";
 						if (trim($main_text)!="" and $daleeshow == 1) {
 							if ($openshow == 1) {
 								$dalee = " <div id=dalee class=\"dalee ".$class."\"><a href=-".$module."_page_".$p_id.$blank.">".$dal."</a></div>";
@@ -555,24 +558,24 @@ case "0": # Блок модуля
 								$dalee = " <div id=dalee class=\"dalee ".$class."\">$dal</div>";
 							}
 						} else $dalee = "";
-						$open_text = "<div id=block_open_text class=\"block_open_text ".$class."\">".$open_text.$dalee."</div>";
+						$open_text = "<span id=block_open_text class='block_open_text ".$class."'>".$open_text.$dalee."</span>";
 						
 						//if ($pic_ramka == 1) { // настройка используется для рамок изображений на сайте Самарских Родителей)
 							//$open_text = str_replace("<img","<div id=for_pic class=\"for_pic".$class."\"><img", str_replace("<IMG","<img",$open_text));
 						//}
 							if ($zagolovokin == 0) {
-								$zagolovok = "<div class=\"block_title ".$class."\"><span class=\"block_li_data ".$class."\">".$data."</span>".$cat."<a class=\"block_title ".$class."\" href=-".$module."_page_".$p_id.$blank.">".$title."</a></div>";
+								$zagolovok = "<span class='block_title ".$class."'><span class='block_li_data ".$class."'>".$data."</span>".$cat."<a class='block_title ".$class."' href='-".$module."_page_".$p_id.$blank."'>".$title."</a></span>";
 								$open_text = str_replace("[заголовок]", "", $open_text); 
 								//$zagolovok = str_replace("[заголовок]", "", $zagolovok); 
 							} else {
 								$zagolovok = "";
 								if ($openshow == 1) { 
-									$open_text = "<div class=a_block_title><a class=\"a_block_title ".$class."\" href=-".$module."_page_".$p_id.$blank.">".str_replace("[заголовок]","</div><div class=\"block_title ".$class."\"><span class=\"block_li_data ".$class."\">".$data."</span>".$cat."".$title."</div>",$open_text)."</a>"; // Вставляем Заголовок в блок!
+									$open_text = "<span class=a_block_title><a class=\"a_block_title ".$class."\" href=-".$module."_page_".$p_id.$blank.">".str_replace("[заголовок]","</span><span class=\"block_title ".$class."\"><span class=\"block_li_data ".$class."\">".$data."</span>".$cat."".$title."</span>",$open_text)."</a>"; // Вставляем Заголовок в блок!
 								} else {
-									$open_text = "<div class=a_block_title>".str_replace("[заголовок]","</div><div class=\"block_title ".$class."\">".$data."".$cat."".$title."</div>",$open_text).""; // Вставляем Заголовок в блок!
+									$open_text = "<span class=a_block_title>".str_replace("[заголовок]","</span><span class=\"block_title ".$class."\">".$data."".$cat."".$title."</span>",$open_text).""; // Вставляем Заголовок в блок!
 								}
 							}
-						$textX .= "".$zagolovok."".$open_text."";
+						$textX .= "<div>".$zagolovok."".$open_text."</div>\n";
 					} else { // Если НЕ показывать предописание
 						$textX .= "<li class=\"block_li_title ".$class."\"><span class=\"block_li_data ".$class."\">".$data."</span>".$cat."<a href=-".$module."_page_".$p_id.$blank.">".$title."</a></li>";
 					}
@@ -647,13 +650,23 @@ case "2": # Блок текста
 	break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 case "3": # Блок ротатор рекламы
-	$lines = trim($textX);
-	$lines = explode("|", $lines); // ЗАМЕНИТЬ!
-	$itogo = count($lines)-1;
-	srand((double) microtime()*1000000);
-	$i = rand(0,$itogo); // выбираем случайное число (0...MAX)
-	$textX = $lines[$i];
-	$block = str_replace("[$titleX]", $design_open.$textX.$design_close, $block);
+	$reload_link = "<a style='cursor:pointer;' onclick='$(showrotator".$idX."())'>".$reload_link_text."</a>";
+	$textX = "<script language='javascript'>
+	  function showrotator".$idX."() {
+          $.get('rotator.php', { num: '".$idX."' }, function(data) { 
+			  $('#show_rotator".$idX."').html( data );
+		  });  
+	  }
+	  $(showrotator".$idX."());";
+	  if ($reload_link_time > 0) { 
+	  	$reload_link_time = $reload_link_time * 1000;
+	  	$textX .= "setInterval(function() { $(showrotator".$idX."()); }, ".$reload_link_time.");";
+	  }
+	  $textX .= "</script>";
+	  if ($reload_link_show == "1") $textX .= $reload_link;
+	  $textX .= "<div id='show_rotator".$idX."'>Загружается...</div>";
+	  if ($reload_link_show == "2") $textX .= $reload_link;
+	$block = str_replace("[".$titleX."]", $design_open.$textX.$design_close, $block);
 	$type = ""; break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////	
 case "4": # Блок папок раздела 
@@ -705,7 +718,7 @@ case "4": # Блок папок раздела
 	$type = ""; break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 case "5": # Блок голосования
-	$textX = "<script language=\"javascript\">
+	$textX = "<script language='javascript'>
 	  function showopros".$idX."(res, golos) { 
 		  $.get('opros.php', { num: '".$idX."', res: res, golos: golos }, function(data) { 
 			  $('#show_opros".$idX."').html( data ); 
@@ -900,7 +913,7 @@ case "9": # Блок мини-фото - экстрактор предописа
 			if ($openshow == 2) $open = $open2;
 		}
 		if ($show_title == 2) $textX .= "<div class=\"".$class."\"><a href=-".$modul."_page_".$id." class='ex_pic ".$class."'>".$title."</a></div>";
-		$textX .= "<a href=-".$modul."_page_".$id." class='ex_pic ".$class."'><img".$width.$height." src='".$src."' title=\"".$title."\" class=\"extract ".$useitX."_pic ".$class."\"></a>";
+		$textX .= "<a href=-".$modul."_page_".$id." title=\"".$title."\" class='ex_pic ".$class."'><img".$width.$height." src='".$src."' alt=\"".$title."\" class=\"extract ".$useitX."_pic ".$class."\"></a>\n";
 		if ($show_title == 2) $textX .= $open;
 		if ($show_title == 1) $textX .= "<div class=\"".$class."\"><a href=-".$modul."_page_".$id." class='ex_pic ".$class."'>".$title."</a></div>";
 		if ($show_title == 1) $textX .= $open;
@@ -1297,6 +1310,7 @@ case "30": # Статистика раздела, выводит кол-во п�
 //$type = ""; break;
 
 	} # конец определения типа блока
+} else $block = str_replace("[$titleX]", "", $block); // убираем отключенный лок
 } # ЗАКОНЧЕНО Определение блоков и их заполнение
 } # ЗАКОНЧЕНО ПОВТОРНОЕ Определение блоков и их заполнение
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1598,7 +1612,7 @@ echo "<title>".$pagetit.$sitename."</title>
 <meta http-equiv='Content-language' content='".$lang."'> 
 <meta name='copyright' content='".str_replace("'","",$sitename)."'>
 <meta name='author' content=''>
-<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
 <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
 <!--[if lt IE 9]><script src='http://html5shim.googlecode.com/svn/trunk/html5.js'></script><![endif]-->
 <script src='includes/j.js'></script>
@@ -1618,7 +1632,7 @@ if ($jqueryui != 0) echo "<script src='http://ajax.googleapis.com/ajax/libs/jque
 
 switch($kickstart) { // Выбор CSS-фреймворка
 	case 1: // KickStart
-	echo "<script type='text/javascript' src='includes/css-frameworks/kickstart/js/prettify.js'></script><script type='text/javascript' src='includes/css-frameworks/kickstart/js/kickstart.js'></script><link rel='stylesheet' type='text/css' href='includes/css-frameworks/kickstart/css/kickstart.css' media='all' /><link rel='stylesheet' type='text/css' href='includes/css-frameworks/kickstart/style.css' media='all' />"; break;
+	echo "<script type='text/javascript' src='includes/css-frameworks/kickstart/js/kickstart.js'></script><link rel='stylesheet' type='text/css' href='includes/css-frameworks/kickstart/css/kickstart.css' media='all' /><link rel='stylesheet' type='text/css' href='includes/css-frameworks/kickstart/style.css' media='all' />"; break;
 	case 2: // CSSframework
 	echo "<link rel='stylesheet' type='text/css' href='includes/css-frameworks/css-framework.css' />"; break;
 	case 3: // Skeleton
@@ -1668,20 +1682,9 @@ if (strlen($add_fonts)>1) {
 	if ($kickstart == 10) $add_body .= " class='yui3-skin-sam'>";
 	# НАЧАЛО ТЕЛА
 	echo "</head>\n<body".$add_body.">";
-	if ($kickstart == 1) echo "<a id='top-of-page'></a><div id='wrap' class='clearfix'>";
+	if ($kickstart == 1) echo "<a id='top-of-page'></a><div id='wrap' class='clearfix'>"; //<div class='grid'>
 	if ($kickstart == 3 or $kickstart == 8) echo "<div class='container'>";
 	//if ($kickstart == 4) echo "<div id='page'>";
-
-	// Исправляем старые ошибки: # проверить и удалить
-	/*
-	$block = str_replace("»»»","\"",$block);
-	$block = str_replace("\"\"\"","\"",$block);
-	$block = str_replace("\"»","\"",$block);
-	$block = str_replace("%C2%BB%C2%BB%C2%BB","",$block);
-	$block = str_replace("%22%22%22","",$block);
-	*/
-	//Подставляем получившееся в HTML + поправка для IE. // удалить
-	//echo str_replace("</table></table>","</table>",str_replace("</tr></div>","</tr>",$block)); 
 	echo $block; // Вывод страницы
 
 		// Если включена погодная анимация

@@ -324,7 +324,7 @@ ul.button-bar li.blue a:hover {color:black !important;}
 
 a.punkt {text-decoration: none;	border-bottom: 1px dashed black;}
 a.punkt img {border: 0;}
-a.punkt:hover, a.punkt:hover span, .punkt:hover a {background: #e0e0dd; color: black; cursor:pointer;}
+a.punkt:hover, a.punkt:hover span, .punkt:hover a {color: black; cursor:pointer;}
 
 .small {font-size: 0.7em;}
 img, table {border:0;}
@@ -686,7 +686,7 @@ table.table_light tfoot td { padding-top:6px; }
 table.table_light tbody tr:hover { background: #e9f2fc; }
 table.table_light tbody tr:hover th, table.table_light tbody tr.odd:hover th { background: #e9f2fc; }
 
-.padleft30 {padding-left: 30px !important; }
+.padleft30 {margin-left: 30px !important; }
 
 /* advanced colors (special for ДвижОк :) */
 .icon.lightgreen{color:#94f394;}

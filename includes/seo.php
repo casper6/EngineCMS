@@ -16,49 +16,41 @@ if ($metod == "des") {
   $kol = $_POST['kol'];
   $x = $_POST['x']; 
   $key = $_POST['key'];
-  echo newdesc($x,$key,$kol);
-}
-if ($metod == "open_text") {
-  $x = $_POST['x']; 
-  $key = $_POST['key'];
-  echo razmetka($x,$key);
-}
-if ($metod == "main_text") {
-  $y = $_POST['y']; 
-  $key = $_POST['key'];
-  global $razmetka;
-  $razmetka = razmetka($y,$key);
-  echo $razmetka;
+  echo trim(newdesc($x,$key,$kol));
 }
 if ($metod == "procent") {
   $y = $_POST['x']; 
+  $sin = $_POST['sin'];
   $key = $_POST['key'];
-  echo procent($y,$key);
+  echo procent($y,$key,$sin);
 }
 if ($metod == "wordstat") {
   $text = $_POST['x']; 
   $key = stopslov($_POST['key']);
   $geo = $_POST['geo'];
   $keys = explode(",", trim($key));
+  $count=count($keys);
   $rezult = array();
   echo "<table width=100%><tr valign=top>";
-  foreach ($keys as $slovo) {
-  $slovo = trim(strip_tags($slovo));
-    if (mb_substr_count($text, ' ') > 0) $arr = yapars($slovo, $geo);
+  $arr = array();
+  $arr = yapars($keys, $geo);
+  for($i=0;$i<$count;$i++) {
+  $slovo = trim($keys[$i]);
     echo "<td><b>".$slovo."</b>";
 	$ch = 0;
 	echo '<table class="table_light" width=100%>';
-    foreach ( $arr[1] as $k=>$v ) {
+    foreach ( $arr[$i][1] as $k=>$v ) {
       // слово и кол-во запросов
-	  if($ch++ % 2) { echo '<tr><td style="color:gray">'.str_replace('+', '', html_entity_decode($v, ENT_NOQUOTES,'UTF-8')).'</td><td style="color:gray">'.$arr[2][$k].'</td></tr>';  } else
-      echo '<tr><td>'.str_replace('+', '', html_entity_decode($v, ENT_NOQUOTES,'UTF-8')).'</td><td>'.$arr[2][$k].'</td></tr>';
+	  if($ch++ % 2) { echo '<tr><td style="color:gray">'.str_replace('+', '', html_entity_decode($v, ENT_NOQUOTES,'UTF-8')).'</td><td style="color:gray">'.$arr[$i][2][$k].'</td></tr>';  } else
+      echo '<tr><td>'.str_replace('+', '', html_entity_decode($v, ENT_NOQUOTES,'UTF-8')).'</td><td>'.$arr[$i][2][$k].'</td></tr>';
     }
 	echo "</table>";
     echo "</td>";
   }
   echo "</tr></table>";
 }
-function newkey($text,$kol=6,$kolslov=3) {
+
+function newkey($text,$kol,$kolslov) {
   # Чистим текст
   $text = normaltext($text,0); // полная функция для ключевиков
 $textorig = stopslov($text);
@@ -73,9 +65,11 @@ for($i=0;$i<$count;$i++) {
 $koren = sklon(trim($text2[$i])); // находим корень слова
 $koren1 = sklon(trim($text[$i]));
 $koren2 = sklon(trim($text[$i+1]));
+if (mb_substr_count($textorig, trim($koren)) > 1) { // берем слова имеющие более 1-го вхождения
 $arr[$koren]= mb_substr_count($textorig, trim($koren)); // корень и сколько вхождений в тексте он имеет
 $arr2[$koren]= $text2[$i]; // корень и найденное слово по нему
 $arr3[$koren]= $i; // Массив с корнями
+}
 if ($koren2 == true){
 $arr4[1][$i] = $text[$i]." ".$text[$i+1]; // массив с фразами в 2 слова
 $arr4[2][$i] = $koren1." ".$koren2; // и их корни
@@ -115,7 +109,8 @@ $str2 = ''; // продолжаем строить строку с ключам�
 	  ++$y;
 	  }
       }
-	  $keys = trim($str.mb_substr($str2, 0, -1, "UTF-8")); // обьединяем словосочетания и слова
+	  if (mb_strlen($str2,"UTF-8") > 1) $keys = trim($str.mb_substr($str2, 0, -1, "UTF-8")); // обьединяем словосочетания и слова
+	  else $keys = trim(mb_substr($str, 0, -1, "UTF-8")); // только словосочетания
 	  return $keys;
 }
 function newdesc($text,$key,$kol) {
@@ -166,7 +161,7 @@ function stopslov($text) { // Удаление стоп слов
   if (file_exists($name)) {
     $data = file($name);
     foreach ($data as $value) {
-      $text = str_replace(' '.trim($value).' ', '', $text);
+      $text = str_replace(' '.trim($value).' ', ' ', $text);
     }
   }
   return $text;
@@ -195,29 +190,6 @@ $text = mb_substr($text, 0, -1, "UTF-8");
 }
 return $text;
 }
-function razmetka($text, $keys) { //Функция поика ключевых слов в тексте и бозначения их жирным шрифтом
-  $text = str_replace(array("<b>", "</b>"), "", $text);
-  $key = explode(",", trim($keys));
-  foreach($key as $s1) {
-   // также найдем склонения ключевых слов и тоже обозначим их жирным
-    $s3 = " ".$s1;
-   $zamena = array($s3."ов", $s3."а", $s3."у", $s3."ом", $s3."е", $s3."ы", $s3."и" ); // Замена для простого как СТОЛ и СТУЛ
-   $na2 = array("<b>".$s3."ов</b>", "<b>".$s3."а</b>", "<b>".$s3."у</b>", "<b>".$s3."ом</b>", "<b>".$s3."е</b>", "<b>".$s3."ы</b>", "<b>".$s3."и</b>" );   
-   $text = str_replace($zamena , $na2, $text);
-   $s2 = mb_substr($s1, 0, -1, "UTF-8"); // удаляем последний символ из слова если требуется для склонения (пример - макулатура , рубль)
-   $zamena1 = array($s2."ей", $s2."я", $s2."и", $s2."ем", $s2."ём", $s2."ы", $s2."у", $s2."ой", $s2."е", $s2."ю" );
-   $na3 = array("<b>".$s2."ей</b>", "<b>".$s2."я</b>", "<b>".$s2."и</b>", "<b>".$s2."ем</b>", "<b>".$s2."ём</b>", "<b>".$s2."ы</b>", "<b>".$s2."у</b>", "<b>".$s2."ой</b>", "<b>".$s2."е</b>", "<b>".$s2."ю</b>" );
-   $text = str_replace($zamena1 , $na3, $text);
-      $s4 = mb_substr($s1, 0, -2, "UTF-8"); // ищем земляной, земляные заменяем на земляная
-   $zamena2 = array($s4."ие",$s4."ые",$s4."ое",$s4."ими",$s4."ыми",$s4."ей",$s4."ий",$s4."ый",$s4."ой",$s4."ем",$s4."им",$s4."ым",$s4."ом",
-$s4."его",$s4."ого",$s4."ему",$s4."ому",$s4."их",$s4."ых",$s4."ую",$s4."юю",$s4."ая",$s4."яя",$s4."ою",$s4."ею");
-$na4 = array("<b>".$s4."ие</b>", "<b>".$s4."ые</b>", "<b>".$s4."ое</b>", "<b>".$s4."ими</b>", "<b>".$s4."ыми</b>", "<b>".$s4."ей</b>", "<b>".$s4."ий</b>", "<b>".$s4."ый</b>", "<b>".$s4."ой</b>", "<b>".$s4."ем</b>", "<b>".$s4."им</b>", "<b>".$s4."ым</b>", "<b>".$s4."ом</b>", "<b>".$s4."его</b>", "<b>".$s4."ого</b>", "<b>".$s4."ему</b>", "<b>".$s4."ому</b>", "<b>".$s4."их</b>", "<b>".$s4."ых</b>", "<b>".$s4."ую</b>", "<b>".$s4."юю</b>", "<b>".$s4."ая</b>", "<b>".$s4."яя</b>", "<b>".$s4."ою</b>", "<b>".$s4."ею</b>");
-   $text = str_replace($zamena2 , $na4, $text);
-   }
-   $zamen = array("<b></b>", "<b> </b>", "</b></b>", "<b><b>");
-   $text = str_replace($zamen, " ", $text);
-  return  $text; 
-}
 
 function utf8_substr($str,$start) { // Функция substr для работы в utf-8
    preg_match_all("/./su", $str, $ar);
@@ -229,19 +201,19 @@ function utf8_substr($str,$start) { // Функция substr для работы
    }
 }
 
-function procent($text,$keys) {
+function procent($text,$keys,$sinoff) {
   # Чистим текст
   $text = normaltext($text,0); // полная функция для ключевиков
   $textd = explode(" ", trim($text));
   $sized=count($textd);
 $textorig =  preg_replace('/ {2,}/',' ',$text);
+
   # Получаем массив слов
   $textm = explode(" ", trim($textorig));
   $size3=count($textm);
   $keys0 = explode(" ", trim($keys));
   $keys2 = explode(",", trim($keys));
   $size2=count($keys0);
-  $keyssi = sinonim($keys); // получаем синонимы ключевиков
   $keyssin = explode(",", trim($keyssi));
   $text_koren = '';
 for($i=0;$i<$size3;$i++) {
@@ -265,22 +237,32 @@ $size4=count($key_koren);
   чтобы повысить вес слова – употребите его чаще или поставьте ближе к началу текста.<br>';
   $result .= '<table class="table_light" width=100%>';
   $result .= "<tr><td>Словосочетание</td><td align=center>Упоминания</td><td align=center>% в тексте</td><td width=65% align=center>Синонимы</td></tr>";
-  
+    	if ($sinoff == 1) { $str = sinonim(trim($keys).'|');  // получаем синонимы
+$arr1 = explode("|", trim($str));
+$sin1 = array();
+foreach ($arr1 as $gruppa) {
+$arr2 = explode(",", trim($gruppa));
+for($i=0;$i<$size4;$i++) {
+$sin1[$i] .= trim($arr2[$i]).', ';
+}}
+	}
       for($i=0;$i<$size4;$i++) {
+	  if ($sinoff == 1) {
+	  $sin = explode(",",$sin1[$i]);
+$arr = array_flip($sin);
+$sin = array_flip($arr);
+$sinonim = implode(",", $sin);
+$sinonim = str_replace(',', ', ', $sinonim);
+}
     $raz = mb_substr_count($text_koren, trim($key_koren[$i]));
 	if ( mb_substr_count(trim($keys2[$i]), ' ') > 0 )
 	$procent_slovo = round($raz*100/$sized,2)*2;
 	 else 
 	$procent_slovo = round($raz*100/$sized,2);
-	$sin1 = sinonim($keys2[$i].',');  // получаем синонимы
-	$sin = explode(",",$sin1);
-	# избавляемся от дублей синонимов
-	$arr = array();
-	$arr = array_flip($sin);
-    $sin = array_flip($arr);
-	$sinonim = implode(",", $sin);
-	$sinonim = str_replace(',', ', ', $sinonim);
-$result .= "<tr><td>".trim($keys2[$i])."</td><td align=center>".$raz."</td><td align=center>".$procent_slovo."</td><td align=center>".$sinonim."</td></tr>";
+$result .= "<tr><td>".trim($keys2[$i])."</td><td align=center>".$raz."</td><td align=center>".$procent_slovo."</td>";
+if ($sinoff == 1) $result .= "<td align=center>".$sinonim."</td>";
+if ($sinoff == 0) $result .= "<td align=center>Поиск синонимов отключен.</td>";
+$result .= "</tr>";
 	$summ+=$raz;
 	$proc+=$procent_slovo;
       }
@@ -292,36 +274,68 @@ $result .= "<tr><td>".trim($keys2[$i])."</td><td align=center>".$raz."</td><td a
 }
 
 function yapars($word, $geo='0') {
-  /* Параметры */
-  $fuid01 = '5092466b0cbab62d.jJgD6rQ2fWFcESmYT9oT82-ExFT4NaO7vw8H86HaqzHrhrHEdXNSr8DA2RI2rDYEP4N120pWif5GgR3hKu1WywHo_7plw1WyTzAYGkDRzDILyuWXBgIVE8KIWS3Cp9eO';
+  $count = count($word);
+  $uri = array();
+  for($i=0;$i<$count;$i++) {
   $params = array(
     'cmd' => 'words',
     'page' => 1,
-    't' => $word,
-    'geo' => $geo, // 39 - Москва и область
+    't' => $word[$i],
+    'geo' => $geo,
   );
 //'http://wordstat.yandex.ru/?cmd=words&page=1&t=%D0%BF%D0%BE%D0%BC%D0%B8%D0%B4%D0%BE%D1%80%D1%8B&geo=&text_geo='
   /* Запрос к wordstat Яндекс */
-  $uri = 'http://wordstat.yandex.ru/?'.http_build_query($params);
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $uri);
-  curl_setopt($ch, CURLOPT_HEADER,0);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-  curl_setopt($ch, CURLOPT_REFERER, 'http://wordstat.yandex.ru/');
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
-  curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
-  curl_setopt($ch, CURLOPT_COOKIE, 'fuid01='.$fuid01);
-  $contents = curl_exec($ch);
-  curl_close($ch);
-
+  $uri[$i] = 'http://wordstat.yandex.ru/?'.http_build_query($params);
+  }
+  $contents = array();
+  $contents = multiyapars($uri);
+  $m = array();
+  for($i=0;$i<$count;$i++) {
   /* Парсинг данных и их вывод на экран */
-  if ( preg_match('/<table border="0" cellpadding="5" cellspacing="0" width="100%">(.*)<\/table>/isU', $contents, $table) ) {
+  if ( preg_match('/<table border="0" cellpadding="5" cellspacing="0" width="100%">(.*)<\/table>/isU', $contents[$i], $table) ) {
     if ( preg_match_all('/<tr class="tlist" bgcolor=".*">\s*?<td>\s*?<a href=".*">(.*)<\/a>\s*?<\/td>\s*?<td><div style="width: 10px"><\/div> <\/td>\s*?<td class="align-right-td">(.*)<\/td>\s*?<\/tr>/isU', $table[1], $m) ) {
-      return $m;
-      }
-    }
+	$s[$i] = $m;
+      }}}
+	  return $s;
 }
-
+function multiyapars($data) {
+  $fuid01 = '5092466b0cbab62d.jJgD6rQ2fWFcESmYT9oT82-ExFT4NaO7vw8H86HaqzHrhrHEdXNSr8DA2RI2rDYEP4N120pWif5GgR3hKu1WywHo_7plw1WyTzAYGkDRzDILyuWXBgIVE8KIWS3Cp9eO';
+  $curls = array();
+  $result = array();
+  $mh = curl_multi_init();
+  // Дескриптор мульти потока. Тоесть эта штука отвечает за то, чтобы много
+  // запросов шли параллельно.
+  foreach ($data as $id => $d) {
+    $curls[$id] = curl_init();
+        // Для каждого url создаем отдельный curl механизм чтоб посылал запрос)
+        $url = (is_array($d) && !empty($d['url'])) ? $d['url'] : $d;
+        // Если $d это массив (как в случае с пост), то достаем из массива url
+        // если это не массив, а уже ссылка - то берем сразу ссылку
+  curl_setopt($curls[$id], CURLOPT_URL,$url);
+  curl_setopt($curls[$id], CURLOPT_HEADER,0);
+  curl_setopt($curls[$id], CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($curls[$id], CURLOPT_REFERER, 'http://wordstat.yandex.ru/');
+  curl_setopt($curls[$id], CURLOPT_CONNECTTIMEOUT, 30);
+  curl_setopt($curls[$id], CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
+  curl_setopt($curls[$id], CURLOPT_COOKIE, 'fuid01='.$fuid01);
+        // добавляем текущий механизм к числу работающих параллельно
+    curl_multi_add_handle($mh, $curls[$id]);
+  }
+  // число работающих процессов.
+  $running = null;
+  // curl_mult_exec запишет в переменную running количество еще не завершившихся
+  // процессов. Пока они есть - продолжаем выполнять запросы.
+  do { curl_multi_exec($mh, $running); } while($running > 0);
+  // Собираем из всех созданных механизмов результаты, а сами механизмы удаляем
+  foreach($curls as $id => $c) {
+    $result[$id] = curl_multi_getcontent($c);
+    curl_multi_remove_handle($mh, $c);
+  }
+  // Освобождаем память от механизма мультипотоков
+  curl_multi_close($mh);
+  // возвращаем данные собранные из всех потоков.
+  return $result;
+}
 function sinonim($sinonim) { 
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, 'http://seogenerator.ru/api/synonym/');
@@ -334,6 +348,7 @@ function sinonim($sinonim) {
   curl_setopt($ch, CURLOPT_POSTFIELDS, 'text='.$sinonim.'&base=big1&type=random&count=10&format=text');
   $contents = curl_exec($ch);
   curl_close($ch);
+  if ($contents == 'Exceeded the limit queries from this IP address') $contents = 'Перегрузка сервера.';
   return $contents;
 }
 ?>

@@ -1397,8 +1397,7 @@ function edit_main($id) {
 	$options = str_replace($module_name."|","",$useit);
 
 	// обнулили все опции от греха подальше
-	$titleshow=$media=$folder=$datashow=$tagdelete=$ipdatauser=$design=$open_all=$catshow=$main=$daleeshow=$openshow=$number=$add=$size=$papki_numbers=$zagolovokin=$menu=$notitlelink=$noli=$html=$show_title=$random=$showlinks=$open_new_window=$shablon=$show_new_pages=0;
-
+	$titleshow=$media=$folder=$datashow=$tagdelete=$ipdatauser=$design=$open_all=$catshow=$main=$daleeshow=$openshow=$number=$add=$size=$papki_numbers=$zagolovokin=$menu=$notitlelink=$noli=$html=$show_title=$random=$showlinks=$open_new_window=$shablon=$show_new_pages=$reload_link_show=$reload_link_time=0;
 	$opros_type=$limkol=$pageshow=$only_question=$opros_result=$foto_gallery_type=1;
 	$addtitle="Добавить статью";
 	$dal="Далее...";
@@ -1416,6 +1415,7 @@ function edit_main($id) {
 	$razdel_open2_name = "Открыть раздел";
 	$calendar = ""; // Календарь - перенаправление на дату из поля.
 	$show_in_razdel = "все";
+	$reload_link_text = "Показать еще...";
 
 	// Для базы данных
 	$base = ""; // Указываем название таблицы БД
@@ -1474,11 +1474,26 @@ function edit_main($id) {
 	<td><b>Заголовок блока</b></td>
 	<td>".select("options[titleshow]", "2,1,0", "внутри предисловия как блок [заголовок],показывать,не показывать", $titleshow)."</td>
 	</tr>";
-	echo "</table>";
 	////////////////
+	if ($name==0 or $name==1 or $name==3 or $name==4 or $name==6 or $name==8 or $name==9 or $name==10 or $name==13) echo "</table><br><br><h2>Настройка данного типа блока:</h2><table width=100% class='table_light'>";
+	
 
-	if ($name==0 or $name==1 or $name==4 or $name==6 or $name==8 or $name==9 or $name==10 or $name==13) echo "<br><br><h2>Настройка данного типа блока:</h2>";
-	echo "<table width=100% class=table_light>";
+	if ($name == 3) {
+	echo "<tr>
+	<td>Время автоматического обновления блока:</td>
+	<td>".select("options[reload_link_time]", "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,25,30,50,60,120,180,240,300,600", "ВЫКЛЮЧЕНО,1 сек.,2,3,4,5 сек.,6,7,8,9,10 сек.,11,12,13,14,15 сек.,16,17,18,19,20 сек.,25,30,50 сек.,1 мин.,2 мин.,3 мин.,4 мин.,5 мин.,10 мин.", $reload_link_time)."</td>
+	</tr>";
+
+	echo "<tr>
+	<td>Показывать ссылку для обновления блока:</td>
+	<td>".select("options[reload_link_show]", "2,1,0", "после блока,до блока,НЕ показывать", $reload_link_show)."</td>
+	</tr>";
+
+	echo "<tr>
+	<td>Текст ссылки обновления блока:</td>
+	<td>".input("options[reload_link_text]", $reload_link_text)."</td>
+	</tr>";
+	}
 
 	if ($name == 0 or $name == 1 or $name == 9) {
 	echo "<tr>

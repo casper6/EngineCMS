@@ -220,8 +220,8 @@ table[align=left] {margin-right: 10px;}
 table[align=right] {margin-left: 10px;}
 
 
-.icon {margin-right: 5px; margin-left: 5px; width:16px; height:16px; border:0;}
-.icon2 {margin:0; padding:0; margin-right: 2px; width:16px; height:16px; border:0; cursor:pointer;}
+.icon {margin-right: 5px; margin-left: 5px; width:16px !important; height:16px !important; border:0;}
+.icon2 {margin:0 !important; padding:0 !important; margin-right: 2px; width:16px !important; height:16px !important; border:0; cursor:pointer;}
 .i1 {background: url('/images/icons.png'); }
 .i2 {background: url('/images/icons.png') -16px; }
 .i3 {background: url('/images/icons.png') -32px; }
@@ -275,8 +275,8 @@ table[align=right] {margin-left: 10px;}
 .all_width, .main_mail_input {width:100%;}
 .main_mail_form, .main_search_form, .add, .main_search_form {display:inline;}
 
-.show_block { border: 2px solid black; padding:2px;  border-radius: 12px;  -moz-border-radius: 12px;  -webkit-border-radius: 12px;}
-.show_block_title {background: #7f7f7f; color: white; padding:2px; padding-left:5px; border: 0;  border-radius: 10px;  -moz-border-radius: 10px;  -webkit-border-radius: 10px;}
+.show_block { border: 2px dotted green; padding:1px;  border-radius: 5px;  -moz-border-radius: 5px;  -webkit-border-radius: 5px;}
+.show_block_title {background: #efefef; color: black; padding:2px; padding-left:5px; border: 0;}
 
 input[type=search] {
   -webkit-appearance: textfield;

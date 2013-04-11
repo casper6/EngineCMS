@@ -16,8 +16,11 @@ function seo($edit=false){
 function seo(){
   var x=document.getElementById('open_text').value;
   var y=document.getElementById('main_text').value;
-  var kolkey=document.getElementById('kolkey').value;
-  var kolslov=document.getElementById('kolslov').value;
+  var kolkey= $('select.kolkey').val();
+  var kolslov = $('select.kolslov').val();
+  var kolslov = $('select.kolslov').val();
+  var wordstatv = $('select.wordstatv').val();
+  var poisksin = $('select.poisksin').val();
   var geo=document.getElementById('geo').value;
   var koldes=250;
   var a = (x+y);
@@ -29,10 +32,10 @@ function seo(){
       if( key.length >= 3 )  {
         $('#key').show('slow'); $('#key_hide').hide();
     document.getElementById('procent').innerHTML = '<h2>Загружаю вычисления...</h2>';
-        document.getElementById('wordstat').innerHTML = '<h2>Загружаю популярные подходящие словосочетания...</h2>';
+        if (wordstatv == 1) { document.getElementById('wordstat').innerHTML = '<h2>Загружаю популярные подходящие словосочетания...</h2>';}
         zapros('metod=des&x='+a+'&key='+key+'&kol='+koldes,document.getElementById('description2'),'des');
-        zapros('metod=procent&x='+a+'&key='+key,document.getElementById('procent'),'proc');
-        zapros('metod=wordstat&x='+a+'&geo='+geo+'&key='+key,document.getElementById('wordstat'),'word');
+        zapros('metod=procent&x='+a+'&key='+key+'&sin='+poisksin,document.getElementById('procent'),'proc');
+		if (wordstatv == 1) { zapros('metod=wordstat&x='+a+'&geo='+geo+'&key='+key,document.getElementById('wordstat'),'word'); }
       } 
     }
     xps.open('POST','includes/seo.php',true);
@@ -55,7 +58,39 @@ function zapros(url,mesto,metod) {
 
 <span id='ajax'></span><div id=seoshow ";
 if ($edit == false) echo "style='display:none;'";
-echo "><input type='button' value='Пересчитать' onclick='seo()'> <b>Регион:</b> <input id='geo' value='".$geo."' size=5> <a href='http://search.yaca.yandex.ru/geo.c2n' target='_blank'>Найти регион</a> <b>Ключевых слов всего:</b> <input id='kolkey' value='".$kolkey."' size=2> <b>Из них словосочетаний:</b> <input id='kolslov' value='".$kolkey."' size=2><p id='procent'></p><p id='wordstat'></p>
+echo "><input type='button' value='Пересчитать' onclick='seo()'> 
+<br>
+<b>Регион:</b> <input id='geo' value='".$geo."' size=5> <a href='http://search.yaca.yandex.ru/geo.c2n' target='_blank'>Найти регион</a> 
+<br><b>Ключевых слов всего:</b> <select class='kolkey'><option value='10' selected='selected'>10</option>
+<option value='9'>9</option>
+<option value='8'>8</option>
+<option value='7'>7</option>
+<option value='6'>6</option>
+<option value='5'>5</option>
+<option value='4'>4</option>
+<option value='3'>3</option>
+<option value='2'>2</option>
+<option value='1'>1</option>
+</select> 
+<br><b>Из них словосочетаний:</b> <select class='kolslov'>
+<option value='2' selected='selected'>По-умолчанию (2)</option>
+<option value='1'>1</option>
+<option value='2'>2</option>
+<option value='3'>3</option>
+<option value='4'>4</option>
+<option value='5'>5</option>
+<option value='6'>6</option>
+<option value='7'>7</option>
+<option value='8'>8</option>
+<option value='9'>9</option>
+<option value='10'>10</option>
+</select>
+<br><b>Искать синонимы:</b> <select class='poisksin'>
+<option value='0' selected='selected'>НЕТ</option>
+<option value='1'>ДА</option></select>
+<br><b>Выдача вордстат:</b> <select class='wordstatv'>
+<option value='0' selected='selected'>НЕТ</option>
+<option value='1'>ДА</option></select><p id='procent'></p><p id='wordstat'></p>
 </div>";
 }
 
@@ -866,12 +901,6 @@ function base_pages_edit_page($pid, $red=0) {
   if ($rss==1) $check= " checked"; else $check= " unchecked";
   if ($nocomm==1) $check2= " checked"; else $check2= " unchecked";
 
-  echo "<label><input type=checkbox name=nocomm value=1".$check2."> Запретить комментарии</label><br>
-
-  <label><input type=checkbox name=rss value=1".$check."> Добавить в RSS</label>  <a onclick=\"show('help2')\" class=help>?</a><br><div id='help2' style='display:none;'><br>Технология RSS похожа на e-mail подписку на новости — в RSS-программу, сайт RSS-читалки или встроенную систему чтения RSS в браузере добавляется ссылка на данный сайт, после чего название и предисловие всех новых страниц, отмеченных данной галочкой, будут видны подписавшемуся человеку и он сможет быстро ознакомиться с их заголовками, не заходя на сайт. Если что-то ему понравится — он откроет сайт и прочитает подробности. RSS используется для постепенного увеличения количества посетителей сайта путем их возвращения на сайт за интересной информацией. <a href=http://yandex.ru/yandsearch?text=Что+такое+RSS%3F target=_blank>Подробнее о RSS?</a><br></div><br>";
-  if ($mainpage==1) $check= " checked"; else $check= " unchecked";
-  echo "<label><input type=checkbox name=mainpage value=1".$check."> На главную страницу</label> <a onclick=\"show('help1')\" class=help>?</a><br><div id='help1' style='display:none;'><br>Если отметить эту галочку, данная страница будет отображаться в блоке, который настроен на отображение только помеченных этой галочкой страниц, или не будет отображаться в блоке, который настроен на показ всех неотмеченных галочкой страниц.<br></div><br>";
-  echo "Очередность: <INPUT type=text name=sor value='".$sor."' style='text-align:center;' size=3><a onclick=\"show('help8')\" class=help>?</a><div id='help8' style='display:none;'><br>Настраивается в настройках раздела. Может быть равна цифре. Применяется для ручной сортировки страниц. Лучше всего делать кратной 10, например 20, 30, 40 и т.д. для того, чтобы было удобно вставлять страницы между двумя другими. Если очередность у двух страниц совпадает, сортировка происходит по дате.<br></div><br><br>";
   $data = explode(" ",$data);
   $data1 = date2normal_view($data[0]);
   $data = explode(":",$data[1]);
@@ -907,7 +936,14 @@ function base_pages_edit_page($pid, $red=0) {
   echo "</select>м";
   echo "<input type=text name=data4 value='".$data4."' style='font-size:12px;' size=1 onclick=\"this.value='00'\">с
   <div id='help0' style='display:none;'><br>Для выбора даты из календаря нажмите по дате. Для обнуления секунд кликните по ним. Минуты представлены текущим вариантом или выбором из основного интервала для ускорения работы.<br></div>
-  <br><br>";
+  <br><br>
+
+  <label><input type=checkbox name=nocomm value=1".$check2."> Запретить комментарии</label><br>
+  <label><input type=checkbox name=rss value=1".$check."> Добавить в RSS</label>  <a onclick=\"show('help2')\" class=help>?</a><br><div id='help2' style='display:none;'><br>Технология RSS похожа на e-mail подписку на новости — в RSS-программу, сайт RSS-читалки или встроенную систему чтения RSS в браузере добавляется ссылка на данный сайт, после чего название и предисловие всех новых страниц, отмеченных данной галочкой, будут видны подписавшемуся человеку и он сможет быстро ознакомиться с их заголовками, не заходя на сайт. Если что-то ему понравится — он откроет сайт и прочитает подробности. RSS используется для постепенного увеличения количества посетителей сайта путем их возвращения на сайт за интересной информацией. <a href=http://yandex.ru/yandsearch?text=Что+такое+RSS%3F target=_blank>Подробнее о RSS?</a><br></div><br>";
+  if ($mainpage==1) $check= " checked"; else $check= " unchecked";
+  echo "<label><input type=checkbox name=mainpage value=1".$check."> На главную страницу</label> <a onclick=\"show('help1')\" class=help>?</a><br><div id='help1' style='display:none;'><br>Если отметить эту галочку, данная страница будет отображаться в блоке, который настроен на отображение только помеченных этой галочкой страниц, или не будет отображаться в блоке, который настроен на показ всех неотмеченных галочкой страниц.<br></div><br>";
+  echo "Очередность: <INPUT type=text name=sor value='".$sor."' style='text-align:center;' size=3><a onclick=\"show('help8')\" class=help>?</a><div id='help8' style='display:none;'><br>Настраивается в настройках раздела. Может быть равна цифре. Применяется для ручной сортировки страниц. Лучше всего делать кратной 10, например 20, 30, 40 и т.д. для того, чтобы было удобно вставлять страницы между двумя другими. Если очередность у двух страниц совпадает, сортировка происходит по дате.<br></div><br><br>";
+
   echo "<a onclick=\"show('slugebka')\" class=punkt>Скрытая информация</a>
   <br><div id='slugebka' style='display:none;'><div class=radius><span class=small>Лучше не менять.</span><br>
   <h3 style='display:inline'>Копия:</h3><INPUT type=text name=cop value='".$copy."' size=3><a onclick=\"show('help18')\" class=help>?</a><br><div id='help18' style='display:none;'>У страниц-копий указывается один и тот же номер — номер оригинальной страницы. Если это не копия, а единственный оригинал, цифра равна 0.<br></div><br>

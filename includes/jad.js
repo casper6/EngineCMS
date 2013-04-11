@@ -178,6 +178,18 @@ function del_file(file, id) {
 	    success: function(data){ $('#file'+id).hide(); }
 	});
 }
+function delblock(id) {
+	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
+	    data: {'func': 'delblock', 'id': id },
+	    beforeSend: function(){ $('#block'+id).hide(); },
+	});
+}
+function offblock(id) {
+	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
+	    data: {'func': 'offblock', 'id': id },
+	    success: function(data){ $('#block'+id).html(data); }
+	});
+}
 function offcomm(id) {
 	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'offcomm', 'id': id },

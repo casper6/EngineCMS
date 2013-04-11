@@ -106,7 +106,7 @@ $db->sql_query("CREATE TABLE `".$prefix."_mainpage` (
  `shablon` mediumtext NOT NULL,
  `counter` int(10) DEFAULT '0' NOT NULL,
  `tables` enum('pages','del','backup') DEFAULT 'pages' NOT NULL,
- `color` tinyint(1),
+ `color` tinyint(1) DEFAULT '0' NOT NULL,
  `description` varchar(255) NOT NULL,
  `keywords` varchar(255) NOT NULL,
  PRIMARY KEY (`id`)
