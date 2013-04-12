@@ -310,7 +310,7 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 			if (($nameX==0 or $nameX==1 or $nameX==4 or $nameX==6 or $nameX==8 or $nameX==9) and $notitlelink==0) {
 				$design_open .= "<h3 class=\"h3_block_title class_".$class."\"><a href=".$alternative_title_link." title=\"".$block_title."\" class=\"h3_block_title class_".$class."\">".$block_title."</a>".$block_title2."</h3><div class=polosa></div>"; 
 			} else {
-				$design_open .= "<h3 class=\"h3_block_title class_".$class."\">".$block_title."</h3><div class=polosa></div>";
+				if ($titleshow != 2) $design_open .= "<h3 class=\"h3_block_title class_".$class."\">".$block_title."</h3><div class=polosa></div>";
 			}
 		} 
 		if (!isset($design[1])) $design[1] = "";
@@ -322,7 +322,7 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 			if (($nameX==0 or $nameX==1 or $nameX==4 or $nameX==6 or $nameX==8 or $nameX==9) and $notitlelink==0) {
 				$design_open .= "<h3 class=\"".$shablonX." h3_block_title class_".$class."\"><a href=".$alternative_title_link." title=\"".$block_title."\" class=\"h3_block_title class_".$class."\">".$block_title."</a>".$block_title2."</h3><div class=polosa></div>";
 			} else {
-				$design_open .= "<h3 class=\"".$shablonX." h3_block_title class_".$class."\">".$block_title."</h3><div class=polosa></div>";
+				if ($titleshow != 2) $design_open .= "<h3 class=\"".$shablonX." h3_block_title class_".$class."\">".$block_title."</h3><div class=polosa></div>";
 			}
 		}
 	$design_close = "</div>";
@@ -645,8 +645,9 @@ case "1": # Блок комментариев модуля
 	$block = str_replace("[$titleX]", $design_open.$textX.$design_close, $block);
 	$type = ""; break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////
-case "2": # Блок текста 
+case "2": # Блок текста
 	$block = str_replace("[$titleX]", $design_open.$textX.$design_close, $block);
+	if ($titleshow != 0) $block = str_replace("[заголовок]", $titleX, $block);
 	break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 case "3": # Блок ротатор рекламы
@@ -1315,7 +1316,7 @@ case "30": # Статистика раздела, выводит кол-во п�
 } # ЗАКОНЧЕНО ПОВТОРНОЕ Определение блоков и их заполнение
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	// Заголовок для модуля ставится в дизайн
+	// Заголовок для раздела ставится в дизайн
 	if (strpos($block, "[заголовок")) {
 		$block = str_replace("[заголовок]", "<div class=cat_title>".$main_title."</div>", $block); 
 		$block = str_replace("[заголовок-ссылка]", "<div class=cat_title><A class=cat_categorii_link href=-".$DBName.">".$main_title."</a></div>", $block); 
