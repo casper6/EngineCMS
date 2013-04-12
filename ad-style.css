@@ -338,7 +338,7 @@ img, table {border:0;}
 .deact {color:gray; background:#fdd;}
 p {margin-top: 15px;margin-left: 5px;}
 .gray {color:#555; font-size: 0.9em;}
-.bggray {padding: 5px; font-family: Georgia, "Times New Roman"; background-color:#eeeeee; color:black; font-size: 1.1em;}
+.bggray {padding: 5px; font-style: italic; background-color:#eeeeee; color:black; font-size: 1.1em;}
 .no {margin-bottom: 10px; padding: 0px; display:inline; text-decoration:none;}
 
 .li_file {list-style-image:url(/images/file.gif); margin-top: -3px; }

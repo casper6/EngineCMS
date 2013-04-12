@@ -191,13 +191,13 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
           $title = $row['title'].$diz.$razr.$bloc.$stri;
       } else $title = $row['title'];
       if ($row['color'] != "1") {
-        $icon_disable = "43"; $text_disable = "Отключить блок";
+        $icon_disable = "43"; $text_disable = "Отключить блок"; $class_disable = "";
       } else {
-        $icon_disable = "44"; $text_disable = "Включить блок";
+        $icon_disable = "44"; $text_disable = "Включить блок"; $class_disable = " bggray";
       }
       if ($n == $row['name']) $nu = "-";  else { $n = $row['name']; $nu = $row['name']; }
       $bgcolor = "#FFeecc"; //FFddaa
-       if ($nu == "-") $block = "<tr valign=top id='block".$row['id']."'><td class='padleft30'>"; else $block = "<tr valign=top><td style='background:white;'><br><h2>".$block_names[$nu]." &darr;</h2></td></tr><tr id='block".$row['id']."'><td class='padleft30'>";
+       if ($nu == "-") $block = "<tr valign=top id='block".$row['id']."'><td class='padleft30".$class_disable."'>"; else $block = "<tr valign=top><td style='background:white;'><br><h2>".$block_names[$nu]." &darr;</h2></td></tr><tr id='block".$row['id']."'><td class='padleft30".$class_disable."'>";
       $title = $block.$title;
       $blocks_ok = "".$title."<div style='margin-left:20px; display: inline; float:right;'>
        <a href='sys.php?op=mainpage&type=3&id=".$row['id']."&red=1' title='Редактировать в HTML'><img class='icon2 i34' src='/images/1.gif'></a> 

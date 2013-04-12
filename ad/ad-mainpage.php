@@ -2177,11 +2177,11 @@ if ($numrows = $db->sql_numrows($result) > 0) {
 		$text = "base|type=".$s_tip.$add."&options=".$text2;
 		$useit = "[содержание]";
 	} 
-	$namo = mysql_real_escape_string($namo);
-	$title = mysql_real_escape_string($title);
-	$text = mysql_real_escape_string($text);
-	$useit = mysql_real_escape_string($useit);
-	$shablon = mysql_real_escape_string($shablon);
+	$namo = mysql_real_escape_string(stripcslashes($namo));
+	$title = mysql_real_escape_string(stripcslashes($title));
+	$text = mysql_real_escape_string(stripcslashes($text));
+	$useit = mysql_real_escape_string(stripcslashes($useit));
+	$shablon = mysql_real_escape_string(stripcslashes($shablon));
 	$db->sql_query("INSERT INTO ".$prefix."_mainpage (`id`, `type`, `name`, `title`, `text`, `useit`, `shablon`, `counter`, `tables`, `color`, `description`, `keywords`) VALUES (NULL, '".$type."', '".$namo."', '".$title."', '".$text."', '".$useit."', '".$shablon."', '0', 'pages', '0', '', '');") or die('Не удалось создать. Попробуйте еще раз и в случае неудачи обратитесь к разработчику.');
 		}
 
@@ -2192,7 +2192,7 @@ if ($numrows = $db->sql_numrows($result) > 0) {
 	//if ( ($nastroi == 1 and $type == 2) or ($id != 0 and $type == 2) ) Header("Location: sys.php"); 
 	if ($type == 2) Header("Location: sys.php?op=mainpage&id=".$row2['id']."&nastroi=1");
 	elseif ($type == 3) Header("Location: sys.php?op=mainpage&id=".$row2['id']."&type=3&nastroi=1");
-	else Header("Location: sys.php");
+	else Header("Location: sys.php?op=mainpage&type=element");
 	die;
 }
 #####################################################################################################################
@@ -2216,7 +2216,7 @@ function mainpage_del($id, $type, $name="") {
 			Header("Location: sys.php?op=".$admintip."&type=element");
 		break;
 		case '3':
-			# Стиль CSS - автоматически удалять из дизайнов -- ДОДЕЛАТЬ!!!
+			# блоки
 			$db->sql_query("DELETE FROM ".$prefix."_mainpage WHERE id='".$id."'");
 			Header("Location: sys.php?op=".$admintip."&type=element");
 		break;
@@ -2273,9 +2273,10 @@ function mainpage_create_block($title, $name, $text, $modul, $useit, $design) {
 		$shablon = "block-".$modul_name."-".$name; // css блока имеет вид: block-англ.имя раздела-тип блока
 	} else $shablon = "block-".trans($title);
 	if ($design != 0) $useit .= "&design=$design";
-	$title = mysql_real_escape_string($title);
-	$text = mysql_real_escape_string($text);
-	$useit = mysql_real_escape_string(str_replace("|&","|",$useit));
+	$title = mysql_real_escape_string(stripcslashes($title));
+	$shablon = mysql_real_escape_string(stripcslashes($shablon));
+	$text = mysql_real_escape_string(stripcslashes($text));
+	$useit = mysql_real_escape_string(stripcslashes(str_replace("|&","|",$useit)));
 	$db->sql_query("INSERT INTO ".$prefix."_mainpage VALUES (NULL, '3', '".$name."', '".$title."', '".$text."', '".$useit."', '".$shablon."', '0', 'pages', '0', '', '')") or die("Не удалось создать блок. INSERT INTO ".$prefix."_mainpage VALUES (NULL, '3', '".$name."', '".$title."', '".$text."', '', '".$useit."', '".$shablon."', '0', 'pages', '0', '', '') ");
 	// узнаем id
 	$row = $db->sql_fetchrow($db->sql_query("select `id` from ".$prefix."_mainpage where `tables`='pages' and `type`='3' and `name`='".$name."' and `title`='".$title."' and `text`='".$text."' and `useit`='".$useit."' limit 1"));
