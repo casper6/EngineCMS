@@ -1,23 +1,15 @@
 if (typeof RedactorPlugins === 'undefined') var RedactorPlugins = {};
-
 RedactorPlugins.fullscreen = {
-
-	init: function()
-	{	
+	init: function(){	
 		this.fullscreen = false;
-		this.addBtn('fullscreen', 'Fullscreen', function(obj)
-		{
+		this.addBtn('fullscreen', 'Открыть редактор на весь экран', function(obj){
 			obj.toggleFullscreen();
 		});
-		
 		this.setBtnRight('fullscreen');
 	},
-	toggleFullscreen: function()
-	{
+	toggleFullscreen: function(){
 		var html;
-	
-		if (this.fullscreen === false)
-		{
+		if (this.fullscreen === false){
 			this.changeBtnIcon('fullscreen', 'normalscreen');
 			this.setBtnActive('fullscreen');
 			this.fullscreen = true;
@@ -35,9 +27,7 @@ RedactorPlugins.fullscreen = {
 			$(document).scrollTop(0,0);
 			
 			this.$editor.focus();
-		}
-		else
-		{
+		} else {
 			this.removeBtnIcon('fullscreen', 'normalscreen');
 			this.setBtnInactive('fullscreen');
 			this.fullscreen = false;
@@ -50,28 +40,20 @@ RedactorPlugins.fullscreen = {
 			
 			this.syncCode();
 			
-			
-			if (this.opts.autoresize)
-			{
+			if (this.opts.autoresize){
 				this.$el.css('height', 'auto');
 				this.$editor.css('height', 'auto')						
-			}
-			else
-			{
+			} else {
 				this.$el.css('height', this.fsheight);
 				this.$editor.css('height', this.fsheight)			
 			}
-			
 			this.$editor.focus();
 		}		
 	},
-	fullScreenResize: function()
-	{
-		if (this.fullscreen === false)
-		{
+	fullScreenResize: function() {
+		if (this.fullscreen === false){
 			return false;
 		}
-		
 		var pad = this.$editor.css('padding-top').replace('px', '');
 		var height = $(window).height() - 34;
 		this.$box.width($(window).width() - 2).height(height+34);		

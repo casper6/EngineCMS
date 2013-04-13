@@ -62,5 +62,9 @@ RELANG['ru'] = {
 	horizontalrule: 'Горизонтальная линейка',
 	fullscreen: 'Во весь экран',
 	deleted: 'Зачеркнутый',
-	anchor: 'Якорь'									
+	anchor: 'Якорь',
+	link_new_tab: 'Открывать ссылку в новом окне',
+	underline: 'Подчеркивание',
+	alignment: 'Выравнивание',
+	name_optional: 'Название (необязательно)'
 };

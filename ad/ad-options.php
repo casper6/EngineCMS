@@ -127,7 +127,7 @@ if ($row['realadmin'] == 1) {
 		include ("ad-header.php");
 		$ok = intval($ok);
 		// Получаем настройки из mainfile
-		global $sitename, $startdate, $adminmail, $keywords, $description, $counter, $statlink, $postlink, $stopcopy, $registr, $pogoda, $flash, $sgatie, $ht_backup, $captcha_ok, $xnocashe, $jqueryui, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $comment_send, $company_name, $company_fullname, $company_address, $company_time, $company_tel, $company_sot, $company_fax, $company_email, $company_map, $company_people, $search_design, $tag_design, $add_fonts, $site_cash, $normalize, $project_logotip, $project_name, $geo, $kolkey;
+		global $sitename, $startdate, $adminmail, $keywords, $description, $counter, $statlink, $postlink, $stopcopy, $registr, $pogoda, $flash, $sgatie, $ht_backup, $captcha_ok, $xnocashe, $jqueryui, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $comment_send, $company_name, $company_fullname, $company_address, $company_time, $company_tel, $company_sot, $company_fax, $company_email, $company_map, $company_people, $search_design, $tag_design, $add_fonts, $site_cash, $normalize, $project_logotip, $project_name, $geo, $kolkey, $add_clips;
 		
 		$ad_fon_option = ""; // Выбор фоновок для админки
 		for ($i=1; $i < 28; $i++) { // всего 27 фоновок + 1 по-умолчанию в папке images/ad-fon
@@ -149,13 +149,17 @@ $opt_save = ":";
 if ($ok==1) $opt_save = " сохранены";
 
 echo "<table style='width:100%; margin-top:5px; padding:0; background: #e2e5ea;' cellspacing=0 cellpadding=0><tr valign=top><td id='razdel_td' class='radius nothing' width=340>
-
-			<div id='razdels' style='background:#e7e9ec;'>
+	<div id='razdels' style='background:#e7e9ec;'>
 			<div class='black_grad'><span class='h1'>Настройки".$opt_save."</span></div>";
 	echo "<div id='mainrazdel8' class='dark_pole2'><a class='base_page' onclick=\"options_show('8','show_first')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\".\"></span><span class='plus20'>Перед началом разработки</span></div></a></div>";
 	echo "<div id='mainrazdel2' class='dark_pole2'><a class='base_page' onclick=\"options_show('2','show_options_fonts')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"i\"></span><span class='plus20'>Подключение шрифтов</span></div></a></div>";
 	echo "<div id='mainrazdel0' class='dark_pole2'><a class='base_page' onclick=\"options_show('0','show_options')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"Z\"></span><span class='plus20'>Основные настройки Сайта</span></div></a></div>";
 	echo "<div id='mainrazdel1' class='dark_pole2'><a class='base_page' onclick=\"options_show('1','show_options_company')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"Y\"></span><span class='plus20'>Карточка компании (мини блоки)</span></div></a></div>";
+	
+
+	echo "<div class='right3 '><button id=mainrazdel9 style='float:right;' title='Добавить заготовку...' class='dark_pole2' onclick=\"options_show('5','show_options_zagotovka'); $('#add_clip').show('slow');\"><span class='mr-2 icon darkgrey small' data-icon='+'></span><span class='plus20'>Добавить</span></button></div>
+
+	<div id='mainrazdel5' class='dark_pole2'><a class='base_page' onclick=\"options_show('5','show_options_zagotovka')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"7\"></span><span class='plus20'>Заготовки для редактора</span></div></a></div>";
 	echo "<div id='mainrazdel3' class='dark_pole2'><a class='base_page' onclick=\"options_show('3','show_options_adspeed')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"z\"></span><span class='plus20'>Настройки Администрирования</span></div></a></div>";
 	echo "<div id='mainrazdel4' class='dark_pole2'><a class='base_page' onclick=\"options_show('4','show_options_pass_block')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"O\"></span><span class='plus20'>Смена пароля и Блокировка по IP</span></div></a></div>";
 	echo "<div id='mainrazdel7' class='dark_pole2'><a class='base_page' onclick=\"options_show('7','show_options_oldfotos'); trash_pics();\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"1\"></span><span class='plus20'>Удаление неиспользуемых фотографий</span></div></a></div>";
@@ -217,301 +221,357 @@ body {}
 
 
 <div id='show_options' class='show_pole' style='display:none;'>
-<table class=table_light>
+	<table class=table_light>
 
-<tr valign=top><td>
-Название сайта (для заголовка title):</td><td class=small>
-".input("options[sitename]", $sitename, 60)."
-</td></tr><tr valign=top><td>
-Логотип сайта/компании:</td><td class=small>
-".input("options[project_logotip]", $project_logotip, 60)."
-<br>Можно вывести в дизайн через блок [лого_проекта]
-</td></tr><tr valign=top><td>
-Название проекта/компании:</td><td class=small>
-".input("options[project_name]", $project_name, 60)."
-<br>Можно вывести в дизайн через блок [название_проекта]. Обобщенный вариант через замену картинкой тега H1 — через блок [название_лого_проекта]. А настраивается всё через CSS за счет стилей, которые можно посомтреть в коде страницы.
+	<tr valign=top><td>
+	Название сайта (для заголовка title):</td><td class=small>
+	".input("options[sitename]", $sitename, 60)."
+	</td></tr><tr valign=top><td>
+	Логотип сайта/компании:</td><td class=small>
+	".input("options[project_logotip]", $project_logotip, 60)."
+	<br>Можно вывести в дизайн через блок [лого_проекта]
+	</td></tr><tr valign=top><td>
+	Название проекта/компании:</td><td class=small>
+	".input("options[project_name]", $project_name, 60)."
+	<br>Можно вывести в дизайн через блок [название_проекта]. Обобщенный вариант через замену картинкой тега H1 — через блок [название_лого_проекта]. А настраивается всё через CSS за счет стилей, которые можно посомтреть в коде страницы.
 
-</td></tr><tr valign=top><td>
-Описание сайта:</td><td class=small>
-".input("options[description]", $description, 60, "txt")."
-<br>Максимум 500 символов. Для поисковых систем (Description)
-</td></tr><tr valign=top><td>
-Ключевые словосочетания:</td><td class=small>
-".input("options[keywords]", $keywords, 60, "txt")."
-<br>Максимум 500 символов. Через запятую. Для поисковых систем (Keywords)
-</td></tr><tr valign=top class=p2><td>
-Ссылка на почтовый сайт:</td><td class=small>
-".input("options[postlink]", $postlink, 60)."
-<br>Если редактору удобно открывать свой почтовый сайт из системы администрирования сайта.
-</td></tr><tr valign=top class=p2><td>
-Ссылка на статистику:</td><td class=small>
-".input("options[statlink]", $statlink, 60)."
-<br>Ссылка на внешнюю статистику Сайта: LiveInternet, Google Analytics, Яндекс.Метрика и другие. Например, если использовать <a href=http://www.liveinternet.ru/add>liveinternet.ru</a> ссылка будет такой: http://pda.liveinternet.ru/stat/".$siteurl."/. Отображается сверху в Администрировании - Статистика.
-</td></tr><tr valign=top class=p2><td>
-Код счетчика статистики:</td><td class=small>
-".input("options[counter]", $counter, 60, "txt")."
-<br>Код счетчика внешней статистики Сайта: LiveInternet, Google Analytics, Яндекс.Метрика и другие. Счетчик можно поставить в дизайн как автоматический блок, написав [статистика]. Если вы хотите скрыть счетчик от посетителей - используйте счетчик без цифр (и с закрытой от просмотра статистикой) и/или поставьте счетчик в скрытый слой DIV (тогда ссылка на статистику будет доступна только из Администрирования — ссылка сверху). Если использовать <a href=http://www.liveinternet.ru/add>LiveInternet</a> для получения счетчика — выбрать при получении: «код счетчика в одну строчку» и «учитывать заголовки».
-</td></tr>
+	</td></tr><tr valign=top><td>
+	Описание сайта:</td><td class=small>
+	".input("options[description]", $description, 60, "txt")."
+	<br>Максимум 500 символов. Для поисковых систем (Description)
+	</td></tr><tr valign=top><td>
+	Ключевые словосочетания:</td><td class=small>
+	".input("options[keywords]", $keywords, 60, "txt")."
+	<br>Максимум 500 символов. Через запятую. Для поисковых систем (Keywords)
+	</td></tr><tr valign=top class=p2><td>
+	Ссылка на почтовый сайт:</td><td class=small>
+	".input("options[postlink]", $postlink, 60)."
+	<br>Если редактору удобно открывать свой почтовый сайт из системы администрирования сайта.
+	</td></tr><tr valign=top class=p2><td>
+	Ссылка на статистику:</td><td class=small>
+	".input("options[statlink]", $statlink, 60)."
+	<br>Ссылка на внешнюю статистику Сайта: LiveInternet, Google Analytics, Яндекс.Метрика и другие. Например, если использовать <a href=http://www.liveinternet.ru/add>liveinternet.ru</a> ссылка будет такой: http://pda.liveinternet.ru/stat/".$siteurl."/. Отображается сверху в Администрировании - Статистика.
+	</td></tr><tr valign=top class=p2><td>
+	Код счетчика статистики:</td><td class=small>
+	".input("options[counter]", $counter, 60, "txt")."
+	<br>Код счетчика внешней статистики Сайта: LiveInternet, Google Analytics, Яндекс.Метрика и другие. Счетчик можно поставить в дизайн как автоматический блок, написав [статистика]. Если вы хотите скрыть счетчик от посетителей - используйте счетчик без цифр (и с закрытой от просмотра статистикой) и/или поставьте счетчик в скрытый слой DIV (тогда ссылка на статистику будет доступна только из Администрирования — ссылка сверху). Если использовать <a href=http://www.liveinternet.ru/add>LiveInternet</a> для получения счетчика — выбрать при получении: «код счетчика в одну строчку» и «учитывать заголовки».
+	</td></tr>
 
-<tr valign=top class=hide><td>
-Регистрация:</td><td class=small>
-".select("options[registr]", "0,1", "НЕТ,ЕСТЬ", $registr)."
-<br>Вкл./Откл. Регистрацию и Вход пользователей на сайт.  Не работает</td></tr>
+	<tr valign=top class=hide><td>
+	Регистрация:</td><td class=small>
+	".select("options[registr]", "0,1", "НЕТ,ЕСТЬ", $registr)."
+	<br>Вкл./Откл. Регистрацию и Вход пользователей на сайт.  Не работает</td></tr>
 
-<tr valign=top class=p3><td>
-Анимация:</td><td class=small>
-".select("options[pogoda]", "0,1,2,3", "Отключена,* Снегопад,@ Осенние листья,• Воздушные шарики", $pogoda)."
-<br>Фоновая анимация поверх содержания сайта (только на Главной странице).</td></tr>
+	<tr valign=top class=p3><td>
+	Анимация:</td><td class=small>
+	".select("options[pogoda]", "0,1,2,3", "Отключена,* Снегопад,@ Осенние листья,• Воздушные шарики", $pogoda)."
+	<br>Фоновая анимация поверх содержания сайта (только на Главной странице).</td></tr>
 
-<tr valign=top class=p3><td>
-Полная поддержка Flash:</td><td class=small>
-".select("options[flash]", "0,1", "НЕТ,ЕСТЬ", $flash)."
-<br>Включать ТОЛЬКО при проблемах отображения SWF-файлов, FLA-видео и Flash-анимации на сайте.
-</td></tr>
+	<tr valign=top class=p3><td>
+	Полная поддержка Flash:</td><td class=small>
+	".select("options[flash]", "0,1", "НЕТ,ЕСТЬ", $flash)."
+	<br>Включать ТОЛЬКО при проблемах отображения SWF-файлов, FLA-видео и Flash-анимации на сайте.
+	</td></tr>
 
-<tr valign=top class=p3><td>
-Простая защита от копирования: </td><td class=small>
-".select("options[stopcopy]", "0,1", "НЕТ,ЕСТЬ", $stopcopy)."
-<br>Препятствует массовому копированию статей на чужие сайты глупыми злоумышленниками. Невозможность выделить/скопировать текст и нажать правую кнопку мыши. </td></tr>
+	<tr valign=top class=p3><td>
+	Простая защита от копирования: </td><td class=small>
+	".select("options[stopcopy]", "0,1", "НЕТ,ЕСТЬ", $stopcopy)."
+	<br>Препятствует массовому копированию статей на чужие сайты глупыми злоумышленниками. Невозможность выделить/скопировать текст и нажать правую кнопку мыши. </td></tr>
 
-<tr valign=top class=p3><td>
-Защита комментариев: </td><td class=small>
-".select("options[captcha_ok]", "1,0", "НЕТ,ЕСТЬ", $captcha_ok)."
-<br>По умолчанию - вкл. При отключении можно не вводить проверочный код или вводить его неправильно — он не будет проверяться. </td></tr>
+	<tr valign=top class=p3><td>
+	Защита комментариев: </td><td class=small>
+	".select("options[captcha_ok]", "1,0", "НЕТ,ЕСТЬ", $captcha_ok)."
+	<br>По умолчанию - вкл. При отключении можно не вводить проверочный код или вводить его неправильно — он не будет проверяться. </td></tr>
 
-<tr valign=top class=p4><td>
-Год основания сайта:</td><td class=small>
-".input("options[startdate]", $startdate, 4)."
-<br>Используется в автоматическом блоке [год], год основания - текущий год, для отображения внизу сайта, в строке копирайта, например © 2007-2009.
-</td></tr>
+	<tr valign=top class=p4><td>
+	Год основания сайта:</td><td class=small>
+	".input("options[startdate]", $startdate, 4)."
+	<br>Используется в автоматическом блоке [год], год основания - текущий год, для отображения внизу сайта, в строке копирайта, например © 2007-2009.
+	</td></tr>
 
-<tr valign=top class=p4><td>
-Почта администратора:</td><td class=small>
-".input("options[adminmail]", $adminmail, 60)."
-<br>Используется в автоматическом блоке [почта], для отправки почты администратору сайта.
-</td></tr>
+	<tr valign=top class=p4><td>
+	Почта администратора:</td><td class=small>
+	".input("options[adminmail]", $adminmail, 60)."
+	<br>Используется в автоматическом блоке [почта], для отправки почты администратору сайта.
+	</td></tr>
 
-<tr valign=top class=p4><td>
-Получать письма о новых комментариях:</td><td class=small>
-".select("options[comment_send]", "0,1", "НЕТ,ДА", $comment_send)."
-<br>Отправка уведомлений о новых комментариях на почту администратору.
-</td></tr>
+	<tr valign=top class=p4><td>
+	Получать письма о новых комментариях:</td><td class=small>
+	".select("options[comment_send]", "0,1", "НЕТ,ДА", $comment_send)."
+	<br>Отправка уведомлений о новых комментариях на почту администратору.
+	</td></tr>
 
-<tr valign=top><td>
-Показывать в администрировании страницы, добавленные посетителями:</td><td class=small>
-".select("options[show_userposts]", "0,1,2", "НЕТ,ДА,Точка вместо кнопки (скрытый вариант)", $show_userposts)."
-</td></tr>
+	<tr valign=top><td>
+	Показывать в администрировании страницы, добавленные посетителями:</td><td class=small>
+	".select("options[show_userposts]", "0,1,2", "НЕТ,ДА,Точка вместо кнопки (скрытый вариант)", $show_userposts)."
+	</td></tr>
 
-<tr valign=top><td>
-Показывать комментарии в администрировании:</td><td class=small>
-".select("options[show_comments]", "0,1,2", "НЕТ,ДА,Точка вместо кнопки (скрытый вариант)", $show_comments)."
-</td></tr>
+	<tr valign=top><td>
+	Показывать комментарии в администрировании:</td><td class=small>
+	".select("options[show_comments]", "0,1,2", "НЕТ,ДА,Точка вместо кнопки (скрытый вариант)", $show_comments)."
+	</td></tr>
 
-<tr valign=top><td>
-Дизайн для страницы поиска:</td><td>
-".select("options[search_design]", $id_designs, $title_designs, $search_design)." В дизайне должен быть блок [содержание]
-</td></tr>
+	<tr valign=top><td>
+	Дизайн для страницы поиска:</td><td>
+	".select("options[search_design]", $id_designs, $title_designs, $search_design)." В дизайне должен быть блок [содержание]
+	</td></tr>
 
-<tr valign=top><td>
-Дизайн для страницы тэгов (ключевых слов):</td><td class=small>
-".select("options[tag_design]", $id_designs, $title_designs, $tag_design)." В дизайне должен быть блок [содержание]
-</td></tr>
+	<tr valign=top><td>
+	Дизайн для страницы тэгов (ключевых слов):</td><td class=small>
+	".select("options[tag_design]", $id_designs, $title_designs, $tag_design)." В дизайне должен быть блок [содержание]
+	</td></tr>
 
-<tr valign=top><td>
-Преобразование {Название раздела} и {Название страницы} в ссылки на эти раздел и страницу, соответственно:</td><td class=small>
-".select("options[show_page_links]", "0,1", "НЕТ,ДА", $show_page_links)." 
-<br>По-умолчанию отключено. Если вы создаете сайт с большим количеством страниц (более 500) — желательно отключить. В случае отключения останется возможность преобразования названий разделов.
-</td></tr>
+	<tr valign=top><td>
+	Преобразование {Название раздела} и {Название страницы} в ссылки на эти раздел и страницу, соответственно:</td><td class=small>
+	".select("options[show_page_links]", "0,1", "НЕТ,ДА", $show_page_links)." 
+	<br>По-умолчанию отключено. Если вы создаете сайт с большим количеством страниц (более 500) — желательно отключить. В случае отключения останется возможность преобразования названий разделов.
+	</td></tr>
 
-</table>
-<div style='text-align:center;'><input type='submit' value=' Сохранить настройки ' style='width:300px; height:40px;'></div>
-<input type='hidden' name='op' value='ConfigSave'>
-</div>
+	</table>
+	<div style='text-align:center;'><input type='submit' value=' Сохранить настройки ' style='width:300px; height:40px;'></div>
+	<input type='hidden' name='op' value='ConfigSave'>
+	</div>
 
 <div id='show_options_fonts' class='show_pole' style='display:none;'>
-<p>Вы можете выбрать дополнительные шрифты (<i><a href='http://www.google.com/webfonts/' target='_blank'>от Google</a></i>) и эффекты для них.<br>Эффекты выбирать необязательно.</p>";
+	<p>Вы можете выбрать дополнительные шрифты (<i><a href='http://www.google.com/webfonts/' target='_blank'>от Google</a></i>) и эффекты для них.<br>Эффекты выбирать необязательно.</p>";
 
-$fonts_rus = explode(",","Andika,Anonymous Pro,Bad Script,Comfortaa,Cuprum,Didact Gothic,EB Garamond,Forum,Istok Web,Jura,Kelly Slab,Ledger,Lobster,Marck Script,Marmelad,Neucha,Open Sans,Open Sans Condensed,Oranienbaum,PT Mono,PT Sans,PT Sans Caption,PT Sans Narrow,PT Serif,PT Serif Caption,Philosopher,Play,Poiret One,Press Start 2P,Prosto One,Ruslan Display,Russo One,Scada,Stalinist One,Tenor Sans,Ubuntu,Ubuntu Condensed,Ubuntu Mono,Underdog,Yeseva One");
-$fonts_eng = explode(",","ABeeZee,Abel,Abril Fatface,Aclonica,Acme,Actor,Adamina,Advent Pro,Aguafina Script,Akronim,Aladin,Aldrich,Alegreya,Alegreya SC,Alex Brush,Alfa Slab One,Alice,Alike,Alike Angular,Allan,Allerta,Allerta Stencil,Allura,Almendra,Almendra SC,Amarante,Amaranth,Amatic SC,Amethysta,Andada,Andika,Annie Use Your Telescope,Anonymous Pro,Antic,Antic Didone,Antic Slab,Anton,Arapey,Arbutus,Arbutus Slab,Architects Daughter,Archivo Black,Archivo Narrow,Arimo,Arizonia,Armata,Artifika,Arvo,Asap,Asset,Astloch,Asul,Atomic Age,Aubrey,Audiowide,Autour One,Average,Averia Gruesa Libre,Averia Libre,Averia Sans Libre,Averia Serif Libre,Bad Script,Balthazar,Bangers,Basic,Baumans,Belgrano,Belleza,BenchNine,Bentham,Berkshire Swash,Bevan,Bigshot One,Bilbo,Bilbo Swash Caps,Bitter,Black Ops One,Bonbon,Boogaloo,Bowlby One,Bowlby One SC,Brawler,Bree Serif,Bubblegum Sans,Bubbler One,Buda,Buenard,Butcherman,Butterfly Kids,Cabin,Cabin Condensed,Cabin Sketch,Caesar Dressing,Cagliostro,Calligraffitti,Cambo,Candal,Cantarell,Cantata One,Cantora One,Capriola,Cardo,Carme,Carrois Gothic,Carrois Gothic SC,Carter One,Caudex,Cedarville Cursive,Ceviche One,Changa One,Chango,Chau Philomene One,Chelsea Market,Cherry Cream Soda,Chewy,Chicle,Chivo,Coda,Coda Caption,Codystar,Combo,Comfortaa,Coming Soon,Concert One,Condiment,Contrail One,Convergence,Cookie,Copse,Corben,Courgette,Cousine,Coustard,Covered By Your Grace,Crafty Girls,Creepster,Crete Round,Crimson Text,Crushed,Cuprum,Cutive,Damion,Dancing Script,Dawning of a New Day,Days One,Delius,Delius Swash Caps,Delius Unicase,Della Respira,Devonshire,Didact Gothic,Diplomata,Diplomata SC,Doppio One,Dorsa,Dosis,Dr Sugiyama,Droid Sans,Droid Sans Mono,Droid Serif,Duru Sans,Dynalight,EB Garamond,Eagle Lake,Eater,Economica,Electrolize,Emblema One,Emilys Candy,Engagement,Enriqueta,Erica One,Esteban,Euphoria Script,Ewert,Exo,Expletus Sans,Fanwood Text,Fascinate,Fascinate Inline,Federant,Federo,Felipa,Fenix,Finger Paint,Fjord One,Flamenco,Flavors,Fondamento,Fontdiner Swanky,Forum,Francois One,Fredericka the Great,Fredoka One,Fresca,Frijole,Fugaz One,Galdeano,Galindo,Gentium Basic,Gentium Book Basic,Geo,Geostar,Geostar Fill,Germania One,Give You Glory,Glass Antiqua,Glegoo,Gloria Hallelujah,Goblin One,Gochi Hand,Gorditas,Goudy Bookletter 1911,Graduate,Gravitas One,Great Vibes,Griffy,Gruppo,Gudea,Habibi,Hammersmith One,Handlee,Happy Monkey,Headland One,Henny Penny,Herr Von Muellerhoff,Holtwood One SC,Homemade Apple,Homenaje,IM Fell DW Pica,IM Fell DW Pica SC,IM Fell Double Pica,IM Fell Double Pica SC,IM Fell English,IM Fell English SC,IM Fell French Canon,IM Fell French Canon SC,IM Fell Great Primer,IM Fell Great Primer SC,Iceberg,Iceland,Imprima,Inconsolata,Inder,Indie Flower,Inika,Irish Grover,Istok Web,Italiana,Italianno,Jacques Francois,Jacques Francois Shadow,Jim Nightshade,Jockey One,Jolly Lodger,Josefin Sans,Josefin Slab,Judson,Julee,Junge,Jura,Just Another Hand,Just Me Again Down Here,Kameron,Karla,Kaushan Script,Kelly Slab,Kenia,Knewave,Kotta One,Kranky,Kreon,Kristi,Krona One,La Belle Aurore,Lancelot,Lato,League Script,Leckerli One,Ledger,Lekton,Lemon,Life Savers,Lilita One,Limelight,Linden Hill,Lobster,Lobster Two,Londrina Outline,Londrina Shadow,Londrina Sketch,Londrina Solid,Lora,Love Ya Like A Sister,Loved by the King,Lovers Quarrel,Luckiest Guy,Lusitana,Lustria,Macondo,Macondo Swash Caps,Magra,Maiden Orange,Mako,Marcellus,Marcellus SC,Marck Script,Marko One,Marmelad,Marvel,Mate,Mate SC,Maven Pro,McLaren,Meddon,MedievalSharp,Medula One,Megrim,Meie Script,Merienda One,Merriweather,Metal Mania,Metamorphous,Metrophobic,Michroma,Miltonian,Miltonian Tattoo,Miniver,Miss Fajardose,Modern Antiqua,Molengo,Molle,Monofett,Monoton,Monsieur La Doulaise,Montaga,Montez,Montserrat,Montserrat Alternates,Montserrat Subrayada,Mountains of Christmas,Mr Bedfort,Mr Dafoe,Mr De Haviland,Mrs Saint Delafield,Mrs Sheppards,Muli,Mystery Quest,Neucha,Neuton,News Cycle,Niconne,Nixie One,Nobile,Norican,Nosifer,Nothing You Could Do,Noticia Text,Nova Cut,Nova Flat,Nova Mono,Nova Oval,Nova Round,Nova Script,Nova Slim,Nova Square,Numans,Nunito,Old Standard TT,Oldenburg,Oleo Script,Open Sans,Open Sans Condensed,Oranienbaum,Orbitron,Oregano,Orienta,Original Surfer,Oswald,Over the Rainbow,Overlock,Overlock SC,Ovo,Oxygen,Oxygen Mono,PT Mono,PT Sans,PT Sans Caption,PT Sans Narrow,PT Serif,PT Serif Caption,Pacifico,Parisienne,Passero One,Passion One,Patrick Hand,Patua One,Paytone One,Peralta,Permanent Marker,Petit Formal Script,Petrona,Philosopher,Piedra,Pinyon Script,Plaster,Play,Playball,Playfair Display,Podkova,Poiret One,Poller One,Poly,Pompiere,Pontano Sans,Port Lligat Sans,Port Lligat Slab,Prata,Press Start 2P,Princess Sofia,Prociono,Prosto One,Puritan,Quando,Quantico,Quattrocento,Quattrocento Sans,Questrial,Quicksand,Qwigley,Racing Sans One,Radley,Raleway,Raleway Dots,Rammetto One,Ranchers,Rancho,Rationale,Redressed,Reenie Beanie,Revalia,Ribeye,Ribeye Marrow,Righteous,Rochester,Rock Salt,Rokkitt,Romanesco,Ropa Sans,Rosario,Rosarivo,Rouge Script,Ruda,Ruge Boogie,Ruluko,Ruslan Display,Russo One,Ruthie,Rye,Sail,Salsa,Sancreek,Sansita One,Sarina,Satisfy,Scada,Schoolbell,Seaweed Script,Sevillana,Shadows Into Light,Shadows Into Light Two,Shanti,Share,Shojumaru,Short Stack,Sigmar One,Signika,Signika Negative,Simonetta,Sirin Stencil,Six Caps,Skranji,Slackey,Smokum,Smythe,Sniglet,Snippet,Sofadi One,Sofia,Sonsie One,Sorts Mill Goudy,Source Code Pro,Source Sans Pro,Special Elite,Spicy Rice,Spinnaker,Spirax,Squada One,Stalinist One,Stardos Stencil,Stint Ultra Condensed,Stint Ultra Expanded,Stoke,Sue Ellen Francisco,Sunshiney,Supermercado One,Swanky and Moo Moo,Syncopate,Tangerine,Telex,Tenor Sans,The Girl Next Door,Tienne,Tinos,Titan One,Titillium Web,Trade Winds,Trocchi,Trochut,Trykker,Tulpen One,Ubuntu,Ubuntu Condensed,Ubuntu Mono,Ultra,Uncial Antiqua,Underdog,UnifrakturCook,UnifrakturMaguntia,Unkempt,Unlock,Unna,VT323,Varela,Varela Round,Vast Shadow,Vibur,Vidaloka,Viga,Voces,Volkhov,Vollkorn,Voltaire,Waiting for the Sunrise,Wallpoet,Walter Turncoat,Warnes,Wellfleet,Wire One,Yanone Kaffeesatz,Yellowtail,Yeseva One,Yesteryear,Zeyada");
-$options = "";
-foreach ($fonts_rus as $font) {
-	$options .= "<option value='".$font."'>".$font."</option>";
-}
-$options .= "<option value='' disabled>- Английские шрифты -</option>";
-foreach ($fonts_eng as $font) {
-	$options .= "<option value='".$font."'>".$font."</option>";
-}
-
-// Chrome/Firefox/Opera/Safari
-$effects = explode(",","anaglyph,emboss,fire,fire-animation,neon,outline,shadow-multiple,3d,3d-float");
-
-// Chrome/Safari
-$effects2 = explode(",","brick-sign,canvas-print,crackle,decaying,destruction,distressed,distressed-wood,fragile,grass,ice,mitosis,putting-green,scuffed-steel,splintered,static,stonewash,vintage,wallpaper");
-
-$options2 = "";
-foreach ($effects as $effect) {
-	$options2 .= "<option value='".$effect."'>".$effect."</option>";
-}
-$options2 .= "<option value='' disabled>- Эффекты (Chrome/Safari) -</option>";
-foreach ($effects2 as $effect) {
-	$options2 .= "<option value='".$effect."'>".$effect."</option>";
-}
-$options3 = "";
-if (strlen($add_fonts) > 1) {
-	$add_fonts2 = explode(".",$add_fonts);
-	foreach ($add_fonts2 as $font) {
-		$options3 .= "<option value=\"".$font."\">".$font."</option>";
+	$fonts_rus = explode(",","Andika,Anonymous Pro,Bad Script,Comfortaa,Cuprum,Didact Gothic,EB Garamond,Forum,Istok Web,Jura,Kelly Slab,Ledger,Lobster,Marck Script,Marmelad,Neucha,Open Sans,Open Sans Condensed,Oranienbaum,PT Mono,PT Sans,PT Sans Caption,PT Sans Narrow,PT Serif,PT Serif Caption,Philosopher,Play,Poiret One,Press Start 2P,Prosto One,Ruslan Display,Russo One,Scada,Stalinist One,Tenor Sans,Ubuntu,Ubuntu Condensed,Ubuntu Mono,Underdog,Yeseva One");
+	$fonts_eng = explode(",","ABeeZee,Abel,Abril Fatface,Aclonica,Acme,Actor,Adamina,Advent Pro,Aguafina Script,Akronim,Aladin,Aldrich,Alegreya,Alegreya SC,Alex Brush,Alfa Slab One,Alice,Alike,Alike Angular,Allan,Allerta,Allerta Stencil,Allura,Almendra,Almendra SC,Amarante,Amaranth,Amatic SC,Amethysta,Andada,Andika,Annie Use Your Telescope,Anonymous Pro,Antic,Antic Didone,Antic Slab,Anton,Arapey,Arbutus,Arbutus Slab,Architects Daughter,Archivo Black,Archivo Narrow,Arimo,Arizonia,Armata,Artifika,Arvo,Asap,Asset,Astloch,Asul,Atomic Age,Aubrey,Audiowide,Autour One,Average,Averia Gruesa Libre,Averia Libre,Averia Sans Libre,Averia Serif Libre,Bad Script,Balthazar,Bangers,Basic,Baumans,Belgrano,Belleza,BenchNine,Bentham,Berkshire Swash,Bevan,Bigshot One,Bilbo,Bilbo Swash Caps,Bitter,Black Ops One,Bonbon,Boogaloo,Bowlby One,Bowlby One SC,Brawler,Bree Serif,Bubblegum Sans,Bubbler One,Buda,Buenard,Butcherman,Butterfly Kids,Cabin,Cabin Condensed,Cabin Sketch,Caesar Dressing,Cagliostro,Calligraffitti,Cambo,Candal,Cantarell,Cantata One,Cantora One,Capriola,Cardo,Carme,Carrois Gothic,Carrois Gothic SC,Carter One,Caudex,Cedarville Cursive,Ceviche One,Changa One,Chango,Chau Philomene One,Chelsea Market,Cherry Cream Soda,Chewy,Chicle,Chivo,Coda,Coda Caption,Codystar,Combo,Comfortaa,Coming Soon,Concert One,Condiment,Contrail One,Convergence,Cookie,Copse,Corben,Courgette,Cousine,Coustard,Covered By Your Grace,Crafty Girls,Creepster,Crete Round,Crimson Text,Crushed,Cuprum,Cutive,Damion,Dancing Script,Dawning of a New Day,Days One,Delius,Delius Swash Caps,Delius Unicase,Della Respira,Devonshire,Didact Gothic,Diplomata,Diplomata SC,Doppio One,Dorsa,Dosis,Dr Sugiyama,Droid Sans,Droid Sans Mono,Droid Serif,Duru Sans,Dynalight,EB Garamond,Eagle Lake,Eater,Economica,Electrolize,Emblema One,Emilys Candy,Engagement,Enriqueta,Erica One,Esteban,Euphoria Script,Ewert,Exo,Expletus Sans,Fanwood Text,Fascinate,Fascinate Inline,Federant,Federo,Felipa,Fenix,Finger Paint,Fjord One,Flamenco,Flavors,Fondamento,Fontdiner Swanky,Forum,Francois One,Fredericka the Great,Fredoka One,Fresca,Frijole,Fugaz One,Galdeano,Galindo,Gentium Basic,Gentium Book Basic,Geo,Geostar,Geostar Fill,Germania One,Give You Glory,Glass Antiqua,Glegoo,Gloria Hallelujah,Goblin One,Gochi Hand,Gorditas,Goudy Bookletter 1911,Graduate,Gravitas One,Great Vibes,Griffy,Gruppo,Gudea,Habibi,Hammersmith One,Handlee,Happy Monkey,Headland One,Henny Penny,Herr Von Muellerhoff,Holtwood One SC,Homemade Apple,Homenaje,IM Fell DW Pica,IM Fell DW Pica SC,IM Fell Double Pica,IM Fell Double Pica SC,IM Fell English,IM Fell English SC,IM Fell French Canon,IM Fell French Canon SC,IM Fell Great Primer,IM Fell Great Primer SC,Iceberg,Iceland,Imprima,Inconsolata,Inder,Indie Flower,Inika,Irish Grover,Istok Web,Italiana,Italianno,Jacques Francois,Jacques Francois Shadow,Jim Nightshade,Jockey One,Jolly Lodger,Josefin Sans,Josefin Slab,Judson,Julee,Junge,Jura,Just Another Hand,Just Me Again Down Here,Kameron,Karla,Kaushan Script,Kelly Slab,Kenia,Knewave,Kotta One,Kranky,Kreon,Kristi,Krona One,La Belle Aurore,Lancelot,Lato,League Script,Leckerli One,Ledger,Lekton,Lemon,Life Savers,Lilita One,Limelight,Linden Hill,Lobster,Lobster Two,Londrina Outline,Londrina Shadow,Londrina Sketch,Londrina Solid,Lora,Love Ya Like A Sister,Loved by the King,Lovers Quarrel,Luckiest Guy,Lusitana,Lustria,Macondo,Macondo Swash Caps,Magra,Maiden Orange,Mako,Marcellus,Marcellus SC,Marck Script,Marko One,Marmelad,Marvel,Mate,Mate SC,Maven Pro,McLaren,Meddon,MedievalSharp,Medula One,Megrim,Meie Script,Merienda One,Merriweather,Metal Mania,Metamorphous,Metrophobic,Michroma,Miltonian,Miltonian Tattoo,Miniver,Miss Fajardose,Modern Antiqua,Molengo,Molle,Monofett,Monoton,Monsieur La Doulaise,Montaga,Montez,Montserrat,Montserrat Alternates,Montserrat Subrayada,Mountains of Christmas,Mr Bedfort,Mr Dafoe,Mr De Haviland,Mrs Saint Delafield,Mrs Sheppards,Muli,Mystery Quest,Neucha,Neuton,News Cycle,Niconne,Nixie One,Nobile,Norican,Nosifer,Nothing You Could Do,Noticia Text,Nova Cut,Nova Flat,Nova Mono,Nova Oval,Nova Round,Nova Script,Nova Slim,Nova Square,Numans,Nunito,Old Standard TT,Oldenburg,Oleo Script,Open Sans,Open Sans Condensed,Oranienbaum,Orbitron,Oregano,Orienta,Original Surfer,Oswald,Over the Rainbow,Overlock,Overlock SC,Ovo,Oxygen,Oxygen Mono,PT Mono,PT Sans,PT Sans Caption,PT Sans Narrow,PT Serif,PT Serif Caption,Pacifico,Parisienne,Passero One,Passion One,Patrick Hand,Patua One,Paytone One,Peralta,Permanent Marker,Petit Formal Script,Petrona,Philosopher,Piedra,Pinyon Script,Plaster,Play,Playball,Playfair Display,Podkova,Poiret One,Poller One,Poly,Pompiere,Pontano Sans,Port Lligat Sans,Port Lligat Slab,Prata,Press Start 2P,Princess Sofia,Prociono,Prosto One,Puritan,Quando,Quantico,Quattrocento,Quattrocento Sans,Questrial,Quicksand,Qwigley,Racing Sans One,Radley,Raleway,Raleway Dots,Rammetto One,Ranchers,Rancho,Rationale,Redressed,Reenie Beanie,Revalia,Ribeye,Ribeye Marrow,Righteous,Rochester,Rock Salt,Rokkitt,Romanesco,Ropa Sans,Rosario,Rosarivo,Rouge Script,Ruda,Ruge Boogie,Ruluko,Ruslan Display,Russo One,Ruthie,Rye,Sail,Salsa,Sancreek,Sansita One,Sarina,Satisfy,Scada,Schoolbell,Seaweed Script,Sevillana,Shadows Into Light,Shadows Into Light Two,Shanti,Share,Shojumaru,Short Stack,Sigmar One,Signika,Signika Negative,Simonetta,Sirin Stencil,Six Caps,Skranji,Slackey,Smokum,Smythe,Sniglet,Snippet,Sofadi One,Sofia,Sonsie One,Sorts Mill Goudy,Source Code Pro,Source Sans Pro,Special Elite,Spicy Rice,Spinnaker,Spirax,Squada One,Stalinist One,Stardos Stencil,Stint Ultra Condensed,Stint Ultra Expanded,Stoke,Sue Ellen Francisco,Sunshiney,Supermercado One,Swanky and Moo Moo,Syncopate,Tangerine,Telex,Tenor Sans,The Girl Next Door,Tienne,Tinos,Titan One,Titillium Web,Trade Winds,Trocchi,Trochut,Trykker,Tulpen One,Ubuntu,Ubuntu Condensed,Ubuntu Mono,Ultra,Uncial Antiqua,Underdog,UnifrakturCook,UnifrakturMaguntia,Unkempt,Unlock,Unna,VT323,Varela,Varela Round,Vast Shadow,Vibur,Vidaloka,Viga,Voces,Volkhov,Vollkorn,Voltaire,Waiting for the Sunrise,Wallpoet,Walter Turncoat,Warnes,Wellfleet,Wire One,Yanone Kaffeesatz,Yellowtail,Yeseva One,Yesteryear,Zeyada");
+	$options = "";
+	foreach ($fonts_rus as $font) {
+		$options .= "<option value='".$font."'>".$font."</option>";
 	}
-}
-echo "<script>
-function del_font() {
-	$(\"#add_fonts :selected\").remove();
-}
-function add_font() {
-	var font = $(\"#fonts\").val();
-	var effect = $(\"#effects\").val();
-	var add = font;
-	if (effect != '') add = font + ',' + effect;
-	if (font != null) $('#add_fonts').append('<option value=\"' + add + '\">' + add + '</li>');
-}
-function font(show) {
-	var font = $(\"#fonts\").val();
-	var effect = $(\"#effects\").val();
-	var effect_show = '';
-	var about_effect = '';
-	if (show == 'show') { 
-		font = $(\"#add_fonts\").val();
-		font = font.split(/[,]/);
-		if (font['1']) effect = font['1']; else effect = '';
-		font = font['0'];
+	$options .= "<option value='' disabled>- Английские шрифты -</option>";
+	foreach ($fonts_eng as $font) {
+		$options .= "<option value='".$font."'>".$font."</option>";
 	}
-	if (effect != null && effect != '') {
-		effect_show = '&effect=' + effect;
-		about_effect = '<br>Подключение эффекта: &lt;div class=\"font-effect-' + effect + '\"&gt;Пример текста&lt;/div&gt;<br>Подключенный эффект можно использовать в любых шрифтах';
+
+	// Chrome/Firefox/Opera/Safari
+	$effects = explode(",","anaglyph,emboss,fire,fire-animation,neon,outline,shadow-multiple,3d,3d-float");
+
+	// Chrome/Safari
+	$effects2 = explode(",","brick-sign,canvas-print,crackle,decaying,destruction,distressed,distressed-wood,fragile,grass,ice,mitosis,putting-green,scuffed-steel,splintered,static,stonewash,vintage,wallpaper");
+
+	$options2 = "";
+	foreach ($effects as $effect) {
+		$options2 .= "<option value='".$effect."'>".$effect."</option>";
 	}
-	$('#font_preview').html('<link href=\"http://fonts.googleapis.com/css?family=' + font.replace(\" \", \"+\") + '&subset=latin,cyrillic' + effect_show + '\" rel=\"stylesheet\" type=\"text/css\"><h1 style=\"font-family: ' + '\'' + font + '\'' + ';\">' + $('#text_primer').val() + ' <br>Использование в CSS: font-family: \'' + font + '\' ' + about_effect + '</h1>');
-	$('#font_preview').toggleClass('font-effect-' + effect);
-}
-function save_fonts() {
-	var all='';
-	$.each($('#add_fonts option'), function(i,val) { 
-		all = all + this.text;
-		if ( i != $('#add_fonts option').length-1) all = all + '.'; 
-	});
-	$('#fonts_spisok').val(all);
-}
-</script>
-<div style='float:left; margin-right:5px; margin-bottom:5px;'><h3>Шрифты:</h3>
-<select id='fonts' size=16 onchange='font()'><option value='' disabled>- Русские шрифты -</option>".$options."</select>
-</div>
-<h3>Эффекты:</h3>
-<select style='margin-bottom:5px;' id='effects' onchange='font()'><option value='' disabled>- Эффекты (Chrome/Firefox/Opera/Safari) -</option><option value='' selected>Эффект не выбран</option>".$options2."</select>
+	$options2 .= "<option value='' disabled>- Эффекты (Chrome/Safari) -</option>";
+	foreach ($effects2 as $effect) {
+		$options2 .= "<option value='".$effect."'>".$effect."</option>";
+	}
+	$options3 = "";
+	if (strlen($add_fonts) > 1) {
+		$add_fonts2 = explode(".",$add_fonts);
+		foreach ($add_fonts2 as $font) {
+			$options3 .= "<option value=\"".$font."\">".$font."</option>";
+		}
+	}
+	echo "<script>
+	function del_font() {
+		$(\"#add_fonts :selected\").remove();
+	}
+	function add_font() {
+		var font = $(\"#fonts\").val();
+		var effect = $(\"#effects\").val();
+		var add = font;
+		if (effect != '') add = font + ',' + effect;
+		if (font != null) $('#add_fonts').append('<option value=\"' + add + '\">' + add + '</li>');
+	}
+	function font(show) {
+		var font = $(\"#fonts\").val();
+		var effect = $(\"#effects\").val();
+		var effect_show = '';
+		var about_effect = '';
+		if (show == 'show') { 
+			font = $(\"#add_fonts\").val();
+			font = font.split(/[,]/);
+			if (font['1']) effect = font['1']; else effect = '';
+			font = font['0'];
+		}
+		if (effect != null && effect != '') {
+			effect_show = '&effect=' + effect;
+			about_effect = '<br>Подключение эффекта: &lt;div class=\"font-effect-' + effect + '\"&gt;Пример текста&lt;/div&gt;<br>Подключенный эффект можно использовать в любых шрифтах';
+		}
+		$('#font_preview').html('<link href=\"http://fonts.googleapis.com/css?family=' + font.replace(\" \", \"+\") + '&subset=latin,cyrillic' + effect_show + '\" rel=\"stylesheet\" type=\"text/css\"><h1 style=\"font-family: ' + '\'' + font + '\'' + ';\">' + $('#text_primer').val() + ' <br>Использование в CSS: font-family: \'' + font + '\' ' + about_effect + '</h1>');
+		$('#font_preview').toggleClass('font-effect-' + effect);
+	}
+	function save_fonts() {
+		var all='';
+		$.each($('#add_fonts option'), function(i,val) { 
+			all = all + this.text;
+			if ( i != $('#add_fonts option').length-1) all = all + '.'; 
+		});
+		$('#fonts_spisok').val(all);
+	}
+	</script>
+	<div style='float:left; margin-right:5px; margin-bottom:5px;'><h3>Шрифты:</h3>
+	<select id='fonts' size=16 onchange='font()'><option value='' disabled>- Русские шрифты -</option>".$options."</select>
+	</div>
+	<h3>Эффекты:</h3>
+	<select style='margin-bottom:5px;' id='effects' onchange='font()'><option value='' disabled>- Эффекты (Chrome/Firefox/Opera/Safari) -</option><option value='' selected>Эффект не выбран</option>".$options2."</select>
 
-<br><a class='button' onclick='add_font(); save_fonts();'>Добавить &darr;</a> <a class='button' onclick='del_font(); save_fonts();'>Удалить</a><br>
-Список используемых шрифтов:<br>
-<select style='margin-top:5px;' id=\"add_fonts\" onchange=\"font('show')\" size=\"11\">".$options3."</select>
-<input id='fonts_spisok' type=hidden name='options[add_fonts]' value='".$add_fonts."'>
+	<br><a class='button' onclick='add_font(); save_fonts();'>Добавить &darr;</a> <a class='button' onclick='del_font(); save_fonts();'>Удалить</a><br>
+	Список используемых шрифтов:<br>
+	<select style='margin-top:5px;' id=\"add_fonts\" onchange=\"font('show')\" size=\"11\">".$options3."</select>
+	<input id='fonts_spisok' type=hidden name='options[add_fonts]' value='".$add_fonts."'>
 
-<div id='font_preview' onclick=\"show('text_primer');\" style='padding:10px; clear: both; background:white;'>Здесь будет показан пример шрифта и его применения. Нажмите, чтобы изменить текст.</div>
-<input id='text_primer' style='width:80%; display:none;' type='text' value='Съешь ещё этих мягких французских булок, да выпей чаю. Нажмите, чтобы изменить текст.<br>Grumpy wizards make toxic brew for the evil Queen and Jack.'><br>
-Не забудьте добавить шрифт в список используемых и сохранить.<br>
-Если при выборе эффекта (или шрифта с эффектом из списка выбранных шрифтов), вы не увидели эффекта в поле предпросмотра — выберите другой эффект и еще раз выберите первый.
+	<div id='font_preview' onclick=\"show('text_primer');\" style='padding:10px; clear: both; background:white;'>Здесь будет показан пример шрифта и его применения. Нажмите, чтобы изменить текст.</div>
+	<input id='text_primer' style='width:80%; display:none;' type='text' value='Съешь ещё этих мягких французских булок, да выпей чаю. Нажмите, чтобы изменить текст.<br>Grumpy wizards make toxic brew for the evil Queen and Jack.'><br>
+	Не забудьте добавить шрифт в список используемых и сохранить.<br>
+	Если при выборе эффекта (или шрифта с эффектом из списка выбранных шрифтов), вы не увидели эффекта в поле предпросмотра — выберите другой эффект и еще раз выберите первый.
 
 
-<p><b>Справка:</b> <a style='cursor:pointer;' class=punkt onclick=\"show('sgladit_shrift')\">Как сгладить шрифт через CSS</a> (подходит для больших заголовков)<br>
-<div id='sgladit_shrift' style=\"display:none;\"><pre>
-.title {
-   text-shadow:-1px -1px 1px rgba(255,255,255,0.2), /* наверх и влево */
-   1px 1px 1px rgba(255,255,255,0.2), /* вниз и вправо */
-   1px 1px 1px rgba(0,0,0,0.7); /* тёмная тень */
-}
-</pre></div>
-<p>
-<div style='text-align:center;'><input type='submit' value=' Сохранить настройки ' style='width:300px; height:40px;'></div>
-</div>
+	<p><b>Справка:</b> <a style='cursor:pointer;' class=punkt onclick=\"show('sgladit_shrift')\">Как сгладить шрифт через CSS</a> (подходит для больших заголовков)<br>
+	<div id='sgladit_shrift' style=\"display:none;\"><pre>
+	.title {
+	   text-shadow:-1px -1px 1px rgba(255,255,255,0.2), /* наверх и влево */
+	   1px 1px 1px rgba(255,255,255,0.2), /* вниз и вправо */
+	   1px 1px 1px rgba(0,0,0,0.7); /* тёмная тень */
+	}
+	</pre></div>
+	<p>
+	<div style='text-align:center;'><input type='submit' value=' Сохранить настройки ' style='width:300px; height:40px;'></div>
+	</div>
 
 <div id='show_options_company' class='show_pole' style='display:none;'>
-<p>Основные данные компании для быстрой замены. Могут быть вставлены в любом месте сайта как мини-блоки.
-<p>Информация разделяется тремя символами «вертикальная черта», т.е. ||| Каждому последующему мини-блоку присваивается аналогичное имя с порядковым номером.
-<p>Пример: пишем в поле «Краткое название компании:» текст «АгроХолдинг|||Промышленная палата|||РусТранс»
-<br>Получаем 3 мини-блока: [компания1] (АгроХолдинг), [компания2] (Промышленная палата) и [компания3] (РусТранс).
-<p><i>Переход на новую строку обрабатывается как BR-тег</i>.
-<table class=table_light>
-<tr valign=top><td style='min-width:350px;'>
-Краткое название компании: [компания1]
-".input("options[company_name]", $company_name, 40, "txt")."</td><td>
-Полное название компании: [КОМПАНИЯ1]
-".input("options[company_fullname]", $company_fullname, 40, "txt")."</td></tr>
-<tr valign=top><td>
-Адрес(а) компании: [адрес компании1]
-".input("options[company_address]", $company_address, 50, "txt")."</td><td>
-Время работы: [время работы компании1]
-".input("options[company_time]", $company_time, 50, "txt")."</td></tr>
-<tr valign=top><td>
-Телефон(ы) компании: [телефон компании1]
-".input("options[company_tel]", $company_tel, 30, "txt")."</td><td>
-Сотовый(ые) компании: [сотовый компании1]
-".input("options[company_sot]", $company_sot, 30, "txt")."</td></tr>
-<tr valign=top><td>
-Факс(ы) компании: [факс компании1]
-".input("options[company_fax]", $company_fax, 30, "txt")."</td><td>
-Email(ы) компании: [почта компании1]
-".input("options[company_email]", $company_email, 30, "txt")."</td></tr>
-<tr valign=top><td>
-Код(ы) карты: [карта компании1]
-".input("options[company_map]", $company_map, 80, "txt")."</td><td>
-Контактное(ые) лицо(а): [лицо компании1]
-".input("options[company_people]", $company_people, 80, "txt")."</td></tr>
-</table>
-<div style='text-align:center;'><input type='submit' value=' Сохранить настройки ' style='width:300px; height:40px;'></div>
-</div>
+	<p>Основные данные компании для быстрой замены. Могут быть вставлены в любом месте сайта как мини-блоки.
+	<p>Информация разделяется тремя символами «вертикальная черта», т.е. ||| Каждому последующему мини-блоку присваивается аналогичное имя с порядковым номером.
+	<p>Пример: пишем в поле «Краткое название компании:» текст «АгроХолдинг|||Промышленная палата|||РусТранс»
+	<br>Получаем 3 мини-блока: [компания1] (АгроХолдинг), [компания2] (Промышленная палата) и [компания3] (РусТранс).
+	<p><i>Переход на новую строку обрабатывается как BR-тег</i>.
+	<table class=table_light>
+	<tr valign=top><td style='min-width:350px;'>
+	Краткое название компании: [компания1]
+	".input("options[company_name]", $company_name, 40, "txt")."</td><td>
+	Полное название компании: [КОМПАНИЯ1]
+	".input("options[company_fullname]", $company_fullname, 40, "txt")."</td></tr>
+	<tr valign=top><td>
+	Адрес(а) компании: [адрес компании1]
+	".input("options[company_address]", $company_address, 50, "txt")."</td><td>
+	Время работы: [время работы компании1]
+	".input("options[company_time]", $company_time, 50, "txt")."</td></tr>
+	<tr valign=top><td>
+	Телефон(ы) компании: [телефон компании1]
+	".input("options[company_tel]", $company_tel, 30, "txt")."</td><td>
+	Сотовый(ые) компании: [сотовый компании1]
+	".input("options[company_sot]", $company_sot, 30, "txt")."</td></tr>
+	<tr valign=top><td>
+	Факс(ы) компании: [факс компании1]
+	".input("options[company_fax]", $company_fax, 30, "txt")."</td><td>
+	Email(ы) компании: [почта компании1]
+	".input("options[company_email]", $company_email, 30, "txt")."</td></tr>
+	<tr valign=top><td>
+	Код(ы) карты: [карта компании1]
+	".input("options[company_map]", $company_map, 80, "txt")."</td><td>
+	Контактное(ые) лицо(а): [лицо компании1]
+	".input("options[company_people]", $company_people, 80, "txt")."</td></tr>
+	</table>
+	<div style='text-align:center;'><input type='submit' value=' Сохранить настройки ' style='width:300px; height:40px;'></div>
+	</div>
 
 
 <div id='show_options_adspeed' class='show_pole' style='display:none;'>";
 
-if ($site_cash == true) echo "<a class='button' target='_blank' href='?cash=del' style='margin-bottom:5px;'><span class=\"icon medium gray\" data-icon=\"T\"></span>Очистить кеш</a>";
-else echo "<div class=\"notice warning\">Кеширование страниц отключено. Включить можно через config.php</div>";
+	if ($site_cash == true) echo "<a class='button' target='_blank' href='?cash=del' style='margin-bottom:5px;'><span class=\"icon medium gray\" data-icon=\"T\"></span>Очистить кеш</a>";
+	else echo "<div class=\"notice warning\">Кеширование страниц отключено. Включить можно через config.php</div>";
 
-echo "<table class=table_light>
-<tr valign=top><td style='min-width:250px;'>
-Фоновая картинка Администрирования:</td><td class=small>
-<select name=options[ad_fon] onchange=\"$(body).css('backgroundImage', 'url(images/adfon/' + $(this).val() + '.png)')\"><option value='0'>по-умолчанию</option>".$ad_fon_option."</select>
-</td></tr>
-<tr valign=top><td>
-Создание резервной копии:</td><td class=small>
-".select("options[show_reserv]", "0,1", "НЕТ,ДА", $show_reserv)."
-<br>Каждый день, при посещении администратором главной страницы администрирования, создается резервная копия всего содержания сайта, кроме файлов (документы, архивы, фотографии), закачанных на сервер. Если это большой портал на скромном хостинге, создание копии можно отключить для экономии файлового места.
-</td></tr>
-<tr valign=top><td>
-Отображать количества страниц в разделах (на вкладке Содержание):</td><td class=small>
-".select("options[show_page]", "0,1", "НЕТ,ДА", $show_page)."
-<br>Отключать его имеет смысл, если создано очень много страниц (более 20 тысяч) и хочется ускорить загрузку вкладки Содержание на 1-2 секунды.
-</td></tr>
-<tr valign=top><td>
-Включить ускорение вывода блоков (на вкладке Оформление):</td><td class=small>
-".select("options[uskorenie_blokov]", "0,1", "НЕТ,ДА", $uskorenie_blokov)."
-<br>Отключать его имеет смысл, если создано много блоков и  страница с ними долго загружается. Ускорение убирает информацию об использовании блоков. 
-</td></tr>
-<tr valign=top><td>
-Файл с резервной копией .htaccess:</td><td class=small>
-".input("options[ht_backup]", $ht_backup)."
-<br>Для автовосстановления в случае поражения «вирусом».
-</td></tr>
+	echo "<table class=table_light>
+	<tr valign=top><td style='min-width:250px;'>
+	Фоновая картинка Администрирования:</td><td class=small>
+	<select name=options[ad_fon] onchange=\"$(body).css('backgroundImage', 'url(images/adfon/' + $(this).val() + '.png)')\"><option value='0'>по-умолчанию</option>".$ad_fon_option."</select>
+	</td></tr>
+	<tr valign=top><td>
+	Создание резервной копии:</td><td class=small>
+	".select("options[show_reserv]", "0,1", "НЕТ,ДА", $show_reserv)."
+	<br>Каждый день, при посещении администратором главной страницы администрирования, создается резервная копия всего содержания сайта, кроме файлов (документы, архивы, фотографии), закачанных на сервер. Если это большой портал на скромном хостинге, создание копии можно отключить для экономии файлового места.
+	</td></tr>
+	<tr valign=top><td>
+	Отображать количества страниц в разделах (на вкладке Содержание):</td><td class=small>
+	".select("options[show_page]", "0,1", "НЕТ,ДА", $show_page)."
+	<br>Отключать его имеет смысл, если создано очень много страниц (более 20 тысяч) и хочется ускорить загрузку вкладки Содержание на 1-2 секунды.
+	</td></tr>
+	<tr valign=top><td>
+	Включить ускорение вывода блоков (на вкладке Оформление):</td><td class=small>
+	".select("options[uskorenie_blokov]", "0,1", "НЕТ,ДА", $uskorenie_blokov)."
+	<br>Отключать его имеет смысл, если создано много блоков и  страница с ними долго загружается. Ускорение убирает информацию об использовании блоков. 
+	</td></tr>
+	<tr valign=top><td>
+	Файл с резервной копией .htaccess:</td><td class=small>
+	".input("options[ht_backup]", $ht_backup)."
+	<br>Для автовосстановления в случае поражения «вирусом».
+	</td></tr>
 
-<tr valign=top><td>Регион:</td><td>".input("options[geo]", $geo, "5", "number")." <a href='http://search.yaca.yandex.ru/geo.c2n' target='_blank'>Найти регион</a></td></tr>
+	<tr valign=top><td>Регион:</td><td>".input("options[geo]", $geo, "5", "number")." <a href='http://search.yaca.yandex.ru/geo.c2n' target='_blank'>Найти регион</a></td></tr>
 
-<tr valign=top><td>Ключевых слов:</td><td class=small>".input("options[kolkey]", $kolkey, "2", "number")."</td></tr>
+	<tr valign=top><td>Ключевых слов:</td><td class=small>".input("options[kolkey]", $kolkey, "2", "number")."</td></tr>
 
-</table>
-<div style='text-align:center;'><input type='submit' value=' Сохранить настройки ' style='width:300px; height:40px;'></div>
-</div>
-</form>";
+	</table>
+	<div style='text-align:center;'><input type='submit' value=' Сохранить настройки ' style='width:300px; height:40px;'></div>
+	</div>";
+
+echo "<div id='show_options_zagotovka' class='show_pole' style='display:none;'>
+	<p>Вы можете добавить <b>шаблонные заготовки</b> для использования во <b>втором</b> редакторе. Это позволит быстро вставлять в предисловие или содержание страницы заранее заготовленные куски текста или HTML-кода, и, в отличии от обычной вставки блоков, также сразу их редактировать. Если на всех страницах раздела используется один и тот же шаблон - его можно задать при редактировании самого раздела (внизу). Заготовки же для редактора используются в случае вставки многочисленных (чаще всего небольших) элементов на странице, т.е. позволяют решить немного другие задачи. Пример: красивая рамочка, DIV с css-классом для цветного выделения текста, заготовка определенной таблицы и т.д.</p>";
+	$add_clips1 = "";
+	if (strlen($add_clips) > 1) {
+		$add_clips2 = explode("?%?",$add_clips);
+		foreach ($add_clips2 as $cli) {
+			$cli2 = explode("*?*",$cli);
+			$add_clips1 .= "<option value=\"".$cli."\">".$cli2[0]."</option>";
+		}
+	}
+	echo "<script>
+	function del_clip() {
+		$(\"#add_clips :selected\").remove();
+	}
+	function add_clip() {
+		var clip = $(\"#clips\").val();
+		var text = $(\"#texts\").val();
+		if (clip != '') $('#add_clips').append('<option value=\"' + clip + '*?*' + text + '\">' + clip + '</li>');
+	}
+	function clip(show) {
+		var clip = $(\"#add_clips\").val();
+		clip = clip.split('*?*');
+		if (clip['1']) { text = clip['1']; clip = clip['0']; } else { text = clip = ''; }
+		$('#clip_preview').html(text + '<p>HTML-код:</p><textarea class=w100>' + text + '</textarea>');
+	}
+	function save_clips() {
+		var all='';
+		$.each($('#add_clips option'), function(i,val) { 
+			all = all + this.value;
+			if ( i != $('#add_clips option').length-1) all = all + '?%?'; 
+		});
+		$('#clips_spisok').val(all);
+	}
+	</script>
+
+	<div style='display:none;' id='add_clip' class=block>
+	".close_button("add_clip")."
+	<h3>Название заготовки:</h3>
+	<input id='clips' class=w100>
+	<h3>Текст заготовки (можно использовать HTML):</h3>
+	<textarea id='texts' class=w100></textarea><br>
+	<a class='button' onclick='add_clip(); save_clips();'>Добавить &darr;</a>
+	</div>
+
+	<h3>Используемые заготовки:</h3>
+	<select style='margin-top:5px;' name='options[add_clips]' id=\"add_clips\" onchange=\"clip()\" size=10 class='w100'>".$add_clips1."</select>
+	<a class='button' onclick='del_clip(); save_clips();'>Удалить</a>
+	<input id='clips_spisok' type=text name='options[add_clips]' value='".$add_clips."'>
+
+	<div id='clip_preview' style='margin:10px; padding:10px; clear: both; background:white;'>Здесь будет показана выбранная заготовка.</div>
+
+	<div style='text-align:center;'><input type='submit' value=' Сохранить настройки ' style='width:300px; height:40px;'></div>
+	<input type='hidden' name='op' value='ConfigSave'>
+	</div>
+	</form>";
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 $result = $db->sql_query("SELECT aid, name from " . $prefix . "_authors where name='BOG'");
 $row = $db->sql_fetchrow($result);
 $adm_aid = filter($row['aid'], "nohtml");
 $adm_aid = trim(strtolower(substr($adm_aid, 0,25)));
+
 echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>";
 		if (!isset($ip)) $ip="";
 		if ($ipban != false) {
@@ -541,8 +601,6 @@ echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>
 		<input type=hidden name=adm_aid value='".$adm_aid."'>
 		<input type=hidden name=op value='UpdateAuthor'>
 		</form>
-
-
 		<br><br><div class=\"notice warning hide\"><a href='sys.php?op=AdminsList'>Список администраторов</a></div>
 		</div>";
 
@@ -926,7 +984,7 @@ echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>
 		global $prefix, $db, $options;
 		$mini_blocks = $options['company_name']."|||||".$options['company_fullname']."|||||".$options['company_address']."|||||".$options['company_time']."|||||".$options['company_tel']."|||||".$options['company_sot']."|||||".$options['company_fax']."|||||".$options['company_email']."|||||".$options['company_map']."|||||".$options['company_people'];
 
-		$advanced = $options['jqueryui']."|".$options['show_comments']."|".$options['show_userposts']."|".$options['show_page']."|".$options['show_reserv']."|".$options['uskorenie_blokov']."|".$options['kickstart']."|".$options['show_page_links']."|".$options['ad_fon']."|".$options['search_design']."|".$options['tag_design']."|".$options['add_fonts']."|".$options['normalize']."|".$options['project_logotip']."|".$options['project_name']."|".$options['geo']."|".$options['kolkey'];
+		$advanced = $options['jqueryui']."|".$options['show_comments']."|".$options['show_userposts']."|".$options['show_page']."|".$options['show_reserv']."|".$options['uskorenie_blokov']."|".$options['kickstart']."|".$options['show_page_links']."|".$options['ad_fon']."|".$options['search_design']."|".$options['tag_design']."|".$options['add_fonts']."|".$options['normalize']."|".$options['project_logotip']."|".$options['project_name']."|".$options['geo']."|".$options['kolkey']."|".$options['add_clips'];
 		// sitename	startdate	adminmail	keywords	description	counter	statlink	postlink	registr	pogoda	flash	sgatie	stopcopy	nocashe	adminmes	red	comment	captcha_ok	ht_backup
 		$db->sql_query("UPDATE `".$prefix."_config` SET 
 			`sitename` = '".mysql_real_escape_string($options['sitename'])."',

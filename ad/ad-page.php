@@ -754,7 +754,7 @@ function base_pages_edit_page($pid, $red=0) {
     echo "</div>";
 
     echo "<form action='sys.php' method='post' enctype='multipart/form-data'>
-    <div style='background: #e2e5ea;'>
+    <div style='background: url(/images/fon.png);'>
   <div class='black_grad' style='height:45px;'>
   <button type=submit id=new_razdel_button class='medium green' onclick=\"show('sortirovka');\" style='float:left; margin:3px;'><span style='margin-right: -2px;' class='icon white small' data-icon='c'></span>Сохранить</button>
   <span class='h1' style='padding-top:10px;'>
