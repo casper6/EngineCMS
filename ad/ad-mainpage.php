@@ -629,8 +629,10 @@ function create_main($type) {
 	case "shablon": $type_opis = "шаблона (оформление раздела или блока)";
 		$create.="<div id=about class=block style='display:none;'>Шаблоны используются для изменения внешнего вида разделов, страниц и блоков. Используются либо стандартные поля страниц, либо дополнительно созданные Поля. Для страниц можно использовать любой дизайн, блоки и разделы используют табличную основу — начало < table >, соответственно сами шаблоны должны начинаться с < tr > и заканчиваться на < /tr >. Для того, чтобы в шаблоне раздела предусмотреть возможность именования столбцов таблицы, например: Дата, Название, Ссылка... после самого шаблона раздела нужна написать ключевое слово [следующий] и написать шаблон именования столбцов, т.е. по сути скопировать шаблон строк раздела, но вместо заготовок автоматических вставок поставить в него названия соответствующих полей-столбцов.<br></div>
 		<table width=100%><tr><td width=50%>
-		<h2>Название шаблона</h2><input type=text name=title size=40 class='w100' autofocus> (рус.)</td><td>
-		<h2>Обращение:</h2><input type=text name=namo size=40 class='w100'> (англ., без пробелов)</td></tr>
+		<h2>Название шаблона</h2>
+		<input type=text name=title size=40 class='w100' autofocus> (рус.)</td><td>
+		<h2>Обращение:</h2>
+		<input type=text name=namo size=40 class='w100'> (англ., без пробелов)</td></tr>
 		<tr><td colspan=2>
 		".help_shablon()."
 		<h2>Содержание шаблона (HTML-код и вставки шаблона):</h2>
@@ -645,7 +647,7 @@ function create_main($type) {
 	<div style='background: #e2e5ea;'>
 	<div class='black_grad' style='height:45px;'>
 	<button type='button' style='float:right;margin:3px;' class='medium orange' onClick=\"show_animate('about')\">?</button>
-	<button type=submit id=new_razdel_button class='medium green' style='float:left; margin:3px;'><span class='mr-2 icon white medium' data-icon='c'></span>Сохранить</button>
+	<button type=submit id=new_razdel_button class='small green' style='float:left; margin:3px;'><span class='mr-2 icon white medium' data-icon='c'></span>Сохранить</button>
 	<span class='h1'>Добавление ".$type_opis."</span></div>".$create."
 	</div>
 	</form>";
@@ -750,7 +752,7 @@ function edit_main($id) {
 
 	echo "<div style='background: #e2e5ea;'>
 	<div class='black_grad' style='height:45px;'>
-	<button type=submit id=new_razdel_button class='medium green' style='float:left; margin:3px;'><span class='mr-2 icon white medium' data-icon='c'></span>Сохранить</button>
+	<button type=submit id=new_razdel_button class='medium green' style='float:left; margin:3px;'><span class='mr-2 icon white small' data-icon='c'></span>Сохранить</button>
 	<span class='h1' style='padding-top:10px;'>";
 
 	if ($type == "0") { ############################### ОТКРЫТИЕ ДИЗАЙН
@@ -784,49 +786,10 @@ function edit_main($id) {
 	".help_design()."
 	<h2>Содержание дизайна (HTML): 
 	<span class=f12>[содержание] - блок вывода страниц.</span></h2>";
-
 	// [корзина] - общая корзина для всех разделов типа \"магазин\"<br>
+  	redactor($red, $text, 'text'); // редактор: типа редактора, редактируемое поле
 
-	if ($red==0) {
-	} elseif ($red==2) {
-		echo "<textarea cols=80 id=editor name=text rows=10>".$text."</textarea>
-		<script type='text/javascript'>
-		CKEDITOR.replace( 'editor', {
-		 filebrowserBrowseUrl : '/ckfinder/ckfinder.html',
-		 filebrowserImageBrowseUrl : '/ckfinder/ckfinder.html?Type=Images',
-		 filebrowserFlashBrowseUrl : '/ckfinder/ckfinder.html?Type=Flash',
-		 filebrowserUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&amp;type=Files',
-		 filebrowserImageUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&amp;type=Images',
-		 filebrowserFlashUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&amp;type=Flash'
-		});
-		</script>";
-	} elseif ($red==1) {
-		// Преобразование textarea (замена на русскую букву е, только для редактора)
-	  	$text = str_replace("textarea","tеxtarea",$text); // ireplace
-		echo "<textarea name=text rows=15 cols=80 style='width:100%; height:350px;' class=f12>".$text."</textarea>";
-	} elseif ($red==3) {
-		echo "<script type='text/javascript' src='ed/js/editor/editor.js'></script> 
-		<link rel='stylesheet' href='ed/js/editor/css/editor.css' type='text/css' media='screen, projection' /> 
-		<script type='text/javascript'> 
-		$(document).ready(function()
-		{  $('#text').editor({ focus: true, toolbar: 'classic', css: ['/ed/js/editor/css/writer.css'], upload: 'upload.php' });  });
-		</script><textarea id=text name=text rows=15 cols=80 style='width:100%; height:350px;'>".$text."</textarea>";
-	} elseif ($red==4) {
-		global $red4_div_convert;
-    	echo "<script type='text/javascript'>
-	    function ButtonMore(obj, event, key){ obj.insertHtml('<!--more-->'); }
-	    function ButtonBlock(obj, event, key){ obj.insertHtml('[Название блока]'); }
-	    function ButtonLink(obj, event, key){ obj.insertHtml('{Название страницы или раздела}'); }
-	    $(document).ready(function() { 
-      	$('.redactor').redactor({ buttonsAdd: ['|', 'button_more', 'button_link', 'button_block'], buttonsCustom: {
-        button_more: {title: 'Вставка ссылки на полное содержание (для предисловия)',callback: ButtonMore},
-        button_link: {title: 'Вставка блока (например, галереи фотографий)',callback: ButtonBlock},
-        button_block: {title: 'Вставка быстрой ссылки на страницу или раздел',callback: ButtonLink}
-      	}, mobile: true, ".$red4_div_convert." imageUpload: 'ed2/image_upload.php',fileUpload: 'ed2/file_upload.php', lang: 'ru', autoresize: false }); } );
-	    </script><textarea class='redactor' id=text name=text rows=15 cols=80 style='width:100%; height:350px;'>".$text."</textarea>";
-	}
-	echo "
-	<h2>Использованные в дизайне стили CSS <span class=f12>Зажмите Ctrl для выбора нескольких стилей</span><h2><select name='useit[]' size=2 class=f12 multiple='multiple'>".$styles."</select></div>";
+	echo "<h2>Использованные в дизайне стили CSS <span class=f12>Зажмите Ctrl для выбора нескольких стилей</span><h2><select name='useit[]' size=2 class=f12 multiple='multiple'>".$styles."</select></div>";
 	} ############################### ЗАКРЫТИЕ ДИЗАЙН
 
 	if ($type == "1") { ############################### ОТКРЫТИЕ СТИЛЬ
@@ -1254,99 +1217,59 @@ function edit_main($id) {
 		<span class='red f12'>НЕ изменять!</span> <span class=f12>Ссылка: <a href=/-".$name." target=_blank>/-".$name."</a></span></h2>
 		</td></tr></table>
 
-	<b>Справка:</b> <a style='cursor:pointer;' class=punkt onclick=\"show('structura_razdela')\">Раскрыть описание структуры раздела</a><br>
-	<div id=structura_razdela style='display:none;'><p><img src=/images/structura_razdela.png align=right>На рисунке справа вы видите внешний вид любого раздела или его страниц (правее). Раздел состоит из заголовка (его названия) и списка страниц раздела. Эта информации создается на странице раздела автоматически, исходя из его названия и созданных страниц. Чтобы эта информация выводилась, достаточно наличия служебного слова [содержание] в «Содержании раздела». Если нужно чтобы какая-либо информация выводилась в разделе сверху или снизу от содержания (названия и списка страниц) — напишите эту информацию в «Содержании раздела» соответственно сверху или снизу от слова [содержание]. На рисунке расположение верха и низа показано зеленым цветом. <br><br>Иногда требуется вставить информацию посередине, между заголовком и списком страниц (желтый цвет) — для этого нужно использовать вместо служебного слова [содержание] (в первой обязательной строке, выделенной ниже) два других служебных слова — [название] и [страницы], между которых написать всё, что вы хотите поставить между Заголовком и Списком страниц.<br><br>
-	Если вы хотите, чтобы вместо Названия и Страниц в разделе отображалась только одна основная страница — начальная страница раздела, да еще и с произвольным содержанием — просто сотрите всё «Содержание раздела» и напишите то, что вам нужно.
-	<br><br>
+		<b>Справка:</b> <a style='cursor:pointer;' class=punkt onclick=\"show('structura_razdela')\">Раскрыть описание структуры раздела</a><br>
+		<div id=structura_razdela style='display:none;'><p><img src=/images/structura_razdela.png align=right>На рисунке справа вы видите внешний вид любого раздела или его страниц (правее). Раздел состоит из заголовка (его названия) и списка страниц раздела. Эта информации создается на странице раздела автоматически, исходя из его названия и созданных страниц. Чтобы эта информация выводилась, достаточно наличия служебного слова [содержание] в «Содержании раздела». Если нужно чтобы какая-либо информация выводилась в разделе сверху или снизу от содержания (названия и списка страниц) — напишите эту информацию в «Содержании раздела» соответственно сверху или снизу от слова [содержание]. На рисунке расположение верха и низа показано зеленым цветом. <br><br>Иногда требуется вставить информацию посередине, между заголовком и списком страниц (желтый цвет) — для этого нужно использовать вместо служебного слова [содержание] (в первой обязательной строке, выделенной ниже) два других служебных слова — [название] и [страницы], между которых написать всё, что вы хотите поставить между Заголовком и Списком страниц.<br><br>
+		Если вы хотите, чтобы вместо Названия и Страниц в разделе отображалась только одна основная страница — начальная страница раздела, да еще и с произвольным содержанием — просто сотрите всё «Содержание раздела» и напишите то, что вам нужно.
+		<br><br>
 
-	Пример сложного содержания раздела:<br><div class=block2>
-	<strong>Наверху раздела [содержание] Внизу раздела</strong> [следующий]<br>
-	Наверху главной страницы раздела [содержание] Внизу главной страницы раздела [следующий] <br>
-	Наверху папок раздела [содержание] Внизу папок раздела [следующий] <br>
-	Наверху страницы раздела [содержание] Внизу страницы раздела
-	</div>
-	Не обязательно указывать всё это. Было приведены наиболее полные возможности системы. Чаще всего достаточно выделенной фразы (естественно с измененными неслужебными словами) или даже одного служебного слова [содержание].
-	<br><br>
+		Пример сложного содержания раздела:<br><div class=block2>
+		<strong>Наверху раздела [содержание] Внизу раздела</strong> [следующий]<br>
+		Наверху главной страницы раздела [содержание] Внизу главной страницы раздела [следующий] <br>
+		Наверху папок раздела [содержание] Внизу папок раздела [следующий] <br>
+		Наверху страницы раздела [содержание] Внизу страницы раздела
+		</div>
+		Не обязательно указывать всё это. Было приведены наиболее полные возможности системы. Чаще всего достаточно выделенной фразы (естественно с измененными неслужебными словами) или даже одного служебного слова [содержание].
+		<br><br>
 
-	Если открыть первую страницу раздела (с вышеприведенным содержанием), можно увидеть:<br><div class=block2>
-	Наверху главной страницы раздела <br>
-	Наверху раздела<br>
-	<b>Название раздела</b><br>
-	<li>Список страниц</li>
-	Внизу раздела <br>
-	Внизу главной страницы раздела</div><br>
+		Если открыть первую страницу раздела (с вышеприведенным содержанием), можно увидеть:<br><div class=block2>
+		Наверху главной страницы раздела <br>
+		Наверху раздела<br>
+		<b>Название раздела</b><br>
+		<li>Список страниц</li>
+		Внизу раздела <br>
+		Внизу главной страницы раздела</div><br>
 
-	Если открыть одну из папок раздела, можно увидеть:<br><div class=block2>
-	Наверху папок раздела<br>
-	Наверху раздела<br>
-	<b>Название раздела и открытой папки</b><br>
-	<li>Список страниц открытой папки</li>
-	Внизу раздела <br>
-	Внизу папок раздела</div><br>
+		Если открыть одну из папок раздела, можно увидеть:<br><div class=block2>
+		Наверху папок раздела<br>
+		Наверху раздела<br>
+		<b>Название раздела и открытой папки</b><br>
+		<li>Список страниц открытой папки</li>
+		Внизу раздела <br>
+		Внизу папок раздела</div><br>
 
-	Если открыть одну из страниц раздела, можно увидеть:<br><div class=block2>
-	Наверху страницы раздела<br>
-	Наверху раздела<br>
-	<b>Название раздела</b><br>
-	<b>Название открытой страницы</b><br>
-	Предисловие и Содержание страницы<br>
-	Комментарии страницы<br>
-	Внизу раздела <br>
-	Внизу страницы раздела</div><br>
-	</div><br>";
+		Если открыть одну из страниц раздела, можно увидеть:<br><div class=block2>
+		Наверху страницы раздела<br>
+		Наверху раздела<br>
+		<b>Название раздела</b><br>
+		<b>Название открытой страницы</b><br>
+		Предисловие и Содержание страницы<br>
+		Комментарии страницы<br>
+		Внизу раздела <br>
+		Внизу страницы раздела</div><br>
+		</div><br>";
 
-	echo "<table width='100%' border='0'><tr valign='top'><td width='50%'>
-	<h2>Ключевые слова: <span class=f12><a onclick=\"show('help5')\" class=help>?</a></span><br><textarea name='keywordsX' class='big' rows='2' cols='10' class='w100'>".$keywordsX."</textarea></h2>
-	<div id='help5' style='display:none;' class=f12>Это поле — для поисковых систем. Максимум 250 символов. Разделять запятой. Если пусто - используются ключевые словосочетания из <a href=/sys.php?op=Configure target=_blank>Настроек портала</a>).<br></div>
-	</td><td>
-	<h2>Описание: <span class=f12><a onclick=\"show('help6')\" class=help>?</a></span><br><textarea name='descriptionX' class='big' rows='2' cols='10' class='w100'>".$descriptionX."</textarea></h2>
-	<div id='help6' style='display:none;' class=f12>Это поле — для поисковых систем. Максимум 250 символов. Если пусто - используется основное описание из <a href=/sys.php?op=Configure target=_blank>Настроек портала</a>.</div>
-	</td></tr></table>
+		echo "<table width='100%' border='0'><tr valign='top'><td width='50%'>
+		<h2>Ключевые слова: <span class=f12><a onclick=\"show('help5')\" class=help>?</a></span><br><textarea name='keywordsX' class='big w100' rows='2' cols='10'>".$keywordsX."</textarea></h2>
+		<div id='help5' style='display:none;' class=f12>Это поле — для поисковых систем. Максимум 250 символов. Разделять запятой. Если пусто - используются ключевые словосочетания из <a href=/sys.php?op=Configure target=_blank>Настроек портала</a>).<br></div>
+		</td><td>
+		<h2>Описание: <span class=f12><a onclick=\"show('help6')\" class=help>?</a></span><br><textarea name='descriptionX' class='big w100' rows='2' cols='10'>".$descriptionX."</textarea></h2>
+		<div id='help6' style='display:none;' class=f12>Это поле — для поисковых систем. Максимум 250 символов. Если пусто - используется основное описание из <a href=/sys.php?op=Configure target=_blank>Настроек портала</a>.</div>
+		</td></tr></table>
 
-	<h2>Содержание раздела:</h2>";
-	if ($red==0) {
-	} elseif ($red==2) {
-		echo "<textarea cols=80 id=editor class=useit name=useit rows=10>".$useit."</textarea>
-		<script type='text/javascript'>
-		CKEDITOR.replace( 'editor', {
-		 filebrowserBrowseUrl : '/ckfinder/ckfinder.html',
-		 filebrowserImageBrowseUrl : '/ckfinder/ckfinder.html?Type=Images',
-		 filebrowserFlashBrowseUrl : '/ckfinder/ckfinder.html?Type=Flash',
-		 filebrowserUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&amp;type=Files',
-		 filebrowserImageUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&amp;type=Images',
-		 filebrowserFlashUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&amp;type=Flash'
-		});
-		</script>";
-	} elseif ($red==1) {
-		$useit = str_replace("&","&amp;",$useit);
-		// Преобразование textarea (замена на русскую букву е, только для редактора)
-	  	$useit = str_replace("textarea","tеxtarea",$useit); // ireplace
-		echo "<textarea name=useit rows=15 cols=80 style='width:100%; height:450px;'>".$useit."</textarea>";
-	} elseif ($red==3) {
-		echo "<script type='text/javascript' src='ed/js/editor/editor.js'></script> 
-	<link rel='stylesheet' href='ed/js/editor/css/editor.css' type='text/css' media='screen, projection' /> 
-	<script type='text/javascript'> 
-	$(document).ready(function(){
-	 $('#useit').editor({ focus: true, toolbar: 'classic', css: ['/ed/js/editor/css/writer.css'], upload: 'upload.php' });
-	 $('#shablon').editor({ focus: true, toolbar: 'classic', css: ['/ed/js/editor/css/writer.css'], upload: 'upload.php' });
-	});
-	</script><textarea id=useit name=useit rows=15 cols=80 style='width:100%; height:450px;'>".$useit."</textarea>";
-	} elseif ($red==4) {
-		global $red4_div_convert;
-    	echo "<script type='text/javascript'>
-	    function ButtonMore(obj, event, key){ obj.insertHtml('<!--more-->'); }
-	    function ButtonBlock(obj, event, key){ obj.insertHtml('[Название блока]'); }
-	    function ButtonLink(obj, event, key){ obj.insertHtml('{Название страницы или раздела}'); }
-	    $(document).ready(function() { 
-	      $('.redactor').redactor({ buttonsAdd: ['|', 'button_more', 'button_link', 'button_block'], buttonsCustom: {
-        button_more: {title: 'Вставка ссылки на полное содержание (для предисловия)',callback: ButtonMore},
-        button_link: {title: 'Вставка блока (например, галереи фотографий)',callback: ButtonBlock},
-        button_block: {title: 'Вставка быстрой ссылки на страницу или раздел',callback: ButtonLink}
-      }, mobile: false, ".$red4_div_convert." imageUpload: 'ed2/image_upload.php',fileUpload: 'ed2/file_upload.php', lang: 'ru', autoresize: false }); } );
-	    </script><textarea class='redactor' id=useit name=useit rows=15 cols=80 style='width:100%; height:450px;'>".$useit."</textarea>";
-	}
+		<h2>Содержание раздела:</h2>";
+	  	redactor($red, $useit, 'useit', 'shablon'); // редактор: типа редактора, редактируемое поле
 
-	echo "<br><input type=hidden name=text value='".$text."'>";
+		echo "<br><input type=hidden name=text value='".$text."'>";
 		$sql = "select name from ".$prefix."_mainpage where `tables`='pages' and id='".$id."'";
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result)) {
@@ -1354,38 +1277,14 @@ function edit_main($id) {
 		}
 		if ($mod_name != "index") {
 			echo "<span style='font-size:14pt;'>Шаблон Предисловия и Содержания страниц</span>
-			<br>
-			Если у большинства страниц раздела особенный дизайн или какое-то первоначальное содержание для всех страниц раздела одинаково — его можно прописать ниже как Шаблон для страниц. Сначала идет шаблон для Предисловия страниц, затем — для Содержания, разделяются они служебным словом [следующий]. Если нужен только шаблон для Предисловия - слово [следующий] можно не писать, а если нужен только шаблон для Содержания - слово [следующий] надо написать перед ним.<br>";
-				if ($red==0) {
-				} elseif ($red==2) {
-						echo "<textarea cols=80 id=editor2 name=shablon rows=10>".$shablon."</textarea>
-						<script type='text/javascript'>
-						CKEDITOR.replace( 'editor2', {
-						 filebrowserBrowseUrl : '/ckfinder/ckfinder.html',
-						 filebrowserImageBrowseUrl : '/ckfinder/ckfinder.html?Type=Images',
-						 filebrowserFlashBrowseUrl : '/ckfinder/ckfinder.html?Type=Flash',
-						 filebrowserUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&amp;type=Files',
-						 filebrowserImageUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&amp;type=Images',
-						 filebrowserFlashUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&amp;type=Flash'
-						});
-						</script>";
-				} elseif ($red==1) {
-						// Преобразование textarea (замена на русскую букву е, только для редактора)
-		  				$shablon = str_replace("textarea","tеxtarea",$shablon); // ireplace
-						echo "<textarea name=shablon rows=10 cols=30 style='width:100%; height:150px;'>".$shablon."</textarea>";
-				} else {
-						echo "<textarea id=shablon class='redactor' name=shablon rows=15 cols=80 style='width:100%; height:250px;'>".$shablon."</textarea>";
-				}
-
-			} else {
-				echo "<input type=hidden name=shablon value='".$shablon."'>";
-			}
-			echo "";
-		} // конец редактирования раздела
-	echo "<br><br><br>";
-	} ############################### ЗАКРЫТИЕ РАЗДЕЛА
-
-
+			<br>Если у большинства страниц раздела особенный дизайн или какое-то первоначальное содержание для всех страниц раздела одинаково — его можно прописать ниже как Шаблон для страниц. Сначала идет шаблон для Предисловия страниц, затем — для Содержания, разделяются они служебным словом [следующий]. Если нужен только шаблон для Предисловия - слово [следующий] можно не писать, а если нужен только шаблон для Содержания - слово [следующий] надо написать перед ним.<br>";
+			redactor2($red, $shablon, 'shablon');
+		} else {
+			echo "<input type=hidden name=shablon value='".$shablon."'>";
+		}
+	} // конец редактирования раздела
+		echo "<br><br><br>";
+} ############################### ЗАКРЫТИЕ РАЗДЕЛА
 
 	if ($type == "3") { ############################### ОТКРЫТИЕ БЛОК
 	global $nastroi;
@@ -1818,49 +1717,12 @@ function edit_main($id) {
 	if ($name == 10 or $name == 5 or $name == 7 or $name == 0) $red = 1; // дополнить список при необходимости
 
 	echo "<h2>Содержание блока:</h2>";
-	if ($red == 0) {
-	} elseif ($red==2) {
-		echo "<textarea cols=80 id=editor name=text rows=10>".$text."</textarea>
-		<script type='text/javascript'>
-		CKEDITOR.replace( 'editor', {
-		 filebrowserBrowseUrl : '/ckfinder/ckfinder.html',
-		 filebrowserImageBrowseUrl : '/ckfinder/ckfinder.html?Type=Images',
-		 filebrowserFlashBrowseUrl : '/ckfinder/ckfinder.html?Type=Flash',
-		 filebrowserUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&amp;type=Files',
-		 filebrowserImageUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&amp;type=Images',
-		 filebrowserFlashUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&amp;type=Flash'
-		});
-		</script>";
-	} elseif ($red==1) {
-		$useit = str_replace("&","&amp;",$useit);
-		// Преобразование textarea (замена на русскую букву е, только для редактора)
-	  	$text = str_replace("textarea","tеxtarea",$text); // ireplace
-		echo "<textarea id=textarea name=text rows=30 cols=80 style='width:100%; height:350px;'>".$text."\n</textarea>";
-	} elseif ($red==3) {
-		echo "<script type='text/javascript' src='ed/js/editor/editor.js'></script> 
-	<link rel='stylesheet' href='ed/js/editor/css/editor.css' type='text/css' media='screen, projection' /> 
-	<script type='text/javascript'> 
-	$(document).ready(function()
-	{  $('#text').editor({ focus: true, toolbar: 'classic', css: ['/ed/js/editor/css/writer.css'], upload: 'upload.php' });  });
-	</script><textarea id=text name=text rows=30 cols=80 style='width:100%; height:450px;'>".$text."</textarea>";
-	} elseif ($red==4) {
-		global $red4_div_convert;
-    	echo "<script type='text/javascript'>
-	    function ButtonMore(obj, event, key){ obj.insertHtml('<!--more-->'); }
-	    function ButtonBlock(obj, event, key){ obj.insertHtml('[Название блока]'); }
-	    function ButtonLink(obj, event, key){ obj.insertHtml('{Название страницы или раздела}'); }
-	    $(document).ready(function() { 
-	      $('.redactor').redactor({ buttonsAdd: ['|', 'button_more', 'button_link', 'button_block'], buttonsCustom: {
-        button_more: {title: 'Вставка ссылки на полное содержание (для предисловия)',callback: ButtonMore},
-        button_link: {title: 'Вставка блока (например, галереи фотографий)',callback: ButtonBlock},
-        button_block: {title: 'Вставка быстрой ссылки на страницу или раздел',callback: ButtonLink}
-      }, mobile: false, ".$red4_div_convert." imageUpload: 'ed2/image_upload.php',fileUpload: 'ed2/file_upload.php', lang: 'ru', autoresize: false }); } );
-	    </script><textarea class='redactor' id=text name=text rows=15 cols=80 style='width:100%; height:450px;'>".$text."</textarea>";
-	}
+	redactor($red, $text, 'text'); // редактор: типа редактора, редактируемое поле
+
 	echo "<div class='dark_pole' onclick=\"show('nastroi')\"><img class='icon2 i26' src='/images/1.gif'>Настройки (для импорта/экспорта)</div>
-	    <div id='nastroi' style='display: none;'>
+	<div id='nastroi' style='display: none;'>
 	<br><span class=f12><a target='_blank' href=sys.php?op=mainpage&amp;type=3&amp;id=".$id."&nastroi=1>Перейти к визуальной настройке</a> &rarr;</span><br>
-	<textarea class='f12' name='useit' rows='2' cols='10' class='w100'>".$useit."</textarea></div>
+	<textarea class='f12 w100' name='useit' rows='2' cols='10'>".$useit."</textarea></div>
 
 	</td></tr></table>";
 
@@ -1949,11 +1811,9 @@ function edit_main($id) {
 	} ############################### ЗАКРЫТИЕ БАЗА ДАННЫХ
 
 	if ($type == "6") { ############################### ОТКРЫТИЕ ШАБЛОН
-
 	echo "Редактирование шаблона</span>";
 	if (intval($nastroi) != 1) red_vybor();
 	echo "</div>
-
 	<table width=100%><tr><td width=50%>
 	<h2>Название:</h2>
 	<textarea class='big' name='title' rows='1' cols='10' style='font-size:16pt; width:100%;'>".$title."</textarea>
@@ -1963,48 +1823,9 @@ function edit_main($id) {
 	</td></tr><tr><td colspan=2>
 	".help_shablon()."
 	<h2>Содержание шаблона:</h2>";
-	if ($red==0) {
-	} elseif ($red==2) {
-		echo "<textarea cols=80 id=editor name=text rows=10>".$text."</textarea>
-		<script type='text/javascript'>
-		CKEDITOR.replace( 'editor', {
-		 filebrowserBrowseUrl : '/ckfinder/ckfinder.html',
-		 filebrowserImageBrowseUrl : '/ckfinder/ckfinder.html?Type=Images',
-		 filebrowserFlashBrowseUrl : '/ckfinder/ckfinder.html?Type=Flash',
-		 filebrowserUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&amp;type=Files',
-		 filebrowserImageUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&amp;type=Images',
-		 filebrowserFlashUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&amp;type=Flash'
-		});
-		</script>";
-	} elseif ($red==1) {
-		$useit = str_replace("&","&amp;",$useit);
-		// Преобразование textarea (замена на русскую букву е, только для редактора)
-	  	$text = str_replace("textarea","tеxtarea",$text); // ireplace
-		echo "<textarea name=text rows=20 cols=80 style='width:100%; height:350px; background:#333333; color:white;'>".$text."</textarea>";
-	} elseif ($red==3) {
-		echo "<script type='text/javascript' src='ed/js/editor/editor.js'></script> 
-		<link rel='stylesheet' href='ed/js/editor/css/editor.css' type='text/css' media='screen, projection' /> 
-		<script type='text/javascript'> 
-		$(document).ready(function()
-		{  $('#text').editor({ focus: true, toolbar: 'classic', css: ['/ed/js/editor/css/writer.css'], upload: 'upload.php' });  });
-		</script><textarea id=text name=text rows=30 cols=80 style='width:100%; height:450px;'>".$text."</textarea>";
-	} elseif ($red==4) {
-		global $red4_div_convert;
-    	echo "<script type='text/javascript'>
-	    function ButtonMore(obj, event, key){ obj.insertHtml('<!--more-->'); }
-	    function ButtonBlock(obj, event, key){ obj.insertHtml('[Название блока]'); }
-	    function ButtonLink(obj, event, key){ obj.insertHtml('{Название страницы или раздела}'); }
-	    $(document).ready(function() { 
-	      $('.redactor').redactor({ buttonsAdd: ['|', 'button_more', 'button_link', 'button_block'], buttonsCustom: {
-        button_more: {title: 'Вставка ссылки на полное содержание (для предисловия)',callback: ButtonMore},
-        button_link: {title: 'Вставка блока (например, галереи фотографий)',callback: ButtonBlock},
-        button_block: {title: 'Вставка быстрой ссылки на страницу или раздел',callback: ButtonLink}
-      }, mobile: false, ".$red4_div_convert." imageUpload: 'ed2/image_upload.php',fileUpload: 'ed2/file_upload.php', lang: 'ru', autoresize: false }); } );
-	    </script><textarea class='redactor' id=text name=text rows=15 cols=80 style='width:100%; height:450px;'>".$text."</textarea>";
-	}
+	redactor($red, $text, 'text'); // редактор: типа редактора, редактируемое поле
 	echo "</td></tr></table>";
 	} ############################### ЗАКРЫТИЕ ШАБЛОН
-
 	echo "</div></form>";
 }
 #####################################################################################################################

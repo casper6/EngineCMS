@@ -812,4 +812,58 @@ function in_arrayi($needle, $haystack) {
   return in_array(strtolower($needle), array_map('strtolower', $haystack));
 }
 ##########################################################################################
+function redactor($type, $txt, $name, $name2="") {
+  global $red4_div_convert;
+  if ($type=="0") {
+  } elseif ($type=="2") {
+    echo ""; // для редактора разметки
+  } elseif ($type=="1") {
+    // Преобразование textarea (замена на русскую букву е, только для редактора)
+    $txt = str_replace("textarea","tеxtarea",$txt); // ireplace
+    $txt = str_replace("&","&amp;",$txt);
+    echo "<textarea id='".$name."' name='".$name."' style='width: 100%; height: 300px;'>".$txt."</textarea>";
+  } elseif ($type=="3") {
+    echo "<script type='text/javascript'> 
+    $(document).ready(function()
+    {  $('#".$name."').editor({ focus: true, toolbar: 'classic', css: ['/ed/js/editor/css/editor.css'] });";
+  if ($name2 != "") echo "\n$('#".$name2."').editor({ css: ['/ed/js/editor/css/editor.css'], toolbar: 'classic', upload: 'upload.php' });\n";
+  echo "});
+    </script><textarea id='".$name."' name='".$name."' style='width: 100%; height: 300px;'>".$txt."</textarea>";
+  } elseif ($type=="4") {
+    echo "<script type='text/javascript'>
+    function ButtonMore(obj, event, key){ obj.insertHtml('<!--more-->'); }
+    function ButtonBlock(obj, event, key){ obj.insertHtml('[Название блока]'); }
+    function ButtonLink(obj, event, key){ obj.insertHtml('{Название страницы или раздела}'); }
+    $(document).ready(function() { 
+      $('.redactor').redactor({ buttonsAdd: ['|', 'button_more', 'button_link', 'button_block'], buttonsCustom: {
+            button_more: {title: 'Вставка ссылки на полное содержание (для предисловия)',callback: ButtonMore},
+            button_link: {title: 'Вставка блока (например, галереи фотографий)',callback: ButtonBlock},
+            button_block: {title: 'Вставка быстрой ссылки на страницу или раздел',callback: ButtonLink}
+          }, mobile: false, ".$red4_div_convert." imageUpload: 'ed2/image_upload.php',fileUpload: 'ed2/file_upload.php', lang: 'ru', autoresize: false, plugins: ['fullscreen','clips'] }); } );
+    </script><textarea id='".$name."' class='redactor' name='".$name."' style='width: 100%; height: 300px;'>".$txt."</textarea>";
+
+    $clip_title = array('«Рыба» для заполнения тестовых страниц');
+    $clip_text = array('<p>Рыбу можно вставлять, использовать, вешать, заливать, показывать, запихивать... Словом, с ней делают что угодно, лишь бы эскиз был максимально похож на готовую работу. Если в качестве рыбных картинок использовать цветные прямоугольники, а вместо текста — несколько повторяющихся слов, эскиз будет выглядеть неестественно.<p>Те, кому когда-либо приходилось делать в квартире ремонт, наверное, обращали внимание на старые газеты, наклеенные под обоями. Как правило, пока все статьи не перечитаешь, ничего другого делать не можешь. Интересно же — обрывки текста, чья-то жизнь... Так же и с рыбой. Пока заказчик не прочтет всё, он не успокоится. Бывали случаи, когда дизайн принимался именно из-за рыбного текста, который, разумеется, никакого отношения к работе не имел.<p>Иногда даже хорошие дизайнеры не утруждают себя набиванием абстрактного текста, а вписывают три-четыре слова («Тут будет текст...»). Это очень плохо, потому что не позволяет зрителю оценить, как на самом деле будет выглядеть текст. Повторяющийся паттерн (узор) текста — один из самых плохих эффектов при показе дизайна.<p>Текст ни о чем (пример в средней колонке) — хороший способ попытаться сосредоточить внимание заказчика на дизайне, форме, верстке, цвете. Некоторые вместо текста вставляют философскую бессмыслицу. Так как читать такой текст неинтересно, то все внимание переключится на детали оформления.');
+    echo "<div id=\"clipsmodal\" style=\"display: none;\"><div id=\"redactor_modal_content\"><div class=\"redactor_modal_box\"><ul class=\"redactor_clips_box\">";
+    foreach ($clip_title as $key => $value) {
+      echo "<li><a href=\"#\" class=\"redactor_clip_link\">".$clip_title[$key]."</a><div class=\"redactor_clip\" style=\"display: none;\">".$clip_text[$key]."</div></li>";
+    }
+    echo "</ul></div></div><div id=\"redactor_modal_footer\">Добавить заготовку текста можно в Настройках 〉Заготовки для редактора.<a href=\"#\" class=\"redactor_modal_btn redactor_btn_modal_close\">Закрыть</a></div></div> ";
+  }
+}
+##########################################################################################
+function redactor2($type, $txt, $name) {
+  if ($type=="1") {
+    // Преобразование textarea (замена на русскую букву е, только для редактора)
+    $txt = str_replace("textarea","tеxtarea",$txt); // ireplace
+    $txt = str_replace("&","&amp;",$txt);
+    echo "<textarea id='".$name."' name='".$name."' rows=15 cols=40 style='width:100%;'>".$txt."</textarea>";
+  } elseif ($type=="2") {
+      echo ""; // для редактора разметки
+  } else {
+    echo "<textarea id='".$name."' class='redactor' name='".$name."' rows=15 cols=40 style='width:100%;'>".$txt."</textarea>";
+  }
+}
+##########################################################################################
+
 ?>

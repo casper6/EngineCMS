@@ -110,9 +110,9 @@ function edit_base_pages_category($cid, $red=0) {
   $parent_id = $row['parent_id'];
 
   echo "<form action='sys.php' method='post'>
-  <div style='background: #e2e5ea;'>
+  <div style='background: url(/images/fon.png);'>
   <div class='black_grad' style='height:45px;'>
-  <button type=submit id=new_razdel_button class='medium green' onclick=\"show('sortirovka');\" style='float:left; margin:3px;'><span style='margin-right: -2px;' class='icon white medium' data-icon='c'></span>Сохранить</button>
+  <button type=submit id=new_razdel_button class='medium green' onclick=\"show('sortirovka');\" style='float:left; margin:3px;'><span style='margin-right: -2px;' class='icon white small' data-icon='c'></span> Сохранить</button>
   <span class='h1' style='padding-top:10px;'>
     ".$title_razdel_and_bd[$module]." &rarr; Редактирование папки</span>";
   if (intval($nastroi) != 1) red_vybor();
@@ -182,40 +182,7 @@ function edit_base_pages_category($cid, $red=0) {
     <h2>Название папки:</h2>
     <input type='text' name='title' value='$title' size='60'><br><br>
     ".$blok."";
-    if ($red==0) {
-    } elseif ($red==2) {
-        echo "<textarea cols=80 id=editor name=desc rows=10>".$desc."</textarea>
-    <script type='text/javascript'>
-    CKEDITOR.replace( 'editor', {
-     filebrowserBrowseUrl : '/ckfinder/ckfinder.html',
-     filebrowserImageBrowseUrl : '/ckfinder/ckfinder.html?Type=Images',
-     filebrowserFlashBrowseUrl : '/ckfinder/ckfinder.html?Type=Flash',
-     filebrowserUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
-     filebrowserImageUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images',
-     filebrowserFlashUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash'
-    });
-    </script>";
-    } elseif ($red==1) {
-        echo "<textarea id='desc' name='desc' style='width: 100%; height: 300px;'>".$desc."</textarea>";
-    } elseif ($red==3) {
-        echo "<script type='text/javascript'> 
-    $(document).ready(function()
-    {  $('#desc').editor({ focus: true, toolbar: 'classic', css: ['/ed/js/editor/css/editor.css'] });  });
-    </script><textarea id='desc' name='desc' style='width: 100%; height: 300px;'>".$desc."</textarea>";
-    } elseif ($red==4) {
-        global $red4_div_convert;
-        echo "<script type='text/javascript'>
-        function ButtonMore(obj, event, key){ obj.insertHtml('<!--more-->'); }
-        function ButtonBlock(obj, event, key){ obj.insertHtml('[Название блока]'); }
-        function ButtonLink(obj, event, key){ obj.insertHtml('{Название страницы или раздела}'); }
-        $(document).ready(function() { 
-          $('.redactor').redactor({ buttonsAdd: ['|', 'button_more', 'button_link', 'button_block'], buttonsCustom: {
-            button_more: {title: 'Вставка ссылки на полное содержание (для предисловия)',callback: ButtonMore},
-            button_link: {title: 'Вставка блока (например, галереи фотографий)',callback: ButtonBlock},
-            button_block: {title: 'Вставка быстрой ссылки на страницу или раздел',callback: ButtonLink}
-          }, mobile: false, ".$red4_div_convert." imageUpload: 'ed2/image_upload.php',fileUpload: 'ed2/file_upload.php', lang: 'ru', autoresize: false }); } );
-        </script><textarea id='desc' class='redactor' name='desc' style='width: 100%; height: 300px;'>".$desc."</textarea>";
-    }
+    redactor($red, $desc, 'desc'); // редактор: типа редактора, редактируемое поле
 
     echo "<br><div style='float:left; '><h2>Сортировка:&nbsp;</h2></div> <input type='text' name='sortirovka' value='$sortirovka' size='3'><br><br><span class=small>Если вы решили отсортировать папки по-своему - лучше всего использовать десятичную разницу между числами сортировки для разных папок, например: 10, 20, 30, 40... Это нужно для того, чтобы в случае создания новой папки вы не изменяли сортировку для всех предыдущих, а легко присвоили ей следующий номер за сортировкой, стоящей перед ней папки, например: 11, 21, 31, 41... или 15, 25, 35 - чтобы можно было вклинить новые папки между ними.</span>
       <input type='hidden' name='cid' value='$cid'>
@@ -287,9 +254,9 @@ function base_pages_add_page($name, $razdel, $red=0, $new=0, $pid=0) {
   if (!isset($shablon1)) $shablon1="";
   if (!isset($shablon2)) $shablon2="";
   echo "<form action='sys.php' method='post' enctype='multipart/form-data'>
-    <div style='background: #e2e5ea;'>
+  <div style='background: url(/images/fon.png);'>
   <div class='black_grad' style='height:45px;'>
-  <button type=submit onClick=\" if (document.getElementById('to_razdel').value=='') { alert('Выберите раздел для страницы (слева сверху)!'); return false; } else { submit(); } \" id=new_razdel_button class='medium green' onclick=\"show('sortirovka');\" style='float:left; margin:3px;'><span style='margin-right: -2px;' class='icon white medium' data-icon='c'></span>Сохранить</button>
+  <button type=submit onClick=\" if (document.getElementById('to_razdel').value=='') { alert('Выберите раздел для страницы (слева сверху)!'); return false; } else { submit(); } \" id=new_razdel_button class='medium green' onclick=\"show('sortirovka');\" style='float:left; margin:3px;'><span style='margin-right: -2px;' class='icon white small' data-icon='c'></span> Сохранить</button>
   <span class='h1' style='padding-top:10px;'>
   Добавление страницы</span>";
   if (intval($nastroi) != 1) red_vybor();
@@ -413,43 +380,14 @@ function base_pages_add_page($name, $razdel, $red=0, $new=0, $pid=0) {
   echo "</div>";
 
   echo "</td><td>
-  <h2>Название страницы (заголовок)</h2><textarea class=big name=title rows=1 cols=10 style='font-size:16pt; width:100%;'></textarea>";
+  <h2>Название страницы (заголовок)</h2><textarea class=big name=title rows=1 cols=10 style='font-size:16pt; height:40px; width:100%;'></textarea>";
 
   echo "<br><h2>Предисловие (начальный текст)</h2>";
-  if ($red==0) {
-  } elseif ($red==2) {
-      // редактор CKE удален
-  } elseif ($red==1) {
-      echo "<textarea id='open_text' name=open_text rows=7 cols=40 style='width:100%;'>".$shablon1."</textarea>";
-  } elseif ($red==3) {
-      echo "<script type='text/javascript'> 
-  $(function()
-  {  $('#open_text').editor({ focus: true, toolbar: 'classic', css: ['/ed/js/editor/css/editor.css'], upload: 'upload.php' }); 
-  $('#main_text').editor({ css: ['/ed/js/editor/css/editor.css'], toolbar: 'classic', upload: 'upload.php' });  });
-  </script>
-  <textarea id='open_text' name=open_text rows=7 cols=40 style='width:100%;'>".$shablon1."</textarea>";
-  } elseif ($red==4) {
-    global $red4_div_convert;
-    echo "<script type='text/javascript'>
-    function ButtonMore(obj, event, key){ obj.insertHtml('<!--more-->'); }
-    function ButtonBlock(obj, event, key){ obj.insertHtml('[Название блока]'); }
-    function ButtonLink(obj, event, key){ obj.insertHtml('{Название страницы или раздела}'); }
-    $(document).ready(function() { 
-      $('.redactor').redactor({ buttonsAdd: ['|', 'button_more', 'button_link', 'button_block'], buttonsCustom: {
-        button_more: {title: 'Вставка ссылки на полное содержание (для предисловия)',callback: ButtonMore},
-        button_link: {title: 'Вставка блока (например, галереи фотографий)',callback: ButtonBlock},
-        button_block: {title: 'Вставка быстрой ссылки на страницу или раздел',callback: ButtonLink}
-      }, mobile: false, ".$red4_div_convert." imageUpload: 'ed2/image_upload.php',fileUpload: 'ed2/file_upload.php', lang: 'ru', autoresize: false }); } );
-    </script>
-    <textarea id='open_text' class='redactor' name=open_text rows=7 cols=40 style='width:100%;'>".$shablon1."</textarea>";
-  }
+  redactor($red, $shablon1, 'open_text', 'main_text'); // редактор: типа редактора, редактируемое поле
+
   echo "<br><h2>Содержание (основной текст)</h2>";
-  if ($red==0) {
-  } elseif ($red==2) {
-      // редактор CKE удален
-  } else {
-      echo "<textarea id='main_text' class='redactor' name=main_text rows=15 cols=40 style='width:100%;'>".$shablon2."</textarea>";
-  }
+  redactor2($red, $shablon2, 'main_text');
+
   $sql = "select text from ".$prefix."_mainpage where name='$name' and type='2'";
   $result = $db->sql_query($sql);
   $row = $db->sql_fetchrow($result);
@@ -818,7 +756,7 @@ function base_pages_edit_page($pid, $red=0) {
     echo "<form action='sys.php' method='post' enctype='multipart/form-data'>
     <div style='background: #e2e5ea;'>
   <div class='black_grad' style='height:45px;'>
-  <button type=submit id=new_razdel_button class='medium green' onclick=\"show('sortirovka');\" style='float:left; margin:3px;'><span style='margin-right: -2px;' class='icon white medium' data-icon='c'></span>Сохранить</button>
+  <button type=submit id=new_razdel_button class='medium green' onclick=\"show('sortirovka');\" style='float:left; margin:3px;'><span style='margin-right: -2px;' class='icon white small' data-icon='c'></span>Сохранить</button>
   <span class='h1' style='padding-top:10px;'>
   ".$title_razdel_and_bd[$module]." &rarr; Редактирование страницы</span>";
   if (intval($nastroi) != 1) red_vybor();
@@ -954,80 +892,13 @@ function base_pages_edit_page($pid, $red=0) {
   </div>
 
   </td><td>
-  <h2>Название страницы (заголовок)</h2><textarea class=big name=title rows=1 cols=10 style='font-size:16pt; width:100%;'>".$titl."</textarea>
+  <h2>Название страницы (заголовок)</h2><textarea class=big name=title rows=1 cols=10 style='font-size:16pt; height:40px; width:100%;'>".$titl."</textarea>
   <br><h2>Предисловие (начальный текст)</h2>";
-
-  // Исправление сломанных таблиц
-  /*
-  $open_text = str_replace("td> nowrap","td nowrap",$open_text);
-  $open_text = str_replace("td> valign","td valign",$open_text);
-  $open_text = str_replace("td>>","td>",$open_text);
-  $main_text = str_replace("td> nowrap","td nowrap",$main_text);
-  $main_text = str_replace("td> valign","td valign",$main_text);
-  $main_text = str_replace("td>>","td>",$main_text);
-  */
-  if ($red==0) {
-  } elseif ($red==2) {
-  echo "<textarea cols=80 id=editor name=open_text rows=10>".$open_text."</textarea>
-  <script type='text/javascript'>
-  CKEDITOR.replace( 'editor', {
-   filebrowserBrowseUrl : '/ckfinder/ckfinder.html',
-   filebrowserImageBrowseUrl : '/ckfinder/ckfinder.html?Type=Images',
-   filebrowserFlashBrowseUrl : '/ckfinder/ckfinder.html?Type=Flash',
-   filebrowserUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
-   filebrowserImageUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images',
-   filebrowserFlashUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash'
-  });
-  </script>";
-  } elseif ($red==1) {
-    // Преобразование textarea (замена на русскую букву е, только для редактора)
-    $open_text = str_replace("textarea","tеxtarea",$open_text); // ireplace
-  echo "<textarea id='open_text' name='open_text' rows='8' cols='80' style='width:100%;'>".$open_text."</textarea>";
-  } elseif ($red==3) {
-  echo "<script type='text/javascript'> 
-  $(document).ready(function()
-  {  $('#open_text').editor({ focus: true, toolbar: 'classic', css: ['/ed/js/editor/css/editor.css'], upload: 'upload.php' }); 
-  $('#main_text').editor({ css: ['/ed/js/editor/css/editor.css'], toolbar: 'classic', upload: 'upload.php' });  });
-  </script>
-  <textarea id='open_text' name='open_text' rows='8' cols='80' style='width:100%;'>".$open_text."</textarea>";
-  } elseif ($red==4) {
-      global $red4_div_convert;
-      echo "<script type='text/javascript'>
-      function ButtonMore(obj, event, key){ obj.insertHtml('<!--more-->'); }
-      function ButtonBlock(obj, event, key){ obj.insertHtml('[Название блока]'); }
-      function ButtonLink(obj, event, key){ obj.insertHtml('{Название страницы или раздела}'); }
-      $(document).ready(function() { 
-        $('.redactor').redactor({ buttonsAdd: ['|', 'button_more', 'button_link', 'button_block'], buttonsCustom: {
-          button_more: {title: 'Вставка ссылки на полное содержание (для предисловия)',callback: ButtonMore},
-          button_link: {title: 'Вставка блока (например, галереи фотографий)',callback: ButtonBlock},
-          button_block: {title: 'Вставка быстрой ссылки на страницу или раздел',callback: ButtonLink}
-        }, ".$red4_div_convert." imageUpload: 'ed2/image_upload.php',fileUpload: 'ed2/file_upload.php', lang: 'ru', autoresize: false }); } );
-      </script>
-  <textarea id='open_text' class='redactor' name='open_text' rows='8' cols='80' style='width:100%;'>".$open_text."</textarea>";
-  }
+  redactor($red, $open_text, 'open_text', 'main_text'); // редактор: типа редактора, редактируемое поле
 
   echo "<br><h2>Содержание (основной текст)</h2>";
+  redactor2($red, $main_text, 'main_text');
 
-  if ($red==0) {
-  } elseif ($red==2) {
-    echo "<textarea cols=80 id=edit name=main_text rows=12>".$main_text."</textarea>
-  <script type='text/javascript'>
-  CKEDITOR.replace( 'edit', {
-   filebrowserBrowseUrl : '/ckfinder/ckfinder.html',
-   filebrowserImageBrowseUrl : '/ckfinder/ckfinder.html?Type=Images',
-   filebrowserFlashBrowseUrl : '/ckfinder/ckfinder.html?Type=Flash',
-   filebrowserUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
-   filebrowserImageUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images',
-   filebrowserFlashUploadUrl : '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash'
-  });
-  </script>";
-  } elseif ($red==1) {
-    // Преобразование textarea (замена на русскую букву е, только для редактора)
-    $main_text = str_replace("textarea","tеxtarea",$main_text); // ireplace
-    echo "<textarea id='main_text' name='main_text' rows='12' cols='80' style='width:100%;'>".$main_text."</textarea>";
-  } else {
-    echo "<textarea id='main_text' class='redactor' name='main_text' rows='12' cols='80' style='width:100%;'>".$main_text."</textarea>";
-  }
   echo "<br>";
 
   /*

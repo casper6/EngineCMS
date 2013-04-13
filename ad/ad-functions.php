@@ -139,10 +139,9 @@ function help_autoblocks() {
     [rss] - выводит ссылку на RSS с картинкой 16х16 пикселей ([rss32] [rss50] 50х50, [rss100], [rss150], [rss200]).<br>
     Прямая ссылка на RSS: /rss<hr>";
 }
-/////////////////////////////////////////////////////////////// 
+///////////////////////////////////////////////////////////////
 function help_design() {
-  return "<h2>Справка: 
-    <select name=shablon_var2 onchange=\"$('#shablon_var').html(this.value); $('#shablon_var').show(); $('#show_shablon_var').show();\"></h2>
+  return "<h2>Справка:</h2><select class='w100' name=shablon_var2 onchange=\"$('#shablon_var').html(this.value); $('#shablon_var').show(); $('#show_shablon_var').show();\">
     <option value='Выберите другой объект из того же списка'>Выберите объект для дизайна</option>
     <option value='<b>Созданные блоки</b> (посмотреть их принадлежность вы можете во вкладке Оформление->Блоки):<br>".block_names()."<hr><b>Автоматические блоки</b>:<br>
   [содержание] - содержание раздела<br>
@@ -171,7 +170,7 @@ function help_shablon() {
       $add = "[подробнее]"; //if (strpos($base_text, "type=3")) $add .= " [добавить в корзину]";
       $bases .= "<option value='".$rowsX.$add."'>Вставки для базы данных \"".$base_title."\"</option>";
   }
-  return "<h2>Справка: <select name=shablon_var2 onchange=\"$('#shablon_var').html(this.value); $('#shablon_var').show(); $('#show_shablon_var').show();\"></h2>
+  return "<h2>Справка:</h2> <select class='w100' name=shablon_var2 onchange=\"$('#shablon_var').html(this.value); $('#shablon_var').show(); $('#show_shablon_var').show();\">
     <option value='Выберите другой объект из того же списка'>Выберите объект для шаблона</option>
 
     <option value='<b>Созданные блоки</b> (посмотреть их принадлежность вы можете во вкладке Оформление->Блоки):<br>".block_names()."<hr><b>Автоматические блоки</b> (не предназначены для шаблонов, но могут быть использованы):<br>
@@ -329,4 +328,5 @@ function add_file_upload_form() {
   <script src='includes/upload/js/main.js'></script>
   <!--[if gte IE 8]><script src='includes/upload/js/cors/jquery.xdr-transport.js'></script><![endif]-->";
 }
+##########################################################################################
 ?>

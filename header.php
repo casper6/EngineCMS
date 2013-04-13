@@ -1619,7 +1619,7 @@ echo "<title>".$pagetit.$sitename."</title>
 <script src='includes/j.js'></script>
 <!--[if IE]><script src='includes/iepngfix_tilebg.js'></script><![endif]-->
 <script src='http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js'></script>
-<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js'></script>
+<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js'></script>
 <script src='includes/jquery.lightbox.js'></script>
 <script src='includes/jquery.innerfade.js'></script>
 <script src='includes/jquery.ad-gallery.js'></script>";
@@ -1627,9 +1627,9 @@ echo "<title>".$pagetit.$sitename."</title>
 global $kickstart, $jqueryui, $normalize;
 if ($normalize != 0) echo "<link rel='stylesheet' type='text/css' href='includes/css-frameworks/normalize.css' />";
 
-if ($jqueryui != 0) echo "<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/jquery-ui.min.js'></script>
-<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/i18n/jquery-ui-i18n.min.js'></script>
-<link rel='stylesheet' href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/base/jquery-ui.css' media='all' />";
+if ($jqueryui != 0) echo "<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js'></script>
+<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/i18n/jquery-ui-i18n.min.js'></script>
+<link rel='stylesheet' href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css' media='all' />";
 
 switch($kickstart) { // Выбор CSS-фреймворка
 	case 1: // KickStart

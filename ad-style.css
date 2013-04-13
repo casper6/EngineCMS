@@ -190,7 +190,7 @@ img.bigicon {margin-bottom: 5px; width:128px; height:128px; border:0; float:left
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f4f5f7', endColorstr='#a8acb8',GradientType=0 ); /* IE6-9 */
 	border-bottom:1px solid #80868f;
 	text-align:center;
-	height: 30px;
+	height: 33px;
 	min-width:290px;
 }
 .yellow_grad {
@@ -216,7 +216,7 @@ img.bigicon {margin-bottom: 5px; width:128px; height:128px; border:0; float:left
 .add_oformlenie {width: 530px; height:500px; margin-bottom:20px; background: #dddddd;}
 .close_button {font-size:12pt; width:20px; height: 20px; color: white; text-align:center; float:right; margin:5px; margin-bottom:0; background: #bbbbbb;}
 .m5 {margin:5px;}
-.w100 {width:100%}
+.w100 {width:100%;}
 .pr10 {padding-right:10px;}
 .mi50ma80 {min-width:50%; max-width:80%;}
 .h15 {height:15px;}

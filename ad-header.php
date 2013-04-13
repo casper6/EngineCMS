@@ -117,9 +117,13 @@ echo "<link rel=\"stylesheet\" href=\"http://ajax.googleapis.com/ajax/libs/jquer
 
 if ($red==3) echo "<script type=\"text/javascript\" src=\"ed/js/editor/editor.js\"></script> 
 <link rel=\"stylesheet\" href=\"ed/js/editor/css/editor.css\" type=\"text/css\" media=\"screen, projection\" /> ";
-if ($red==4) echo "<script src=\"ed2/redactor.js\"></script>
+if ($red==4) echo "
+<script src=\"ed2/redactor.min.js\"></script>
 <link rel=\"stylesheet\" href=\"ed2/redactor.css\" />
-<script src=\"ed2/ru.js\"></script>";
+<script src=\"ed2/ru.js\"></script>
+<script src=\"ed2/clips.js\"></script>
+<link rel=\"stylesheet\" href=\"ed2/clips.css\" />
+<script src=\"ed2/fullscreen.js\"></script>";
 
 global $ad_fon;
 if ($ad_fon == 0) $fon = "default.jpg"; else $fon = $ad_fon.".png";

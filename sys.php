@@ -139,18 +139,19 @@ function GraphicAdmin() {
 		$num_add_pages = $db->sql_numrows($db->sql_query("SELECT `pid` from ".$prefix."_pages where (`active`='2' or `active`='3') and `tables`!='del'"));
 	}
 	$soderganie_menu = "<div style='margin-bottom:5px;'>
-	<button class='nothing small' id='hide_razdel' onclick=\"$('#show_razdel').show(); $('#razdels').hide(); $('#hide_razdel').hide(); $('#razdel_td').hide(); $('.dark_pole2sel').attr('class', 'dark_pole2');\" style='' title='Скрыть Разделы в кнопку'>&rarr;</button>
+	<button class='nothing small' id='hide_razdel' onclick=\"$('#show_razdel').show(); $('#razdels').hide(); $('#hide_razdel').hide(); $('#razdel_td').hide(); $('.dark_pole2sel').attr('class', 'dark_pole2');\" style='' title='Скрыть Разделы в кнопку'>&rarr;</button> ";
 
-	<button class='small' id='show_razdel' style='display:none;' href=# onclick=\" $('#razdel_td').show(); $('#show_razdel').hide(); $('#razdels').show(); $('#hide_razdel').show();\"><span class=\"icon gray small\" data-icon=\",\"></span>Разделы</button> <button class='nothing small' onclick=\"openbox('5','Новое и отредактированное'); $('#hide_razdel').click();\"><span class=\"icon gray small\" data-icon=\"M\"></span>Новое</button>";
+	if ($show_comments != 0) {
+		if ($show_comments == 2) $soderganie_menu .= "<a style='color: gray;' onclick=\"openbox('3','Комментарии');\">.</a>";
+		elseif ($show_comments == 1) $soderganie_menu .= "<button class='nothing medium' onclick=\"openbox('3','Комментарии'); $('#hide_razdel').click();\" title='Комментарии за сегодня/вчера/позавчера'><span class=\"icon gray small\" data-icon=\"'\"></span><nobr>Отзывы: ".$comm_segodnya."/".$comm_vchera."/".$comm_pozavchera."</nobr></button>";
+	}
+
+	$soderganie_menu .= "<button class='small' id='show_razdel' style='display:none;' href=# onclick=\" $('#razdel_td').show(); $('#show_razdel').hide(); $('#razdels').show(); $('#hide_razdel').show();\"><span class=\"icon gray small\" data-icon=\",\"></span>Разделы</button> <button class='nothing small' onclick=\"openbox('5','Новое и отредактированное'); $('#hide_razdel').click();\"><span class=\"icon gray small\" data-icon=\"M\"></span>Новое</button>";
 	if (!isset($num_add_pages)) $num_add_pages = 0;
 
 	if ($num_add_pages > 0 and $show_userposts != 0) {
 		if ($show_userposts == 2) $soderganie_menu .= "<a style='color: gray;' onclick=\"openbox('4','Добавленное посетителями');\">.</a>";
 		elseif ($show_userposts == 1) $soderganie_menu .= "<button class='nothing small' style='color: red;' onclick=\"openbox('4','Добавленное посетителями'); $('#hide_razdel').click();\"><span class=\"icon gray small\" data-icon=\"u\"></span><nobr>Проверить: <strong>".$num_add_pages."</strong></nobr></button>";
-	}
-	if ($show_comments != 0) {
-		if ($show_comments == 2) $soderganie_menu .= "<a style='color: gray;' onclick=\"openbox('3','Комментарии');\">.</a>";
-		elseif ($show_comments == 1) $soderganie_menu .= "<button class='nothing medium' onclick=\"openbox('3','Комментарии'); $('#hide_razdel').click();\" title='Комментарии за сегодня/вчера/позавчера'><span class=\"icon gray small\" data-icon=\"'\"></span><nobr>Отзывы: ".$comm_segodnya."/".$comm_vchera."/".$comm_pozavchera."</nobr></button>";
 	}
 	$del_page = $db->sql_numrows($db->sql_query("SELECT pid from ".$prefix."_".$pages." where `tables`='del' limit 0,1"));
 	if ($del_page > 0) $soderganie_menu .= "<button class='nothing small' onclick=\"openbox('1','Корзина'); $('#hide_razdel').click();\" title='Удаленные страницы'><span class=\"icon gray small\" data-icon=\"T\"></span>Корзина</button>";
@@ -447,7 +448,7 @@ function red_vybor() { // Выбор редактора (перенести в �
   global $url;
   $link = str_replace("&red=0","",str_replace("&red=1","",str_replace("&red=2","",str_replace("&red=3","",str_replace("&red=4","",$url)))));
   echo "
-  <button id='rerurn' class='medium orange' type=button onclick=\"show('red_vybor');\" style='float:right;margin:3px;'><span style='margin-right: -2px;' class=\"icon white medium\" data-icon=\"7\"></span></button>
+  <button id='rerurn' class='medium orange' type=button onclick=\"show('red_vybor');\" style='float:right;margin:3px;'><span style='margin-right: -2px;' class=\"icon white small\" data-icon=\"7\"></span> Редактор</button>
 
   <div id='red_vybor' style='position: absolute; z-index:666; right:5px; top:5px; padding:5px; width:647px; background:white; display:none; border:solid 10px gray;' class=radius>
   <a onclick=show('red_vybor') style='cursor:pointer; float:right;' title='Закрыть'><img class='icon2 i33' src='/images/1.gif'></a>
