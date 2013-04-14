@@ -1619,7 +1619,7 @@ echo "<title>".$pagetit.$sitename."</title>
 <script src='includes/j.js'></script>
 <!--[if IE]><script src='includes/iepngfix_tilebg.js'></script><![endif]-->
 <script src='http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js'></script>
-<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js'></script>
+<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js'></script>
 <script src='includes/jquery.lightbox.js'></script>
 <script src='includes/jquery.innerfade.js'></script>
 <script src='includes/jquery.ad-gallery.js'></script>";

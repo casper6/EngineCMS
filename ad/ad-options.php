@@ -194,9 +194,12 @@ echo "
 ".select("options[sortable]", "0,1", "НЕТ,ДА", $sortable)."<br>
 Позволяет сортировать любые элементы, обращаясь к ним через jQuery. Пример:
 <pre>
-Сортировка:
+&lt;div id=sorter style='display:none;'&gt;Сортировка:
 &lt;a style=\"cursor:pointer;\" onclick=\"$('div#tovars>div#tovar').tsort('h3',{attr:'title'});\"&gt;по цене&lt;/a&gt;, 
 &lt;a style=\"cursor:pointer;\" onclick=\"$('div#tovars>div#tovar').tsort('h1',{charOrder:'абвгдђежзијклљмнњопрстћуфхцчџш'});\"&gt;по названию&lt;/a&gt;
+&lt;/div&gt;
+Можно показывать сортировку только при наличии сортируемых элементов:
+&lt;script&gt;$(document).ready(function() { if ( document.getElementById('tovar') != null ) $('#sorter').show('slow'); });&lt;/script&gt;
 </pre>
 </td></tr>
 
