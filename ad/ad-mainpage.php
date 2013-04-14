@@ -219,10 +219,10 @@ function create_main($type) {
 	$create.="<div id=about class=block style='display:none;'>Дизайн — это обрамление страниц сайта, всё, что окружает контент, содержание. В дизайне могут быть блоки, которые выводят необходимую информацию. Например созданный вами блок меню или автоматический блок [статистика], который выводит счетчик статистики из настроек сайта. В общем, дизайн — это весь html-код, от body до /body (невключительно), а сама страница заменена на служебное слово [содержание] - блок, который выводит содержание подключенных разделов и их страниц. После создания дизайна, откройте его редактирование и присвойте необходимые стили (css).<br></div>
 	<table width=100%><tr><td>
 	<h2>Название:</h2>По-русски, можно с пробелами
-	<input type='text' name='title' value='' size=40 class='w100' autofocus><br>
+	<input type='text' name='title' value='' size=40 class='w100 h40 f16' autofocus><br>
 	<br>".help_design()."<br>
 	<h2>Содержание дизайна (HTML):</h2>
-	<textarea name=text rows=15 cols=86 class='w100'></textarea>
+	<textarea name=text rows=15 cols=86 class='w100 h40 f16'></textarea>
 	<div class='notice success black'><span class='icon large white' data-icon='C'></span>
 	Здесь вы можете вставить готовый HTML-код (от тега &lt;body&gt; до &lt;/body&gt;, не включительно) или набрать его с нуля.
 	<br><b>[содержание]</b> - автоматический блок для вывода страниц. Не использовать его можно лишь в случае присоединения дизайна к разделу, состоящему из одной страницы — в этом случае можно всю страницу поместить в дизайн или в раздел.</div>
@@ -242,9 +242,9 @@ function create_main($type) {
 	<div id=about class=block style='display:none;'>Стили - это CSS (каскадные таблицы стилей), описание оформления элементов сайта. Стили подключаются к дизайну (при его редактировании). В дизайне может быть использовано сразу несколько стилей. При подключении стилей они объединяются в один стиль и сжимаются.<br></div>
 	<table width=100%><tr><td>
 	<h2>Название:</h2>По-русски, можно с пробелами<br>
-	<input type=text name=title value='' size=40 class='w100' autofocus>
+	<input type=text name=title value='' size=40 class='w100 h40 f16' autofocus>
 	<h2>Содержание стиля:</h2>
-	<textarea name=text rows=30 cols=86 class='w100'></textarea><br>
+	<textarea name=text rows=30 cols=86 class='w100 h40 f16'></textarea><br>
 	<input type=hidden name=id value=0>
 	<input type=hidden name=type value='1'>
 	<input type=hidden name=namo value=''>
@@ -301,12 +301,12 @@ function create_main($type) {
 
 	$create = "<div id=about class=block style='display:none;'>Блок — это дополнительный элемент сайта, который может быть вставлен в любом его месте. Блоки бывают автоматические (заранее заданные системой), полуавтоматические (создаваемые с последующей настройкой того, что будет в них отображаться) и ручные (текст, HTML, JavaScript или PHP-код).<br></div>
 	<table width=100%><tr valign=bottom><td width=50%>
-	<h2>Название блока:</h2><input type='text' name='title' value='' size=60 class='w100' autofocus></td><td>
+	<h2>Название блока:</h2><input type='text' name='title' value='' size=60 class='w100 h40 f16' autofocus></td><td>
 	<h2>Выберите дизайн:</h2><select name=design><option value=0> без дизайна </option>".$styles."</select>
 	</td></tr><tr><td colspan=2>
 	<h2>Выберите тип блока:</h2> (справа увидите его параметры (не у всех блоков), а снизу — описание)
 	<table width=100% cellspacing=0 cellpadding=0><tr valign=top><td class='pr10'>
-	<select id=name size=10 name='name' class='w100' onchange=\"
+	<select id=name size=10 name='name' class='w100 f16' onchange=\"
 
 	var arr = [ 'Блок выводит несколько страниц выбранного раздела или всех разделов', 'Блок выводит несколько комментариев со страниц выбранного раздела или всех разделов', 'В этом блоке можно написать любой текст, использовать HTML, а также другие созданные блоки', '«Ротатор» используется для показа блоков, текста или html.<br>При каждом обновлении страницы будет показан один из написанных элементов, разделение списка ротации — через символ «|» (вертикальная черта)', 'Блок выводит папки выбранного раздела или всех разделов', 'Блок выводит голосование или опрос, для чего нужно ввести сам вопрос в названии блока, а список вопросов — в Содержании блока, через «Enter»', 'Блок «Фотогалерея» выводит фотографии в нужном месте сайта, для его создания используется список адресов закаченный фотографий, через «Enter».<br>А их описание ставится сразу после адреса через символ «|» (вертикальная черта), пример: /img/1.jpg|Фото 1. <br>— Имена файлов могут содержать любые символы. <br>— Загрузка автоматическая сразу после выбора файлов. <br>— Фотографии будут автоматически переименованы, развернуты в нужную сторону, сжаты и уменьшены по ширине до 1000 пикселей.<br><div class=red>— Если впоследствии вы захотите стереть какую-либо фотографию — просто удалите ее строчку из блока галереи (не забудьте сохранить блок), затем перейдите во вкладку «Настройки», откройте «Удаление неиспользуемых фотографий» и удалите эту фотографию.</div>', 'PHP-код пишется в Содержании блока.<br>PHP можно писать сразу, без начальных и конечных обозначений ( &lt; ?php ... ? &gt; ).<br>Вывод информации в блок производится через переменную <b>$"."txt</b>', 'Блок выводит папки открытого в данный момент раздела или ничего не выводит, если это Главная страница или папок в разделе не создано', 'Эта фотогалерея собирает первые фотографии из страниц выбранного раздела (или всех разделов).<br>Если в предисловии страницы не обнаружена фотография, эта страница пропускается.', 'Меню сайта создается по простым правилам (для того, чтобы быть универсальным и легко переключать варианты отображения):<br>[элемент открыть][url=/]Главная[/url][элемент закрыть]<br>[элемент открыть][url=#]Пункт меню 1[/url][элемент закрыть]<br>[элемент открыть][url=#]Пункт меню 2[/url]<br>&nbsp;&nbsp;[уровень открыть]<br>&nbsp;&nbsp;[элемент открыть][url=#]Подпункт 1[/url][элемент закрыть]<br>&nbsp;&nbsp;[элемент открыть][url=#]Подпункт 2[/url][элемент закрыть]<br>&nbsp;&nbsp;[уровень закрыть]<br>[элемент закрыть]<br><i>где # - это ссылка на страницу.</i><br>В меню может быть до 3-х уровней вложенности', 'Календарь на текущем месяце показывает ссылками те даты, за которые созданы страницы в выбранном разделе (или всех разделах).<br>Также показывает текущую дату', 'В РАЗРАБОТКЕ!!!!!!!!! Контактная форма может применяться для создания страницы Контакты, а также для отправки разнообразных анкет, заявок, жалоб и т.д', 'Облако тегов — это вращающийся трехмерный шар, состоящий из ключевых слов, взятых из страниц выбранного раздела (или всех разделов). Под ним есть ссылка на альтернативный текстовый вариант облака', '14', '15', '16', '17', '18', '19', 'База данных (количество по 1 колонке верт.)', 'База данных (количество по 1 колонке гор.)', 'База данных (количество по 2 колонкам)', 'База данных (список колонок)', '24', '25', '26', '27', '28', '29', 'Статистика раздела, выводит кол-во посещений выбранного раздела', 'JavaScript-блок автоматически встанет в HEAD и его не нужно где-либо специально размещать.', '32' ];
 
@@ -443,15 +443,15 @@ function create_main($type) {
 	'><span class='icon white small' data-icon='+'></span>Добавить поле</a><br>
 	<table width=100%><tr valign=top><td width=50%>
 	<div class='form_name' style='display:none'>Название <span class=small>(по-русски)</span>*:<br>
-		<input id='form_name' class='w100'></div>
+		<input id='form_name' class='w100 h40 f16'></div>
 	</td><td>
 	<div class='form_id' style='display:none'>и по-английски <span class=small>(необязательно)</span><br>
-		<input id='form_id' class='w100'></div>
+		<input id='form_id' class='w100 h40 f16'></div>
 	</td></tr><tr valign=top><td>
 	<div class='form_var' style='display:none'>Выбор <span class=small>(вариант*(рус.)/значение)</span>:<br>
-		<textarea rows=3 cols=86 class='w100 h70' id='form_var'></textarea></div>
+		<textarea rows=3 cols=86 class='w100 h70 f16' id='form_var'></textarea></div>
 	<div class='form_placeholder' style='display:none'>Текст в поле <span class=small>(тип значения)</span>:<br>
-		<input id='form_placeholder' class='w100'></div>
+		<input id='form_placeholder' class='w100 h40 f16'></div>
 	</td><td>
 	<div class='form_size_h' style='display:none'>Ширина <span class=small>(необязательно)</span>:<br>
 	<select id='form_size_h'>
@@ -517,12 +517,12 @@ function create_main($type) {
 	$create.="<div id=about class=block style='display:none;'>В Разделах сайта есть папки, в папках лежат страницы (статьи, новости и т.д.). У каждой страницы несколько полей для хранения информации: название, дата, предисловие, содержание и т.д. Если вдруг для какого либо раздела (или для всех разделов) не хватает подобного поля - его можно добавить. Примеры использования полей: отдельное поле для ввода автора (для статей), поле для загрузки фотографии (для фотогалереи), выбор из раскрывающегося списка определенного населенного пункта (для каталога предприятий), период времени (для афиши) и т.д. А для того, чтобы поля начали отображаться на страницах - есть произвольные шаблоны, которые можно создать и подключить к любому разделу (См. в настройках раздела - Шаблон для всего раздела или Шаблон для страницы).<br><b>Поле может принадлежать или какому-то одному разделу или сразу всем разделам.</b><br></div>
 	<table width=100%><tr><td width=50%>
 	<input type=hidden name=type value='4'>
-	<h2>Название поля</h2><input type=text name=title size=40 class='w100' autofocus><br>(рус.)</td><td>
-	<h2>Обращение</h2><input type=text name=namo size=40 class='w100'><br>(англ., без пробелов) Используется для вывода в шаблонах как: [обращение]</td></tr>
+	<h2>Название поля</h2><input type=text name=title size=40 class='w100 h40 f16' autofocus><br>(рус.)</td><td>
+	<h2>Обращение</h2><input type=text name=namo size=40 class='w100 h40 f16'><br>(англ., без пробелов) Используется для вывода в шаблонах как: [обращение]</td></tr>
 	<tr><td width=50%>
 	<input type=hidden name=shablon value=''>
-	<h2>Выберите раздел:</h2><select name='useit' class='w100'><option value='0'>все разделы</option>".$modules."</select></td><td>
-	<h2>Выберите тип поля:</h2><select name='s_tip' class='w100' id=s_tip onchange=\"
+	<h2>Выберите раздел:</h2><select name='useit' class='w100 h40 f16'><option value='0'>все разделы</option>".$modules."</select></td><td>
+	<h2>Выберите тип поля:</h2><select name='s_tip' class='w100 h40 f16' id=s_tip onchange=\"
 	if (document.getElementById('s_tip').value==0) { hide('spisok_5'); hide('spisok_2'); hide('spisok_3'); hide('spisok_4'); show('spisok_1'); }
 	if (document.getElementById('s_tip').value==1) { hide('spisok_5'); hide('spisok_3'); hide('spisok_4'); hide('spisok_1'); show('spisok_2'); }
 	if (document.getElementById('s_tip').value==2) { hide('spisok_5'); hide('spisok_4'); hide('spisok_1'); hide('spisok_2'); show('spisok_3'); }
@@ -554,12 +554,12 @@ function create_main($type) {
 	<input type='hidden' name='shablon' value=''>
 	</td></tr>
 	<tr valign=top><td width=50%>
-	<h2>Название:</h2><input type=text name=title size=30 class='w100' autofocus><br>(рус.)</td><td>
-	<h2>Обращение:</h2><input type=text name=namo size=30 class='w100'><br>(англ., без пробелов, мал. буквами)<br>
+	<h2>Название:</h2><input type=text name=title size=30 class='w100 h40 f16' autofocus><br>(рус.)</td><td>
+	<h2>Обращение:</h2><input type=text name=namo size=30 class='w100 h40 f16'><br>(англ., без пробелов, мал. буквами)<br>
 	<b>Удалить</b> таблицу с таким же обращением (замена копии)? <select name='delete_table'><option value='1'>да</option><option value='0'>нет</option></select>
 	</td></tr>
 	<tr><td colspan=2>
-	<h2>Тип базы данных:</h2><select name='s_tip' class='w100'>
+	<h2>Тип базы данных:</h2><select name='s_tip' class='w100 h40 f16'>
 	<option value='1'>открытая база данных (ограниченный доступ, полный доступ по паролю)</option>
 	<option value='2'>закрытая база данных (доступ по паролю)</option>
 	<option value='3'>интернет-магазин</option>
@@ -630,13 +630,13 @@ function create_main($type) {
 		$create.="<div id=about class=block style='display:none;'>Шаблоны используются для изменения внешнего вида разделов, страниц и блоков. Используются либо стандартные поля страниц, либо дополнительно созданные Поля. Для страниц можно использовать любой дизайн, блоки и разделы используют табличную основу — начало < table >, соответственно сами шаблоны должны начинаться с < tr > и заканчиваться на < /tr >. Для того, чтобы в шаблоне раздела предусмотреть возможность именования столбцов таблицы, например: Дата, Название, Ссылка... после самого шаблона раздела нужна написать ключевое слово [следующий] и написать шаблон именования столбцов, т.е. по сути скопировать шаблон строк раздела, но вместо заготовок автоматических вставок поставить в него названия соответствующих полей-столбцов.<br></div>
 		<table width=100%><tr><td width=50%>
 		<h2>Название шаблона</h2>
-		<input type=text name=title size=40 class='w100' autofocus> (рус.)</td><td>
+		<input type=text name=title size=40 class='w100 h40 f16' autofocus> (рус.)</td><td>
 		<h2>Обращение:</h2>
-		<input type=text name=namo size=40 class='w100'> (англ., без пробелов)</td></tr>
+		<input type=text name=namo size=40 class='w100 h40 f16'> (англ., без пробелов)</td></tr>
 		<tr><td colspan=2>
 		".help_shablon()."
 		<h2>Содержание шаблона (HTML-код и вставки шаблона):</h2>
-		<textarea name=text rows=15 cols=80 style='width:100%; height:350px;'></textarea>
+		<textarea name=text rows=15 cols=80 class='w100' style='height:350px;'></textarea>
 		</td></tr></table>
 		<input type=hidden name=id value=''>
 		<input type=hidden name=type value='6'>
@@ -645,7 +645,7 @@ function create_main($type) {
 	}
 	echo "<form method='POST' action='sys.php' style='display:inline;' enctype='multipart/form-data'>
 	<div style='background: #e2e5ea;'>
-	<div class='black_grad' style='height:45px;'>
+	<div class='black_grad h40'>
 	<button type='button' style='float:right;margin:3px;' class='medium orange' onClick=\"show_animate('about')\">?</button>
 	<button type=submit id=new_razdel_button class='small green' style='float:left; margin:3px;'><span class='mr-2 icon white medium' data-icon='c'></span>Сохранить</button>
 	<span class='h1'>Добавление ".$type_opis."</span></div>".$create."
@@ -782,7 +782,7 @@ function edit_main($id) {
 	echo "</div>
 
 	<h2>Название дизайна <span class=f12>Видит только администратор</span><br>
-	<textarea class='big' name='title' rows='1' cols='10' style='font-size:16pt; width:100%;'>".$title."</textarea></h2>
+	<textarea class='big w100 h40 f16' name='title' rows='1' cols='10'>".$title."</textarea></h2>
 	".help_design()."
 	<h2>Содержание дизайна (HTML): 
 	<span class=f12>[содержание] - блок вывода страниц.</span></h2>";
@@ -797,10 +797,10 @@ function edit_main($id) {
 	echo "Редактирование стиля (CSS)</span></div>
 
 	<h2>Название стиля <span class=f12>Видит только администратор</span><br>
-	<textarea class='big' name='title' rows='1' cols='10' style='font-size:16pt; width:100%;'>".$title."</textarea></h2>
+	<textarea class='big w100 h40 f16' name='title' rows='1' cols='10'>".$title."</textarea></h2>
 
 	<h2>Содержание стиля
-	<textarea class='f12' name='text' rows='30' cols='50' style='width:100%; background:#333333; color:white;'>".$text."</textarea></h2>
+	<textarea class='f12 w100' name='text' rows='30' cols='50' style='background:#333333; color:white;'>".$text."</textarea></h2>
 
 	<input type='hidden' name='namo' value='".$name."'><br>";
 	} ############################### ЗАКРЫТИЕ СТИЛЬ
@@ -1210,10 +1210,10 @@ function edit_main($id) {
 
 		<table width='100%' border='0'><tr valign='top'><td width='50%'>
 		<h2>Название раздела
-		<textarea class='big' name='title' rows='2' cols='10' style='font-size:16pt; width:100%;'>".$title."</textarea></h2>
+		<textarea class='big w100 h40 f16' name='title' rows='2' cols='10'>".$title."</textarea></h2>
 		</td><td>
 		<h2>Адрес раздела на сайте
-		<textarea class='big' name='namo' rows='1' cols='10' style='font-size:16pt; width:100%;'>".$name."</textarea>
+		<textarea class='big w100 h40 f16' name='namo' rows='1' cols='10'>".$name."</textarea>
 		<span class='red f12'>НЕ изменять!</span> <span class=f12>Ссылка: <a href=/-".$name." target=_blank>/-".$name."</a></span></h2>
 		</td></tr></table>
 
@@ -1704,10 +1704,10 @@ function edit_main($id) {
 
 	<table width='100%' border='0'><tr valign='top'><td width='50%'>
 	<h2>Название блока
-	<textarea class='big' name='title' rows='1' cols='10' style='font-size:16pt; width:100%;'>".$title."</textarea></h2>
+	<textarea class='big w100 h40 f16' name='title' rows='1' cols='10'>".$title."</textarea></h2>
 	</td><td>
 	<h2>Название класса CSS
-	<textarea class='big' name='shablon' rows='1' cols='10' style='font-size:16pt; width:100%;'>".$shablon."</textarea></h2>
+	<textarea class='big w100 h40 f16' name='shablon' rows='1' cols='10'>".$shablon."</textarea></h2>
 	</td></tr>
 	<tr><td colspan=2>";
 
@@ -1778,10 +1778,10 @@ function edit_main($id) {
 	echo "Редактирование поля</span></div>
 	<table width=100%><tr><td width=50%>
 	<h2>Название поля<br>
-	<textarea class='big' name='title' rows='1' cols='10' style='font-size:16pt; width:100%;'>".$title."</textarea></h2>
+	<textarea class='big w100 h40 f16' name='title' rows='1' cols='10'>".$title."</textarea></h2>
 	</td><td>
 	<h2>Обращение (англ., без пробелов)<br>
-	<textarea class='big' name='namo' rows='1' cols='10' style='font-size:16pt; width:100%;'>".$name."</textarea></h2>
+	<textarea class='big w100 h40 f16' name='namo' rows='1' cols='10'>".$name."</textarea></h2>
 	Используется в шаблонах для подключения вывода этого поля, пример: pole &rarr; [pole]
 	</td></tr><tr><td>
 	<h2>Принадлежит разделу:<br>
@@ -1816,10 +1816,10 @@ function edit_main($id) {
 	echo "</div>
 	<table width=100%><tr><td width=50%>
 	<h2>Название:</h2>
-	<textarea class='big' name='title' rows='1' cols='10' style='font-size:16pt; width:100%;'>".$title."</textarea>
+	<textarea class='big w100 h40 f16' name='title' rows='1' cols='10'>".$title."</textarea>
 	</td><td>
 	<h2>Обращение (англ, без пробелов)</h2>
-	<textarea class='big' name='namo' rows='1' cols='10' style='font-size:16pt; width:100%;'>".$name."</textarea>
+	<textarea class='big w100 h40 f16' name='namo' rows='1' cols='10'>".$name."</textarea>
 	</td></tr><tr><td colspan=2>
 	".help_shablon()."
 	<h2>Содержание шаблона:</h2>";

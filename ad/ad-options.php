@@ -127,7 +127,7 @@ if ($row['realadmin'] == 1) {
 		include ("ad-header.php");
 		$ok = intval($ok);
 		// Получаем настройки из mainfile
-		global $sitename, $startdate, $adminmail, $keywords, $description, $counter, $statlink, $postlink, $stopcopy, $registr, $pogoda, $flash, $sgatie, $ht_backup, $captcha_ok, $xnocashe, $jqueryui, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $comment_send, $company_name, $company_fullname, $company_address, $company_time, $company_tel, $company_sot, $company_fax, $company_email, $company_map, $company_people, $search_design, $tag_design, $add_fonts, $site_cash, $normalize, $project_logotip, $project_name, $geo, $kolkey, $add_clips;
+		global $sitename, $startdate, $adminmail, $keywords, $description, $counter, $statlink, $postlink, $stopcopy, $registr, $pogoda, $flash, $sgatie, $ht_backup, $captcha_ok, $xnocashe, $jqueryui, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $comment_send, $company_name, $company_fullname, $company_address, $company_time, $company_tel, $company_sot, $company_fax, $company_email, $company_map, $company_people, $search_design, $tag_design, $add_fonts, $site_cash, $normalize, $project_logotip, $project_name, $geo, $kolkey, $add_clips, $sortable;
 		
 		$ad_fon_option = ""; // Выбор фоновок для админки
 		for ($i=1; $i < 28; $i++) { // всего 27 фоновок + 1 по-умолчанию в папке images/ad-fon
@@ -182,10 +182,22 @@ echo "
 
 <div id='show_first' class='show_pole' style='display:none;'>
 	<table class=table_light>
+
 <tr valign=top><td style='min-width:250px;'>
 <b>Включить <a href='http://necolas.github.com/normalize.css/' target='_blank'>normalize.css</a></b>:</td><td class=small>
 ".select("options[normalize]", "0,1", "НЕТ,ДА", $normalize)."<br>
 Нормализация отличается от подхода reset.css тем, что выравнивает различия стандартных стилей разных браузеров и пытается нейтрализовать баги, не сбрасывая при этом самих стандартных стилей.
+</td></tr>
+
+<tr valign=top><td style='min-width:250px;'>
+<b>Включить <a href='http://tinysort.sjeiti.com' target='_blank'>сортировку TinySort</a></b>:</td><td class=small>
+".select("options[sortable]", "0,1", "НЕТ,ДА", $sortable)."<br>
+Позволяет сортировать любые элементы, обращаясь к ним через jQuery. Пример:
+<pre>
+Сортировка:
+&lt;a style=\"cursor:pointer;\" onclick=\"$('div#tovars>div#tovar').tsort('h3',{attr:'title'});\"&gt;по цене&lt;/a&gt;, 
+&lt;a style=\"cursor:pointer;\" onclick=\"$('div#tovars>div#tovar').tsort('h1',{charOrder:'абвгдђежзијклљмнњопрстћуфхцчџш'});\"&gt;по названию&lt;/a&gt;
+</pre>
 </td></tr>
 
 <tr valign=top><td style='min-width:250px;'>
@@ -567,7 +579,7 @@ echo "<div id='show_options_zagotovka' class='show_pole' style='display:none;'>
 	<h3>Используемые заготовки:</h3>
 	<select style='margin-top:5px;' name='options[add_clips]' id=\"add_clips\" onchange=\"clip()\" size=10 class='w100'>".$add_clips1."</select>
 	<a class='button' onclick='del_clip(); save_clips();'>Удалить</a>
-	<input id='clips_spisok' type=text name='options[add_clips]' value='".$add_clips."'>
+	<input id='clips_spisok' type=hidden name='options[add_clips]' value='".$add_clips."'>
 
 	<div id='clip_preview' style='margin:10px; padding:10px; clear: both; background:white;'>Здесь будет показана выбранная заготовка.</div>
 
@@ -994,7 +1006,7 @@ echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>
 		global $prefix, $db, $options;
 		$mini_blocks = $options['company_name']."|||||".$options['company_fullname']."|||||".$options['company_address']."|||||".$options['company_time']."|||||".$options['company_tel']."|||||".$options['company_sot']."|||||".$options['company_fax']."|||||".$options['company_email']."|||||".$options['company_map']."|||||".$options['company_people'];
 
-		$advanced = $options['jqueryui']."|".$options['show_comments']."|".$options['show_userposts']."|".$options['show_page']."|".$options['show_reserv']."|".$options['uskorenie_blokov']."|".$options['kickstart']."|".$options['show_page_links']."|".$options['ad_fon']."|".$options['search_design']."|".$options['tag_design']."|".$options['add_fonts']."|".$options['normalize']."|".$options['project_logotip']."|".$options['project_name']."|".$options['geo']."|".$options['kolkey']."|".$options['add_clips'];
+		$advanced = $options['jqueryui']."|".$options['show_comments']."|".$options['show_userposts']."|".$options['show_page']."|".$options['show_reserv']."|".$options['uskorenie_blokov']."|".$options['kickstart']."|".$options['show_page_links']."|".$options['ad_fon']."|".$options['search_design']."|".$options['tag_design']."|".$options['add_fonts']."|".$options['normalize']."|".$options['project_logotip']."|".$options['project_name']."|".$options['geo']."|".$options['kolkey']."|".$options['add_clips']."|".$options['sortable'];
 		// sitename	startdate	adminmail	keywords	description	counter	statlink	postlink	registr	pogoda	flash	sgatie	stopcopy	nocashe	adminmes	red	comment	captcha_ok	ht_backup
 		$db->sql_query("UPDATE `".$prefix."_config` SET 
 			`sitename` = '".mysql_real_escape_string($options['sitename'])."',

@@ -220,8 +220,10 @@ img.bigicon {margin-bottom: 5px; width:128px; height:128px; border:0; float:left
 .pr10 {padding-right:10px;}
 .mi50ma80 {min-width:50%; max-width:80%;}
 .h15 {height:15px;}
+.h40 {height: 40px;}
 .h70 {height: 70px;}
 .h155 {height: 155px;}
+.f16 {font-size:16pt;}
 .ml20 {margin-left:20px;}
 .black {color:black;}
 

@@ -1624,8 +1624,11 @@ echo "<title>".$pagetit.$sitename."</title>
 <script src='includes/jquery.innerfade.js'></script>
 <script src='includes/jquery.ad-gallery.js'></script>";
 
-global $kickstart, $jqueryui, $normalize;
+global $kickstart, $jqueryui, $normalize, $sortable;
 if ($normalize != 0) echo "<link rel='stylesheet' type='text/css' href='includes/css-frameworks/normalize.css' />";
+
+if ($sortable != 0) echo "<script type='text/javascript' src='includes/jquery.tinysort.min.js'></script>
+<script type='text/javascript' src='includes/jquery.tinysort.charorder.min.js'></script>";
 
 if ($jqueryui != 0) echo "<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js'></script>
 <script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/i18n/jquery-ui-i18n.min.js'></script>
