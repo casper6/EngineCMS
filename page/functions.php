@@ -839,7 +839,7 @@ function redactor($type, $txt, $name, $name2="") {
             button_more: {title: 'Вставка ссылки на полное содержание (для предисловия)',callback: ButtonMore},
             button_link: {title: 'Вставка блока (например, галереи фотографий)',callback: ButtonBlock},
             button_block: {title: 'Вставка быстрой ссылки на страницу или раздел',callback: ButtonLink}
-          }, mobile: false, ".$red4_div_convert." imageUpload: 'ed2/image_upload.php',fileUpload: 'ed2/file_upload.php', lang: 'ru', autoresize: false, plugins: ['fullscreen','clips'] }); } );
+          }, mobile: false, observeImages: true, ".$red4_div_convert." imageUpload: 'ed2/image_upload.php',fileUpload: 'ed2/file_upload.php', lang: 'ru', autoresize: false, plugins: ['fullscreen','clips'] }); } );
     </script><textarea id='".$name."' class='redactor' name='".$name."' style='width: 100%; height: 300px;'>".$txt."</textarea>";
 
     $clip_title = array('«Рыба» для заполнения тестовых страниц');

@@ -2867,12 +2867,12 @@ var RLANG = {
 
 					if (new_w > min_w)
 					{
-						$(resize).width(new_w);
+						$(resize).width(Math.round(new_w));
 					}
 
 					if (new_h > min_h)
 					{
-						$(resize).height(new_h);
+						$(resize).height(Math.round(new_h));
 					}
 
 					start_x = Math.round(e.pageX - $(this).eq(0).offset().left);

@@ -149,6 +149,7 @@ $opt_save = ":";
 if ($ok==1) $opt_save = " сохранены";
 
 echo "<table style='width:100%; margin-top:5px; padding:0; background: #e2e5ea;' cellspacing=0 cellpadding=0><tr valign=top><td id='razdel_td' class='radius nothing' width=340>
+
 	<div id='razdels' style='background:#e7e9ec;'>
 			<div class='black_grad'><span class='h1'>Настройки".$opt_save."</span></div>";
 	echo "<div id='mainrazdel8' class='dark_pole2'><a class='base_page' onclick=\"options_show('8','show_first')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\".\"></span><span class='plus20'>Перед началом разработки</span></div></a></div>";
@@ -166,12 +167,21 @@ echo "<table style='width:100%; margin-top:5px; padding:0; background: #e2e5ea;'
 	echo "<div id='mainrazdel5' class='dark_pole2'><a class='base_page' href='sys.php?op=subscribe'><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"@\"></span><span class='plus20'>Рассылка (список адресатов)</span></div></a></div>";
 	echo "<div id='mainrazdel6' class='dark_pole2'><a class='base_page' href='sys.php?op=users'><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"U\"></span><span class='plus20'>Пользователи (в разработке!)</span></div></a></div>";
 
+	echo "<div id='mainrazdel10' class='dark_pole2'><a class='base_page' onclick=\"options_show('10','show_options_razrab');\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"b\"></span><span class='plus20'>Информация для разработчиков</span></div></a></div>";
+
 	echo "</div></td><td><form action='".$admin_file.".php' method='post' name=\"form\">";
 
-echo "<div id='show_first' class='show_pole' style='display:none;'>
-<table class=table_light>
+echo "
+<div id='show_options_razrab' class='show_pole' style='display:none;'>
+<p>Знаете хорошие профессиональные мануалы по PHP, HTML, CSS, JS или jQuery на русском — присылайте ссылки на 13i@list.ru</p>
+	<ul class='alt base_open_page'>
+	<li><a href='http://habrahabr.ru/post/159101/'>Базовые стили и полезные CSS-сниппеты</a></li>
+	<li><a href='http://habrahabr.ru/post/158577/'>jQuery-сниппеты и плагины для iPad</a></li>
+	</ul>
+	</div>	
 
-
+<div id='show_first' class='show_pole' style='display:none;'>
+	<table class=table_light>
 <tr valign=top><td style='min-width:250px;'>
 <b>Включить <a href='http://necolas.github.com/normalize.css/' target='_blank'>normalize.css</a></b>:</td><td class=small>
 ".select("options[normalize]", "0,1", "НЕТ,ДА", $normalize)."<br>

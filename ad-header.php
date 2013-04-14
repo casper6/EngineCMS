@@ -7,7 +7,7 @@ require_once("mainfile.php");
 global $postlink, $name, $sitename, $op, $type, $red, $prefix, $db, $id, $nastroi, $kickstart;
 $color1=$color2=$color3=$color4="gray"; // Цвета 4х кнопок основных категорий админки (Содержание...)
 
-if ($postlink != "") $post = "<button class='small' onclick='location.href=\"".$postlink."\"' title='Открыть почтовый сайт...'><span class=\"icon small black\" data-icon=\"@\"></span>Почта</button> "; else $post="";
+if ($postlink != "") $post = "<button class='small' onclick='location.href=\"".$postlink."\"' title='Открыть почтовый сайт...'><span class=\"icon small black\" data-icon=\"@\"></span> Почта</button> "; else $post="";
 
 switch($kickstart) {
 	case 1:
@@ -48,7 +48,7 @@ switch($kickstart) {
 	$kick_link = "";
 	$kick_name = ""; break;
 }
-if ($kickstart != 0) $kick = " <button class='small' onclick='location.href=\"".$kick_link."\"' title='Открыть сайт CSS-фреймворка «".$kick_name."»'><span class=\"icon small black\" data-icon=\"S\"></span>".$kick_name."</button>";
+if ($kickstart != 0) $kick = " <button class='small' onclick='location.href=\"".$kick_link."\"' title='Открыть сайт CSS-фреймворка «".$kick_name."»'><span class=\"icon small black\" data-icon=\"S\"></span> ".$kick_name."</button>";
 else $kick = "";
 
 
@@ -96,9 +96,9 @@ echo "<!doctype html>
 <link rel=\"shortcut icon\" href=\"favicon_cms.ico\" type=\"image/x-icon\">
 <script src='includes/jad.js'></script>
 <script src='includes/j.js'></script>
-<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.6.3/jquery.min.js'></script>
-<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/jquery-ui.min.js'></script>
-<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/i18n/jquery-ui-i18n.min.js'></script> 
+<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js'></script>
+<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js'></script>
+<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/i18n/jquery-ui-i18n.min.js'></script> 
 <script src='includes/jquery.innerfade.js'></script>";
 /*
 if (!$op) {
@@ -108,7 +108,7 @@ if (!$op) {
 	<script type=\"text/javascript\" src=\"includes/general.js\"></script>";
 }
 */
-echo "<link rel=\"stylesheet\" href=\"http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.3/themes/base/jquery-ui.css\" media=\"all\" />
+echo "<link rel=\"stylesheet\" href=\"http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/base/jquery-ui.css\" media=\"all\" />
 <script type=\"text/javascript\" src=\"includes/css-frameworks/kickstart/js/ad-kickstart.js\"></script>
 <link rel=\"stylesheet\" type=\"text/css\" href=\"includes/css-frameworks/kickstart/css/ad-kickstart.css\" media=\"all\" />
 <link rel=\"stylesheet\" type=\"text/css\" href=\"includes/css-frameworks/kickstart/css/kickstart-forms.css\" media=\"all\" />
@@ -117,8 +117,7 @@ echo "<link rel=\"stylesheet\" href=\"http://ajax.googleapis.com/ajax/libs/jquer
 
 if ($red==3) echo "<script type=\"text/javascript\" src=\"ed/js/editor/editor.js\"></script> 
 <link rel=\"stylesheet\" href=\"ed/js/editor/css/editor.css\" type=\"text/css\" media=\"screen, projection\" /> ";
-if ($red==4) echo "
-<script src=\"ed2/redactor.min.js\"></script>
+if ($red==4) echo "<script src=\"ed2/redactor.js\"></script>
 <link rel=\"stylesheet\" href=\"ed2/redactor.css\" />
 <script src=\"ed2/ru.js\"></script>
 <script src=\"ed2/clips.js\"></script>
@@ -140,7 +139,7 @@ echo "<table width=100%><tr><td align=center width=170>
 	<div class='nothing noprint'>
 
 <div style='margin: 0 5px 5px 0;'>
-<button class='small' onclick='location.href=\"/\"' title='Перейти на сайт (откроется в новом окне)'><span class=\"icon small black\" data-icon=\"4\"></span>На сайт</button> ".$post.$kick."
+<button class='small' onclick='location.href=\"/\"' title='Перейти на сайт (откроется в новом окне)'><span class=\"icon small black\" data-icon=\"4\"></span> На сайт</button> ".$post.$kick."
 </div>
 
 <ul class=\"button-bar\">

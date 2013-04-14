@@ -418,10 +418,10 @@ a.help:hover  {cursor:pointer; background: green; color:white; padding:2px; padd
 
 /* File */
 
-ul li{  line-height: 1.5em; display:inline}
+/* ul li{  line-height: 1.5em; display:inline} */
 form{margin: 0;}
 fieldset{padding: 6px; margin:0; border:1px solid #717171}
-ul{list-style:none;}
+/* ul{list-style:none;} */
 .clear{clear:both;}
 input{ padding: 0; }
 /*~~~~~~Layout Setting ~~~~~~~~*/
