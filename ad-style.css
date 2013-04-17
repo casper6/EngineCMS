@@ -263,6 +263,8 @@ div.b8f4f2 {background: #b8f4f2; border:1px solid gray;}
 
 h1, h2, h3 {margin:0; padding:5px; font-weight: normal;}
 .h1 {font-size: 15pt; color: #717880; text-shadow: 1px 1px 0 #e0e2e7, 1px 1px 0 #e0e2e7;}
+.h2 {font-size: 14pt; color: #717880;}
+.h3 {font-size: 13pt; color: #717880;}
 h1 {font-size: 21px;color:#333;}
 h2 {font-size: 17px;color:#333;}
 h3 {font-size: 14px;color:#333;}
@@ -675,7 +677,7 @@ left:50%;
    float: right;
 }
 
-
+.li_light li:hover { background: #e9f2fc; }
 /* Красивая таблица - стиль table_light */
 table.table_light td { font-size:13px; border: 0; padding: 4px; color: black; }
 table.table_light thead th, table.table_light tfoot th { font-size:14px; border-bottom: 1px dotted #666; color: black;}

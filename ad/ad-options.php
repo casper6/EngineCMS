@@ -157,15 +157,15 @@ echo "<table style='width:100%; margin-top:5px; padding:0; background: #e2e5ea;'
 	echo "<div id='mainrazdel0' class='dark_pole2'><a class='base_page' onclick=\"options_show('0','show_options')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"Z\"></span><span class='plus20'>Основные настройки Сайта</span></div></a></div>";
 	echo "<div id='mainrazdel1' class='dark_pole2'><a class='base_page' onclick=\"options_show('1','show_options_company')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"Y\"></span><span class='plus20'>Карточка компании (мини блоки)</span></div></a></div>";
 	
-
-	echo "<div class='right3 '><button id=mainrazdel9 style='float:right;' title='Добавить заготовку...' class='dark_pole2' onclick=\"options_show('5','show_options_zagotovka'); $('#add_clip').show('slow');\"><span class='mr-2 icon darkgrey small' data-icon='+'></span><span class='plus20'>Добавить</span></button></div>
-
+	echo "<div class='right3'><button id=mainrazdel9 style='float:right;' title='Добавить заготовку...' class='dark_pole2' onclick=\"options_show('5','show_options_zagotovka'); $('#add_clip').show('slow');\"><span class='mr-2 icon darkgrey small' data-icon='+'></span><span class='plus20'>Добавить</span></button></div>
 	<div id='mainrazdel5' class='dark_pole2'><a class='base_page' onclick=\"options_show('5','show_options_zagotovka')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"7\"></span><span class='plus20'>Заготовки для редактора</span></div></a></div>";
 	echo "<div id='mainrazdel3' class='dark_pole2'><a class='base_page' onclick=\"options_show('3','show_options_adspeed')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"z\"></span><span class='plus20'>Настройки Администрирования</span></div></a></div>";
 	echo "<div id='mainrazdel4' class='dark_pole2'><a class='base_page' onclick=\"options_show('4','show_options_pass_block')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"O\"></span><span class='plus20'>Смена пароля и Блокировка по IP</span></div></a></div>";
 	echo "<div id='mainrazdel7' class='dark_pole2'><a class='base_page' onclick=\"options_show('7','show_options_oldfotos'); trash_pics();\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"1\"></span><span class='plus20'>Удаление неиспользуемых фотографий</span></div></a></div>";
-	echo "<div id='mainrazdel5' class='dark_pole2'><a class='base_page' href='sys.php?op=subscribe'><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"@\"></span><span class='plus20'>Рассылка (список адресатов)</span></div></a></div>";
+	echo "<div id='mainrazdel5' class='dark_pole2'><a class='base_page' href='sys.php?op=subscribe'><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"@\"></span><span class='plus20'>Cписок адресатов для рассылки</span></div></a></div>";
 	echo "<div id='mainrazdel6' class='dark_pole2'><a class='base_page' href='sys.php?op=users'><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"U\"></span><span class='plus20'>Пользователи (в разработке!)</span></div></a></div>";
+    echo "<div id='mainrazdel11' class='dark_pole2'><a class='base_page' href='sys.php?op=txt_and_csv_main'><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"(\"></span><span class='plus20'>Импорт из txt и csv (в разработке!)</span></div></a></div>";
+echo "<div id='mainrazdel12' class='dark_pole2'><a class='base_page' href='sys.php?op=regions_main'><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"&\"></span><span class='plus20'>Регионы (в разработке!)</span></div></a></div>";
 
 	echo "<div id='mainrazdel10' class='dark_pole2'><a class='base_page' onclick=\"options_show('10','show_options_razrab');\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"b\"></span><span class='plus20'>Информация для разработчиков</span></div></a></div>";
 
@@ -173,10 +173,31 @@ echo "<table style='width:100%; margin-top:5px; padding:0; background: #e2e5ea;'
 
 echo "
 <div id='show_options_razrab' class='show_pole' style='display:none;'>
-<p>Знаете хорошие профессиональные мануалы по PHP, HTML, CSS, JS или jQuery на русском — присылайте ссылки на 13i@list.ru</p>
-	<ul class='alt base_open_page'>
-	<li><a href='http://habrahabr.ru/post/159101/'>Базовые стили и полезные CSS-сниппеты</a></li>
-	<li><a href='http://habrahabr.ru/post/158577/'>jQuery-сниппеты и плагины для iPad</a></li>
+<p>Профессиональные мануалы по PHP, HTML, CSS, JS и jQuery</p>
+	Русский:<ul class='alt base_open_page'>
+	<li><a href='http://htmlbook.ru'>Сайт — HTMLbook, Справочник по HTML и CSS</a></li>
+	<li><a href='http://css-live.ru'>Сайт — CSS-Live, Сборник информации по CSS</a></li>
+	<li><a href='http://habrahabr.ru'>Сайт — ХабраХабр, айтишный социальный блог</a></li>
+	<li><a href='http://web-standards.ru'>Сайт — Веб-стандарты, российское сообщество разработчиков, статьи</a></li>
+	<li><a href='http://habrahabr.ru/post/159101/'>Статья — Базовые стили и полезные CSS-сниппеты</a></li>
+	<li><a href='http://habrahabr.ru/post/158577/'>Статья — jQuery-сниппеты и плагины для iPad</a></li>
+	<li><a href=''></a></li>
+	<li><a href=''></a></li>
+	<li><a href=''></a></li>
+	<li><a href=''></a></li>
+	</ul>
+
+	English:<ul class='alt base_open_page'>
+	<li><a href='http://www.smashingmagazine.com'>Сайт — SmashingMagazine: Вебдизайн, CSS, HTML</a></li>
+	<li><a href='http://www.netmagazine.com'>Сайт — NetMagazine: инструкции и примеры веб-дизайна</a></li>
+	<li><a href='http://www.impressivewebs.com'>Сайт — ImpressiveWebs: статьи, инструкции и примеры веб-дизайна, CSS</a></li>
+	<li><a href='http://lea.verou.me'>Сайт — Lea.Verou: статьи и проекты по веб-дизайну</a></li>
+	<li><a href='http://css-tricks.com'>Сайт — CSS-Tricks: CSS-трюки, статьи, сниппеты</a></li>
+	<li><a href='http://coding.smashingmagazine.com/2012/05/31/50-jquery-function-demos-for-aspiring-web-developers/'>Статья — Примеры функций jQuery, 50 шт.</a></li>
+	
+	
+	<li><a href=''></a></li>
+	<li><a href=''></a></li>
 	</ul>
 	</div>	
 

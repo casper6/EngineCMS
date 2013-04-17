@@ -6,20 +6,17 @@
     // запрет пользователю посещать не свою страницу 
 	$urlus = getenv("REQUEST_URI");
     if (substr_count($urlus, "--users" ) == 1 || substr_count($urlus, "--edituser" ) == 1) {
-	if ($_GET["user"] !== $_COOKIE['user_id']) {
-	Header("Location: error.php?code=123"); die; } }
+		if ($_GET["user"] !== $_COOKIE['user_id']) { Header("Location: error.php?code=123"); die; } 
+	}
 	if ( substr_count($urlus, "--adduser" ) == 1) {
-	if ( $_GET["group"] !== $_COOKIE['user_group']) {
-	Header("Location: error.php?code=123"); die; } }
+		if ( $_GET["group"] !== $_COOKIE['user_group']) { Header("Location: error.php?code=123"); die; } 
+	}
 	require_once("mainfile.php");
 	global $strelka, $siteurl, $prefix, $module_name, $name, $db, $sitekey, $admin, $sitename, $pagetitle, $pagetitle2, $registr, $pogoda, $flash, $keywords, $description, $counter, $startdate, $adminmail, $keywords2, $description2, $stopcopy, $nocash, $blocks, $http_siteurl, $display_errors;
-	
 	$nocash = false;
 	if ($name == "") $name = "index";
 
-    $username = "Аноним"; // удалить
-
-if ($name=="-email") { // занесение мыла как скрытого комментария
+if ($name=="-email") { // занесение мыла как скрытого комментария Убрать !!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	global $DBName, $prefix, $db, $now, $ip;
 	$avtor = trim(str_replace("  "," ",filter($avtor, "nohtml")));
 	$mail = trim(str_replace("  "," ",filter($mail, "nohtml")));
@@ -39,7 +36,7 @@ if ($name=="-email") { // занесение мыла как скрытого к
 	echo "<br>Вы можете вернуться назад (нажав на клавиатуре клавишу &larr;BackSpace) или перейти <a href='/'>на Главную</a>.";
 	exit;
 } elseif ($name=="golos") { // Голосование (опросы)
-	###################################################### ГОЛОСОВАНИЕ ГОЛОСОВАНИЕ
+	###################################################### ГОЛОСОВАНИЕ Убрать !!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	global $soderganie, $tip, $DBName, $prefix, $db, $module_name, $ModuleName, $opros, $num, $admin, $ip, $now, $referer;
 	$num = intval($num);
 	$dat = $now;
@@ -611,7 +608,7 @@ case "1": # Блок комментариев модуля
 	if ($shablon != "") $sel = "*";
 	else $sel = "cid, num, avtor, text, data"; 
 	
-	$sql = "SELECT pid, title, module from ".$prefix."_".$pages.$and." order by date desc";
+	$sql = "SELECT `pid`, `title`, `module` from ".$prefix."_".$pages.$and." order by `date` desc";
 
 	$result = $db->sql_query($sql);
 	$line_id = array();
@@ -680,7 +677,7 @@ case "4": # Блок папок раздела
 	// Определяем отношение страниц к папкам
 	if ($papki_numbers==1) {
 		$num = array();
-		$sql = "SELECT pid, cid from ".$prefix."_".$pages." where `tables`='pages' and module='$useitX' and active='1'";
+		$sql = "SELECT `pid`, `cid` from ".$prefix."_".$pages." where `tables`='pages' and `module`='$useitX' and `active`='1'";
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result)) {
 			$cid_id = $row['cid'];		//
@@ -1328,40 +1325,44 @@ case "30": # Статистика раздела, выводит кол-во п�
 	}
 
 	// Регистрация / Вход
-	$registr = "<div class='registration'>
-	<a class='button' onclick=\" 
-	$.ajax({ url: 'ajax.php', cache: false, dataType : 'html',
-	    data: {'func': 'registration_form'},
-	    beforeSend: function(){ $('.registr').show(); $('.registration').hide(); },
-	    success: function(data){ $('.registr').html(data); }
-	});\">Регистрация</a> 
-	<a class='button' onclick=\"$('.vhod').show(); $('.registration').hide();\">Вход</a>
-	</div>
-	<div class='registr hide'>
-	Загрузка...
-	</div>
-	<div class='vhod hide'>
-	<form class='reg_forma' action='--login' method='post'> 
-	<input class='reg_mail' type='text' name='em' value='' placeholder='Email'>
-	<br><input class='reg_pass' type='password' name='pa' value='' placeholder='Пароль'>
-	<br><input type='submit' name='submit' value='Войти'></form>
-	</div>";
-	$block = str_replace("[регистрация]", $registr, $block);
+	if (strpos($block, "[регистрация]")) {
+		$registr = "<div class='registration'>
+		<a class='button' onclick=\" 
+		$.ajax({ url: 'ajax.php', cache: false, dataType : 'html',
+		    data: {'func': 'registration_form'},
+		    beforeSend: function(){ $('.registr').show(); $('.registration').hide(); },
+		    success: function(data){ $('.registr').html(data); }
+		});\">Регистрация</a> 
+		<a class='button' onclick=\"$('.vhod').show(); $('.registration').hide();\">Вход</a>
+		</div>
+		<div class='registr hide'>
+		Загрузка...
+		</div>
+		<div class='vhod hide'>
+		<form class='reg_forma' action='--login' method='post'> 
+		<input class='reg_mail' type='text' name='em' value='' placeholder='Email'>
+		<br><input class='reg_pass' type='password' name='pa' value='' placeholder='Пароль'>
+		<br><input type='submit' name='submit' value='Войти'></form>
+		</div>";
+		$block = str_replace("[регистрация]", $registr, $block);
+	}
 
 	// Ставим годовой промежуток существования сайта
 	$god = $startdate;
 	$year = date("Y");
 	$nextyear = $year+1;
-	if ($year != $startdate) $god .= "—$year";
+	if ($year != $startdate) $god .= "—".$year;
 	$block = str_replace("[год]", "© ".$god, $block); // Промежуток лет ставится в дизайн
 
 	// Ставим статистику
 	$block=str_replace("[статистика]", $counter, $block); 
 
 	// Ставим почту
-	$mailer = "<a href=\"/mail.php\">Отправить письмо</a>"; // ".str_replace("@","<nobr>@</nobr>",$adminmail)." ";
-	$soderganie = str_replace("[почта]", $mailer, $soderganie); 
-	$block = str_replace("[почта]", $mailer, $block); 
+	if (strpos($block, "[почта]")) {
+		$mailer = "<a href=\"/mail.php\">Отправить письмо</a>"; // ".str_replace("@","<nobr>@</nobr>",$adminmail)." ";
+		$soderganie = str_replace("[почта]", $mailer, $soderganie); 
+		$block = str_replace("[почта]", $mailer, $block); 
+	}
 
 	// Ставим Новый год
 	if (strpos($block, "[новый год]")) { //February 12, 2001
@@ -1456,12 +1457,14 @@ case "30": # Статистика раздела, выводит кол-во п�
 	$block=str_replace("[поиск]", $search, $block);
 
 	// Ставим подписку
-	$search = "<form method=POST action=\"/--email\" class=main_mail_form><table width=100%><tr><td align=right>Email: </td><td><input type=text name=mail class=main_mail_input size=10 class=all_width></td></tr><tr><td align=right>Имя: </td><td><input type=text name=avtor class=main_mail_input size=10 class=all_width></td></tr><tr><td colspan=2 align=right><input type='submit' name='ok' value='Подписаться'></td></tr></table></form>";
-	$block=str_replace("[подписка]", $search, $block);
+	if (strpos(" ".$block, "[подписка")) {
+		$search = "<form method=POST action=\"/--email\" class=main_mail_form><table width=100%><tr><td align=right>Email: </td><td><input type=text name=mail class=main_mail_input size=10 class=all_width></td></tr><tr><td align=right>Имя: </td><td><input type=text name=avtor class=main_mail_input size=10 class=all_width></td></tr><tr><td colspan=2 align=right><input type='submit' name='ok' value='Подписаться'></td></tr></table></form>";
+		$block=str_replace("[подписка]", $search, $block);
 
-// Ставим подписку в линию
-	$search = "<form method=POST action=\"/--email\" class=main_mail_form><table><tr><td><b>Рассылка: </b></td><td>&nbsp;Email:</td><td><input type=text name=mail class=main_mail_input size=10 class=all_width></td><td>&nbsp;Имя:</td><td><input type=text name=avtor class=main_mail_input size=10 class=all_width></td><td colspan=2 align=right><input type='submit' name='ok' value='Подписаться'></td></tr></table></form>";
-	$block=str_replace("[подписка_горизонт]", $search, $block);
+		// Ставим подписку в линию
+		$search = "<form method=POST action=\"/--email\" class=main_mail_form><table><tr><td><b>Рассылка: </b></td><td>&nbsp;Email:</td><td><input type=text name=mail class=main_mail_input size=10 class=all_width></td><td>&nbsp;Имя:</td><td><input type=text name=avtor class=main_mail_input size=10 class=all_width></td><td colspan=2 align=right><input type='submit' name='ok' value='Подписаться'></td></tr></table></form>";
+		$block=str_replace("[подписка_горизонт]", $search, $block);
+	}
 
 	// Ставим день и время
 	if (strpos($block, "[день]") or strpos($block, "[время]")) {
@@ -1474,9 +1477,11 @@ case "30": # Статистика раздела, выводит кол-во п�
 	}
 
 	global $project_logotip, $project_name;
-	$block=str_replace("[лого_проекта]", "<img src='".$project_logotip."' class='project_logotip'>", $block);
-	$block=str_replace("[название_проекта]", "<h1 class='project_name'>".$project_name."</h1>", $block);
-	$block=str_replace("[название_лого_проекта]", "<h1 class=project_logotip_name><a href='/'' title='Главная страница'><span>".$project_name."</span><img src='".$project_logotip."' alt=''></a></h1>", $block);
+	if (strpos($block, "_проекта]")) {
+		$block=str_replace("[лого_проекта]", "<img src='".$project_logotip."' class='project_logotip'>", $block);
+		$block=str_replace("[название_проекта]", "<h1 class='project_name'>".$project_name."</h1>", $block);
+		$block=str_replace("[название_лого_проекта]", "<h1 class=project_logotip_name><a href='/'' title='Главная страница'><span>".$project_name."</span><img src='".$project_logotip."' alt=''></a></h1>", $block);
+	}
 
 	// Ставим кнопку Твиттера
 	$block=str_replace("[твиттер]", "<div><a href=\"https://twitter.com/share\" class=\"twitter-share-button\" data-lang=\"ru\" data-size=\"large\">Твитнуть</a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=\"//platform.twitter.com/widgets.js\";fjs.parentNode.insertBefore(js,fjs);}}(document,\"script\",\"twitter-wjs\");</script></div>", $block);
@@ -1496,10 +1501,12 @@ case "30": # Статистика раздела, выводит кол-во п�
 
 	// Обработка мини-блоков (карточка компании)
 	function company_blocks($company, $name, $block) {
-		$company = explode("|||", $company);
-		foreach ($company as $key => $value) {
-			$key_plus = $key + 1;
-			$block = str_replace("[".$name.$key_plus."]", str_replace("\r\n", "<br>", $value), $block);
+		if (strpos(" ".$block, "[".$name)) { // проверить
+			$company = explode("|||", $company);
+			foreach ($company as $key => $value) {
+				$key_plus = $key + 1;
+				$block = str_replace("[".$name.$key_plus."]", str_replace("\r\n", "<br>", $value), $block);
+			}
 		}
 		return $block;
 	}
@@ -1543,7 +1550,7 @@ case "30": # Статистика раздела, выводит кол-во п�
 		}
 	if ($show_page_links == 1) {
 		// Определяем все страницы
-		$sql = "SELECT pid, module, title FROM ".$prefix."_pages where `tables`='pages' and active='1'";
+		$sql = "SELECT `pid`, `module`, `title` FROM ".$prefix."_pages where `tables`='pages' and `active`='1'";
 		$result = $db->sql_query($sql);
 		while ($rows = $db->sql_fetchrow($result)) {
 			$row_title = str_replace( "«","&laquo;", str_replace( "»","&raquo;", $rows['title'] ) );
@@ -1583,7 +1590,7 @@ if ($keywords2 == "") $keywords2 = $keywords;
 if ($description2 == "") $description2 = $description;
 
 // При открытии раздела можно убирать определенные блоки и через CSS
-global $add_css, $data_page, $lang;
+global $add_css, $data_page, $lang, $kickstart, $jqueryui, $normalize, $sortable, $add_fonts, $url, $admin, $pid, $now, $nocash; //, $slider;
 if (trim($add_css) != "") $stil .= "_add_".str_replace (" ","-", str_replace ("  "," ", trim($add_css))); 
 
 header("Cache-Control: public");
@@ -1597,14 +1604,8 @@ echo "<!doctype html>\n
 <!--[if IE 8 ]><html class='ie ie8 no-js lt-ie9' lang='".$lang."'> <![endif]-->
 <!--[if (gte IE 9)|!(IE)]><!--><html lang='".$lang."' dir='ltr' class='no-js'> <!--<![endif]-->
 \n<head>";
-if (file_exists("favicon.ico"))  echo "<link rel='shortcut icon' href='favicon.ico' />";
-elseif (file_exists("favicon.png")) echo "<link rel='shortcut icon' href='favicon.png' />";
-/*
-// переделать в настройку
-if (file_exists("images/favicon_apple.png")) echo "<link rel='apple-touch-icon' href='images/apple-touch-icon.png' />
-	<link rel='apple-touch-icon' sizes='72x72' href='images/apple-touch-icon-72x72.png'>
-	<link rel='apple-touch-icon' sizes='114x114' href='images/apple-touch-icon-114x114.png'>";
-*/
+if (file_exists("favicon.png"))  echo "<link rel='shortcut icon' href='favicon.png' />";
+else echo "<link rel='shortcut icon' href='favicon.ico' />";
 echo "<title>".$pagetit.$sitename."</title>
 <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
 <meta name='keywords' content='".str_replace("'","",$keywords2)."'>
@@ -1616,23 +1617,76 @@ echo "<title>".$pagetit.$sitename."</title>
 <meta name='viewport' content='width=device-width, initial-scale=1.0'>
 <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
 <!--[if lt IE 9]><script src='http://html5shim.googlecode.com/svn/trunk/html5.js'></script><![endif]-->
-<script src='includes/j.js'></script>
 <!--[if IE]><script src='includes/iepngfix_tilebg.js'></script><![endif]-->
-<script src='http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js'></script>
-<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js'></script>
-<script src='includes/jquery.lightbox.js'></script>
-<script src='includes/jquery.innerfade.js'></script>
-<script src='includes/jquery.ad-gallery.js'></script>";
+<script src='includes/j.js'></script>
+<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js'></script>";
 
-global $kickstart, $jqueryui, $normalize, $sortable;
 if ($normalize != 0) echo "<link rel='stylesheet' type='text/css' href='includes/css-frameworks/normalize.css' />";
 
-if ($sortable != 0) echo "<script type='text/javascript' src='includes/jquery.tinysort.min.js'></script>
-<script type='text/javascript' src='includes/jquery.tinysort.charorder.min.js'></script>";
+/*
+if ($slider == 1) echo "<script src='includes/jquery.innerfade.js'></script>";
+if ($slider == 2) echo "<script src='includes/jquery.slides.min.js'></script>";
+if ($slider == 3) echo "<script src='includes/jquery.aslideshow.pack.js'></script>";
 
-if ($jqueryui != 0) echo "<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js'></script>
-<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/i18n/jquery-ui-i18n.min.js'></script>
-<link rel='stylesheet' href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css' media='all' />";
+Подключение
+jScroll
+http://cloud.github.com/downloads/wduffy/jScroll/jquery.jscroll.min.js
+http://www.wduffy.co.uk/jScroll/
+
+TableSorter
+includes/jquery.tablesorter.min.js
+http://tablesorter.ru/docs/
+
+includes/jquery.keyboard.js
+
+
+
+AngularJS
+snippet: <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.min.js"></script>
+site: http://angularjs.org
+stable versions: 1.0,6, 1.0.5, 1.0.4, 1.0.3, 1.0.2, 1.0.1
+unstable versions: 1.1.4, 1.1.3
+Chrome Frame
+snippet: <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
+site: https://developers.google.com/chrome/chrome-frame/
+versions: 1.0.3, 1.0.2, 1.0.1, 1.0.0
+Dojo
+snippet: <script src="//ajax.googleapis.com/ajax/libs/dojo/1.8.3/dojo/dojo.js"></script>
+site: http://dojotoolkit.org/
+versions: 1.8.3, 1.8.2, 1.8.1, 1.8.0, 1.7.4, 1.7.3, 1.7.2, 1.7.1, 1.7.0, 1.6.1, 1.6.0, 1.5.2, 1.5.1, 1.5.0, 1.4.4, 1.4.3, 1.4.1, 1.4.0, 1.3.2, 1.3.1, 1.3.0, 1.2.3, 1.2.0, 1.1.1
+Ext Core
+snippet: <script src="//ajax.googleapis.com/ajax/libs/ext-core/3.1.0/ext-core.js"></script>
+site: http://www.sencha.com/products/extjs/
+versions: 3.1.0, 3.0.0
+
+MooTools
+snippet: <script src="//ajax.googleapis.com/ajax/libs/mootools/1.4.5/mootools-yui-compressed.js"></script>
+site: http://mootools.net/
+versions: 1.4.5, 1.4.4, 1.4.3, 1.4.2, 1.4.1, 1.4.0, 1.3.2, 1.3.1, 1.3.0, 1.2.5, 1.2.4, 1.2.3, 1.2.2, 1.2.1, 1.1.2, 1.1.1
+Prototype
+snippet: <script src="//ajax.googleapis.com/ajax/libs/prototype/1.7.1.0/prototype.js"></script>
+site: http://prototypejs.org/
+versions: 1.7.1.0, 1.7.0.0, 1.6.1.0, 1.6.0.3, 1.6.0.2
+script.aculo.us
+snippet: <script src="//ajax.googleapis.com/ajax/libs/scriptaculous/1.9.0/scriptaculous.js"></script>
+site: http://script.aculo.us/
+versions: 1.9.0, 1.8.3, 1.8.2, 1.8.1
+note: This library depends on Prototype. Before loading this module, you must load Prototype.
+
+WebFont Loader
+snippet: <script src="//ajax.googleapis.com/ajax/libs/webfont/1.3.0/webfont.js"></script>
+site: https://developers.google.com/webfonts/docs/webfont_loader
+versions: 1.3.0, 1.1.2, 1.1.1, 1.1.0, 1.0.31, 1.0.30, 1.0.29, 1.0.28, 1.0.27, 1.0.26, 1.0.25, 1.0.24, 1.0.23, 1.0.22, 1.0.21, 1.0.19, 1.0.18, 1.0.17, 1.0.16, 1.0.15, 1.0.14, 1.0.13, 1.0.12, 1.0.11, 1.0.10, 1.0.9, 1.0.6, 1.0.5, 1.0.4, 1.0.3, 1.0.2, 1.0.1, 1.0.0
+
+
+
+*/
+
+if ($sortable != 0) echo "<script type='text/javascript' src='includes/jquery.tinysort.min.js'></script>";
+
+if ($jqueryui != 0) echo "<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js'></script>
+<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/i18n/jquery-ui-i18n.min.js'></script>
+<link rel='stylesheet' href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/base/jquery-ui.css' media='all' />";
 
 switch($kickstart) { // Выбор CSS-фреймворка
 	case 1: // KickStart
@@ -1661,13 +1715,11 @@ switch($kickstart) { // Выбор CSS-фреймворка
 	default:
 	break;
 }
-if ($kickstart != 1) echo "<script>$(document).ready(function(){ $('.lightbox').lightbox({ fitToScreen: true, imageClickClose: false }); var galleries = $('.ad-gallery').adGallery(); $('#switch-effect').change( function() { galleries[0].settings.effect = $(this).val(); return false; } ); });</script><link rel='stylesheet' href='includes/lightbox.css' media='screen' />"; // при включенном kickstart, lightbox не нужен, включается fancybox
+if ($kickstart != 1) echo "<script src='includes/jquery.lightbox.js'></script><script src='includes/jquery.ad-gallery.js'></script><script>$(document).ready(function(){ $('.lightbox').lightbox({ fitToScreen: true, imageClickClose: false }); var galleries = $('.ad-gallery').adGallery(); $('#switch-effect').change( function() { galleries[0].settings.effect = $(this).val(); return false; } ); });</script><link rel='stylesheet' href='includes/lightbox-carusel.css' media='screen' />"; // при включенном kickstart, lightbox не нужен, включается fancybox
 
-echo "<link rel='alternate' href='/rss/' title='".$siteurl." RSS' />
-<link rel='stylesheet' href='includes/carusel.css' media='screen' />
+echo "<link rel='alternate' href='/rss/' title='".$project_name." RSS' />
 <link rel='stylesheet' href='".$stil.".css' />";
 
-global $add_fonts;
 if (strlen($add_fonts)>1) {
 	$add_fonts = explode(".",$add_fonts);
 	if (count($add_fonts) > 0) {
@@ -1691,40 +1743,28 @@ if (strlen($add_fonts)>1) {
 	//if ($kickstart == 4) echo "<div id='page'>";
 	echo $block; // Вывод страницы
 
-		// Если включена погодная анимация
-		global $url;
-		//echo $url;
-		if ($url=="/") {
-			if ($pogoda==1) echo "<script src='includes/sneg.js'></script>\n";
-			if ($pogoda==2) echo "<script src='includes/list.js'></script>\n";
-			if ($pogoda==3) {
-				echo "<script src='includes/shar.js'></script>\n";
-				include("includes/ballon.htm");
-			}
-		}
-		// Если включена SWF Flash поддержка
-		if ($flash==1) echo "<script src='includes/swffix_modified.js'></script>\n";
+	if ($url=="/") {
+		if ($pogoda==1) echo "<script src='includes/sneg.js'></script>\n";
+		if ($pogoda==2) echo "<script src='includes/list.js'></script>\n";
+		if ($pogoda==3) { echo "<script src='includes/shar.js'></script>\n"; include("includes/ballon.htm"); }
+	}
+	
+	// Если включена SWF Flash поддержка
+	if ($flash==1) echo "<script src='http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js'></script><script src='includes/swffix_modified.js'></script>";
 
 	// Если включена защита от копирования (для школьников)
-	if ($stopcopy==1) echo "<script language='Javascript1.1'><!-- 
-	function notmenu() { window.event.returnValue=false;} 
-	document.ondragstart = test; 
-	document.onselectstart = test; 
-	document.ontextmenu = test; 
-	function test() { return false } 
+	if ($stopcopy==1) echo "<script><!-- 
+	function notmenu() { window.event.returnValue=false; } document.ondragstart = test; document.onselectstart = test; document.ontextmenu = test; function test() { return false } 
 	// --></script> ";
-	
-	global $admin, $pid, $now, $nocash;
 
 	if ($kickstart == 1 or $kickstart == 3 or $kickstart == 4 or $kickstart == 8) echo "</div>";
 
-	echo "\n</body>\n</html>"; // Кончаем! )
+	echo "</body></html>";
 
 	$txt = ob_get_contents(); // собираем файл для вывода на экран и сохранения в кеше
 	ob_end_clean();
-	$txt2 = $txt;
-	if (is_admin($admin)) $txt2 = page_admin($txt2,$pid); // добавили функции админа к страничке
-	echo $txt2;
+	if (is_admin($admin)) echo page_admin($txt,$pid); // добавили функции админа к страничке
+	else echo $txt;
 
 	// если в config.php выбрано «показывать ошибки», помимо этого покажет запросы к БД и их количество
 	if ($display_errors == true) print("<!-- запросов: $db->num_queries \n $db->num_q -->");

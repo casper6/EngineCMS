@@ -87,6 +87,7 @@ switch($op) {
     case "backup":
     include("ad/ad-backup.php");
     break;
+    
 // Добавлены пользователи
     case "users":
     case "add_group":
@@ -97,16 +98,26 @@ switch($op) {
     case "s_group":
     case "s_html_group":
     case "html_group":
-	case "adduser":
+    case "adduser":
     include("ad/ad-users.php");
     break;
 	
-	case "regions_main":
-		case "regions_install":
-		case "regions_vibor":
-		case "regions_addbase":
-		case "regions_menu":
+    case "regions_main":
+    case "regions_install":
+    case "regions_vibor":
+    case "regions_addbase":
+    case "regions_menu":
     include("ad/ad-regions.php");
+    break;
+	
+// Импорт из txt и csv
+    case "txt_and_csv_main":
+    case "txt_and_csv_install":
+    case "start_txt_and_csv":
+    case "upload_txt_and_csv":
+    case "step2_txt_and_csv":
+    case "txt_and_csv_zip":
+    include("ad/ad-csv.php");
     break;
 }
 ?>

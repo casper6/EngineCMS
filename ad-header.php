@@ -138,8 +138,9 @@ echo "<table width=100%><tr><td align=center width=170>
 </td><td width=570>
 	<div class='nothing noprint'>
 
-<div style='margin: 0 5px 5px 0;'>
-<button class='small' onclick='location.href=\"/\"' title='Перейти на сайт (откроется в новом окне)'><span class=\"icon small black\" data-icon=\"4\"></span> На сайт</button> ".$post.$kick."
+<div style='margin: 0 5px 5px 0;'>";
+if ($op == "adminMain") echo "<button class='small red' onclick=\"openbox('8','Помощь'); $('#show_razdel').click();\" style='color:white !important;' title='Перейти в режим обучения'><span class=\"icon small white\" data-icon=\"n\"></span> ПОМОЩЬ</button> ";
+echo "<button class='small' target=_blank onclick='window.open(\"/\")' title='Перейти на сайт (откроется в новом окне)'><span class=\"icon small black\" data-icon=\"4\"></span> На сайт</button> ".$post.$kick."
 </div>
 
 <ul class=\"button-bar\">

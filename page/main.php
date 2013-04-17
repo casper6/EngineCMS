@@ -271,7 +271,7 @@ $soderganieALL .= "на ".date2normal_view($showdate);
 
 // Список всех папок (массив)
 $c_name = array();
-$sql = "SELECT cid,title FROM ".$prefix."_".$tip."_categories where module='$DBName' and `tables`='pages'";
+$sql = "SELECT `cid`, `title` FROM ".$prefix."_".$tip."_categories where `module`='$DBName' and `tables`='pages'";
 $result = $db->sql_query($sql) or die('Не удалось собрать список всех папок');
 while ($row = $db->sql_fetchrow($result)) {
 $x_cid = $row['cid'];
@@ -286,9 +286,9 @@ $row = $db->sql_fetchrow($result2);
 $datavybor = $row['pages'];
 $datavybor = trim(str_replace("   "," ",str_replace("  "," ",$datavybor)));
 $datavybor = " and (`pid`='".str_replace(" ","' or `pid`='",$datavybor)."')";
-} else $datavybor = " and `date` like '$showdate %'";
+} else $datavybor = " and `date` like '".$showdate." %'";
 
-$sql2 = "SELECT pid FROM ".$prefix."_".$tip." where `tables`='pages' and (copy='0' or copy=pid) and `module`='$DBName' AND `active`='1'$datavybor";
+$sql2 = "SELECT `pid` FROM ".$prefix."_".$tip." where `tables`='pages' and (`copy`='0' or `copy`=pid) and `module`='$DBName' AND `active`='1'".$datavybor;
 $result2 = $db->sql_query($sql2) or die('Не удалось определить кол-во страниц');
 $nu = $db->sql_numrows($result2);
 $soderganieALL .= ", всего: $nu.";
@@ -300,7 +300,7 @@ if ($div_or_table == 0) {
   if ($view==1) $soderganieALL .= "<table cellspacing=0 cellpadding=3 width=100%>";
   else $soderganieALL .= "<table cellspacing=0 cellpadding=3 width=100%>";
 }
-$sql2 = "SELECT * FROM ".$prefix."_".$tip." where `tables`='pages' and (copy='0' or copy=pid) and `module`='$DBName' AND `active`='1'$datavybor ORDER BY ".$sort."";
+$sql2 = "SELECT * FROM ".$prefix."_".$tip." where `tables`='pages' and (`copy`='0' or `copy`=pid) and `module`='$DBName' AND `active`='1'".$datavybor." ORDER BY ".$sort;
 $result2 = $db->sql_query($sql2);
 $soderganieALL .= "";
 
@@ -487,7 +487,7 @@ if ($cid == 0 and $view!=2) {
 // Список всех каталогов (массив)
 $c_name = array();
 //$c_pic = array();
-$sql = "SELECT cid, title FROM ".$prefix."_pages_categories where module='$DBName' and `tables`='pages' and `cid`!='0' order by sort, title";
+$sql = "SELECT `cid`, `title` FROM ".$prefix."_pages_categories where `module`='$DBName' and `tables`='pages' and `cid`!='0' order by `sort`, `title`";
 $result = $db->sql_query($sql);
 while ($row = $db->sql_fetchrow($result)) {
 $x_cid = $row['cid'];
@@ -500,19 +500,19 @@ $c_name[$x_cid] = $row['title'];
 }
 
 $and_1_4 = "";
-if ($view==6 and $cid == 0) $and_1_4 = " and cid='0'";
+if ($view==6 and $cid == 0) $and_1_4 = " and `cid`='0'";
 
 #####################
-$sql2 = "SELECT pid FROM ".$prefix."_".$tip." where `tables`='pages' and module='$DBName'".$and_1_1." AND (active='1' or active='2')".$and_1_2.$and_1_3.$and_1_4;
+$sql2 = "SELECT `pid` FROM ".$prefix."_".$tip." where `tables`='pages' and `module`='$DBName'".$and_1_1." AND (`active`='1' or `active`='2')".$and_1_2.$and_1_3.$and_1_4;
 $result2 = $db->sql_query($sql2);
 $nu = $db->sql_numrows($result2);
 
-$sql2 = "SELECT * FROM ".$prefix."_".$tip." where `tables`='pages' and module='$DBName'".$and_1_1." AND (active='1' or active='2')".$and_1_2.$and_1_3.$and_1_4." ORDER BY ".$sort." limit $offset,$lim2";
+$sql2 = "SELECT * FROM ".$prefix."_".$tip." where `tables`='pages' and `module`='$DBName'".$and_1_1." AND (`active`='1' or `active`='2')".$and_1_2.$and_1_3.$and_1_4." ORDER BY ".$sort." limit ".$offset.",".$lim2;
 $result2 = $db->sql_query($sql2);
 
 $proc = intval(100 / $limkol);
 $soderganieALL2 = "";
-if ($limkol > 1) $soderganieALL2 = "<tr valign=top><td width='".$proc."%'>"; // <table width=100% border=0 class=proc_table><tr><td width=$proc>";
+if ($limkol > 1) $soderganieALL2 = "<tr valign='top'><td width='".$proc."%'>"; // <table width=100% border=0 class=proc_table><tr><td width=$proc>";
 //} else 
 $limkol_num = 0;
 $kol_num = 0;
@@ -1342,7 +1342,7 @@ $page_blog .= "</div></div><br>";
 $page_search_news = "";
 #######################################
 if ($search != "") { // Похожие новости
-$sql = "SELECT pid, title, date FROM ".$prefix."_".$tip." WHERE `tables`='pages' and module='$module' and (active=1 or active=2) and pid!='$pid' and cid='$cid'".$search_keys." order by date desc Limit 0,5";
+$sql = "SELECT `pid`, `title`, `date` FROM ".$prefix."_".$tip." WHERE `tables`='pages' and `module`='$module' and (`active`=1 or `active`=2) and `pid`!='$pid' and `cid`='$cid'".$search_keys." order by `date` desc Limit 0,5";
   $result = $db->sql_query($sql);
   $numrows = $db->sql_numrows($result);
   if ($numrows > 0 and $search_num>0) {
@@ -1365,7 +1365,7 @@ $page_search_news .= "</div><br>";
 $page_reiting = "";
 // Рейтинг #######################################
 if ($golos==1 and $view!=4) { // !!! УБРАНО gol - позволяет запрещать голосование для отдельных страниц, выставив значение в 0!
-$sql2 = "SELECT golos FROM ".$prefix."_".$tip."_golos WHERE num='$pid'";
+$sql2 = "SELECT `golos` FROM ".$prefix."_".$tip."_golos WHERE `num`='$pid'";
 $result2 = $db->sql_query($sql2);
 $numrows23 = $db->sql_numrows($result2);
 $golos_id = $prefix.'golos'.$pid;
@@ -2160,7 +2160,7 @@ function savepost ($avtor, $post_title, $info, $num, $cid, $add){
 
 
   // Узнаем получившийся номер страницы ID
-  $sql = "select pid from ".$prefix."_pages where `tables`='pages' and title='$post_title' and date='$date'";
+  $sql = "select `pid` from ".$prefix."_pages where `tables`='pages' and `title`='".$post_title."' and `date`='".$date."'";
   $result = $db->sql_query($sql);
   $row = $db->sql_fetchrow($result);
   $page_id = $row['pid'];
@@ -2170,7 +2170,7 @@ function savepost ($avtor, $post_title, $info, $num, $cid, $add){
   if (is_array($add)) {
     foreach ($add as $name => $elements) {
       // Получение информации о каждом списке
-      $sql = "select * from ".$prefix."_mainpage where `tables`='pages' and name='$name' and type='4'";
+      $sql = "select * from ".$prefix."_mainpage where `tables`='pages' and `name`='$name' and `type`='4'";
       $result = $db->sql_query($sql);
       $row = $db->sql_fetchrow($result);
       $s_id = $row['id'];
@@ -2183,7 +2183,7 @@ function savepost ($avtor, $post_title, $info, $num, $cid, $add){
         ////////////////////////////////////////////////////////////////////////////
         case "4": // строка
                 // Проверяем наличие подобного текста
-                $sql = "SELECT name, pages FROM ".$prefix."_spiski WHERE type='$name' and name='$elements'";
+                $sql = "SELECT `name`, `pages` FROM ".$prefix."_spiski WHERE `type`='$name' and `name`='".$elements."'";
                 $result = $db->sql_query($sql);
                 $numrows = $db->sql_numrows($result);
                 if ($numrows > 0) { // если элемент найден
@@ -2193,12 +2193,12 @@ function savepost ($avtor, $post_title, $info, $num, $cid, $add){
                         if (strpos($agent," $page_id ") < 1 and $s_name == $elements) {
                             $s_pages .= " $page_id ";
                             $s_pages = str_replace("  "," ",$s_pages);
-                            $db->sql_query("UPDATE ".$prefix."_spiski SET pages='$s_pages' WHERE type='$name' and name='$elements'") or die ('Ошибка: Не удалось обновить список.');
+                            $db->sql_query("UPDATE ".$prefix."_spiski SET `pages`='".$s_pages."' WHERE `type`='".$name."' and `name`='".$elements."'") or die ('Ошибка: Не удалось обновить список.');
                         } else {
-                            $db->sql_query("INSERT INTO ".$prefix."_spiski (id, type, name, opis, sort, pages, parent) VALUES (NULL, '$name', '$elements', '', '0', ' $page_id ', '0');") or die ('Ошибка: Не удалось сохранить список.');
+                            $db->sql_query("INSERT INTO ".$prefix."_spiski (`id`, `type`, `name`, `opis`, `sort`, `pages`, `parent`) VALUES (NULL, '".$name."', '".$elements."', '', '0', ' ".$page_id." ', '0');") or die ('Ошибка: Не удалось сохранить список.');
                         }
                 } else { // если элемент новый
-                    $db->sql_query("INSERT INTO ".$prefix."_spiski (id, type, name, opis, sort, pages, parent) VALUES (NULL, '$name', '$elements', '', '0', ' $page_id ', '0');") or die ('Ошибка: Не удалось сохранить список.');
+                    $db->sql_query("INSERT INTO ".$prefix."_spiski (`id`, `type`, `name`, `opis`, `sort`, `pages`, `parent`) VALUES (NULL, '".$name."', '".$elements."', '', '0', ' ".$page_id." ', '0');") or die ('Ошибка: Не удалось сохранить список.');
                 }
         break;
         ////////////////////////////////////////////////////////////////////////////
@@ -2213,7 +2213,7 @@ function savepost ($avtor, $post_title, $info, $num, $cid, $add){
                 $upd = array();
                 $noupd = array();
 
-                $sql = "SELECT name, pages FROM ".$prefix."_spiski WHERE type='$name' order by name";
+                $sql = "SELECT `name`, `pages` FROM ".$prefix."_spiski WHERE `type`='".$name."' order by `name`";
                 $result = $db->sql_query($sql);
 
                 while ($row = $db->sql_fetchrow($result)) {
@@ -2232,31 +2232,28 @@ function savepost ($avtor, $post_title, $info, $num, $cid, $add){
                 $update[] = "name='$up'";
                 }
                 foreach ($period as $per) {
-                if (!in_array($per, $noupd)) $insert[] = "(NULL, '$name', '$per', '', '0', ' $page_id ', '0')";
+                if (!in_array($per, $noupd)) $insert[] = "(NULL, '".$name."', '".$per."', '', '0', ' ".$page_id." ', '0')";
                 }
 
                 $insert = implode(", ",$insert);
                 $update = implode(" or ",$update);
 
-                $sql = "SELECT name, pages FROM ".$prefix."_spiski WHERE type='$name' and (".$update.") order by name";
+                $sql = "SELECT `name`, `pages` FROM ".$prefix."_spiski WHERE `type`='$name' and (".$update.") order by `name`";
                 $result = $db->sql_query($sql);
                 while ($row = $db->sql_fetchrow($result)) {
                 $na = $row['name']; // дата
                 $pa = $row['pages']; // страницы
                     if (trim($update) != "") {
-                    $db->sql_query("UPDATE ".$prefix."_spiski SET pages = ' $pa $page_id ' WHERE type='$name' and name='$na'") or die ("Ошибка: Не удалось обновить списки. $page_id $name");
+                    $db->sql_query("UPDATE ".$prefix."_spiski SET `pages` = ' ".$pa." ".$page_id." ' WHERE `type`='".$name."' and `name`='".$na."'") or die ("Ошибка: Не удалось обновить списки. ".$page_id." ".$name);
                     //print ("UPDATE ".$prefix."_spiski SET pages = ' $pa $page_id ' WHERE type='$name' and name='$na'<br>");
                     }
                 }
-
-                    if (trim($insert) != "") {
-                    $db->sql_query("INSERT INTO ".$prefix."_spiski (id, type, name, opis, sort, pages, parent) VALUES ".$insert.";") or die ('Ошибка: Не удалось сохранить списки.');
+                if (trim($insert) != "") $db->sql_query("INSERT INTO ".$prefix."_spiski (`id`, `type`, `name`, `opis`, `sort`, `pages`, `parent`) VALUES ".$insert.";") or die ('Ошибка: Не удалось сохранить списки.');
                     //print ("INSERT INTO ".$prefix."_spiski (id, type, name, opis, sort, pages, parent) VALUES ".$insert.";<br>");
-                    }
 
         break;
         ////////////////////////////////////////////////////////////////////////////
-        case "2": // файл НЕОКОНЧЕНО!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        case "2": // файл НЕОКОНЧЕНО!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 // Смотрим настройки - тип файла и что с ним делать
 
                 // Закачиваем файл
@@ -2271,7 +2268,7 @@ function savepost ($avtor, $post_title, $info, $num, $cid, $add){
         ////////////////////////////////////////////////////////////////////////////
         case "1": // текст
                 // Проверяем наличие подобного текста
-                $sql = "SELECT name, pages FROM ".$prefix."_spiski WHERE type='$name' and name='$elements'";
+                $sql = "SELECT `name`, `pages` FROM ".$prefix."_spiski WHERE `type`='".$name."' and `name`='".$elements."'";
                 $result = $db->sql_query($sql);
                 $numrows = $db->sql_numrows($result);
                 if ($numrows > 0) { // если элемент найден
@@ -2281,7 +2278,7 @@ function savepost ($avtor, $post_title, $info, $num, $cid, $add){
                         if (strpos($s_pages," $page_id ") < 1 and $s_name == $elements) {
                             $s_pages .= " $page_id ";
                             $s_pages = str_replace("  "," ",$s_pages);
-                            $db->sql_query("UPDATE ".$prefix."_spiski SET pages='$s_pages' WHERE type='$name' and name='$elements'") or die ('Ошибка: Не удалось обновить список.');
+                            $db->sql_query("UPDATE ".$prefix."_spiski SET `pages`='".$s_pages."' WHERE `type`='".$name."' and `name`='".$elements."'") or die ('Ошибка: Не удалось обновить список.');
                             //echo "up";
                         } else {
                             $db->sql_query("INSERT INTO ".$prefix."_spiski (id, type, name, opis, sort, pages, parent) VALUES (NULL, '$name', '$elements', '', '0', ' $page_id ', '0');") or die ('Ошибка: Не удалось сохранить список.');
@@ -2299,15 +2296,15 @@ function savepost ($avtor, $post_title, $info, $num, $cid, $add){
                 for ($x=0; $x < $num; $x++) { // посчитали сколько номеров списка
                     if ($elements[$x] != 0) {
                     // узнаем какие страницы уже есть у этого номера из списка
-                    $sql = "SELECT pages FROM ".$prefix."_spiski WHERE id='$elements[$x]'";
+                    $sql = "SELECT `pages` FROM ".$prefix."_spiski WHERE `id`='".$elements[$x]."'";
                     $result = $db->sql_query($sql);
                     $row = $db->sql_fetchrow($result);
                     $s_pages = $row['pages'];
-                    if (strpos($s_pages," $page_id ") < 1) {
-                    $s_pages .= " $page_id ";
+                    if (strpos($s_pages," ".$page_id." ") < 1) {
+                    $s_pages .= " ".$page_id." ";
                     $s_pages = str_replace("  "," ",$s_pages);
                     // теперь присвоем каждому из элементов списка id страницы, которую редактируем.
-                    $db->sql_query("UPDATE ".$prefix."_spiski SET pages='$s_pages' WHERE id='$elements[$x]'") or die('Ошибка при добавлении страницы в элемент списка');
+                    $db->sql_query("UPDATE ".$prefix."_spiski SET `pages`='".$s_pages."' WHERE `id`='".$elements[$x]."'") or die('Ошибка при добавлении страницы в элемент списка');
                     }
 
                     }
@@ -2329,7 +2326,7 @@ function savepost ($avtor, $post_title, $info, $num, $cid, $add){
 
   //unset($_SESSION['captcha_keystring']);
 
-  echo "<html><head><meta http-equiv=\"Refresh\" content=\"6; URL=".$location."\"></head><body>
+  echo "<html><head><meta http-equiv='Refresh' content='6; URL=".$location."'></head><body>
   <h2>Спасибо!</h2>".$inform."<br>Через 6 секунд откроется предыдущая страница.<br>Также вы можете перейти на <a href=/>Главную</a>.
   </body></html>";
   global $siteurl; #######################################################################
