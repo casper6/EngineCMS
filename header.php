@@ -668,51 +668,54 @@ case "3": # Блок ротатор рекламы
 	$type = ""; break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////	
 case "4": # Блок папок раздела 
-	if ($noli == 0) $textX = "<ul id=block_ul_title_$useitX class=\"block_ul_title\">"; 
-	// В эту переменную входит содержание блока
+	if ($useitX == 'index') $block = str_replace("[".$titleX."]", "", $block); // если главная - ничего не выводим
+	else {
+		if ($noli == 0) $textX = "<ul id=block_ul_title_$useitX class=\"block_ul_title\">"; 
+		// В эту переменную входит содержание блока
 
-	global $txt_razdels; // ЗАМЕНА mainpage2 №3
-	$textXX = explode("|", $txt_razdels[$useitX] );
-	$pages = $textXX[0]; // получили название файла модуля, например, pages
-	// Определяем отношение страниц к папкам
-	if ($papki_numbers==1) {
-		$num = array();
-		$sql = "SELECT `pid`, `cid` from ".$prefix."_".$pages." where `tables`='pages' and `module`='$useitX' and `active`='1'";
-		$result = $db->sql_query($sql);
-		while ($row = $db->sql_fetchrow($result)) {
-			$cid_id = $row['cid'];		//
-			if (!isset($num[$cid_id])) $num[$cid_id] = 1; else $num[$cid_id]++;
-		}
-	}
-	////// Определяем отношение подпапок к папкам
-	if ($papki_numbers==0) $and_par = " and parent_id='0'"; else $and_par = "";
-		$sql="SELECT cid, title, parent_id from ".$prefix."_".$pages."_categories where module='$useitX' and `tables`='pages'".$and_par." order by $papka_sort";
-		$result = $db->sql_query($sql);
-		$title = array();
-		while ($row = $db->sql_fetchrow($result)) {
-			$id = $row['cid'];
-			$title[$id] = $row['title'];
-			$par[$id] = $row['parent_id'];
-		}
-	// Выводим результаты
-	foreach ($title as $id => $nam) {
-	if ($papki_numbers==1) {
-		$and2=""; 
-		if (vhodyagie($id,$par,$num)>0) $and2 = "<div class='add'>+".vhodyagie($id,$par,$num)."</div>";
-		$and="";
-		if ( $num[$id]>0 ) $and = " (".$num[$id].$and2.")";
-	} else $and="";
-		if ($par[$id]==0) {
-			if ($noli == 0) {
-				$textX .= "<li id='block_li_title_".$useitX."' class='block_li_title'><a class='papki_".$useitX."' href=-".$useitX."_cat_".$id.">".$nam."</a>".$and."";
-			} else {
-				$textX .= "<a class='papki_$useitX' href=-".$useitX."_cat_".$id.">".$nam."</a>".$and." | ";
+		global $txt_razdels; // ЗАМЕНА mainpage2 №3
+		$textXX = explode("|", $txt_razdels[$useitX] );
+		$pages = $textXX[0]; // получили название файла модуля, например, pages
+		// Определяем отношение страниц к папкам
+		if ($papki_numbers==1) {
+			$num = array();
+			$sql = "SELECT `pid`, `cid` from ".$prefix."_".$pages." where `tables`='pages' and `module`='$useitX' and `active`='1'";
+			$result = $db->sql_query($sql);
+			while ($row = $db->sql_fetchrow($result)) {
+				$cid_id = $row['cid'];		//
+				if (!isset($num[$cid_id])) $num[$cid_id] = 1; else $num[$cid_id]++;
 			}
 		}
+		////// Определяем отношение подпапок к папкам
+		if ($papki_numbers==0) $and_par = " and parent_id='0'"; else $and_par = "";
+			$sql="SELECT cid, title, parent_id from ".$prefix."_".$pages."_categories where module='$useitX' and `tables`='pages'".$and_par." order by $papka_sort";
+			$result = $db->sql_query($sql);
+			$title = array();
+			while ($row = $db->sql_fetchrow($result)) {
+				$id = $row['cid'];
+				$title[$id] = $row['title'];
+				$par[$id] = $row['parent_id'];
+			}
+		// Выводим результаты
+		foreach ($title as $id => $nam) {
+		if ($papki_numbers==1) {
+			$and2=""; 
+			if (vhodyagie($id,$par,$num)>0) $and2 = "<div class='add'>+".vhodyagie($id,$par,$num)."</div>";
+			$and="";
+			if ( $num[$id]>0 ) $and = " (".$num[$id].$and2.")";
+		} else $and="";
+			if ($par[$id]==0) {
+				if ($noli == 0) {
+					$textX .= "<li id='block_li_title_".$useitX."' class='block_li_title'><a class='papki_".$useitX."' href=-".$useitX."_cat_".$id.">".$nam."</a>".$and."";
+				} else {
+					$textX .= "<a class='papki_$useitX' href=-".$useitX."_cat_".$id.">".$nam."</a>".$and." | ";
+				}
+			}
+		}
+		if ($noli == 0) $textX .= "</ul>";
+		// Вставим шаблон из блока!!!
+		$block = str_replace("[".$titleX."]", $design_open.$textX.$design_close, $block);
 	}
-	if ($noli == 0) $textX .= "</ul>";
-	// Вставим шаблон из блока!!!
-	$block = str_replace("[".$titleX."]", $design_open.$textX.$design_close, $block);
 	$type = ""; break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 case "5": # Блок голосования

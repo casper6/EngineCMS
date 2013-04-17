@@ -1,9 +1,9 @@
 <?php
 if (stristr(htmlentities($_SERVER['PHP_SELF']), "ad-header.php")) {
-	Header("Location: in.php");
+	Header("Location: index.php");
 	die();
 }
-require_once("mainfile.php");
+//require_once("mainfile.php");
 global $postlink, $name, $sitename, $op, $type, $red, $prefix, $db, $id, $nastroi, $kickstart;
 $color1=$color2=$color3=$color4="gray"; // Цвета 4х кнопок основных категорий админки (Содержание...)
 
