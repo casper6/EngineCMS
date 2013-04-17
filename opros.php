@@ -56,7 +56,7 @@ parse_str($useit);
 
   mt_srand ((double)microtime()*1000000);
   $re = mt_rand(0, 1000000);
-  $textX = "<div id=a".$re."><a name=\"golos$re\"></a>";
+  $textX = "<div id='a".$re."'><a name='golos".$re."'></a>";
   $textX2 = "";
   $lines2 = array();
   $cols2 = array();
@@ -106,19 +106,10 @@ parse_str($useit);
     }
   } else { // Если еще не голосовали - ссылка на результаты
 
-    $textX .= "<script language=JavaScript>\n
-var valueOpros = -1;
-function CheckForm".$re."(){
-  if(valueOpros == -1) { alert('Вы не выбрали ни одного ответа!'); }
-  else { 
-    $(showopros".$opros_num."(2,valueOpros));
-  }
-}
-</script>
-<form method=post enctype=\"multipart/form-data\" onsubmit=\"return false\">".$textX2."<br><center>
-<input type='submit' id=\"go\" name='go' value='Отправить' class=\"ok opros\" onclick=\"CheckForm".$re."();\"></center></form>";
+  $textX .= "<form method=post enctype=\"multipart/form-data\" onsubmit=\"return false\">".$textX2."<br><center>
+  <input type='submit' id=\"go\" name='go' value='Отправить' class=\"ok opros\" onclick=\"CheckForm(".$opros_num.");\"></center></form>";
 
-if ($opros_result == 1 or $admin_ok == 1)  $textX .= "<br><a href=\"#golos$re\" onclick=\"$(showopros".$opros_num."(3, 0)); return false;\" class=opros_result_show>Посмотреть результаты</a>";
+if ($opros_result == 1 or $admin_ok == 1)  $textX .= "<br><a href=\"#golos".$re."\" onclick=\"$(showopros(".$opros_num.",3, 0)); return false;\" class=opros_result_show>Посмотреть результаты</a>";
   }
   $textX .= "</div>";
 

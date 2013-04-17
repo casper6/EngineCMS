@@ -1,4 +1,16 @@
-﻿/* Поиск объекта (используется ниже) */
+﻿/* Проверка формы голосования */
+var valueOpros = -1;
+function CheckForm(opros_num){
+  if(valueOpros == -1) alert('Вы не выбрали ни одного ответа!');
+  else $(showopros(opros_num,2,valueOpros));
+}
+
+/* Отображение голосования */
+function showopros(id, res, golos) { 
+	$.get('opros.php', { num: id, res: res, golos: golos }, function(data) { $('#show_opros'+id).html( data ); }); 
+}
+
+/* Поиск объекта (используется ниже) */
 function getObject(obj) {  
 	var theObj
 	if (document.layers) {

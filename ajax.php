@@ -38,39 +38,41 @@ if ($func == "registration_form") {
 }
 ///////////////////////////////////////////////////////////
 if ($func == "savegolos") { // Сохраняем голосование
+	$spasibo = " <b class=green>Спасибо за ваше неравнодушие!</b>";
+	$golosovali = "<b class=red>Вы уже голосовали!</b>";
+	$udaleny = "Голоса удалены.";
 	$info = "";
 	if (isset($golos_id) and isset($GLOBALS[$golos_id])) $tmp = $GLOBALS[$golos_id]; else $tmp = ""; // поставлено от голосования
 	list($name, $gol) = explode("*@%", $string);
-		//$bangolosdays = 30;
 		$type = intval($type);
 		$ip = getenv("REMOTE_ADDR"); // IP
 		if ($gol == 6 and is_admin($admin)) {
 			$db->sql_query("UPDATE ".$prefix."_pages SET golos='0' WHERE pid='$id';");
 			$db->sql_query("DELETE from ".$prefix."_pages_golos WHERE num='$id';");
-			$info = "Голоса удалены.";
+			$info = $udaleny;
 			echo $info;	exit;
 		}
-		if ($gol>5) $gol=1; 
-		if ($gol<0) $gol=1;
+		if ($gol > 5) $gol=1; 
+		if ($gol < 0) $gol=1;
 		if ($type != 2 and $type != 3) $gol = intval($gol);
 		$dat = date("Y.m.d H:i:s");
 		$golos_id = $prefix.'golos'.$id;
 
-		if ($type == 0) { if ($gol != 1 and $gol != 2 and $gol != 3 and $gol != 4 and $gol != 5 ) $gol = 5; }
-		if ($type == 1) { $gol = 1; }
-		if ($type == 2 or $type == 3) { if ($gol != 1) $gol = -1; }
-		if ($type != 0) { 
+		if ($type == 0) if ($gol != 1 and $gol != 2 and $gol != 3 and $gol != 4 and $gol != 5 ) $gol = 5;
+		if ($type == 1) $gol = 1;
+		if ($type == 2 or $type == 3) if ($gol != 1) $gol = -1;
+		if ($type != 0) {
 				$sql = "SELECT golos FROM ".$prefix."_pages where pid='$id'";
 				$row2 = $db->sql_fetchrow($db->sql_query($sql));
 				$resnum = $db->sql_query($sql);
 				$numrows = $db->sql_numrows($resnum);
 					if (($numrows > 0 and $tmp == $golos_id) or $id==0) {
-						$info = "<b class=red>Вы уже голосовали!</b>";
+						$info = $golosovali;
 					} else {
 						$golos = $row2['golos'] + $gol;
 						$db->sql_query("UPDATE ".$prefix."_pages SET golos='".$golos."' WHERE pid='$id';");
 						$db->sql_query("INSERT INTO ".$prefix."_pages_golos (`gid`, `ip`, `golos`, `num`, `data`) VALUES ('', '$ip', '$gol', '$id', '$dat')");
-						setcookie ("$golos_id", "$golos_id",time()+2678400,"/");
+						setcookie ($golos_id, $golos_id,time()+2678400,"/");
 					}
 		} else {
 					$sql = "SELECT data FROM ".$prefix."_pages_golos WHERE ip='$ip' AND num='$id'";
@@ -81,10 +83,10 @@ if ($func == "savegolos") { // Сохраняем голосование
 					$date = dateresize($dat);
 					$numrows = $db->sql_numrows($resnum);
 					if ($numrows > 0 or $tmp==$golos_id or $id==0) {
-						$info = "<b class=red>Вы уже голосовали.</b>";
+						$info = $golosovali;
 					} else {
 						$db->sql_query("INSERT INTO ".$prefix."_pages_golos (`gid`, `ip`, `golos`, `num`, `data`) VALUES ('', '$ip', '$gol', '$id', '$dat')");
-						setcookie ("$golos_id", "$golos_id",time()+2678400,"/");
+						setcookie ($golos_id, $golos_id,time()+2678400,"/");
 					}
 		}
 		$sqlX = "SELECT module from ".$prefix."_pages where pid = '$id'";
@@ -99,12 +101,12 @@ if ($func == "savegolos") { // Сохраняем голосование
 			$golos = $row2['golos'];
 		}
 		if ($type == 1) 
-			$info .= " <b class=green>Спасибо за ваше неравнодушие!</b>";
+			$info .= $spasibo;
 		if ($type == 2 or $type == 3) {
 			$sql23 = "SELECT golos FROM ".$prefix."_pages_golos WHERE num='$id'";
 			$result23 = $db->sql_query($sql23);
 			$numrows23 = $db->sql_numrows($result23);
-			$info .= " <b class=green>Спасибо за ваше неравнодушие!</b>";
+			$info .= $spasibo;
 		}
 		if ($type == 0) {
 			$sql2 = "SELECT golos FROM ".$prefix."_pages_golos WHERE num='$id'";
@@ -119,7 +121,7 @@ if ($func == "savegolos") { // Сохраняем голосование
 			$sersv2 = number_format($proc,2)/10;
 			$sersv1 = number_format($sersv2,2);
 			$sersv = 90*$sersv/100;
-			$info .= " <b class=green>Спасибо за ваше неравнодушие!</b>";
+			$info .= $spasibo;
 		}
 	echo $info; exit();
 }

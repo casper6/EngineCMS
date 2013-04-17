@@ -12,7 +12,7 @@
 		if ( $_GET["group"] !== $_COOKIE['user_group']) { Header("Location: error.php?code=123"); die; } 
 	}
 	require_once("mainfile.php");
-	global $strelka, $siteurl, $prefix, $module_name, $name, $db, $sitekey, $admin, $sitename, $pagetitle, $pagetitle2, $registr, $pogoda, $flash, $keywords, $description, $counter, $startdate, $adminmail, $keywords2, $description2, $stopcopy, $nocash, $blocks, $http_siteurl, $display_errors;
+	global $strelka, $siteurl, $prefix, $name, $db, $admin, $sitename, $pagetitle, $pagetitle2, $registr, $pogoda, $flash, $keywords, $description, $counter, $startdate, $adminmail, $keywords2, $description2, $stopcopy, $nocash, $blocks, $http_siteurl, $display_errors;
 	$nocash = false;
 	if ($name == "") $name = "index";
 
@@ -35,55 +35,15 @@ if ($name=="-email") { // занесение мыла как скрытого к
 	}
 	echo "<br>Вы можете вернуться назад (нажав на клавиатуре клавишу &larr;BackSpace) или перейти <a href='/'>на Главную</a>.";
 	exit;
-} elseif ($name=="golos") { // Голосование (опросы)
-	###################################################### ГОЛОСОВАНИЕ Убрать !!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	global $soderganie, $tip, $DBName, $prefix, $db, $module_name, $ModuleName, $opros, $num, $admin, $ip, $now, $referer;
-	$num = intval($num);
-	$dat = $now;
-	$n_opros = count($opros);
-	if ($n_opros==1) $opros=intval($opros[0]);
-	else {
-	     for ($x=0; $x < $n_opros; $x++) {
-	     $opros_list .= intval($opros[$x])." ";
-	     }
-	     $opros = trim($opros_list);
-	}
-	$sql = "SELECT data FROM ".$prefix."_golos WHERE ip='$ip' AND num='$num'";
-	$resnum = $db->sql_query($sql);
-	$numrows = $db->sql_numrows($resnum);
-	if ($numrows > 0 or $num==0) {
-		Header("Location: $referer");
-		// если уже есть - на страницу переброс
-	} else {
-		$db->sql_query("INSERT INTO ".$prefix."_golos ( `gid` , `ip` , `golos`, `num`, `data`) VALUES ('', '$ip', '$opros', '$num', '$now')");
-		// Получить из базы данных значения и прибавить к ним голоса
-		$sql2 = "select text from ".$prefix."_mainpage where `tables`='pages' and type='3' and id='$num'"; // `name` != '$name' and 
-		$result2 = $db->sql_query($sql2);
-		$row2 = $db->sql_fetchrow($result2);
-		$textX = trim($row2['text']);
-		$lines = explode("\r\n",$textX);
-		$txt = "";
-		foreach ($lines as $line_id => $line) {
-			$line = explode("|",$line);
-			$col = $line[1];
-			if ($col=="") $col=0;
-			$line = $line[0];
-			if ($line_id == $opros) $col = $col + 1;
-			$txt .= $line."|".$col."\r\n";
-		} // foreach закончился
-		$db->sql_query("UPDATE ".$prefix."_mainpage SET text='$txt' WHERE `tables`='pages' and id='$num' and type='3'");
-		Header("Location: $referer");
-	}
-
 } else { // Сборка дизайна с разделом и Блоки
 	###################################################### БЛОКИ
 	$block = ""; // Определение раздела
 
-	if ($name=="-user") { 			list($block, $stil) = include('page/user.php');	$pagetitle = "Страница пользователя"; } 
- 	elseif ($name=="-slovo") { 		list($block, $stil) = include('page/tags.php');	$pagetitle = $slovo." — Тэги — "; }
-	elseif ($name=="-search") {		list($block, $stil) = include('page/search.php'); $pagetitle = $slov." — Поиск — "; }
+	if ($name=="-search") {		list($block, $stil) = include('page/search.php'); $pagetitle = $slov." — Поиск — "; }
+	elseif ($name=="-slovo") { 		list($block, $stil) = include('page/tags.php');	$pagetitle = $slovo." — Тэги — "; }
 	elseif ($name=="-register") { 	list($block, $stil) = include('page/reg.php'); $pagetitle = "Регистрация — "; }
 	elseif ($name=="-login") { 	list($block, $stil) = include('page/login.php'); $pagetitle = "Вход — "; }
+	elseif ($name=="-user") { 			list($block, $stil) = include('page/user.php');	$pagetitle = "Страница пользователя"; } 
 	elseif ($name=="-users") { 	list($block, $stil) = include('page/users.php'); $pagetitle = "Личная анкета — "; }
 	elseif ($name=="-adduser") { 	list($block, $stil) = include('page/adduser.php'); $pagetitle = "Добавление публикации — "; }
 	elseif ($name=="-edituser") { 	list($block, $stil) = include('page/edituser.php'); $pagetitle = "Редактирование личной анкеты — "; }
@@ -719,14 +679,8 @@ case "4": # Блок папок раздела
 	$type = ""; break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 case "5": # Блок голосования
-	$textX = "<script language='javascript'>
-	  function showopros".$idX."(res, golos) { 
-		  $.get('opros.php', { num: '".$idX."', res: res, golos: golos }, function(data) { 
-			  $('#show_opros".$idX."').html( data ); 
-		  }); 
-	  }
-	  $(showopros".$idX."(1, 0));
-	  </script><div id='show_opros".$idX."'>Загружается опрос...</div>";
+	$textX = "<script>$(showopros(".$idX.", 1, 0));</script>
+	<div id='show_opros".$idX."'>Загружается опрос...</div>";
 	$block = str_replace("[".$titleX."]", $design_open.$textX.$design_close, $block);
 	$type = ""; break; 
 //////////////////////////////////////////////////////////////////////////////////////////////////////

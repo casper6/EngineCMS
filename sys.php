@@ -139,29 +139,29 @@ function GraphicAdmin() {
 		$num_add_pages = $db->sql_numrows($db->sql_query("SELECT `pid` from ".$prefix."_pages where (`active`='2' or `active`='3') and `tables`!='del'"));
 	}
 	$soderganie_menu = "<div style='margin-bottom:5px;'>
-	<button class='nothing small' id='hide_razdel' onclick=\"$('#show_razdel').show(); $('#razdels').hide(); $('#hide_razdel').hide(); $('#razdel_td').hide(); $('.dark_pole2sel').attr('class', 'dark_pole2');\" style='' title='Скрыть Разделы в кнопку'>&rarr;</button> ";
+	<button class='nothing small' id='hide_razdel' onclick=\"$('#show_razdel').show(); $('#razdels').hide(); $('#hide_razdel').hide(); $('#razdel_td').hide(); $('.dark_pole2sel').attr('class', 'dark_pole2');\" style='' title='Скрыть Разделы в кнопку'>&rarr;</button> <button class='small' id='show_razdel' style='display:none;' href=# onclick=\" $('#razdel_td').show(); $('#show_razdel').hide(); $('#razdels').show(); $('#hide_razdel').show();\"><span class=\"icon gray small\" data-icon=\",\"></span> Разделы</button> ";
 
 	if ($show_comments != 0) {
 		if ($show_comments == 2) $soderganie_menu .= "<a style='color: gray;' onclick=\"openbox('3','Комментарии');\">.</a>";
-		elseif ($show_comments == 1) $soderganie_menu .= "<button class='nothing medium' onclick=\"openbox('3','Комментарии'); $('#hide_razdel').click();\" title='Комментарии за сегодня/вчера/позавчера'><span class=\"icon gray small\" data-icon=\"'\"></span><nobr>Отзывы: ".$comm_segodnya."/".$comm_vchera."/".$comm_pozavchera."</nobr></button>";
+		elseif ($show_comments == 1) $soderganie_menu .= "<button class='nothing medium' onclick=\"openbox('3','Комментарии'); $('#hide_razdel').click();\" title='Комментарии за сегодня/вчера/позавчера'><span class=\"icon gray small\" data-icon=\"'\"></span><nobr> Отзывы: ".$comm_segodnya."/".$comm_vchera."/".$comm_pozavchera."</nobr></button>";
 	}
 
-	$soderganie_menu .= "<button class='small' id='show_razdel' style='display:none;' href=# onclick=\" $('#razdel_td').show(); $('#show_razdel').hide(); $('#razdels').show(); $('#hide_razdel').show();\"><span class=\"icon gray small\" data-icon=\",\"></span>Разделы</button> <button class='nothing small' onclick=\"openbox('5','Новое и отредактированное'); $('#hide_razdel').click();\"><span class=\"icon gray small\" data-icon=\"M\"></span>Новое</button>";
+	$soderganie_menu .= " <button class='nothing small' onclick=\"openbox('5','Новое и отредактированное'); $('#hide_razdel').click();\"><span class=\"icon gray small\" data-icon=\"M\"></span>Новое</button>";
 	if (!isset($num_add_pages)) $num_add_pages = 0;
 
 	if ($num_add_pages > 0 and $show_userposts != 0) {
 		if ($show_userposts == 2) $soderganie_menu .= "<a style='color: gray;' onclick=\"openbox('4','Добавленное посетителями');\">.</a>";
-		elseif ($show_userposts == 1) $soderganie_menu .= "<button class='nothing small' style='color: red;' onclick=\"openbox('4','Добавленное посетителями'); $('#hide_razdel').click();\"><span class=\"icon gray small\" data-icon=\"u\"></span><nobr>Проверить: <strong>".$num_add_pages."</strong></nobr></button>";
+		elseif ($show_userposts == 1) $soderganie_menu .= "<button class='nothing small' style='color: red;' onclick=\"openbox('4','Добавленное посетителями'); $('#hide_razdel').click();\"><span class=\"icon gray small\" data-icon=\"u\"></span><nobr> Проверить: <strong>".$num_add_pages."</strong></nobr></button>";
 	}
 	$del_page = $db->sql_numrows($db->sql_query("SELECT pid from ".$prefix."_".$pages." where `tables`='del' limit 0,1"));
 	if ($del_page > 0) $soderganie_menu .= "<button class='nothing small' onclick=\"openbox('1','Корзина'); $('#hide_razdel').click();\" title='Удаленные страницы'><span class=\"icon gray small\" data-icon=\"T\"></span>Корзина</button>";
 
 	$backup_page = $db->sql_numrows($db->sql_query("SELECT pid from ".$prefix."_".$pages." where `tables`='backup' limit 0,1"));
-	if ($backup_page > 0) $soderganie_menu .= "<button class='nothing small' onclick=\"openbox('2','Резервные копии'); $('#hide_razdel').click();\" title='Резервные копии созданных ранее страниц'><span class=\"icon gray small\" data-icon=\"t\"></span>Старое</button>";
+	if ($backup_page > 0) $soderganie_menu .= "<button class='nothing small' onclick=\"openbox('2','Резервные копии'); $('#hide_razdel').click();\" title='Резервные копии созданных ранее страниц'><span class=\"icon gray small\" data-icon=\"t\"></span> Старое</button>";
 
-	$soderganie_menu .= " <button class='nothing small' onclick=\"oformlenie_show('блок','3','block','/sys.php?op=mainpage&name=block&type=3'); $('#hide_razdel').click();\" title='Резервные копии созданных ранее страниц'><span class=\"icon gray small\" data-icon=\"R\"></span>Блоки</button> ";
+	$soderganie_menu .= " <button class='nothing small' onclick=\"oformlenie_show('блок','3','block','/sys.php?op=mainpage&name=block&type=3'); $('#hide_razdel').click();\" title='Резервные копии созданных ранее страниц'><span class=\"icon gray small\" data-icon=\"R\"></span> Блоки</button> ";
 
-	$soderganie_menu .= "<button id='new_razdel_button' title='Добавить страницу...' class='medium green nothing' onclick='location.href=\"/sys.php?op=base_pages_add_page#1\"'><span class=\"icon white small\" data-icon=\"+\"></span>страницу</button>
+	$soderganie_menu .= "<button id='new_razdel_button' title='Добавить страницу...' class='medium green nothing' onclick='location.href=\"/sys.php?op=base_pages_add_page#1\"'><span class=\"icon white small\" data-icon=\"+\"></span> страницу</button>
 	</div>";
 
 	echo "<table style='width:100%; background: #e2e5ea; margin-top:5px; padding:0;' cellspacing=0 cellpadding=5><tr valign=top><td id='razdel_td' class='radius nothing'><div id='razdels' style='background:#e7e9ec;'>";
@@ -227,17 +227,6 @@ function GraphicAdmin() {
 			<form method='post' action=sys.php class='block_white2 radius align_center' style='min-width: 450px; max-width:700px; margin-bottom:20px; background: #dddddd;'>
 			<a title='Закрыть это окно' class=punkt onclick=\"show_animate('add')\"><div class='radius' style='font-size:12pt; width:20px; height: 20px; color: white; text-align:center; float:right; margin:5px; margin-bottom:0; background: #bbbbbb;'>&nbsp;x&nbsp;</div></a>
 			<h1>Вы решили добавить раздел:</h1>
-			<div class='help small'>?</div><a name=metka class=punkt href=#metka onClick=\"show('about')\">Узнать, что такое раздел</a>
-			<div id=about style='display:none;'><div style='background: white;'>
-			<p><b>Раздел</b> — это определенная тематическая категория на сайте. Она может быть самодостаточной (представлять из себя одну страницу) или содержать несколько страниц и папок. 
-			<p>Страницы создаются, если информацию раздела следует разбить на несколько отдельных тем и не стоит делать одну гигантскую страницу.
-			<p>Папки не являются обязательными и создаются как подкатегории (подразделы) в случае излишнего количества страниц (к примеру больше 50).
-			<p>Если раздел содержит только одну небольшую начальную страницу, можно не создавать в нем папок и страниц, а лишь редактировать сам раздел — после создания раздела, нажмите по его имени в списке разделов на этой странице и по ссылке <nobr><img class=\"icon2 i35\" src=/images/1.gif><u>глав. страница раздела</u></nobr>. 
-			<p>Создавая раздел, укажите его русское название, например, «Наши акции», а также английское имя, желательно в одно слово (без пробелов), например, akcyi (транслит) или stock (перевод). После этого выберите дизайн (обычно используется «Главный дизайн», но на этом сайте, возможно, используются и дополнительные дизайны — в таком случае часто используемый дизайн будет выбран по-умолчанию). Нажмите «Добавить раздел». 
-			<p>Как только раздел будет создан, его можно настроить, нажав по его имени и по ссылке <nobr><img class=\"icon2 i38\" src=/images/1.gif><u>настроить</u></nobr>. 
-			<p>Чтобы добавить в раздел папки (категории/каталоги) или страницы (статьи/новости/посты) нажмите по его названию в списке разделов слева. Справа вы увидите ссылку Добавить <nobr><img class=\"icon2 i39\" src=/images/1.gif><u>страницу</u></nobr>, а следом за ней — <nobr><img class=\"icon2 i40\" src=/images/1.gif><u>папку</u></nobr>. 
-			<p><i>Если что-то не ясно — обратитесь к разработчику.</i>
-			</div></div>
 			<input type=hidden name=type value='2'>
 			<TABLE cellspacing=0 cellpadding=5 width=100%><TR>
 			<TD align=right valign=top width=40>
