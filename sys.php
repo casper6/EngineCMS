@@ -184,76 +184,22 @@ function GraphicAdmin() {
 	$result = $db->sql_query($sql);
 	$current_type = ""; 
 
-			$styles2 = ""; // Выяснить основной дизайн у всех разделов
-			$sql3 = "select text from ".$prefix."_mainpage where type='2' and name!='index' and `tables`!='del'";
-			$result3 = $db->sql_query($sql3);
-			$num_razdel = $db->sql_numrows($result3);
-			while ($row3 = $db->sql_fetchrow($result3)) {
-				$design = 1;
-				$parse = explode("|",$row3['text']);
-				parse_str($parse[1]); // Разложим на переменные и узнаем дизайн раздела
-				$styles2[] = $design;
-			}
-			if ($num_razdel > 0) {
-				$styles2 = array_count_values($styles2);
-				reset($styles2);
-				arsort($styles2);
-				$styles2 = key($styles2);
-				$razdel_txt = "";
-			} else $razdel_txt = "<div style='padding-left:5px; color: red;'>Разделов пока нет. Добавьте.</div>";
-				
-			$styles = ""; // Выборка дизайнов
-			$sql2 = "select id, title from ".$prefix."_mainpage where type='0'";
-			$result2 = $db->sql_query($sql2);
-			while ($row2 = $db->sql_fetchrow($result2)) {
-				$id_design = $row2['id'];
-				$title_design = trim($row2['title']);
-				$sel = "";
-				if ($styles2 == $row2['id']) {
-					$title_design .= " (используется чаще всего)";
-					$sel = " selected";
-				}
-				$styles .= "<option value='".$row2['id']."'".$sel.">".$title_design."</option>";
-			}
+	$num_razdel = $db->sql_numrows($db->sql_query("select id from ".$prefix."_mainpage where type='2' and name!='index' and `tables`!='del'"));
+	$razdel_txt = "";
+	if ($num_razdel == 0) $razdel_txt = "<div style='padding-left:5px; color: red;'>Разделов пока нет. Добавьте.</div>";
 
-			if ($registr=='1') echo "&nbsp;&nbsp;&nbsp;<a href=".$admin_file.".php?op=MainUser>Пользователи</a> <a href=".$admin_file.".php?op=sortuser>Список</a>";
+	if ($registr=='1') echo "&nbsp;&nbsp;&nbsp;<a href=".$admin_file.".php?op=MainUser>Пользователи</a> <a href=".$admin_file.".php?op=sortuser>Список</a>";
 
-			echo "<div class='black_grad'><button id=new_razdel_button title='Сортировка...' class='small black' onclick=\"show('sortirovka');\" style='float:left; margin:3px;'><span style='margin-right: -2px;' class=\"icon darkgrey small\" data-icon=\"|\"></span></button><button id=new_razdel_button title='Добавить раздел...' class='small black right3' onclick=\"show_animate('add');\"><span class=\"mr-2 icon darkgrey small\" data-icon=\"+\"></span></button><span class='h1'>Разделы:</span>
-				</div>".$razdel_txt."
-				<div id='sortirovka' style='color: green; display:none;'>
-				<p style=' margin-left:20px;'>Сортировка по: <br>".$razdel_sort_name[0].",<br>".$razdel_sort_name[1].",<br>".$razdel_sort_name[2]."</p></div>"; 
-			
-			$new_razdel = "<div style='display:none;' id='add'>
-			<form method='post' action=sys.php class='block_white2 radius align_center' style='min-width: 450px; max-width:700px; margin-bottom:20px; background: #dddddd;'>
-			<a title='Закрыть это окно' class=punkt onclick=\"show_animate('add')\"><div class='radius' style='font-size:12pt; width:20px; height: 20px; color: white; text-align:center; float:right; margin:5px; margin-bottom:0; background: #bbbbbb;'>&nbsp;x&nbsp;</div></a>
-			<h1>Вы решили добавить раздел:</h1>
-			<input type=hidden name=type value='2'>
-			<TABLE cellspacing=0 cellpadding=5 width=100%><TR>
-			<TD align=right valign=top width=40>
-			<b>Название раздела:</b></td><td><input id=rus_name type=text name=title size=30 style='width:100%;'><br>
-			Например: «О нас», «Наша продукция», «Каталог», «Контакты» и т.д.
-			</td></tr><tr><TD align=right valign=top>
-			Англ. название:</td><td><input type=text name=namo size=30 style='width:100%;'><br>
-			<a href=# onclick=\"window.open('http://translate.google.ru/#ru/en/' + $('#rus_name').val(),'Перевод',' width=800,height=400'); return false;\"><b>Перевести русское название</b></a><br>
-			Например: «about», «product», «catalog», «contact» и т.д.<br>
-			Используются англ. буквы и знак «_», без пробелов. 
-			<input type=hidden name=text value='lim=10&amp;comments=1'>
-			</td></tr><tr valign=top><TD align=right valign=top>
-			<b>Выберите дизайн:</b></td><td><select name=useit style='width:100%;'>".$styles."</select>
-			<br><input type=\"submit\" value=\"Добавить раздел\" style='width:100%; height:55px; font-size: 20px; margin-top:20px;'>
-			</td></tr></table>
-			<input type=hidden name=shablon>
-			<input type=hidden name=id value=''>
-			<input type=hidden name=op value=mainpage_save>
-			</form>
-			</div>";
+	echo "<div class='black_grad'><button id=new_razdel_button title='Сортировка...' class='small black' onclick=\"show('sortirovka');\" style='float:left; margin:3px;'><span style='margin-right: -2px;' class=\"icon darkgrey small\" data-icon=\"|\"></span></button><button id=new_razdel_button title='Добавить раздел...' class='small black right3' onclick=\"openbox('10','Вы решили добавить раздел:');\"><span class=\"mr-2 icon darkgrey small\" data-icon=\"+\"></span></button><span class='h1'>Разделы:</span>
+		</div>".$razdel_txt."<div id='sortirovka' style='color: green; display:none;'>
+		<p style=' margin-left:20px;'>Сортировка по: <br>".$razdel_sort_name[0].",<br>".$razdel_sort_name[1].",<br>".$razdel_sort_name[2]."</p></div>";
 
-		$icon_size = "large";
-		if ($num_razdel > 5) $icon_size = "medium"; 
-		if ($num_razdel > 10) $icon_size = "small"; 
+	$icon_size = "large";
+	if ($num_razdel > 5) $icon_size = "medium"; 
+	if ($num_razdel > 10) $icon_size = "small"; 
 
-		echo "<div id='mainrazdel_index'>
-		<a class='base_page' href='/sys.php?op=mainpage&amp;id=24&amp;red=1' title='Редактировать главную страницу'><div class='dark_pole2'><span class='icon black ".$icon_size."' data-icon='4'></span><span class='plus20'>Главная страница</span> <span class='small' style='color:#e7e9ec'>(редактировать)</span></div></a>";
+	echo "<div id='mainrazdel_index'>
+	<a class='base_page' href='/sys.php?op=mainpage&amp;id=24&amp;red=1' title='Редактировать главную страницу'><div class='dark_pole2'><span class='icon black ".$icon_size."' data-icon='4'></span><span class='plus20'>Главная страница</span> <span class='small' style='color:#e7e9ec'>(редактировать)</span></div></a>";
 
     while ($row = $db->sql_fetchrow($result)) {
 	    $id = $row['id'];
@@ -330,10 +276,10 @@ function GraphicAdmin() {
 		</div></a></div>";
     }
 	echo "</div>
-	</td><td width=70%>".$soderganie_menu.$new_razdel."<div class='podrazdel radius nothing' id='podrazdel'>";
+	</td><td width=70%>".$soderganie_menu."<div class='podrazdel radius nothing' id='podrazdel'>";
 
 	// ЗАПИСКИ
-	$row = $db->sql_fetchrow($db->sql_query("SELECT adminmes from ".$prefix."_config"));
+	$row = $db->sql_fetchrow($db->sql_query("SELECT `adminmes` from ".$prefix."_config"));
 	$adminmes = $row['adminmes'];
 	global $op, $project_logotip, $project_name;
 	if ($op == "mes") $mes_ok = "<span style='color:green;'>Записки сохранены</span>"; else $mes_ok = "";
@@ -347,7 +293,7 @@ function GraphicAdmin() {
 		<h2>Записки администратора</h2></td><td align=center>
 		<button onclick=\"document.getElementById('adminmes').value+='\\r'+getDateNow()+'  '\" title='Вставить дату и время (в конце текста)' class='pill small punkt'><span class=\"icon gray small\" data-icon=\"6\"></span>Вставить дату</button>
 		</td><td><form action='".$admin_file.".php?op=mes' method='post' name=form class=nothing>
-		<button type='submit' class='small'><span class=\"icon gray small\" data-icon=\"C\"></span>Сохранить</button></td><td>".$mes_ok."
+		</td><td>".$mes_ok."
 		</td></tr><tr><td colspan=3>
 		<textarea id=adminmes name=adminmes rows=3 cols=80 style='border:0; height:300px; width: 98%;' class=yellow_grad>".$adminmes."</textarea>
 	</td></tr></table>

@@ -209,7 +209,7 @@ function mainpage($name="") {
 	</body>
 	</html>";
 }
-#####################################################################################################################
+###################################################################################################
 function create_main($type) {
 	global $tip, $admintip, $prefix, $db;
 	echo "<a name=1></a>";
@@ -302,10 +302,10 @@ function create_main($type) {
 
 	$create = "<div id=about class=block style='display:none;'>Блок — это дополнительный элемент сайта, который может быть вставлен в любом его месте. Блоки бывают автоматические (заранее заданные системой), полуавтоматические (создаваемые с последующей настройкой того, что будет в них отображаться) и ручные (текст, HTML, JavaScript или PHP-код).<br></div>
 	<table width=100%><tr valign=bottom><td width=50%>
-	<h2>Название блока:</h2><input type='text' name='title' value='' size=60 class='w100 h40 f16' autofocus></td><td>
-	<h2>Выберите дизайн:</h2><select name=design><option value=0> без дизайна </option>".$styles."</select>
+	<span class=h2>Название блока:</span><br><input type='text' name='title' value='' size=60 class='w100 h40 f16' autofocus></td><td>
+	<span class=>Выберите дизайн:</span> <select name=design><option value=0> без дизайна </option>".$styles."</select>
 	</td></tr><tr><td colspan=2>
-	<h2>Выберите тип блока:</h2> (справа увидите его параметры (не у всех блоков), а снизу — описание)
+	<span class=h2>Выберите тип блока:</span> (справа увидите его параметры (не у всех блоков), а снизу — описание)
 	<table width=100% cellspacing=0 cellpadding=0><tr valign=top><td class='pr10'>
 	<select id=name size=10 name='name' class='w100 f16' onchange=\"
 
@@ -1782,7 +1782,7 @@ function edit_main($id) {
 	} ############################### ЗАКРЫТИЕ ШАБЛОН
 	echo "</div></form>";
 }
-#####################################################################################################################
+###################################################################################################
 function mainpage_save($id=0, $type, $namo, $title, $text, $useit, $shablon, $descriptionX, $keywordsX, $s_tip) {
 global $sgatie, $tip, $admintip, $prefix, $db, $nastroi;
 $sql = "select name from ".$prefix."_mainpage where `id`='".$id."'";
@@ -1790,6 +1790,11 @@ $result = $db->sql_query($sql);
 $row = $db->sql_fetchrow($result);
 $mod_name = $row['name'];
 recash("/-".$mod_name); // Удаление кеша раздела
+
+if ($type == 2) {
+	if (trim($namo) == "") $namo = strtolow(translit_name(trim($title)));
+	else $namo = strtolow(translit_name(trim($namo)));
+}
 
 if ($nastroi == 1) { // Настройка раздела или блока
 	global $options, $module_name;
@@ -1976,7 +1981,7 @@ function mainpage_razdel_color($id, $color) {
 	$db->sql_query("UPDATE ".$prefix."_mainpage SET `color`='".$color."' WHERE `tables`='pages' and `id`='".$id."';");
 	Header("Location: sys.php");
 }
-#####################################################################################################################
+##################################################################################################
 function mainpage_del($id, $type, $name="") {
 	global $tip, $admintip, $prefix, $db;
 	switch ( $type ) {
@@ -2023,7 +2028,7 @@ function mainpage_del($id, $type, $name="") {
 		break;
 	}
 }
-#####################################################################################################################
+##################################################################################################
 function mainpage_recycle_spiski() {
 	global $admintip, $prefix, $db;
 	$sql = "select name from ".$prefix."_mainpage where type='4' and text like '%type=1%'";
@@ -2034,7 +2039,7 @@ function mainpage_recycle_spiski() {
 	}
 	Header("Location: sys.php");
 }
-#####################################################################################################################
+##################################################################################################
 function mainpage_create_block($title, $name, $text, $modul, $useit, $design) {
 	global $tip, $admintip, $prefix, $db, $name_razdels;
 	# id type name title text useit shablon
