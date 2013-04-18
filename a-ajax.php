@@ -456,22 +456,14 @@ if ($func == "addpapka") { // Добавляем папку(и)
   list($title, $parent) = explode("*@%", $string);
   global $name_razdels, $title_razdel_and_bd;
   $name_raz = $name_razdels[$id];
-  $title = explode("+|+",$title);
-  if (trim($title[1]) != "") {
-      $title = explode("\n",$title[1]);
+      $title = explode("\n",$title);
       foreach( $title as $title_value ) {
           $pap = mysql_real_escape_string(trim($title_value));
           $title_name = explode("|",$title_value);
           $title_opis = $title_name[1];
           $title_name = $title_name[0];
-          if ($pap!="") $db->sql_query("INSERT INTO ".$prefix."_pages_categories VALUES (NULL, '$name_raz', '$title_name', '$title_opis', '', '0', '0', '$parent', 'pages')");
+          if ($pap!="" && $title_name!="") $db->sql_query("INSERT INTO ".$prefix."_pages_categories VALUES (NULL, '$name_raz', '$title_name', '$title_opis', '', '0', '0', '$parent', 'pages')");
       }
-  } else {
-      $title_name = explode("|", trim($title[0]) );
-      $title_opis = $title_name[1];
-      $title_name = $title_name[0];
-      if ($title!="") $db->sql_query("INSERT INTO ".$prefix."_pages_categories VALUES (NULL, '$name_raz', '$title_name', '$title_opis', '', '0', '0', '$parent', 'pages')");
-  }
   echo $title_razdel_and_bd[$name_raz]; exit;
 }
 ######################################################################################
@@ -572,12 +564,10 @@ if ($func == "add_papka") { // Создание папки
   $name_raz = $name_razdels[$id];
   $list = "<form method=post style=\"display:inline;\" onsubmit='return false'>
   <h1>Создаем папку в этом разделе</h1>
-  <table width=100%><tr valign=top><td width=60%>
-  <div id=txt>Имя папки:</div><div id=txt2 style='display:none;'>Имена папок:</div>
-  <div id=text><input type=text name=title id='title".$id."' size=30 style='width:100%;'></div>
-  <div id=text2 style='display:none;'><br>
-  <textarea name=title2 id='title".$id."text' rows=5 cols=3 style='width:100%; height: 200px;'></textarea><br></div>
-  </td><td width=5></td><td>Основная или вложенная папка?<br>";
+  <table width=100% class='table_light'><tr valign=top><td>
+  <span class=h2>Имя папки:</span><br>
+  <textarea name=title2 id='title".$id."' rows=5 cols=3 style='width:100%; height: 200px;' autofocus></textarea>
+  </td></tr><tr><td><span class=h2>Основная или вложенная папка?</span><br>";
              $sql = "select cid, title, parent_id from ".$prefix."_pages_categories where module='$name_raz' and `tables`='pages' order by parent_id,cid";
              $result = $db->sql_query($sql);
              $list .= "<select id='select".$id."' name=parent_id style='width: 100%;'><option value=0>Это основная папка</option>";
@@ -589,16 +579,13 @@ if ($func == "add_papka") { // Создание папки
                //if ($add_cat==$cid) $sel=" selected"; else $sel="";
                $list .= "<option value=".$cid.">Вложена в «".$title."»</option>";
              }
-  $list .= "</select><br><br>
-  <a onclick=\"show('text'); show('text2'); show('text22');  show('txt'); show('txt2');\" class=punkt>Создать несколько папок...</a>
-  <div id=text22 style='display:none;'><br><br><font class=green>&larr; Пишите имена папок в столбик, разделяя их нажатием Enter</font><br><br><br></div>
-  <input type=submit value=\" Создать \" onclick=\"save_papka('".$id."',document.getElementById('title".$id."').value+'+|+'+document.getElementById('title".$id."text').value,document.getElementById('select".$id."').value,'$name_raz');\" style='width:100%; height:55px; font-size: 22px; margin-top:20px;'>
+  $list .= "</select><br>
+  <input type=submit value=\" Создать \" onclick=\"save_papka('".$id."',document.getElementById('title".$id."').value,document.getElementById('select".$id."').value,'".$name_raz."');\" style='width:100%; height:55px; font-size: 22px; margin-top:20px;'>
   </td></tr></table>
-  <div class='help small'>?</div> <span class=small>Добавить описание к папке можно сразу после названия через символ «|».<br>
-  Если вы не видите созданной папки — обновите страницу (например, нажав F5).</span>
+  <i class=h3>Вы можете создать сразу несколько папок — пишите их имена в столбик, разделяя Enter.<br>Добавить описание к папке можно сразу после названия через символ «|».<br>
+  Если вы не видите созданной папки — обновите страницу (нажав F5).</i>
   </form>";
-  $list = "<div class='block_white2 radius' style='margin-top:20px; padding-bottom:30px; padding-left:10px; background: #dddddd;'><a title='Закрыть это окно' class=punkt onclick=\"$('#add_papka').hide();\"><div class='radius' style='font-size:12pt; width:20px; height: 20px; color: white; text-align:center; float:right; margin:5px; margin-bottom:0; background: #bbbbbb;'>&nbsp;x&nbsp;</div></a>".$list."
-  </div>";
+  $list = close_button('add_papka').$list."<hr>";
   echo $list; exit;
 }
 ######################################################################################
@@ -644,21 +631,21 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
       <TABLE width=100% class='table_light'><tr><td>
       <span class=h2>Название раздела:</span><br>
       <input id=rus_name type=text name=title size=30 style='width:100%;' autofocus><br>
-      <a href='javascript:$(\"#engname\").toggle(\"slow\");'>Англ. название</a> будет создано транслитом. Примеры: «О нас», «Наша продукция», «Каталог», «Контакты» и т.д.<br>
+      <a href='javascript:$(\"#engname\").toggle(\"slow\");'>Англ. название</a> будет создано транслитом. <i>Примеры: «О нас», «Наша продукция», «Каталог», «Контакты» и т.д.</i><br>
       </td></tr>
       <tr id=engname style='display:none;'><td>
       <span class=h3>Англ. название:</span><br>
       <input type=text name=namo size=30 style='width:100%;'><br>
-      <a href=# onclick=\"window.open('http://translate.google.ru/#ru/en/' + $('#rus_name').val(),'Перевод',' width=800,height=400'); return false;\"><b>Перевести русское название</b></a>. Используются англ. буквы и знак «_», без пробелов. Примеры: «about», «product», «catalog», «contact» и т.д. 
+      <a href=# onclick=\"window.open('http://translate.google.ru/#ru/en/' + $('#rus_name').val(),'Перевод',' width=800,height=400'); return false;\"><b>Перевести русское название</b></a>. <i>Используются англ. буквы и знак «_», без пробелов. Примеры: «about», «product», «catalog», «contact» и т.д.</i>
       </td></tr><tr><td>
       <span class=h2>Использовать настройки:</span><br><select name=text>
       <option value='lim=15&amp;comments=0'>По-умолчанию (15 страниц на листе, комментарии выключены)</option>
       <option value='lim=10&amp;comments=1&amp;comments_add=1&amp;vetki=2&amp;comments_mail=1&amp;comments_adres=1'>вариант «Блог» (10 страниц на листе, комментарии включены)</option>
       <option value='lim=500&amp;comments=0'>вариант «Каталог» (500 страниц на листе, комментарии выключены)</option>
-      ".$options."</select>
+      ".$options."</select><br><i>Можно моментально настроить новый раздел, выбрав один из вариантов или ранее созданных разделов.</i>
       </td></tr><tr><td>
       <span class=h2>Выберите дизайн:</span><br>
-      <select name=useit style='width:100%;'>".$styles."</select>
+      <select name=useit style='width:100%;'>".$styles."</select><br><i>Дизайн раздела окружает содержимое раздела оформлением, он обязательно должен содержать в себе блок [содержание] (который выводит содержание раздела), а также у дизайна должен быть выбран стиль (css).</i>
       </td></tr></table>
       <input type=\"submit\" value=\"Добавить раздел\" style='width:100%; height:55px; font-size: 20px; margin-top:20px;'>
       <input type=hidden name=type value='2'>
