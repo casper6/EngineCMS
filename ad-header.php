@@ -139,7 +139,8 @@ echo "<table width=100%><tr><td align=center width=170>
 	<div class='nothing noprint'>
 
 <div style='margin: 0 5px 5px 0;'>";
-if ($op == "adminMain") echo "<button class='small red' onclick=\"openbox('8','Помощь'); $('#show_razdel').click();\" style='color:white !important;' title='Перейти в режим обучения'><span class=\"icon small white\" data-icon=\"n\"></span> ПОМОЩЬ</button> ";
+if ($op == "adminMain") red_help(8);
+if ($op == "mainpage" && $type==2) red_help(9);
 echo "<button class='small' target=_blank onclick='window.open(\"/\")' title='Перейти на сайт (откроется в новом окне)'><span class=\"icon small black\" data-icon=\"4\"></span> На сайт</button> ".$post.$kick."
 </div>
 
@@ -155,4 +156,8 @@ echo "<button class='small' target=_blank onclick='window.open(\"/\")' title='П
 </td><td>
 	<form method=post name=search action='/--search' style='display:inline;' class='nothing'><input type='search' placeholder='Поиск по сайту' name=slovo style='width:100%;'></form>
 </td></tr></table>";
+
+function red_help($id){
+	echo "<button class='small red' onclick=\"openbox('".$id."','Помощь'); $('#show_razdel').click();\" style='color:white !important;' title='Открыть справочную информацию'><span class=\"icon small white\" data-icon=\"n\"></span> ПОМОЩЬ</button> ";
+}
 ?>

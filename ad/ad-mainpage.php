@@ -244,7 +244,7 @@ function create_main($type) {
 	<h2>Название:</h2>По-русски, можно с пробелами<br>
 	<input type=text name=title value='' size=40 class='w100 h40 f16' autofocus>
 	<h2>Содержание стиля:</h2>
-	<textarea name=text rows=30 cols=86 class='w100 h40 f16'></textarea><br>
+	<textarea id=text name=text rows=30 cols=86 class='w100 h700 f12'></textarea><br>
 	<input type=hidden name=id value=0>
 	<input type=hidden name=type value='1'>
 	<input type=hidden name=namo value=''>
@@ -252,6 +252,7 @@ function create_main($type) {
 	<input type=hidden name=shablon value=''>
 	<input type=hidden name=op value='".$admintip."_save'>
 	</td></tr></table>";
+	codemirror("css", "", "text");
 	########################################################
 	break;
 
@@ -656,7 +657,7 @@ function create_main($type) {
 #####################################################################################################################
 function edit_main($id) {
 	global $tip, $admintip, $prefix, $db, $red, $nastroi;
-	
+	echo "<div id=podrazdel></div>";
      $sql = "select type,name,title,text,useit,shablon,description,keywords from ".$prefix."_mainpage where id='".$id."'";
      // здесь учитываем и возможность редактирования удаленных и старых версий, поэтому нет «`tables`='pages'»
      $result = $db->sql_query($sql);
@@ -799,10 +800,10 @@ function edit_main($id) {
 	<h2>Название стиля <span class=f12>Видит только администратор</span><br>
 	<textarea class='big w100 h40 f16' name='title' rows='1' cols='10'>".$title."</textarea></h2>
 
-	<h2>Содержание стиля
-	<textarea class='f12 w100' name='text' rows='30' cols='50' style='background:#333333; color:white;'>".$text."</textarea></h2>
-
+	<span class=h2>Содержание стиля</span>
+	<textarea class='f12 h700 w100' id=text name='text' rows='30' cols='50'>".$text."</textarea>
 	<input type='hidden' name='namo' value='".$name."'><br>";
+	codemirror("css", "", "text");
 	} ############################### ЗАКРЫТИЕ СТИЛЬ
 
 	if ($type == "2") { ############################### ОТКРЫТИЕ РАЗДЕЛА
@@ -1209,74 +1210,27 @@ function edit_main($id) {
 		echo "</div>
 
 		<table width='100%' border='0'><tr valign='top'><td width='50%'>
-		<h2>Название раздела
-		<textarea class='big w100 h40 f16' name='title' rows='2' cols='10'>".$title."</textarea></h2>
+		<span class=h2>Название раздела</span><br>
+		<textarea class='big w100 h40 f16' name='title' rows='2' cols='10'>".$title."</textarea>
 		</td><td>
-		<h2>Адрес раздела на сайте
+		<span class=h2>Адрес раздела на сайте</span><br>
 		<textarea class='big w100 h40 f16' name='namo' rows='1' cols='10'>".$name."</textarea>
-		<span class='red f12'>НЕ изменять!</span> <span class=f12>Ссылка: <a href=/-".$name." target=_blank>/-".$name."</a></span></h2>
+		<span class='red f12'>НЕ изменять!</span> <span class=f12>Ссылка: <a href=/-".$name." target=_blank>/-".$name."</a></span>
 		</td></tr></table>
-
-		<b>Справка:</b> <a style='cursor:pointer;' class=punkt onclick=\"show('structura_razdela')\">Раскрыть описание структуры раздела</a><br>
-		<div id=structura_razdela style='display:none;'><p><img src=/images/structura_razdela.png align=right>На рисунке справа вы видите внешний вид любого раздела или его страниц (правее). Раздел состоит из заголовка (его названия) и списка страниц раздела. Эта информации создается на странице раздела автоматически, исходя из его названия и созданных страниц. Чтобы эта информация выводилась, достаточно наличия служебного слова [содержание] в «Содержании раздела». Если нужно чтобы какая-либо информация выводилась в разделе сверху или снизу от содержания (названия и списка страниц) — напишите эту информацию в «Содержании раздела» соответственно сверху или снизу от слова [содержание]. На рисунке расположение верха и низа показано зеленым цветом. <br><br>Иногда требуется вставить информацию посередине, между заголовком и списком страниц (желтый цвет) — для этого нужно использовать вместо служебного слова [содержание] (в первой обязательной строке, выделенной ниже) два других служебных слова — [название] и [страницы], между которых написать всё, что вы хотите поставить между Заголовком и Списком страниц.<br><br>
-		Если вы хотите, чтобы вместо Названия и Страниц в разделе отображалась только одна основная страница — начальная страница раздела, да еще и с произвольным содержанием — просто сотрите всё «Содержание раздела» и напишите то, что вам нужно.
-		<br><br>
-
-		Пример сложного содержания раздела:<br><div class=block2>
-		<strong>Наверху раздела [содержание] Внизу раздела</strong> [следующий]<br>
-		Наверху главной страницы раздела [содержание] Внизу главной страницы раздела [следующий] <br>
-		Наверху папок раздела [содержание] Внизу папок раздела [следующий] <br>
-		Наверху страницы раздела [содержание] Внизу страницы раздела
-		</div>
-		Не обязательно указывать всё это. Было приведены наиболее полные возможности системы. Чаще всего достаточно выделенной фразы (естественно с измененными неслужебными словами) или даже одного служебного слова [содержание].
-		<br><br>
-
-		Если открыть первую страницу раздела (с вышеприведенным содержанием), можно увидеть:<br><div class=block2>
-		Наверху главной страницы раздела <br>
-		Наверху раздела<br>
-		<b>Название раздела</b><br>
-		<li>Список страниц</li>
-		Внизу раздела <br>
-		Внизу главной страницы раздела</div><br>
-
-		Если открыть одну из папок раздела, можно увидеть:<br><div class=block2>
-		Наверху папок раздела<br>
-		Наверху раздела<br>
-		<b>Название раздела и открытой папки</b><br>
-		<li>Список страниц открытой папки</li>
-		Внизу раздела <br>
-		Внизу папок раздела</div><br>
-
-		Если открыть одну из страниц раздела, можно увидеть:<br><div class=block2>
-		Наверху страницы раздела<br>
-		Наверху раздела<br>
-		<b>Название раздела</b><br>
-		<b>Название открытой страницы</b><br>
-		Предисловие и Содержание страницы<br>
-		Комментарии страницы<br>
-		Внизу раздела <br>
-		Внизу страницы раздела</div><br>
-		</div><br>";
-
-		echo "<table width='100%' border='0'><tr valign='top'><td width='50%'>
-		<h2>Ключевые слова: <span class=f12><a onclick=\"show('help5')\" class=help>?</a></span><br><textarea name='keywordsX' class='big w100' rows='2' cols='10'>".$keywordsX."</textarea></h2>
+		<table width='100%' border='0'><tr valign='top'><td width='50%'>
+		<span class=h2>Ключевые слова:</span> <span class=f12><a onclick=\"show('help5')\" class=help>?</a></span><br><textarea name='keywordsX' class='big w100 h40' rows='2' cols='10'>".$keywordsX."</textarea>
 		<div id='help5' style='display:none;' class=f12>Это поле — для поисковых систем. Максимум 250 символов. Разделять запятой. Если пусто - используются ключевые словосочетания из <a href=/sys.php?op=Configure target=_blank>Настроек портала</a>).<br></div>
 		</td><td>
-		<h2>Описание: <span class=f12><a onclick=\"show('help6')\" class=help>?</a></span><br><textarea name='descriptionX' class='big w100' rows='2' cols='10'>".$descriptionX."</textarea></h2>
+		<span class=h2>Описание:</span> <span class=f12><a onclick=\"show('help6')\" class=help>?</a></span><br><textarea name='descriptionX' class='big w100 h40' rows='2' cols='10'>".$descriptionX."</textarea>
 		<div id='help6' style='display:none;' class=f12>Это поле — для поисковых систем. Максимум 250 символов. Если пусто - используется основное описание из <a href=/sys.php?op=Configure target=_blank>Настроек портала</a>.</div>
 		</td></tr></table>
 
-		<h2>Содержание раздела:</h2>";
+		<span class=h2>Содержание раздела:</span><br>";
 	  	redactor($red, $useit, 'useit', 'shablon'); // редактор: типа редактора, редактируемое поле
 
 		echo "<br><input type=hidden name=text value='".$text."'>";
-		$sql = "select name from ".$prefix."_mainpage where `tables`='pages' and id='".$id."'";
-		$result = $db->sql_query($sql);
-		while ($row = $db->sql_fetchrow($result)) {
-			$mod_name = $row['name'];
-		}
-		if ($mod_name != "index") {
-			echo "<span style='font-size:14pt;'>Шаблон Предисловия и Содержания страниц</span>
+		if ($id != 24) {
+			echo "<span class=h2>Шаблон Предисловия и Содержания страниц</span>
 			<br>Если у большинства страниц раздела особенный дизайн или какое-то первоначальное содержание для всех страниц раздела одинаково — его можно прописать ниже как Шаблон для страниц. Сначала идет шаблон для Предисловия страниц, затем — для Содержания, разделяются они служебным словом [следующий]. Если нужен только шаблон для Предисловия - слово [следующий] можно не писать, а если нужен только шаблон для Содержания - слово [следующий] надо написать перед ним.<br>";
 			redactor2($red, $shablon, 'shablon');
 		} else {

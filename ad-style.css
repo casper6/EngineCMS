@@ -225,6 +225,7 @@ img.bigicon {margin-bottom: 5px; width:128px; height:128px; border:0; float:left
 .h40 {height: 40px;}
 .h70 {height: 70px;}
 .h155 {height: 155px;}
+.h700 {height: 700px;}
 .f16 {font-size:16pt;}
 .ml20 {margin-left:20px;}
 .black {color:black;}
@@ -265,8 +266,8 @@ div.b8f4f2 {background: #b8f4f2; border:1px solid gray;}
 
 h1, h2, h3 {margin:0; padding:5px; font-weight: normal;}
 .h1 {font-size: 15pt; color: #717880; text-shadow: 1px 1px 0 #e0e2e7, 1px 1px 0 #e0e2e7;}
-.h2 {font-size: 14pt; color: #717880;}
-.h3 {font-size: 13pt; color: #717880;}
+.h2 {font-size: 14pt; color: #333;}
+.h3 {font-size: 13pt; color: #333;}
 h1 {font-size: 21px;color:#333;}
 h2 {font-size: 17px;color:#333;}
 h3 {font-size: 14px;color:#333;}
