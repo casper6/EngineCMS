@@ -44,20 +44,20 @@ $PHPTHUMB_CONFIG['cache_directory'] = dirname(__FILE__).'/cache/';              
 
 $PHPTHUMB_CONFIG['cache_disable_warning'] = true; // If [cache_directory] is non-existant or not writable, and [cache_disable_warning] is false, an error image will be generated warning to either set the cache directory or disable the warning (to avoid people not knowing about the cache)
 
-$PHPTHUMB_CONFIG['cache_directory_depth'] = 4; // If this larger than zero, cache structure will be broken into a broad directory structure based on cache filename. For example "cache_src012345..." will be stored in "/0/01/012/0123/cache_src012345..." when (cache_directory_depth = 4)
+$PHPTHUMB_CONFIG['cache_directory_depth'] = 2; // If this larger than zero, cache structure will be broken into a broad directory structure based on cache filename. For example "cache_src012345..." will be stored in "/0/01/012/0123/cache_src012345..." when (cache_directory_depth = 4)
 
 
 // * Cache culling: phpThumb can automatically limit the contents of the cache directory
 //   based on last-access date and/or number of files and/or total filesize.
 
 //$PHPTHUMB_CONFIG['cache_maxage'] = null;            // never delete cached thumbnails based on last-access time
-$PHPTHUMB_CONFIG['cache_maxage'] = 86400 * 30;        // delete cached thumbnails that haven't been accessed in more than [30 days] (value is maximum time since last access in seconds to avoid deletion)
+$PHPTHUMB_CONFIG['cache_maxage'] = 20160 * 30;        // delete cached thumbnails that haven't been accessed in more than [7 days] (value is maximum time since last access in seconds to avoid deletion)
 
 //$PHPTHUMB_CONFIG['cache_maxsize'] = null;           // never delete cached thumbnails based on byte size of cache directory
 $PHPTHUMB_CONFIG['cache_maxsize'] = 10 * 1024 * 1024; // delete least-recently-accessed cached thumbnails when more than [10MB] of cached files are present (value is maximum bytesize of all cached files)
 
 //$PHPTHUMB_CONFIG['cache_maxfiles'] = null;          // never delete cached thumbnails based on number of cached files
-$PHPTHUMB_CONFIG['cache_maxfiles'] = 500;             // delete least-recently-accessed cached thumbnails when more than [200] cached files are present (value is maximum number of cached files to keep)
+$PHPTHUMB_CONFIG['cache_maxfiles'] = 500;             // delete least-recently-accessed cached thumbnails when more than [500] cached files are present (value is maximum number of cached files to keep)
 
 
 // * Source image cache configuration

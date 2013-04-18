@@ -695,10 +695,10 @@ case "6": # Фотогалерея
 		if (isset($link[1])) $title = $link[1]; else $title = "";
 		if (isset($link[2])) $alt = $link[2]; else $alt = "";
 		if (isset($link[0])) $link = $link[0]; else $link = "";
-		if ($watermark != "") $water = "http://".$siteurl."/includes/phpThumb/phpThumb.php?src=".$link."&fltr[]=wmi|".$watermark."|BR|100";	else $water = $link;
+		if ($watermark != "") $water = "includes/phpThumb/phpThumb.php?src=".$link."&fltr[]=wmi|".$watermark."|BR|100";	else $water = $link;
 		// foto_gallery_type: 1 - миниатюры, 0 - «карусель»
-		if ($foto_gallery_type == 1) $textX .= "<span class='div_a_img_gallery'><a title='".$title."' href='".$water."' class='lightbox' rel='group'><img alt='".$title."' src='http://".$siteurl."/includes/phpThumb/phpThumb.php?src=".$link."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0' class='img_gallery'></a></span> ";
-		elseif ($foto_gallery_type == 0) $textX0 .= "<li><a href='".$water."'><img src='http://".$siteurl."/includes/phpThumb/phpThumb.php?src=".$link."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0' title='".$title."' alt='".$alt."' class='image".$i."'></a></li>";
+		if ($foto_gallery_type == 1) $textX .= "<span class='div_a_img_gallery'><a title='".$title."' href='".$water."' class='lightbox' rel='group'><img alt='".$title."' src='includes/phpThumb/phpThumb.php?src=".$link."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0' class='img_gallery'></a></span> ";
+		elseif ($foto_gallery_type == 0) $textX0 .= "<li><a href='".$water."'><img src='includes/phpThumb/phpThumb.php?src=".$link."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0' title='".$title."' alt='".$alt."' class='image".$i."'></a></li>";
 	}
 	if ($foto_gallery_type == 0) $textX .= "
     <div id='carusel-gallery' class='ad-gallery'>
