@@ -11,19 +11,19 @@ function delpage(id) {
   $('#redact').html('Страница удалена в Корзину.');
 }
 </script>
-<a target=_blank href='/sys.php?op=base_pages_edit_page&amp;pid=".$pid."'>Редактировать страницу</a><br><a target=_blank style='cursor:pointer; color:red;' onclick='delpage(".$pid.");'>Удалить страницу</a><br>"; 
+<a class=ad_button target=_blank href='/sys.php?op=base_pages_edit_page&amp;pid=".$pid."'><img class='ad_icon' src='/images/sys/edit.png'>Редактировать страницу <nobr>в редакторе</nobr></a><a class=ad_button target=_blank href='javascript:delpage(".$pid.");'><img class='ad_icon' src='/images/sys/trash_fill.png'>Удалить страницу <nobr>в Корзину</nobr></a>"; 
   elseif ( $pid == 0 and $module_name != "" ) {
     // выяснить id
     $sql55="SELECT `id` from ".$prefix."_mainpage where `tables`='pages' and `type`='2' and `name`='".$name."'";
     $result55 = $db->sql_query($sql55);
     $row55 = $db->sql_fetchrow($result55);
     $name_id = $row55['id'];
-    $red = "<a target=_blank href='/sys.php?op=mainpage&amp;id=$name_id'>Редактировать главную страницу раздела</a><br><a target=_blank href='sys.php?op=base_pages_add_page&amp;name=$name#1'>Добавить новую страницу в раздел</a><br>";
+    $red = "<a class=ad_button target=_blank href='/sys.php?op=mainpage&amp;id=".$name_id."'><img class='ad_icon' src='/images/sys/edit.png'>Редактировать <nobr>главную стр.</nobr> раздела</a><a class=ad_button target=_blank href='sys.php?op=base_pages_add_page&amp;name=".$name."#1'><img class='ad_icon' src='/images/sys/plus.png'>Добавить <nobr>новую страницу</nobr> в раздел</a>";
   }
-  elseif ( $module_name == "" ) $red = "<a target=_blank href='/sys.php?op=mainpage&amp;id=24'>Редактировать Главную страницу</a><br>";
+  elseif ( $module_name == "" ) $red = "<a class=ad_button target=_blank href='/sys.php?op=mainpage&amp;id=24'><img class='ad_icon' src='/images/sys/edit.png'>Редактировать Главную страницу</a><a class=ad_button target=_blank href='sys.php?op=base_pages_add_page#1'><img class='ad_icon' src='/images/sys/plus.png'>Добавить <nobr>новую страницу</nobr> на сайт</a>";
   else $red = "";
   $url = getenv("REQUEST_URI");
-  $txt = str_replace("</body>","<div id='redact_show' style='position:absolute; top:10px; floaf:right; right:20px; z-index:300; width:18px;'><a title='Показать настройки администратора' href=# style='cursor:pointer;' onclick=\"show('redact'); show('redact_show');\"><img class='icon2 i35' src='/images/1.gif'></a></div><div id='redact' style='background: white; color: black; position:absolute; top:5px; display:none; floaf:right; right:20px; z-index:300; width:290px;' class=show_block><div class=show_block_title><a title='Скрыть настройки администратора' href=# style='cursor:pointer;' onclick=\"show('redact_show'); show('redact');\"><img class='icon2 i33' src='/images/1.gif' align=right></a>Настройки администратора</div>".$red."<form method=post name=blocks_show action='".$url."' style='display:inline;'><input type='hidden' name=blocks value='1'><a href='javascript:document.blocks_show.submit();' title='Показать редактирование блоков на странице'>Показать редактирование блоков</a></form><br><a href='/sys.php?op=base_pages_re&amp;link=".$url."'>Обновить страницу</a></div></body>",$txt);
+  $txt = str_replace("</body>","<div id='redact_show' style='position:absolute; top:10px; floaf:right; right:20px; z-index:300; width:18px;'><a title='Показать настройки администратора' href=# style='cursor:pointer;' onclick=\"show('redact'); show('redact_show');\"><img class='icon2 i35' src='/images/1.gif'></a></div><div id='redact' style='background: white; color: black; position:absolute; top:5px; display:none; floaf:right; right:20px; z-index:300; width:560px;' class=show_block><div class=show_block_title><a title='Скрыть настройки администратора' href=# style='cursor:pointer;' onclick=\"show('redact_show'); show('redact');\"><img class='icon2 i33' src='/images/1.gif' align=right></a>Настройки администратора</div>".$red."<form method=post name=blocks_show action='".$url."' style='display:inline;'><input type='hidden' name=blocks value='1'><a class=ad_button href='javascript:document.blocks_show.submit();' title='Показать редактирование блоков на странице'><img class='ad_icon' src='/images/sys/new_window.png'>Показать редактирование блоков</a></form><a class=ad_button href='/sys.php?op=base_pages_re&amp;link=".$url."'><img class='ad_icon' src='/images/sys/reload_alt.png'>Обновить (перезагрузить) страницу</a><a class=ad_button target=_blank href='/red'><img class='ad_icon' src='/images/sys/cog.png'>Открыть редактирование сайта</a></div></body>",$txt);
   return $txt;
 }
 ///////////////////////////////////////////////////////////////

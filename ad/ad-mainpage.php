@@ -644,7 +644,7 @@ function create_main($type) {
 	break;
 	}
 	echo "<form method='POST' action='sys.php' style='display:inline;' enctype='multipart/form-data'>
-	<div style='background: #e2e5ea;'>
+	<div class=fon>
 	<div class='black_grad h40'>
 	<button type='button' style='float:right;margin:3px;' class='medium orange' onClick=\"show_animate('about')\">?</button>
 	<button type=submit id=new_razdel_button class='small green' style='float:left; margin:3px;'><span class='mr-2 icon white medium' data-icon='c'></span>Сохранить</button>
@@ -750,7 +750,7 @@ function edit_main($id) {
 	$spisok_var = implode(",",$spisok_var);
 	$spisok_names = implode(",",$spisok_names);
 
-	echo "<div style='background: #e2e5ea;'>
+	echo "<div class=fon>
 	<div class='black_grad' style='height:45px;'>
 	<button type=submit id=new_razdel_button class='medium green' style='float:left; margin:3px;'><span class='mr-2 icon white small' data-icon='c'></span>Сохранить</button>
 	<span class='h1' style='padding-top:10px;'>";

@@ -315,6 +315,9 @@ a.button {cursor:pointer; text-decoration: underline;}
 
 a.search_razdel_link, a.search_papka_link {color:gray !important;}
 a.search_page_link {font-size:20px !important;}
+
+.ad_button {width:100px; display:block; text-align:center; float:left; margin:5px;}
+.ad_icon {height:32px; display:block; margin: 0 auto;}
 ".$sha;
 
 $n = count($name);

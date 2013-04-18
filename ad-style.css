@@ -25,6 +25,8 @@ body {
     background: green;
 }
 
+.fon {background: url(/images/fon.png);}
+
 hr{clear:both;border-bottom:0;border-top:1px dotted #ccc;border-right:0;border-left:0;margin:30px 0;min-height: 0px;height:1px;}
 
 .align_center {	position: relative;	width: 99%;}
@@ -210,7 +212,7 @@ img.bigicon {margin-bottom: 5px; width:128px; height:128px; border:0; float:left
 
 #razdels { min-width:300px; padding-bottom:20px; overflow:auto;}
 .razdels {background:#e7e9ec;}
-.block_back {width:100%; margin-top:5px; padding:0; background: #e2e5ea;}
+.block_back {width:100%; margin-top:5px; padding:0; background: url('/images/fon.png');}
 .right3 {float:right; margin:3px;}
 .mr-2 {margin-right: -2px;}
 .add_oformlenie {width: 530px; height:500px; margin-bottom:20px; background: #dddddd;}

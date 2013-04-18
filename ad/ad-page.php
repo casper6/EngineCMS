@@ -110,7 +110,7 @@ function edit_base_pages_category($cid, $red=0) {
   $parent_id = $row['parent_id'];
 
   echo "<form action='sys.php' method='post'>
-  <div style='background: url(/images/fon.png);'>
+  <div class=fon>
   <div class='black_grad' style='height:45px;'>
   <button type=submit id=new_razdel_button class='medium green' onclick=\"show('sortirovka');\" style='float:left; margin:3px;'><span style='margin-right: -2px;' class='icon white small' data-icon='c'></span> Сохранить</button>
   <span class='h1' style='padding-top:10px;'>
@@ -254,7 +254,7 @@ function base_pages_add_page($name, $razdel, $red=0, $new=0, $pid=0) {
   if (!isset($shablon1)) $shablon1="";
   if (!isset($shablon2)) $shablon2="";
   echo "<form action='sys.php' method='post' enctype='multipart/form-data'>
-  <div style='background: url(/images/fon.png);'>
+  <div class=fon>
   <div class='black_grad' style='height:45px;'>
   <button type=submit onClick=\" if (document.getElementById('to_razdel').value=='') { alert('Выберите раздел для страницы (слева сверху)!'); return false; } else { submit(); } \" id=new_razdel_button class='medium green' onclick=\"show('sortirovka');\" style='float:left; margin:3px;'><span style='margin-right: -2px;' class='icon white small' data-icon='c'></span> Сохранить</button>
   <span class='h1' style='padding-top:10px;'>
@@ -754,7 +754,7 @@ function base_pages_edit_page($pid, $red=0) {
     echo "</div>";
 
     echo "<form action='sys.php' method='post' enctype='multipart/form-data'>
-    <div style='background: url(/images/fon.png);'>
+    <div class=fon>
   <div class='black_grad' style='height:45px;'>
   <button type=submit id=new_razdel_button class='medium green' onclick=\"show('sortirovka');\" style='float:left; margin:3px;'><span style='margin-right: -2px;' class='icon white small' data-icon='c'></span>Сохранить</button>
   <span class='h1' style='padding-top:10px;'>
