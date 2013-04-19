@@ -821,7 +821,10 @@ function redactor($type, $txt, $name, $name2="") {
     // Преобразование textarea (замена на русскую букву е, только для редактора)
     $txt = str_replace("textarea","tеxtarea",$txt); // ireplace
     $txt = str_replace("&","&amp;",$txt);
-    echo "<textarea id='".$name."' name='".$name."' style='width: 100%; height: 300px;'>".$txt."</textarea>";
+    echo "<textarea id='".$name."' name='".$name."'>".$txt."</textarea><br>
+    <a class=h3 href='javascript:$(\"#".$name."_preview\").toggle(\"slow\");'>Открыть предварительный просмотр</a><br>
+    <iframe class='preview' id='".$name."_preview' style='display:none;'></iframe><hr>";
+    codemirror("html", $name);
   } elseif ($type=="3") {
     echo "<script type='text/javascript'> 
     $(document).ready(function()
@@ -867,7 +870,10 @@ function redactor2($type, $txt, $name) {
     // Преобразование textarea (замена на русскую букву е, только для редактора)
     $txt = str_replace("textarea","tеxtarea",$txt); // ireplace
     $txt = str_replace("&","&amp;",$txt);
-    echo "<textarea id='".$name."' name='".$name."' rows=15 cols=40 style='width:100%;'>".$txt."</textarea>";
+    echo "<textarea id='".$name."' name='".$name."'>".$txt."</textarea><br>
+    <a class=h3 href='javascript:$(\"#".$name."_preview\").toggle(\"slow\");'>Открыть предварительный просмотр</a><br>
+    <iframe class='preview' id='".$name."_preview' style='display:none;'></iframe><hr>";
+    codemirror("html", $name);
   } elseif ($type=="2") {
       echo ""; // для редактора разметки
   } else {

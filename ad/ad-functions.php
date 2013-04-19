@@ -329,12 +329,39 @@ function add_file_upload_form() {
   <!--[if gte IE 8]><script src='includes/upload/js/cors/jquery.xdr-transport.js'></script><![endif]-->";
 }
 ##########################################################################################
-function codemirror($mode, $theme="", $id) {
-  echo '<link rel="stylesheet" href="includes/codemirror/lib/codemirror.css">';
-  if ($theme != "") echo '<link rel="stylesheet" href="includes/codemirror/lib/'.$theme.'.css">';
-  echo '<script src="includes/codemirror/lib/codemirror.js"></script>
-  <script src="includes/codemirror/mode/'.$mode.'/'.$mode.'.js"></script>
-  <script>var editor = CodeMirror.fromTextArea(document.getElementById("'.$id.'"), {});</script>';
+function codemirror($mode, $id) {
+  global $color_tema_html, $color_tema_css, $color_tema_js;
+  if ($mode == "html") $theme=$color_tema_html;
+  if ($mode == "css") $theme=$color_tema_css;
+  if ($mode == "js") $theme=$color_tema_js;
+  echo '<link rel="stylesheet" href="includes/codemirror/theme/'.$theme.'.css">';
+  echo '<script src="includes/codemirror/lib/codemirror.js"></script>';
+  if ($mode == "html") { 
+    echo "<script src='includes/codemirror/mode/xml/xml.js'></script>
+    <script src='includes/codemirror/mode/javascript/javascript.js'></script>
+    <script src='includes/codemirror/mode/css/css.js'></script>
+    <script src='includes/codemirror/mode/htmlmixed/htmlmixed.js'></script>
+    <script>
+      var delay".$id.";
+      var editor".$id." = CodeMirror.fromTextArea(document.getElementById('".$id."'), { viewportMargin: Infinity, styleActiveLine: true, tabMode: 'indent', mode: 'text/html', lineWrapping: true, theme: '".$theme."', autofocus: true });
+      editor".$id.".on('change', function() {
+        clearTimeout(delay".$id.");
+        delay".$id." = setTimeout(update".$id."_Preview, 300);
+      });
+      
+      function update".$id."_Preview() {
+        var ".$id."_previewFrame = document.getElementById('".$id."_preview');
+        var ".$id."_preview =  ".$id."_previewFrame.contentDocument ||  previewFrame.contentWindow.document;
+        ".$id."_preview.open();
+        ".$id."_preview.write(editor".$id.".getValue());
+        ".$id."_preview.close();
+      }
+      setTimeout(update".$id."_Preview, 300);
+    </script>";
+  }
+  if ($mode == "css") echo "<script src='includes/codemirror/mode/css/css.js'></script>
+    <script>var editor".$id." = CodeMirror.fromTextArea(document.getElementById('".$id."'), { viewportMargin: Infinity, mode: 'text/css', styleActiveLine: true, tabMode: 'indent', lineWrapping: true, theme: '".$theme."', autofocus: true });</script>";
+  echo "<link rel='stylesheet' href='includes/codemirror/lib/codemirror.css'>";
 }
 ##########################################################################################
 ?>

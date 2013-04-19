@@ -116,7 +116,6 @@ box-sizing: border-box;
 	
 	/* FOCUS STATES */
 	input[type="text"]:focus,
-	textarea:focus,
 	button:focus,
 	a.button:focus,
 	select:focus,
@@ -131,7 +130,6 @@ box-sizing: border-box;
 	
 	/* TRANSITION */
 	input[type="text"],
-	textarea,
 	button,
 	a.button,
 	a,
@@ -190,26 +188,6 @@ margin:0;
 line-height:100%;
 padding:3px;
 vertical-align: middle;
-}
-
-textarea{
-width:auto;
-height:200px;
-margin:0;
-border:1px solid #ccc;
-padding:5px;
-vertical-align: middle;
-font-family:inherit;
-font-size:0.9em;
--moz-border-radius:5px;
--webkit-border-radius:5px;
-border-radius:5px;
--moz-box-shadow:inset 0px 0px 6px #ccc;
--webkit-box-shadow:inset 0px 1px 6px #ccc;
-box-shadow:inset 0px 1px 6px #ccc;
--moz-box-sizing: border-box;
--webkit-box-sizing: border-box;
-box-sizing: border-box;
 }
 
 /*---------------------------------

@@ -127,7 +127,7 @@ if ($row['realadmin'] == 1) {
 		include ("ad-header.php");
 		$ok = intval($ok);
 		// Получаем настройки из mainfile
-		global $sitename, $startdate, $adminmail, $keywords, $description, $counter, $statlink, $postlink, $stopcopy, $registr, $pogoda, $flash, $sgatie, $ht_backup, $captcha_ok, $xnocashe, $jqueryui, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $comment_send, $company_name, $company_fullname, $company_address, $company_time, $company_tel, $company_sot, $company_fax, $company_email, $company_map, $company_people, $search_design, $tag_design, $add_fonts, $site_cash, $normalize, $project_logotip, $project_name, $geo, $kolkey, $add_clips, $sortable;
+		global $sitename, $startdate, $adminmail, $keywords, $description, $counter, $statlink, $postlink, $stopcopy, $registr, $pogoda, $flash, $sgatie, $ht_backup, $captcha_ok, $xnocashe, $jqueryui, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $comment_send, $company_name, $company_fullname, $company_address, $company_time, $company_tel, $company_sot, $company_fax, $company_email, $company_map, $company_people, $search_design, $tag_design, $add_fonts, $site_cash, $normalize, $project_logotip, $project_name, $geo, $kolkey, $add_clips, $sortable, $color_tema_html, $color_tema_css, $color_tema_js;
 		
 		$ad_fon_option = ""; // Выбор фоновок для админки
 		for ($i=1; $i < 28; $i++) { // всего 27 фоновок + 1 по-умолчанию в папке images/ad-fon
@@ -522,35 +522,61 @@ body {}
 	if ($site_cash == true) echo "<a class='button' target='_blank' href='?cash=del' style='margin-bottom:5px;'><span class=\"icon medium gray\" data-icon=\"T\"></span>Очистить кеш</a>";
 	else echo "<div class=\"notice warning\">Кеширование страниц отключено. Включить можно через config.php</div>";
 
-	echo "<table class=table_light>
+	echo "<table class='table_light'>
+
 	<tr valign=top><td style='min-width:250px;'>
 	Фоновая картинка Администрирования:</td><td class=small>
 	<select name=options[ad_fon] onchange=\"$(body).css('backgroundImage', 'url(images/adfon/' + $(this).val() + '.png)')\"><option value='0'>по-умолчанию</option>".$ad_fon_option."</select>
 	</td></tr>
+
 	<tr valign=top><td>
 	Создание резервной копии:</td><td class=small>
 	".select("options[show_reserv]", "0,1", "НЕТ,ДА", $show_reserv)."
 	<br>Каждый день, при посещении администратором главной страницы администрирования, создается резервная копия всего содержания сайта, кроме файлов (документы, архивы, фотографии), закачанных на сервер. Если это большой портал на скромном хостинге, создание копии можно отключить для экономии файлового места.
 	</td></tr>
+
 	<tr valign=top><td>
 	Отображать количества страниц в разделах (на вкладке Содержание):</td><td class=small>
 	".select("options[show_page]", "0,1", "НЕТ,ДА", $show_page)."
 	<br>Отключать его имеет смысл, если создано очень много страниц (более 20 тысяч) и хочется ускорить загрузку вкладки Содержание на 1-2 секунды.
 	</td></tr>
+
 	<tr valign=top><td>
 	Включить ускорение вывода блоков (на вкладке Оформление):</td><td class=small>
 	".select("options[uskorenie_blokov]", "0,1", "НЕТ,ДА", $uskorenie_blokov)."
 	<br>Отключать его имеет смысл, если создано много блоков и  страница с ними долго загружается. Ускорение убирает информацию об использовании блоков. 
 	</td></tr>
+
 	<tr valign=top><td>
 	Файл с резервной копией .htaccess:</td><td class=small>
 	".input("options[ht_backup]", $ht_backup)."
 	<br>Для автовосстановления в случае поражения «вирусом».
 	</td></tr>
 
-	<tr valign=top><td>Регион:</td><td>".input("options[geo]", $geo, "5", "number")." <a href='http://search.yaca.yandex.ru/geo.c2n' target='_blank'>Найти регион</a></td></tr>
+	<tr valign=top><td>
+	Регион:</td><td>
+	".input("options[geo]", $geo, "5", "number")." <a href='http://search.yaca.yandex.ru/geo.c2n' target='_blank'>Найти регион</a>
+	</td></tr>
 
-	<tr valign=top><td>Ключевых слов:</td><td class=small>".input("options[kolkey]", $kolkey, "2", "number")."</td></tr>
+	<tr valign=top><td>
+	Ключевых слов:</td><td class=small>
+	".input("options[kolkey]", $kolkey, "2", "number")."
+	</td></tr>
+
+	<tr valign=top><td>
+	Цветовая тема подсветки HTML-редактора:</td><td class=small>
+	".select("options[color_tema_html]", "solarized,xq-light,neat,eclipse,elegant,cobalt,ambiance,rubyblue,erlang-dark,lesser-dark,monokai,night,blackboard,twilight,vibrant-ink,xq-dark", "белая №1,белая №2,белая №3,белая №4,белая №5,темно-синяя,темная №1,темная №2,темная №3,темная №4,темная №5,черная №1,черная №2,черная №3,черная №4,черная №5", $color_tema_html)."
+	</td></tr>
+
+	<tr valign=top><td>
+	Цветовая тема подсветки CSS-редактора:</td><td class=small>
+	".select("options[color_tema_css]", "solarized,xq-light,neat,eclipse,elegant,cobalt,ambiance,rubyblue,erlang-dark,lesser-dark,monokai,night,blackboard,twilight,vibrant-ink,xq-dark", "белая №1,белая №2,белая №3,белая №4,белая №5,темно-синяя,темная №1,темная №2,темная №3,темная №4,темная №5,черная №1,черная №2,черная №3,черная №4,черная №5", $color_tema_css)."
+	</td></tr>
+
+	<tr valign=top><td>
+	Цветовая тема подсветки JS-редактора:</td><td class=small>
+	".select("options[color_tema_js]", "solarized,xq-light,neat,eclipse,elegant,cobalt,ambiance,rubyblue,erlang-dark,lesser-dark,monokai,night,blackboard,twilight,vibrant-ink,xq-dark", "белая №1,белая №2,белая №3,белая №4,белая №5,темно-синяя,темная №1,темная №2,темная №3,темная №4,темная №5,черная №1,черная №2,черная №3,черная №4,черная №5", $color_tema_js)."
+	</td></tr>
 
 	</table>
 	<div style='text-align:center;'><input type='submit' value=' Сохранить настройки ' style='width:300px; height:40px;'></div>
@@ -1030,7 +1056,7 @@ echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>
 		global $prefix, $db, $options;
 		$mini_blocks = $options['company_name']."|||||".$options['company_fullname']."|||||".$options['company_address']."|||||".$options['company_time']."|||||".$options['company_tel']."|||||".$options['company_sot']."|||||".$options['company_fax']."|||||".$options['company_email']."|||||".$options['company_map']."|||||".$options['company_people'];
 
-		$advanced = $options['jqueryui']."|".$options['show_comments']."|".$options['show_userposts']."|".$options['show_page']."|".$options['show_reserv']."|".$options['uskorenie_blokov']."|".$options['kickstart']."|".$options['show_page_links']."|".$options['ad_fon']."|".$options['search_design']."|".$options['tag_design']."|".$options['add_fonts']."|".$options['normalize']."|".$options['project_logotip']."|".$options['project_name']."|".$options['geo']."|".$options['kolkey']."|".$options['add_clips']."|".$options['sortable'];
+		$advanced = $options['jqueryui']."|".$options['show_comments']."|".$options['show_userposts']."|".$options['show_page']."|".$options['show_reserv']."|".$options['uskorenie_blokov']."|".$options['kickstart']."|".$options['show_page_links']."|".$options['ad_fon']."|".$options['search_design']."|".$options['tag_design']."|".$options['add_fonts']."|".$options['normalize']."|".$options['project_logotip']."|".$options['project_name']."|".$options['geo']."|".$options['kolkey']."|".$options['add_clips']."|".$options['sortable']."|".$options['color_tema_html']."|".$options['color_tema_css']."|".$options['color_tema_js'];
 		// sitename	startdate	adminmail	keywords	description	counter	statlink	postlink	registr	pogoda	flash	sgatie	stopcopy	nocashe	adminmes	red	comment	captcha_ok	ht_backup
 		$db->sql_query("UPDATE `".$prefix."_config` SET 
 			`sitename` = '".mysql_real_escape_string($options['sitename'])."',

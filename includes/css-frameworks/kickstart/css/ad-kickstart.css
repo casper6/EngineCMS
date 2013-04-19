@@ -107,12 +107,13 @@ border-radius:3px;
 color:#518BAB;
 }
 
+/*
 pre{
-white-space: pre-wrap;       /* css-3 */
-white-space: -moz-pre-wrap !important;  /* Mozilla, since 1999 */
-white-space: -pre-wrap;      /* Opera 4-6 */
-white-space: -o-pre-wrap;    /* Opera 7 */
-word-wrap: break-word;       /* Internet Explorer 5.5+ */
+white-space: pre-wrap;       
+white-space: -moz-pre-wrap !important; 
+white-space: -pre-wrap;     
+white-space: -o-pre-wrap;    
+word-wrap: break-word;      
 margin: 0px 0px 0px 0px;
 padding:5px 5px 3px 5px;
 background:#fff;
@@ -126,7 +127,7 @@ border:1px solid #ddd;
 font-family: Consolas, "Andale Mono WT", "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", Monaco, "Courier New", Courier, monospace;
 font-size:0.9em;
 }
-
+*/
 /*---------------------------------
 	TABLES
 -----------------------------------*/

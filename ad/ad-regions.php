@@ -18,7 +18,7 @@ function regions_main() {
 	include("includes/regions/config.php");
 	$stru = array('','область-район-город','область-город','область-район','район-город','только области','только районы','только города');
 	echo '<div style="background: #e2e5ea;"><div class="black_grad" style="height:45px;">
-	<span class="h1">Регионы использует структуру <b>'.$stru[$stryktyra].'</b></span></div>
+	<span class="h1">Регионы используют структуру <b>'.$stru[$stryktyra].'</b></span></div>
 	<center><div class=block style="width:800px; text-align:left;">
 	<p>Выбор регионов:';
 	include("includes/regions/meny.html");
@@ -83,9 +83,9 @@ function regions_addbase() {
 	if ($stryktyra == 1 || $stryktyra == 2 || $stryktyra == 4 || $stryktyra == 7) $gorod = 1; // необходимы города
 	$db->sql_query("DROP TABLE IF EXISTS `".$prefix."_regions`;");
 	$db->sql_query("CREATE TABLE `".$prefix."_regions` (`id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT, `region_id` smallint(7) unsigned NOT NULL, `raion_id` smallint(6) unsigned NOT NULL, `name` varchar(40) NOT NULL, PRIMARY KEY (`id`) ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 ;");
-	$regions = array('adigea','bashk','byryat','altai','dagestan','ing','kabbal','Kalmic','karchek','karelia','xmao','chao','yanao','komi','marij','mordovia','yakutia','so','tatarstan','tiva','ydmyrtia','xakas','chr','chyvas','altaik','krdk','pmk','stavropol','xabk','kryak','amyro','arxangel','astraxan','belgorod','bryansk','vladimir','volgograd','vologod','voronej','ivan','irkytsk','kalinin','kaluga','kamchat','kemerovo','kirov','kostroma','kyrgan','kyrsk','leningrad','lipet','magadan','mosko','myrm','nijgorod','nowgorod','novosib','omsk','orenbyrg','orlov','penza','permk','pskov','rostov','ryazan','samara','saratov','sverdlovsk','smolen','tambov','tver','tomsk','tyla','tumen','ylyanov','chelyabinsk','zabaikal','yaroslav','moskovg','sp','eao','abao','komipao','neneao','yorbao','caxalin');
-	foreach ($regions as $re) {
-		if ($_POST[$re] == '1') include("includes/regions/".$_POST[$re].".php");
+	$regions = array('1' => 'adigea','9' => 'bashk','64' => 'byryat','88' => 'altai','100' => 'dagestan','143' => 'ing','148' => 'kabbal','159' => 'Kalmic','174' => 'karchek','185' => 'karelia','1970' => 'xmao','1981' => 'chao','1990' => 'yanao','201' => 'komi','221' => 'marij','236' => 'mordovia','259' => 'yakutia','294' => 'so','304' => 'tatarstan','349' => 'tiva','367' => 'ydmyrtia','393' => 'xakas','402' => 'chr','419' => 'chyvas','441' => 'altaik','502' => 'krdk','592' => 'pmk','618' => 'stavropol','645' => 'xabk','542' => 'kryak','663' => 'amyro','684' => 'arxangel','705' => 'astraxan','717' => 'belgorod','739' => 'bryansk','767' => 'vladimir','784' => 'volgograd','818' => 'vologod','845' => 'voronej','878' => 'ivan','900' => 'irkytsk','928' => 'kalinin','942' => 'kaluga','967' => 'kamchat','980' => 'kemerovo','999' => 'kirov','1040' => 'kostroma','1065' => 'kyrgan','1090' => 'kyrsk','1119' => 'leningrad','1137' => 'lipet','1156' => 'magadan','1165' => 'mosko','1205' => 'myrm','1211' => 'nijgorod','1261' => 'nowgorod','1284' => 'novosib','1315' => 'omsk','1348' => 'orenbyrg','1384' => 'orlov','1409' => 'penza','1439' => 'permk','1474' => 'pskov','1500' => 'rostov','1544' => 'ryazan','1570' => 'samara','1598' => 'saratov','1655' => 'sverdlovsk','1688' => 'smolen','1714' => 'tambov','1738' => 'tver','1775' => 'tomsk','1792' => 'tyla','1816' => 'tumen','1839' => 'ylyanov','1861' => 'chelyabinsk','1889' => 'zabaikal','1919' => 'yaroslav','1937' => 'moskovg','1939' => 'sp','1942' => 'eao','1948' => 'abao','1953' => 'komipao','1961' => 'neneao','1962' => 'yorbao','1637' => 'caxalin');
+	foreach ($regions as $key => $re) {
+		if ($_POST[$re] != '0') include("includes/regions/".$key.".php");
 	}
 	include("ad-header.php");
 	echo '<div style="background: #e2e5ea;"><div class="black_grad" style="height:45px;"><span class="h1">Шаг Третий</span></div><center><a href="sys.php?op=regions_menu" class=h1>Закончить установку</a></center>';
@@ -102,9 +102,10 @@ function regions_menu() {
 		}			
 	}
 	if ($stryktyra == 4 || $stryktyra == 6) { // необходимы районы
-		$result = $db->sql_query("select id, name from ".$prefix."_regions where region_id != '0' and raion_id = '0'");
+		$result = $db->sql_query("select id, name from ".$prefix."_regions where region_id != '0' and raion_id = '0'") or die('db');
 		while ($row = $db->sql_fetchrow($result)) {
 			$text .= '<option value="'.$row['id'].'">'.$row['name'].'</option>';
+			echo $row['name']." - ";
 		}
 	}
 	if ($stryktyra == 7) { // необходимы города

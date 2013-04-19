@@ -222,7 +222,7 @@ img.bigicon {margin-bottom: 5px; width:128px; height:128px; border:0; float:left
 .pr10 {padding-right:10px;}
 .mi50ma80 {min-width:50%; max-width:80%;}
 .h15 {height:15px;}
-.h40 {height: 40px;}
+.h40 {height: 50px;}
 .h70 {height: 70px;}
 .h155 {height: 155px;}
 .h700 {height: 700px;}
@@ -271,14 +271,14 @@ h1, h2, h3 {margin:0; padding:5px; font-weight: normal;}
 h1 {font-size: 21px;color:#333;}
 h2 {font-size: 17px;color:#333;}
 h3 {font-size: 14px;color:#333;}
-#podrazdel {margin-top:5px;padding-left:5px; padding-right:5px; background:#ffffff;}
+#podrazdel, .preview {margin-top:5px; padding-left:5px; padding-right:5px; background:#ffffff;}
 
-textarea.big, textarea {
+textarea.big {
 font-family: Verdana, Arial, Helvetica, sans-serif;
 font-size: 1em;
 border:1px solid #bbbbbb;
 }
-textarea, select, input {
+select, input {
 font-family: Verdana, Arial, Helvetica, sans-serif;
 border:1px solid #bbbbbb;
 font-size: 14px;
@@ -468,36 +468,28 @@ input{ padding: 0; }
 }
 
 #header img {margin-top:117px;}
-#action
-{
+#action{
 	list-style-type: none;
 	margin:0;
 	padding:0;
 }
 #action li{line-height: 24px;}
-#body
-{
+#body{
 	height:500px;
 	overflow:auto;
 }
 * html #body{width: 443px;}
-#footer
-{
+#footer{
 	padding:2px 5px;
 	background:#E5E5E5;
 }
 #footer p{margin: 8px 0;}
-#footer div{}
-#divNewFolder{}
-#divFormFile{}
 
-#previewFooter
-{
+#previewFooter{
 	text-align:center;
 	padding-top: 4px;
 }
-#preview
-{
+#preview{
 	padding:2px 5px;
 	height:400px;
 	overflow:auto;
@@ -702,3 +694,7 @@ table.table_light tbody tr:hover th, table.table_light tbody tr.odd:hover th { b
 .icon.lightyellow{color:#f3f373;}
 
 input[type="search"] { -webkit-appearance: textfield; }
+
+iframe.preview {width: 100%; height: 700px;}
+.CodeMirror {border: 1px solid #aaa; height: auto !important;}
+.CodeMirror-scroll {overflow-y: hidden; overflow-x: auto;}
