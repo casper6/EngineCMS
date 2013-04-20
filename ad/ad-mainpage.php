@@ -334,8 +334,6 @@ function create_main($type) {
 			if ($key > 19 and $key < 24) $create .=  "<option value=".$key.$bd_show.">".$tit."</option>";
 			else $create .=  "<option value='".$key."'".$sel.">".$tit."</option>";
 		}
-	// ЗАмена http://blueimp.github.com/cdn/css/bootstrap-responsive.min.css
-	// Удалено 	<!--[if lt IE 7]><link rel='stylesheet' href='http://blueimp.github.com/cdn/css/bootstrap-ie6.min.css'><![endif]-->
 	$create .=  "</select>
 	<input type='hidden' name='useit'>
 	</td><td>
@@ -527,18 +525,20 @@ function create_main($type) {
 	<input type=hidden name=shablon value=''>
 	<h2>Выберите раздел:</h2><select name='useit' class='w100 h40 f16'><option value='0'>все разделы</option>".$modules."</select></td><td>
 	<h2>Выберите тип поля:</h2><select name='s_tip' class='w100 h40 f16' id=s_tip onchange=\"
-	if (document.getElementById('s_tip').value==0) { hide('spisok_5'); hide('spisok_2'); hide('spisok_3'); hide('spisok_4'); show('spisok_1'); }
-	if (document.getElementById('s_tip').value==1) { hide('spisok_5'); hide('spisok_3'); hide('spisok_4'); hide('spisok_1'); show('spisok_2'); }
-	if (document.getElementById('s_tip').value==2) { hide('spisok_5'); hide('spisok_4'); hide('spisok_1'); hide('spisok_2'); show('spisok_3'); }
-	if (document.getElementById('s_tip').value==4) { hide('spisok_3'); hide('spisok_4'); hide('spisok_1'); hide('spisok_2'); show('spisok_5'); }
-	if (document.getElementById('s_tip').value==3) { 
-		hide('spisok_5'); hide('spisok_1'); hide('spisok_2'); hide('spisok_3'); show('spisok_4');
-		$('#textarea').hide();
-	} else { $('#textarea').show(); }
+	if ($('#s_tip').val()==0) { $('#spisok_0').html( $('#spisok_1').html() ); }
+	if ($('#s_tip').val()==1) { $('#spisok_0').html( $('#spisok_2').html() ); }
+	if ($('#s_tip').val()==2) { $('#spisok_0').html( $('#spisok_3').html() ); }
+	if ($('#s_tip').val()==4) { $('#spisok_0').html( $('#spisok_5').html() ); }
+	if ($('#s_tip').val()==5) { $('#spisok_0').html( $('#spisok_6').html() ); }
+	if ($('#s_tip').val()==6) { $('#spisok_0').html( $('#spisok_7').html() ); $('#textarea').hide(); }
+	if ($('#s_tip').val()==3) { $('#spisok_0').html( $('#spisok_4').html() ); $('#textarea').hide(); }
+	if ($('#s_tip').val()!=3 && $('#s_tip').val()!=6) { $('#textarea').show(); }
 	\">
 	<option value='0'>список слов (словосочетания разделяются Enter'ом)</option>
 	<option value='1'>текст (можно написать шаблон)</option>
 	<option value='4'>строка (можно написать шаблон)</option>
+	<option value='5'>число (можно написать шаблон)</option>
+	<option value='6'>регион (можно написать шаблон)</option>
 	<option value='2' disabled>файл (указать какой, куда и что с ним делать)</option>
 	<option value='3'>период времени (две даты, актуально для Афиши)</option>
 	</select></td></tr>
@@ -1674,8 +1674,11 @@ function edit_main($id) {
 	if ($name == 10 or $name == 5 or $name == 7 or $name == 0) $red = 1; // дополнить список при необходимости
 
 	echo "<span class=h2>Содержание блока:</span><br>";
-	redactor($red, $text, 'text'); // редактор: типа редактора, редактируемое поле
-
+	if ($name != 31) redactor($red, $text, 'text'); // редактор: типа редактора, редактируемое поле
+	else {
+		echo "<textarea id=text name=text rows=30 cols=86 class='w100 h700 f12'>".$text."</textarea>";
+		codemirror("javascript", "text");
+	}
 	echo "<div class='dark_pole' onclick=\"show('nastroi')\"><img class='icon2 i26' src='/images/1.gif'>Настройки (для импорта/экспорта)</div>
 	<div id='nastroi' style='display: none;'>
 	<br><span class=f12><a target='_blank' href=sys.php?op=mainpage&amp;type=3&amp;id=".$id."&nastroi=1>Перейти к визуальной настройке</a> &rarr;</span><br>
@@ -1973,11 +1976,10 @@ if ($numrows = $db->sql_numrows($result) > 0) {
 	// после сохранения откроем настройку раздела или блока
 	//if ( ($nastroi == 1 and $type == 2) or ($id != 0 and $type == 2) ) Header("Location: sys.php"); 
 	if ($type == 2) Header("Location: sys.php?op=mainpage&id=".$row2['id']."&nastroi=1");
-	elseif ($type == 3) Header("Location: sys.php?op=mainpage&id=".$row2['id']."&type=3&nastroi=1");
 	else Header("Location: sys.php?op=mainpage&type=element");
 	die;
 }
-#####################################################################################################################
+##################################################################################################
 function mainpage_razdel_color($id, $color) {
 	global $tip, $admintip, $prefix, $db;
 	$db->sql_query("UPDATE ".$prefix."_mainpage SET `color`='".$color."' WHERE `tables`='pages' and `id`='".$id."';");
@@ -2062,14 +2064,14 @@ function mainpage_create_block($title, $name, $text, $modul, $useit, $design) {
 	$db->sql_query("INSERT INTO ".$prefix."_mainpage VALUES (NULL, '3', '".$name."', '".$title."', '".$text."', '".$useit."', '".$shablon."', '0', 'pages', '0', '', '')") or die("Не удалось создать блок. INSERT INTO ".$prefix."_mainpage VALUES (NULL, '3', '".$name."', '".$title."', '".$text."', '', '".$useit."', '".$shablon."', '0', 'pages', '0', '', '') ");
 	// узнаем id
 	$row = $db->sql_fetchrow($db->sql_query("select `id` from ".$prefix."_mainpage where `tables`='pages' and `type`='3' and `name`='".$name."' and `title`='".$title."' and `text`='".$text."' and `useit`='".$useit."' limit 1"));
-	Header("Location: sys.php?op=".$admintip."&type=3&id=".$row['id']."&nastroi=1");
+	if ($name != 31) Header("Location: sys.php?op=".$admintip."&type=3&id=".$row['id']."&nastroi=1");
+	else Header("Location: sys.php?op=mainpage&type=element");
 }
-#####################################################################################################################
+#################################################################################################
 function spisok_help() { // проверить вызов
-	return "<div id=spisok_1><b>«список слов»:</b> просто указываем список возможных вариантов выбора, разделяем их через Enter.<br></div>
-
+	return "<div id=spisok_0><b>«список слов»:</b> просто указываем список возможных вариантов выбора, разделяем их через Enter.<br></div>
+	<div id=spisok_1 style='display:none;'><b>«список слов»:</b> просто указываем список возможных вариантов выбора, разделяем их через Enter.<br></div>
 	<div id=spisok_2 style='display:none;'><b>«текст»:</b> можно написать заготовку-шаблон, которая будет использоваться по-умолчанию как значение данного поля.<br></div>
-
 	<div id=spisok_3 style='display:none;'><b>«файл»:</b><br>
 	прописывать параметры, разделяя их знаком &, указывать значения параметров через знак =, всё без пробелов!<br>
 	например: <b>fil=pic&papka=/img=verh&align=left&resizepic=x&file=&picsize=600&minipic=1&resizeminipic=x&minipicsize=100</b><br>Очередность параметров значения не имеет.<br>
@@ -2087,10 +2089,10 @@ function spisok_help() { // проверить вызов
 	x - по-горизонтали, y - по-вертикали, big - по большей стороне</td></tr>
 	<tr><td><strong>minipicsize=</strong></td><td>число в пикселях, указывается размер, к которому приводится миниатюра изображение, если оно больше этого размера</td></tr>
 	</table></div>
-
 	<div id=spisok_4 style='display:none;'><b>«период времени»:</b> для него пока что нет никаких настроек и шаблон ему не нужен.</div>
-
-	<div id=spisok_5 style='display:none;'><b>«строка»:</b> можно написать заготовку-шаблон, которая будет использоваться по-умолчанию как значение данного поля.<br></div>";
+	<div id=spisok_5 style='display:none;'><b>«строка»:</b> можно написать заготовку-шаблон, которая будет использоваться по-умолчанию как значение данного поля.<br></div>
+	<div id=spisok_6 style='display:none;'><b>«число»:</b> можно написать заготовку-шаблон, которая будет использоваться по-умолчанию как значение данного поля.<br></div>
+	<div id=spisok_7 style='display:none;'><b>«регион»:</b> для него пока что нет никаких настроек и шаблон ему не нужен.</div>";
 }
 #####################################################################################################################
 function block_help() { // проверить вызов

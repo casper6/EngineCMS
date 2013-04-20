@@ -150,7 +150,7 @@ function start_txt_and_csv() {
 			while ($row = $db->sql_fetchrow($res)) {
 				$type = $row['text'];
 				$pole = $row['name'];
-				if ($type{12} == 1 || $type{12} == 4 ) echo '<option value="'.$pole.'">'.$pole.'</option>'; // Нужные нам поля, текст и строка
+				if ($type{12} == 1 || $type{12} == 4 || $type{12} == 5 ) echo '<option value="'.$pole.'">'.$pole.'</option>'; // Нужные нам поля, текст и строка
 			}
 		}
 		echo '</td></tr></table><input type="submit" name="submit" value="Продолжить"></form>';

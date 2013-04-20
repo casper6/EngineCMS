@@ -489,6 +489,45 @@ function base_pages_add_page($name, $razdel, $red=0, $new=0, $pid=0) {
   echo "</select>";
   break;
   ///////////////////
+  case "5": // число
+    echo "<br><br><b>$s_title:</b><br><INPUT name='add[$s_name]' type=text value='".$shablon."' style='width:98%;'>";
+  break;
+    case "6": // регион
+    echo '<br><br><b>'.$s_title.':</b><br><script type="text/javascript" src="includes/regions/jquery.livequery.js"></script>';
+echo "<script type='text/javascript'>
+$(document).ready(function() {
+	//$('#loader').hide();
+	$('.parent').livequery('change', function() {
+		$(this).nextAll('.parent').remove();
+		$(this).nextAll('label').remove();
+		$('#show_sub_categories').append('<img src=\"includes/regions/loader.gif\" style=\"float:left; margin-top:7px;\" id=\"loader\" alt=\"\" />');
+		$.post(\"get_chid_categories.php\", {
+			parent_id: $(this).val(),
+		}, function(response){
+			setTimeout(\"finishAjax('show_sub_categories', '\"+escape(response)+\"')\", 400);
+		});
+		return false;
+	});
+});
+function finishAjax(id, response){
+  $('#loader').remove();
+  $('#'+id).append(unescape(response));
+} 
+</script>
+<style>
+.parent{ padding:3px; width:150px; float:left; margin-right:12px;}
+.both{ float:left; margin:0 0px 0 0; padding:0px;}
+</style>
+<br clear='all' /><br clear='all' />
+	<div id='show_sub_categories'>
+		<select name='add[$s_name]' class='parent'>
+		<option value='' selected='selected'>Выберите область</option>";
+		include("includes/regions/list.html");
+	echo '</select>
+	</div>
+	<br clear="all" /><br clear="all" />';
+  break;
+  ///////////////////
   }
   }
   echo "<input type=hidden name=op value=".$admintip."_save_page>";
@@ -568,6 +607,18 @@ function base_pages_save_page($cid, $module, $title, $open_text, $main_text, $fo
     $type=0; $shablon=""; 
     parse_str($options); // раскладка всех настроек списка
   switch($type) {
+  ////////////////////////////////////////////////////////////////////////////
+  case "5": // число
+  if( preg_match("/[^(0-9)|(\.)]/", $elements)) die ('Ошибка: Не удалось сохранить список. 5 - Возможен ввод только числа с плавающей точкой'); 
+  else  $db->sql_query("INSERT INTO ".$prefix."_spiski (id, type, name, opis, sort, pages, parent) VALUES (NULL, '".$name."', '".$elements."', '', '0', ' $page_id ', '0');") or die ('Ошибка: Не удалось сохранить список. 5'); 
+  break;
+  ////////////////////////////////////////////////////////////////////////////
+  case "6": // регион
+  $id_regions = $_POST['id_regions'];
+  if (!isset($id_regions)) $id_regions = $elements;
+  $region = $db->sql_fetchrow($db->sql_query("select name from ".$prefix."_regions where id='".$id_regions."'"));
+  $db->sql_query("INSERT INTO ".$prefix."_spiski (id, type, name, opis, sort, pages, parent) VALUES (NULL, '".$name."', '".$region['name']."', '', '0', ' $page_id ', '0');") or die ('Ошибка: Не удалось сохранить список. 6'); 
+  break;
   ////////////////////////////////////////////////////////////////////////////
   case "4": // строка
           // Проверяем наличие подобного текста
@@ -935,6 +986,55 @@ function base_pages_edit_page($pid, $red=0) {
     $type=0; $shablon=""; 
     parse_str($options); // раскладка всех настроек списка
     switch($type) {
+	case "6": // регион
+        // Получаем значениЕ поля
+        $sql2 = "SELECT name FROM ".$prefix."_spiski WHERE type='".$s_name."' AND pages like '% ".$page_id." %'";
+        $result2 = $db->sql_query($sql2);
+        $row2 = $db->sql_fetchrow($result2);
+        $sp_name = $row2['name'];
+		$namereg = $db->sql_fetchrow($db->sql_query("SELECT id FROM ".$prefix."_regions WHERE name='".$sp_name."'"));
+       echo '<br><br><b>'.$s_title.':</b><br><script type="text/javascript" src="includes/regions/jquery.livequery.js"></script>';
+echo "<script type='text/javascript'>
+$(document).ready(function() {
+	//$('#loader').hide();
+	$('.parent').livequery('change', function() {
+		$(this).nextAll('.parent').remove();
+		$(this).nextAll('label').remove();
+		$('#show_sub_categories').append('<img src=\"includes/regions/loader.gif\" style=\"float:left; margin-top:7px;\" id=\"loader\" alt=\"\" />');
+		$.post(\"get_chid_categories.php\", {
+			parent_id: $(this).val(),
+		}, function(response){
+			setTimeout(\"finishAjax('show_sub_categories', '\"+escape(response)+\"')\", 400);
+		});
+		return false;
+	});
+});
+function finishAjax(id, response){
+  $('#loader').remove();
+  $('#'+id).append(unescape(response));
+} 
+</script>
+<style>
+.parent{ padding:3px; width:150px; float:left; margin-right:12px;}
+.both{ float:left; margin:0 0px 0 0; padding:0px;}
+</style>
+<br clear='all' /><br clear='all' />
+	<div id='show_sub_categories'>
+		<select name='add[$s_name]' class='parent'>
+		<option value='".$namereg['id']."' selected='selected'>".$sp_name."</option>";
+		include("includes/regions/list.html");
+	echo '</select>
+	</div>
+	<br clear="all" /><br clear="all" />';
+      break;
+	     case "5": // число
+        // Получаем значениЕ поля
+        $sql2 = "SELECT name FROM ".$prefix."_spiski WHERE type='".$s_name."' AND pages like '% ".$page_id." %'";
+        $result2 = $db->sql_query($sql2);
+        $row2 = $db->sql_fetchrow($result2);
+        $sp_name = $row2['name'];
+        echo "<br><br><b>$s_title:</b><br><INPUT type=text name='add[$s_name]' value='".$sp_name."'>";
+      break;
       case "4": // строка
         // Получаем значениЕ поля
         $sql2 = "SELECT name FROM ".$prefix."_spiski WHERE type='".$s_name."' AND pages like '% ".$page_id." %'";
@@ -1130,6 +1230,36 @@ function base_pages_edit_sv_page($pid, $module, $cid, $title, $open_text, $main_
     $type=0; $shablon=""; 
     parse_str($options); // раскладка всех настроек списка
     switch($type) {
+	  ////////////////////////////////////////////////////////////////////////////
+  case "6": // регион
+  $sql = "SELECT id, name, pages FROM ".$prefix."_spiski WHERE type='$name' and pages like '% $page_id %'";
+      $result = $db->sql_query($sql);
+      $row = $db->sql_fetchrow($result);
+      $nums = $db->sql_numrows($result);
+      $del_id = $row['id'];
+      $del_name = $row['name'];
+      $del_pages = $row['pages'];
+      if ($nums==0 or ($elements != $del_name and $del_name!="")) {
+	  $id_regions = $_POST['id_regions'];
+  if (!isset($id_regions)) $id_regions = $elements;
+   $region = $db->sql_fetchrow($db->sql_query("select name from ".$prefix."_regions where id='".$id_regions."'"));
+  $db->sql_query("INSERT INTO ".$prefix."_spiski (id, type, name, opis, sort, pages, parent) VALUES (NULL, '".$name."', '".$region['name']."', '', '0', ' $page_id ', '0');") or die ('Ошибка: Не удалось сохранить список. 6'); 
+}
+  break;
+	      case "5": // число
+      $sql = "SELECT id, name, pages FROM ".$prefix."_spiski WHERE type='$name' and pages like '% $page_id %'";
+      $result = $db->sql_query($sql);
+      $row = $db->sql_fetchrow($result);
+      $nums = $db->sql_numrows($result);
+      $del_id = $row['id'];
+      $del_name = $row['name'];
+      $del_pages = $row['pages'];
+      if ($nums==0 or ($elements != $del_name and $del_name!="")) { // Сравним число с вводимым
+       if( preg_match("/[^(0-9)|(\.)]/", $elements)) die ('Ошибка: Не удалось сохранить список. 5 - Возможен ввод только числа с плавающей точкой'); 
+  else  $db->sql_query("INSERT INTO ".$prefix."_spiski (id, type, name, opis, sort, pages, parent) VALUES (NULL, '".$name."', '".$elements."', '', '0', ' $page_id ', '0');") or die ('Ошибка: Не удалось сохранить список. 5'); 
+  } // END Сравним найденный текст с вводимым
+      // Если текст похож - ничего не делаем, т.к. информация не изменилась.
+      break;
       case "4": // строка
       // Найдем текст для данной страницы
       $sql = "SELECT id, name, pages FROM ".$prefix."_spiski WHERE type='$name' and pages like '% $page_id %'";

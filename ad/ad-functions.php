@@ -333,7 +333,7 @@ function codemirror($mode, $id) {
   global $color_tema_html, $color_tema_css, $color_tema_js;
   if ($mode == "html") $theme=$color_tema_html;
   if ($mode == "css") $theme=$color_tema_css;
-  if ($mode == "js") $theme=$color_tema_js;
+  if ($mode == "javascript") $theme=$color_tema_js;
   echo '<link rel="stylesheet" href="includes/codemirror/theme/'.$theme.'.css">';
   echo '<script src="includes/codemirror/lib/codemirror.js"></script>';
   if ($mode == "html") { 
@@ -343,7 +343,7 @@ function codemirror($mode, $id) {
     <script src='includes/codemirror/mode/htmlmixed/htmlmixed.js'></script>
     <script>
       var delay".$id.";
-      var editor".$id." = CodeMirror.fromTextArea(document.getElementById('".$id."'), { viewportMargin: Infinity, styleActiveLine: true, tabMode: 'indent', mode: 'text/html', lineWrapping: true, theme: '".$theme."', autofocus: true });
+      var editor".$id." = CodeMirror.fromTextArea(document.getElementById('".$id."'), { viewportMargin: Infinity, styleActiveLine: true, tabMode: 'indent', mode: 'text/".$mode."', lineWrapping: true, theme: '".$theme."', autofocus: true });
       editor".$id.".on('change', function() {
         clearTimeout(delay".$id.");
         delay".$id." = setTimeout(update".$id."_Preview, 300);
@@ -359,8 +359,8 @@ function codemirror($mode, $id) {
       setTimeout(update".$id."_Preview, 300);
     </script>";
   }
-  if ($mode == "css") echo "<script src='includes/codemirror/mode/css/css.js'></script>
-    <script>var editor".$id." = CodeMirror.fromTextArea(document.getElementById('".$id."'), { viewportMargin: Infinity, mode: 'text/css', styleActiveLine: true, tabMode: 'indent', lineWrapping: true, theme: '".$theme."', autofocus: true });</script>";
+  if ($mode == "css" || $mode == "javascript") echo "<script src='includes/codemirror/mode/".$mode."/".$mode.".js'></script>
+    <script>var editor".$id." = CodeMirror.fromTextArea(document.getElementById('".$id."'), { viewportMargin: Infinity, mode: 'text/".$mode."', styleActiveLine: true, tabMode: 'indent', lineWrapping: true, theme: '".$theme."', autofocus: true });</script>";
   echo "<link rel='stylesheet' href='includes/codemirror/lib/codemirror.css'>";
 }
 ##########################################################################################

@@ -6,6 +6,7 @@
 
 if (isset($_GET['add'])) $add = $_GET['add']; else $add = "";
 $name = explode("-", $_GET['files']);
+$type = $_GET['type'];
 
 // Добавочный шаблон стиля
 if ($add != "") {
@@ -13,21 +14,6 @@ if ($add != "") {
   require_once("shablon_style.php");
   $sha = shablon_style_show ($add[0], $add[1]);
 } else $sha = "";
-
-
-// ДОБАВИТЬ — word-wrap: break-word; - перенос длинных слов в Дивах
-/*
-div {
-    white-space: pre; 
-    white-space: pre-wrap;
-    white-space: pre-line;
-    white-space: -moz-pre-wrap !important;
-    white-space: -hp-pre-wrap;
-    white-space: -o-pre-wrap;
-    white-space: -pre-wrap;
-    word-wrap: break-word;
-}
-*/
 
 // это будет добавлено к любому CSS
 $contents = "
@@ -51,26 +37,19 @@ $contents = "
 .editor_file_ico_xls 	{ background: url(ed/js/editor/i/fileicons/xls.png) no-repeat; }
 .editor_file_ico_zip 	{ background: url(ed/js/editor/i/fileicons/zip.png) no-repeat; }
 
-/*
-.cat_page_text IMG, .page_opentext IMG, .page_text IMG {
-	background:url('images/loading.gif') no-repeat center; 
-}
-*/
 .comm_form #avtory, .comm_form #maily, .comm_form #adres, .comm_form #tel, .comm_form #area {width: 99%;}
 
-del { color:#666; }
-
 input {
-transition: all 0.30s ease-in-out;
--webkit-transition: all 0.30s ease-in-out;
--moz-transition: all 0.30s ease-in-out;
-outline:none;
+  transition: all 0.30s ease-in-out;
+  -webkit-transition: all 0.30s ease-in-out;
+  -moz-transition: all 0.30s ease-in-out;
+  outline:none;
 }
 input:focus {
-border:#35a5e5 1px solid;
-box-shadow: 0 0 5px rgba(81, 203, 238, 1);
--webkit-box-shadow: 0 0 5px rgba(81, 203, 238, 1);
--moz-box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+  border:#35a5e5 1px solid;
+  box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+  -webkit-box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+  -moz-box-shadow: 0 0 5px rgba(81, 203, 238, 1);
 }
 
 .overcomm {max-height:150px; overflow:auto;}
@@ -78,28 +57,13 @@ box-shadow: 0 0 5px rgba(81, 203, 238, 1);
 .radius {
 	border: 1px solid #cccccc;
 	border-radius: 10px;
-	/* Gecko (Firefox 3.6+) */
 	-moz-border-radius: 10px;
-	/* WebKit (Safari/Chrome) */
 	-webkit-border-radius: 10px;
 }
-
-/* Выравнивание DIV */
-.align_center {	position: relative;	width: 100%;}
-.align_center:after {content: '';display: block;clear: both;}
-.align_center_to_left {position: relative;right: 50%;float: right;}
-.align_center_to_right {position: relative;z-index: 1;right: -50%;}
 
 .cat_page_comments {margin-right: 10px;}
 
 a img {border:0;}
-
-/* 
-A[target=\"_blank\"] { 
-	background: url(images/sys/028.png) 0 6px no-repeat;
-	padding-left: 15px;
-}
-*/
 
 .opros_line, .opros_line2 {height:2px; margin:0px; padding:0px;}
 
@@ -207,67 +171,15 @@ table.table_light tfoot td { border: 1px solid #38160C; padding-top:6px; }
 table.table_light tbody tr:hover { background: #e9f2fc; }
 table.table_light tbody tr:hover th, table.table_light tbody tr.odd:hover th { background: #e9f2fc; }
 
-#menu {
--webkit-padding-start: 0px;
-}
+#menu { -webkit-padding-start: 0px; }
 
-.img_left, img.justifyleft {float: left; margin-right: 10px; margin-bottom: 10px;}
-.img_right, img.justifyright {float: right; margin-left: 10px; margin-bottom: 10px;}
+.img_left {float: left; margin-right: 10px; margin-bottom: 10px;}
+.img_right {float: right; margin-left: 10px; margin-bottom: 10px;}
 
 .table_left {float: left; margin-right: 10px; width: 10%; border:0;}
 .table_right {float: right; margin-left: 10px; width: 20%; border:0;}
 table[align=left] {margin-right: 10px;}
 table[align=right] {margin-left: 10px;}
-
-
-.icon {margin-right: 5px; margin-left: 5px; width:16px !important; height:16px !important; border:0;}
-.icon2 {margin:0 !important; padding:0 !important; margin-right: 2px; width:16px !important; height:16px !important; border:0; cursor:pointer;}
-.i1 {background: url('/images/icons.png'); }
-.i2 {background: url('/images/icons.png') -16px; }
-.i3 {background: url('/images/icons.png') -32px; }
-.i4 {background: url('/images/icons.png') -48px; }
-.i5 {background: url('/images/icons.png') -64px; }
-.i6 {background: url('/images/icons.png') -80px; }
-.i7 {background: url('/images/icons.png') -96px; }
-.i8 {background: url('/images/icons.png') -112px; }
-.i9 {background: url('/images/icons.png') -128px; }
-.i10 {background: url('/images/icons.png') -144px; }
-.i11 {background: url('/images/icons.png') -160px; }
-.i12 {background: url('/images/icons.png') -176px; }
-.i13 {background: url('/images/icons.png') -192px; }
-.i14 {background: url('/images/icons.png') -208px; }
-.i15 {background: url('/images/icons.png') -224px; }
-.i16 {background: url('/images/icons.png') -240px; }
-.i17 {background: url('/images/icons.png') -256px; }
-.i18 {background: url('/images/icons.png') -272px; }
-.i19 {background: url('/images/icons.png') -288px; }
-.i20 {background: url('/images/icons.png') -304px; }
-.i21 {background: url('/images/icons.png') -320px; }
-.i22 {background: url('/images/icons.png') -336px; }
-.i23 {background: url('/images/icons.png') -352px; }
-.i24 {background: url('/images/icons.png') -368px; }
-.i25 {background: url('/images/icons.png') -384px; }
-.i26 {background: url('/images/icons.png') -400px; }
-.i27 {background: url('/images/icons.png') -416px; }
-.i28 {background: url('/images/icons.png') -432px; }
-.i29 {background: url('/images/icons.png') -448px; }
-.i30 {background: url('/images/icons.png') -464px; }
-.i31 {background: url('/images/icons.png') -480px; }
-.i32 {background: url('/images/icons.png') -496px; }
-.i33 {background: url('/images/icons.png') -512px; }
-.i34 {background: url('/images/icons.png') -528px; }
-.i35 {background: url('/images/icons.png') -544px; }
-.i36 {background: url('/images/icons.png') -560px; }
-.i37 {background: url('/images/icons.png') -576px; }
-.i38 {background: url('/images/icons.png') -592px; }
-.i39 {background: url('/images/icons.png') -608px; }
-.i40 {background: url('/images/icons.png') -624px; }
-.i41 {background: url('/images/icons.png') -640px; }
-.i42 {background: url('/images/icons.png') -656px; }
-.i43 {background: url('/images/icons.png') -672px; }
-.i44 {background: url('/images/icons.png') -688px; }
-.i45 {background: url('/images/icons.png') -704px; }
-.i46 {background: url('/images/icons.png') -720px; }
 
 /* =========================================== */
 /* Предустановки - перенос стилей из php */
@@ -324,20 +236,21 @@ $n = count($name);
 if ($n > 0) {
 	for ($x=0; $x < $n; $x++) {
 	$i = intval($name[$x]);
-     $sql = "select text from ".$prefix."_mainpage where id='".$i."'";
+     $sql = "select `text` from ".$prefix."_mainpage where `id`='".$i."' and (`type`='1' or (`type`='3' and `name`='31')) and `tables`='pages' and `color`='0'";
      $result = $db->sql_query($sql);
      $row = $db->sql_fetchrow($result);
      $contents .= "\n".$row['text']; 
 	}
 }
-             //   if ($type == 'javascript') {
-             //    for ($i = 1; $i < 10; $i++) {
-             //    $contents = str_replace("\n\n", "\n", $contents); //Удаляем переносы строк
-             //    $contents = str_replace("\r\r", "\r", $contents); //Удаляем переносы строк
-             //    $contents = str_replace("\r\n\r\n", "\r\n", $contents); //Удаляем переносы строк
-             //    }
-             //   }
-//                if ($type == 'css') {
+
+if ($type == 'js') {
+  for ($i = 1; $i < 10; $i++) {
+    $contents = str_replace("\n\n", "\n", $contents); //Удаляем переносы строк
+    $contents = str_replace("\r\r", "\r", $contents); //Удаляем переносы строк
+    $contents = str_replace("\r\n\r\n", "\r\n", $contents); //Удаляем переносы строк
+  }
+  header ("Content-Type: text/javascript");
+} elseif ($type == 'css') {
 $contents = str_replace("color:white","color:#ffffff",$contents); // Заменим основные цвета...
 $contents = str_replace("color:black","color:#000000",$contents);
 $contents = str_replace("color:red","color:#ff0000",$contents);
@@ -365,5 +278,6 @@ $contents = str_replace(", ", ",", $contents);
 $contents = str_replace(" ,", ",", $contents);
 $contents = str_replace("  ", " ", $contents);
 header ("Content-Type: text/css");
+}
 echo $contents;
 ?>	

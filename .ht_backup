@@ -88,3 +88,13 @@ RewriteRule ^-([а-яА-Яa-zA-Z0-9_-]*)_slovo_([a-zA-Z0-9%+-]*) header.php?name
 RewriteRule ^-([а-яА-Яa-zA-Z0-9_-]*) header.php?name=$1
 RewriteRule ^css_([0-9-]*)_add_([a-z0-9_-]*).css combine.php?type=css&files=$1&add=$2
 RewriteRule ^css_([0-9-]*).css combine.php?type=css&files=$1
+RewriteRule ^js_([0-9-]*).js combine.php?type=js&files=$1
+### Ассоциируем расширение .gz с gzip
+AddEncoding gzip .gz
+ 
+### Отдаём foo.bar.gz вместо файла foo.bar, если foo.bar.gz присутствует в той же директории,
+### что и foo.bar. Если браузер - Safari, отдаём foo.bar
+RewriteCond %{HTTP:Accept-encoding} gzip
+RewriteCond %{HTTP_USER_AGENT} !Safari
+RewriteCond %{REQUEST_FILENAME}.gz -f
+RewriteRule ^(.*)$ $1.gz [QSA,L]

@@ -308,6 +308,8 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 		$nameX = "-1";
 	}
 
+$js = '';
+
 if ($block_color != "1") {
 
 switch ($nameX) {
@@ -1261,6 +1263,20 @@ case "30": # Статистика раздела, выводит кол-во п�
 	$textX = $row8['counter'];
 	$block = str_replace("[$titleX]", $design_open.$textX.$design_close, $block);
 	$type = ""; break;
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+case "31": # Блок JS
+	if ($js == "") {
+		$contents = array();
+		$sql = "select `id` from ".$prefix."_mainpage where `type`='3' and `name`='31' and `tables`='pages' and `color`='0'";
+		$result = $db->sql_query($sql);
+		while($row = $db->sql_fetchrow($result)) {
+			$contents[] = $row['id'];
+		}
+		if (count($contents) > 0) $js = implode("-",$contents);
+		else $js = "no";
+	}
+	$type = ""; break;
+
 //case "8": 
 //$type = ""; break;
 
@@ -1674,6 +1690,8 @@ switch($kickstart) { // Выбор CSS-фреймворка
 }
 if ($kickstart != 1) echo "<script src='includes/jquery.lightbox.js'></script><script src='includes/jquery.ad-gallery.js'></script><script>$(document).ready(function(){ $('.lightbox').lightbox({ fitToScreen: true, imageClickClose: false }); var galleries = $('.ad-gallery').adGallery(); $('#switch-effect').change( function() { galleries[0].settings.effect = $(this).val(); return false; } ); });</script><link rel='stylesheet' href='includes/lightbox-carusel.css' media='screen' />"; // при включенном kickstart, lightbox не нужен, включается fancybox
 
+
+if ($js != "" or $js != "no") echo "<script src='js_".$js.".js'></script>";
 echo "<link rel='alternate' href='/rss/' title='".$project_name." RSS' />
 <link rel='stylesheet' href='".$stil.".css' />";
 
