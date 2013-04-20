@@ -3,7 +3,13 @@ if (stristr(htmlentities($_SERVER['PHP_SELF']), "ad-header.php")) {
 	Header("Location: index.php");
 	die();
 }
-//require_once("mainfile.php");
+
+// Определяем устройство - компьютер, планшет или телефон
+require_once 'includes/Mobile_Detect.php';
+$detect = new Mobile_Detect;
+global $deviceType;
+$deviceType = ($detect->isMobile() ? ($detect->isTablet() ? 'tablet' : 'phone') : 'computer');
+
 global $postlink, $name, $sitename, $op, $type, $red, $prefix, $db, $id, $nastroi, $kickstart;
 $color1=$color2=$color3=$color4="gray"; // Цвета 4х кнопок основных категорий админки (Содержание...)
 
@@ -135,29 +141,36 @@ $url2 = explode("?",$url2[0]);
 $url2 = $url2[0];
 echo "<table width=100%><tr><td align=center width=170>
 	<a title=\"Перейти в Содержание\" href=\"sys.php\" class='nothing'><img src=images/logo_admin.png></a>
-</td><td width=570>
+</td><td>
 	<div class='nothing noprint'>
 
 <div style='margin: 0 5px 5px 0;'>";
+
+//if($detect->isiOS())
+//if($detect->isAndroidOS())
+global $buttons;
+$buttons = array(' Содержание',' Оформление',' Настройки',' Статистика',' ПОМОЩЬ','');
+if ($deviceType != 'computer') $buttons = array('','','','','','');
+
 if ($op == "adminMain") red_help(8);
 if ($op == "mainpage" && $type==2) red_help(9);
-echo "<button class='small' target=_blank onclick='window.open(\"/\")' title='Перейти на сайт (откроется в новом окне)'><span class=\"icon small black\" data-icon=\"4\"></span> На сайт</button> ".$post.$kick."
+
+echo "<button class='small' target=_blank onclick='window.open(\"/\")' title='Перейти на сайт (откроется в новом окне)'><span class=\"icon small black\" data-icon=\"4\"></span> На сайт</button> ".$post.$kick." <form method=post name=search action='/--search' style='display:inline;' class='nothing'><input type='search' placeholder='Поиск по сайту' name=slovo class=w45></form>
 </div>
 
 <ul class=\"button-bar\">
-<li class='first ".$color1."'><a title='Содержание сайта: разделы, папки, страницы и комментарии' href='sys.php'><span class=\"icon gray small\" data-icon=\",\"></span> Содержание</a></li>
-<li class='".$color2."'><a title='Дизайн, стиль, блоки и прочие элементы оформления сайта' href='sys.php?op=mainpage&amp;type=element'><span class=\"icon gray small\" data-icon=\"Y\"></span> Оформление</a></li>
-<li class='".$color3."'><a title='Настройки сайта' href='sys.php?op=Configure'><span class=\"icon gray small\" data-icon=\"=\"></span> Настройки</a></li>
-<li class='".$color4."'><a title='Открыть статистику сайта' href='sys.php?op=mainpage&amp;type=stat'><span class=\"icon gray small\" data-icon=\"j\"></span> Статистика</a></li>
+<li class='first ".$color1."'><a title='Содержание сайта: разделы, папки, страницы и комментарии' href='sys.php'><span class=\"icon gray small\" data-icon=\",\"></span>".$buttons[0]."</a></li>
+<li class='".$color2."'><a title='Дизайн, стиль, блоки и прочие элементы оформления сайта' href='sys.php?op=mainpage&amp;type=element'><span class=\"icon gray small\" data-icon=\"Y\"></span>".$buttons[1]."</a></li>
+<li class='".$color3."'><a title='Настройки сайта' href='sys.php?op=Configure'><span class=\"icon gray small\" data-icon=\"=\"></span>".$buttons[2]."</a></li>
+<li class='".$color4."'><a title='Открыть статистику сайта' href='sys.php?op=mainpage&amp;type=stat'><span class=\"icon gray small\" data-icon=\"j\"></span>".$buttons[3]."</a></li>
 <li class='last'><a title='Выход из администрирования\n(мера безопасности)' href='sys.php?op=logout'><span class=\"icon red small\" data-icon=\"Q\"></span></a></li>
 </ul>
 
 	</div>
-</td><td>
-	<form method=post name=search action='/--search' style='display:inline;' class='nothing'><input type='search' placeholder='Поиск по сайту' name=slovo style='width:100%;'></form>
-</td></tr></table>";
+</td></tr></table><a name=1></a>";
 
 function red_help($id){
-	echo "<button class='small red' onclick=\"openbox('".$id."','Помощь'); $('#show_razdel').click();\" style='color:white !important;' title='Открыть справочную информацию'><span class=\"icon small white\" data-icon=\"n\"></span> ПОМОЩЬ</button> ";
+	global $buttons;
+	echo "<button class='small red' onclick=\"openbox('".$id."','Помощь'); $('#show_razdel').click();\" style='color:white !important;' title='Открыть справочную информацию'><span class=\"icon small white\" data-icon=\"n\"></span>".$buttons[4]."</button> ";
 }
 ?>

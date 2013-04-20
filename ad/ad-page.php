@@ -226,7 +226,6 @@ function delete_all_pages($del="del") {
 function base_pages_add_page($name, $razdel, $red=0, $new=0, $pid=0) {
   global $tip, $admintip, $prefix, $db, $red, $new, $pid, $redaktor, $toolbars, $geo, $kolkey;
   include("ad-header.php");
-  echo "<a name=1></a>";
   $id = intval ($id);
   if ( $pid > 0 ) {
     // узнаем имя страницы
@@ -760,7 +759,6 @@ function base_pages_save_page($cid, $module, $title, $open_text, $main_text, $fo
 }
 #######################################################################################
 function base_pages_edit_page($pid, $red=0) {
-  echo "<a name=1></a>";
   $page_id = $pid;
   global $tip, $module, $admintip, $red, $prefix, $db, $new, $title_razdel_and_bd;
     $sql = "SELECT * FROM ".$prefix."_pages WHERE pid='".$pid."' limit 1";

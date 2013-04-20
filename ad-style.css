@@ -1,7 +1,6 @@
-﻿/* Основной стиль админ-меню */
-
+﻿/* Основной стиль админки */
 @page {mso-page-orientation:landscape;}
-
+html { font-size: 100%; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
 body, td {
 /* text-shadow: none !important; */
 margin: 5px; 
@@ -128,7 +127,6 @@ img.bigicon {margin-bottom: 5px; width:128px; height:128px; border:0; float:left
 	column-rule: 1px solid #bbb;
 	column-gap: 2em;
 }
-.f12 {font-size:12px;}
 
 .radius {
 	padding:1px;
@@ -219,15 +217,21 @@ img.bigicon {margin-bottom: 5px; width:128px; height:128px; border:0; float:left
 .close_button {font-size:12pt; width:20px; height: 20px; color: white; text-align:center; float:right; margin:5px; margin-bottom:0; background: #bbbbbb;}
 .m5 {margin:5px;}
 .w100 {width:100%;}
+.w45 {width:45%;}
 .pr10 {padding-right:10px;}
+.pt10 {padding-top:10px;}
 .mi50ma80 {min-width:50%; max-width:80%;}
 .h15 {height:15px;}
 .h40 {height: 50px;}
 .h70 {height: 70px;}
 .h155 {height: 155px;}
 .h700 {height: 700px;}
+.f12 {font-size:12px;}
 .f16 {font-size:16pt;}
 .ml20 {margin-left:20px;}
+.ml50 {margin-left:50px;}
+.mt5 {margin-top: 5px;}
+.mb20 {margin-bottom: 20px;}
 .black {color:black;}
 
 div.b4f3b4 {background: #b4f3b4; border:1px solid gray;}
@@ -674,6 +678,7 @@ left:50%;
 
 .li_light li:hover { background: #e9f2fc; }
 /* Красивая таблица - стиль table_light */
+table.table_light tr {border-bottom: 1px solid #ddd;}
 table.table_light td { font-size:13px; border: 0; padding: 4px; color: black; }
 table.table_light thead th, table.table_light tfoot th { font-size:14px; border-bottom: 1px dotted #666; color: black;}
 table.table_light tbody td a { color: #0e5db6; }

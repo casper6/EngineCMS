@@ -140,26 +140,30 @@ function GraphicAdmin() {
 	}
 	$soderganie_menu = "<div style='margin-bottom:5px;'>
 	<button class='nothing small' id='hide_razdel' onclick=\"$('#show_razdel').show(); $('#razdels').hide(); $('#hide_razdel').hide(); $('#razdel_td').hide(); $('.dark_pole2sel').attr('class', 'dark_pole2');\" style='' title='Скрыть Разделы в кнопку'>&rarr;</button> <button class='small' id='show_razdel' style='display:none;' href=# onclick=\" $('#razdel_td').show(); $('#show_razdel').hide(); $('#razdels').show(); $('#hide_razdel').show();\"><span class=\"icon gray small\" data-icon=\",\"></span> Разделы</button> ";
+ 	
+ 	global $deviceType;
+ 	$buttons = array(' Новое',' Проверить: ',' Корзина',' Старое',' Блоки',' Отзывы:', ' Вставить дату');
+	if ($deviceType != 'computer') $buttons = array('','','','','','','');
 
 	if ($show_comments != 0) {
 		if ($show_comments == 2) $soderganie_menu .= "<a style='color: gray;' onclick=\"openbox('3','Комментарии');\">.</a>";
-		elseif ($show_comments == 1) $soderganie_menu .= "<button class='nothing medium' onclick=\"openbox('3','Комментарии'); $('#hide_razdel').click();\" title='Комментарии за сегодня/вчера/позавчера'><span class=\"icon gray small\" data-icon=\"'\"></span><nobr> Отзывы: ".$comm_segodnya."/".$comm_vchera."/".$comm_pozavchera."</nobr></button>";
+		elseif ($show_comments == 1) $soderganie_menu .= "<button class='nothing medium' onclick=\"openbox('3','Комментарии'); $('#hide_razdel').click();\" title='Комментарии за сегодня/вчера/позавчера'><span class=\"icon gray small\" data-icon=\"'\"></span><nobr>".$buttons[5]." ".$comm_segodnya."/".$comm_vchera."/".$comm_pozavchera."</nobr></button>";
 	}
 
-	$soderganie_menu .= " <button class='nothing small' onclick=\"openbox('5','Новое и отредактированное'); $('#hide_razdel').click();\"><span class=\"icon gray small\" data-icon=\"M\"></span>Новое</button>";
+	$soderganie_menu .= " <button class='nothing small' onclick=\"openbox('5','Новое и отредактированное'); $('#hide_razdel').click();\"><span class=\"icon gray small\" data-icon=\"M\"></span>".$buttons[0]."</button>";
 	if (!isset($num_add_pages)) $num_add_pages = 0;
 
 	if ($num_add_pages > 0 and $show_userposts != 0) {
 		if ($show_userposts == 2) $soderganie_menu .= "<a style='color: gray;' onclick=\"openbox('4','Добавленное посетителями');\">.</a>";
-		elseif ($show_userposts == 1) $soderganie_menu .= "<button class='nothing small' style='color: red;' onclick=\"openbox('4','Добавленное посетителями'); $('#hide_razdel').click();\"><span class=\"icon gray small\" data-icon=\"u\"></span><nobr> Проверить: <strong>".$num_add_pages."</strong></nobr></button>";
+		elseif ($show_userposts == 1) $soderganie_menu .= "<button class='nothing small' style='color: red;' onclick=\"openbox('4','Добавленное посетителями'); $('#hide_razdel').click();\"><span class=\"icon gray small\" data-icon=\"u\"></span><nobr>".$buttons[1]."<strong>".$num_add_pages."</strong></nobr></button>";
 	}
 	$del_page = $db->sql_numrows($db->sql_query("SELECT pid from ".$prefix."_".$pages." where `tables`='del' limit 0,1"));
-	if ($del_page > 0) $soderganie_menu .= "<button class='nothing small' onclick=\"openbox('1','Корзина'); $('#hide_razdel').click();\" title='Удаленные страницы'><span class=\"icon gray small\" data-icon=\"T\"></span>Корзина</button>";
+	if ($del_page > 0) $soderganie_menu .= "<button class='nothing small' onclick=\"openbox('1','Корзина'); $('#hide_razdel').click();\" title='Удаленные страницы'><span class=\"icon gray small\" data-icon=\"T\"></span>".$buttons[2]."</button>";
 
 	$backup_page = $db->sql_numrows($db->sql_query("SELECT pid from ".$prefix."_".$pages." where `tables`='backup' limit 0,1"));
-	if ($backup_page > 0) $soderganie_menu .= "<button class='nothing small' onclick=\"openbox('2','Резервные копии'); $('#hide_razdel').click();\" title='Резервные копии созданных ранее страниц'><span class=\"icon gray small\" data-icon=\"t\"></span> Старое</button>";
+	if ($backup_page > 0) $soderganie_menu .= "<button class='nothing small' onclick=\"openbox('2','Резервные копии'); $('#hide_razdel').click();\" title='Резервные копии созданных ранее страниц'><span class=\"icon gray small\" data-icon=\"t\"></span>".$buttons[3]."</button>";
 
-	$soderganie_menu .= " <button class='nothing small' onclick=\"oformlenie_show('блок','3','block','/sys.php?op=mainpage&name=block&type=3'); $('#hide_razdel').click();\" title='Резервные копии созданных ранее страниц'><span class=\"icon gray small\" data-icon=\"R\"></span> Блоки</button> ";
+	$soderganie_menu .= " <button class='nothing small' onclick=\"oformlenie_show('блок','3','block','/sys.php?op=mainpage&name=block&type=3'); $('#hide_razdel').click();\" title='Резервные копии созданных ранее страниц'><span class=\"icon gray small\" data-icon=\"R\"></span>".$buttons[4]."</button> ";
 
 	$soderganie_menu .= "<button id='new_razdel_button' title='Добавить страницу...' class='medium green nothing' onclick='location.href=\"/sys.php?op=base_pages_add_page#1\"'><span class=\"icon white small\" data-icon=\"+\"></span> страницу</button>
 	</div>";
@@ -270,7 +274,7 @@ function GraphicAdmin() {
 		}
 		$ver = mt_rand(10000, 99999); // получили случайное число
 
-		echo "<div id='mainrazdel".$id."' class='dark_pole2'><div style='float:right'>".$iconpage.$type_opisX."</div><a class='base_page' title='Нажмите для просмотра действий над этим разделом и его содержимым' onclick='razdel_show(\"\", ".$id.", \"".$nam."\", \"".$text."\");'><div id='mainrazdel".$id."'>
+		echo "<div id='mainrazdel".$id."' class='dark_pole2'><div style='float:right'>".$iconpage.$type_opisX."</div><a class='base_page' title='Нажмите для просмотра действий над этим разделом и его содержимым' href=#1 onclick='razdel_show(\"\", ".$id.", \"".$nam."\", \"".$text."\");'><div id='mainrazdel".$id."'>
 		<span class='icon ".$color." ".$icon_size."' data-icon=','></span><span class='plus20'>".$title."</span>
 		
 		</div></a></div>";
@@ -282,22 +286,16 @@ function GraphicAdmin() {
 	$row = $db->sql_fetchrow($db->sql_query("SELECT `adminmes` from ".$prefix."_config"));
 	$adminmes = $row['adminmes'];
 	global $op, $project_logotip, $project_name;
-	if ($op == "mes") $mes_ok = "<span style='color:green;'>Записки сохранены</span>"; else $mes_ok = "";
+	if ($op == "mes") $mes_ok = "<span class='green'>Записки сохранены</span>"; else $mes_ok = "Записки администратора";
 
 	echo "<div style='margin:50px;'>";
 	if (!empty($project_logotip)) echo "<img src='".$project_logotip."' width=300 class=center>";
 	if (!empty($project_name)) echo "<br><font style='font-size:44px; color:gray;'>".$project_name."</font>";
-	echo "</div>";
-
-	echo "<table align=center width=100%><tr><td>
-		<h2>Записки администратора</h2></td><td align=center>
-		<button onclick=\"document.getElementById('adminmes').value+='\\r'+getDateNow()+'  '\" title='Вставить дату и время (в конце текста)' class='pill small punkt'><span class=\"icon gray small\" data-icon=\"6\"></span>Вставить дату</button>
-		</td><td><form action='".$admin_file.".php?op=mes' method='post' name=form class=nothing>
-		</td><td>".$mes_ok."
-		</td></tr><tr><td colspan=3>
-		<textarea id=adminmes name=adminmes rows=3 cols=80 style='border:0; height:300px; width: 98%;' class=yellow_grad>".$adminmes."</textarea>
-	</td></tr></table>
-	</form>
+	echo "</div>
+	<form action='".$admin_file.".php?op=mes' method='post' name=form class='nothing'>
+		<button class='pill small punkt' type=submit><span class=\"icon gray small\" data-icon=\"c\"></span> Сохранить</button><span class='ml20 h3'>".$mes_ok."</span>
+		<button onclick=\"document.getElementById('adminmes').value+='\\r'+getDateNow()+'  '\" title='Вставить дату и время (в конце текста)' class='pill small punkt ml20'><span class=\"icon gray small\" data-icon=\"6\"></span>".$buttons[6]."</button>
+		<br><textarea id=adminmes name=adminmes rows=3 cols=80 style='border:0; height:300px; width: 98%;' class=yellow_grad>".$adminmes."</textarea></form>
 	</div>
 	</td></tr></table>";
 

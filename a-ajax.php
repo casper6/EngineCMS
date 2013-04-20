@@ -5,6 +5,13 @@ header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache"); // HTTP/1.0
 require_once("mainfile.php");
+
+// Определяем устройство - компьютер, планшет или телефон
+require_once 'includes/Mobile_Detect.php';
+$detect = new Mobile_Detect;
+global $deviceType;
+$deviceType = ($detect->isMobile() ? ($detect->isTablet() ? 'tablet' : 'phone') : 'computer');
+
 global $prefix, $db, $module_name, $admin, $now, $adminmail, $ip, $siteurl;
 if (is_admin($admin)) {
   if (isset($_REQUEST['func']))   $func = $_REQUEST['func']; else die(); // Выбор функции
@@ -630,24 +637,24 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
     $pageslistdel .= "<form method='post' action=sys.php>
       <TABLE width=100% class='table_light'><tr><td>
       <span class=h2>Название раздела:</span><br>
-      <input id=rus_name type=text name=title size=30 style='width:100%;' autofocus><br>
+      <input id=rus_name type=text name=title size=30 class=w100 autofocus><br>
       <a href='javascript:$(\"#engname\").toggle(\"slow\");'>Англ. название</a> будет создано транслитом. <i>Примеры: «О нас», «Наша продукция», «Каталог», «Контакты» и т.д.</i><br>
       </td></tr>
       <tr id=engname style='display:none;'><td>
       <span class=h3>Англ. название:</span><br>
-      <input type=text name=namo size=30 style='width:100%;'><br>
+      <input type=text name=namo size=30 class=w100><br>
       <a href=# onclick=\"window.open('http://translate.google.ru/#ru/en/' + $('#rus_name').val(),'Перевод',' width=800,height=400'); return false;\"><b>Перевести русское название</b></a>. <i>Используются англ. буквы и знак «_», без пробелов. Примеры: «about», «product», «catalog», «contact» и т.д.</i>
       </td></tr><tr><td>
-      <span class=h2>Использовать настройки:</span><br><select name=text>
+      <span class=h2>Использовать настройки:</span><br><select name=text class=w100>
       <option value='lim=15&amp;comments=0'>По-умолчанию (15 страниц на листе, комментарии выключены)</option>
       <option value='lim=10&amp;comments=1&amp;comments_add=1&amp;vetki=2&amp;comments_mail=1&amp;comments_adres=1'>вариант «Блог» (10 страниц на листе, комментарии включены)</option>
       <option value='lim=500&amp;comments=0'>вариант «Каталог» (500 страниц на листе, комментарии выключены)</option>
       ".$options."</select><br><i>Можно моментально настроить новый раздел, выбрав один из вариантов или ранее созданных разделов.</i>
       </td></tr><tr><td>
       <span class=h2>Выберите дизайн:</span><br>
-      <select name=useit style='width:100%;'>".$styles."</select><br><i>Дизайн раздела окружает содержимое раздела оформлением, он обязательно должен содержать в себе блок [содержание] (который выводит содержание раздела), а также у дизайна должен быть выбран стиль (css).</i>
+      <select name=useit class=w100>".$styles."</select><br><i>Дизайн раздела окружает содержимое раздела оформлением, он обязательно должен содержать в себе блок [содержание] (который выводит содержание раздела), а также у дизайна должен быть выбран стиль (css).</i>
       </td></tr></table>
-      <input type=\"submit\" value=\"Добавить раздел\" style='width:100%; height:55px; font-size: 20px; margin-top:20px;'>
+      <input type=\"submit\" value=\"Добавить раздел\" class='w100 h40 f16'>
       <input type=hidden name=type value='2'>
       <input type=hidden name=shablon>
       <input type=hidden name=id value=''>
@@ -1108,6 +1115,10 @@ if ($func == "papka") { // Папка
         if ($counter != 0) $keydes .= " <img class=\"icon2 i42\" src=/images/1.gif title='Посещения:'>".$counter." "; 
         if ($mainpage == 1) $keydes .= "<span class=green title='Страница отмечена для Главной страницы'>*</span> "; 
         if ($rss == 0) $keydes .= " <span class=rss title='Отключен RSS'>rss</span> "; 
+
+        global $deviceType;
+        if ($deviceType != 'computer') {$copy=""; $date=""; $keydes=""; }
+
         $ver = mt_rand(10000, 99999); // получили случайное число
         $color=""; $nowork = "";
         if ($active == 0) { $color=" class=noact"; $nowork="<img class=\"icon2 i43\" src=/images/1.gif class=left title='Страница отключена.\nНажав по ней и выбрав такой же значок, вы можете ее включить.'>";}
@@ -1199,6 +1210,10 @@ if ($func == "razdel") { // Папка
       if ($rss == 0) $keydes .= " <span class=rss title='Отключен RSS'>rss</span> ";  
       $ver = mt_rand(10000, 99999); // получили случайное число
       $color=""; $nowork = "";
+
+      global $deviceType;
+        if ($deviceType != 'computer') {$copy=""; $date=""; $keydes=""; }
+
       if ($active == 0) { $color=" class=noact"; $nowork="<img class=\"icon2 i43\" src=/images/1.gif class=left title='Страница отключена.\nНажав по ней и выбрав такой же значок, вы можете ее включить.'>";}
       if ($active == 2) { $color=" class=deact"; $nowork="<img class=\"icon2 i44\" src=/images/1.gif class=left title='Страница требует проверки.\nНажмите по ней и выберите один из редакторов. Проверьте страницу и поставьте галочку Включить.'>";}
       if ($active == 3) { $color=" class=deact"; $nowork="<img class=\"icon2 i44\" src=/images/1.gif class=left title='Страница требует проверки!!!\nНажмите по ней и выберите один из редакторов. Проверьте страницу и поставьте галочку Включить.'>";}
