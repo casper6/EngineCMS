@@ -212,6 +212,7 @@ img.bigicon {margin-bottom: 5px; width:128px; height:128px; border:0; float:left
 .razdels {background:#e7e9ec;}
 .block_back {width:100%; margin-top:5px; padding:0; background: url('/images/fon.png');}
 .right3 {float:right; margin:3px;}
+.left3 {float:left; margin:3px;}
 .mr-2 {margin-right: -2px;}
 .add_oformlenie {width: 530px; height:500px; margin-bottom:20px; background: #dddddd;}
 .close_button {font-size:12pt; width:20px; height: 20px; color: white; text-align:center; float:right; margin:5px; margin-bottom:0; background: #bbbbbb;}
@@ -227,12 +228,18 @@ img.bigicon {margin-bottom: 5px; width:128px; height:128px; border:0; float:left
 .h155 {height: 155px;}
 .h700 {height: 700px;}
 .f12 {font-size:12px;}
-.f16 {font-size:16pt;}
+.f16 {font-size:16pt !important;}
 .ml20 {margin-left:20px;}
 .ml50 {margin-left:50px;}
 .mt5 {margin-top: 5px;}
 .mb20 {margin-bottom: 20px;}
 .black {color:black;}
+.eee {background-color:#eeeeee;}
+.darkgreen {color:darkgreen;}
+.in_r {display:inline; float:right;}
+.in_b {display:inline-block;}
+.parent{ padding:3px; width:150px; float:left; margin-right:12px;}
+.both{ float:left; margin:0 0px 0 0; padding:0px;}
 
 div.b4f3b4 {background: #b4f3b4; border:1px solid gray;}
 .b4f3b4 {color: green;}
@@ -303,7 +310,7 @@ box-shadow: 0 0 5px rgba(81, 203, 238, 1);
 input[type=submit] {color:white; background:#666666; border-radius: 5px; -moz-border-radius: 5; -webkit-border-radius: 5;}
 input[type=submit]:hover {background: green; cursor:pointer;}
 
-b {font-size: 1em; font-weight:bold; } /* color: #715d9d; */
+b, .b {font-size: 1em; font-weight:bold; } /* color: #715d9d; */
 
 a {color:black; font-weight: normal;}
 a:hover {color:darkred;}
@@ -386,10 +393,10 @@ p {margin-top: 15px;margin-left: 5px;}
 .dark_pole3 {border:0; border-radius: 5px; -moz-border-radius: 5; -webkit-border-radius: 5; padding:2px; color:white !important; margin:2px; background:#8c8c8c; text-decoration:none; display: inline-block;}
 
 
-.dark_pole2 { text-shadow: 1px 1px 0 #ffffff, 1px 1px 0 #ffffff; border-top: 1px solid #edeef0; border-bottom: 1px solid #d8dadc; padding:5px;}
+.dark_pole2 { max-height:44px; overflow:hidden; text-shadow: 1px 1px 0 #ffffff, 1px 1px 0 #ffffff; border-top: 1px solid #edeef0; border-bottom: 1px solid #d8dadc; padding:5px;}
 .dark_pole:hover, .dark_pole2:hover, .dark_pole2:hover h2, .dark_pole3:hover {color:black !important; background:#eeeeee; cursor:pointer;}
 
-.dark_pole2sel span, .dark_pole2:hover span { color: white; }
+.dark_pole2sel span, .dark_pole2:hover span { color: white; max-height:44px; overflow:hidden; }
 
 .dark_pole2sel,
 .dark_pole2:hover { 
@@ -424,7 +431,7 @@ p {margin-top: 15px;margin-left: 5px;}
 .but_color5 {width:8px; height:8px; margin-left:1px; background: #78e4e2; display:inline; }
 ol, ul, li {margin:0; }
 
-.help, .help:visited {background: gray; color:white; padding:2px; margin-right: 5px; padding-left:6px; padding-right:6px; display:inline; border:0; border-radius: 15px; -moz-border-radius: 15; -webkit-border-radius: 15;}
+.help, .help:visited {background: gray; color:white; padding:2px; display:inline; border:0; border-radius: 15px; -moz-border-radius: 15; -webkit-border-radius: 15;}
 a.help:hover  {cursor:pointer; background: green; color:white; padding:2px; padding-left:6px; padding-right:6px;}
 
 /* File */
