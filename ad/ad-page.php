@@ -73,7 +73,6 @@ echo "><input type='button' value='Пересчитать' onclick='seo()'>
 <option value='1'>1</option>
 </select> 
 <br><b>Из них словосочетаний:</b> <select class='kolslov'>
-<option value='2' selected='selected'>По-умолчанию (2)</option>
 <option value='1'>1</option>
 <option value='2'>2</option>
 <option value='3'>3</option>
