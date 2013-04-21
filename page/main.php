@@ -20,7 +20,11 @@ global $strelka, $go, $cid, $pid, $all, $avtor, $to, $info, $num, $ip, $golos, $
 // настройки раздела из БД
 global $post, $comments, $datashow, $sort, $lim, $foto, $view, $search, $search_papka, $tema, $tema_name, $tema_title, $tema_opis, $menushow, $design; 
 
-$media=$folder=$col=$view=$golos=$golosrazdel=$post=$comments=$datashow=$favorites=$socialnetwork=$search=$search_papka=$put_in_blog=$base=$vetki=$citata=$media_comment=$show_add_post_on_first_page=$show_add_post_fileform=$shablon=$comment_shablon=$razdel_shablon=$page_shablon=$comments_all=$comments_num=$comments_desc=$golostype=$comments_main=$tags_type=$tema_zapret_comm=$pagekol=$designpages=$div_or_table=0;
+$media=$folder=$col=$view=$golos=$golosrazdel=$post=$comments=$datashow=$favorites=$socialnetwork=$search=$search_papka=$put_in_blog=$base=$vetki=$citata=$media_comment=$no_html_in_opentext=$no_html_in_text=$show_add_post_on_first_page=$show_add_post_fileform=$razdel_shablon=$page_shablon=$comments_all=$comments_num=$comments_mail=$comments_adres=$comments_tel=$comments_desc=$golostype=$pagenumbers=$comments_main=$tags_type=$tema_zapret_comm=$pagekol=$table_light=$designpages=$comments_add=$div_or_table=0;
+
+$menushow=$titleshow=$razdel_link=$peopleshow=$design=$tags=$podrobno=$podrazdel_active_show=$podrazdel_show=$tipograf=$limkol=$tags_show=$tema_zapret=1;
+$comment_shablon=2;
+
 $sort="date desc";
 $tema = "Открыть новую тему";
 $tema_name = "Ваше имя";
@@ -35,7 +39,7 @@ $comments_6 = "Ваш телефон:";
 $comments_7 = "Ваш вопрос или комментарий:";
 $comments_8 = "Раскрыть все комментарии";
 $tag_text_show = "Ключевые слова";
-$menushow=$titleshow=$razdel_link=$peopleshow=$design=$tags=$comments_add=$podrobno=$podrazdel_active_show=$podrazdel_show=$limkol=$tags_show=$tema_zapret=1;
+
 $where=$order=$calendar=$reclama="";
 $lim=20;
 
@@ -1131,7 +1135,12 @@ if ( $cid=="" or ($active != 1 and !is_admin($admin))) {
   $opentext = str_replace('-ссылка-', '', $opentext);
   $opentext = str_replace('<hr class="editor_cut">', '', $opentext);
   
-  
+  global $table_light;
+  if ($table_light == "1") {
+    $opentext = str_ireplace("<table","<table class=\"table_light\"", $opentext);
+    $bodytext = str_ireplace("<table","<table class=\"table_light\"", $bodytext);
+  }
+
 // Разделение содержания на блоки
 $raz[0] = "{{";   $raz[1] = "}}";
 preg_match_all("/\\".$raz[0]."[^\\".$raz[1]."]+\\".$raz[1]."/s", $bodytext, $matches);

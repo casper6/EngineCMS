@@ -201,8 +201,8 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 		$block_color = $block_colorYYY[$idX];
 
 	// обнулили все опции блоков от греха подальше
-	$media=$folder=$datashow=$design=$open_all=$catshow=$main=$daleeshow=$openshow=$number=$add=$size=$papki_numbers=$zagolovokin=$menu=$notitlelink=$noli=$html=$show_title=$random=$showlinks=$open_new_window=$show_new_pages=$reload_link_show=$reload_link_time=0;
-	$titleshow=$opros_type=$limkol=$pageshow=$only_question=$opros_result=$foto_gallery_type=1;
+	$titleshow=$media=$folder=$datashow=$tagdelete=$ipdatauser=$design=$open_all=$catshow=$main=$daleeshow=$openshow=$number=$add=$size=$papki_numbers=$zagolovokin=$menu=$notitlelink=$noli=$html=$show_title=$random=$showlinks=$open_new_window=$shablon=$show_new_pages=$reload_link_show=$reload_link_time=$re_menu=0;
+	$opros_type=$limkol=$pageshow=$only_question=$opros_result=$foto_gallery_type=1;
 	$addtitle="Добавить статью";
 	$dal="Далее...";
 	$first = "src=";
@@ -928,34 +928,46 @@ case "9": # Блок мини-фото - экстрактор предописа
 	$type = ""; break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 case "10": # Блок меню
-	global $siteurl, $url;
-	$url1 = $url;
-	if ($url1 == "") $url1 = "/";
-	$url1 = str_replace("http://".$siteurl,"",$url1);
-	$url1 = str_replace("http%3A%2F%2F".$siteurl."%2F","","/".$url1);
-	$url1 = str_replace("//","/",$url1);
-	$url2 = explode("_",$url1);
-	$url2 = $url2[0];
-	$tr = array("[b]"=>"<b>","[B]"=>"<b>","[/b]"=>"</b>","[/B]"=>"</b>","[i]"=>"<i>","[I]"=>"<i>","[/i]"=>"</i>","[/I]"=>"</i>","http://".$siteurl=>"");
-	$textX = strtr($textX,$tr);
-	$tr = array("[уровень открыть]"=>"<ul>","[уровень закрыть]"=>"</ul>","[элемент открыть]"=>"<li>","[элемент закрыть]"=>"</li>","[/url]"=>"</a>","[url="=>"<a class='li1menu_link' href=","[/URL]"=>"</a>","[URL="=>"<a class='li1menu_link' href=","]"=>">"
-	);
-	$textXX = strtr($textX,$tr);
-	if ($url != "/") {
-		$textXX = str_replace("' href=".$url1.">", " mainmenu_open' href=".$url1.">", $textXX);
-		$textXX = str_replace("<li><a class='li1menu_link mainmenu_open' href=".$url1.">", "<li class='li_mainmenu_open'><a class='li1menu_link mainmenu_open' href=".$url1.">", $textXX);
+	global $siteurl, $url, $re_menu;
+	if ($re_menu == 1) { // автоматическое меню
+		$sql2 = "select `name`,`title`,`text` from ".$prefix."_mainpage where `tables`='pages' and `type`='2' and `text` like '%menu=".$idX."&%' order by `title`, `name`";
+       	$result = $db->sql_query($sql);
+       	$numrows = $db->sql_numrows($result);
+       	if ($numrows == 0) {
+	        while ($row = $db->sql_fetchrow($result)) {
+	          $id = "[элемент открыть][url=".$row2['name']."]".$row2['title']."[/url][элемент закрыть]";
+	        }
+    	}
 
-		$textXX = str_replace("' href=".$url2.">", " mainmenu_open' href=".$url2.">", $textXX);
-		$textXX = str_replace("<li><a class='li1menu_link mainmenu_open' href=".$url2.">", "<li class='li_mainmenu_open'><a class='li1menu_link mainmenu_open' href=".$url2.">", $textXX);
+		//[элемент открыть][url=/]Главная[/url][элемент закрыть]<br>[элемент открыть][url=#]Пункт меню 1[/url][элемент закрыть]<br>[элемент открыть][url=#]Пункт меню 2[/url]<br>&nbsp;&nbsp;[уровень открыть]<br>&nbsp;&nbsp;[элемент открыть][url=#]Подпункт 1[/url][элемент закрыть]<br>&nbsp;&nbsp;[элемент открыть][url=#]Подпункт 2[/url][элемент закрыть]
+	} elseif ($re_menu == 0) {
+		$url1 = $url;
+		if ($url1 == "") $url1 = "/";
+		$url1 = str_replace("http://".$siteurl,"",$url1);
+		$url1 = str_replace("http%3A%2F%2F".$siteurl."%2F","","/".$url1);
+		$url1 = str_replace("//","/",$url1);
+		$url2 = explode("_",$url1);
+		$url2 = $url2[0];
+		$tr = array("[b]"=>"<b>","[B]"=>"<b>","[/b]"=>"</b>","[/B]"=>"</b>","[i]"=>"<i>","[I]"=>"<i>","[/i]"=>"</i>","[/I]"=>"</i>","http://".$siteurl=>"");
+		$textX = strtr($textX,$tr);
+		$tr = array("[уровень открыть]"=>"<ul>","[уровень закрыть]"=>"</ul>","[элемент открыть]"=>"<li>","[элемент закрыть]"=>"</li>","[/url]"=>"</a>","[url="=>"<a class='li1menu_link' href=","[/URL]"=>"</a>","[URL="=>"<a class='li1menu_link' href=","]"=>">"
+		);
+		$textXX = strtr($textX,$tr);
+		if ($url != "/") {
+			$textXX = str_replace("' href=".$url1.">", " mainmenu_open' href=".$url1.">", $textXX);
+			$textXX = str_replace("<li><a class='li1menu_link mainmenu_open' href=".$url1.">", "<li class='li_mainmenu_open'><a class='li1menu_link mainmenu_open' href=".$url1.">", $textXX);
 
-		$textXX = str_replace("mainmenu_open mainmenu_open", "mainmenu_open", $textXX);
+			$textXX = str_replace("' href=".$url2.">", " mainmenu_open' href=".$url2.">", $textXX);
+			$textXX = str_replace("<li><a class='li1menu_link mainmenu_open' href=".$url2.">", "<li class='li_mainmenu_open'><a class='li1menu_link mainmenu_open' href=".$url2.">", $textXX);
 
-		if ($menu == 7 or $menu == 8 or $menu == 9) $textXX = str_replace("<li class='li_mainmenu_open'><a class='li1menu_link mainmenu_open' href", "<li class='current'><a href", $textXX);
-	} else {
-		if ($menu == 7 or $menu == 8 or $menu == 9) $textXX = str_replace("<li class='li_mainmenu_open'><a class='li1menu_link mainmenu_open' href='/'>", "<li class='current'><a href='/'>", $textXX);
-		else $textXX = str_replace("<li><a class='li1menu_link' href='/'>", "<li class='li_mainmenu_open'><a class='li1menu_link mainmenu_open' href='/'>", $textXX);
+			$textXX = str_replace("mainmenu_open mainmenu_open", "mainmenu_open", $textXX);
+
+			if ($menu == 7 or $menu == 8 or $menu == 9) $textXX = str_replace("<li class='li_mainmenu_open'><a class='li1menu_link mainmenu_open' href", "<li class='current'><a href", $textXX);
+		} else {
+			if ($menu == 7 or $menu == 8 or $menu == 9) $textXX = str_replace("<li class='li_mainmenu_open'><a class='li1menu_link mainmenu_open' href='/'>", "<li class='current'><a href='/'>", $textXX);
+			else $textXX = str_replace("<li><a class='li1menu_link' href='/'>", "<li class='li_mainmenu_open'><a class='li1menu_link mainmenu_open' href='/'>", $textXX);
+		}
 	}
-
 	switch ($menu) {
 		case "0": // гор влево 3 уровня
 			$class_menu = "menu-h-d"; break;
