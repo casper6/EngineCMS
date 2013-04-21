@@ -320,8 +320,8 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
     $numrows = $db->sql_numrows($result);
     if ($numrows > 10) $size = 10*16; else $size = ($numrows+2)*16;
     echo "</select>
-    <div class='in_r'><div id=showa class='in_r'><a style='cursor:pointer;' onclick=\"show('hidea'); show('showa'); $('#to_papka').width(500); $('#to_papka').height(400);\">развернуть &rarr;</a></div><div id=hidea style='display:none;'><a style='cursor:pointer;' onclick=\"show('showa'); show('hidea'); $('#to_papka').width(248); $('#to_papka').height(".$size.");\">&larr; свернуть</a></div></div>
-    <span class=h2>Папка:</span><br><div id='izmenapapka'><select name=cid id='to_papka' size=4 class='f12 mb20 w100'><option value=0 selected>Основная папка («корень»)</option>";
+    <div class='in_r'><div id=showa class='in_r'><a style='cursor:pointer;' onclick=\"show('hidea'); show('showa'); $('#to_papka').width(500); $('#to_papka').height(400);\">развернуть &rarr;</a></div><div id=hidea style='display:none;'><a style='cursor:pointer;' onclick=\"show('showa'); show('hidea'); $('#to_papka').width(300); $('#to_papka').height(155);\">&larr; свернуть</a></div></div>
+    <span class=h2>Папка:</span><br><div id='izmenapapka'><select name=cid id='to_papka' size=4 class='f12 mb20 w100 h155'><option value=0 selected>Основная папка («корень»)</option>";
     while ($row = $db->sql_fetchrow($result)) {
       $cid2 = $row['cid'];
       $title = $row['title'];
@@ -351,7 +351,7 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
 
   
 
-  echo "</td><td>";
+  echo "</td><td style='padding:0;'><a title='Свернуть левую колонку' href='javascript:$(\"#razdels\").toggle(\"slow\");'><div class='w100 i27' style='width:16px; height:500px;'></div></a></td><td>";
 
 
 
@@ -371,15 +371,20 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
   <br><div id='help12' style='display:none;'><span class=small>Разделять пробелами, а слова в словосочетаниях символом + <br>
   Писать только существительные! НИКАКИХ ПРЕДЛОГОВ! Максимум неограничен. Разделять слова необходимо пробелом. Разделять слова в словосочетаниях символом +, например: игра+разума игротека game. Писать желательно в единственном числе и именительном падеже. Можно создать Блок «Облако тегов». Теги также могут выводиться на страницах (в настройках Раздела).</span><br></div>
 
-  <table class=w100><tr><td><label><input type=checkbox name=nocomm value=1".$check2."> Запретить комментарии</label>
-  </td><td><label><input type=checkbox name=rss value=1".$check3."> Добавить в RSS</label> <a onclick=\"show('help2')\" class=help>?</a>
-  </td><td><label><input type=checkbox name=mainpage value=1".$check4."> На главную страницу</label> <a onclick=\"show('help1')\" class=help>?</a>
-  </td><td>Очередность: <input type=text name=sor value='".$sor."' size=3 style='text-align:center;'> <a onclick=\"show('help8')\" class=help>?</a>
+  <table class='w100 f12'><tr><td>
+  <label><input type=checkbox name=mainpage value=1".$check4."> На главную страницу</label> <a onclick=\"show('help_mainpage')\" class=help>?</a>
+  </td><td>
+  <label><input type=checkbox name=rss value=1".$check3."> Добавить в RSS</label> <a onclick=\"show('help_rss')\" class=help>?</a>
+  </td><td>
+  <label><input type=checkbox name=nocomm value=1".$check2."> Запретить комментарии</label> <a onclick=\"show('help_nocomm')\" class=help>?</a>
+  </td><td>
+  Очередность: <input type=text name=sor value='".$sor."' size=4 style='text-align:center;'> <a onclick=\"show('help_sor')\" class=help>?</a>
   </td></tr></table>
 
-  <div id='help2' style='display:none;'>Технология RSS похожа на e-mail подписку на новости — в RSS-программу, сайт RSS-читалки или встроенную систему чтения RSS в браузере добавляется ссылка на данный сайт, после чего название и предисловие всех новых страниц, отмеченных данной галочкой, будут видны подписавшемуся человеку и он сможет быстро ознакомиться с их заголовками, не заходя на сайт. Если что-то ему понравится — он откроет сайт и прочитает подробности. RSS используется для постепенного увеличения количества посетителей сайта путем их возвращения на сайт за интересной информацией. <a href=http://yandex.ru/yandsearch?text=Что+такое+RSS%3F target=_blank>Подробнее о RSS?</a><br><br></div>
-  <div id='help1' style='display:none;'>Если отметить эту галочку, данная страница будет отображаться в блоке, который настроен на отображение только помеченных этой галочкой страниц, или не будет отображаться в блоке, который настроен на показ всех неотмеченных галочкой страниц.<br><br></div>
-  <div id='help8' style='display:none;'>Настраивается в настройках раздела. Может быть равна цифре. Применяется для ручной сортировки страниц. Лучше всего делать кратной 10, например 20, 30, 40 и т.д. для того, чтобы было удобно вставлять страницы между двумя другими. Если очередность у двух страниц совпадает, сортировка происходит по дате.<br><br></div>
+  <div id='help_nocomm' style='display:none;'>Если в данном разделе разрешены комментарии — вы можете отключить их выборочно на данной странице, поставив галочку.<br><br></div>
+  <div id='help_rss' style='display:none;'>Технология RSS похожа на e-mail подписку на новости — в RSS-программу, сайт RSS-читалки или встроенную систему чтения RSS в браузере добавляется ссылка на данный сайт, после чего название и предисловие всех новых страниц, отмеченных данной галочкой, будут видны подписавшемуся человеку и он сможет быстро ознакомиться с их заголовками, не заходя на сайт. Если что-то ему понравится — он откроет сайт и прочитает подробности. RSS используется для постепенного увеличения количества посетителей сайта путем их возвращения на сайт за интересной информацией. <a href=http://yandex.ru/yandsearch?text=Что+такое+RSS%3F target=_blank>Подробнее о RSS?</a><br><br></div>
+  <div id='help_mainpage' style='display:none;'>Если отметить эту галочку, данная страница будет отображаться в блоке, который настроен на отображение только помеченных этой галочкой страниц, или не будет отображаться в блоке, который настроен на показ всех неотмеченных галочкой страниц.<br><br></div>
+  <div id='help_sor' style='display:none;'>Настраивается в настройках раздела. Может быть равна цифре. Применяется для ручной сортировки страниц. Лучше всего делать кратной 10, например 20, 30, 40 и т.д. для того, чтобы было удобно вставлять страницы между двумя другими. Если очередность у двух страниц совпадает, сортировка происходит по дате.<br><br></div>
 
   <span class=h2>Дата создания:</span> <script>$(function() { $.datepicker.setDefaults( $.datepicker.regional[ \"ru\" ] ); $( \"#f_date_c999\" ).datepicker({ changeMonth: true, changeYear: true, dateFormat: \"d MM yy\", showAnim: 'slide' }); });</script>
   <INPUT type=text name=data1 id=\"f_date_c999\" value=\"".$data1."\" onchange=\"document.getElementById('add999').value=document.getElementById('f_date_c999').value+'|'+document.getElementById('f_date_c2999').value\" readonly=1 size=18> <a onclick=\"show('help0')\" class=help>?</a> <nobr>Время: <select name=data2 class='f12'>";
@@ -388,7 +393,7 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
     $sel = ""; if ($xx == $data2) $sel = " selected";
     echo "<option value=".$xx.$sel."> ".$xx." </option>";
   }
-  echo "</select>ч <select name=data3 class='f12'><option value=".$data3.$sel."> ".$data3." </option>".$data3_2."<option value='00'> 00 </option><option value='10'> 10 </option><option value='15'> 15 </option><option value='20'> 20 </option><option value='30'> 30 </option><option value='40'> 40 </option><option value='45'> 45 </option><option value='50'> 50 </option><option value='55'> 55 </option></select>м <input type=text name=data4 value='".$data4."' class='f12' size=1 onclick=\"this.value='00'\">с</nobr><div id='help0' style='display:none;'><br>Для выбора даты из календаря нажмите по дате. Для обнуления секунд кликните по ним. Минуты представлены текущим вариантом или выбором из основного интервала для ускорения работы.<br></div><br><br>";
+  echo "</select>ч <select name=data3 class='f12'><option value=".$data3.$sel."> ".$data3." </option>".$data3_2."<option value='00'> 00 </option><option value='10'> 10 </option><option value='15'> 15 </option><option value='20'> 20 </option><option value='30'> 30 </option><option value='40'> 40 </option><option value='45'> 45 </option><option value='50'> 50 </option><option value='55'> 55 </option></select>м <input type=text name=data4 value='".$data4."' class='f12' size=3 onclick=\"this.value='00'\">с</nobr><div id='help0' style='display:none;'><br>Для выбора даты из календаря нажмите по дате. Для обнуления секунд кликните по ним. Минуты представлены текущим вариантом или выбором из основного интервала для ускорения работы.<br></div><br><br>";
 
   if ($page_id > 0) echo "<a onclick=\"show('slugebka')\" class=punkt>Скрытая информация</a><br><div id='slugebka' style='display:none;'><div class=radius><span class=small>Лучше не менять.</span><br><h3 style='display:inline'>Копия:</h3><INPUT type=text name=cop value='".$copy."' size=3><a onclick=\"show('help18')\" class=help>?</a><br><div id='help18' style='display:none;'>У страниц-копий указывается один и тот же номер — номер оригинальной страницы. Если это не копия, а единственный оригинал, цифра равна 0.<br></div><br><h3 style='display:inline'>Кол-во комментариев:</h3><INPUT type=text name=com value='".$comm."' size=3><br><br><h3 style='display:inline'>Кол-во посещений:</h3><INPUT type=text name=count value='".$counter."' size=3></div></div><br>";
 

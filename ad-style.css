@@ -1,6 +1,7 @@
 ﻿/* Основной стиль админки */
 @page {mso-page-orientation:landscape;}
 html { font-size: 100%; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+body, html { height: 100%; }
 body, td {
 /* text-shadow: none !important; */
 margin: 5px; 
@@ -8,8 +9,6 @@ font-family: Verdana, Arial, Helvetica, sans-serif;
 font-size: 14px;
 color: black;
 font-weight:normal;
-}
-body {
 }
 
 @media print {
