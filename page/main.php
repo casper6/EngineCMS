@@ -1111,7 +1111,7 @@ default:
   $cid = $row['cid'];
   $active = $row['active'];
 
-if ( $cid=="" or ($active != 1 and !is_admin($admin))) {
+if ($cid=="") { // or ($active != 1 and !is_admin($admin))
   header("HTTP/1.0 404 Not Found");
   echo "<center style='margin-top:40px;'><img src=/images/icon_no.png> <b>Запрашиваемая страница не существует.</b><br>Она была удалена, отключена или никогда и не создавалась.<br><br>Вы имеете право сохранять молчание и перейти на <a href=/>Главную страницу</a> <br>или попробовать найти нужную информацию на сайте с помощью быстрого поиска: <form method=POST action=\"/--search\" style='display:inline;' class=main_search_form>
   <input type=search name=slovo class=main_search_input><input type='submit' name='ok' value='Найти' class='main_search_button'>

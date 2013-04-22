@@ -224,7 +224,7 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 	$base = ""; // Указываем название таблицы БД
 	$first = ""; // первая колонка
 	$second = ""; // вторая колонка
-	$text = ""; // текст самой первой ячейки (для блока БД количество по 2 колонкам)
+	$text1 = ""; // текст самой первой ячейки (для блока БД количество по 2 колонкам)
 	$direct = "vert"; // направление, gor - горизонт., vert - вертикальное
 	$all = 0; // Указывать сколько всего элементов, по умолчанию 0 - не указывать, 1 - указывать.
 	$col = ""; // какие поля будут использоваться для вывода информации
@@ -1195,7 +1195,7 @@ case "22": # База данных (количество по 2 колонкам
 	}
 	$seconds = array_unique($seconds);
 
-	$textX = "<table class=base_table width=100%><tr><td class=base_first>$text</td>";
+	$textX = "<table class=base_table width=100%><tr><td class=base_first>".$text1."</td>";
 	foreach ($firsts as $first1) {
 		$textX .= "<td class=base_first>".$first1."</td>";
 	}
@@ -1227,10 +1227,10 @@ case "23": # База данных (список по нескольким ко�
 	if (trim($textX) != "") $and = " and ".$textX;
 	if ($direct=="vert") {
 		$where = "where active='1' or active='3'$and ";
-		$text = str_replace(",","</td><td>",$text);
+		$text1 = str_replace(",","</td><td>",$text1);
 		if ($textX != "") $where = "where ".stripcslashes($textX)." and (active='1' or active='3')$and ";
 		$textX = "<table class='base_table table_light' width=100%>";
-		if ($text != "") $textX .= "<tr class=base_first><td>".$text."</td></tr>";
+		if ($text1 != "") $textX .= "<tr class=base_first><td>".$text1."</td></tr>";
 		// узнать имя БД по номеру
 		global $id_razdel_and_bd;
 		$base_name = WhatArrayElement($id_razdel_and_bd, $base);
