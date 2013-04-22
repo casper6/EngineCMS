@@ -294,7 +294,7 @@ function GraphicAdmin() {
 	echo "</div>
 	<form action='".$admin_file.".php?op=mes' method='post' name=form class='nothing'>
 		<button class='pill small punkt' type=submit><span class=\"icon gray small\" data-icon=\"c\"></span> Сохранить</button><span class='ml20 h3'>".$mes_ok."</span>
-		<button onclick=\"document.getElementById('adminmes').value+='\\r'+getDateNow()+'  '\" title='Вставить дату и время (в конце текста)' class='pill small punkt ml20'><span class=\"icon gray small\" data-icon=\"6\"></span>".$buttons[6]."</button>
+		<a onclick=\"document.getElementById('adminmes').value+='\\r'+getDateNow()+'  '\" title='Вставить дату и время (в конце текста)' class='button pill small punkt ml20'><span class=\"icon gray small\" data-icon=\"6\"></span>".$buttons[6]."</a>
 		<br><textarea id=adminmes name=adminmes rows=3 cols=80 style='border:0; height:300px; width: 98%;' class=yellow_grad>".$adminmes."</textarea></form>
 	</div>
 	</td></tr></table>";
