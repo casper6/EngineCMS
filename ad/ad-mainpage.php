@@ -1778,6 +1778,7 @@ function edit_main($id) {
 			$("#link_title").val( $("#razdels :selected").text() );
 		}
 		function select_menu() {
+			$("#izmena").show();
 			$("#link").val( $("#menu_element :selected").val() ); 
 			$("#link_title").val( $("#menu_element :selected").text() );
 		}
