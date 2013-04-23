@@ -1668,7 +1668,7 @@ function edit_main($id) {
 	if (intval($nastroi) != 1 or $name == 10) red_vybor();
 	echo "</div>
 
-	<table width='100%' border='0'><tr valign='top'><td width='50%'>
+	<table class=w100><tr valign='top'><td width='50%'>
 	<span class=h2>Название блока</span><br>
 	<textarea class='big w100 h40 f16' name='title' rows='1' cols='10'>".$title."</textarea>
 	</td><td>
@@ -1681,17 +1681,16 @@ function edit_main($id) {
 	if ($name == 7) echo "<b>Вывод на экран из блока с PHP-кодом осуществляется через переменную $"."txt</b>";
 
 	if ($name == 10 or $name == 5 or $name == 0) $red = 1; // дополнить список при необходимости
-	echo "<span class=h2>Содержание блока:</span><br>";
-	if ($name != 31 && $name != 7) redactor($red, $text, 'text'); // редактор: типа редактора, редактируемое поле
+	
+	echo "<span class=h2>Содержание блока:</span>";
+	if ($name != 31 && $name != 7 && $name != 10) redactor($red, $text, 'text'); // редактор: типа редактора, редактируемое поле
 	if ($name == 31) redactor($red, $text, 'text', '', 'javascript');
 	if ($name == 7) redactor($red, $text, 'text', '', 'php');
-	
-	echo "<div class='dark_pole' onclick=\"show('nastroi')\"><img class='icon2 i26' src='/images/1.gif'>Настройки (для импорта/экспорта)</div>
-	<div id='nastroi' style='display: none;'>
-	<br><span class=f12><a target='_blank' href=sys.php?op=mainpage&amp;type=3&amp;id=".$id."&nastroi=1>Перейти к визуальной настройке</a> &rarr;</span><br>
-	<textarea class='f12 w100' name='useit' rows='2' cols='10'>".$useit."</textarea></div>
 
-	</td></tr></table>";
+	if ($name == 10 && $re_menu == 1) echo "<div style='display:none'>";
+	if ($name == 10 && $re_menu == 1) redactor($red, '', 'text', '');
+	elseif ($name == 10 && $re_menu != 1) redactor($red, '$text', 'text', '');
+	if ($name == 10 && $re_menu == 1) echo "</div>";
 
 	if ($name == 6) echo "</form>".add_file_upload_form();
 	
@@ -1712,8 +1711,123 @@ function edit_main($id) {
 				$menu_elements .= "<option value='".$value[0]."'>".$ur.$value[1]."</option>";
 			}
 		}
-		echo "<select size=10 class='w45' id='menu_element' name='menu_element'>".$menu_elements."</select>";
+		echo '<script>
+		function bottom_menu(top) {
+			x = $("#menu_element :selected");
+			if (top == 1) x.insertBefore(x.prev());
+			else x.insertAfter(x.next());
+			save_menu();
+		}
+		function min_menu() {
+			$("#menu_element :selected").text( $("#menu_element :selected").text().replace("→","") );
+			save_menu();
+		}
+		function max_menu() {
+			x = $("#menu_element :selected");
+			z = x.text().replace("→→","");
+			if (x.text() == z) { x.text( "→" + x.text() ); save_menu(); }
+		}
+		function del_menu() {
+			$("#menu_element :selected").remove();
+			save_menu();
+			$("#izmena").hide();
+		}
+		function delete_menu() {
+			$("#menu_element").empty();
+			save_menu();
+			$("#izmena").hide();
+		}
+		function add_menu(top) {
+			var link = $("#link").val();
+			var link_title = $("#link_title").val();
+			x = "<option value=\'" + link + "\'>" + link_title + "</option>";
+			if (top == 1) { 
+				$("#menu_element").prepend( x ); 
+				$("#menu_element :first").attr("selected", "selected");
+			} else {
+				$("#menu_element").append( x );
+				$("#menu_element :last").attr("selected", "selected");
+			}
+			save_menu();
+		}
+		function save_menu() {
+			var all=\'\';
+			var pod = pod2 = podrazdel = podrazdel2 = false;
+			$.each($(\'#menu_element option\'), function(i,val) {
+				x = this.text;
+				y = x.replace("→","");
+				z = x.replace("→→","");
+				if (podrazdel == false && y != x) { all = all + \'\n[уровень открыть]\n\'; pod = true; }
+				if (podrazdel == false && y == x && i != 0 && z == x) all = all + \'[элемент закрыть]\n\';
+				if (podrazdel == true && y != x && z == x) all = all + \'[элемент закрыть]\n\';
+				if (podrazdel == true && y == x) { all = all + \'[элемент закрыть]\n[уровень закрыть]\n[элемент закрыть]\n\'; pod = false; }
+				if (podrazdel2 == false && z != x) { all = all + \'\n[уровень открыть]\n\'; pod2 = true; pod = true; }
+				if (podrazdel2 == true && z != x) all = all + \'[элемент закрыть]\n\';
+				if (podrazdel2 == true && z == x) { all = all + \'[уровень закрыть]\n[элемент закрыть]\n\'; pod2 = false; }
+				x = x.replace("→","").replace("→","");
+				all = all + \'[элемент открыть][url=\' + this.value + \']\' + x + \'[/url]\';
+				if (i == $(\'#menu_element option\').length-1) all = all + \'[элемент закрыть]\n\';
+				podrazdel = pod;
+				podrazdel2 = pod2;
+			});
+			$(\'#text\').val(all);
+		}
+		function select_razdels() {
+			$("#razdel").hide();
+			$("#link").val( $("#razdels :selected").val() ); 
+			$("#link_title").val( $("#razdels :selected").text() );
+		}
+		function select_menu() {
+			$("#link").val( $("#menu_element :selected").val() ); 
+			$("#link_title").val( $("#menu_element :selected").text() );
+		}
+		function red_menu() {
+			$("#izmena").hide();
+			$("#menu_element :selected").val( $("#link").val() ); 
+			$("#menu_element :selected").text( $("#link_title").val() );
+			save_menu();
+		}
+		$(document).ready( function() { save_menu(); $("#menu_element").children().draggable(); } );
+		</script>';
+		// multiple пока не работает.
+		global $title_razdels;
+		$title_razdelsX = "";
+		foreach ($title_razdels as $key => $value) {
+			$title_razdelsX .= "<option value='-".$key."'>".$value."</option>";
+		}
+		echo "<table class=w100 cellpadding=0 cellspacing=0><tr valign=top><td width=50%>
+		<a class='button small' href='javascript:min_menu()'>← Вложенность -</a> 
+		<a class='button small' href='javascript:max_menu()'>→ Вложенность +</a> 
+		<a class='button small' href='javascript:bottom_menu(1)'>↑ Поднять</a> 
+		<a class='button small' href='javascript:bottom_menu(0)'>↓ Опустить</a> 
+		<select size=13 class='w100' id='menu_element' onclick='javascript:select_menu()'>".$menu_elements."</select><br>
+		<a class='button small red white' href='javascript:del_menu()'>× Удалить</a>
+		<a class='button small red white ml20' href='javascript:delete_menu()'>Очистить всё</a>
+		</td><td>
+		<span class=h3>Адрес ссылки (URL):</span><br>
+		<input id=link class=w100><br>
+		<span class=h3>Название ссылки:</span><br>
+		<input id=link_title class='w100 mb10'>
+		<div id='izmena' style='display:none' class='mb20'><a class='button blue' href='javascript:red_menu()'>Изменить</a><br></div>
+		<a class='button green' href='javascript:add_menu(0)'>+ Добавить в конец меню</a>
+		<a class='button green small' href='javascript:add_menu(1)'>в начало</a><br><br>
+
+		Выбрать для добавления в меню:<br><a class='button' href='javascript:$(\"#link\").val(\"/\");$(\"#link_title\").val(\"Главная\");'>Главная</a> 
+		<a class='button black' href='javascript:$(\"#razdel\").toggle();'>Раздел</a> 
+		<!-- <a class='button small black' href='javascript:void(0)'>Папку</a> 
+		<a class='button small black' href='javascript:void(0)'>Страницу</a> -->
+		<div id='razdel' style='display:none'>
+		<select class='w100' id='razdels' onchange='javascript:select_razdels()'>".$title_razdelsX."</select>
+		</div>
+		</td></tr></table>";
 	}
+
+	echo "</td></tr></table>
+	<hr><div class='dark_pole' onclick=\"show('nastroi')\"><img class='icon2 i26' src='/images/1.gif'>Настройки (для импорта/экспорта)</div>
+	<div id='nastroi' style='display: none;'>
+	<br><span class=f12><a target='_blank' href=sys.php?op=mainpage&amp;type=3&amp;id=".$id."&nastroi=1>Перейти к визуальной настройке</a> &rarr;</span><br>
+	<textarea class='f12 w100' name='useit' rows='2' cols='10'>".$useit."</textarea></div>";
+
 
 	if ($name == 10 && $re_menu == 0) echo "<div class='dark_pole' style='float:right;' onclick=\"show('primer')\">
 	    <img class='icon2 i26' src='/images/1.gif'>Пример построения меню сайта (справка)</div>

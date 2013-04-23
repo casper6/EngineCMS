@@ -185,7 +185,7 @@
 
     $id_razdel_and_bd = array(); // список ID разделов
     $title_razdel_and_bd = array(); // список рус. названий разделов и БД
-    $title_razdels = array(); // список рус. названий разделов и БД
+    $title_razdels = array(); // список рус. названий разделов
     $title_razdels_by_id = array(); // список рус. названий разделов по ID
     $txt_razdels = array(); // список содержания разделов
     $useit_razdels = array(); // список настроек разделов

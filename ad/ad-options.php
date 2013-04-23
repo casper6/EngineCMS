@@ -422,7 +422,7 @@ body {}
 		var effect = $(\"#effects\").val();
 		var add = font;
 		if (effect != '') add = font + ',' + effect;
-		if (font != null) $('#add_fonts').append('<option value=\"' + add + '\">' + add + '</li>');
+		if (font != null) $('#add_fonts').append('<option value=\"' + add + '\">' + add + '</option>');
 	}
 	function font(show) {
 		var font = $(\"#fonts\").val();
@@ -599,7 +599,7 @@ echo "<div id='show_options_zagotovka' class='show_pole' style='display:none;'>
 	function add_clip() {
 		var clip = $(\"#clips\").val();
 		var text = $(\"#texts\").val();
-		if (clip != '') $('#add_clips').append('<option value=\"' + clip + '*?*' + text + '\">' + clip + '</li>');
+		if (clip != '') $('#add_clips').append('<option value=\"' + clip + '*?*' + text + '\">' + clip + '</option>');
 	}
 	function clip(show) {
 		var clip = $(\"#add_clips\").val();
