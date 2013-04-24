@@ -99,7 +99,7 @@ echo "<!doctype html>
 <!--[if IE]><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge,chrome=1\"><![endif]-->
 <!--[if lt IE 9]><script src=\"http://html5shim.googlecode.com/svn/trunk/html5.js\"></script><![endif]-->
 <link rel=\"stylesheet\" href=\"ad-style.css\" type=\"text/css\">
-<link rel=\"shortcut icon\" href=\"favicon_cms.ico\" type=\"image/x-icon\">
+<link rel=\"shortcut icon\" href=\"images/favicon_cms.png\" type=\"image/x-icon\">
 <script src='includes/jad.js'></script>
 <script src='includes/j.js'></script>
 <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js'></script>

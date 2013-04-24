@@ -1,4 +1,6 @@
 <?php
+$display_delete 	= true; # Админ-опция - для показа кнопок удаления основного содержания = true, для скрытия = false
+$display_addmenu 	= true; # Админ-опция - для показа кнопок создания основного содержания = true, для скрытия = false
 // Все «правила хорошего кода» написаны кровью, вытекшей из глаз программистов, читавших чужой код.
 	if (strpos($_SERVER['PHP_SELF'], 'sys.php') === false) { die ("Доступ закрыт!"); }
 	$aid = trim($aid);
@@ -243,16 +245,15 @@ function create_main($type) {
 	<table width=100%><tr><td>
 	<h2>Название:</h2>По-русски, можно с пробелами<br>
 	<input type=text name=title value='' size=40 class='w100 h40 f16' autofocus>
-	<h2>Содержание стиля:</h2>
-	<textarea id=text name=text rows=30 cols=86 class='w100 h700 f12'></textarea><br>
-	<input type=hidden name=id value=0>
+	<h2>Содержание стиля:</h2>";
+	$create.=redactor('2', '', 'text', '', 'css','return');
+	$create.="<input type=hidden name=id value=0>
 	<input type=hidden name=type value='1'>
 	<input type=hidden name=namo value=''>
 	<input type=hidden name=useit value=''>
 	<input type=hidden name=shablon value=''>
 	<input type=hidden name=op value='".$admintip."_save'>
 	</td></tr></table>";
-	codemirror("css", "text");
 	########################################################
 	break;
 
@@ -797,16 +798,12 @@ function edit_main($id) {
 	} ############################### ЗАКРЫТИЕ ДИЗАЙН
 
 	if ($type == "1") { ############################### ОТКРЫТИЕ СТИЛЬ
-
 	echo "Редактирование стиля (CSS)</span></div>
-
 	<h2>Название стиля <span class=f12>Видит только администратор</span><br>
 	<textarea class='big w100 h40 f16' name='title' rows='1' cols='10'>".$title."</textarea></h2>
-
-	<span class=h2>Содержание стиля</span>
-	<textarea class='f12 h700 w100' id=text name='text' rows='30' cols='50'>".$text."</textarea>
-	<input type='hidden' name='namo' value='".$name."'><br>";
-	codemirror("css", "text");
+	<span class=h2>Содержание стиля</span>";
+	redactor('2', $text, 'text', '', 'css');
+	echo "<input type='hidden' name='namo' value='".$name."'><br>";
 	} ############################### ЗАКРЫТИЕ СТИЛЬ
 
 	if ($type == "2") { ############################### ОТКРЫТИЕ РАЗДЕЛА
@@ -1293,9 +1290,9 @@ function edit_main($id) {
 	".input("nastroi", "1", "1", "hidden")."
 	<h2>Общие настройки блока:</h2>
 	<table width=100% class=table_light>";
-	if ($name == 4 or $name == 0 or $name == 1 or $name == 13 or $name == 11 or $name == 9 or $name == 30) {
+	if ($name == 4 or $name == 0 or $name == 1 or $name == 13 or $name == 11 or $name == 9 or $name == 30) { // дополнить остальные блоки
 	echo "<tr>
-	<td><b>Блок использует содержание Раздела:</b><br>Всех разделов – оставьте поле пустым, определенного раздела — выберите этот раздел и нажмите «Добавить», нескольких разделов — добавьте несколько разделов через запятую.</td>
+	<td><b>Блок использует содержание Раздела:</b><ul><li><b>всех разделов</b> – оставьте поле пустым, <li><b>определенного раздела</b> — выберите этот раздел и нажмите «Добавить», <li><b>нескольких разделов</b> — добавьте несколько разделов через запятую, <li><b>открытого раздела</b> — напишите в поле «open_razdel» (без кавычек). При выводе страниц открытого раздела на Главной странице блок исчезнет совсем, при выводе в разделе без страниц будет выведен заголовок, если он разрешен в настройках блока.</ul></td>
 	<td>".input("options[module_name]", $module_name, "25","input"," id='add_razdel'")." 
 <a class='button small' onclick='add_raz();'>&larr; Добавить</a><br>
 ".select("razdels", $razdel_engname."", $razdel_name."ко всем Разделам", "", " id='razdels'")."
@@ -1678,20 +1675,21 @@ function edit_main($id) {
 	<tr><td colspan=2>";
 
 	if ($name == 3) echo "<b>Разделение кусков рекламы или текста — с помощью символа | </b>";
-	if ($name == 7) echo "<b>Вывод на экран из блока с PHP-кодом осуществляется через переменную $"."txt</b>";
+	if ($name == 7) echo "<b>Вывод на экран из блока с PHP-кодом осуществляется через переменную $"."txt</b><br>
+		&lt;? и ?&gt; ставятся <b>только</b> в начале и конце кода, лишь для визуального редактора и наглядности.<br>";
 
 	if ($name == 10 or $name == 5 or $name == 0) $red = 1; // дополнить список при необходимости
 	
 	echo "<span class=h2>Содержание блока:</span>";
 	if ($name != 31 && $name != 7 && $name != 10) redactor($red, $text, 'text'); // редактор: типа редактора, редактируемое поле
 	if ($name == 31) redactor($red, $text, 'text', '', 'javascript');
-	if ($name == 7) redactor($red, $text, 'text', '', 'php');
+	if ($name == 7) redactor($red, "<?\n".$text."\n?>", 'text', '', 'php');
 
 	if ($name == 10 && $re_menu == 1) echo "<div style='display:none'>";
 	if ($name == 10 && $re_menu == 1) redactor($red, '', 'text', '');
 	elseif ($name == 10 && $re_menu != 1) redactor($red, '$text', 'text', '');
 	if ($name == 10 && $re_menu == 1) echo "</div>";
-
+	echo "</td></tr>";
 	if ($name == 6) echo "</form>".add_file_upload_form();
 	
 	if ($name == 10 && $re_menu == 1) {
@@ -1796,7 +1794,7 @@ function edit_main($id) {
 		foreach ($title_razdels as $key => $value) {
 			$title_razdelsX .= "<option value='-".$key."'>".$value."</option>";
 		}
-		echo "<table class=w100 cellpadding=0 cellspacing=0><tr valign=top><td width=50%>
+		echo "<tr valign=top><td width=50%>
 		<a class='button small' href='javascript:min_menu()'>← Вложенность -</a> 
 		<a class='button small' href='javascript:max_menu()'>→ Вложенность +</a> 
 		<a class='button small' href='javascript:bottom_menu(1)'>↑ Поднять</a> 
@@ -1820,10 +1818,10 @@ function edit_main($id) {
 		<div id='razdel' style='display:none'>
 		<select class='w100' id='razdels' onchange='javascript:select_razdels()'>".$title_razdelsX."</select>
 		</div>
-		</td></tr></table>";
+		</td></tr>";
 	}
 
-	echo "</td></tr></table>
+	echo "</table>
 	<hr><div class='dark_pole' onclick=\"show('nastroi')\"><img class='icon2 i26' src='/images/1.gif'>Настройки (для импорта/экспорта)</div>
 	<div id='nastroi' style='display: none;'>
 	<br><span class=f12><a target='_blank' href=sys.php?op=mainpage&amp;type=3&amp;id=".$id."&nastroi=1>Перейти к визуальной настройке</a> &rarr;</span><br>
@@ -1993,7 +1991,7 @@ $result = $db->sql_query($sql);
 
 if ($numrows = $db->sql_numrows($result) > 0) {
 	// Обновление
-	//if ($type==2) $useit = tipograf($useit, 2);
+	if ($type==3 && $namo == 7) $text = str_replace("<?\n", "", str_replace("\n?>", "", $text));
 	$db->sql_query("UPDATE ".$prefix."_mainpage SET `name`='".$namo."', `title`='".$title."', `text`='".$text."', `useit`='".$useit."', `shablon`='".$shablon."', `tables`='pages', `description`='".$descriptionX."', `keywords`='".$keywordsX."' WHERE `id`='".$id."';") or die('Не удалось обновить содержание. Попробуйте нажать в Редакторе на кнопку "Чистка HTML"');
 
 	if ($type == 2) Header("Location: sys.php");

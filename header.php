@@ -325,7 +325,17 @@ case "0": # Блок страниц раздела
 	if ($main==1) $and = " and mainpage='1'";
 	if ($main==2) $and = " and mainpage!='1'";
 	if ($text_old != "") $and .= " and ".stripcslashes($text_old)."";
-	if ($useitX=="все" or $useitX=="") { // Показывать ВСЕ разделы или выбранный
+
+
+	if ($useitX=="open_razdel") { // Показывать ВСЕ разделы или выбранный
+		if ($name == "index") {
+			$block = str_replace("[$titleX]", "", $block);
+			break 1;
+		} else {
+			$and2 = " and module='$name'"; 
+			$pages="pages";
+		}
+	} elseif ($useitX=="все" or $useitX=="") { // Показывать ВСЕ разделы или выбранный
 		$and2 = ""; 
 		$pages="pages";
 	} elseif ( strpos($useitX, ",") ) { // Показывать определенные разделы, через «,»
@@ -335,7 +345,8 @@ case "0": # Блок страниц раздела
 			if ($value != "") $a[] = "module='$value'";
 		}
 		$and2 = " and (".implode(" or ",$a).")";
-	} else $and2 = " and module='$useitX'"; 
+	} else $and2 = " and module='$useitX'";
+
 	if ($cid_open=="все" or $cid_open=="") { // Показывать ВСЕ папки или выбранную
 		$and3 = "";
 		$cid_open2 = "";

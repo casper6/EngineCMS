@@ -329,39 +329,105 @@ function add_file_upload_form() {
   <!--[if gte IE 8]><script src='includes/upload/js/cors/jquery.xdr-transport.js'></script><![endif]-->";
 }
 ##########################################################################################
-function codemirror($mode, $id) {
-  global $color_tema_html, $color_tema_css, $color_tema_js;
-  if ($mode == "html") $theme=$color_tema_html;
-  if ($mode == "css") $theme=$color_tema_css;
-  if ($mode == "javascript") $theme=$color_tema_js;
-  echo '<link rel="stylesheet" href="includes/codemirror/theme/'.$theme.'.css">';
-  echo '<script src="includes/codemirror/lib/codemirror.js"></script>';
-  if ($mode == "html") { 
-    echo "<script src='includes/codemirror/mode/xml/xml.js'></script>
-    <script src='includes/codemirror/mode/javascript/javascript.js'></script>
-    <script src='includes/codemirror/mode/css/css.js'></script>
-    <script src='includes/codemirror/mode/htmlmixed/htmlmixed.js'></script>
-    <script>
-      var delay".$id.";
-      var editor".$id." = CodeMirror.fromTextArea(document.getElementById('".$id."'), { viewportMargin: Infinity, styleActiveLine: true, tabMode: 'indent', mode: 'text/".$mode."', lineWrapping: true, theme: '".$theme."', autofocus: true });
-      editor".$id.".on('change', function() {
-        clearTimeout(delay".$id.");
-        delay".$id." = setTimeout(update".$id."_Preview, 300);
-      });
-      
-      function update".$id."_Preview() {
-        var ".$id."_previewFrame = document.getElementById('".$id."_preview');
-        var ".$id."_preview =  ".$id."_previewFrame.contentDocument ||  previewFrame.contentWindow.document;
-        ".$id."_preview.open();
-        ".$id."_preview.write(editor".$id.".getValue());
-        ".$id."_preview.close();
+
+##########################################################################################
+function redactor($type, $txt, $name, $name2="", $style="html", $return="echo") {
+  global $red4_div_convert, $add_clips;
+  $echo = "";
+  if ($type=="0") {
+  } elseif ($type=="2") {
+    global $color_tema_html, $color_tema_css, $color_tema_js, $color_tema_php; // цветовые стили для редактора кода
+    if ($style == "html") $theme=$color_tema_html;
+    if ($style == "css") $theme=$color_tema_css;
+    if ($style == "php") $theme=$color_tema_php;
+    if ($style == "javascript") $theme=$color_tema_js;
+    // Преобразование textarea (замена на русскую букву е, только для редактора)
+    //$txt = str_replace("textarea","tеxtarea",$txt); // ireplace
+    //$txt = str_replace("&","&amp;",$txt);
+    $echo .= "<textarea id='".$name."X' class='hide' name='".$name."'>".$txt."</textarea>
+    <pre id='".$name."' class='w100 h700'></pre><br>
+    <script src='http://rawgithub.com/ajaxorg/ace-builds/master/src-noconflict/ace.js' type='text/javascript' charset='utf-8'></script><script>var ".$name." = ace.edit('".$name."');
+          ".$name.".getSession().setValue( $('#".$name."X').val() );
+          ".$name.".setTheme('ace/theme/".$theme."');
+          ".$name.".getSession().setMode('ace/mode/".$style."');
+          ".$name.".getSession().setUseWrapMode(true);
+          ".$name.".getSession().on('change', function(e) {
+              $('#".$name."X').val( ".$name.".getSession().getValue() );
+          });</script>";
+  } elseif ($type=="1") {
+    // Преобразование textarea (замена на русскую букву е, только для редактора)
+    $txt = str_replace("textarea","tеxtarea",$txt); // ireplace
+    $txt = str_replace("&","&amp;",$txt);
+    $echo .= "<textarea id='".$name."' class='w100 h155' name='".$name."'>".$txt."</textarea><br>";
+  } elseif ($type=="3") {
+    $echo .= "<script type='text/javascript'> 
+    $(document).ready(function()
+    {  $('#".$name."').editor({ focus: true, toolbar: 'classic', css: ['/ed/js/editor/css/editor.css'] });";
+  if ($name2 != "") $echo .= "\n$('#".$name2."').editor({ css: ['/ed/js/editor/css/editor.css'], toolbar: 'classic', upload: 'upload.php' });\n";
+  $echo .= "});
+    </script><textarea id='".$name."' name='".$name."' style='width: 100%; height: 220px;'>".$txt."</textarea>";
+  } elseif ($type=="4") {
+    $echo .= "<script type='text/javascript'>
+    function ButtonMore(obj, event, key){ obj.insertHtml('<!--more-->'); }
+    function ButtonBlock(obj, event, key){ obj.insertHtml('[Название блока]'); }
+    function ButtonLink(obj, event, key){ obj.insertHtml('{Название страницы или раздела}'); }
+    $(document).ready(function() { 
+      $('.redactor').redactor({ buttonsAdd: ['|', 'button_more', 'button_link', 'button_block'], buttonsCustom: {
+            button_more: {title: 'Вставка ссылки на полное содержание (для предисловия)',callback: ButtonMore},
+            button_link: {title: 'Вставка блока (например, галереи фотографий)',callback: ButtonBlock},
+            button_block: {title: 'Вставка быстрой ссылки на страницу или раздел',callback: ButtonLink}
+          }, mobile: false, observeImages: true, ".$red4_div_convert." imageUpload: 'ed2/image_upload.php',fileUpload: 'ed2/file_upload.php', lang: 'ru', autoresize: false, plugins: ['fullscreen','clips'] }); } );
+    </script><textarea id='".$name."' class='redactor' name='".$name."' style='width: 100%; height: 220px;'>".$txt."</textarea>";
+    $clip_title = array('«Рыба» для заполнения тестовых страниц');
+    $clip_text = array('<p>Социальная парадигма, на первый взгляд, определяет антропологический феномен толпы, говорится в докладе ОБСЕ. Политическая психология ограничивает эмпирический доиндустриальный тип политической культуры, указывает в своем исследовании К.Поппер. Демократия участия, как бы это ни казалось парадоксальным, ограничивает социализм, последнее особенно ярко выражено в ранних работах В.И.Ленина. Правовое государство, согласно традиционным представлениям, постоянно. Политическое лидерство отражает феномен толпы, впрочем, это несколько расходится с концепцией Истона.<p>Понятие политического конфликта, особенно в условиях политической нестабильности, означает культ личности (отметим, что это особенно важно для гармонизации политических интересов и интеграции общества). Политическое учение Руссо сохраняет феномен толпы, исчерпывающее исследование чего дал М.Кастельс в труде "Информационная эпоха". Политическое учение Августина, в первом приближении, доказывает механизм власти (приводится по работе Д.Белла "Грядущее постиндустриальное общество"). Либеральная теория, в первом приближении, сохраняет онтологический тоталитарный тип политической культуры, если взять за основу только формально-юридический аспект. Постиндустриализм существенно формирует культ личности, что было отмечено П.Лазарсфельдом. Демократия участия, с другой стороны, вызывает плюралистический доиндустриальный тип политической культуры, впрочем, это несколько расходится с концепцией Истона.');
+    $echo .= "<div id=\"clipsmodal\" style=\"display: none;\"><div id=\"redactor_modal_content\"><div class=\"redactor_modal_box\"><ul class=\"redactor_clips_box\">";
+    if (strlen($add_clips) > 1) {
+      $add_clips2 = explode("?%?",$add_clips);
+      foreach ($add_clips2 as $cli) {
+        $cli = explode("*?*",$cli);
+        $clip_title[] = $cli[0];
+        $clip_text[] = $cli[1];
       }
-      setTimeout(update".$id."_Preview, 300);
-    </script>";
+    }
+    foreach ($clip_title as $key => $value) {
+      $echo .= "<li><a href=\"#\" class=\"redactor_clip_link\">".$clip_title[$key]."</a><div class=\"redactor_clip\" style=\"display: none;\">".$clip_text[$key]."</div></li>";
+    }
+    $echo .= "</ul></div></div><div id=\"redactor_modal_footer\">Добавить заготовку можно в Настройках 〉Заготовки для редактора.<br><a href=\"#\" class=\"redactor_modal_btn redactor_btn_modal_close\">Закрыть</a></div></div> ";
   }
-  if ($mode == "css" || $mode == "javascript") echo "<script src='includes/codemirror/mode/".$mode."/".$mode.".js'></script>
-    <script>var editor".$id." = CodeMirror.fromTextArea(document.getElementById('".$id."'), { viewportMargin: Infinity, mode: 'text/".$mode."', styleActiveLine: true, tabMode: 'indent', lineWrapping: true, theme: '".$theme."', autofocus: true });</script>";
-  echo "<link rel='stylesheet' href='includes/codemirror/lib/codemirror.css'>";
+  if ($return=="echo") echo $echo; else return $echo;
 }
 ##########################################################################################
+function redactor2($type, $txt, $name, $style="html") {
+  if ($type=="1") {
+    // Преобразование textarea (замена на русскую букву е, только для редактора)
+    $txt = str_replace("textarea","tеxtarea",$txt); // ireplace
+    $txt = str_replace("&","&amp;",$txt);
+    echo "<textarea id='".$name."' class='w100 h155' name='".$name."'>".$txt."</textarea><br>";
+  } elseif ($type=="2") {
+    global $color_tema_html, $color_tema_css, $color_tema_js, $color_tema_php; // цветовые стили для редактора кода
+    if ($style == "html") $theme=$color_tema_html;
+    if ($style == "css") $theme=$color_tema_css;
+    if ($style == "php") $theme=$color_tema_php;
+    if ($style == "javascript") $theme=$color_tema_js;
+    // Преобразование textarea (замена на русскую букву е, только для редактора)
+    //$txt = str_replace("textarea","tеxtarea",$txt); // ireplace
+    //$txt = str_replace("&","&amp;",$txt);
+    echo "<textarea id='".$name."X' class='hide' name='".$name."'>".$txt."</textarea>
+    <pre id='".$name."' class='w100 h700'></pre><br>
+    <script src='http://rawgithub.com/ajaxorg/ace-builds/master/src-noconflict/ace.js' type='text/javascript' charset='utf-8'></script><script>var ".$name." = ace.edit('".$name."');
+          ".$name.".getSession().setValue( $('#".$name."X').val() );
+          ".$name.".setTheme('ace/theme/".$theme."');
+          ".$name.".getSession().setMode('ace/mode/".$style."');
+          ".$name.".getSession().setUseWrapMode(true);
+          ".$name.".getSession().on('change', function(e) {
+              $('#".$name."X').val( ".$name.".getSession().getValue() );
+          });</script>";
+  } else {
+    echo "<textarea id='".$name."' class='redactor' name='".$name."' rows=15 cols=40 style='width:100%;'>".$txt."</textarea>";
+  }
+}
+##########################################################################################
+function close_button($txt) {
+  return "<a title='Закрыть' class='punkt' onclick=\"$('#".$txt."').hide('slow');\"><div class='radius' style='font-size:12pt; width:20px; height: 20px; color: white; text-align:center; float:right; margin:5px; background: #bbbbbb;'>&nbsp;x&nbsp;</div></a>";
+}
 ?>
