@@ -353,7 +353,8 @@ function redactor($type, $txt, $name, $name2="", $style="html", $return="echo") 
           ".$name.".getSession().setUseWrapMode(true);
           ".$name.".getSession().on('change', function(e) {
               $('#".$name."X').val( ".$name.".getSession().getValue() );
-          });</script>";
+          });
+          document.getElementById('".$name."').style.fontSize='16px';</script>";
   } elseif ($type=="1") {
     // Преобразование textarea (замена на русскую букву е, только для редактора)
     $txt = str_replace("textarea","tеxtarea",$txt); // ireplace
@@ -376,7 +377,14 @@ function redactor($type, $txt, $name, $name2="", $style="html", $return="echo") 
             button_more: {title: 'Вставка ссылки на полное содержание (для предисловия)',callback: ButtonMore},
             button_link: {title: 'Вставка блока (например, галереи фотографий)',callback: ButtonBlock},
             button_block: {title: 'Вставка быстрой ссылки на страницу или раздел',callback: ButtonLink}
-          }, mobile: false, observeImages: true, ".$red4_div_convert." imageUpload: 'ed2/image_upload.php',fileUpload: 'ed2/file_upload.php', lang: 'ru', autoresize: false, plugins: ['fullscreen','clips'] }); } );
+          }, 
+          mobile: false, 
+          observeImages: true, 
+          ".$red4_div_convert." imageUpload: 'ed2/image_upload.php', fileUpload: 'ed2/file_upload.php', 
+          lang: 'ru', 
+          autoresize: true, 
+          minHeight: 300,
+          plugins: ['fullscreen','clips'] }); } );
     </script><textarea id='".$name."' class='redactor' name='".$name."' style='width: 100%; height: 220px;'>".$txt."</textarea>";
     $clip_title = array('«Рыба» для заполнения тестовых страниц');
     $clip_text = array('<p>Социальная парадигма, на первый взгляд, определяет антропологический феномен толпы, говорится в докладе ОБСЕ. Политическая психология ограничивает эмпирический доиндустриальный тип политической культуры, указывает в своем исследовании К.Поппер. Демократия участия, как бы это ни казалось парадоксальным, ограничивает социализм, последнее особенно ярко выражено в ранних работах В.И.Ленина. Правовое государство, согласно традиционным представлениям, постоянно. Политическое лидерство отражает феномен толпы, впрочем, это несколько расходится с концепцией Истона.<p>Понятие политического конфликта, особенно в условиях политической нестабильности, означает культ личности (отметим, что это особенно важно для гармонизации политических интересов и интеграции общества). Политическое учение Руссо сохраняет феномен толпы, исчерпывающее исследование чего дал М.Кастельс в труде "Информационная эпоха". Политическое учение Августина, в первом приближении, доказывает механизм власти (приводится по работе Д.Белла "Грядущее постиндустриальное общество"). Либеральная теория, в первом приближении, сохраняет онтологический тоталитарный тип политической культуры, если взять за основу только формально-юридический аспект. Постиндустриализм существенно формирует культ личности, что было отмечено П.Лазарсфельдом. Демократия участия, с другой стороны, вызывает плюралистический доиндустриальный тип политической культуры, впрочем, это несколько расходится с концепцией Истона.');
@@ -421,7 +429,8 @@ function redactor2($type, $txt, $name, $style="html") {
           ".$name.".getSession().setUseWrapMode(true);
           ".$name.".getSession().on('change', function(e) {
               $('#".$name."X').val( ".$name.".getSession().getValue() );
-          });</script>";
+          });
+          document.getElementById('".$name."').style.fontSize='16px';</script>";
   } else {
     echo "<textarea id='".$name."' class='redactor' name='".$name."' rows=15 cols=40 style='width:100%;'>".$txt."</textarea>";
   }

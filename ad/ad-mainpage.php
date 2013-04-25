@@ -1687,7 +1687,7 @@ function edit_main($id) {
 
 	if ($name == 10 && $re_menu == 1) echo "<div style='display:none'>";
 	if ($name == 10 && $re_menu == 1) redactor($red, '', 'text', '');
-	elseif ($name == 10 && $re_menu != 1) redactor($red, '$text', 'text', '');
+	elseif ($name == 10 && $re_menu != 1) redactor($red, $text, 'text', '');
 	if ($name == 10 && $re_menu == 1) echo "</div>";
 	echo "</td></tr>";
 	if ($name == 6) echo "</form>".add_file_upload_form();
