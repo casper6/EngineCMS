@@ -107,12 +107,11 @@ echo "<!doctype html>
 <script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/i18n/jquery-ui-i18n.min.js'></script> 
 <script src='includes/jquery.innerfade.js'></script>";
 /*
-if (!$op) {
-	echo "\n<script type=\"text/javascript\" src=\"includes/jeditable.js\"></script>
-	<script type=\"text/javascript\" src=\"includes/form.js\"></script>
-	<script type=\"text/javascript\" src=\"includes/select.js\"></script>
-	<script type=\"text/javascript\" src=\"includes/general.js\"></script>";
-}
+<script>$(function(){
+  if ($('#'+window.location.hash).length) {
+    $('#'+window.location.hash).show();
+  }
+});</script>";
 */
 echo "<link rel=\"stylesheet\" href=\"http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/base/jquery-ui.css\" media=\"all\" />
 <script type=\"text/javascript\" src=\"includes/css-frameworks/kickstart/js/ad-kickstart.js\"></script>

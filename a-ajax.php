@@ -463,14 +463,33 @@ if ($func == "addpapka") { // Добавляем папку(и)
   list($title, $parent) = explode("*@%", $string);
   global $name_razdels, $title_razdel_and_bd;
   $name_raz = $name_razdels[$id];
-      $title = explode("\n",$title);
-      foreach( $title as $title_value ) {
-          $pap = mysql_real_escape_string(trim($title_value));
-          $title_name = explode("|",$title_value);
-          $title_opis = $title_name[1];
-          $title_name = $title_name[0];
-          if ($pap!="" && $title_name!="") $db->sql_query("INSERT INTO ".$prefix."_pages_categories VALUES (NULL, '$name_raz', '$title_name', '$title_opis', '', '0', '0', '$parent', 'pages')");
-      }
+  if (strpos($title, "&&&")) $title = explode("&&&",$title);
+  else $title = explode("\n",$title);
+  foreach( $title as $title_value ) {
+    $pap = mysql_real_escape_string(trim($title_value));
+    $title_name = explode("|",$title_value);
+    $title_opis = $title_name[1];
+    $title_name = $title_name[0];
+    if ($pap!="" && $title_name!="") $db->sql_query("INSERT INTO ".$prefix."_pages_categories VALUES (NULL, '$name_raz', '$title_name', '$title_opis', '', '0', '0', '$parent', 'pages')");
+  }
+  echo $title_razdel_and_bd[$name_raz]; exit;
+}
+######################################################################################
+if ($func == "addpages") { // Добавляем страницы
+  list($title, $cid) = explode("*@%", $string);
+  global $name_razdels, $title_razdel_and_bd, $now;
+  $name_raz = $name_razdels[$id];
+  if (strpos($title, "&&&")) $title = explode("&&&",$title);
+  else $title = explode("\n",$title);
+  foreach( $title as $value ) {
+    $pap = mysql_real_escape_string(trim($value));
+    $value = explode("|",$value);
+    $tit = $value[0];
+    $open_text = $value[1];
+    $main_text = $value[2];
+    $active = $value[3]; if ($active=="") $active = "1";
+    if ($pap!="" && $tit!="") $db->sql_query("INSERT INTO ".$prefix."_pages VALUES (NULL, '".$name_raz."', '".$cid."', '".$tit."', '".$open_text."', '".$main_text."', '".$now."', '".$now."', '0', '".$active."', '0', '0', '', '', '', '".$active."', '', '', '', 'pages', '0','0', '0');");
+  }
   echo $title_razdel_and_bd[$name_raz]; exit;
 }
 ######################################################################################
@@ -565,32 +584,63 @@ if ($func == "offblock") { // Вкл./Выкл. блока
   echo "<td class='padleft30 notice ".$color."'>".$comm."</td>"; exit;
 }
 ######################################################################################
-if ($func == "add_papka") { // Создание папки
+if ($func == "add_pages") { // Создание страниц
   // Узнаем название раздела
   global $name_razdels;
   $name_raz = $name_razdels[$id];
   $list = "<form method=post style=\"display:inline;\" onsubmit='return false'>
-  <h1>Создаем папку в этом разделе</h1>
+  <h1>Добавим сразу несколько страниц</h1>
   <table width=100% class='table_light'><tr valign=top><td>
-  <span class=h2>Имя папки:</span><br>
+  <span class=h2>Заголовки страниц:</span><br>
   <textarea name=title2 id='title".$id."' rows=5 cols=3 style='width:100%; height: 200px;' autofocus></textarea>
-  </td></tr><tr><td><span class=h2>Основная или вложенная папка?</span><br>";
-             $sql = "select cid, title, parent_id from ".$prefix."_pages_categories where module='$name_raz' and `tables`='pages' order by parent_id,cid";
+  </td></tr><tr><td><span class=h2>В начале раздела или вложены в папку?</span><br>";
+             $sql = "select cid, title, parent_id from ".$prefix."_pages_categories where module='".$name_raz."' and `tables`='pages' order by parent_id,cid";
              $result = $db->sql_query($sql);
-             $list .= "<select id='select".$id."' name=parent_id style='width: 100%;'><option value=0>Это основная папка</option>";
+             $list .= "<select id='select".$id."' name=parent_id style='width: 100%;'><option value=0>в начале раздела</option>";
              while ($row = $db->sql_fetchrow($result)) {
                $cid = $row['cid'];
                $title = strip_tags($row['title'], '<b><i>');
                $parentid = $row['parent_id'];
                $title = getparent($name_raz,$parentid,$title);
-               //if ($add_cat==$cid) $sel=" selected"; else $sel="";
-               $list .= "<option value=".$cid.">Вложена в «".$title."»</option>";
+               $list .= "<option value=".$cid.">вложены в «".$title."»</option>";
              }
   $list .= "</select><br>
-  <input type=submit value=\" Создать \" onclick=\"save_papka('".$id."',document.getElementById('title".$id."').value,document.getElementById('select".$id."').value,'".$name_raz."');\" style='width:100%; height:55px; font-size: 22px; margin-top:20px;'>
+  <input type=submit value=\" Добавить \" onclick=\"save_papka('".$id."',document.getElementById('title".$id."').value,document.getElementById('select".$id."').value,'".$name_raz."',1);\" style='width:100%; height:55px; font-size: 22px; margin-top:20px;'>
   </td></tr></table>
-  <i class=h3>Вы можете создать сразу несколько папок — пишите их имена в столбик, разделяя Enter.<br>Добавить описание к папке можно сразу после названия через символ «|».<br>
-  Если вы не видите созданной папки — обновите страницу (нажав F5).</i>
+  <blockquote class=small>Вы можете создать сразу несколько страниц — пишите их заголовки в столбик, разделяя Enter.<br>Добавить предисловие, содержание и активность (вкл./выкл = 1/0) к страницам можно сразу после заголовка через символ «|». Пример: Заголовок|Предисловие|Содержание|1<br>
+  В качестве разделителя страниц по-умолчанию используется Enter, но если вам нужно сразу добавить страницы с большим количеством текста, в котором присутствуют переносы строк — используйте разделитель &&&<br>
+  Если вы не видите созданных страниц — обновите страницу (нажав F5) и вновь откройте этот раздел.</blockquote>
+  </form>";
+  $list = close_button('add_papka').$list."<hr>";
+  echo $list; exit;
+}
+######################################################################################
+if ($func == "add_papka") { // Создание папки
+  // Узнаем название раздела
+  global $name_razdels;
+  $name_raz = $name_razdels[$id];
+  $list = "<form method=post style=\"display:inline;\" onsubmit='return false'>
+  <h1>Создадим папку (или папки) в этом разделе</h1>
+  <table width=100% class='table_light'><tr valign=top><td>
+  <span class=h2>Имя папки:</span><br>
+  <textarea name=title2 id='title".$id."' rows=5 cols=3 style='width:100%; height: 200px;' autofocus></textarea>
+  </td></tr><tr><td><span class=h2>В начале раздела или вложена в другую папку?</span><br>";
+             $sql = "select cid, title, parent_id from ".$prefix."_pages_categories where module='".$name_raz."' and `tables`='pages' order by parent_id,cid";
+             $result = $db->sql_query($sql);
+             $list .= "<select id='select".$id."' name=parent_id style='width: 100%;'><option value=0>в начале раздела</option>";
+             while ($row = $db->sql_fetchrow($result)) {
+               $cid = $row['cid'];
+               $title = strip_tags($row['title'], '<b><i>');
+               $parentid = $row['parent_id'];
+               $title = getparent($name_raz,$parentid,$title);
+               $list .= "<option value=".$cid.">вложена в «".$title."»</option>";
+             }
+  $list .= "</select><br>
+  <input type=submit value=\" Создать \" onclick=\"save_papka('".$id."',document.getElementById('title".$id."').value,document.getElementById('select".$id."').value,'".$name_raz."',0);\" style='width:100%; height:55px; font-size: 22px; margin-top:20px;'>
+  </td></tr></table>
+  <blockquote class=small>Вы можете создать сразу несколько папок — пишите их имена в столбик, разделяя Enter.<br>Добавить описание к папке можно сразу после названия через символ «|». Пример: Название | Описание.<br>
+  В качестве разделителя страниц по-умолчанию используется Enter, но если вам нужно сразу добавить папки с большим количеством текста в описании, в котором присутствуют переносы строк — используйте разделитель &&&<br>
+  Если вы не видите созданной папки — обновите страницу (нажав F5) и вновь откройте этот раздел.</blockquote>
   </form>";
   $list = close_button('add_papka').$list."<hr>";
   echo $list; exit;
