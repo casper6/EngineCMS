@@ -1359,7 +1359,19 @@ case "31": # Блок JS
 		$soderganie = str_replace("[1 сентября]", $sent, $soderganie); 
 		$block = str_replace("[1 сентября]", $sent, $block); 
 	}
-
+	if (strpos($block, "[список ")) {
+		// Ставим автогенерацию раскрывающегося списка из заголовков и последующих элементов
+		if ( date("m") > 9 or ( date("m") == 9 and date("d") > 1 ) ) $year = $nextyear;
+		$zagolovok = array("h2","h3");
+		$spisok = array("p","table", "div", "blockquote");
+		foreach ($zagolovok as $z) {
+			foreach ($spisok as $s) {
+				$sent = '<script>jQuery(document).ready(function($) {$("'.$z.'").toggleClass("button").next("'.$s.'").hide();$("'.$z.'").click(function() {$(this).next("'.$s.'").slideToggle();return false;});});</script>';
+				$soderganie = str_replace("[список ".$z." ".$s."]", $sent, $soderganie); 
+				$block = str_replace("[список ".$z." ".$s."]", $sent, $block);
+			}
+		}
+	}
 	// Ставим почту
 	if (strpos($block, "письмо]")) {
 		// Заявка

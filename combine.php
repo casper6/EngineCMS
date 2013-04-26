@@ -223,7 +223,7 @@ input[type=search]:focus {
 }
 .main_search_button {display:none !important;}
 
-a.button {cursor:pointer; text-decoration: underline;}
+.button {cursor:pointer; text-decoration: underline;}
 
 a.search_razdel_link, a.search_papka_link {color:gray !important;}
 a.search_page_link {font-size:20px !important;}
