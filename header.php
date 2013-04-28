@@ -1529,7 +1529,7 @@ case "31": # Блок JS
 		$lines1 = explode("Евро</td>",$lines);
 		$lines1 = explode("</td>",$lines1[1]);
 		$eur = str_replace("<td align=\"right\">","",$lines1[0]);
-		$valuta .= "<A HREF=\"javascript:\" onMouseDown=\"win2 = window.open('http://www.cbr.ru/currency_base/D_print.aspx?date_req=".$dat."','',
+		$valuta .= "<A HREF=\"#\" onMouseDown=\"win2 = window.open('http://www.cbr.ru/currency_base/D_print.aspx?date_req=".$dat."','',
 		'width=400,height=260'); return true;\">Валюта</a>: USD: ".$usd." EUR: ".$eur."";
 		$block = str_replace("[валюта]", $valuta, $block);
 	}

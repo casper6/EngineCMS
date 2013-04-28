@@ -511,8 +511,8 @@ function select($name,$vars,$vars_name,$znachenie,$add='') { // генераци
     if ($znachenie == "1") $style1 = "style='display:none;'"; 
     else $style2 = "style='display:none;'";
     $id = md5($name);
-    $button = "<a class='button red white' id=on_".$id." href='javascript: $(\"#".$id." [value=1]\").attr(\"selected\", \"selected\");  $(\"#on_".$id."\").hide().next().show();'".$style1.">Выключено</a><a class='button green' id=off_".$id." href='javascript: $(\"#".$id." [value=0]\").attr(\"selected\", \"selected\"); $(\"#off_".$id."\").hide().prev().show();'".$style2.">Включено</a>";
-  } else { $button = ""; $id=""; }
+    $button = "<a class='button red white small punkt' id=on_".$id." onclick='$(\"#".$id." [value=1]\").attr(\"selected\", \"selected\");  $(\"#on_".$id."\").hide().next().show();'".$style1.">Выключено</a><a class='button green small punkt' id=off_".$id." onclick='$(\"#".$id." [value=0]\").attr(\"selected\", \"selected\"); $(\"#off_".$id."\").hide().prev().show();'".$style2.">Включено</a>";
+  } else { $button = ""; $id=""; $add .= " class='w100'"; }
   $return = "<select id='".$id."' name='".$name."'".$add.">";
   $vars = explode(",",$vars);
   $vars_name = explode(",",$vars_name);
@@ -532,9 +532,11 @@ function select($name,$vars,$vars_name,$znachenie,$add='') { // генераци
 /////////////////////////////////////////////////////////////
 function input($name,$znachenie,$size="40",$type="text",$add='') { // генерация INPUT элемента формы
   if ($type=="txt") 
-    return "<textarea name='".$name."'".$add." rows=3 cols=80 style='width:100%; height:".$size."px;'>".$znachenie."</textarea>";
-  else
-    return "<input type='".$type."' name='".$name."'".$add." value='".$znachenie."' size='".$size."'>";
+    return "<textarea name='".$name."'".$add." rows=3 cols=80 class=w100 style='height:".$size."px;'>".$znachenie."</textarea>";
+  else {
+    if ($size == "100%") $size = " class=w100"; else $size = " size='".$size."'";
+    return "<input type='".$type."' name='".$name."'".$add." value='".$znachenie."'".$size.">";
+  }
 }
 ////////////////////////////////////////////////////////////
 function smile_generate($smiles, $folder="") { // генерация полоски смайлов
@@ -716,7 +718,7 @@ function predlogi($text) { // Добавление к предлогам нер�
 }
 /////////////////////////////////////////////////////////////////
 function time_otschet($tim, $txt, $do) { // JavaScript обратного отсчета времени
-  return "<script language='javascript'> 
+  return "<script> 
   function fulltime () { 
     var time=new Date(); 
     var newYear=new Date(\"".$tim."\"); 
@@ -746,7 +748,7 @@ function time_otschet($tim, $txt, $do) { // JavaScript обратного отс
     <span id='lastSec'></span> 
   </div>
   </div>
-  <script language='javascript'>fulltime();</script>";
+  <script>fulltime();</script>";
 }
 /////////////////////////////////////////////////////////////// 
 function text_shablon() { // список шаблонов

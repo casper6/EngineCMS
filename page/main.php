@@ -1086,7 +1086,7 @@ $soderganieALL = "<center><br><object classid='clsid:D27CDB6E-AE6D-11cf-96B8-444
 </object><p>
 ".$txt."
 </center>
-<script type=\"text/javascript\">
+<script>
 <!--
 SWFFix.registerObject('FlashID');
 //-->
@@ -1149,7 +1149,7 @@ $count_match = count($matches); // кол-во блоков
 if ($count_match > 0) {
     $info_blocks = "";
     $obzor = false;
-    $names_block = "<script type=\"text/javascript\">$(function() {  $('#rotate > ul').tabs({ fx: { opacity: 'toggle' } });  }); </script><div id=\"rotate\"><ul>";
+    $names_block = "<script>$(function() {  $('#rotate > ul').tabs({ fx: { opacity: 'toggle' } });  }); </script><div id=\"rotate\"><ul>";
     for ( $i=0; $i < $count_match+1; $i++ ) { 
       // Разделение блока
       if (!isset($matches[$i])) $info_block = "";
@@ -1313,7 +1313,7 @@ $page_tags .= $tag_text_show." ".implode(" | ", $searches)."";
 
 $page_socialnetwork = "";
 if ($socialnetwork == 1) {
-  $page_socialnetwork .= "<div id=\"socialnetwork\" class=\"socialnetwork\"><script type=\"text/javascript\" src=\"//yandex.st/share/share.js\" charset=\"utf-8\"></script>Добавьте в социальные сети: <div class=\"yashare-auto-init\" data-yashareL10n=\"ru\" data-yashareType=\"none\" data-yashareQuickServices=\"yaru,vkontakte,facebook,twitter,odnoklassniki,moimir,lj,moikrug,gplus\"></div></div>";
+  $page_socialnetwork .= "<div id=\"socialnetwork\" class=\"socialnetwork\"><script src=\"//yandex.st/share/share.js\" charset=\"utf-8\"></script>Добавьте в социальные сети: <div class=\"yashare-auto-init\" data-yashareL10n=\"ru\" data-yashareType=\"none\" data-yashareQuickServices=\"yaru,vkontakte,facebook,twitter,odnoklassniki,moimir,lj,moikrug,gplus\"></div></div>";
 }
 
 $page_favorites = "";
@@ -1331,7 +1331,6 @@ $page_favorites .= "<div id=\"favorites\" class=\"favorites\">Cохраните 
 <a target='_blank' href='http://memori.ru/link/?sm=1&amp;u_data[url]=".$url."&amp;u_data[name]=".$tit3."'><img width='16' height='16' title=\"Memori\" style=\"background-image: url(/images/favorit.gif); background-position: 0px 0px; \" src='/images/pixel.gif'></a> 
 <a target='_blank' href='http://bobrdobr.ru/addext.html?url=".$url."&amp;title=".$tit3."'><img width='16' height='16' title=\"БобрДобр\" style=\"background-image: url(/images/favorit.gif); background-position: -20px 0px; \" src='/images/pixel.gif'></a> 
 <a target='_blank' href='http://moemesto.ru/post.php?url=".$url."&amp;title=".$tit3."'><img width='15' height='16' title=\"МоёМесто\" style=\"background-image: url(/images/favorit.gif); background-position: -180px 0px; \" src='/images/pixel.gif'></a> </div>";
-// <script src=\"http://odnaknopka.ru/ok3.js\" type=\"text/javascript\"></script>
 }
 
 $page_blog = "";
@@ -1343,7 +1342,7 @@ $page_blog .= "&lt;table width=75% border=0 cellspacing=0 cellpadding=0 style=&q
 $page_blog .= "&lt;table width=100% border=0 cellspacing=0 cellpadding=0 style=&quot;border: 1px solid #dfdfdf; background-color:#FFFFFF; color: #333333;&quot;&gt;&lt;tr&gt; &lt;td valign=bottom&gt; &lt;div style=&quot;width: 95%;font-size:16px; font-weight:bold;padding: 5px 10px 5px 5px;&quot;&gt; &lt;a href=".$link." target=_blank style=&quot;text-decoration:none; color: #2e64c8;&quot;&gt; ".$title_blog." &lt;/a&gt; &lt;/div&gt;&lt;/td&gt;&lt;/tr&gt; &lt;tr&gt; &lt;td align=left valign=top style=&quot;padding: 0 10px 0 10px; font-size:11px;&quot;&gt; ".$opentext_blog." &lt;/td&gt; &lt;/tr&gt; &lt;tr align=right&gt; &lt;td style=&quot;padding:5px 10px 0 10px&quot;&gt;&lt;div style=&quot;border-top: 1px solid #dfdfdf; padding-top: 10px; padding:5px 0 5px 0; font-size: 11px;&quot;&gt;&lt;a href=".$link." target=_blank style=&quot;color: #2e64c8;&quot;&gt;читать полностью&lt;/a&gt;&lt;/div&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;";
 }
 $page_blog .= "</div></div><br>";
-//if ($comments==0) $soderganie .= "<SCRIPT language=JavaScript src=\"/includes/SwitchMenu.js\" type=text/javascript></SCRIPT>";
+//if ($comments==0) $soderganie .= "<SCRIPT src=\"/includes/SwitchMenu.js\"></SCRIPT>";
 }
 
 
@@ -1431,7 +1430,7 @@ if ($comments>0 and $view!=4 and $nocomm == 0) {
   if (is_admin($admin)) { $adm = 1; } else { $adm = 0; }
   $add_css .= " comments_".$comment_shablon;
   $page_comments .= "<div class=page_comm><a name=comm id=comm></a>".$comments_1."</div>
-  <script type=\"text/javascript\" language=\"javascript\">
+  <script>
   function showcomm(){
     $.get('comments.php', { p_id: '".$pid."', desc: '".$comments_desc."', sha: '".$comment_shablon."', vetki: '".$vetki."', num: '".$comments_num."', all: '".$comments_all."', mail: '".$comments_mail."', adres: '".$comments_adres."', tel: '".$comments_tel."' }, function(data) { 
     $('#page_comments').html( data );
@@ -1818,9 +1817,9 @@ function addbase($base,$name,$spa=0) {
   $soderganie .= "<h3>Добавление информации в базу данных</h3>";
   $soderganie .= "<!-- calendar -->
   <LINK rel=\"stylesheet\" type=\"text/css\" media=\"all\" href=/includes/calendar/calendar-win2k-cold-1.css title=\"win2k-cold-1\"> 
-  <SCRIPT type=\"text/javascript\" src=/includes/calendar/calendar.js></SCRIPT> 
-  <SCRIPT type=\"text/javascript\" src=/includes/calendar/calendar-en.js></SCRIPT> 
-  <SCRIPT type=\"text/javascript\" src=/includes/calendar/calendar-setup.js></SCRIPT>
+  <SCRIPT src=/includes/calendar/calendar.js></SCRIPT> 
+  <SCRIPT src=/includes/calendar/calendar-en.js></SCRIPT> 
+  <SCRIPT src=/includes/calendar/calendar-setup.js></SCRIPT>
   <!-- / calendar -->";
   $soderganie .= "<form method=\"POST\" action=\"/-".$DBName."\" enctype=\"multipart/form-data\">
   <table width=100%><tr valign=top><td>";
@@ -1878,7 +1877,7 @@ function addbase($base,$name,$spa=0) {
            <TD><INPUT type=text name=\"text[".$one[0]."]\" id=\"f_date_c[".$one[0]."]\" readonly=1 size=15></TD> 
            <TD><IMG src=/images/calendar.gif id=\"f_trigger_c[".$one[0]."]\" title=\"Выбор даты\" onmouseover=\"this.style.background=&#39;red&#39;;\" onmouseout=\"this.style.background=&#39;&#39;\"> (выберите дату из меню)</TD> 
           </TR></TBODY></TABLE>
-          <SCRIPT type=\"text/javascript\"> 
+          <SCRIPT> 
               Calendar.setup({
                   inputField     :    \"f_date_c[".$one[0]."]\",     // id of the input field
                   ifFormat       :    \"%e %B %Y\",      // format of the input field
@@ -2038,7 +2037,7 @@ function addpost($cid) {
           <TD><INPUT type=text name=\"text[".$s_name."]\" id=\"f_date_c2[".$s_name."]\" value=\"\" onchange=\"document.getElementById('add[".$s_name."]').value=document.getElementById('f_date_c[".$s_name."]').value+'|'+document.getElementById('f_date_c2[".$s_name."]').value\" readonly=1 size=15></TD> 
           <TD><IMG src=/images/calendar.gif id=\"f_trigger_c2[".$s_name."]\" title=\"Выбор даты\" onmouseover=\"this.style.background=&#39;red&#39;;\" onmouseout=\"this.style.background=&#39;&#39;\"></TD>
           </TR></TBODY></TABLE>
-          <SCRIPT type=\"text/javascript\"> 
+          <SCRIPT> 
               Calendar.setup({
                   inputField     :    \"f_date_c[".$s_name."]\",     // id of the input field
                   ifFormat       :    \"%e %B %Y\",      // format of the input field
@@ -2047,7 +2046,7 @@ function addpost($cid) {
                   singleClick    :    true
               });
           </SCRIPT>
-          <SCRIPT type=\"text/javascript\"> 
+          <SCRIPT> 
               Calendar.setup({
                   inputField     :    \"f_date_c2[".$s_name."]\",     // id of the input field
                   ifFormat       :    \"%e %B %Y\",      // format of the input field

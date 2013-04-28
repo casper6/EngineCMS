@@ -271,14 +271,14 @@ body {}
 
 	<tr valign=top><td>
 	Название сайта (для заголовка title):</td><td class=small>
-	".input("options[sitename]", $sitename, 60)."
+	".input("options[sitename]", $sitename, "100%")."
 	</td></tr><tr valign=top><td>
 	Логотип сайта/компании:</td><td class=small>
-	".input("options[project_logotip]", $project_logotip, 60)."
+	".input("options[project_logotip]", $project_logotip, "100%")."
 	<br>Можно вывести в дизайн через блок [лого_проекта]
 	</td></tr><tr valign=top><td>
 	Название проекта/компании:</td><td class=small>
-	".input("options[project_name]", $project_name, 60)."
+	".input("options[project_name]", $project_name, "100%")."
 	<br>Можно вывести в дизайн через блок [название_проекта]. Обобщенный вариант через замену картинкой тега H1 — через блок [название_лого_проекта]. А настраивается всё через CSS за счет стилей, которые можно посомтреть в коде страницы.
 
 	</td></tr><tr valign=top><td>
@@ -291,11 +291,11 @@ body {}
 	<br>Максимум 500 символов. Через запятую. Для поисковых систем (Keywords)
 	</td></tr><tr valign=top class=p2><td>
 	Ссылка на почтовый сайт:</td><td class=small>
-	".input("options[postlink]", $postlink, 60)."
+	".input("options[postlink]", $postlink, "100%")."
 	<br>Если редактору удобно открывать свой почтовый сайт из системы администрирования сайта.
 	</td></tr><tr valign=top class=p2><td>
 	Ссылка на статистику:</td><td class=small>
-	".input("options[statlink]", $statlink, 60)."
+	".input("options[statlink]", $statlink, "100%")."
 	<br>Ссылка на внешнюю статистику Сайта: LiveInternet, Google Analytics, Яндекс.Метрика и другие. Например, если использовать <a href=http://www.liveinternet.ru/add>liveinternet.ru</a> ссылка будет такой: http://pda.liveinternet.ru/stat/".$siteurl."/. Отображается сверху в Администрировании - Статистика.
 	</td></tr><tr valign=top class=p2><td>
 	Код счетчика статистики:</td><td class=small>
@@ -337,7 +337,7 @@ body {}
 
 	<tr valign=top class=p4><td>
 	Почта администратора:</td><td class=small>
-	".input("options[adminmail]", $adminmail, 60)."
+	".input("options[adminmail]", $adminmail, "100%")."
 	<br>Используется в автоматическом блоке [почта], для отправки почты администратору сайта.
 	</td></tr>
 
@@ -549,7 +549,7 @@ body {}
 
 	<tr valign=top><td>
 	Файл с резервной копией .htaccess:</td><td class=small>
-	".input("options[ht_backup]", $ht_backup)."
+	".input("options[ht_backup]", $ht_backup, "100%")."
 	<br>Для автовосстановления в случае поражения «вирусом».
 	</td></tr>
 
@@ -560,7 +560,7 @@ body {}
 
 	<tr valign=top><td>
 	Ключевых слов:</td><td class=small>
-	".input("options[kolkey]", $kolkey, "2", "number")."
+	".input("options[kolkey]", $kolkey, "3", "number")."
 	</td></tr>
 
 	<tr valign=top><td>

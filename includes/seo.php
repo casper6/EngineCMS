@@ -54,39 +54,44 @@ function newkey($text,$kol,$kolslov) {
   # Чистим текст
   $text = normaltext($text,0); // полная функция для ключевиков
 $textorig = stopslov($text);
-$textorig =  preg_replace('/ {2,}/',' ',$textorig);
-$text = explode(' ', $textorig);
-$text = delslov($text,4);
-$text2 =$text;
+$texts = explode(' ', $textorig);
+$text5 = delslov($texts,4);
+$counts=count($texts);
+$text2 =$text5;
 sort($text2);
-$count=count($text);
-$arr = array(); $arr2 = array(); $arr3 = array(); $arr4 = array(); $arr5 = array(); $text_koren = '';
+$count=count($text5);
+$arr = array(); $arr2 = array(); $arr3 = array(); $arr4 = array(); $arr5 = ''; $arrse = array();
 for($i=0;$i<$count;$i++) {
+if (strpos('-—,.?();:!',trim($text2[$i])) < 1) {
 $koren = sklon(trim($text2[$i])); // находим корень слова
-$koren1 = sklon(trim($text[$i]));
-$koren2 = sklon(trim($text[$i+1]));
 if (mb_substr_count($textorig, trim($koren)) > 1) { // берем слова имеющие более 1-го вхождения
 $arr[$koren]= mb_substr_count($textorig, " ".trim($koren)); // корень и сколько вхождений в тексте он имеет
 $arr2[$koren]= $text2[$i]; // корень и найденное слово по нему
 $arr3[$koren]= $i; // Массив с корнями
 }
-if ($koren2 == true){
-$arr4[1][$i] = $text[$i]." ".$text[$i+1]; // массив с фразами в 2 слова
-$arr4[2][$i] = $koren1." ".$koren2; // и их корни
-}
-$text_koren .= $koren1." "; // и строим тот-же текст но вместо слов их корни
-}
-$arrhy = array_flip($arr4[2]);
-$arr4[2] = array_flip($arrhy);
-$arrres = array();
-for($i=0;$i<$count;$i++) {
-if (mb_substr_count($text_koren, $arr4[2][$i]) > 1) { 
-if (strpos(trim($arr4[1][$i]), ' ') > 0) 
-$arrres[$arr4[1][$i]] = mb_substr_count($text_koren, $arr4[2][$i]); // наши словосочетаниея имеющие больше 1-го вхождения (словосочетание - вхождений)
 }
 }
-arsort($arrres); // сортируем словосочетания по вхождениям
-$arrres2 = array_keys($arrres); // переводим в массив словосочетаний (номер - словосочетание)
+for($i=0;$i<$counts;$i++) { // строим фразы
+if (strpos('-—,.?();:!',trim($texts[$i])) < 1 and strpos('-—,.?();:!',trim($texts[$i+1])) < 1) {
+$sear1 = sklon(trim($texts[$i]));
+$sear2 = sklon(trim($texts[$i+1]));
+$sear3 = sklon(trim($texts[$i+2]));
+if (array_key_exists($sear1,$arr) and array_key_exists($sear2,$arr) and strpos($arr5,$sear1.' '.$sear2) < 1 and mb_substr_count($text, trim($texts[$i]).' '.trim($texts[$i+1])) > 1) {
+$arr4[trim($texts[$i]).' '.trim($texts[$i+1])] = mb_substr_count($text, trim($texts[$i]).' '.trim($texts[$i+1])); // Фраза в 2 слова и ее вес
+$arr5 .= $sear1.' '.$sear2.' ';
+}
+if ($i < $counts-1 and array_key_exists($sear1,$arr) and array_key_exists($sear3,$arr) and strpos($arr5,$sear1.' '.trim($texts[$i+1]).' '.$sear3) < 1 and mb_substr_count($text, trim($texts[$i]).' '.trim($texts[$i+1]).' '.trim($texts[$i+2])) > 1) {
+$arr4[trim($texts[$i]).' '.trim($texts[$i+1]).' '.trim($texts[$i+2])] = mb_substr_count($text, trim($texts[$i]).' '.trim($texts[$i+1]).' '.trim($texts[$i+2])); // Фраза в 3 слова с предлогом в середине и ее вес
+$arr5 .= $sear1.' '.trim($texts[$i+1]).' '.$sear3.' ';
+}
+if ($i < $counts-2 and array_key_exists($sear2,$arr) and array_key_exists($sear3,$arr) and strpos($arr5,trim($texts[$i]).' '.$sear2.' '.$sear3) < 1 and strpos($arr5,$sear2.' '.trim($texts[$i]).' '.$sear3) < 1 and strpos($arr5,$sear2.' '.$sear3) < 1 and mb_substr_count($text, trim($texts[$i]).' '.trim($texts[$i+1]).' '.trim($texts[$i+2])) > 1) {
+$arr4[trim($texts[$i]).' '.trim($texts[$i+1]).' '.trim($texts[$i+2])] = mb_substr_count($text, trim($texts[$i]).' '.trim($texts[$i+1]).' '.trim($texts[$i+2])); // Фраза в 3 слова с предлогом в начале и ее вес
+$arr5 .= trim($texts[$i]).' '.$sear2.' '.$sear3.' ';
+}
+}
+}
+arsort($arr4); // сортируем словосочетания по вхождениям
+$arrres2 = array_keys($arr4); // переводим в массив словосочетаний (номер - словосочетание)
 $countres2 = count($arrres2);
 $y =1; // этот счетчик будет работать в двух циклах
 $str = '';  // начинаем строить строку с ключами (берем словосочетания)
@@ -152,7 +157,9 @@ function normaltext($text, $a) { // Нормализация текста - уб
   $text = preg_replace($regex, ' ', $text);
   if ($a !== 1) { // для description не нужно
     // убираем ненужные знаки
-    $text = str_ireplace(array("&nbsp;", "\r\n", "\r", "\n", "\t", "-", "—", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", ",", ".", "&", "%", "?", "/", "(", ")", ";", ":", "`", "_", "'", "=", "+", "*", "^", "#", "!", "]", "[", "\""), " ", $text);
+    $text = str_ireplace(array("&nbsp;", "\r\n", "\r", "\n", "\t", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "&", "%", "/", "`", "_", "'", "=", "+", "*", "^", "#", "]", "[", "\""), " ", $text);
+      $text = str_ireplace(array("-", "—", ",", ".", "?", "(", ")", ";", ":", "!"), array(" - ", " — ", " , ", " . ", " ? ", " ( ", " ) ", " ; ", " : ", " ! "), $text);
+ 
   }
   return trim($text);
 }
@@ -187,7 +194,8 @@ $text = mb_substr($text, 0, -3);
 
 if (mb_strlen($text) > 3) {
 $s2 = mb_substr($text, mb_strlen($text)-2, 2); // окончание слова в 2 символа
-if ($s2=="ев"||$s2=="ов"||$s2=="ье"||$s2=="еи"||$s2=="ии"||$s2=="ей"||$s2=="ой"||$s2=="ий"||$s2=="ям"||$s2=="ем"||$s2=="ам"||$s2=="ом"||$s2=="ах"||$s2=="ях"||$s2=="ию"||$s2=="ью"||$s2=="ия"||$s2=="ья"||$s2=="ок")
+if ($s2=="ев"||$s2=="ов"||$s2=="ье"||$s2=="еи"||$s2=="ые"||$s2=="ие"||$s2=="ии"||$s2=="ей"||$s2=="ой"||$s2=="ий"||$s2=="ям"||$s2=="ем"||$s2=="ам"||
+$s2=="ых"||$s2=="ом"||$s2=="ах"||$s2=="ях"||$s2=="ию"||$s2=="ью"||$s2=="ия"||$s2=="ья"||$s2=="ок")
 $text = mb_substr($text, 0, -2);
 $s1 = mb_substr($text, mb_strlen($text)-1, 1); // окончание слова в 1 символ
 if ($s1=="а"||$s1=="у"||$s1=="е"||$s1=="ы"||$s1=="и"||$s1=="й"||$s1=="о"||$s1=="ю"||$s1=="я"||$s1=="ь")
@@ -263,10 +271,7 @@ $result .= "</tr>";
 	$summ+=$raz;
 	$proc+=$procent_slovo;
       }
-  $result .= '</table><br>Всего в тексте ключевых слов - '.$summ.'<br>Их процент - '.$proc;
-  if ( $proc < 5 ) { $result .= '<br>Недостаточно ключевых слов в тексте.'; }
-  elseif ( $proc > 8 ) { $result .= '<br>Много ключевых слов в тексте.'; }
-  else { $result .= '<br>Оптимальное количество ключевых слов.'; }
+  $result .= '</table>';
   return  $result;
 }
 

@@ -1623,7 +1623,7 @@ function edit_main($id) {
 
 	if ($name == 10) {
 	echo "<tr>
-	<td>Режим меню: <a class='punkt' href=\"javascript:$('#re_menu').toggle('slow');\">Справка</a>.
+	<td>Режим меню: <a class='punkt' onclick=\"$('#re_menu').toggle('slow');\">Справка</a>.
       <div id=re_menu style='display:none;'>".close_button('re_menu')."<p>Меню сайта может настраиваться автоматически или вручную. Если выбран авто-режим — при редактировании блока можно будет выбрать разделы, папки и страницы сайта, а также их очередность. <p>В ручном режиме меню создается по простым правилам (для того, чтобы быть универсальным и легко переключать варианты отображения):<br>[элемент открыть][url=/]Главная[/url][элемент закрыть]<br>[элемент открыть][url=#]Пункт меню 1[/url][элемент закрыть]<br>[элемент открыть][url=#]Пункт меню 2[/url]<br>&nbsp;&nbsp;[уровень открыть]<br>&nbsp;&nbsp;[элемент открыть][url=#]Подпункт 1[/url][элемент закрыть]<br>&nbsp;&nbsp;[элемент открыть][url=#]Подпункт 2[/url][элемент закрыть]<br>&nbsp;&nbsp;[уровень закрыть]<br>[элемент закрыть]<br><i>где # - это ссылка на страницу.</i><br>В меню может быть до 3-х уровней вложенности</div>
 	</td>
 	<td>".select("options[re_menu]", "1,0", "автоматический,ручной", $re_menu)."</td>
@@ -1797,28 +1797,28 @@ function edit_main($id) {
 			$title_razdelsX .= "<option value='-".$key."'>".$value."</option>";
 		}
 		echo "<tr valign=top><td width=50%>
-		<a class='button small' href='javascript:min_menu()'>← Вложенность -</a> 
-		<a class='button small' href='javascript:max_menu()'>→ Вложенность +</a> 
-		<a class='button small' href='javascript:bottom_menu(1)'>↑ Поднять</a> 
-		<a class='button small' href='javascript:bottom_menu(0)'>↓ Опустить</a> 
-		<select size=13 class='w100' id='menu_element' onclick='javascript:select_menu()'>".$menu_elements."</select><br>
-		<a class='button small red white' href='javascript:del_menu()'>× Удалить</a>
-		<a class='button small red white ml20' href='javascript:delete_menu()'>Очистить всё</a>
+		<a class='button small punkt' onclick='min_menu()'>← Вложенность -</a> 
+		<a class='button small punkt' onclick='max_menu()'>→ Вложенность +</a> 
+		<a class='button small punkt' onclick='bottom_menu(1)'>↑ Поднять</a> 
+		<a class='button small punkt' onclick='bottom_menu(0)'>↓ Опустить</a> 
+		<select size=13 class='w100' id='menu_element' onclick='select_menu()'>".$menu_elements."</select><br>
+		<a class='button small punkt red white' onclick='del_menu()'>× Удалить</a>
+		<a class='button small punkt red white ml20' onclick='delete_menu()'>Очистить всё</a>
 		</td><td>
 		<span class=h3>Адрес ссылки (URL):</span><br>
 		<input id=link class=w100><br>
 		<span class=h3>Название ссылки:</span><br>
 		<input id=link_title class='w100 mb10'>
-		<div id='izmena' style='display:none' class='mb20'><a class='button blue' href='javascript:red_menu()'>Изменить</a><br></div>
-		<a class='button green' href='javascript:add_menu(0)'>+ Добавить в конец меню</a>
-		<a class='button green small' href='javascript:add_menu(1)'>в начало</a><br><br>
+		<div id='izmena' style='display:none' class='mb20'><a class='button blue' onclick='red_menu()'>Изменить</a><br></div>
+		<a class='button green' onclick='add_menu(0)'>+ Добавить в конец меню</a>
+		<a class='button green small punkt' onclick='add_menu(1)'>в начало</a><br><br>
 
-		Выбрать для добавления в меню:<br><a class='button' href='javascript:$(\"#link\").val(\"/\");$(\"#link_title\").val(\"Главная\");'>Главная</a> 
-		<a class='button black' href='javascript:$(\"#razdel\").toggle();'>Раздел</a> 
-		<!-- <a class='button small black' href='javascript:void(0)'>Папку</a> 
-		<a class='button small black' href='javascript:void(0)'>Страницу</a> -->
+		Выбрать для добавления в меню:<br><a class='button' onclick='$(\"#link\").val(\"/\");$(\"#link_title\").val(\"Главная\");'>Главная</a> 
+		<a class='button black' onclick='$(\"#razdel\").toggle();'>Раздел</a> 
+		<!-- <a class='button small punkt black' onclick='void(0)'>Папку</a> 
+		<a class='button small punkt black' onclick='void(0)'>Страницу</a> -->
 		<div id='razdel' style='display:none'>
-		<select class='w100' id='razdels' onchange='javascript:select_razdels()'>".$title_razdelsX."</select>
+		<select class='w100' id='razdels' onchange='select_razdels()'>".$title_razdelsX."</select>
 		</div>
 		</td></tr>";
 	}
