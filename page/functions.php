@@ -505,7 +505,15 @@ function my_calendar($fill='', $modul, $showdate='') { // Функция выв�
 ////////////////////////////////////////////////////////////
 function select($name,$vars,$vars_name,$znachenie,$add='') { // генерация SELECT элемента формы
   // $add - добавление, например id или onchange...
-  $return = "<select name='".$name."'".$add.">";
+  if ( ($vars == "0,1" || $vars == "1,0") && ($vars_name == "ДА,НЕТ" || $vars_name == "НЕТ,ДА" || $vars_name == "НЕТ,ЕСТЬ")) {
+    $add .= " class='hide'";
+    $style1 = $style2 = "";
+    if ($znachenie == "1") $style1 = "style='display:none;'"; 
+    else $style2 = "style='display:none;'";
+    $id = md5($name);
+    $button = "<a class='button red white' id=on_".$id." href='javascript: $(\"#".$id." [value=1]\").attr(\"selected\", \"selected\");  $(\"#on_".$id."\").hide().next().show();'".$style1.">Выключено</a><a class='button green' id=off_".$id." href='javascript: $(\"#".$id." [value=0]\").attr(\"selected\", \"selected\"); $(\"#off_".$id."\").hide().prev().show();'".$style2.">Включено</a>";
+  } else { $button = ""; $id=""; }
+  $return = "<select id='".$id."' name='".$name."'".$add.">";
   $vars = explode(",",$vars);
   $vars_name = explode(",",$vars_name);
   $vybor = false; // если выбор не сделан - напишем этот невыбранный вариант!
@@ -518,7 +526,7 @@ function select($name,$vars,$vars_name,$znachenie,$add='') { // генераци
   if ($vybor == false) {
   $return .= "<option value='".$znachenie."' selected style='background:#dddddd;'>".$znachenie."</option>";
   }
-  $return .= "</select>";
+  $return .= "</select>".$button;
   return $return;
 }
 /////////////////////////////////////////////////////////////

@@ -181,7 +181,7 @@ echo "
 	<li><a href='http://web-standards.ru'>Сайт — Веб-стандарты, российское сообщество разработчиков, статьи</a></li>
 	<li><a href='http://habrahabr.ru/post/159101/'>Статья — Базовые стили и полезные CSS-сниппеты</a></li>
 	<li><a href='http://habrahabr.ru/post/158577/'>Статья — jQuery-сниппеты и плагины для iPad</a></li>
-	<li><a href=''></a></li>
+	<li><a href='http://efimov.ws/main/develop/javascript/650-effektnyix-jquery-mootools-css-plaginov-i-skriptov-dlya-veb-razrabotchikov.html'>700+ эффектных jQuery Mootools CSS решений для веб-разработчиков</a></li>
 	<li><a href=''></a></li>
 	<li><a href=''></a></li>
 	<li><a href=''></a></li>
@@ -325,8 +325,8 @@ body {}
 	<br>Препятствует массовому копированию статей на чужие сайты глупыми злоумышленниками. Невозможность выделить/скопировать текст и нажать правую кнопку мыши. </td></tr>
 
 	<tr valign=top class=p3><td>
-	Защита комментариев: </td><td class=small>
-	".select("options[captcha_ok]", "1,0", "НЕТ,ЕСТЬ", $captcha_ok)."
+	Отключить защиту комментариев: </td><td class=small>
+	".select("options[captcha_ok]", "0,1", "НЕТ,ЕСТЬ", $captcha_ok)."
 	<br>По умолчанию - вкл. При отключении можно не вводить проверочный код или вводить его неправильно — он не будет проверяться. </td></tr>
 
 	<tr valign=top class=p4><td>
@@ -349,12 +349,12 @@ body {}
 
 	<tr valign=top><td>
 	Показывать в администрировании страницы, добавленные посетителями:</td><td class=small>
-	".select("options[show_userposts]", "0,1,2", "НЕТ,ДА,Точка вместо кнопки (скрытый вариант)", $show_userposts)."
+	".select("options[show_userposts]", "0,1", "НЕТ,ДА", $show_userposts)."
 	</td></tr>
 
 	<tr valign=top><td>
 	Показывать комментарии в администрировании:</td><td class=small>
-	".select("options[show_comments]", "0,1,2", "НЕТ,ДА,Точка вместо кнопки (скрытый вариант)", $show_comments)."
+	".select("options[show_comments]", "0,1", "НЕТ,ДА", $show_comments)."
 	</td></tr>
 
 	<tr valign=top><td>

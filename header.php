@@ -1366,7 +1366,9 @@ case "31": # Блок JS
 		$spisok = array("p","table", "div", "blockquote");
 		foreach ($zagolovok as $z) {
 			foreach ($spisok as $s) {
-				$sent = '<script>jQuery(document).ready(function($) {$("'.$z.'").toggleClass("button").next("'.$s.'").hide();$("'.$z.'").click(function() {$(this).next("'.$s.'").slideToggle();return false;});});</script>';
+				$sent = '<script>$(function() {
+						$("'.$z.'").toggleClass("button").next("'.$s.'").hide(); $("'.$z.'").click(function() { $(this).next("'.$s.'").slideToggle(); return false; });
+				});</script>';
 				$soderganie = str_replace("[список ".$z." ".$s."]", $sent, $soderganie); 
 				$block = str_replace("[список ".$z." ".$s."]", $sent, $block);
 			}

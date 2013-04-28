@@ -1920,11 +1920,11 @@ function savebase ($name, $basename, $type, $text) { // Сохранение д�
   if ($post==2) $active = 0;
   if ($post==3) $active = 2;
   if( (isset($_SESSION['captcha_keystring']) && $_SESSION['captcha_keystring'] == $_POST['keystring']) or $captcha_ok == 1) {
-  $texts = implode("', '",$text);
-  $types = array_keys($text);
-  $types = implode(", ",$types);
-  $db->sql_query("INSERT INTO ".$prefix."_base_".$basename." (id, $types, active) VALUES (NULL, '$texts', '2')") or die('Ошибка базы данных: Не удается добавить вашу информацию.');
-  $location = "/-".$DBName.""; // _addbase_1
+    $texts = implode("', '",$text);
+    $types = array_keys($text);
+    $types = implode(", ",$types);
+    $db->sql_query("INSERT INTO ".$prefix."_base_".$basename." (id, $types, active) VALUES (NULL, '$texts', '2')") or die('Ошибка базы данных: Не удается добавить вашу информацию.');
+    $location = "/-".$DBName.""; // _addbase_1
   } else die("<b>Ошибка: Вы неправильно ввели цифровой код, необходимый для подтверждения вашей человечности!</b><p>Нажмите <a href=\"".$link."\">Вернуться назад</a>, а затем обновите страницу [клавиша F5], если код не изменится на новый.");
   //} else die("<b>Ошибка: вероятно попытка взлома или добавление в базу данных из сохраненной страницы. Вернитесь на сайт! name - $name, basename - $basename");
   unset($_SESSION['captcha_keystring']);
@@ -2147,7 +2147,6 @@ function savepost ($avtor, $post_title, $info, $num, $cid, $add){
   $info =  preg_replace($pattern, $replacement, $info);
 
   // Узнаем настройку раздела
-  //$tema_zapret = 1;
   $sql3 = "select `text` from `".$prefix."_mainpage` where `name`='$DBName' and `type`='2'";
   $result3 = $db->sql_query($sql3);
   $row3 = $db->sql_fetchrow($result3);
@@ -2157,12 +2156,7 @@ function savepost ($avtor, $post_title, $info, $num, $cid, $add){
     parse_str($main_options);
   }
 
-  if ($tema_zapret == 1) {
-    $avtor = str_replace("http://", "", $avtor);
-    $info = str_replace("http://", "", $info);
-    $post_title = str_replace("http://", "", $post_title);
-  }
-  if ($tema_zapret == 2 and ( (strpos(" ".$avtor, "http://")) or (strpos(" ".$info, "http://")) or (strpos(" ".$post_title, "http://")) ) ) die('Запрещено размещать информацию, содержащую ссылки. Это защита от спама. <br><b>Если ссылку разместить необходимо - пишите ее без http://</b>');
+  if (($tema_zapret == 1 || $tema_zapret == 2) and ( (strpos(" ".$avtor, "http://")) or (strpos(" ".$info, "http://")) or (strpos(" ".$post_title, "http://")) ) ) die('Запрещено размещать информацию, содержащую ссылки. Это защита от спама. <br><b>Если ссылку разместить необходимо - пишите ее без http://</b>');
 
   if ($ok == true) {
   $db->sql_query("INSERT INTO ".$prefix."_pages (pid, module, cid, title, open_text, main_text, date, redate, counter, active, golos, comm, foto, search, mainpage, rss) VALUES (NULL, '$DBName', '$num', '$post_title', '$avtor', '$info', '$date', '$date', '0', '$active', '0', '0', '', '', '', '0')") or die('Ошибка базы данных: Не удается добавить вашу информацию.');
@@ -2610,13 +2604,7 @@ function savecomm($avtor, $avtory, $info, $num, $comm_otvet, $maily, $mail, $adr
 
     //$info = str_replace(". ..", "...", $info);
 
-    if ($tema_zapret_comm == 1) {
-      $avtory = str_replace("http://", "", $avtory);
-      $info = str_replace("http://", "", $info);
-      $adres = str_replace("http://", "", $adres);
-      $tel = str_replace("http://", "", $tel);
-    }
-    if ($tema_zapret_comm == 2 and ( strpos(" ".$avtory.$info.$maily.$adres.$tel, "://") or strpos(" ".$avtory.$info.$maily.$adres.$tel, "www.") ) ) die('Запрещено размещать информацию, содержащую ссылки.');
+    if (($tema_zapret_comm == 1 || $tema_zapret_comm == 2) and ( strpos(" ".$avtory.$info.$maily.$adres.$tel, "://") or strpos(" ".$avtory.$info.$maily.$adres.$tel, "www.") ) ) die('Запрещено размещать информацию, содержащую ссылки.');
 
     if ($avtor != "" or $mail != "" or !preg_match("#[а-яА-Я]#i",$info)) die('Запрещено размещать спам.');
 

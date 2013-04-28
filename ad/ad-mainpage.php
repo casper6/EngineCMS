@@ -817,9 +817,9 @@ function edit_main($id) {
 	$options = str_replace($module_name."|","",$text);
 
 	// обнулили все опции от греха подальше
-	$media=$folder=$col=$view=$golos=$golosrazdel=$post=$comments=$datashow=$favorites=$socialnetwork=$search=$search_papka=$put_in_blog=$base=$vetki=$citata=$media_comment=$no_html_in_opentext=$no_html_in_text=$show_add_post_on_first_page=$show_add_post_fileform=$razdel_shablon=$page_shablon=$comments_all=$comments_num=$comments_mail=$comments_adres=$comments_tel=$comments_desc=$golostype=$pagenumbers=$comments_main=$tags_type=$tema_zapret_comm=$pagekol=$table_light=$designpages=$comments_add=$div_or_table=0;
+	$media=$folder=$col=$view=$golos=$golosrazdel=$post=$comments=$datashow=$favorites=$socialnetwork=$search=$search_papka=$put_in_blog=$base=$vetki=$citata=$media_comment=$no_html_in_opentext=$no_html_in_text=$show_add_post_on_first_page=$show_add_post_fileform=$razdel_shablon=$page_shablon=$comments_all=$comments_num=$comments_mail=$comments_adres=$comments_tel=$comments_desc=$golostype=$pagenumbers=$comments_main=$tags_type=$pagekol=$table_light=$designpages=$comments_add=$div_or_table=0;
 
-	$menushow=$titleshow=$razdel_link=$peopleshow=$design=$tags=$podrobno=$podrazdel_active_show=$podrazdel_show=$tipograf=$limkol=$tags_show=$tema_zapret=1;
+	$menushow=$titleshow=$razdel_link=$peopleshow=$design=$tags=$podrobno=$podrazdel_active_show=$podrazdel_show=$tipograf=$limkol=$tags_show=$tema_zapret=$tema_zapret_comm=1;
 
 	$comment_shablon=2;
 
@@ -1118,9 +1118,9 @@ function edit_main($id) {
 	<td>Можно заменить надпись «Раскрыть все комментарии» на:</td>
 	<td>".input("options[comments_8]", $comments_8)."</td>
 	</tr>
-	<tr bgcolor=#f79779>
-	<td>Запретить размещать в комментарии ссылки?</td>
-	<td>".select("options[tema_zapret_comm]", "2,1,0", "ЗАПРЕТИТЬ,УДАЛЯТЬ http:// в начале ссылки,РАЗРЕШИТЬ", $tema_zapret_comm)."</td>
+	<tr>
+	<td><b>Запретить добавление ссылок</b> в комментариях?</td>
+	<td>".select("options[tema_zapret_comm]", "1,0", "НЕТ,ЕСТЬ", $tema_zapret_comm)."</td>
 	</tr>
 	</table>
 	</div>
@@ -1157,9 +1157,9 @@ function edit_main($id) {
 	<td>Замена названия текстового поля «Подробнее (содержание темы)». Например: «Описание фото», «Текст статьи», «Сообщение». Если написать «no» - это поле не будет отображаться.</td>
 	<td>".input("options[tema_opis]", $tema_opis)."</td>
 	</tr>
-	<tr bgcolor=#f79779>
-	<td>Запретить размещать в тексте ссылки?</td>
-	<td>".select("options[tema_zapret]", "2,1,0", "ЗАПРЕТИТЬ,УДАЛЯТЬ http:// в начале ссылки,РАЗРЕШИТЬ", $tema_zapret)."</td>
+	<tr>
+	<td><b>Запретить добавление ссылок</b> в тексте добавляемой страницы?</td>
+	<td>".select("options[tema_zapret]", "1,0", "НЕТ,ЕСТЬ", $tema_zapret)."</td>
 	</tr>
 	</table>
 	</div>
@@ -1684,6 +1684,8 @@ function edit_main($id) {
 	if ($name != 31 && $name != 7 && $name != 10) redactor($red, $text, 'text'); // редактор: типа редактора, редактируемое поле
 	if ($name == 31) redactor($red, $text, 'text', '', 'javascript');
 	if ($name == 7) redactor($red, "<?\n".$text."\n?>", 'text', '', 'php');
+
+	//if ($name == 10) $text = utf8_decode($text);
 
 	if ($name == 10 && $re_menu == 1) echo "<div style='display:none'>";
 	if ($name == 10 && $re_menu == 1) redactor($red, '', 'text', '');
