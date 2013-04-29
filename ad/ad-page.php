@@ -73,7 +73,7 @@ function edit_base_pages_category($cid, $red=0) {
   $parent_id = $row['parent_id'];
 
   echo "<form action='sys.php' method='post'>
-  <div class=fon>
+  <div class='fon w100 mw800'>
   <div class='black_grad' style='height:45px;'>
   <button type=submit id=new_razdel_button class='medium green' onclick=\"show('sortirovka');\" style='float:left; margin:3px;'><span style='margin-right: -2px;' class='icon white small' data-icon='c'></span> Сохранить</button>
   <span class='h1' style='padding-top:10px;'>
@@ -220,8 +220,8 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
     $result = $db->sql_query($sql);
     $row = $db->sql_fetchrow($result);
     $new_pid = $row['pid'];
-    if ( $new > 0 ) echo "<div class='notice success'><a target='_blank' class='green' href=/-".$module."_page_".$pid.">Страница</a> отредактирована. "; 
-    else echo "<div class='notice warning'>Открыть страницу <a target='_blank' class='green' href=/-".$module."_page_".$pid.">на сайте</a>. ";
+    if ( $new > 0 ) echo "<div class='notice success mw700'><a target='_blank' class='green' href=/-".$module."_page_".$pid.">Страница</a> отредактирована. "; 
+    else echo "<div class='notice warning mw700'>Открыть страницу <a target='_blank' class='green' href=/-".$module."_page_".$pid.">на сайте</a>. ";
     if ( $new_pid != 0 ) echo "Есть предыдущая версия: <button title='Заменить этой копией оригинал...' onclick='resetpage(".$new_pid."); setTimeout(\"location.reload()\", 2000);' class='small'><img class='icon2 i24' src='/images/1.gif'>Заменить на последнюю резервную копию</button>";
     else echo "Предыдущей версии нет.";
     echo "</div>";
@@ -250,7 +250,7 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
       $result = $db->sql_query($sql);
       $row = $db->sql_fetchrow($result);
       $new_title = $row['title'];
-      echo "<div class='notice success'>Страница «<a target='_blank' class='green' href=/-".$name."_page_".$pid.">".$new_title."</a>» добавлена. <a href=/sys.php?op=base_pages_edit_page&name=".$name."&pid=".$pid."><img class='icon2 i35' src='/images/1.gif'>Редактировать</a>. <b>Добавим еще одну страницу?</b></div>";
+      echo "<div class='notice success mw700'>Страница «<a target='_blank' class='green' href=/-".$name."_page_".$pid.">".$new_title."</a>» добавлена. <a href=/sys.php?op=base_pages_edit_page&name=".$name."&pid=".$pid."><img class='icon2 i35' src='/images/1.gif'>Редактировать</a>. <b>Добавим еще одну страницу?</b></div>";
     }
     // Получаем шаблон
     $sql = "select id, title, shablon from ".$prefix."_mainpage where name='".$name."' and `tables`='pages' and type='2'";
@@ -289,7 +289,7 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
   }
 
   echo "<form action='sys.php' method='post' enctype='multipart/form-data'>
-  <div class=fon><div class='black_grad h40'>
+  <div class='fon w100 mw800'><div class='black_grad h40'>
   <button type=submit onClick=\" if (document.getElementById('to_razdel').value=='') { alert('Выберите раздел для страницы (слева сверху)'); return false; } else { submit(); } \" class='medium green left3'><span class='icon white small mr-2' data-icon='c'></span> Сохранить</button>
   <span class='h1 pt10'>".$main_title."</span>";
   if ($nastroi != 1) red_vybor();

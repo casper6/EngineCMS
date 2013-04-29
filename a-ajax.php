@@ -1057,7 +1057,7 @@ if ($func == "rep") { // Копия/Перемещения/Ярлык стран
   $info = "<b>Страница успешно перемещена.</b>";
   $db->sql_query("UPDATE ".$prefix."_pages SET `module`='$razdel', `cid`='$papka' WHERE pid='$id'") or $info = "Перемещение не удалось.";
   }
-  echo "<div class='notice success center'><h2>".$info."</h2></div>"; exit;
+  echo "<div class='notice success center mw700'><h2>".$info."</h2></div>"; exit;
 }
 ######################################################################################
 if ($func == "replace") { // Перемещение страницы

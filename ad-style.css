@@ -239,6 +239,7 @@ img.bigicon {margin-bottom: 5px; width:128px; height:128px; border:0; float:left
 .in_r {display:inline; float:right;}
 .in_b {display:inline-block;}
 .mw800 {min-width:780px;}
+.mw700 {min-width:700px;}
 .parent{ padding:3px; width:150px; float:left; margin-right:12px;}
 .both{ float:left; margin:0 0px 0 0; padding:0px;}
 

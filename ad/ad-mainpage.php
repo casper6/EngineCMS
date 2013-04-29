@@ -56,7 +56,7 @@ function menu() {
 		<strong>В средней колонке</strong> также выводится предполагаемое имя, e-mail и телефон человека, искавшего этот запрос.<br>
 		<strong>В последней колонке:</strong> первое число - найдено в названии страниц, второе - в содержании.";
 		
-		if ($statlink != "") echo "<h2><img class='icon2 i41' src='/images/1.gif'><a href=".$statlink." target=_blank>Сторонняя статистика</a></h2>"; else echo "<div class='notice warning'>Сторонняя статистика не настроена. См. <a href='sys.php?op=Configure'>Настройки</a></div>";
+		if ($statlink != "") echo "<h2><img class='icon2 i41' src='/images/1.gif'><a href=".$statlink." target=_blank>Сторонняя статистика</a></h2>"; else echo "<div class='notice warning w100 mw800'>Сторонняя статистика не настроена. См. <a href='sys.php?op=Configure'>Настройки</a></div>";
 		echo "<h2><img class='icon2 i41' src='/images/1.gif' style='margin-top:10px'>Встроенная статистика:</h2>
 		<table cellpadding=2 class='w100 mw800 block radius'><tr valign=top><td width=25%>".$stat_razdel."</td><td width=30%>".$stat_page."</td><td>".$stat_search."</td></tr></table></div>
 		</body>
@@ -225,7 +225,7 @@ function create_main($type) {
 	<br>".help_design()."<br>
 	<span class=h2>Содержание дизайна (HTML):</span><br>
 	<textarea name=text rows=15 cols=86 class='w100 h40 f16'></textarea>
-	<div class='notice success black'><span class='icon large white' data-icon='C'></span>
+	<div class='notice success black w100 mw800'><span class='icon large white' data-icon='C'></span>
 	Здесь вы можете вставить готовый HTML-код (от тега &lt;body&gt; до &lt;/body&gt;, не включительно) или набрать его с нуля.
 	<br><b>[содержание]</b> - автоматический блок для вывода страниц. Не использовать его можно лишь в случае присоединения дизайна к разделу, состоящему из одной страницы — в этом случае можно всю страницу поместить в дизайн или в раздел.</div>
 	<input type=hidden name=id value=0>
@@ -491,11 +491,11 @@ function create_main($type) {
 	Не должно быть одинаковых английских названий!<br>
 	Кнопка «Отправить» обычно добавляется последней. Её можно и не добавлять, тогда она будет добавлена автоматически.
 	</td></tr></table>
-	<div id='opisanie_bloka' class='notice success black'>
+	<div id='opisanie_bloka' class='notice success black w100 mw800'>
 	<span class='icon large white' data-icon='C'></span>В этом блоке можно написать любой текст, использовать HTML, а также другие созданные блоки.<br>
 После создания блока, необходимо его настроить — настройка откроется автоматически.
 	</div>
-	<br> <div class='notice warning black'>Если выбран дизайн, в нём обязательно должен быть блок [содержание], сам дизайн его обрамляет.</div></td></tr></table>";
+	<br> <div class='notice warning black w100 mw800'>Если выбран дизайн, в нём обязательно должен быть блок [содержание], сам дизайн его обрамляет.</div></td></tr></table>";
 	break;
 	########################################################!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	case "spisok": $type_opis = "поля (дополнительное поле для страниц)";

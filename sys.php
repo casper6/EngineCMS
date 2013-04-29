@@ -119,17 +119,14 @@ echo "<title>Вход в Администрирование</title>
 </head>\n
 <body style='background: url(images/adfon/23.png);' class='elements'>\n
 <div class='grid'>
-<form action='red' class=radius style='margin-top:20px; background: url(images/adfon/17.png); -webkit-box-shadow:0px 0px 15px rgba(50, 50, 50, 0.6);-moz-box-shadow:0px 0px 15px rgba(50, 50, 50, 0.6);box-shadow:0px 0px 15px rgba(50, 50, 50, 0.6);' method='post' id=form>
-<h5>Вход в администрирование</h5>
-<label class='col_12'>Псевдоним:</label>
-<input type=text name=aid size=20>
-<label class='col_12'>Пароль:</label>
-<input type=password name=pwd size=20><br>
+<form action='red' class=radius style='margin-top:20px; ' method='post' id=form>
+<h5>Вход <nobr>в администрирование</nobr></h5>
+<input type=text name=aid size=20> <label>Псевдоним</label><br>
+<input type=password name=pwd size=20> <label>Пароль</label><br><br>
 <input class='large green mt5 w100' type=submit value=' Войти '>
-
 <input type=hidden name=password value='".$random."'>
 <input type=hidden name=op value=login></form></div>
-<script>$('#form').submit(function(e) {e.preventDefault();$('#form').animate({opacity: 0.1, width: '70%', height: '400'}, 3500,function(){ $('#form').unbind('submit').submit(); });});</script></body></html>";
+<script>$('#form').submit(function(e) {e.preventDefault();$('#form').animate({opacity: 0.1}, 2500,function(){ $('#form').unbind('submit').submit(); });});</script></body></html>";
 }
 
 function GraphicAdmin() {
