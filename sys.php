@@ -92,11 +92,44 @@ if ( $razdel_sort == 1 or $razdel_sort == 2 or $razdel_sort == 0 ) setcookie("ra
 /******************/
 
 function login() {
-	global $admin_file;
+	global $admin_file, $lang;
 	mt_srand ((double)microtime()*1000000);
 	$random = mt_rand(0, 1000000);
 	header ("Content-Type: text/html; charset=utf-8");
-	echo "<!doctype html>\n<html lang=\"ru-RU\" dir=\"ltr\">\n<head><title>Вход в Администрирование</title><meta http-equiv='Content-Type' content='text/html; charset=utf-8'><meta http-equiv='pragma' content='no-cache' /><meta http-equiv='no-cache' /><meta http-equiv='cache-control' content='no-cache' /><link rel=\"stylesheet\" href=\"ad-style.css\" type=\"text/css\"><link REL=\"shortcut icon\" href=\"images/favicon_cms.png\" type=\"image/x-icon\"><script src='http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js'></script></head>\n<body style=\"background: url(images/adfon/23.png);\">\n<center><form action='red' class=radius style=\"background: url(images/adfon/17.png); margin-top:170px; width:600px;-webkit-box-shadow:0px 0px 15px rgba(50, 50, 50, 0.6);-moz-box-shadow:0px 0px 15px rgba(50, 50, 50, 0.6);box-shadow:0px 0px 15px rgba(50, 50, 50, 0.6);\" method='post' id=form><h1>Вход в администрирование сайта</h1><br><table><tr><td align=right>Псевдоним: </td><td><input type=text name=aid size=20></td></tr><tr><td align=right>Пароль: </td><td><input type=password name=pwd size=20></td></tr><tr><td colspan=2><input type=hidden name=password value='".$random."'><input type=hidden name=op value=login><input type=submit value=\" Войти \" class='w100 h40'></td></tr></table></form></center><script>$('#form').submit(function(e) {e.preventDefault();$('#form').animate({opacity: 0.1, width: '70%', height: '400'}, 3500,function(){ $('#form').unbind('submit').submit(); });});</script></body></html>";
+	echo "<!doctype html>\n
+<!--[if lt IE 7 ]><html class='ie ie6 no-js lt-ie9 lt-ie8 lt-ie7' lang='".$lang."'> <![endif]-->
+<!--[if IE 7 ]><html class='ie ie7 no-js lt-ie9 lt-ie8' lang='".$lang."'> <![endif]-->
+<!--[if IE 8 ]><html class='ie ie8 no-js lt-ie9' lang='".$lang."'> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang='".$lang."' dir='ltr' class='no-js'> <!--<![endif]-->
+\n<head>";
+if (file_exists("favicon.png"))  echo "<link rel='shortcut icon' href='favicon.png' />";
+else echo "<link rel='shortcut icon' href='favicon.ico' />";
+echo "<title>Вход в Администрирование</title>
+<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
+<meta http-equiv='Content-language' content='".$lang."'> 
+<meta name='copyright' content='ДвижОк CMS'>
+<meta name='author' content='13i'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+<!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
+<!--[if lt IE 9]><script src='http://html5shim.googlecode.com/svn/trunk/html5.js'></script><![endif]-->
+<meta http-equiv='pragma' content='no-cache' /><meta http-equiv='no-cache' /><meta http-equiv='cache-control' content='no-cache' />
+<link rel='stylesheet' href='ad-style.css' type='text/css'>
+<link REL='shortcut icon' href='images/favicon_cms.png' type='image/x-icon'><script src='http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js'></script>
+<script type='text/javascript' src='includes/css-frameworks/kickstart/js/kickstart.js'></script><link rel='stylesheet' type='text/css' href='includes/css-frameworks/kickstart/css/kickstart.css' media='all' /><link rel='stylesheet' type='text/css' href='includes/css-frameworks/kickstart/style.css' media='all' />
+</head>\n
+<body style='background: url(images/adfon/23.png);' class='elements'>\n
+<div class='grid'>
+<form action='red' class=radius style='margin-top:20px; background: url(images/adfon/17.png); -webkit-box-shadow:0px 0px 15px rgba(50, 50, 50, 0.6);-moz-box-shadow:0px 0px 15px rgba(50, 50, 50, 0.6);box-shadow:0px 0px 15px rgba(50, 50, 50, 0.6);' method='post' id=form>
+<h5>Вход в администрирование</h5>
+<label class='col_12'>Псевдоним:</label>
+<input type=text name=aid size=20>
+<label class='col_12'>Пароль:</label>
+<input type=password name=pwd size=20><br>
+<input class='large green mt5 w100' type=submit value=' Войти '>
+
+<input type=hidden name=password value='".$random."'>
+<input type=hidden name=op value=login></form></div>
+<script>$('#form').submit(function(e) {e.preventDefault();$('#form').animate({opacity: 0.1, width: '70%', height: '400'}, 3500,function(){ $('#form').unbind('submit').submit(); });});</script></body></html>";
 }
 
 function GraphicAdmin() {
@@ -168,7 +201,7 @@ function GraphicAdmin() {
 	$soderganie_menu .= "<button id='new_razdel_button' title='Добавить страницу...' class='medium green nothing' onclick='location.href=\"/sys.php?op=base_pages_add_page#1\"'><span class=\"icon white small\" data-icon=\"+\"></span> страницу</button>
 	</div>";
 
-	echo "<table style='width:100%; background: url(/images/fon.png); margin-top:5px; padding:0;' cellspacing=0 cellpadding=5><tr valign=top><td id='razdel_td' class='radius nothing'><div id='razdels' style='background:#e7e9ec;'>";
+	echo "<table style='background: url(/images/fon.png); padding:0;' cellspacing=0 cellpadding=0 class='w100 mw800 mt5'><tr valign=top><td id='razdel_td' class='radius nothing'><div id='razdels' style='background:#e7e9ec;'>";
 
 	// Сортировка разделов: 0 - цвет, 1 - алфавит, 2 - посещаемость
 	$razdel_sort_name = array("<a href=red?razdel_sort=0>цвету раздела</a>", "<a href=red?razdel_sort=1>названию</a>", "<a href=red?razdel_sort=2>посещаемости</a>");

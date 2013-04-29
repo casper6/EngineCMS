@@ -195,8 +195,9 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
         if ($diz=="" and $razr=="" and $bloc=="" and $stri=="") 
           $title = $row['title'].'<span class="gray"> &rarr; не используется</span>';
         else 
-          $title = $row['title'].$diz.$razr.$bloc.$stri;
-      } else $title = $row['title'];
+          $title = '<a href="sys.php?op=mainpage&type=3&id='.$row['id'].'&red=1">'.$row['title'].'</a>'.$diz.$razr.$bloc.$stri;
+      } else $title = '<a href="sys.php?op=mainpage&type=3&id='.$row['id'].'&red=1">'.$row['title'].'</a>';
+
       if ($row['color'] != "1") {
         $icon_disable = "43"; $text_disable = "Отключить блок"; $class_disable = "";
       } else {
@@ -204,9 +205,11 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
       }
       if ($n == $row['name']) $nu = "-";  else { $n = $row['name']; $nu = $row['name']; }
       $bgcolor = "#FFeecc"; //FFddaa
-       if ($nu == "-") $block = "<tr valign=top id='block".$row['id']."'><td class='padleft30".$class_disable."'>"; else $block = "<tr valign=top><td style='background:white;'><br><h2>".$block_names[$nu]." &darr;</h2></td></tr><tr id='block".$row['id']."'><td class='padleft30".$class_disable."'>";
+
+       if ($nu == "-") $block = "<tr valign=top id='block".$row['id']."'><td class='padleft30".$class_disable."'>"; 
+       else $block = "<tr valign=top><td style='background:white;'><br><h2>".$block_names[$nu]." &darr;</h2></td></tr><tr id='block".$row['id']."'><td class='padleft30".$class_disable."'>";
       $title = $block.$title;
-      $blocks_ok = "".$title."<div style='margin-left:20px; display: inline; float:right;'>
+      $blocks_ok = $title."<div style='margin-left:20px; display: inline; float:right;'>
        <a href='sys.php?op=mainpage&type=3&id=".$row['id']."&red=1' title='Редактировать в HTML'><img class='icon2 i34' src='/images/1.gif'></a> 
        <a href='sys.php?op=mainpage&type=3&id=".$row['id']."&nastroi=1' title='Настроить блок'><img class='icon2 i38' src='/images/1.gif'></a> 
        <a class='punkt' onclick='offblock(".$row['id'].")' title='".$text_disable."'><img class='icon2 i".$icon_disable."' src='/images/1.gif'></a>  
@@ -216,7 +219,7 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
        // удалить блок sys.php?op=mainpage_del&id=".$row['id']."&type=3
       $blocks_no .= $blocks_ok;
     }
-    $info .= "<span class=green>Названия блоков в [квадратных скобках] можно использовать для вставки в дизайн, разделы, папки, страницы или другие блоки (т.е. в любом месте сайта).</span><table width=100% class='table_light'>".$blocks_no."</table>";
+    $info .= "<span class=green>Названия блоков в [квадратных скобках] можно использовать для вставки в дизайн, разделы, папки, страницы или другие блоки (т.е. в любом месте сайта).</span><table class='table_light w100'>".$blocks_no."</table>";
   break;
 
 

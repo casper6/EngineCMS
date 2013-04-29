@@ -148,7 +148,7 @@ if ($row['realadmin'] == 1) {
 $opt_save = ":";
 if ($ok==1) $opt_save = " сохранены";
 
-echo "<table style='width:100%; margin-top:5px; padding:0; background: #e2e5ea;' cellspacing=0 cellpadding=0><tr valign=top><td id='razdel_td' class='radius nothing' width=340>
+echo "<table class='w100 mw800 mt5' style='padding:0; background: #e2e5ea;' cellspacing=0 cellpadding=0><tr valign=top><td id='razdel_td' class='radius nothing' width=340>
 
 	<div id='razdels' style='background:#e7e9ec;'>
 			<div class='black_grad'><span class='h1'>Настройки".$opt_save."</span></div>";
@@ -158,14 +158,14 @@ echo "<table style='width:100%; margin-top:5px; padding:0; background: #e2e5ea;'
 	echo "<div id='mainrazdel1' class='dark_pole2'><a class='base_page' onclick=\"options_show('1','show_options_company')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"Y\"></span><span class='plus20'>Карточка компании (мини блоки)</span></div></a></div>";
 	
 	echo "<div class='right3'><button id=mainrazdel9 style='float:right;' title='Добавить заготовку...' class='dark_pole2' onclick=\"options_show('5','show_options_zagotovka'); $('#add_clip').show('slow');\"><span class='mr-2 icon darkgrey small' data-icon='+'></span><span class='plus20'>Добавить</span></button></div>
-	<div id='mainrazdel5' class='dark_pole2'><a class='base_page' onclick=\"options_show('5','show_options_zagotovka')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"7\"></span><span class='plus20'>Заготовки для редактора</span></div></a></div>";
+	<div id='mainrazdel5' class='dark_pole2'><a class='base_page' onclick=\"options_show('5','show_options_zagotovka')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"7\"></span><span class='plus20'>Заготовки редактора</span></div></a></div>";
 	echo "<div id='mainrazdel3' class='dark_pole2'><a class='base_page' onclick=\"options_show('3','show_options_adspeed')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"z\"></span><span class='plus20'>Настройки Администрирования</span></div></a></div>";
 	echo "<div id='mainrazdel4' class='dark_pole2'><a class='base_page' onclick=\"options_show('4','show_options_pass_block')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"O\"></span><span class='plus20'>Смена пароля и Блокировка по IP</span></div></a></div>";
-	echo "<div id='mainrazdel7' class='dark_pole2'><a class='base_page' onclick=\"options_show('7','show_options_oldfotos'); trash_pics();\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"1\"></span><span class='plus20'>Удаление неиспользуемых фотографий</span></div></a></div>";
+	echo "<div id='mainrazdel7' class='dark_pole2'><a class='base_page' onclick=\"options_show('7','show_options_oldfotos'); trash_pics();\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"1\"></span><span class='plus20'>Удаление старых фото</span></div></a></div>";
 	echo "<div id='mainrazdel5' class='dark_pole2'><a class='base_page' href='sys.php?op=subscribe'><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"@\"></span><span class='plus20'>Cписок адресатов для рассылки</span></div></a></div>";
 	echo "<div id='mainrazdel6' class='dark_pole2'><a class='base_page' href='sys.php?op=users'><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"U\"></span><span class='plus20'>Пользователи (в разработке!)</span></div></a></div>";
-    echo "<div id='mainrazdel11' class='dark_pole2'><a class='base_page' href='sys.php?op=txt_and_csv_main'><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"(\"></span><span class='plus20'>Импорт из txt и csv (в разработке!)</span></div></a></div>";
-echo "<div id='mainrazdel12' class='dark_pole2'><a class='base_page' href='sys.php?op=regions_main'><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"&\"></span><span class='plus20'>Регионы (в разработке!)</span></div></a></div>";
+    echo "<div id='mainrazdel11' class='dark_pole2'><a class='base_page' href='sys.php?op=txt_and_csv_main'><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"(\"></span><span class='plus20'>Импорт из txt и csv (в разработке)</span></div></a></div>";
+echo "<div id='mainrazdel12' class='dark_pole2'><a class='base_page' href='sys.php?op=regions_main'><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"&\"></span><span class='plus20'>Регионы</span></div></a></div>";
 
 	echo "<div id='mainrazdel10' class='dark_pole2'><a class='base_page' onclick=\"options_show('10','show_options_razrab');\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"b\"></span><span class='plus20'>Информация для разработчиков</span></div></a></div>";
 
@@ -213,7 +213,8 @@ echo "
 <tr valign=top><td style='min-width:250px;'>
 <b>Включить <a href='http://tinysort.sjeiti.com' target='_blank'>сортировку TinySort</a></b>:</td><td class=small>
 ".select("options[sortable]", "0,1", "НЕТ,ДА", $sortable)."<br>
-Позволяет сортировать любые элементы, обращаясь к ним через jQuery. Пример:
+Позволяет сортировать любые элементы, обращаясь к ним через jQuery. <a class='punkt' onclick=\"$('#sortable').toggle('slow');\">Пример</a>.
+<div id=sortable style='display:none;'>".close_button('sortable')."
 <pre>
 &lt;div id=sorter style='display:none;'&gt;Сортировка:
 &lt;a style=\"cursor:pointer;\" onclick=\"$('div#tovars>div#tovar').tsort('h3',{attr:'title'});\"&gt;по цене&lt;/a&gt;, 
@@ -222,6 +223,7 @@ echo "
 Можно показывать сортировку только при наличии сортируемых элементов:
 &lt;script&gt;$(document).ready(function() { if ( document.getElementById('tovar') != null ) $('#sorter').show('slow'); });&lt;/script&gt;
 </pre>
+</div>
 </td></tr>
 
 <tr valign=top><td style='min-width:250px;'>

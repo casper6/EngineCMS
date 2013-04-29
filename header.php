@@ -1734,9 +1734,11 @@ if (strlen($add_fonts)>1) {
 	$add_body = "";
 	if ($stopcopy == 1) $add_body .= " oncontextmenu='notmenu();'"; // «защита» от глупых копипастеров
 	if ($kickstart == 10) $add_body .= " class='yui3-skin-sam'>";
+	if ($kickstart == 1) $add_body .= ' class="elements"';
 	# НАЧАЛО ТЕЛА
 	echo "</head>\n<body".$add_body.">";
-	if ($kickstart == 1) echo "<a id='top-of-page'></a><div id='wrap' class='clearfix'>"; //<div class='grid'>
+	if ($kickstart == 1) echo "<div class='grid'>"; 
+	//<a id='top-of-page'></a><div id='wrap' class='clearfix'>"; //<div class='grid'>
 	if ($kickstart == 3 or $kickstart == 8) echo "<div class='container'>";
 	//if ($kickstart == 4) echo "<div id='page'>";
 	echo $block; // Вывод страницы

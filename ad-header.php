@@ -138,7 +138,7 @@ $url = str_replace("http://".$siteurl,"",$url);
 $url2 = explode("_",$url);
 $url2 = explode("?",$url2[0]);
 $url2 = $url2[0];
-echo "<table width=100%><tr><td align=center width=170>
+echo "<table class='mw800 w100'><tr><td align=center width=170>
 	<a title=\"Перейти в Содержание\" href=\"sys.php\" class='nothing'><img src=images/logo_admin.png></a>
 </td><td>
 	<div class='nothing noprint'>
@@ -151,12 +151,14 @@ global $buttons;
 $buttons = array(' Содержание',' Оформление',' Настройки',' Статистика',' ПОМОЩЬ','');
 if ($deviceType != 'computer') $buttons = array('','','','','','');
 
+echo "<nobr>";
+
 if ($op == "adminMain") red_help(8);
-if ($op == "mainpage" && $type==2) red_help(9);
+if ($op == "mainpage" && $type==2) red_help(9); 
 
-echo "<button class='small' target=_blank onclick='window.open(\"/\")' title='Перейти на сайт (откроется в новом окне)'><span class=\"icon small black\" data-icon=\"4\"></span> На сайт</button> ".$post.$kick." <form method=post name=search action='/--search' style='display:inline;' class='nothing'><input type='search' placeholder='Поиск по сайту' name=slovo class=w45></form>
+echo "<button class='small' target=_blank onclick='window.open(\"/\")' title='Перейти на сайт (откроется в новом окне)'><span class=\"icon small black\" data-icon=\"4\"></span> На сайт</button> ".$post.$kick." <form method=post name=search action='/--search' style='display:inline;' class='nothing'><input type='search' placeholder='Поиск по сайту' name=slovo class=w45></form></nobr>
 </div>
-
+<nobr>
 <ul class=\"button-bar\">
 <li class='first ".$color1."'><a title='Содержание сайта: разделы, папки, страницы и комментарии' href='sys.php'><span class=\"icon gray small\" data-icon=\",\"></span>".$buttons[0]."</a></li>
 <li class='".$color2."'><a title='Дизайн, стиль, блоки и прочие элементы оформления сайта' href='sys.php?op=mainpage&amp;type=element'><span class=\"icon gray small\" data-icon=\"Y\"></span>".$buttons[1]."</a></li>
@@ -164,7 +166,7 @@ echo "<button class='small' target=_blank onclick='window.open(\"/\")' title='П
 <li class='".$color4."'><a title='Открыть статистику сайта' href='sys.php?op=mainpage&amp;type=stat'><span class=\"icon gray small\" data-icon=\"j\"></span>".$buttons[3]."</a></li>
 <li class='last'><a title='Выход из администрирования\n(мера безопасности)' href='sys.php?op=logout'><span class=\"icon red small\" data-icon=\"Q\"></span></a></li>
 </ul>
-
+</nobr>
 	</div>
 </td></tr></table><a name=1></a>";
 

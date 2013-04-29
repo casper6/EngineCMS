@@ -23,14 +23,14 @@ function menu() {
 		while ($row = $db->sql_fetchrow($result)) {
 			$stat_razdel .= "<tr valign=top><td class='polosa gray'><a target='_blank' href='/-".$row['name']."'>".strip_tags($row['title'], '<b><i>')."</a></td><td align=center class='polosa gray'>".$row['counter']."</td></tr>";
 		}
-		$stat_razdel = "<strong>Посещаемость разделов:</strong><table width=100% class='table_light'>".$stat_razdel."</table>Посещения страниц сайта администратором не учитываются. ";
+		$stat_razdel = "<strong>Посещаемость разделов:</strong><table class='w100 table_light'>".$stat_razdel."</table>Посещения страниц сайта администратором не учитываются. ";
 	
 		$sql = "SELECT pid, module, title, counter from ".$prefix."_pages where active='1' and `tables`='pages' order by counter desc limit 0,20";
 		$result = $db->sql_query($sql) or die('Ошибка при попытке прочитать посещаемость страниц');
 		while ($row = $db->sql_fetchrow($result)) {
 		$stat_page .= "<tr valign=top><td class='polosa gray'><a target='_blank' href='/-".$row['module']."_page_".$row['pid']."'>".strip_tags($row['title'], '<b><i>')."</a></td><td align=center class='polosa gray'>".$row['counter']."</td></tr>";
 		}
-		$stat_page = "<strong>и страниц:</strong> <a href='sys.php?op=mainpage&amp;type=stat_page'>См. популярные &rarr;</a><table width=100% class='table_light'>".$stat_page."</table>";
+		$stat_page = "<strong>и страниц:</strong> <a href='sys.php?op=mainpage&amp;type=stat_page'>См. популярные &rarr;</a><table class='w100 table_light'>".$stat_page."</table>";
 		$user_name = array();
 		$user_mail = array();
 		$user_tel = array();
@@ -52,13 +52,13 @@ function menu() {
 			if (isset($user_tel[$user_ip])) if ($user_tel[$user_ip] != '') $user_info .= "<br>Тел. ".$user_tel[$user_ip];
 			$stat_search .= "<tr valign=top><td class='polosa gray'>".date2normal_view($row['data'], 2, 1)."</td><td class='polosa'>".$row['slovo']."<br><span class='gray'>".$user_info."</span></td><td class='polosa gray'>".$row['pages']."</td></tr>";
 		}
-		$stat_search = "<strong>Искали через поиск на сайте:</strong> <a href='sys.php?op=mainpage&amp;type=stat_search'>См. всё &rarr;</a><table width=100% class='table_light'>".$stat_search."</table>
+		$stat_search = "<strong>Искали через поиск на сайте:</strong> <a href='sys.php?op=mainpage&amp;type=stat_search'>См. всё &rarr;</a><table class='w100 table_light'>".$stat_search."</table>
 		<strong>В средней колонке</strong> также выводится предполагаемое имя, e-mail и телефон человека, искавшего этот запрос.<br>
 		<strong>В последней колонке:</strong> первое число - найдено в названии страниц, второе - в содержании.";
 		
 		if ($statlink != "") echo "<h2><img class='icon2 i41' src='/images/1.gif'><a href=".$statlink." target=_blank>Сторонняя статистика</a></h2>"; else echo "<div class='notice warning'>Сторонняя статистика не настроена. См. <a href='sys.php?op=Configure'>Настройки</a></div>";
 		echo "<h2><img class='icon2 i41' src='/images/1.gif' style='margin-top:10px'>Встроенная статистика:</h2>
-		<table cellpadding=2 width=100% class='block radius'><tr valign=top><td width=25%>".$stat_razdel."</td><td width=30%>".$stat_page."</td><td>".$stat_search."</td></tr></table></div>
+		<table cellpadding=2 class='w100 mw800 block radius'><tr valign=top><td width=25%>".$stat_razdel."</td><td width=30%>".$stat_page."</td><td>".$stat_search."</td></tr></table></div>
 		</body>
 		</html>";
 		exit;
@@ -144,7 +144,7 @@ function menu() {
 		}
 		if ($numrows > 0) $pro = intval($nu * 100 / $numrows);
 		else $pro = 0;
-		echo "<table width=100%><tr valign=bottom><td><nobr><strong>Страницы</strong> (всего: ".$numrows.", показано ниже: ".$nu.", эффективность: ".$pro."%)</nobr><br>
+		echo "<table class='w100'><tr valign=bottom><td><nobr><strong>Страницы</strong> (всего: ".$numrows.", показано ниже: ".$nu.", эффективность: ".$pro."%)</nobr><br>
 		Новые (до 15 посещений) и малопосещаемые (меньше 3 в день) не отображаются.</td><td width=80><strong><nobr>Процент</nobr></strong></td><td><nobr>Посещения</nobr></td><td><strong><nobr>Среднее</nobr></strong></td><td><nobr>Время, дней</nobr></td></tr>".$stat_page."</table>";
 		exit;
 	}
@@ -160,7 +160,7 @@ function mainpage($name="") {
 	elseif ($display_addmenu == false) echo "<center><br>Создание основных разделов сайта запрещено администратором.</center>";
 	else {
 		
-		echo "<table class='block_back' cellspacing=0 cellpadding=0><tr valign=top><td id='razdel_td' class='radius' width=300>
+		echo "<table class='block_back w100 mw800' cellspacing=0 cellpadding=0><tr valign=top><td id='razdel_td' class='radius' width=300>
 
 			<div id='razdels' class='razdels'>
 			<div class='black_grad h40'><button id=new_razdel_button title='Добавить оформление...' class='small black right3' onclick=\"show_animate('addmain');\"><span class='mr-2 icon darkgrey small' data-icon='+'></button>
@@ -219,7 +219,7 @@ function create_main($type) {
 	switch ($type) {
 	case "design": $type_opis = "дизайна (HTML-разметка, внешний вид сайта)";
 	$create.="<div id=about class=block style='display:none;'>Дизайн — это обрамление страниц сайта, всё, что окружает контент, содержание. В дизайне могут быть блоки, которые выводят необходимую информацию. Например созданный вами блок меню или автоматический блок [статистика], который выводит счетчик статистики из настроек сайта. В общем, дизайн — это весь html-код, от body до /body (невключительно), а сама страница заменена на служебное слово [содержание] - блок, который выводит содержание подключенных разделов и их страниц. После создания дизайна, откройте его редактирование и присвойте необходимые стили (css).<br></div>
-	<table width=100%><tr><td>
+	<table class='w100 mw800'><tr><td>
 	<span class=h2>Название:</span> По-русски, можно с пробелами
 	<input type='text' name='title' value='' size=40 class='w100 h40 f16' autofocus><br>
 	<br>".help_design()."<br>
@@ -242,7 +242,7 @@ function create_main($type) {
 	case "css": $type_opis = "стиля (CSS, настройка внешнего вида)";
 	$create.="
 	<div id=about class=block style='display:none;'>Стили - это CSS (каскадные таблицы стилей), описание оформления элементов сайта. Стили подключаются к дизайну (при его редактировании). В дизайне может быть использовано сразу несколько стилей. При подключении стилей они объединяются в один стиль и сжимаются.<br></div>
-	<table width=100%><tr><td>
+	<table class='w100 mw800'><tr><td>
 	<h2>Название:</h2>По-русски, можно с пробелами<br>
 	<input type=text name=title value='' size=40 class='w100 h40 f16' autofocus>
 	<h2>Содержание стиля:</h2>";
@@ -302,12 +302,12 @@ function create_main($type) {
 			}
 
 	$create = "<div id=about class=block style='display:none;'>Блок — это дополнительный элемент сайта, который может быть вставлен в любом его месте. Блоки бывают автоматические (заранее заданные системой), полуавтоматические (создаваемые с последующей настройкой того, что будет в них отображаться) и ручные (текст, HTML, JavaScript или PHP-код).<br></div>
-	<table width=100%><tr valign=bottom><td width=50%>
+	<table class='w100 mw800'><tr valign=bottom><td width=50%>
 	<span class=h2>Название блока:</span><br><input type='text' name='title' value='' size=60 class='w100 h40 f16' autofocus></td><td>
 	<span class=h3>Дизайн блока:</span><br><select name=design><option value=0>выбирать необязательно</option>".$styles."</select><br>Не стоит использовать дизайн для раздела!
 	</td></tr><tr><td colspan=2>
 	<span class=h2>Выберите тип блока:</span> (справа увидите его параметры (не у всех блоков), а снизу — описание)
-	<table width=100% cellspacing=0 cellpadding=0><tr valign=top><td class='pr10'>
+	<table class='w100 mw800' cellspacing=0 cellpadding=0><tr valign=top><td class='pr10'>
 	<select id=name size=10 name='name' class='w100 f14' onchange=\"
 
 	var arr = [ 'Блок выводит несколько страниц выбранного раздела или всех разделов', 'Блок выводит несколько комментариев со страниц выбранного раздела или всех разделов', 'В этом блоке можно написать любой текст, использовать HTML, а также другие созданные блоки', '«Ротатор» используется для показа блоков, текста или html.<br>При каждом обновлении страницы будет показан один из написанных элементов, разделение списка ротации — через символ «|» (вертикальная черта)', 'Блок выводит папки выбранного раздела или всех разделов', 'Блок выводит голосование или опрос, для чего нужно ввести сам вопрос в названии блока, а список вопросов — в Содержании блока, через «Enter»', 'Блок «Фотогалерея» выводит фотографии в нужном месте сайта, для его создания используется список адресов закаченный фотографий, через «Enter».<br>А их описание ставится сразу после адреса через символ «|» (вертикальная черта), пример: /img/1.jpg|Фото 1. <br>— Имена файлов могут содержать любые символы. <br>— Загрузка автоматическая сразу после выбора файлов. <br>— Фотографии будут автоматически переименованы, развернуты в нужную сторону, сжаты и уменьшены по ширине до 1000 пикселей.<br><div class=red>— Если впоследствии вы захотите стереть какую-либо фотографию — просто удалите ее строчку из блока галереи (не забудьте сохранить блок), затем перейдите во вкладку «Настройки», откройте «Удаление неиспользуемых фотографий» и удалите эту фотографию.</div>', 'PHP-код пишется в Содержании блока.<br>PHP можно писать сразу, без начальных и конечных обозначений ( &lt; ?php ... ? &gt; ).<br>Вывод информации в блок производится через переменную <b>$"."txt</b>', 'Блок выводит папки открытого в данный момент раздела или ничего не выводит, если это Главная страница или папок в разделе не создано', 'Эта фотогалерея собирает первые фотографии из страниц выбранного раздела (или всех разделов).<br>Если в предисловии страницы не обнаружена фотография, эта страница пропускается.', 'Меню сайта может настраиваться автоматически или вручную. Если выбран авто-режим — при редактировании блока можно будет выбрать разделы, папки и страницы сайта, а также их очередность. <br>В ручном режиме меню создается по простым правилам (для того, чтобы быть универсальным и легко переключать варианты отображения):<br>[элемент открыть][url=/]Главная[/url][элемент закрыть]<br>[элемент открыть][url=#]Пункт меню 1[/url][элемент закрыть]<br>[элемент открыть][url=#]Пункт меню 2[/url]<br>&nbsp;&nbsp;[уровень открыть]<br>&nbsp;&nbsp;[элемент открыть][url=#]Подпункт 1[/url][элемент закрыть]<br>&nbsp;&nbsp;[элемент открыть][url=#]Подпункт 2[/url][элемент закрыть]<br>&nbsp;&nbsp;[уровень закрыть]<br>[элемент закрыть]<br><i>где # - это ссылка на страницу.</i><br>В меню может быть до 3-х уровней вложенности', 'Календарь на текущем месяце показывает ссылками те даты, за которые созданы страницы в выбранном разделе (или всех разделах).<br>Также показывает текущую дату', 'В РАЗРАБОТКЕ!!!!!!!!! Контактная форма может применяться для создания страницы Контакты, а также для отправки разнообразных анкет, заявок, жалоб и т.д', 'Облако тегов — это вращающийся трехмерный шар, состоящий из ключевых слов, взятых из страниц выбранного раздела (или всех разделов). Под ним есть ссылка на альтернативный текстовый вариант облака', '14', '15', '16', '17', '18', '19', 'База данных (количество по 1 колонке верт.)', 'База данных (количество по 1 колонке гор.)', 'База данных (количество по 2 колонкам)', 'База данных (список колонок)', '24', '25', '26', '27', '28', '29', 'Статистика раздела, выводит кол-во посещений выбранного раздела', 'JavaScript-блок автоматически встанет в HEAD и его не нужно где-либо специально размещать.', '32' ];
@@ -443,7 +443,7 @@ function create_main($type) {
 		$(\"#textarea\").val($(\"#textarea\").val()+ $(\"#form_element\").val() + \"|\" + $(\"#form_name\").val() + add + \"\\n\" );
 	}
 	'><span class='icon white small' data-icon='+'></span>Добавить поле</a><br>
-	<table width=100%><tr valign=top><td width=50%>
+	<table class='w100 mw800'><tr valign=top><td width=50%>
 	<div class='form_name' style='display:none'>Название <span class=small>(по-русски)</span>*:<br>
 		<input id='form_name' class='w100 h40 f16'></div>
 	</td><td>
@@ -518,7 +518,7 @@ function create_main($type) {
 			}
 			// Добавлены пользователи USERAD
 	$create.="<div id=about class=block style='display:none;'>В Разделах сайта есть папки, в папках лежат страницы (статьи, новости и т.д.). У каждой страницы несколько полей для хранения информации: название, дата, предисловие, содержание и т.д. Если вдруг для какого либо раздела (или для всех разделов) не хватает подобного поля - его можно добавить. Примеры использования полей: отдельное поле для ввода автора (для статей), поле для загрузки фотографии (для фотогалереи), выбор из раскрывающегося списка определенного населенного пункта (для каталога предприятий), период времени (для афиши) и т.д. А для того, чтобы поля начали отображаться на страницах - есть произвольные шаблоны, которые можно создать и подключить к любому разделу (См. в настройках раздела - Шаблон для всего раздела или Шаблон для страницы).<br><b>Поле может принадлежать или какому-то одному разделу или сразу всем разделам.</b><br></div>
-	<table width=100%><tr><td width=50%>
+	<table class='w100 mw800'><tr><td width=50%>
 	<input type=hidden name=type value='4'>
 	<h2>Название поля</h2><input type=text name=title size=40 class='w100 h40 f16' autofocus><br>(рус.)</td><td>
 	<h2>Обращение</h2><input type=text name=namo size=40 class='w100 h40 f16'><br>(англ., без пробелов) Используется для вывода в шаблонах как: [обращение]</td></tr>
@@ -554,7 +554,7 @@ function create_main($type) {
 	########################################################
 	case "base": $type_opis = "базы данных (таблица)";
 	$create.="<div id=about class=block style='display:none;'>База данных — это таблица с удобным редактированием (по типу БД, а не электронных таблиц), поиском и фильтрами. Таблица может содержать любые поля и выводиться на страницы сайта или использоваться для внутреннего документооборота компании (доступно через администрирование).</b><br></div>
-	<table width=100%><tr><td colspan=2>
+	<table class='w100 mw800'><tr><td colspan=2>
 	<input type='hidden' name='type' value='5'>
 	<input type='hidden' name='shablon' value=''>
 	</td></tr>
@@ -584,7 +584,7 @@ function create_main($type) {
 	<b>Поля базы данных (названия столбцов):</b><br>
 
 	<a name=pole></a>
-	<table id=table width=100% class=table_light>
+	<table id=table  class='w100 mw800 table_light'>
 	  <tr valign=bottom>
 		<td width=18%>Имя поля <nobr>по-английски</nobr></td>
 		<td width=20%>Имя поля <nobr>по-русски</nobr></td>
@@ -633,7 +633,7 @@ function create_main($type) {
 	########################################################
 	case "shablon": $type_opis = "шаблона (оформление раздела или блока)";
 		$create.="<div id=about class=block style='display:none;'>Шаблоны используются для изменения внешнего вида разделов, страниц и блоков. Используются либо стандартные поля страниц, либо дополнительно созданные Поля. Для страниц можно использовать любой дизайн, блоки и разделы используют табличную основу — начало < table >, соответственно сами шаблоны должны начинаться с < tr > и заканчиваться на < /tr >. Для того, чтобы в шаблоне раздела предусмотреть возможность именования столбцов таблицы, например: Дата, Название, Ссылка... после самого шаблона раздела нужна написать ключевое слово [следующий] и написать шаблон именования столбцов, т.е. по сути скопировать шаблон строк раздела, но вместо заготовок автоматических вставок поставить в него названия соответствующих полей-столбцов.<br></div>
-		<table width=100%><tr><td width=50%>
+		<table class='w100 mw800'><tr><td width=50%>
 		<h2>Название шаблона</h2>
 		<input type=text name=title size=40 class='w100 h40 f16' autofocus> (рус.)</td><td>
 		<h2>Обращение:</h2>
@@ -649,7 +649,7 @@ function create_main($type) {
 	break;
 	}
 	echo "<form method='POST' action='sys.php' style='display:inline;' enctype='multipart/form-data'>
-	<div class=fon>
+	<div class='fon w100 mw800'>
 	<div class='black_grad h40'>
 	<button type='button' style='float:right;margin:3px;' class='medium orange' onClick=\"show_animate('about')\">?</button>
 	<button type=submit id=new_razdel_button class='small green' style='float:left; margin:3px;'><span class='mr-2 icon white medium' data-icon='c'></span>Сохранить</button>
@@ -755,7 +755,7 @@ function edit_main($id) {
 	$spisok_var = implode(",",$spisok_var);
 	$spisok_names = implode(",",$spisok_names);
 
-	echo "<div class=fon>
+	echo "<div class='fon w100 mw800'>
 	<div class='black_grad h40'>
 	<button type=submit id=new_razdel_button class='medium green' style='float:left; margin:3px;'><span class='mr-2 icon white small' data-icon='c'></span>Сохранить</button>
 	<span class='h1' style='padding-top:10px;'>";
@@ -852,7 +852,7 @@ function edit_main($id) {
 
 	<a class='dark_pole align_center' onclick=\"show_animate('block1');\"><h2>Дизайн (обрамление страниц)</h2>
 	</a><div id=block1 style='display: none;'>
-	<table width=100% class='table_light'>
+	<table  class='w100 mw800 table_light'>
 	<tr>
 	<td><b>Дизайн раздела</b> (по умолчанию - Главный дизайн) [<a href=sys.php?op=mainpage&amp;name=design target=_blank>Добавить дизайн</a>]</td>
 	<td>".select("options[design]", $design_var, $design_names, $design)."</td>
@@ -866,7 +866,7 @@ function edit_main($id) {
 
 	<a class='dark_pole align_center' onclick=\"show_animate('block3');\"><h2>Шаблоны (расположение и наличие элементов)</h2>
 	</a><div id=block3 style='display: none;'>
-	<table width=100% class='table_light'>
+	<table  class='w100 mw800 table_light'>
 	<tr>
 	<tr>
 	<td><b>Шаблон для всего раздела</b> (вывод заголовков страниц и т.д.)</td>
@@ -894,7 +894,7 @@ function edit_main($id) {
 
 	<a class='dark_pole align_center' onclick=\"show_animate('block5');\"><h2>Раздел и папки</h2>
 	</a><div id=block5 style='display: none;'>
-	<table width=100% class='table_light'>
+	<table  class='w100 mw800 table_light'>
 	<tr>
 	<td>Количество колонок (столбцов) в списке страниц, выводимом в папках и начале раздела, <nobr>по-умолчанию: 1.</nobr></td>
 	<td>".select("options[limkol]", "1,2,3,4,5,6,7,8,9,10", "1,2,3,4,5,6,7,8,9,10", $limkol)."</td>
@@ -964,7 +964,7 @@ function edit_main($id) {
 
 	<a class='dark_pole align_center' onclick=\"show_animate('block6');\"><h2>Ключевые слова (тэги)</h2>
 	</a><div id=block6 style='display: none;'>
-	<table width=100% class='table_light'>
+	<table  class='w100 mw800 table_light'>
 	<tr>
 	<td><strong>Где показывать ключевые слова?</strong></td>
 	<td>".select("options[tags]", "3,2,5,6,4,7,1,0", "ВЕЗДЕ,в разделе и папках,в разделе (в разработке),в разделе и на страницах (в разработке),в папках (в разработке),в папках и на страницах (в разработке),на страницах,НИГДЕ", $tags)."</td>
@@ -987,7 +987,7 @@ function edit_main($id) {
 
 	<a class='dark_pole align_center' onclick=\"show_animate('block7');\"><h2>Голосование</h2>
 	</a><div id=block7 style='display: none;'>
-	<table width=100% class='table_light'>
+	<table  class='w100 mw800 table_light'>
 	<tr>
 	<td><strong>Показывать голосование на страницах?</strong></td>
 	<td>".select("options[golos]", "1,0", "ДА,НЕТ", $golos)."</td>
@@ -1006,7 +1006,7 @@ function edit_main($id) {
 
 	<a class='dark_pole align_center' onclick=\"show_animate('block8');\"><h2>Страницы в разделе</h2>
 	</a><div id=block8 style='display: none;'>
-	<table width=100% class='table_light'>
+	<table  class='w100 mw800 table_light'>
 	<tr>
 	<td>Показывать Название страницы?</td>
 	<td>".select("options[titleshow]", "1,0", "ДА,НЕТ", $titleshow)."</td>
@@ -1041,7 +1041,7 @@ function edit_main($id) {
 
 	<a class='dark_pole align_center' onclick=\"show_animate('block9');\"><h2>Комментарии</h2>
 	</a><div id=block9 style='display: none;'>
-	<table width=100% class='table_light'>
+	<table  class='w100 mw800 table_light'>
 	<tr>
 	<td>Показывать Комментарии на страницах</td>
 	<td>".select("options[comments]", "0,1", "НЕТ,ДА", $comments)."</td>
@@ -1128,7 +1128,7 @@ function edit_main($id) {
 
 	<a class='dark_pole align_center' onclick=\"show_animate('block10');\"><h2>Добавление страниц пользователем</h2>
 	</a><div id=block10 style='display: none;'>
-	<table width=100% class='table_light'>
+	<table  class='w100 mw800 table_light'>
 	<tr>
 	<td><b>Разрешить пользователям добавлять страницы</b> в раздел.<br>Выделение серым цветом позволяет сразу писать комментарии к добавленной странице, что особенно актуально для рейтингов.</td>
 	<td>".select("options[post]", "3,2,1,0", "с выделением серым цветом,с проверкой администратора,без проверки,ЗАПРЕТИТЬ", $post)."</td>
@@ -1167,7 +1167,7 @@ function edit_main($id) {
 
 	<a class='dark_pole align_center' onclick=\"show_animate('block4');\"><h2>Дополнительные блоки</h2>
 	</a><div id=block4 style='display: none;'>
-	<table width=100% class='table_light'>
+	<table  class='w100 mw800 table_light'>
 	<tr>
 	<td>Добавление блока Календарь. Выберите поле, подключенное к данному разделу и содержащее период времени (две даты).</td>
 	<td>".select("options[calendar]", $spisok_var, $spisok_names, $calendar)."</td>
@@ -1178,7 +1178,7 @@ function edit_main($id) {
 
 	<a class='dark_pole align_center' onclick=\"show_animate('block2');\"><h2>Подключение базы данных вместо страниц</h2>
 	</a><div id=block2 style='display: none;'>
-	<table width=100% class='table_light'>
+	<table  class='w100 mw800 table_light'>
 	<tr>
 	<td><b>Подключить базу данных</b> вместо страниц и папок [<a href=sys.php?op=mainpage&amp;name=base target=_blank>Добавить</a>]</td>
 	<td>".select("options[base]", $base_var, $base_names, $base)."</td>
@@ -1330,7 +1330,7 @@ function edit_main($id) {
 	<td>".select("options[titleshow]", "2,1,0", "внутри предисловия как блок [заголовок],показывать,не показывать", $titleshow)."</td>
 	</tr>";
 	////////////////
-	if ($name==0 or $name==1 or $name==3 or $name==4 or $name==6 or $name==8 or $name==9 or $name==10 or $name==13) echo "</table><br><br><h2>Настройка данного типа блока:</h2><table width=100% class='table_light'>";
+	if ($name==0 or $name==1 or $name==3 or $name==4 or $name==6 or $name==8 or $name==9 or $name==10 or $name==13) echo "</table><br><br><h2>Настройка данного типа блока:</h2><table  class='w100 mw800 table_light'>";
 	
 
 	if ($name == 3) {
@@ -1665,7 +1665,7 @@ function edit_main($id) {
 	if (intval($nastroi) != 1 or $name == 10) red_vybor();
 	echo "</div>
 
-	<table class=w100><tr valign='top'><td width='50%'>
+	<table class='w100 mw800'><tr valign='top'><td width='50%'>
 	<span class=h2>Название блока</span><br>
 	<textarea class='big w100 h40 f16' name='title' rows='1' cols='10'>".$title."</textarea>
 	</td><td>
@@ -1877,7 +1877,7 @@ function edit_main($id) {
 	// Добавлены пользователи USERAD
 	
 	echo "Редактирование поля</span></div>
-	<table width=100%><tr><td width=50%>
+	<table class='w100 mw800'><tr><td width=50%>
 	<h2>Название поля<br>
 	<textarea class='big w100 h40 f16' name='title' rows='1' cols='10'>".$title."</textarea></h2>
 	</td><td>
@@ -1897,7 +1897,7 @@ function edit_main($id) {
 	if ($type == "5") { ############################### ОТКРЫТИЕ БАЗА ДАННЫХ
 	echo "Редактирование базы данных (таблицы)</span>";
 	echo "</div>
-	<table width=100%><tr><td width=50%>
+	<table class='w100 mw800'><tr><td width=50%>
 	<table width=90%><tr><td align=right><b>База данных:</b></td><td></td></tr>
 	<tr><td align=right><b>Название:</b></td><td style='background-color: ".$color.";'><input type='text' name='title' value='".$title."' size=60></td></tr></table>
 	</td></tr></table>
@@ -1915,7 +1915,7 @@ function edit_main($id) {
 	echo "Редактирование шаблона</span>";
 	if (intval($nastroi) != 1) red_vybor();
 	echo "</div>
-	<table width=100%><tr><td width=50%>
+	<table class='w100 mw800'><tr><td width=50%>
 	<h2>Название:</h2>
 	<textarea class='big w100 h40 f16' name='title' rows='1' cols='10'>".$title."</textarea>
 	</td><td>
@@ -2218,7 +2218,7 @@ function spisok_help() { // проверить вызов
 	прописывать параметры, разделяя их знаком &, указывать значения параметров через знак =, всё без пробелов!<br>
 	например: <b>fil=pic&papka=/img=verh&align=left&resizepic=x&file=&picsize=600&minipic=1&resizeminipic=x&minipicsize=100</b><br>Очередность параметров значения не имеет.<br>
 	<b>Список доступных параметров:</b><br> 
-	<table width=100% cellpadding=5 cellspacing=0 border=1> 
+	<table class='w100 mw800' cellpadding=5 cellspacing=0 border=1> 
 	<tr><td><strong>fil=</strong></td><td>pic - картинка, doc - документ/архив, flash - flash-анимация, avi - видео-ролик</td></tr>
 	<tr><td><strong>papka=</strong></td><td>путь сохранения файла, например /img/</td></tr>
 	<tr><td><strong>align=</strong></td><td>left - слева, right - справа, center - по центру, no - без выравнивания</td></tr>
@@ -2244,7 +2244,7 @@ function block_help() { // проверить вызов
 	Значение параметра пишется сразу через символ = . Очередность параметров значения не имеет.<br>
 	<b>Список доступных параметров:</b><br> 
 	noli shablon sort
-	<table width=100% cellpadding=5 cellspacing=0 border=1> 
+	<table class='w100 mw800' cellpadding=5 cellspacing=0 border=1> 
 
 	<tr><td><strong>media=</strong></td>
 	<td> использование медиа: <font color=green>0 - нет</font>, <font color=red>1 - фотогалерея, 2 - flash, 3 - видео, 4 - музыка</font></td></tr>
