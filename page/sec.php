@@ -77,7 +77,7 @@
     }
   }
 
-  if((isset($admin) && $admin != $_COOKIE['admin'])) {
+  if(isset($admin) && $admin != $_COOKIE['admin'] && !file_exists('install/index.php')) {
     die("Попытка взлома, тип 2");
   }
 

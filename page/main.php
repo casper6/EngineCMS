@@ -2,7 +2,6 @@
 if (!defined('MODULE_FILE')) {
   die ("У вас нет прав для доступа к этому файлу!");
 }
-//require_once("mainfile.php");
 require_once("shablon.php");
 $module_name = basename(dirname(__FILE__));
 ###########################################

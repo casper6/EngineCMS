@@ -28,9 +28,9 @@ php_flag register_globals Off
 RewriteEngine On
 RewriteBase /
 
-RewriteRule ^index.php header.php
-RewriteRule ^index.htm header.php
-RewriteRule ^index.html header.php
+#RewriteRule ^index.php header.php
+#RewriteRule ^index.htm header.php
+#RewriteRule ^index.html header.php
 
 RewriteRule ^admin/ /
 RewriteRule ^red/ /
