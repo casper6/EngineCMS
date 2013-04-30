@@ -126,12 +126,12 @@ $pass = generate_password(10);
 <div class="container">
 	<div class="sixteen columns">
 			<h1 class="remove-bottom" style="margin-top: 40px">Установка CMS «ДвижОк»</h1>
-			<h5>Версия 1.9</h5>
+			<h5>Версия 1.10</h5>
 			<hr />
 		</div>
 		<div class="one-third column">
 			<h3>С чего начать?</h3>
-			<p>На хостинге должны быть установлены: PHP от 5.2.1 до 5.3 (выше пока не поддерживается) и MySQL 4.1 (или выше).<br>В MySQL необходимо создать базу данных.</p>
+			<p>На хостинге должны быть установлены: PHP от 5.2.1 до 5.3 (выше не тестировалось) и MySQL 4.1 (или выше).<br>В MySQL необходимо создать базу данных.</p>
 			<ul class="square">
 				<li><strong>Хост базы данных</strong>:<br><input name="dbhost" value="localhost"></li>
 				<li><strong>Имя базы данных</strong>:<br><input name="dbname" value=""></li>
@@ -159,7 +159,7 @@ $pass = generate_password(10);
 </div>
 <?
 if ($phpversion{0}==5 && $phpversion{2}<2) echo "<b style='color:red;'>Версия PHP — 5.".$phpversion{2}.". Рекомендуется использовать PHP как минимум версии 5.2.1</b>";
-if ($phpversion{0}>=5 && $phpversion{2}>3) echo "<b style='color:red;'>Версия PHP — 5.".$phpversion{2}.". Рекомендуется использовать PHP как максимум версии 5.3.<br>На 5.4 полноценно не тестировалось — вы можете попробовать и передать разработчику все возникшие ошибки.</b>";
+if ($phpversion{0}>=5 && $phpversion{2}>3) echo "<b style='color:red;'>Версия PHP — 5.".$phpversion{2}.". Рекомендуется использовать PHP как максимум версии 5.3.<br>На 5.4 (и выше) полноценно не тестировалось — вы можете попробовать и передать разработчику все возникшие ошибки.</b>";
 if (!function_exists('curl_init')) echo "<b style='color:red;'>Желательно включить поддержку cURL на вашем хостинге.</b>";
 ?>
 </form>
