@@ -1,10 +1,9 @@
 <?php
 // Проверка наличия файла config.php
-if (file_exists("config.php")) {
-	echo "<h3>Найдена установленная CMS «ДвижОк»</h3><li>Если вы только что её установили – удалите каталог install в корне вашего сайта на сервере – после этого сайт заработает.<!-- <li>Если данный сайт создан ранее — вы можете <a href=#>обновить базу данных</a> до новой версии. -->";
-	die();
-}
-// Запуск установки ===========================================
+if (file_exists("config.php")) die("<h3>Найдена установленная CMS «ДвижОк»</h3><li>Если вы только что её установили – удалите каталог install в корне вашего сайта на сервере – после этого сайт заработает.<li>Если по какой-то другой причине в корне сайта оказался файл config.php, CMS еще не установлена и вы запустили её установку — просто сотрите файл config.php и обновите эту страницу.");
+	// <li>Если данный сайт создан ранее — вы можете <a href=#>обновить базу данных</a> до новой версии.
+
+// Запуск установки ====================
 if (isset($_REQUEST['lang'])) {
 	$lang = $_REQUEST['lang'];
 	$ipban = $_REQUEST['ipban'];
@@ -16,11 +15,8 @@ if (isset($_REQUEST['lang'])) {
 	$prefix = $_REQUEST['prefix'];
 	$a = $_REQUEST['a'];
 	$pass = md5($_REQUEST['pass']);
-	//echo "$lang $ipban $site_cash $dbhost $dbuname $dbpass $dbname $prefix $admin $pass";
-
 	// Проверка БД
 	$db = mysql_connect ($dbhost, $dbuname, $dbpass) or die("не выбрана база! ".mysql_error());
-
 	// Создание config.php
 	$conf = '<?php
 ##############################################
@@ -66,31 +62,30 @@ if (stristr(htmlentities($_SERVER[\'PHP_SELF\']), "config.php")) { Header("Locat
 	        }
 	    }
 	}
-	if (!file_put_contents('config.php', $conf, LOCK_EX)) die('Файл config.php в корне сайта не перезаписан. Попробуйте его удалить и перезапустить установку CMS');
-	
-	
-	echo "config настроен";
-
+	if (!file_put_contents('config.php', $conf, LOCK_EX)) die('<li>Файл config.php в корне сайта не перезаписан! Попробуйте его удалить и перезапустить установку CMS.');
+	echo "<li>Файл config.php настроен";
 
 	// Запуск install.php
 	if (file_exists("install/install.php")) include ("install/install.php");
-	else die('<br>Файл install.php в папке install не найден');
-	echo "<br>install запущен";
+	else die('<li>Файл install.php в папке install не найден!');
+	echo "<li>Установка БД окончена";
 	// Запуск обновления
 	//include ("update_old_version.php");
 
 	// Добавление дизайна
 
 	// Добавляем админа
-	$db->sql_query("INSERT INTO `".$prefix."_authors` VALUES ( '".$a."', 'BOG', '".$pass."', '1', '', '0');") or die ('Администратор не был добавлен в базу данных');
-	echo "<br>админ установлен";
+	$db->sql_query("INSERT INTO `".$prefix."_authors` VALUES ( '".$a."', 'BOG', '".$pass."', '1', '', '0');") or die ('<li>Администратор не был добавлен в базу данных');
+	echo "<li>Права администратора установлены";
 	// Переход в админку
-	echo "<h1>Установка успешно завершилась. Удалите папку install</h1> <a href=sys.php>Перейти в Администрирование сайта</a>";
+	echo "<h1>Установка успешно завершилась. Удалите папку install</h1>
+	<a href=sys.php>Перейти в Администрирование сайта</a>";
 	die;
 }
-// НАЧАЛО УСТАНОВКИ ===========================================
+// НАЧАЛО УСТАНОВКИ =====================================
 // Проверка версии PHP
 $phpversion = preg_replace('/[a-z-]/', '', phpversion());
+if ($phpversion{0}<4) die ('Версия PHP ниже плинтуса. Где же ты нарыл такое старьё?! 0_о');
 if ($phpversion{0}==4) die ('Версия PHP — 4. Попросите хостинг-компанию установить PHP как минимум версии 5.2.1');
 $siteurl = $_SERVER["HTTP_HOST"];
 if ($siteurl == "") $siteurl = "localhost";
@@ -159,12 +154,12 @@ $pass = generate_password(10);
 		<div class="one-third column">
 			<h3>Документация и поддержка</h3>
 			<p>Большая часть документации содержится в самой CMS, как в Помощи, так и в необходимых местах. Если встроенной помощи недостаточно — пишите на <a href="mailto:13i@list.ru">13i@list.ru</a> или стучитесь в skype <b>angel13i</b> — вы получите ответы на все вопросы, после чего встроенная помощь будет расширена и дополнена.</p>
-			<button type="submit">Установить →</button>
+			<button type="submit"><h3>Установить →</h3></button>
 		</div>
 </div>
 <?
 if ($phpversion{0}==5 && $phpversion{2}<2) echo "<b style='color:red;'>Версия PHP — 5.".$phpversion{2}.". Рекомендуется использовать PHP как минимум версии 5.2.1</b>";
-if ($phpversion{0}==5 && $phpversion{2}>3) echo "<b style='color:red;'>Версия PHP — 5.".$phpversion{2}.". Рекомендуется использовать PHP как максимум версии 5.3</b>";
+if ($phpversion{0}>=5 && $phpversion{2}>3) echo "<b style='color:red;'>Версия PHP — 5.".$phpversion{2}.". Рекомендуется использовать PHP как максимум версии 5.3.<br>На 5.4 полноценно не тестировалось — вы можете попробовать и передать разработчику все возникшие ошибки.</b>";
 if (!function_exists('curl_init')) echo "<b style='color:red;'>Желательно включить поддержку cURL на вашем хостинге.</b>";
 ?>
 </form>

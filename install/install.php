@@ -1,8 +1,6 @@
 <?php
-echo "<br>установка БД началась";
 if (file_exists("mainfile.php")) require_once("mainfile.php");
-else echo "<br>mainfile.php не найден";
-//global $prefix;
+else echo "<li>mainfile.php не найден!";
 $db->sql_query("DROP TABLE IF EXISTS `".$prefix."_authors`;");
 $db->sql_query("CREATE TABLE `".$prefix."_authors` (
  `aid` varchar(25) NOT NULL,
@@ -12,7 +10,7 @@ $db->sql_query("CREATE TABLE `".$prefix."_authors` (
  `link` varchar(250) NOT NULL,
  `all` enum('0','1') NOT NULL,
  PRIMARY KEY (`aid`)
-);") or die('Ошибка записи в БД. Возможно база не создана или при настройке её параметров допущены ошибки.');
+);") or die('<li>Ошибка записи в БД! Возможно база не создана или при настройке её параметров допущены ошибки.');
 $db->sql_query("DROP TABLE IF EXISTS `".$prefix."_banned_ip`;");
 $db->sql_query("CREATE TABLE `".$prefix."_banned_ip` (
  `id` int(11) NOT NULL auto_increment,
@@ -281,5 +279,4 @@ $db->sql_query("CREATE TABLE `".$prefix."_spiski` (
  `parent` int(10) DEFAULT '0' NOT NULL,
  PRIMARY KEY (`id`)
 );");
-echo "<br>установка БД закончилась";
 ?>
