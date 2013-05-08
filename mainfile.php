@@ -212,4 +212,8 @@
   //$nocash = explode(" ",$mods."/?name=-search /--search ".trim(str_replace("  "," ",str_replace("\n"," ",$row['nocashe']))));
   ///////////////////////////////////////////////////////////////////////////////////////////////
 }
+#############################
+function close_button($txt) { // Кнопка для закрытия, обращение по id объекта
+  return "<a title='Закрыть' class='punkt' onclick=\"$('#".$txt."').hide('slow');\"><div class='radius' style='font-size:12pt; width:20px; height: 20px; color: white; text-align:center; float:right; margin:5px; background: #bbbbbb;'>&nbsp;x&nbsp;</div></a>";
+}
 ?>

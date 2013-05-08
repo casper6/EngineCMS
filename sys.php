@@ -487,8 +487,4 @@ if($admintest) {
 			break;
 	}
 }
-##########################################################################################
-function close_button($txt) {
-  return "<a title='Закрыть' class='punkt' onclick=\"$('#".$txt."').hide('slow');\"><div class='radius' style='font-size:12pt; width:20px; height: 20px; color: white; text-align:center; float:right; margin:5px; background: #bbbbbb;'>&nbsp;x&nbsp;</div></a>";
-}
 ?>

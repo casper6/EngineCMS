@@ -1,5 +1,4 @@
 <?php
-
 # KCAPTCHA configuration file
 $alphabet = "0123456789abcdefghijklmnopqrstuvwxyz"; # do not change without changing font files!
 
@@ -19,13 +18,13 @@ $width = 80;
 $height = 60;
 
 # symbol's vertical fluctuation amplitude divided by 2
-$fluctuation_amplitude = 5;
+$fluctuation_amplitude = 6;
 
 # increase safety by prevention of spaces between symbols
-$no_spaces = false;
+$no_spaces = true;
 
 # show credits
-$show_credits = true; # set to false to remove credits line. Credits adds 12 pixels to image height
+$show_credits = false; # set to false to remove credits line. Credits adds 12 pixels to image height
 $credits = ''; # if empty, HTTP_HOST will be shown
 
 # CAPTCHA image colors (RGB, 0-255)

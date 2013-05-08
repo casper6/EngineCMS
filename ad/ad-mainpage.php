@@ -1436,7 +1436,7 @@ function edit_main($id) {
 	</tr>";
 	echo "<tr>
 	<td><b>Тип галереи фотографий:</b></td>
-	<td>".select("options[foto_gallery_type]", "1,0", "миниатюры одна за другой,«карусель» — большая и миниатюры", $foto_gallery_type)."</td>
+	<td>".select("options[foto_gallery_type]", "3,2,1,0", "В РАЗРАБОТКЕ: горизонтальная плавная дорожка аля MacOs с увеличением,В РАЗРАБОТКЕ: миниатюры с описанием в 3 строки (разделение | ),миниатюры с описанием в одну строку,«карусель» — большая картинка и миниатюры", $foto_gallery_type)."</td>
 	</tr>";
 	}
 
@@ -1692,7 +1692,6 @@ function edit_main($id) {
 	elseif ($name == 10 && $re_menu != 1) redactor($red, $text, 'text', '');
 	if ($name == 10 && $re_menu == 1) echo "</div>";
 	echo "</td></tr>";
-	if ($name == 6) echo "</form>".add_file_upload_form();
 	
 	if ($name == 10 && $re_menu == 1) {
 		$menu_element = explode("\n", $text);
@@ -1824,7 +1823,7 @@ function edit_main($id) {
 	}
 
 	echo "</table>
-	<hr><div class='dark_pole' onclick=\"show('nastroi')\"><img class='icon2 i26' src='/images/1.gif'>Настройки (для импорта/экспорта)</div>
+	<div class='dark_pole' onclick=\"show('nastroi')\"><img class='icon2 i26' src='/images/1.gif'>Настройки (для импорта/экспорта)</div>
 	<div id='nastroi' style='display: none;'>
 	<br><span class=f12><a target='_blank' href=sys.php?op=mainpage&amp;type=3&amp;id=".$id."&nastroi=1>Перейти к визуальной настройке</a> &rarr;</span><br>
 	<textarea class='f12 w100' name='useit' rows='2' cols='10'>".$useit."</textarea></div>";
@@ -1844,6 +1843,9 @@ function edit_main($id) {
 	[элемент закрыть]
 	[элемент открыть][url=#]Афиша[/url][элемент закрыть]
 	</pre></div>";
+
+	echo "</form>";
+	if ($name == 6) echo "<hr>".add_file_upload_form("text");
 	}
 	} ############################### ЗАКРЫТИЕ БЛОК
 

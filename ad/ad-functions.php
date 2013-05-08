@@ -136,7 +136,7 @@ function help_autoblocks() {
     [почта] - выводит ссылку на почтовую форму \"Написать нам\".<br>
     [день] - выводит сегодняшний день в формате \"3 Января 2009\".<br>
     [время] - выводит текущее время.<br>
-    [rss] - выводит ссылку на RSS с картинкой 16х16 пикселей ([rss32] [rss50] 50х50, [rss100], [rss150], [rss200]).<br>
+    [rss] - выводит ссылку на RSS с картинкой 16х16 пикселей (другие варианты: [rss32] [rss50], [rss100], [rss128], [rss150]).<br>
     Прямая ссылка на RSS: /rss<br>
     [список h2 div], [список h3 div], [список h2 table], [список h3 table], [список h2 p], [список h3 p], [список h2 blockquote], [список h3 blockquote] – автоматически создают раскрывающиеся списки из заголовков (h2, h3) и следующей за ними информации, содержащейся в тегах «p», «table», «div» и «blockquote», соответственно.
     <hr>";
@@ -288,7 +288,7 @@ function help_shablon() {
     <a title='Закрыть/Открыть справочное окно' id='show_shablon_var' class=punkt onclick=\"show_animate('shablon_var');\" style='float:right; display:none;'><div class='radius' style='font-size:12pt; width:20px; height: 20px; color: white; text-align:center; float:right; margin:5px; margin-bottom:0; background: #bbbbbb;'>&nbsp;&uarr;&nbsp;</div></a><div id=shablon_var style='display:none; width:95%; height:300px; scroll:auto;' class=block></div>";
 }
 ##########################################################################################
-function add_file_upload_form() {
+function add_file_upload_form($id="textarea") {
   return "<link rel='stylesheet' href='http://blueimp.github.com/Bootstrap-Image-Gallery/css/bootstrap-image-gallery.min.css'>
   <link rel='stylesheet' href='includes/upload/css/jquery.fileupload-ui.css'>
       <form id='fileupload' action='includes/upload/server/php/' method='POST' enctype='multipart/form-data'>
@@ -316,8 +316,10 @@ function add_file_upload_form() {
       done: function (e, data) {
           data.context.text('Загрузка завершена.');
           $.each(data.result, function (index, file) {
-        if (document.getElementById(\"show_oldnames\").checked == true) $(\"#textarea\").append(\"/img/\" + file.name + \"|\" + file.oldname + \"\\n\");
-        else $(\"#textarea\").append(\"/img/\" + file.name + \"|\\n\");
+        if (document.getElementById(\"show_oldnames\").checked == true) 
+          $(\"#".$id."\").append(\"/img/\" + file.name + \"|\" + file.oldname + \"\\n\");
+        else 
+          $(\"#".$id."\").append(\"/img/\" + file.name + \"|\\n\");
           });
       $(\"#textarea_block\").show();
       }

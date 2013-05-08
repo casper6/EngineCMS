@@ -37,11 +37,11 @@ $ver = mt_rand(10000, 99999); // получили случайное число
 foreach ($names as $id => $nam) {
 $par = $parents[$id];
 if ($par == $parent) {
-$derevo .= "<li class='li_papka li_mesto_$mesto'> <a class=no href=#".$ver.$id." onclick='men3($id, \"$name\", \"$admintip\");'>$nam</a> $nowork <div id='id".$id."' style='display:inline;'></div></li>";
+$derevo .= "<li class='li_mesto_".$mesto."'> <a class=no href=#".$ver.$id." onclick='men3(".$id.", \"".$name."\", \"".$admintip."\");'>".$nam."</a> ".$nowork." <div id='id".$id."' style='display:inline;'></div></li>";
 // Показываем подпапки
 $de = base_spisok_derevo($names, $parents, $id, $mesto+1);
 if ($de=="") $derevo .= "";
-else $derevo .= "<li class='li_next li_mesto_$mesto'> $de</li>";
+else $derevo .= "<li class='li_next li_mesto_".$mesto."'> ".$de."</li>";
 }
 }
 return $derevo;
@@ -317,8 +317,6 @@ $pic_name2 = date("Y-m-d_H-i-s_", time()).str_replace(" ","",translit($_FILES["f
 $db->sql_query("UPDATE ".$prefix."_".$tip." SET cid='$cid', module='$module', title='$title', open_text='$open_text', main_text='$main_text', foto='$foto', search='$search', active='$active', mainspisok='$mainspisok' WHERE pid='$pid'");
 Header("Location: sys.php?op=".$admintip."&name=$module");
 }
-#####################################################################################################################
-#####################################################################################################################
 #####################################################################################################################
 function base_spisok_delit_spisok($name,$pid, $ok) {
     global $tip, $admintip, $prefix, $db;

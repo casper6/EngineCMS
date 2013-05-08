@@ -756,7 +756,7 @@ echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>
 				echo "		<img src=\"images/delete_x.png\" alt=\"Главный аккаунт\" title=\"Главный аккаунт\" border=\"0\" width=\"17\" height=\"17\"></a></td>";
 			} 
 			else {
-				echo "		<a href=\"".$admin_file.".php?op=AdminsDelete&amp;aid=".$a_aid."\"><img src=\"images/delete.png\" alt=\"Удалить\" title=\"Удалить\" border=\"0\" width=\"17\" height=\"17\"></a></td>";
+				echo "		<a href=\"".$admin_file.".php?op=AdminsDelete&amp;aid=".$a_aid."\"><img src=\"images/delete.gif\" alt=\"Удалить\" title=\"Удалить\" border=\"0\" width=\"17\" height=\"17\"></a></td>";
 			}
 			echo "	</tr>";
 		}

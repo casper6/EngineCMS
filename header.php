@@ -1493,12 +1493,12 @@ case "31": # Блок JS
 
 	//Ставим RSS
 	if (strpos($block, "[rss")) {
-		$block=str_replace("[rss]", "<a href=rss.php title=\"RSS-подписка позволит вам быстро узнать о всех новых статьях на этом сайте\" target=_blank class=rss><img src=images/rss_16.png></a>", $block);
-		$block=str_replace("[rss32]", "<a href=rss.php target=_blank title='RSS-подписка. Нажми!'><img src=images/rss_32.gif></a>", $block);
-		$block=str_replace("[rss50]", "<a href=rss.php target=_blank title='RSS-подписка. Нажми!'><img src=images/rss_50.gif></a>", $block);
-		$block=str_replace("[rss100]", "<a href=rss.php target=_blank title='RSS-подписка. Нажми!'><img src=images/rss_100.gif></a>", $block);
-		$block=str_replace("[rss150]", "<a href=rss.php target=_blank title='RSS-подписка. Нажми!'><img src=images/rss_150.gif></a>", $block);
-		$block=str_replace("[rss200]", "<a href=rss.php target=_blank title='RSS-подписка. Нажми!'><img src=images/rss_200.gif></a>", $block);
+		$block=str_replace("[rss]", "<a href='rss.php' title='RSS-подписка позволит вам быстро узнать о всех новых статьях на этом сайте' target='_blank' class='rss'><img src='images/rss_16.png'></a>", $block);
+		$block=str_replace("[rss32]", "<a href='rss.php' target='_blank' title='Подпишись на наши новости по RSS!'><img src='images/rss_32.gif'></a>", $block);
+		$block=str_replace("[rss50]", "<a href='rss.php' target='_blank' title='Подпишись на наши новости по RSS!'><img src='images/rss_50.gif'></a>", $block);
+		$block=str_replace("[rss100]", "<a href='rss.php' target='_blank' title='Подпишись на наши новости по RSS!'><img src='images/rss_100.gif'></a>", $block);
+		$block=str_replace("[rss128]", "<a href='rss.php' target='_blank' title='Подпишись на наши новости по RSS!'><img src='images/rss_128.png'></a>", $block);
+		$block=str_replace("[rss150]", "<a href='rss.php' target='_blank' title='Подпишись на наши новости по RSS!'><img src='images/rss_150.gif'></a>", $block);
 	}
 
 	// Обработка мини-блоков (карточка компании)

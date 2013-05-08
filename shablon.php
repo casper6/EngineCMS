@@ -121,16 +121,16 @@ function shablon_show($shablon_type, $shablon_id) {
 case "1": return "<DIV id=comments_1_commentbubble> 
 <TABLE border=0 cellpadding=0 cellspacing=0 width=100%> 
 <TBODY><TR> 
-<TD width=24><IMG src=/images/shablon/comments/ang_h_g2.gif width=24 height=28></TD> 
-<TD colspan=2 background=/images/shablon/comments/top_center2.gif> 
+<TD width=24><IMG src=/images/shablon_comments/ang_h_g2.gif width=24 height=28></TD> 
+<TD colspan=2 background=/images/shablon_comments/top_center2.gif> 
 <DIV id=comments_1_commentheader><DIV> 
 <SPAN class=comments_1_commentnumber><A id=comment_[comment_id] name=comment_[comment_id]></A>
 [comment_num]. </SPAN>[comment_data] в [comment_time]
 </DIV></DIV></TD> 
-<TD width=24><IMG src=/images/shablon/comments/ang_h_d2.gif width=24 height=28></TD> 
+<TD width=24><IMG src=/images/shablon_comments/ang_h_d2.gif width=24 height=28></TD> 
 </TR> 
 <TR> 
-<TD background=/images/shablon/comments/left2.gif>&nbsp;</TD> 
+<TD background=/images/shablon_comments/left2.gif>&nbsp;</TD> 
 <TD colspan=2> 
 <DIV id=comments_1_commentbody2><img src=/images/user.png align=bottom> <SPAN class=comment_avtor>[comment_avtor]</SPAN></DIV>
 <DIV id=comments_1_comment class=comment_text>[comment_text]<br>
@@ -138,14 +138,14 @@ case "1": return "<DIV id=comments_1_commentbubble>
 </DIV> 
 <DIV id=comments_1_commentusertype>[comment_avtor_type]</DIV> 
 </TD> 
-<TD background=/images/shablon/comments/right2.gif>&nbsp;</TD> 
+<TD background=/images/shablon_comments/right2.gif>&nbsp;</TD> 
 </TR> 
 </TBODY></TABLE> 
 <TABLE border=0 cellpadding=0 cellspacing=0 width=100%> 
 <TBODY><TR valign=top> 
-<TD width=24><IMG src=/images/shablon/comments/ang_b_g2.gif></TD> 
-<TD background=/images/shablon/comments/bottom_center2.gif>&nbsp;</TD> 
-<TD width=24><IMG src=/images/shablon/comments/ang_b_d2.gif></TD> 
+<TD width=24><IMG src=/images/shablon_comments/ang_b_g2.gif></TD> 
+<TD background=/images/shablon_comments/bottom_center2.gif>&nbsp;</TD> 
+<TD width=24><IMG src=/images/shablon_comments/ang_b_d2.gif></TD> 
 </TR> 
 </TBODY></TABLE> 
 </DIV>"; break;

@@ -1765,11 +1765,12 @@ function addcomm($pid) {
 
   $ret .= "<table width=100% cellspacing=0 cellpadding=0><tr valign=bottom><td width=350>".$comments_7."</td><td>
   <DIV class='editor' style='margin-top:10px; width:100%;'> 
-  <DIV class='editorbutton' onclick=\"clc_bbcode('жирный',1)\"><IMG title='Жирный текст' src='images/comm/bold.gif'></DIV>
-  <DIV class='editorbutton' onclick=\"clc_bbcode('цитата',1)\"><IMG title='Вставить цитату' src='images/comm/quote.gif'></DIV>
-  <div id=\"cont\" class=\"editorbutton\" OnClick=\"show('onoffsmilies0');\" style=\"cursor: pointer;\"><img title=\"Показать смайлы: эмоции\" src=\"images/smilies/07.gif\"></div>";
-
+  <DIV class='editorbutton' onclick=\"clc_bbcode('жирный',1)\"><IMG title='Жирный текст' src='images/bold.gif'></DIV>
+  <DIV class='editorbutton' onclick=\"clc_bbcode('цитата',1)\"><IMG title='Вставить цитату' src='images/quote.gif'></DIV>";
+  
   global $more_smile;
+  if ($more_smile == true or $more_smile == false) $ret .= "<div id=\"cont\" class=\"editorbutton\" OnClick=\"show('onoffsmilies0');\" style=\"cursor: pointer;\"><img title=\"Показать смайлы: эмоции\" src=\"images/smilies/07.gif\"></div>";
+
   if ($more_smile == true) $ret .= "<div id=\"cont\" class=\"editorbutton\" OnClick=\"show('onoffsmilies1');\" style=\"cursor: pointer;\"><img title=\"Смайлы: альтернативная коллекция :)\" src=\"images/smilies/75.gif\"></div>
   <div id=\"cont\" class=\"editorbutton\" OnClick=\"show('onoffsmilies2');\" style=\"cursor: pointer;\"><img title=\"Смайлы: если эмоций маловато :)\" src=\"images/smilies/17.gif\"></div>
   <div id=\"cont\" class=\"editorbutton\" OnClick=\"show('onoffsmilies3');\" style=\"cursor: pointer;\"><img title=\"Смайлы: аниме-эмоции o_O\" src=\"images/smilies/18.gif\"></div>";

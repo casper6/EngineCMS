@@ -377,35 +377,15 @@ p {margin-top: 15px;margin-left: 5px;}
 	}
 .skin_texture span.h3 {color:white !important;}
 
-.li_file {list-style-image:url(/images/file.gif); margin-top: -3px; }
-.li_papka {list-style-image:url(/images/papka.gif); margin-top: -3px; }
-.li_list {list-style-image:url(/images/list.gif); margin-top: -3px;}
-.li_next {list-style-image:url(/images/next.gif); margin-top: -3px;}
-
-.li_mesto_0 {margin-left: 0px; padding-left: 0px;}
-.li_mesto_1 {margin-left: 10px; padding-left: 0px;}
-.li_mesto_2 {margin-left: 20px; padding-left: 0px;}
-.li_mesto_3 {margin-left: 35px; padding-left: 0px;}
-.li_mesto_4 {margin-left: 45px; padding-left: 0px;}
-.li_mesto_5 {margin-left: 55px; padding-left: 0px;}
-.li_mesto_6 {margin-left: 65px; padding-left: 0px;}
-
 .block {background: #ededed; padding: 5px; margin: 0px; overflow:auto;}
 .block2 {background: #deffde; padding: 5px; margin: 0px; }
 .block_white { padding: 5px; border: 0;}
 .block_white2 { border: 1px solid gray; padding: 5px; background: #ffffff; }
 .block_red { padding: 5px; background: #f2e2e2; }
 
-#block1 {border:3px solid #aaaaaa; padding: 1px; margin-bottom:30px;}
-#block2 {border:3px solid #aaaaaa; padding: 1px; margin-bottom:30px;}
-#block3 {border:3px solid #aaaaaa; padding: 1px; margin-bottom:30px;}
-#block4 {border:3px solid #aaaaaa; padding: 1px; margin-bottom:30px;}
-#block5 {border:3px solid #aaaaaa; padding: 1px; margin-bottom:30px;}
-#block6 {border:3px solid #aaaaaa; padding: 1px; margin-bottom:30px;}
-#block7 {border:3px solid #aaaaaa; padding: 1px; margin-bottom:30px;}
-#block8 {border:3px solid #aaaaaa; padding: 1px; margin-bottom:30px;}
-#block9 {border:3px solid #aaaaaa; padding: 1px; margin-bottom:30px;}
-#block10 {border:3px solid #aaaaaa; padding: 1px; margin-bottom:30px;}
+#block1, #block2, #block3, #block4, #block5, #block6, #block7, #block8, #block9, #block10 {
+	border:3px solid #aaaaaa; padding: 1px; margin-bottom:30px;
+}
 
 .dark_pole {border:0; border-radius: 5px; -moz-border-radius: 5; -webkit-border-radius: 5; padding:2px; margin:2px;background:#dddddd; display: inline-block; cursor:pointer;}
 .dark_pole3 {border:0; border-radius: 5px; -moz-border-radius: 5; -webkit-border-radius: 5; padding:2px; color:white !important; margin:2px; background:#8c8c8c; text-decoration:none; display: inline-block;}
@@ -527,119 +507,6 @@ input{ padding: 0; }
 	height:400px;
 	overflow:auto;
 }
-/*~~~~~~Links Setting ~~~~~~~~*/
-#tickAll, .flagYes, .flagNo
-{
-	padding:2px 0 2px 16px;
-	background-repeat:no-repeat;
-	background-position:0 50%;
-	text-decoration:none;
-	height:100%;
-}
-.check_all{background-image:url(../images/tickAll.png);}
-.uncheck_all{background-image:url(../images/uncheckAll.png);}
-.flagYes{background-image:url(../images/flagYes.png);}
-.flagNo{background-image:url(../images/flagno.png);}
-#actionCopy{background-image:url(../images/copy.png);}
-#actionPaste{background-image:url(../images/paste.png);}
-#actionCut{background-image:url(../images/cut.png);}
-#actionDelete{background-image:url(../images/delete.png);}
-#actionZip{background-image:url(../images/zip.png);}
-#actionRefresh{background-image:url(../images/refresh.png);}
-#actionUnzip{background-image:url(../images/unzip.png);}
-#tickAll{margin-left:5px;}
-
-/*~~~~~~File / Folder Icon ~~~~~~~~*/
-span.folderEmpty, span.folder, span.folderParent,
-span.fileUnknown, span.fileText, span.fileWord,
-span.fileFlash, span.fileVideo, span.filePicture,
-span.filePPT, span.fileExcel, span.filePhp,
-span.fileMusic, span.fileExe, span.fileAcrobat,
-span.fileRTF, span.fileXml, span.fileCode,
-span.fileZip{
-padding:2px 0 2px 16px;
-background-repeat:no-repeat;
-background-position:0 50%;
-}
-span.folderEmpty{background-image:url(../images/file_folder_icon/folderEmpty.png);}
-span.folder{background-image:url(../images/file_folder_icon/folder.png);}
-span.folderParent{background-image:url(../images/file_folder_icon/folderParent.png);}
-span.fileUnknown{background-image:url(../images/file_folder_icon/fileUnknown.png);}
-span.fileText{background-image:url(../images/file_folder_icon/fileText.png);}
-span.fileWord{background-image:url(../images/file_folder_icon/fileWord.png);}
-span.fileFlash{background-image:url(../images/file_folder_icon/fileFlash.png);}
-span.fileVideo{background-image:url(../images/file_folder_icon/fileVideo.png);}
-span.filePicture{background-image:url(../images/file_folder_icon/filePicture.png);}
-span.filePPT{background-image:url(../images/file_folder_icon/filePowerpoint.png);}
-span.fileExcel{background-image:url(../images/file_folder_icon/fileExcel.png);}
-span.filePhp{background-image:url(../images/file_folder_icon/filePhp.png);}
-span.fileMusic{background-image:url(../images/file_folder_icon/fileMusic.png);}
-span.fileExe{background-image:url(../images/file_folder_icon/fileExe.png);}
-span.fileAcrobat{background-image:url(../images/file_folder_icon/fileAcrobat.png);}
-span.fileRTF{background-image:url(../images/file_folder_icon/fileRTF.png);}
-span.fileXml{background-image:url(../images/file_folder_icon/fileXml.png);}
-span.fileCode{background-image:url(../images/file_folder_icon/fileCode.png);}
-span.fileZip{background-image:url(../images/file_folder_icon/fileZip.png);}
-/*~~~~~~Tables Setting ~~~~~~~~*/
-table.tableList{
-border-collapse:collapse;
-width:100%;
-}
-.tableList td
-{
-	text-align:center;
-}
-table.tableList thead th{
-
-	border:1px solid #ccc;
-	background-color:#8D8D8D;
-	color:#FEFEFE;
-	white-space:nowrap;
-	padding:2px;
-	}
-
-table.tableList thead th.left{
-text-align:left;
-padding-left:8px;
-	}
-table.tableList tbody td
-{
-	border:1px solid #ccc;
-	padding:1px 6px;
-
-}
-table.tableList tbody tr.even{
-background-color:#FFFFFF;
-}
-table.tableList tbody tr.odd{
-background-color:#EAEAEA;
-}
-table.tableList tbody tr.over{
-background-color:#ACACAC;
-color:#FEFEFE;
-}
-table.tableList tbody tr td a {
-text-decoration:none;
-}
-table.tableSummary{
-border-collapse:collapse;
-width:100%;
-}
-table.tableSummary tbody td
-{
-	border:1px solid #ccc;
-	padding:2px 6px;
-	text-align:left;
-}
-table.tableSummary tbody th{
-	border:1px solid #ccc;
-	background-color:#8D8D8D;
-	color:#FEFEFE;
-	white-space:nowrap;
-	padding:1px 6px ;
-	text-align:left;
-}
-
 
 /*~~~~~~Form Setting ~~~~~~~~*/
 .input, .inputFile{
@@ -728,7 +595,3 @@ table.table_light tbody tr:hover th, table.table_light tbody tr.odd:hover th { b
 .icon.lightyellow{color:#f3f373;}
 
 input[type="search"] { -webkit-appearance: textfield; }
-
-iframe.preview {width: 100%; height: 700px;}
-.CodeMirror {border: 1px solid #aaa; height: auto !important; font-family: monospace !important;}
-.CodeMirror-scroll {overflow-y: hidden; overflow-x: auto;}
