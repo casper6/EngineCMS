@@ -1,4 +1,5 @@
 <?php
+// Пустая база данных
 if (file_exists("mainfile.php")) require_once("mainfile.php");
 else echo "<li>mainfile.php не найден!";
 $db->sql_query("DROP TABLE IF EXISTS `".$prefix."_authors`;");
@@ -61,7 +62,6 @@ $db->sql_query("CREATE TABLE `".$prefix."_config` (
  `ht_backup` varchar(255) NOT NULL,
  PRIMARY KEY (`sitename`)
 );");
-$db->sql_query("INSERT INTO `".$prefix."_config` VALUES ( 'Название сайта', '2013', '', '', '', '', '', '', '0', '0', '0', '|||||||||||||||||||||||||||||||||||||||||||||', '0', '1|1|1|1|1|0|0|1|17', '', '4', '0', '0', '.ht_backup');");
 $db->sql_query("DROP TABLE IF EXISTS `".$prefix."_golos`;");
 $db->sql_query("CREATE TABLE `".$prefix."_golos` (
  `gid` int(10) NOT NULL auto_increment,
@@ -87,109 +87,6 @@ $db->sql_query("CREATE TABLE `".$prefix."_mainpage` (
  `keywords` varchar(255) NOT NULL,
  PRIMARY KEY (`id`)
 );");
-$db->sql_query("INSERT INTO `".$prefix."_mainpage` VALUES ( '1', '0', '', 'Главный дизайн', 'что-то в шапке<br>[содержание]<br>футер сайта', '20', '', '0', 'pages', '0', '', '');");
-$db->sql_query("INSERT INTO `".$prefix."_mainpage` VALUES ( '24', '2', 'index', 'Главная страница', 'pages|design=1', 'Текст главной страницы', '', '0', 'pages', '0', '', '');");
-$db->sql_query("INSERT INTO `".$prefix."_mainpage` VALUES ( '20', '1', 'index', 'Главный стиль', 'body {
-margin: 0px;
-font-family: Calibri, Verdana, Geneva, sans-serif;
-}
-
-.img_left {float: left; padding-right: 10px;}
-.img_right {float: right; padding-left: 10px;}
-
-a:link {color: #0071ff;}
-a:visited {color: #0071ff;}
-a:hover {color: #FF0000;}
-a:active {color: #000000;}
-
-a img {	border:none;}
-img[align=left] {
- margin-right: 15px;
-}
-img[align=right] {
- margin-left: 15px;
-}
-img[align=center] {
- display: block;
- margin: 0 auto !important;
-}
-
-/* Для информации и списков в блоках */
-.main_razdel {}
-.pod_razdel {}
-.pod_razdel a:link {}
-.pod_razdel a:visited {}
-.pod_razdel a:hover {}
-
-/* Для категорий */
-.cat_page {}
-.cat_page_title {}
-.cat_page_text {}
-.cat_page_counter {}
-.cat_page_comments {}
-.cat_page_date {}
-.cat_description {}
-
-.cat_razdel {}
-
-.cat_categorii_link {} 
-.cat_podcategorii_link {}
-div.cat_podcategorii_link a {}
-
-a.cat_categorii_link:link, a.cat_categorii_link:visited {}
-a.cat_categorii_link:hover, a.cat_categorii_link:active {}
-
-.cat_title {}
-.cat_page_commnum {}
-
-.cat_maincategorii_link {}
-.cat_mainpodcategorii_link {}
-.cat_podcategorii {}
-.cat_mainpodcategorii {}
-
-
-/* Для страниц */
-.page_comm, .page_another, .send_comment {}
-.page_title {}
-.page_opentext {}
-.page_text {}
-.page_comm_avtor {}
-.page_comm_data {}
-.page_date {}
-.page_forum_avtor {}
-
-.send_comment, a.send_comment, .send_post, a.send_post {}
-a.comm_write {}
-
-/* Поиск */
-.main_search_input {}
-.main_search {}
-.main_search_button {}
-
-
-select, option, input {}
-
-.dalee {}
-
-hr {}
-i, em {}
-
-.a_block_title {}
-.main_title {}
-.block_open_text {} 
-
-li.block_li_title, .block_title {}
-li.block_li_title a, .block_title a {}
-li.block_li_title a:hover, .block_title a:hover {}
-
-.venzel { display:none; }
-.razdel { display:none; }
-
-/* Открыть все */
-.open_all {display: block; float: right;}
-.open_all_small, a:link .open_all_small, a:visited .open_all_small, a:hover .open_all_small {}
-a.open_all_link {}
-', '', '', '0', 'pages', '0', '', '');");
 $db->sql_query("DROP TABLE IF EXISTS `".$prefix."_pages`;");
 $db->sql_query("CREATE TABLE `".$prefix."_pages` (
  `pid` int(10) NOT NULL auto_increment,

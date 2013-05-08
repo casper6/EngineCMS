@@ -23,6 +23,8 @@ font-weight:normal;
     background: green;
 }
 
+
+
 .fon {background: url(/images/fon.png);}
 
 hr{clear:both;border-bottom:0;border-top:1px dotted #ccc;border-right:0;border-left:0;margin:30px 0;min-height: 0px;height:1px;}
@@ -227,6 +229,7 @@ img.bigicon {margin-bottom: 5px; width:128px; height:128px; border:0; float:left
 .h155 {height: 155px;}
 .h700 {height: 700px;}
 .f12 {font-size:12px;}
+.f14 {font-size:14px;}
 .f16 {font-size:16pt !important;}
 .ml20 {margin-left:20px;}
 .ml50 {margin-left:50px;}
@@ -284,7 +287,7 @@ h1, h2, h3 {margin:0; padding:5px; font-weight: normal;}
 h1 {font-size: 21px;color:#333;}
 h2 {font-size: 17px;color:#333;}
 h3 {font-size: 14px;color:#333;}
-#podrazdel, .preview {margin-top:5px; padding-left:5px; padding-right:5px; background:#ffffff;}
+#podrazdel, .preview {margin-top:5px; padding-left:5px; padding-right:5px;}
 
 textarea.big {
 font-family: Verdana, Arial, Helvetica, sans-serif;
@@ -361,6 +364,19 @@ p {margin-top: 15px;margin-left: 5px;}
 .bggray {padding: 5px; font-style: italic; background-color:#eeeeee; color:black; font-size: 1.1em;}
 .no {margin-bottom: 10px; padding: 0px; display:inline; text-decoration:none;}
 
+.skin_texture {
+	background:url(/images/skin_texture.jpg); 
+	height:40px; 
+	padding:5px;
+	-webkit-border-top-right-radius: 10px;
+	-webkit-border-top-left-radius: 10px;
+	-moz-border-radius-topright: 10px;
+	-moz-border-radius-topleft: 10px;
+	border-top-right-radius: 10px;
+	border-top-left-radius: 10px;
+	}
+.skin_texture span.h3 {color:white !important;}
+
 .li_file {list-style-image:url(/images/file.gif); margin-top: -3px; }
 .li_papka {list-style-image:url(/images/papka.gif); margin-top: -3px; }
 .li_list {list-style-image:url(/images/list.gif); margin-top: -3px;}
@@ -400,6 +416,7 @@ p {margin-top: 15px;margin-left: 5px;}
 
 .dark_pole2sel span, .dark_pole2:hover span { color: white; max-height:44px; overflow:hidden; }
 
+.sortirovka, 
 .dark_pole2sel,
 .dark_pole2:hover { 
 	border-top: 1px solid #40a7f7; border-bottom: 1px solid #4782d7;
@@ -414,6 +431,9 @@ p {margin-top: 15px;margin-left: 5px;}
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#058bf5', endColorstr='#0160e6',GradientType=0 ); /* IE6-9 */
 	padding:5px;
 }
+
+#sortirovka {position: absolute; width:344px; z-index:1000; height:92px; margin-top:-5px; margin-left:-10px; background: url(/images/bubble.png); font-size:1.2em; color:#ddd; padding-left:20px; padding-top:20px;}
+#sortirovka a {color:white;}
 
 .sortir_page {width:200px; float:right; }
 

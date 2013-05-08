@@ -88,6 +88,7 @@ function razdel_show(title,id,name,type,xxx,sort) {
 		if (type == 'pages') {
 			txt = txt+'<div class="mt5 mb20"><nobr><a class="button green" title="Добавить страницу (в редакторе)" target=_blank href="sys.php?op=base_pages_add_page&name='+name+'#1"><img class="icon2 i39" src=/images/1.gif>Добавить страницу</a><a onclick="add_papka(\''+id+'\',1)" class="button small green" title="Добавить несколько страниц">цы</a> <a onclick="add_papka(\''+id+'\',0)" class="button small green"><img class="icon2 i40" src=/images/1.gif>Создать папку</a> <a href="sys.php?op=mainpage_razdel_color&id='+id+'&color=0" title="Без цветовой маркировки"><div class="but_color radius"><img class=icon3 src=/images/1.gif></div></a><a href="sys.php?op=mainpage_razdel_color&id='+id+'&color=1" title="Раздел часто используется"><div class="but_color2 radius"><img class=icon3 src=/images/1.gif></div></a><a href="sys.php?op=mainpage_razdel_color&id='+id+'&color=2" title="Раздел редко используется"><div class="but_color3 radius"><img class=icon3 src=/images/1.gif></div></a><a href="sys.php?op=mainpage_razdel_color&id='+id+'&color=3" title="Раздел не используется"><div class="but_color4 radius"><img class=icon3 src=/images/1.gif></div></a><a href="sys.php?op=mainpage_razdel_color&id='+id+'&color=4" title="Новый раздел, в разработке"><div class="but_color5 radius"><img class=icon3 src=/images/1.gif></div></a></nobr> <div id="add_papka" style="display:none;"></div></div>';
 		} else txt = txt+'<div style="margin-top: 5px; margin-bottom: 20px;"><nobr><a href="sys.php?op=mainpage_razdel_color&id='+id+'&color=0" title="Без цветовой маркировки"><div class="but_color radius"><img class=icon3 src=/images/1.gif></div></a><a href="sys.php?op=mainpage_razdel_color&id='+id+'&color=1" title="Раздел часто используется"><div class="but_color2 radius"><img class=icon3 src=/images/1.gif></div></a><a href="sys.php?op=mainpage_razdel_color&id='+id+'&color=2" title="Раздел редко используется"><div class="but_color3 radius"><img class=icon3 src=/images/1.gif></div></a><a href="sys.php?op=mainpage_razdel_color&id='+id+'&color=3" title="Раздел не используется"><div class="but_color4 radius"><img class=icon3 src=/images/1.gif></div></a><a href="sys.php?op=mainpage_razdel_color&id='+id+'&color=4" title="Новый раздел, в разработке"><div class="but_color5 radius"><img class=icon3 src=/images/1.gif></div></a></nobr></div>';
+		if (type == 'page') txt = txt+'Раздел не содержит блока отображения страниц — [содержание], поэтому сам является страницей.<br>Для изменения содержания раздела нажмите кнопку Редактировать.<br>Для размещения в разделе страниц и/или папок — добавьте в содержание раздела блок [содержание]';
 	}
 	document.getElementById('podrazdel').innerHTML = txt;
 	if (type == 'pages') { razdel(id, sort, xxx, txt); }
@@ -183,13 +184,13 @@ function del_file(file, id) {
 function delblock(id) {
 	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'delblock', 'id': id },
-	    beforeSend: function(){ $('#block'+id).hide(); },
+	    beforeSend: function(){ $('#block_'+id).hide(); },
 	});
 }
 function offblock(id) {
 	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'offblock', 'id': id },
-	    success: function(data){ $('#block'+id).html(data); }
+	    success: function(data){ $('#block_'+id).html(data); }
 	});
 }
 function offcomm(id) {

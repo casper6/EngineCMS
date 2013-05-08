@@ -10,53 +10,10 @@ $detect = new Mobile_Detect;
 global $deviceType;
 $deviceType = ($detect->isMobile() ? ($detect->isTablet() ? 'tablet' : 'phone') : 'computer');
 
-global $postlink, $name, $sitename, $op, $type, $red, $prefix, $db, $id, $nastroi, $kickstart;
+global $postlink, $name, $sitename, $op, $type, $red, $prefix, $db, $id, $nastroi;
 $color1=$color2=$color3=$color4="gray"; // Цвета 4х кнопок основных категорий админки (Содержание...)
 
 if ($postlink != "") $post = "<button class='small' onclick='location.href=\"".$postlink."\"' title='Открыть почтовый сайт...'><span class=\"icon small black\" data-icon=\"@\"></span> Почта</button> "; else $post="";
-
-switch($kickstart) {
-	case 1:
-	$kick_link = "http://www.99lime.com/elements/";
-	$kick_name = "KickStart"; break;
-	case 2:
-	$kick_link = "http://css-framework.ru/doc/utilites/";
-	$kick_name = "CSSframework"; break;
-	case 3:
-	$kick_link = "http://www.getskeleton.com/#examples";
-	$kick_name = "Skeleton"; break;
-	case 4:
-	$kick_link = "http://kubeframework.com";
-	$kick_name = "Kube"; break;
-	case 5:
-	$kick_link = "http://twitter.github.com/bootstrap/base-css.html";
-	$kick_name = "Bootstrap"; break;
-	case 6:
-	$kick_link = "http://cssgrid.net";
-	$kick_name = "1140 Grid"; break;
-	case 7:
-	$kick_link = "http://daneden.me/toast/";
-	$kick_name = "Toast"; break;
-	case 8:
-	$kick_link = "http://www.blueprintcss.org/tests/";
-	$kick_name = "Blueprint"; break;
-	case 9:
-	$kick_link = "http://yuilibrary.com/yui/docs/cssgrids/";
-	$kick_name = "YUI"; break;
-	case 10:
-	$kick_link = "http://960.gs";
-	$kick_name = "960gs"; break;
-	case 11:
-	$kick_link = "http://960.gs";
-	$kick_name = "960gs(24)"; break;
-
-	default:
-	$kick_link = "";
-	$kick_name = ""; break;
-}
-if ($kickstart != 0) $kick = " <button class='small' onclick='location.href=\"".$kick_link."\"' title='Открыть сайт CSS-фреймворка «".$kick_name."»'><span class=\"icon small black\" data-icon=\"S\"></span> ".$kick_name."</button>";
-else $kick = "";
-
 
 $title = "Управление сайтом";
 $color1="blue";
@@ -156,7 +113,7 @@ echo "<nobr>";
 if ($op == "adminMain") red_help(8);
 if ($op == "mainpage" && $type==2) red_help(9); 
 
-echo "<button class='small' target=_blank onclick='window.open(\"/\")' title='Перейти на сайт (откроется в новом окне)'><span class=\"icon small black\" data-icon=\"4\"></span> На сайт</button> ".$post.$kick." <form method=post name=search action='/--search' style='display:inline;' class='nothing'><input type='search' placeholder='Поиск по сайту' name=slovo class=w45></form></nobr>
+echo "<button class='small' target=_blank onclick='window.open(\"/\")' title='Перейти на сайт (откроется в новом окне)'><span class=\"icon small black\" data-icon=\"4\"></span> На сайт</button> ".$post." <form method=post name=search action='/--search' style='display:inline;' class='nothing'><input type='search' placeholder='Поиск по сайту' name=slovo class=w45></form></nobr>
 </div>
 <nobr>
 <ul class=\"button-bar\">

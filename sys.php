@@ -198,16 +198,16 @@ function GraphicAdmin() {
 	$soderganie_menu .= "<button id='new_razdel_button' title='Добавить страницу...' class='medium green nothing' onclick='location.href=\"/sys.php?op=base_pages_add_page#1\"'><span class=\"icon white small\" data-icon=\"+\"></span> страницу</button>
 	</div>";
 
-	echo "<table style='background: url(/images/fon.png); padding:0;' cellspacing=0 cellpadding=0 class='w100 mw800 mt5'><tr valign=top><td id='razdel_td' class='radius nothing'><div id='razdels' style='background:#e7e9ec;'>";
+	echo "<table style='background: url(/images/fon.png); padding:0;' cellspacing=0 cellpadding=0 class='w100 mw800 mt5'><tr valign=top><td id='razdel_td' class='radius nothing' style='background:#e7e9ec;'><div id='razdels'>";
 
 	// Сортировка разделов: 0 - цвет, 1 - алфавит, 2 - посещаемость
-	$razdel_sort_name = array("<a href=red?razdel_sort=0>цвету раздела</a>", "<a href=red?razdel_sort=1>названию</a>", "<a href=red?razdel_sort=2>посещаемости</a>");
+	$razdel_sort_name = array("<a href=red?razdel_sort=0>цвету</a>", "<a href=red?razdel_sort=1>названию</a>", "<a href=red?razdel_sort=2>посещаемости</a>");
 	if (!isset($razdel_sort)) if (!isset($_COOKIE["razdel_sort"])) { 
 		setcookie("razdel_sort", "0", time()+60*60*24*360); 
 		$razdel_sort = 0;
 	}
 	else $razdel_sort = intval($_COOKIE["razdel_sort"]);
-	$razdel_sort_name[$razdel_sort] = ">>> ".$razdel_sort_name[$razdel_sort]."";
+	$razdel_sort_name[$razdel_sort] = "<span class='sortirovka radius'>".$razdel_sort_name[$razdel_sort]."</span>";
 	if ($razdel_sort == 0) $razdel_sort = "color desc, title";
 	elseif ($razdel_sort == 1) $razdel_sort = "title";
 	elseif ($razdel_sort == 2) $razdel_sort = "counter desc";
@@ -215,25 +215,26 @@ function GraphicAdmin() {
 
 	$subg = "";
 	$sql = "select * from ".$prefix."_mainpage where `tables`!='del' and type='2' and name!='index' order by ".$razdel_sort;
-	$result = $db->sql_query($sql);
+	$result = $db->sql_query($sql) or die('Ошибка первичной инициализации администрирования: не найдена таблица разделов.');
 	$current_type = ""; 
 
 	$num_razdel = $db->sql_numrows($db->sql_query("select id from ".$prefix."_mainpage where type='2' and name!='index' and `tables`!='del'"));
+
 	$razdel_txt = "";
 	if ($num_razdel == 0) $razdel_txt = "<div style='padding-left:5px; color: red;'>Разделов пока нет. Добавьте.</div>";
 
 	if ($registr=='1') echo "&nbsp;&nbsp;&nbsp;<a href=".$admin_file.".php?op=MainUser>Пользователи</a> <a href=".$admin_file.".php?op=sortuser>Список</a>";
 
 	echo "<div class='black_grad'><button id=new_razdel_button title='Сортировка...' class='small black' onclick=\"show('sortirovka');\" style='float:left; margin:3px;'><span style='margin-right: -2px;' class=\"icon darkgrey small\" data-icon=\"|\"></span></button><button id=new_razdel_button title='Добавить раздел...' class='small black right3' onclick=\"openbox('10','Вы решили добавить раздел:'); $('.dark_pole2sel').attr('class', 'dark_pole2');\"><span class=\"mr-2 icon darkgrey small\" data-icon=\"+\"></span></button><span class='h1'>Разделы:</span>
-		</div>".$razdel_txt."<div id='sortirovka' style='color: green; display:none;'>
-		<p style=' margin-left:20px;'>Сортировка по: <br>".$razdel_sort_name[0].",<br>".$razdel_sort_name[1].",<br>".$razdel_sort_name[2]."</p></div>";
+		</div>".$razdel_txt."<div id='sortirovka' style='display:none;'>
+		".close_button('sortirovka')."<p>Сортировать разделы по: <p>".$razdel_sort_name[0].", ".$razdel_sort_name[1]." или ".$razdel_sort_name[2]."</p></div>";
 
 	$icon_size = "large";
 	if ($num_razdel > 5) $icon_size = "medium"; 
 	if ($num_razdel > 10) $icon_size = "small"; 
 
 	echo "<div id='mainrazdel_index'>
-	<a class='base_page' href='/sys.php?op=mainpage&amp;id=24&amp;red=1' title='Редактировать главную страницу'><div class='dark_pole2'><span class='icon black ".$icon_size."' data-icon='4'></span><span class='plus20'>Главная страница</span> <span class='small' style='color:#e7e9ec'>(редактировать)</span></div></a>";
+	<a class='base_page' href='/sys.php?op=mainpage&amp;id=24&amp;red=1' title='Редактировать главную страницу'><div class='dark_pole2'><div style='color:#e7e9ec;float:right' class='small'>(редактировать)</div><span class='icon black ".$icon_size."' data-icon='.'></span><span class='plus20'>Главная страница</span></div></a>";
 
     while ($row = $db->sql_fetchrow($result)) {
 	    $id = $row['id'];
@@ -304,9 +305,17 @@ function GraphicAdmin() {
 		}
 		$ver = mt_rand(10000, 99999); // получили случайное число
 
-		echo "<div id='mainrazdel".$id."' class='dark_pole2'><div style='float:right'>".$iconpage.$type_opisX."</div><a class='base_page' title='Нажмите для просмотра действий над этим разделом и его содержимым' href=#1 onclick='razdel_show(\"\", ".$id.", \"".$nam."\", \"".$text."\");'><div id='mainrazdel".$id."'>
-		<span class='icon ".$color." ".$icon_size."' data-icon=','></span><span class='plus20'>".$title."</span>
-		
+		if (strpos(" ".$useit,"[содержание]")) {
+			$right = $iconpage.$type_opisX;
+			$ico = ",";
+			$reaction = "razdel_show(\"\", ".$id.", \"".$nam."\", \"".$text."\");";
+		} else { // не содержит страниц
+			$right = "<span class='f14 gray'>&rang;</span>";
+			$ico = ".";
+			$reaction = "razdel_show(\"\", ".$id.", \"".$nam."\", \"page\");";
+		}
+		echo "<div id='mainrazdel".$id."' class='dark_pole2'><div style='float:right'>".$right."</div><a class='base_page' title='Нажмите для просмотра действий над этим разделом и его содержимым' href=#1 onclick='".$reaction."'><div id='mainrazdel".$id."'>
+		<span class='icon ".$color." ".$icon_size."' data-icon='".$ico."'></span><span class='plus20'>".$title."</span>
 		</div></a></div>";
     }
 	echo "</div>
@@ -319,13 +328,15 @@ function GraphicAdmin() {
 	if ($op == "mes") $mes_ok = "<span class='green'>Записки сохранены</span>"; else $mes_ok = "Записки администратора";
 
 	echo "<div style='margin:50px;'>";
-	if (!empty($project_logotip)) echo "<img src='".$project_logotip."' width=300 class=center>";
+	if (!empty($project_logotip) && file_exists($project_logotip)) echo "<img src='".$project_logotip."' class=center>";
 	if (!empty($project_name)) echo "<br><font style='font-size:44px; color:gray;'>".$project_name."</font>";
 	echo "</div>
 	<form action='".$admin_file.".php?op=mes' method='post' name=form class='nothing'>
-		<button class='pill small punkt' type=submit><span class=\"icon gray small\" data-icon=\"c\"></span> Сохранить</button><span class='ml20 h3'>".$mes_ok."</span>
-		<a onclick=\"document.getElementById('adminmes').value+='\\r'+getDateNow()+'  '\" title='Вставить дату и время (в конце текста)' class='button pill small punkt ml20'><span class=\"icon gray small\" data-icon=\"6\"></span>".$buttons[6]."</a>
-		<br><textarea id=adminmes name=adminmes rows=3 cols=80 style='border:0; height:300px; width: 98%;' class=yellow_grad>".$adminmes."</textarea></form>
+		<div class='skin_texture w100'>
+		<button class='small punkt' type=submit><span class=\"icon gray small\" data-icon=\"c\"></span> Сохранить</button><span class='ml20 h3'>".$mes_ok."</span>
+		<a onclick=\"document.getElementById('adminmes').value+='\\r'+getDateNow()+'  '\" title='Вставить дату и время (в конце текста)' class='button small punkt ml20'><span class=\"icon gray small\" data-icon=\"6\"></span>".$buttons[6]."</a>
+		</div>
+		<textarea id=adminmes name=adminmes rows=3 cols=80 style='border:3px solid #222327' class='w100 f14 yellow_grad h155'>".$adminmes."</textarea></form>
 	</div>
 	</td></tr></table>";
 
@@ -475,5 +486,9 @@ if($admintest) {
 			login();
 			break;
 	}
+}
+##########################################################################################
+function close_button($txt) {
+  return "<a title='Закрыть' class='punkt' onclick=\"$('#".$txt."').hide('slow');\"><div class='radius' style='font-size:12pt; width:20px; height: 20px; color: white; text-align:center; float:right; margin:5px; background: #bbbbbb;'>&nbsp;x&nbsp;</div></a>";
 }
 ?>

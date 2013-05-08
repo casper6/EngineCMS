@@ -153,7 +153,7 @@
   $red_type = intval($row['red']); // редактор
   if (!isset($red) or $red=="") $red = $red_type;
   else {
-      if ($red != "1") $db->sql_query("UPDATE ".$prefix."_config SET red='$red' WHERE red='$red_type'");
+      if ($red != "1" && $red != "2") $db->sql_query("UPDATE ".$prefix."_config SET red='$red' WHERE red='$red_type'");
   }
   $comment_send = intval($row['comment']); // отправка комментариев админу
   $ip = getip(); //getenv("REMOTE_ADDR"); // IP

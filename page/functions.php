@@ -201,6 +201,8 @@ function tipograf($text, $p=0) { // Типографика - все основн
   "<div><br /> 
   </div>"=>"<br>",
   "\"/>"=>"\">",
+  " class=\"MsoNormalCxSpFirst\""=>"",
+  " class=\"MsoNormalCxSpMiddle\""=>"",
   "MsoNormalTable"=>"table_light",
   " class=\"Apple-style-span\""=>"",
   "st1:metricconverter"=>"span",

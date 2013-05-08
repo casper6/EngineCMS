@@ -206,8 +206,8 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
       if ($n == $row['name']) $nu = "-";  else { $n = $row['name']; $nu = $row['name']; }
       $bgcolor = "#FFeecc"; //FFddaa
 
-       if ($nu == "-") $block = "<tr valign=top id='block".$row['id']."'><td class='padleft30".$class_disable."'>"; 
-       else $block = "<tr valign=top><td style='background:white;'><br><h2>".$block_names[$nu]." &darr;</h2></td></tr><tr id='block".$row['id']."'><td class='padleft30".$class_disable."'>";
+       if ($nu == "-") $block = "<tr valign=top id='block_".$row['id']."'><td class='padleft30".$class_disable."'>"; 
+       else $block = "<tr valign=top><td style='background:white;'><br><h2>".$block_names[$nu]." &darr;</h2></td></tr><tr id='block_".$row['id']."'><td class='padleft30".$class_disable."'>";
       $title = $block.$title;
       $blocks_ok = $title."<div style='margin-left:20px; display: inline; float:right;'>
        <a href='sys.php?op=mainpage&type=3&id=".$row['id']."&red=1' title='Редактировать в HTML'><img class='icon2 i34' src='/images/1.gif'></a> 
@@ -653,7 +653,6 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
   global $title_razdel_and_bd;
   $color=$pageslistdel=$nowork = "";
 
-
   if ($id == 10) {
     $options = ""; // Выборка настроек
     $styles2 = ""; // Выяснить основной дизайн у всех разделов
@@ -689,14 +688,14 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
       }
     $pageslistdel .= "<form method='post' action=sys.php>
       <TABLE width=100% class='table_light'><tr><td>
-      <span class=h2>Название раздела:</span><br>
+      <span class=h2>Название раздела (по-русски):</span><br>
       <input id=rus_name type=text name=title size=30 class=w100 autofocus><br>
-      <a class=punkt onclick=':$(\"#engname\").toggle(\"slow\");'>Англ. название</a> будет создано транслитом. <i>Примеры: «О нас», «Наша продукция», «Каталог», «Контакты» и т.д.</i><br>
+      <a class=punkt onclick='$(\"#eng_name\").toggle(\"slow\");'>Англ. название</a> будет создано транслитом. <i>Примеры: «О нас», «Наша продукция», «Каталог», «Контакты» и т.д.</i><br>
       </td></tr>
-      <tr id=engname style='display:none;'><td>
+      <tr id=eng_name style='display:none;'><td>
       <span class=h3>Англ. название:</span><br>
       <input type=text name=namo size=30 class=w100><br>
-      <a href=# onclick=\"window.open('http://translate.google.ru/#ru/en/' + $('#rus_name').val(),'Перевод',' width=800,height=400'); return false;\"><b>Перевести русское название</b></a>. <i>Используются англ. буквы и знак «_», без пробелов. Примеры: «about», «product», «catalog», «contact» и т.д.</i>
+      <a href=# onclick=\"window.open('http://translate.google.ru/#ru/en/' + $('#rus_name').val(),'Перевод',' width=800,height=400'); return false;\"><b>Перевести русское название</b></a>. <i>Используются англ. буквы и знак «_», без пробелов. Примеры: «about_me», «product», «catalog», «contact» и т.д.</i>
       </td></tr><tr><td>
       <span class=h2>Использовать настройки:</span><br><select name=text class=w100>
       <option value='lim=15&amp;comments=0'>По-умолчанию (15 страниц на листе, комментарии выключены)</option>

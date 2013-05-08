@@ -1,6 +1,30 @@
 <?php
+$ver = '1.11'; // Версия CMS «ДвижОк»
+
+// Получение списка БД
+if (isset($_REQUEST['db'])) {
+	$dbhost = $_REQUEST['db'];
+	$dbuname = $_REQUEST['dbuname'];
+	$dbpass = $_REQUEST['dbpass'];
+	if (!mysql_connect($dbhost, $dbuname, $dbpass)) {
+		echo "Ошибка доступа к БД. Неправильно введены хост, имя и пароль БД."; exit;
+	} else {
+		$q = mysql_query("SHOW DATABASES;");
+		// Добавить проверку кол-ва таблиц в БД для вывода подходящей БД
+		echo "<select name='dbname'>";
+		while ($row = mysql_fetch_assoc($q)) {
+		    if ($row['Database'] != 'information_schema' &&
+		    	$row['Database'] != 'mysql' &&
+		    	$row['Database'] != 'performance_schema' ) 
+		    	echo "<option value='".$row['Database']."'>".$row['Database']."</option>";
+		}
+		echo "</select>";
+		exit;
+	}
+}
+
 // Проверка наличия файла config.php
-if (file_exists("config.php")) die("<h3>Найдена установленная CMS «ДвижОк»</h3><li>Если вы только что её установили – удалите каталог install в корне вашего сайта на сервере – после этого сайт заработает.<li>Если по какой-то другой причине в корне сайта оказался файл config.php, CMS еще не установлена и вы запустили её установку — просто сотрите файл config.php и обновите эту страницу.");
+if (file_exists("config.php")) die("<h3>Найдена установленная CMS «ДвижОк»</h3><li>Если вы только что её установили – удалите каталог install в корне сайта на сервере – после этого сайт заработает.<li>Если по какой-то другой причине в корне сайта оказался файл config.php, CMS еще не установлена и вы запустили её установку (или вы решили переустановить CMS) — удалите файл config.php в корне сайта и обновите эту страницу (нажав F5).");
 	// <li>Если данный сайт создан ранее — вы можете <a href=#>обновить базу данных</a> до новой версии.
 
 // Запуск установки ====================
@@ -13,8 +37,18 @@ if (isset($_REQUEST['lang'])) {
 	$dbpass = $_REQUEST['dbpass'];
 	$dbname = $_REQUEST['dbname'];
 	$prefix = $_REQUEST['prefix'];
+	$razdel = $_REQUEST['razdel'];
+	$design = intval($_REQUEST['design']);
+	$type = $_REQUEST['type'];
 	$a = $_REQUEST['a'];
 	$pass = md5($_REQUEST['pass']);
+
+	// Доп. настройки для разных типов сайтов
+	if ($type == 'company') {}
+	if ($type == 'shop') {}
+	if ($type == 'blog') {}
+	if ($type == 'group') {}
+
 	// Проверка БД
 	$db = mysql_connect ($dbhost, $dbuname, $dbpass) or die("не выбрана база! ".mysql_error());
 	// Создание config.php
@@ -62,6 +96,66 @@ if (stristr(htmlentities($_SERVER[\'PHP_SELF\']), "config.php")) { Header("Locat
 	        }
 	    }
 	}
+
+	function translit_n($cyr_str) { # Транслит названий файлов
+	  $tr = array(
+	   "Ґ"=>"G","Ё"=>"YO","Є"=>"E","Ї"=>"YI","І"=>"I","і"=>"i","ґ"=>"g","ё"=>"yo","№"=>"","є"=>"e",
+	   "ї"=>"yi","А"=>"A","Б"=>"B","В"=>"V","Г"=>"G","Д"=>"D","Е"=>"E","Ж"=>"ZH","З"=>"Z","И"=>"I",
+	   "Й"=>"Y","К"=>"K","Л"=>"L","М"=>"M","Н"=>"N","О"=>"O","П"=>"P","Р"=>"R","С"=>"S","Т"=>"T",
+	   "У"=>"U","Ф"=>"F","Х"=>"H","Ц"=>"TS","Ч"=>"CH","Ш"=>"SH","Щ"=>"SCH","Ъ"=>"","Ы"=>"YI","Ь"=>"",
+	   "Э"=>"E","Ю"=>"YU","Я"=>"YA","а"=>"a","б"=>"b","в"=>"v","г"=>"g","д"=>"d","е"=>"e","ж"=>"zh",
+	   "з"=>"z","и"=>"i","й"=>"y","к"=>"k","л"=>"l","м"=>"m","н"=>"n","о"=>"o","п"=>"p","р"=>"r",
+	   "с"=>"s","т"=>"t","у"=>"u","ф"=>"f","х"=>"h","ц"=>"ts","ч"=>"ch","ш"=>"sh","щ"=>"sch","ъ"=>"",
+	   "ы"=>"yi","ь"=>"","э"=>"e","ю"=>"yu","я"=>"ya",
+	   "«"=>"","»"=>"","."=>"",","=>"","!"=>"",":"=>"",";"=>"","?"=>""," "=>"_"
+	  );
+	   return $str = iconv ( "UTF-8", "UTF-8//IGNORE", strtr ( $cyr_str, $tr ) );
+	}
+
+	function strtolowX($txt, $t=1) { # Большие буквы в маленькие (и наоборот, при t=0)
+	  $from   = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЬЫЭЮЯABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	  $to     = 'абвгдеёжзийклмнопрстуфхцчшщъьыэюяabcdefghijklmnopqrstuvwxyz';
+	  if ($t==1) $txt = strtr($txt, $from, $to); elseif ($t==0) $txt = strtr($txt, $to, $from);
+	  return $txt;
+	}
+
+	function copy_folder($d1, $d2, $upd = true, $force = true) { // копирование папки с файлами
+	    if ( is_dir( $d1 ) ) { 
+	        $d2 = mkdir_safe( $d2, $force ); 
+	        if (!$d2) {fs_log("!!fail $d2"); return;} 
+	        $d = dir( $d1 ); 
+	        while ( false !== ( $entry = $d->read() ) ) { 
+	            if ( $entry != '.' && $entry != '..' )  
+	                copy_folder( "$d1/$entry", "$d2/$entry", $upd, $force ); 
+	        } 
+	        $d->close(); 
+	    } 
+	    else { 
+	        $ok = copy_safe( $d1, $d2, $upd ); 
+	        $ok = ($ok) ? "ok-- " : " -- ";
+	    } 
+	} //function copy_folder 
+
+	function mkdir_safe( $dir, $force ) { 
+	    if (file_exists($dir)) { 
+	        if (is_dir($dir)) return $dir; 
+	        else if (!$force) return false; 
+	        unlink($dir); 
+	    } 
+	    return (mkdir($dir, 0777, true)) ? $dir : false; 
+	} //function mkdir_safe 
+
+	function copy_safe ($f1, $f2, $upd) { 
+	    $time1 = filemtime($f1); 
+	    if (file_exists($f2)) { 
+	        $time2 = filemtime($f2); 
+	        if ($time2 >= $time1 && $upd) return false; 
+	    } 
+	    $ok = copy($f1, $f2); 
+	    if ($ok) touch($f2, $time1); 
+	    return $ok; 
+	} //function copy_safe
+
 	if (!file_put_contents('config.php', $conf, LOCK_EX)) die('<li>Файл config.php в корне сайта не перезаписан! Попробуйте его удалить и перезапустить установку CMS.');
 	echo "<li>Файл config.php настроен";
 
@@ -74,6 +168,123 @@ if (stristr(htmlentities($_SERVER[\'PHP_SELF\']), "config.php")) { Header("Locat
 
 	// Добавление дизайна
 
+	// Добавляем настройку конфигурации сайта
+	if ($design != 0) {
+		// Копируем файлы темы
+		copy_folder("install/themes/".$design, "theme");
+		echo "<li>Картинки дизайна скопированы в папку theme";
+		if (file_exists("install/themes/".$design."_install.php")) include ("install/themes/".$design."_install.php");
+		else die('<li>Файл '.$design.'_install.php в папке install/themes не найден!');
+		echo "<li>Установка дизайна в БД окончена";
+	} else {
+		$db->sql_query("INSERT INTO `".$prefix."_config` VALUES ( 'Название сайта', '2013', '', '', '', '', '', '', '0', '0', '0', '|||||||||||||||||||||||||||||||||||||||||||||', '0', '1|1|1|1|1|0|0|1|17', '', '4', '0', '0', '.ht_backup');") or die('Не удалось записать настройку конфигурации сайта');
+		$db->sql_query("INSERT INTO `".$prefix."_mainpage` VALUES ( '1', '0', '', 'Главный дизайн', 'что-то в шапке<br>[содержание]<br>футер сайта', '20', '', '0', 'pages', '0', '', '');");
+		$db->sql_query("INSERT INTO `".$prefix."_mainpage` VALUES ( '24', '2', 'index', 'Главная страница', 'pages|design=1', 'Текст главной страницы', '', '0', 'pages', '0', '', '');");
+		$db->sql_query("INSERT INTO `".$prefix."_mainpage` VALUES ( '20', '1', 'index', 'Главный стиль', '
+
+		.img_left {float: left; padding-right: 10px;}
+		.img_right {float: right; padding-left: 10px;}
+
+		a img {	border:none;}
+		img[align=left] {
+		 margin-right: 15px;
+		}
+		img[align=right] {
+		 margin-left: 15px;
+		}
+		img[align=center] {
+		 display: block;
+		 margin: 0 auto !important;
+		}
+
+		.venzel { display:none; }
+		.razdel { display:none; }
+
+		/* Открыть все */
+		.open_all {display: block; float: right;}
+		.open_all_small, a:link .open_all_small, a:visited .open_all_small, a:hover .open_all_small {}
+		a.open_all_link {}
+		', '', '', '0', 'pages', '0', '', '');");
+	}
+	echo "<li>Настройка конфигурации сайта закончена";
+	
+
+	// Создаем разделы
+	$useit = 1; // Если верстка использует разделы с общим дизайном (т.е. для главной и остальных страниц используется один Главный дизайн), иначе используется другой дизайн, назначенный в верстке.
+
+	$menu_block = array();
+	
+	$razdel = explode("\n",$razdel);
+	foreach ($razdel as $raz) {
+		$raz = explode("|",$raz);
+		$r = trim($raz[1]);
+		$r2 = trim($raz[0]);
+		$engname = array("Новости"=>"news","Наши новости"=>"news","Статьи"=>"article","Наши статьи"=>"article","Советы"=>"tips","Наши советы"=>"tips","Я читаю"=>"read","Я пишу"=>"write","Я смотрю"=>"see","Я слушаю"=>"listen","Я играю"=>"play","Услуги"=>"services","Наши услуги"=>"services","О компании"=>"about","Производство"=>"production","Наше производство"=>"production","Продукты"=>"product","Наши продукты"=>"product","Акции"=>"promo","Наши акции"=>"promo","Скидки"=>"sale","Наши скидки"=>"sale","Магазины"=>"shops","Наши магазины"=>"shops","Прайс-лист"=>"price","Прайс"=>"price","Цены"=>"price","Расценки"=>"price","Стоимость"=>"price","Каталог"=>"catalog","Наш каталог"=>"catalog","Франшиза"=>"franchise","Дилерство"=>"dealership","Дилеры"=>"dealers","Галерея"=>"gallery","Фотогалерея"=>"photo","Наше фото"=>"photos","Наши фото"=>"photos","Видеогалерея"=>"video","Сотрудничество"=>"partnership","Партнерство"=>"partnership","Партнеры"=>"partners","Наши партнеры"=>"partners","Вакансии"=>"vacancy","Наши вакансии"=>"vacancy","Работа"=>"job","Оставить заявку"=>"request","Заявка"=>"request","Напишите нам"=>"email","Пишите нам"=>"email","Отзывы"=>"reviews","Отзывы о нас"=>"reviews","Контакты"=>"contacts","Наши контакты"=>"contacts","Обратная связь"=>"feedback","Связь с нами"=>"feedback","Связаться с нами"=>"feedback","Связаться со мной"=>"feedback","О магазине"=>"about_shop","Товары"=>"products","Наши товары"=>"products","Бренды"=>"brands","Наши бренды"=>"brands","Спецпредложения"=>"special","Наши спецпредложения"=>"special","Спецпредложение"=>"special","Спец. предложения"=>"special","Специальное предложение"=>"special","Специальные предложения"=>"special","Гарантия"=>"warranty","Оплата"=>"payment","Как оплатить"=>"payment","Доставка"=>"delivery","Отзывы клиентов"=>"client_reviews","Клиенты"=>"clients","Наши клиенты"=>"clients","О сайте"=>"about_site","О нас"=>"about_us","Обо мне"=>"about_me","Интересно"=>"interesting","Это интересно"=>"interesting","Интересное"=>"interesting","Полезно"=>"useful","Полезное"=>"useful","Интересные статьи"=>"interesting","Полезные статьи"=>"useful","Информация"=>"info","Игра"=>"game","Игры"=>"games","Блог"=>"blog","Форум"=>"forum","Гостевая"=>"guestbook","Гостевая книга"=>"guestbook","Заметки"=>"notes","Портфолио"=>"portfolio","Мои работы"=>"my_work","Работы"=>"portfolio","Наша работа"=>"portfolio","Работы участников"=>"works","Друзья"=>"friends","Мои друзья"=>"friends","Фото"=>"photo","Видео"=>"video","Музыка"=>"music","Библиотека"=>"books","От автора"=>"author","Вступление"=>"first","Сообщество"=>"community","Секта"=>"cult","Курсы"=>"courses","События"=>"events","Уроки"=>"lessons","Общение"=>"communion","Творчество"=>"creation","Наш блог"=>"blog","Сотрудники"=>"workers","Работники"=>"workers");
+		if (isset($engname[$r2])) {
+			$r = $engname[$r2];
+		} else {
+			if ($r=="") $r = translit_n($r2);
+			else $r = translit_n($r);
+			$r = strtolowX($r);
+		}
+		if ($r2 != "Главная" && $r2 != "Главная страница" && $r2 != "главная страница" && $r2 != "главная") {
+			//Настройки для разделов, основываясь на их названии
+			$text = "lim=15&comments=0"; // 15 страниц, комментарии выключены
+			if ($r2 == "Новости" || $r2 == "Статьи" || $r2 == "Советы" || $r2 == "Я читаю" || $r2 == "Я пишу" || $r2 == "Я смотрю" || $r2 == "Я слушаю" || $r2 == "Блог" || $r2 == "Заметки" || $r2 == "Музыка" || $r2 == "Библиотека" || $r2 == "Работы участников" || $r2 == "Курсы" || $r2 == "События" || $r2 == "Творчество" || $r2 == "Наш блог" || $r2 == "Общение") $text = "lim=10&comments=1&comments_add=1&vetki=2&comments_mail=1&comments_adres=1"; // 10 страниц на листе, комментарии включены
+			if ($r2 == "Каталог" || $r2 == "Прайс" || $r2 == "Прайс-лист" || $r2 == "Галерея" || $r2 == "Товары" || $r2 == "Услуги" || $r2 == "Производство" || $r2 == "Продукты" || $r2 == "Акции" || $r2 == "Скидки" || $r2 == "Спецпредложения" || $r2 == "Вакансии") $text = "lim=100&comments=0"; // 500 страниц на листе, комментарии выключены
+
+			// Настройка типа разделов - одна страница или несколько
+			$soderganie = "[содержание]";
+			if ($r2 == "Услуги" || $r2 == "Наши услуги" || $r2 == "О компании" || $r2 == "Производство" || $r2 == "Наше производство" || $r2 == "Акции" || $r2 == "Наши акции" || $r2 == "Скидки" || $r2 == "Наши скидки" || $r2 == "Магазины" || $r2 == "Наши магазины" || $r2 == "Прайс-лист" || $r2 == "Прайс" || $r2 == "Цены" || $r2 == "Расценки" || $r2 == "Стоимость" || $r2 == "Франшиза" || $r2 == "Дилерство" || $r2 == "Дилеры" || $r2 == "Сотрудничество" || $r2 == "Партнерство" || $r2 == "Партнеры" || $r2 == "Наши партнеры" || $r2 == "Вакансии" || $r2 == "Наши вакансии" || $r2 == "Оставить заявку" || $r2 == "Заявка" || $r2 == "Напишите нам" || $r2 == "Пишите нам" || $r2 == "Отзывы" || $r2 == "Отзывы о нас" || $r2 == "Контакты" || $r2 == "Наши контакты" || $r2 == "Обратная связь" || $r2 == "Связь с нами" || $r2 == "Связаться с нами" || $r2 == "Связаться со мной" || $r2 == "О магазине" || $r2 == "Бренды" || $r2 == "Наши бренды" || $r2 == "Специальное предложение" || $r2 == "Спецпредложение" || $r2 == "Гарантия" || $r2 == "Оплата" || $r2 == "Как оплатить" || $r2 == "Доставка" || $r2 == "Отзывы клиентов" || $r2 == "От автора" || $r2 == "Наши клиенты" || $r2 == "О сайте" || $r2 == "О нас" || $r2 == "Обо мне" || $r2 == "Игра" || $r2 == "Друзья" || $r2 == "Секта" || $r2 == "Сообщество" || $r2 == "Общение" || $r2 == "Сотрудники" || $r2 == "Работники") 
+				$soderganie = "[название]<br>Текст раздела «".$r2."». Для редактирования откройте Администрирование — слева выберите этот раздел, затем справа нажмите по кнопке Редактировать.<br>Блок &#91;название&#93; в данном случае выводит название раздела.<br>Если вы хотите вывести (вместо названия и последующего произвольного текста) статьи, добавленные в этот раздел — напишите блок &#91;содержание&#93; вместо блока &#91;название&#93;.<br>Более подробная справка доступна при редактировании раздела.";
+			$namo = mysql_real_escape_string(stripcslashes($r));
+			$title = mysql_real_escape_string(stripcslashes($r2));
+			$text = mysql_real_escape_string($text);
+			$db->sql_query("INSERT INTO ".$prefix."_mainpage (`id`, `type`, `name`, `title`, `text`, `useit`, `shablon`, `counter`, `tables`, `color`, `description`, `keywords`) VALUES (NULL, '2', '".$namo."', '".$title."', 'pages|design=".$useit."&designpages=0&".$text."', '".$soderganie."', '', '0', 'pages', '0', '', '".$title."');") or die('Не удалось создать. Попробуйте еще раз и в случае неудачи обратитесь к разработчику.');
+
+			$r = "-".$r;
+		} else $r = "/";
+		// Создаем блок меню из разделов
+		$menu_block[] = "[элемент открыть][url=".$r."]".$r2."[/url][элемент закрыть]";
+	}
+	$menu_block = implode("\n",$menu_block);
+	/* Записываем меню
+		5 – вертикальное 1 уровень
+		2 – вертикальное 2 уровня (не желательно)
+		6 – вертикальное 3 уровня
+		3 – горизонтальное 1 уровень (слева)
+		1 – горизонтальное 1 уровень (по ширине 100%)
+		0 – горизонтальное 3 уровня (слева)
+		4 – горизонтальное 3 уровня (слева, открывается вверх)
+		7 – KickStart вертикальное 3 уровня (слева)
+		8 – KickStart вертикальное 3 уровня (справа)
+		9 – KickStart горизонтальное 3 уровня (слева) */
+	$db->sql_query("INSERT INTO `".$prefix."_mainpage` VALUES (NULL, '3', '10', 'Главное меню', '".$menu_block."', '|design=0&show_in_razdel=все&no_show_in_razdel=&html=0&titleshow=0&menu=0', 'block-main_menu', '0', 'pages', '0', '', '');");
+/*	
+$db->sql_query("INSERT INTO `".$prefix."_config` VALUES ( '«Такая-сякая», женский портал', '2013', 'takaya63@bk.ru', 'самара,женский портал,', 'Самарский женский портал', '<div style=\"display:none\">
+<!--LiveInternet counter--><script type=\"text/javascript\">document.write(\"<a href=\'http://www.liveinternet.ru/click\' target=_blank><img src=\'//counter.yadro.ru/hit?t26.1;r\" + escape(document.referrer) + ((typeof(screen)==\"undefined\")?\"\":\";s\"+screen.width+\"*\"+screen.height+\"*\"+(screen.colorDepth?screen.colorDepth:screen.pixelDepth)) + \";u\" + escape(document.URL) +\";h\"+escape(document.title.substring(0,80)) + \";\" + Math.random() + \"\' border=0 width=88 height=15 alt=\'\' title=\'LiveInternet: показано число посетителей за сегодня\'><\\/a>\")</script><!--/LiveInternet-->
+</div>', 'http://pda.liveinternet.ru/stat/такая63.рф/', 'http://gmail.com', '0', '0', '0', '||||||||||||||||||||+7 927 652 88 29|||||||||||||||<a href=\"mailto:takaya63@bk.ru\">takaya63@bk.ru</a>||||||||||', '1', '0|1|1|1|1|1|1|1|21|1|1|Bad Script.Lobster.Poiret One|0|/img/takaya_rec.jpg|Такая-сякая|51|8||0|monokai|monokai|monokai|monokai', ' 
+09:29 - 22 апреля 
+
+Добавление блока — информацию переместил в помощь, которую серьезно доработал.
+
+НОВОЕ:
+— можно переходить на второй редактор - все ошибки в нем исправлены
+— интерфейс немного улучшен, если что-то непонятно - звоните, всё подробно расскажу
+— теперь при создании статей ключевые слова и описание для них можно создавать автоматически, на вкладке Дополнительные настройки - кнопка Заполнить ключевые слова – лучше всего пользоваться именно автогенерацией, она основана на поиске в тексте основных слов
+
+Как добавлять баннеры:
+— Изменяем размер картинки баннера по ширине до нужного (размеры можно спросить у разработчика, измеряются в пикселях, «px»).
+— Жмем кнопку Блоки на главной администрирования — ищем в списке блоков нужный блок, к примеру «Баннер_на_Главной_перед_Акцией».
+— Нажимаем белый карандаш (редактировать), жмем кнопку Редактор справа сверху, жмем по второму редактору.
+— Добавляем картинку баннера — жмем в редакторе кнопку «Изображение» (иконка - картина с горами). Перетаскиваем файл картинки или жмем кнопку «Выбрать файл» и находим наш файл.
+— Если на картинку нужно поставить ссылку на другой сайт или страницу нашего сайта — жмем по картинке и вписываем ссылку на сайт в поле Ссылка.
+— Сохраняем (кнопка Сохранить в левом верхнем углу)', '4', '1', '0', '.ht_backup');");
+*/
+
+	// Добавляем страницы в некоторые разделы
+
+
 	// Добавляем админа
 	$db->sql_query("INSERT INTO `".$prefix."_authors` VALUES ( '".$a."', 'BOG', '".$pass."', '1', '', '0');") or die ('<li>Администратор не был добавлен в базу данных');
 	echo "<li>Права администратора установлены";
@@ -82,16 +293,17 @@ if (stristr(htmlentities($_SERVER[\'PHP_SELF\']), "config.php")) { Header("Locat
 	<a href=sys.php>Перейти в Администрирование сайта</a>";
 	die;
 }
+
 // НАЧАЛО УСТАНОВКИ =====================================
 // Проверка версии PHP
 $phpversion = preg_replace('/[a-z-]/', '', phpversion());
 if ($phpversion{0}<4) die ('Версия PHP ниже плинтуса. Где же ты нарыл такое старьё?! 0_о');
 if ($phpversion{0}==4) die ('Версия PHP — 4. Попросите хостинг-компанию установить PHP как минимум версии 5.2.1');
-$siteurl = $_SERVER["HTTP_HOST"];
+$siteurl = str_replace("www.", "", $_SERVER["HTTP_HOST"]);
 if ($siteurl == "") $siteurl = "localhost";
 
 function generate_password($number) {  // Генерируем пароль
-    $arr = array('a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','r','s','t','u','v','x','y','z','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','R','S','T','U','V','X','Y','Z','1','2','3','4','5','6','7','8','9','0','.','(',')','!','-',);
+    $arr = array('a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','r','s','t','u','v','x','y','z','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','R','S','T','U','V','X','Y','Z','1','2','3','4','5','6','7','8','9','0');
     $pass = "";
     for($i = 0; $i < $number; $i++) { // Вычисляем случайный индекс массива
       $index = rand(0, count($arr) - 1);
@@ -99,7 +311,8 @@ function generate_password($number) {  // Генерируем пароль
     }
     return $pass;
 }
-$pass = generate_password(10);
+$pass = generate_password(20);
+$pass_bd = generate_password(15);
 ?>
 <!DOCTYPE html>
 <!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
@@ -113,6 +326,7 @@ $pass = generate_password(10);
 	<link rel="stylesheet" href="../includes/css-frameworks/skeleton/base.css">
 	<link rel="stylesheet" href="../includes/css-frameworks/skeleton/skeleton.css">
 	<link rel="stylesheet" href="../includes/css-frameworks/skeleton/layout.css">
+	<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js'></script>
 	<!--[if lt IE 9]>
 		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
@@ -125,19 +339,29 @@ $pass = generate_password(10);
 <form>
 <div class="container">
 	<div class="sixteen columns">
-			<h1 class="remove-bottom" style="margin-top: 40px">Установка CMS «ДвижОк»</h1>
-			<h5>Версия 1.10</h5>
+			<div class="column">
+				<h1 class="remove-bottom" style="margin-top: 40px">Установка CMS «ДвижОк»</h1>
+				<h5>Первая CMS с русской душой. Версия <? echo $ver; ?></h5>
+			</div>
+			<div class="column">
+				<button type="submit" style="margin-top: 40px; margin-left: 30px"><h3>Установить →</h3></button>
+			</div>
 			<hr />
-		</div>
+	</div>
 		<div class="one-third column">
-			<h3>С чего начать?</h3>
+			<h3>База данных</h3>
 			<p>На хостинге должны быть установлены: PHP от 5.2.1 до 5.3 (выше не тестировалось) и MySQL 4.1 (или выше).<br>В MySQL необходимо создать базу данных.</p>
 			<ul class="square">
-				<li><strong>Хост базы данных</strong>:<br><input name="dbhost" value="localhost"></li>
-				<li><strong>Имя базы данных</strong>:<br><input name="dbname" value=""></li>
-				<li><strong>Имя пользователя базы данных</strong>:<br><input name="dbuname" value=""></li>
-				<li><strong>Пароль пользователя базы данных</strong>:<br><input name="dbpass" value=""></li>
-				<li><strong>Префикс таблиц</strong>:<br><input name="prefix" value="dvizhok"><br>Если у вас один сайт или на каждый сайт своя база данных - префикс можно не менять.</li>
+				<li><strong>Хост базы данных</strong> (сервер):<br><input id="dbhost" name="dbhost" value="localhost"></li>
+				<li><strong>Имя пользователя базы данных</strong>:<br><input id="dbuname" name="dbuname" value="root"></li>
+				<li><strong>Пароль пользователя базы данных</strong>:<br><input id="dbpass" name="dbpass" value="<? echo $pass_bd; ?>"></li>
+				<li><strong>Имя базы данных</strong>: <a onclick='x=$("#dbhost").val(); b=$("#dbuname").val(); c=$("#dbpass").val(); $.ajax({ url: "index.php?db=" + x + "&dbuname=" + b + "&dbpass=" + c, cache: false, dataType: "html", beforeSend: function(){ $("#db").html("Загрузка..."); }, success: function(data) { $("#db").html(data); } });' style='color:darkgreen; cursor:pointer; text-decoration:none; border-bottom:1px dashed green;'>Получить имя</a><br><div id='db'><input name="dbname" value=""></div></li>
+				<li><strong>Префикс таблиц</strong>:<br><input name="prefix" value="dvizhok"><br>Если один сайт или на каждый – своя база данных, префикс необязателен.<hr></li>
+			</ul>
+			<h3>Администратор</h3>
+			<ul class="square">
+				<li><strong>Псевдоним администратора</strong>:<br><input name="a" value="admin"></li>
+				<li><strong>Пароль администратора сайта</strong>:<br><input name="pass" value="<? echo $pass; ?>"><br><strong style='color:darkred'>Скопируйте</strong> или перепишите пароль!</li>
 			</ul>
 		</div>
 		<div class="one-third column">
@@ -145,23 +369,69 @@ $pass = generate_password(10);
 			<ul class="square">
 				<li><strong>Адрес сайта</strong>:<br><input name="siteurl" value="<? echo $siteurl; ?>"></li>
 				<li><strong>Язык</strong>:<br><select name="lang"><option value="ru-RU">Русский</option></select></li>
-				<li><strong>Псевдоним администратора</strong>:<br><input name="a" value="admin"></li>
-				<li><strong>Пароль администратора</strong>:<br><input name="pass" value="<? echo $pass; ?>"><br>Скопируйте или перепишите пароль!</li>
 				<li><strong>Блокировка по IP-адресу</strong>:<br><select name="ipban"><option value="true">Включить</option><option value="false" selected>Отключить</option></select></li>
 				<li><strong>Кеширование страниц сайта</strong>:<br><select name="site_cash"><option value="false">Отключено</option><option value="file">в файлы</option><option value="base">в базу данных</option></select></li>
 			</ul>
+			<h3>Выбор дизайна</h3>
+			<p>Готовый дизайн служит для освоения «Движка» или быстрой разработки сайтов.
+			<select id=design_skin name="design" onchange="x='1';
+			if ( $('#design_skin :selected').val() != 0 ) 
+				$('#design').html('<a target=\'_blank\' title=\'Увеличить (откроется в новом окне)\' href=\'install/themes/' + $('#design_skin :selected').val() + '.jpg\'><img src=\'install/themes/' + $('#design_skin :selected').val() + '.jpg\' height=250></a>');
+			else 
+				$('#design').html('<img src=\'install/strawberry.png\' height=250>');">
+				<option value="0">Выбирать необязательно ↓</option>
+				<option value="1">Дизайн №1: Универсальный</option>
+			</select>
+			<!-- стрелки выбора дизайна < > <a target='_blank' href='design_1.jpg'><img src='design_1.jpg' height=190></a> -->
+			<div id='design'><img src='install/strawberry.png' height=250></div>
 		</div>
 		<div class="one-third column">
-			<h3>Документация и поддержка</h3>
-			<p>Большая часть документации содержится в самой CMS, как в Помощи, так и в необходимых местах. Если встроенной помощи недостаточно — пишите на <a href="mailto:13i@list.ru">13i@list.ru</a> или стучитесь в skype <b>angel13i</b> — вы получите ответы на все вопросы, после чего встроенная помощь будет расширена и дополнена.</p>
-			<button type="submit"><h3>Установить →</h3></button>
-		</div>
-</div>
+			<h3>Поддержка</h3>
+			<p>Большая часть документации содержится в самой CMS, как в Помощи, так и в необходимых местах. Если встроенной помощи недостаточно — пишите на <a href="mailto:13i@list.ru"><strong>13i@list.ru</strong></a> или стучитесь в skype <a href="skype:angel13i?add"><strong>angel13i</strong></a> — вы получите ответы на все вопросы, после чего встроенная помощь будет расширена и дополнена. Также принимаются предложения и пожелания.</p>
+			
+			<h3>Добавление разделов</h3>
+			Выберите тип сайта и <strong style='color:darkred'>удалите/дополните разделы</strong> ниже.
+			<select id='type' name="type" onchange="x='1';
+			if ( $('#type :selected').val() == 'company') x='Главная\nУслуги\nО компании\nПроизводство\nПродукты\nНовости\nАкции\nСкидки\nМагазины\nПрайс-лист\nКаталог\nФраншиза\nДилерство\nГалерея\nСотрудничество\nВакансии\nОставить заявку\nНапишите нам\nСтатьи\nСоветы\nОтзывы\nКонтакты';
+			if ($('#type :selected').val() == 'shop') x='О магазине\nТовары\nПрайс-лист\nБренды\nНовости\nАкции\nСкидки\nСпецпредложения\nГарантия\nОплата\nДоставка\nПартнеры\nСотрудничество\nВакансии\nОтзывы клиентов\nКонтакты';
+			if ($('#type :selected').val() == 'blog') x='О сайте\nОбо мне\nИнтересно\nЯ читаю\nЯ пишу\nЯ смотрю\nЯ слушаю\nБлог\nСтатьи\nЗаметки\nПортфолио\nДрузья\nФото\nВидео\nМузыка\nБиблиотека\nСвязаться со мной\nОт автора';
+			if ($('#type :selected').val() == 'group') x='О нас\nСообщество\nРаботы участников\nКурсы\nСобытия\nОбщение\nТворчество\nСотрудничество\nНаш блог\nКонтакты';
+			$('#razdel').val(x); ">
+			<option value="company">Компания / Организация</option>
+			<option value="shop">Магазин / Каталог</option>
+			<option value="blog">Личный сайт / Блог</option>
+			<option value="group">Сообщество / Группа</option>
+			</select>Или напишите имена разделов в столбик, разделяя их нажатием Enter.<br>
+			<em>Адреса разделов будут созданы автоматически или их можно написать сразу после названия раздела, отделив символом «|», например: О нас|about</em><textarea id='razdel' name='razdel' rows=9 style='width:100%;'>Главная
+Услуги
+О компании
+Производство
+Продукты
+Новости
+Акции
+Скидки
+Магазины
+Прайс-лист
+Каталог
+Франшиза
+Дилерство
+Галерея
+Сотрудничество
+Вакансии
+Оставить заявку
+Напишите нам
+Статьи
+Советы
+Отзывы
+Контакты</textarea>
+		</div><br><p>
+
 <?
 if ($phpversion{0}==5 && $phpversion{2}<2) echo "<b style='color:red;'>Версия PHP — 5.".$phpversion{2}.". Рекомендуется использовать PHP как минимум версии 5.2.1</b>";
-if ($phpversion{0}>=5 && $phpversion{2}>3) echo "<b style='color:red;'>Версия PHP — 5.".$phpversion{2}.". Рекомендуется использовать PHP как максимум версии 5.3.<br>На 5.4 (и выше) полноценно не тестировалось — вы можете попробовать и передать разработчику все возникшие ошибки.</b>";
+if ( ( $phpversion{0}==5 && $phpversion{2}>3 ) || $phpversion{0}>5) echo "<b style='color:red;'>Версия PHP — 5.".$phpversion{2}.".<br>На 5.4 (и выше) CMS полноценно не тестировалась — вы можете попробовать и передать разработчику все возникшие ошибки или замечания.</b>";
 if (!function_exists('curl_init')) echo "<b style='color:red;'>Желательно включить поддержку cURL на вашем хостинге.</b>";
 ?>
+</div>
 </form>
 </body>
 </html>

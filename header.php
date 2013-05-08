@@ -130,7 +130,7 @@ if ($name=="-email") { // занесение мыла как скрытого к
 			$soda_col = count($soda);
 			if (strpos(" ".$soda[0],"[содержание]")) $soderganie = str_replace("[содержание]", $soderganie, $soda[0]);
 			else {
-				$soderganie = str_replace("[название]", "<div class=cat_title><font class=cat_categorii_link>".$ModuleName."</font></div><div class=polosa></div>", $soda[0]);
+				$soderganie = str_replace("[название]", "<div class=cat_title><span class=cat_categorii_link>".$ModuleName."</span></div><div class=polosa></div>", $soda[0]);
 				$soderganie = str_replace("[страницы]", $soderganie2, $soderganie);
 			}
 
@@ -259,7 +259,7 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 		if (trim($stile)!="" and $stile!=0) $stil .= "-".str_replace(" ","-",trim($stile));
 		/////////////////////////////////////
 		if ($nameX == 0) {
-		if ($useitX != "все" and $nameX != 2 and $useitX != "" and $razdel_open_name != "" and $razdel_open_name != "no") $block_title2 .= "<font class=open_all_small> &nbsp; &#124; &nbsp; </font> <a href=-".$useitX." title=\"".$razdel_open_name."\" class=open_all_small><u>".$razdel_open_name."</u></a>";
+		if ($useitX != "все" and $nameX != 2 and $useitX != "" and $razdel_open_name != "" and $razdel_open_name != "no") $block_title2 .= "<span class=open_all_small> &nbsp; &#124; &nbsp; </span> <a href=-".$useitX." title=\"".$razdel_open_name."\" class=open_all_small><u>".$razdel_open_name."</u></a>";
 		}
 	/////////////////////////////////////
 		$design_open = "<div class=".$shablonX.">".$design[0]; 
@@ -945,26 +945,30 @@ case "10": # Блок меню
 		$url1 = str_replace("http://".$siteurl,"",$url1);
 		$url1 = str_replace("http%3A%2F%2F".$siteurl."%2F","","/".$url1);
 		$url1 = str_replace("//","/",$url1);
+		$url3 = str_replace("/","",$url1);
 		$url2 = explode("_",$url1);
 		$url2 = $url2[0];
 		$tr = array("[b]"=>"<b>","[B]"=>"<b>","[/b]"=>"</b>","[/B]"=>"</b>","[i]"=>"<i>","[I]"=>"<i>","[/i]"=>"</i>","[/I]"=>"</i>","http://".$siteurl=>"");
 		$textX = strtr($textX,$tr);
 		$tr = array("[уровень открыть]"=>"<ul>","[уровень закрыть]"=>"</ul>","[элемент открыть]"=>"<li>","[элемент закрыть]"=>"</li>","[/url]"=>"</a>","[url="=>"<a class='li1menu_link' href=","[/URL]"=>"</a>","[URL="=>"<a class='li1menu_link' href=","]"=>">");
 		$textXX = strtr($textX,$tr);
-		if ($url != "/") {
+		//if ($url != "/") {
 			$textXX = str_replace("' href=".$url1.">", " mainmenu_open' href=".$url1.">", $textXX);
 			$textXX = str_replace("<li><a class='li1menu_link mainmenu_open' href=".$url1.">", "<li class='li_mainmenu_open'><a class='li1menu_link mainmenu_open' href=".$url1.">", $textXX);
 
 			$textXX = str_replace("' href=".$url2.">", " mainmenu_open' href=".$url2.">", $textXX);
 			$textXX = str_replace("<li><a class='li1menu_link mainmenu_open' href=".$url2.">", "<li class='li_mainmenu_open'><a class='li1menu_link mainmenu_open' href=".$url2.">", $textXX);
 
+			$textXX = str_replace("' href=".$url3.">", " mainmenu_open' href=".$url3.">", $textXX);
+			$textXX = str_replace("<li><a class='li1menu_link mainmenu_open' href=".$url3.">", "<li class='li_mainmenu_open'><a class='li1menu_link mainmenu_open' href=".$url3.">", $textXX);
+
 			$textXX = str_replace("mainmenu_open mainmenu_open", "mainmenu_open", $textXX);
 
-			if ($menu == 7 or $menu == 8 or $menu == 9) $textXX = str_replace("<li class='li_mainmenu_open'><a class='li1menu_link mainmenu_open' href", "<li class='current'><a href", $textXX);
-		} else {
+			//if ($menu == 7 or $menu == 8 or $menu == 9) $textXX = str_replace("<li class='li_mainmenu_open'><a class='li1menu_link mainmenu_open' href", "<li class='current'><a href", $textXX);
+		//} else {
 			if ($menu == 7 or $menu == 8 or $menu == 9) $textXX = str_replace("<li class='li_mainmenu_open'><a class='li1menu_link mainmenu_open' href='/'>", "<li class='current'><a href='/'>", $textXX);
 			else $textXX = str_replace("<li><a class='li1menu_link' href='/'>", "<li class='li_mainmenu_open'><a class='li1menu_link mainmenu_open' href='/'>", $textXX);
-		}
+		//}
 	switch ($menu) {
 		case "0": // гор влево 3 уровня
 			$class_menu = "menu-h-d"; break;
@@ -986,6 +990,7 @@ case "10": # Блок меню
 			$textXX = "<table class='table1menu' width=100% cellspacing=0 cellpadding=0><tr valign=bottom>".$textXX."</tr></table>";
 			$textXX = str_replace("' href=\"".$url1."\">", " mainmenu_open' href=\"".$url1."\" >", $textXX);
 			$textXX = str_replace("' href=\"".$url2."\">", " mainmenu_open' href=\"".$url2."\" >", $textXX);
+			$textXX = str_replace("' href=\"".$url3."\">", " mainmenu_open' href=\"".$url3."\" >", $textXX);
 		break;
 		case "2": // вертикальное 2 уровня
 			$tr = array( // без 3 уровней!
@@ -995,6 +1000,7 @@ case "10": # Блок меню
 			$textXX = "<div class=suckerdiv><ul id=suckertree1>".$textXX."</ul></div>";
 			$textXX = str_replace("<li><a class=li2menu_link href=\"".$url1."\">", "<li class=li_openlink><a class=li2menu_openlink href=\"".$url1."\">", $textXX);
 			$textXX = str_replace("<li><a class=li2menu_link href=\"".$url2."\">", "<li class=li_openlink><a class=li2menu_openlink href=\"".$url2."\">", $textXX);
+			$textXX = str_replace("<li><a class=li2menu_link href=\"".$url3."\">", "<li class=li_openlink><a class=li2menu_openlink href=\"".$url3."\">", $textXX);
 		break;
 	 	case "7": // KickStart вертикальное 3 уровня (слева)
 			$class_menu = "menu vertical"; break;
@@ -1168,7 +1174,7 @@ case "13": # ОБЛАКО ТЕГОВ
 	$tagcloud = str_replace( "&nbsp;", " ", str_replace( "+", " ", $tagcloud ) ) ; 
 	$tagcloud2 = str_replace( "&nbsp;", " ", str_replace( "+", " ", $tagcloud2 ) ) ; 
 	$textX .= str_replace( "pt","px", $tagcloud2);
-	$textX .= "<br><br><center><div id=show_oblako style='font-size: 11px; cursor:pointer;' OnClick=\"show('text_tags'); show('flash_tags'); show('show_tags'); show('all_tags');\"><font style='border-bottom:1px dotted;'>Вернуть облако тегов</font></div></center> 
+	$textX .= "<br><br><center><div id=show_oblako style='font-size: 11px; cursor:pointer;' OnClick=\"show('text_tags'); show('flash_tags'); show('show_tags'); show('all_tags');\"><span style='border-bottom:1px dotted;'>Вернуть облако тегов</span></div></center> 
 	</div>
 	<div id=\"all_tags\"></div>
 	<div id=flash_tags><script>
@@ -1183,7 +1189,7 @@ case "13": # ОБЛАКО ТЕГОВ
 	widget_so.addVariable(\"tagcloud\", \"<span>". $tagcloud ."<\/span>\");
 	widget_so.write(\"all_tags\");
 	</script></div> 
-	<center><div id=show_tags style='font-size: 11px; cursor:pointer;' OnClick=\"show('text_tags'); show('flash_tags'); show('show_tags'); show('all_tags');\"><font style='border-bottom:1px dotted;'>Смотреть список слов</font></div></center> 
+	<center><div id=show_tags style='font-size: 11px; cursor:pointer;' OnClick=\"show('text_tags'); show('flash_tags'); show('show_tags'); show('all_tags');\"><span style='border-bottom:1px dotted;'>Смотреть список слов</span></div></center> 
 	";
 	$block = str_replace("[$titleX]", $design_open.$textX.$design_close, $block);
 	$type = ""; break;
@@ -1475,7 +1481,7 @@ case "31": # Блок JS
 	global $project_logotip, $project_name;
 	if (strpos($block, "_проекта]")) {
 		$block=str_replace("[лого_проекта]", "<img src='".$project_logotip."' class='project_logotip'>", $block);
-		$block=str_replace("[название_проекта]", "<h1 class='project_name'>".$project_name."</h1>", $block);
+		$block=str_replace("[название_проекта]", $project_name, $block);
 		$block=str_replace("[название_лого_проекта]", "<h1 class=project_logotip_name><a href='/'' title='Главная страница'><span>".$project_name."</span><img src='".$project_logotip."' alt=''></a></h1>", $block);
 	}
 
@@ -1615,7 +1621,8 @@ echo "<title>".$pagetit.$sitename."</title>
 <!--[if lt IE 9]><script src='http://html5shim.googlecode.com/svn/trunk/html5.js'></script><![endif]-->
 <!--[if IE]><script src='includes/iepngfix_tilebg.js'></script><![endif]-->
 <script src='includes/j.js'></script>
-<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js'></script>";
+<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js'></script>
+<script src='includes/modernizr-1.5.min.js'></script>";
 
 if ($normalize != 0) echo "<link rel='stylesheet' type='text/css' href='includes/css-frameworks/normalize.css' />";
 

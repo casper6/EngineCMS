@@ -227,9 +227,49 @@ echo "
 </td></tr>
 
 <tr valign=top><td style='min-width:250px;'>
-<b>Включить CSS-фреймворк</b>:</td><td class=small>
+<b>Включить CSS-фреймворк</b>:<br>";
+
+global $kickstart;
+switch($kickstart) {
+	case 1:
+	$kick_link = "http://www.99lime.com/elements/";
+	$kick_name = "KickStart"; break;
+	case 2:
+	$kick_link = "http://css-framework.ru/doc/utilites/";
+	$kick_name = "CSSframework"; break;
+	case 3:
+	$kick_link = "http://www.getskeleton.com/#examples";
+	$kick_name = "Skeleton"; break;
+	case 4:
+	$kick_link = "http://kubeframework.com";
+	$kick_name = "Kube"; break;
+	case 5:
+	$kick_link = "http://twitter.github.com/bootstrap/base-css.html";
+	$kick_name = "Bootstrap"; break;
+	case 6:
+	$kick_link = "http://cssgrid.net";
+	$kick_name = "1140 Grid"; break;
+	case 7:
+	$kick_link = "http://daneden.me/toast/";
+	$kick_name = "Toast"; break;
+	case 8:
+	$kick_link = "http://www.blueprintcss.org/tests/";
+	$kick_name = "Blueprint"; break;
+	case 9:
+	$kick_link = "http://yuilibrary.com/yui/docs/cssgrids/";
+	$kick_name = "YUI"; break;
+	case 10:
+	$kick_link = "http://960.gs";
+	$kick_name = "960gs"; break;
+	case 11:
+	$kick_link = "http://960.gs";
+	$kick_name = "960gs(24)"; break;
+}
+if ($kickstart != 0) echo " <button class='small' onclick='location.href=\"".$kick_link."\"' title='Открыть сайт CSS-фреймворка «".$kick_name."»'><span class=\"icon small black\" data-icon=\"S\"></span> ".$kick_name."</button>";
+
+echo "</td><td class=small>
 ".select("options[kickstart]", "0,1,2,3,4,5,6,7,8,9,10,11", "-- НЕТ --,KickStart,CSSframework,Skeleton,Kube,Bootstrap,1140 Grid,Toast,Blueprint,YUI CSS Grids,960gs (12 и/или 16 колонок),960gs (24 колонки)", $kickstart, ' id=kickstart onchange="if ( $(\'#kickstart\').val() == 1) $(\'#frame1\').show(); else $(\'#frame1\').hide(); if ( $(\'#kickstart\').val() == 6) $(\'#frame6\').show(); else $(\'#frame6\').hide(); "')."
-<br>Ссылка на сайт фреймворка (для просмотра правил оформления CSS и HTML) появится наверху администрирования.
+<br>Ссылка на сайт фреймворка (для просмотра правил оформления CSS и HTML) появится слева после сохранения.
 
 <pre id='frame1' style='display:none;'>
 LightBox отключен, включен FancyBox, входящий в состав KickStart
@@ -329,7 +369,7 @@ body {}
 	<tr valign=top class=p3><td>
 	Отключить защиту комментариев: </td><td class=small>
 	".select("options[captcha_ok]", "0,1", "НЕТ,ЕСТЬ", $captcha_ok)."
-	<br>По умолчанию - вкл. При отключении можно не вводить проверочный код или вводить его неправильно — он не будет проверяться. </td></tr>
+	<br>По умолчанию - выкл. При отключении можно не вводить проверочный код или вводить его неправильно — он не будет проверяться. </td></tr>
 
 	<tr valign=top class=p4><td>
 	Год основания сайта:</td><td class=small>
