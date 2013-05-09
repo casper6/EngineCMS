@@ -1,5 +1,5 @@
 <?php
-$ver = '1.11'; // Версия CMS «ДвижОк»
+$ver = '1.12'; // Версия CMS «ДвижОк»
 
 // Получение списка БД
 if (isset($_REQUEST['db'])) {
@@ -339,98 +339,80 @@ $pass_bd = generate_password(15);
 <form>
 <div class="container">
 	<div class="sixteen columns">
-			<div class="column">
 				<h1 class="remove-bottom" style="margin-top: 40px">Установка CMS «ДвижОк»</h1>
-				<h5>Первая CMS с русской душой. Версия <? echo $ver; ?></h5>
-			</div>
-			<div class="column">
-				<button type="submit" style="margin-top: 40px; margin-left: 30px"><h3>Установить →</h3></button>
-			</div>
+				<h5>Версия <? echo $ver; ?></h5>
 			<hr />
 	</div>
 		<div class="one-third column">
-			<h3>База данных</h3>
-			<p>На хостинге должны быть установлены: PHP от 5.2.1 до 5.3 (выше не тестировалось) и MySQL 4.1 (или выше).<br>В MySQL необходимо создать базу данных.</p>
+			<h3>1. База данных</h3>
 			<ul class="square">
-				<li><strong>Хост базы данных</strong> (сервер):<br><input id="dbhost" name="dbhost" value="localhost"></li>
+				<li><strong>Хост базы данных MySQL</strong> (сервер):<br><input id="dbhost" name="dbhost" value="localhost"></li>
 				<li><strong>Имя пользователя базы данных</strong>:<br><input id="dbuname" name="dbuname" value="root"></li>
 				<li><strong>Пароль пользователя базы данных</strong>:<br><input id="dbpass" name="dbpass" value="<? echo $pass_bd; ?>"></li>
 				<li><strong>Имя базы данных</strong>: <a onclick='x=$("#dbhost").val(); b=$("#dbuname").val(); c=$("#dbpass").val(); $.ajax({ url: "index.php?db=" + x + "&dbuname=" + b + "&dbpass=" + c, cache: false, dataType: "html", beforeSend: function(){ $("#db").html("Загрузка..."); }, success: function(data) { $("#db").html(data); } });' style='color:darkgreen; cursor:pointer; text-decoration:none; border-bottom:1px dashed green;'>Получить имя</a><br><div id='db'><input name="dbname" value=""></div></li>
-				<li><strong>Префикс таблиц</strong>:<br><input name="prefix" value="dvizhok"><br>Если один сайт или на каждый – своя база данных, префикс необязателен.<hr></li>
-			</ul>
-			<h3>Администратор</h3>
-			<ul class="square">
-				<li><strong>Псевдоним администратора</strong>:<br><input name="a" value="admin"></li>
-				<li><strong>Пароль администратора сайта</strong>:<br><input name="pass" value="<? echo $pass; ?>"><br><strong style='color:darkred'>Скопируйте</strong> или перепишите пароль!</li>
+				<li><a onclick='$("#prefix_show").toggle();' style='color:darkgreen; cursor:pointer; text-decoration:none; border-bottom:1px dashed green;'>Префикс таблиц</a>:<div id='prefix_show' style='display:none'><input name="prefix" value="dvizhok"><br>Если один сайт или на каждый – своя база данных, префикс необязателен.</div></li>
 			</ul>
 		</div>
 		<div class="one-third column">
-			<h3>Основные настройки</h3>
+			<h3>2. Настройки</h3>
 			<ul class="square">
 				<li><strong>Адрес сайта</strong>:<br><input name="siteurl" value="<? echo $siteurl; ?>"></li>
-				<li><strong>Язык</strong>:<br><select name="lang"><option value="ru-RU">Русский</option></select></li>
-				<li><strong>Блокировка по IP-адресу</strong>:<br><select name="ipban"><option value="true">Включить</option><option value="false" selected>Отключить</option></select></li>
-				<li><strong>Кеширование страниц сайта</strong>:<br><select name="site_cash"><option value="false">Отключено</option><option value="file">в файлы</option><option value="base">в базу данных</option></select></li>
+				<li style='display:none'><strong>Язык</strong>:<br><select name="lang"><option value="ru-RU">Русский</option></select></li>
+				<li><strong>Псевдоним администратора</strong>:<br><input name="a" value="admin"></li>
+				<li><strong>Пароль администратора сайта</strong>:<br><input name="pass" value="<? echo $pass; ?>"><br><strong style='color:darkred'>Скопируйте</strong> или перепишите пароль!</li>
+				<li id='all_show'><a onclick='$("#blo_show").show();$("#cash_show").show();$("#all_show").hide();' style='color:darkgreen; cursor:pointer; text-decoration:none; border-bottom:1px dashed green;'>IP-блокировка и кеш отключены</a></li>
+				<li id='blo_show' style='display:none'><strong>Блокировка по IP-адресу</strong>:<br><select name="ipban"><option value="true">Включить</option><option value="false" selected>Отключить</option></select></li>
+				<li id='cash_show' style='display:none'><strong>Кеширование страниц сайта</strong>:<br><select name="site_cash"><option value="false">Отключено</option><option value="file">в файлы</option><option value="base">в базу данных</option></select></li>
+				
 			</ul>
-			<h3>Выбор дизайна</h3>
+			
+		</div>
+		<div class="one-third column">
+			<h3>3. Дизайн</h3>
 			<p>Готовый дизайн служит для освоения «Движка» или быстрой разработки сайтов.
 			<select id=design_skin name="design" onchange="x='1';
 			if ( $('#design_skin :selected').val() != 0 ) 
 				$('#design').html('<a target=\'_blank\' title=\'Увеличить (откроется в новом окне)\' href=\'install/themes/' + $('#design_skin :selected').val() + '.jpg\'><img src=\'install/themes/' + $('#design_skin :selected').val() + '.jpg\' height=250></a>');
 			else 
-				$('#design').html('<img src=\'install/strawberry.png\' height=250>');">
+				$('#design').html('');">
 				<option value="0">Выбирать необязательно ↓</option>
 				<option value="1">Дизайн №1: Универсальный</option>
 			</select>
 			<!-- стрелки выбора дизайна < > <a target='_blank' href='design_1.jpg'><img src='design_1.jpg' height=190></a> -->
-			<div id='design'><img src='install/strawberry.png' height=250></div>
-		</div>
-		<div class="one-third column">
-			<h3>Поддержка</h3>
-			<p>Большая часть документации содержится в самой CMS, как в Помощи, так и в необходимых местах. Если встроенной помощи недостаточно — пишите на <a href="mailto:13i@list.ru"><strong>13i@list.ru</strong></a> или стучитесь в skype <a href="skype:angel13i?add"><strong>angel13i</strong></a> — вы получите ответы на все вопросы, после чего встроенная помощь будет расширена и дополнена. Также принимаются предложения и пожелания.</p>
-			
-			<h3>Добавление разделов</h3>
-			Выберите тип сайта и <strong style='color:darkred'>удалите/дополните разделы</strong> ниже.
-			<select id='type' name="type" onchange="x='1';
+			<div id='design'></div>
+
+			<h3>4. Разделы</h3>
+			<select id='type' name="type" onchange="x='';
 			if ( $('#type :selected').val() == 'company') x='Главная\nУслуги\nО компании\nПроизводство\nПродукты\nНовости\nАкции\nСкидки\nМагазины\nПрайс-лист\nКаталог\nФраншиза\nДилерство\nГалерея\nСотрудничество\nВакансии\nОставить заявку\nНапишите нам\nСтатьи\nСоветы\nОтзывы\nКонтакты';
 			if ($('#type :selected').val() == 'shop') x='О магазине\nТовары\nПрайс-лист\nБренды\nНовости\nАкции\nСкидки\nСпецпредложения\nГарантия\nОплата\nДоставка\nПартнеры\nСотрудничество\nВакансии\nОтзывы клиентов\nКонтакты';
 			if ($('#type :selected').val() == 'blog') x='О сайте\nОбо мне\nИнтересно\nЯ читаю\nЯ пишу\nЯ смотрю\nЯ слушаю\nБлог\nСтатьи\nЗаметки\nПортфолио\nДрузья\nФото\nВидео\nМузыка\nБиблиотека\nСвязаться со мной\nОт автора';
 			if ($('#type :selected').val() == 'group') x='О нас\nСообщество\nРаботы участников\nКурсы\nСобытия\nОбщение\nТворчество\nСотрудничество\nНаш блог\nКонтакты';
-			$('#razdel').val(x); ">
-			<option value="company">Компания / Организация</option>
-			<option value="shop">Магазин / Каталог</option>
-			<option value="blog">Личный сайт / Блог</option>
-			<option value="group">Сообщество / Группа</option>
-			</select>Или напишите имена разделов в столбик, разделяя их нажатием Enter.<br>
-			<em>Адреса разделов будут созданы автоматически или их можно написать сразу после названия раздела, отделив символом «|», например: О нас|about</em><textarea id='razdel' name='razdel' rows=9 style='width:100%;'>Главная
-Услуги
-О компании
-Производство
-Продукты
-Новости
-Акции
-Скидки
-Магазины
-Прайс-лист
-Каталог
-Франшиза
-Дилерство
-Галерея
-Сотрудничество
-Вакансии
-Оставить заявку
-Напишите нам
-Статьи
-Советы
-Отзывы
-Контакты</textarea>
-		</div><br><p>
+			$('#razdel').val(x);
+			if ( $('#type :selected').val() == '') $('#razdel_show').hide(); else $('#razdel_show').show(); ">
+				<option value="">Добавлю разделы позже</option>
+				<option value="company">Тип сайта: Компания / Организация</option>
+				<option value="shop">Тип сайта: Магазин / Каталог</option>
+				<option value="blog">Тип сайта: Личный сайт / Блог</option>
+				<option value="group">Тип сайта: Сообщество / Группа</option>
+			</select>
+			<div id='razdel_show' style='display:none'>
+				<strong style='color:darkred'>Удалите/дополните разделы</strong> ниже.
+				<br>Или напишите имена разделов в столбик, разделяя их нажатием Enter.<br>
+				<em>Адреса разделов будут созданы автоматически или их можно написать сразу после названия раздела, отделив символом «|», например: О нас|about</em><textarea id='razdel' name='razdel' rows=9 style='width:100%;'></textarea>
+			</div>
+		</div>
 
-<?
-if ($phpversion{0}==5 && $phpversion{2}<2) echo "<b style='color:red;'>Версия PHP — 5.".$phpversion{2}.". Рекомендуется использовать PHP как минимум версии 5.2.1</b>";
-if ( ( $phpversion{0}==5 && $phpversion{2}>3 ) || $phpversion{0}>5) echo "<b style='color:red;'>Версия PHP — 5.".$phpversion{2}.".<br>На 5.4 (и выше) CMS полноценно не тестировалась — вы можете попробовать и передать разработчику все возникшие ошибки или замечания.</b>";
-if (!function_exists('curl_init')) echo "<b style='color:red;'>Желательно включить поддержку cURL на вашем хостинге.</b>";
-?>
+		<div class="column">
+			<button type="submit" style="float:right; margin-left: 30px"><h3>Установить →</h3></button>
+
+			<p>Документация встроена в CMS. Если её недостаточно — пишите на <a href="mailto:13i@list.ru"><strong>13i@list.ru</strong></a> или стучитесь в skype <a href="skype:angel13i?add"><strong>angel13i</strong></a> — вы получите ответы на все вопросы, после чего встроенная помощь будет расширена и дополнена. Также принимаются предложения и пожелания.<hr>
+			<?
+			if ($phpversion{0}==5 && $phpversion{2}<2) echo "<b style='color:red;'>Версия PHP — 5.".$phpversion{2}.". Рекомендуется использовать PHP как минимум версии 5.2.1</b>";
+			if ( ( $phpversion{0}==5 && $phpversion{2}>3 ) || $phpversion{0}>5) echo "<b style='color:red;'>Версия PHP — 5.".$phpversion{2}.".<br>На 5.4 (и выше) CMS полноценно не тестировалась — вы можете попробовать и передать разработчику все возникшие ошибки или замечания.</b>";
+			if (!function_exists('curl_init')) echo "<b style='color:red;'>Желательно включить поддержку cURL на вашем хостинге.</b>";
+			?>
+		</div>
+
 </div>
 </form>
 </body>
