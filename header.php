@@ -12,8 +12,9 @@
 		if ( $_GET["group"] !== $_COOKIE['user_group']) { Header("Location: error.php?code=123"); die; } 
 	}
 	require_once("mainfile.php");
-	global $strelka, $siteurl, $prefix, $name, $db, $admin, $sitename, $pagetitle, $pagetitle2, $registr, $pogoda, $flash, $keywords, $description, $counter, $startdate, $adminmail, $keywords2, $description2, $stopcopy, $nocash, $blocks, $http_siteurl, $display_errors;
+	global $strelka, $siteurl, $prefix, $name, $db, $admin, $sitename, $pagetitle, $pagetitle2, $registr, $pogoda, $flash, $keywords, $description, $counter, $startdate, $adminmail, $keywords2, $description2, $stopcopy, $nocash, $blocks, $http_siteurl, $display_errors, $gallery_css3, $gallery_lightbox, $gallery_carusel, $gallery_sly;
 	$nocash = false;
+	$gallery_css3 = $gallery_lightbox = $gallery_carusel = $gallery_sly = false;
 	if ($name == "") $name = "index";
 
 if ($name=="-email") { // занесение мыла как скрытого комментария Убрать !!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -701,30 +702,35 @@ case "6": # Фотогалерея
 	$links = explode("\n", str_replace("\n\n", "\n", $textX) );
 	$textX = $textX0 = "";
 	global $siteurl;
+	if ($foto_gallery_type >= 2 && $foto_gallery_type <= 6) {
+		if ($img_width == "0") $img_width = $img_height;
+		if ($img_height == "0") $img_height = $img_width;
+	}
 	for ( $i=0; $i < count($links); $i++ ) { 
 		# Обработка ссылок на фото
 		$link = $title = $alt = "";
 		$link = explode("|",$links[$i]);
 		if (isset($link[1])) $title = $link[1]; else $title = "";
 		if (isset($link[2])) $alt = $link[2]; else $alt = "";
+		if (isset($link[3])) $alt2 = $link[3]; else $alt2 = "";
 		if (isset($link[0])) $link = $link[0]; else $link = "";
 		if ($watermark != "") $water = "includes/phpThumb/phpThumb.php?src=".$link."&fltr[]=wmi|".$watermark."|BR|100";	else $water = $link;
-		// foto_gallery_type: 1 - миниатюры, 0 - «карусель»
+		// foto_gallery_type: 1 - миниатюры, 0 - «карусель», 2 - описание в 3 строки, 3 - аля макос горизонтальная полоса прокрутки
 		if ($foto_gallery_type == 1) $textX .= "<span class='div_a_img_gallery'><a title='".$title."' href='".$water."' class='lightbox' rel='group'><img alt='".$title."' src='includes/phpThumb/phpThumb.php?src=".$link."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0' class='img_gallery'></a></span> ";
-		elseif ($foto_gallery_type == 0) $textX0 .= "<li><a href='".$water."'><img src='includes/phpThumb/phpThumb.php?src=".$link."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0' title='".$title."' alt='".$alt."' class='image".$i."'></a></li>";
+		if ($foto_gallery_type == 0) $textX0 .= "<li><a href='".$water."'><img src='includes/phpThumb/phpThumb.php?src=".$link."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0' title='".$title."' alt='".$alt."' class='image".$i."'></a></li>";
+		if ($foto_gallery_type == 2) $textX0 .= "<li><a href='#image-".$i."'><img src='includes/phpThumb/phpThumb.php?src=".$link."&amp;fltr[]=crop|0|0|0|0.05&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0' alt='".$title."'><span>".$title."</span></a><div class='lb-overlay' id='image-".$i."'><img src='".$water."' alt='".$title." / ".$alt." / ".$alt2."' /><div><h3>".$title."<span>".$alt."</h3><p>".$alt2."</p></div><a href='#page' class='lb-close'>x Закрыть</a></div></li>";
+		if ($foto_gallery_type >= 3 && $foto_gallery_type <= 6) $textX0 .= "<li><a title='".$title."' href='".$water."' class='lightbox' rel='group'><img src='includes/phpThumb/phpThumb.php?src=".$link."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0' alt='".$alt."' class='img_gallery'></a></li>";
 	}
-	if ($foto_gallery_type == 0) $textX .= "
-    <div id='carusel-gallery' class='ad-gallery'>
-      <div class='ad-image-wrapper'></div>
-      <div class='ad-controls'></div>
-      <div class='ad-nav'>
-        <div class='ad-thumbs'>
-          <ul class='ad-thumb-list'>
-            ".$textX0."
-          </ul>
-        </div>
-      </div>
-    </div>";
+	if ($foto_gallery_type >= 3 && $foto_gallery_type <= 6) { 
+		// effects 3, basic 4, cycleitems 5, oneperframe 6
+		$type_sly = array('','','','effects', 'basic', 'cycleitems', 'oneperframe');
+		$type_sly = $type_sly[$foto_gallery_type];
+		$gallery_sly = true; $gallery_lightbox = true; $textX .= "<style>.frame ul li {width: ".$img_width."px;}</style><div class='scrollbar'><div class='handle'><div class='mousearea'></div></div></div>
+		<div class='frame ".$type_sly."' id='".$type_sly."'><ul class='slidee'>".$textX0."</ul></div>
+		<div class='controls center'><button class='prev'> ← предыдущая </button> <button class='next'> следующая → </button></div>";}
+	if ($foto_gallery_type == 2) { $gallery_css3 = true; $textX .= "<style>.lb-album li > a{width: ".$img_width."px;height: ".$img_height."px;line-height: ".$img_height."px;}.lb-album li > a span{width: ".$img_width."px;height: ".$img_height."px;line-height: ".$img_height."px;}</style><ul class='lb-album'>".$textX0."</ul>"; }	
+	if ($foto_gallery_type == 1) { $gallery_lightbox = true; }
+	if ($foto_gallery_type == 0) { $gallery_carusel = true; $textX .= "<div id='carusel-gallery' class='ad-gallery'><div class='ad-image-wrapper'></div><div class='ad-controls'></div><div class='ad-nav'><div class='ad-thumbs'><ul class='ad-thumb-list'>".$textX0."</ul></div></div></div>"; }
 	$block = str_replace("[$titleX]", $design_open.$textX.$design_close, $block);
 	$type = ""; break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1718,8 +1724,13 @@ switch($kickstart) { // Выбор CSS-фреймворка
 	default:
 	break;
 }
-if ($kickstart != 1) echo "<script src='includes/jquery.lightbox.js'></script><script src='includes/jquery.ad-gallery.js'></script><script>$(document).ready(function(){ $('.lightbox').lightbox({ fitToScreen: true, imageClickClose: false }); var galleries = $('.ad-gallery').adGallery(); $('#switch-effect').change( function() { galleries[0].settings.effect = $(this).val(); return false; } ); });</script><link rel='stylesheet' href='includes/lightbox-carusel.css' media='screen' />"; // при включенном kickstart, lightbox не нужен, включается fancybox
 
+// Подключение фото-галерей
+if ($gallery_css3 == true) echo "<link rel='stylesheet' href='includes/lightbox-css3.css' media='screen' />";
+if ($gallery_lightbox == true && $kickstart != 1) echo "<script src='includes/jquery.lightbox.js'></script><script src='includes/jquery.ad-gallery.js'></script><script>$(document).ready(function(){ $('.lightbox').lightbox({ fitToScreen: true, imageClickClose: false }); var galleries = $('.ad-gallery').adGallery(); $('#switch-effect').change( function() { galleries[0].settings.effect = $(this).val(); return false; } ); });</script>
+<link rel='stylesheet' href='includes/lightbox.css' media='screen' />"; // при включенном kickstart, lightbox не нужен, включается fancybox
+if ($gallery_carusel == true) echo "<script src='includes/jquery.lightbox.js'></script><script src='includes/jquery.ad-gallery.js'></script><script>$(document).ready(function(){ $('.lightbox').lightbox({ fitToScreen: true, imageClickClose: false }); var galleries = $('.ad-gallery').adGallery(); $('#switch-effect').change( function() { galleries[0].settings.effect = $(this).val(); return false; } ); });</script><link rel='stylesheet' href='includes/carusel.css' media='screen' />";
+if ($gallery_sly == true) echo "<script src='includes/sly.min.js'></script><link rel='stylesheet' href='includes/sly.css' media='screen' />";
 
 if ($js != "" or $js != "no") echo "<script src='js_".$js.".js'></script>";
 echo "<link rel='alternate' href='/rss/' title='".$project_name." RSS' />
@@ -1743,7 +1754,7 @@ if (strlen($add_fonts)>1) {
 	if ($kickstart == 10) $add_body .= " class='yui3-skin-sam'>";
 	if ($kickstart == 1) $add_body .= ' class="elements"';
 	# НАЧАЛО ТЕЛА
-	echo "</head>\n<body".$add_body.">";
+	echo "</head>\n<body".$add_body." id='page'>";
 	if ($kickstart == 1) echo "<div class='grid'>"; 
 	//<a id='top-of-page'></a><div id='wrap' class='clearfix'>"; //<div class='grid'>
 	if ($kickstart == 3 or $kickstart == 8) echo "<div class='container'>";
