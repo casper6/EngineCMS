@@ -514,7 +514,11 @@ function select($name,$vars,$vars_name,$znachenie,$add='') { // генераци
     else $style2 = "style='display:none;'";
     $id = md5($name);
     $button = "<a class='button red white small punkt' id=on_".$id." onclick='$(\"#".$id." [value=1]\").attr(\"selected\", \"selected\");  $(\"#on_".$id."\").hide().next().show();'".$style1.">Выключено</a><a class='button green small punkt' id=off_".$id." onclick='$(\"#".$id." [value=0]\").attr(\"selected\", \"selected\"); $(\"#off_".$id."\").hide().prev().show();'".$style2.">Включено</a>";
-  } else { $button = ""; $id=""; $add .= " class='w100'"; }
+  } else { 
+    $button = "";
+    $id = $name;
+    $add .= " class='w100'";
+  }
   $return = "<select id='".$id."' name='".$name."'".$add.">";
   $vars = explode(",",$vars);
   $vars_name = explode(",",$vars_name);

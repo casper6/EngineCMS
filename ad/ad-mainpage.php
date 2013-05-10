@@ -1295,7 +1295,7 @@ function edit_main($id) {
 	<td><b>Блок использует содержание Раздела:</b><ul><li><b>всех разделов</b> – оставьте поле пустым, <li><b>определенного раздела</b> — выберите этот раздел и нажмите «Добавить», <li><b>нескольких разделов</b> — добавьте несколько разделов через запятую, <li><b>открытого раздела</b> — напишите в поле «open_razdel» (без кавычек). При выводе страниц открытого раздела на Главной странице блок исчезнет совсем, при выводе в разделе без страниц будет выведен заголовок, если он разрешен в настройках блока.</ul></td>
 	<td>".input("options[module_name]", $module_name, "25","input"," id='add_razdel'")." 
 <a class='button small' onclick='add_raz();'>&larr; Добавить</a><br>
-".select("razdels", $razdel_engname."", $razdel_name."ко всем Разделам", "", " id='razdels'")."
+".select("razdels", $razdel_engname."", $razdel_name."ко всем Разделам")."
 <script>function add_raz() { if ($('#razdels').val() != '') $('#add_razdel').val( $('#add_razdel').val() + $('#razdels').val() + ',' ); }</script>
 	</td></tr>";
 	}
