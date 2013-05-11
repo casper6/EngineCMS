@@ -1292,11 +1292,19 @@ function edit_main($id) {
 	<table width=100% class=table_light>";
 	if ($name == 4 or $name == 0 or $name == 1 or $name == 13 or $name == 11 or $name == 9 or $name == 30) { // дополнить остальные блоки
 	echo "<tr>
-	<td><b>Блок использует содержание Раздела:</b><ul><li><b>всех разделов</b> – оставьте поле пустым, <li><b>определенного раздела</b> — выберите этот раздел и нажмите «Добавить», <li><b>нескольких разделов</b> — добавьте несколько разделов через запятую, <li><b>открытого раздела</b> — напишите в поле «open_razdel» (без кавычек). При выводе страниц открытого раздела на Главной странице блок исчезнет совсем, при выводе в разделе без страниц будет выведен заголовок, если он разрешен в настройках блока.</ul></td>
+	<td><b>Блок использует содержание Раздела:</b><ul><li><b>всех разделов</b> – оставьте поле пустым, <li><b>определенного раздела</b> — выберите этот раздел и нажмите «Добавить», <li><b>нескольких разделов</b> — добавьте несколько разделов через запятую, <li><b>открытого раздела</b> — выберите из меню разделов пункт «открытого раздела» и добавьте его или напишите в поле «open_razdel» (без кавычек). При выводе страниц открытого раздела на Главной странице блок исчезнет совсем, при выводе в разделе без страниц будет выведен заголовок, если он разрешен в настройках блока.</ul></td>
 	<td>".input("options[module_name]", $module_name, "25","input"," id='add_razdel'")." 
 <a class='button small' onclick='add_raz();'>&larr; Добавить</a><br>
-".select("razdels", $razdel_engname."", $razdel_name."ко всем Разделам")."
-<script>function add_raz() { if ($('#razdels').val() != '') $('#add_razdel').val( $('#add_razdel').val() + $('#razdels').val() + ',' ); }</script>
+".select("razdels", $razdel_engname.",open_razdel", $razdel_name."ко всем Разделам,открытого раздела")."
+<script>function add_raz() { 
+	if ($('#razdels').val() != '') {
+		if ($('#razdels').val() == 'open_razdel') $('#add_razdel').val( $('#razdels').val() ); 
+		else {
+			if ($('#add_razdel').val() == 'open_razdel') $('#add_razdel').val( '' ); 
+			$('#add_razdel').val( $('#add_razdel').val() + $('#razdels').val() + ',' );
+		}
+	}
+}</script>
 	</td></tr>";
 	}
 	if ($name == 22 or $name == 23) {
@@ -1436,7 +1444,7 @@ function edit_main($id) {
 	</tr>";
 	echo "<tr>
 	<td><b>Тип галереи фотографий:</b></td>
-	<td>".select("options[foto_gallery_type]", "6,5,4,3,2,1,0", "горизонтальная плавная дорожка с показом по одному фото и с увеличением,горизонтальная плавная дорожка с автопоказом (2 сек.) и увеличением,горизонтальная плавная дорожка с увеличением,горизонтальная плавная дорожка аля MacOs с увеличением,миниатюры одного размера с описанием в 3 строки (разделение | ),миниатюры с описанием в одну строку,«карусель» — большая картинка и миниатюры", $foto_gallery_type)."</td>
+	<td>".select("options[foto_gallery_type]", "7,6,5,4,3,2,1,0", "полноэкранные миниатюры с описанием в 2 строки (разделение | ) и увеличением,горизонтальная плавная дорожка с показом по одному фото и с увеличением,горизонтальная плавная дорожка с автопоказом (2 сек.) и увеличением,горизонтальная плавная дорожка с увеличением,горизонтальная плавная дорожка аля MacOs с увеличением,миниатюры одного размера с описанием в 3 строки (разделение | ),миниатюры с описанием в одну строку,«карусель» — большая картинка и миниатюры", $foto_gallery_type)."</td>
 	</tr>"; // effects 3, basic 4, cycleitems 5, oneperframe 6
 	}
 
@@ -1828,7 +1836,7 @@ function edit_main($id) {
 	<div class='dark_pole' onclick=\"show('nastroi')\"><img class='icon2 i26' src='/images/1.gif'>Настройки (для импорта/экспорта)</div>
 	<div id='nastroi' style='display: none;'>
 	<br><span class=f12><a target='_blank' href=sys.php?op=mainpage&amp;type=3&amp;id=".$id."&nastroi=1>Перейти к визуальной настройке</a> &rarr;</span><br>
-	<textarea class='f12 w100' name='useit' rows='2' cols='10'>".$useit."</textarea></div>";
+	<textarea class='f12 w100' name='useit' rows='2' cols='10'>".str_replace("&","&amp;",$useit)."</textarea></div>";
 
 
 	if ($name == 10 && $re_menu == 0) echo "<div class='dark_pole' style='float:right;' onclick=\"show('primer')\">

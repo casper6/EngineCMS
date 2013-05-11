@@ -702,7 +702,7 @@ case "6": # Фотогалерея
 	$links = explode("\n", str_replace("\n\n", "\n", $textX) );
 	$textX = $textX0 = "";
 	global $siteurl;
-	if ($foto_gallery_type >= 2 && $foto_gallery_type <= 6) {
+	if ($foto_gallery_type >= 2 && $foto_gallery_type <= 7) {
 		if ($img_width == "0") $img_width = $img_height;
 		if ($img_height == "0") $img_height = $img_width;
 	}
@@ -720,14 +720,25 @@ case "6": # Фотогалерея
 		if ($foto_gallery_type == 0) $textX0 .= "<li><a href='".$water."'><img src='includes/phpThumb/phpThumb.php?src=".$link."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0' title='".$title."' alt='".$alt."' class='image".$i."'></a></li>";
 		if ($foto_gallery_type == 2) $textX0 .= "<li><a href='#image-".$i."'><img src='includes/phpThumb/phpThumb.php?src=".$link."&amp;fltr[]=crop|0|0|0|0.05&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0' alt='".$title."'><span>".$title."</span></a><div class='lb-overlay' id='image-".$i."'><img src='".$water."' alt='".$title." / ".$alt." / ".$alt2."' /><div><h3>".$title."<span>".$alt."</h3><p>".$alt2."</p></div><a href='#page' class='lb-close'>x Закрыть</a></div></li>";
 		if ($foto_gallery_type >= 3 && $foto_gallery_type <= 6) $textX0 .= "<li><a title='".$title."' href='".$water."' class='lightbox' rel='group'><img src='includes/phpThumb/phpThumb.php?src=".$link."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0' alt='".$alt."' class='img_gallery'></a></li>";
+		if ($foto_gallery_type == 7) $textX0 .= "<a title='".$title."' href='".$water."' class='lightbox' rel='group'><figure style=\"background-image: url('includes/phpThumb/phpThumb.php?src=".$link."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0')\"><figcaption><h4>".$title."</h4><p>".$alt."</p></figcaption></figure></a>";
 	}
-	if ($foto_gallery_type >= 3 && $foto_gallery_type <= 6) { 
-		// effects 3, basic 4, cycleitems 5, oneperframe 6
-		$type_sly = array('','','','effects', 'basic', 'cycleitems', 'oneperframe');
+	if ($foto_gallery_type >= 3 && $foto_gallery_type <= 7) { 
+		// effects 3, basic 4, cycleitems 5, oneperframe 6, fullscreen 7
+		$type_sly = array('','','','effects', 'basic', 'cycleitems', 'oneperframe', 'fullscreen');
+		if ($foto_gallery_type == 7) {
+			$gallery_sly_full = true;
+			$image_block = "<div id='images' class='images clearfix'>".$textX0."</div>";
+		} else {
+			$gallery_sly = true;
+			$image_block = "<ul class='slidee'>".$textX0."</ul>";
+		}
 		$type_sly = $type_sly[$foto_gallery_type];
-		$gallery_sly = true; $gallery_lightbox = true; $textX .= "<style>.frame ul li {width: ".$img_width."px;}</style><div class='scrollbar'><div class='handle'><div class='mousearea'></div></div></div>
-		<div class='frame ".$type_sly."' id='".$type_sly."'><ul class='slidee'>".$textX0."</ul></div>
-		<div class='controls center'><button class='prev'> ← предыдущая </button> <button class='next'> следующая → </button></div>";}
+		$gallery_lightbox = true;
+		if ($foto_gallery_type != 7) $textX .= "<div class='scrollbar'><div class='handle'><div class='mousearea'></div></div></div>";
+		$textX .= "<div class='frame ".$type_sly."' id='".$type_sly."'>".$image_block."</div>";
+		if ($foto_gallery_type != 7) $textX .= "<style>.frame ul li {width: ".$img_width."px;}</style><div class='controls center'><button class='prev'> ← предыдущая </button> <button class='next'> следующая → </button></div>";
+		else $textX .= "<style>.images figure { padding-top: ".$img_height."px; width: ".$img_width."px; }</style>";
+	}
 	if ($foto_gallery_type == 2) { $gallery_css3 = true; $textX .= "<style>.lb-album li > a{width: ".$img_width."px;height: ".$img_height."px;line-height: ".$img_height."px;}.lb-album li > a span{width: ".$img_width."px;height: ".$img_height."px;line-height: ".$img_height."px;}</style><ul class='lb-album'>".$textX0."</ul>"; }	
 	if ($foto_gallery_type == 1) { $gallery_lightbox = true; }
 	if ($foto_gallery_type == 0) { $gallery_carusel = true; $textX .= "<div id='carusel-gallery' class='ad-gallery'><div class='ad-image-wrapper'></div><div class='ad-controls'></div><div class='ad-nav'><div class='ad-thumbs'><ul class='ad-thumb-list'>".$textX0."</ul></div></div></div>"; }
@@ -1731,8 +1742,10 @@ if ($gallery_lightbox == true && $kickstart != 1) echo "<script src='includes/jq
 <link rel='stylesheet' href='includes/lightbox.css' media='screen' />"; // при включенном kickstart, lightbox не нужен, включается fancybox
 if ($gallery_carusel == true) echo "<script src='includes/jquery.lightbox.js'></script><script src='includes/jquery.ad-gallery.js'></script><script>$(document).ready(function(){ $('.lightbox').lightbox({ fitToScreen: true, imageClickClose: false }); var galleries = $('.ad-gallery').adGallery(); $('#switch-effect').change( function() { galleries[0].settings.effect = $(this).val(); return false; } ); });</script><link rel='stylesheet' href='includes/carusel.css' media='screen' />";
 if ($gallery_sly == true) echo "<script src='includes/sly.min.js'></script><link rel='stylesheet' href='includes/sly.css' media='screen' />";
+if ($gallery_sly_full == true) echo "<script src='includes/sly.min.js'></script><link rel='stylesheet' href='includes/sly_full.css' media='screen' />";
 
-if ($js != "" or $js != "no") echo "<script src='js_".$js.".js'></script>";
+if ($js != "" && $js != "no") echo "<script src='js_".$js.".js'></script>";
+
 echo "<link rel='alternate' href='/rss/' title='".$project_name." RSS' />
 <link rel='stylesheet' href='".$stil.".css' />";
 

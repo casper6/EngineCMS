@@ -33,7 +33,7 @@ body { background: #e8e8e8; }
 }
 .frame ul li.active {
   color: #fff;
-  background: #a03232;
+  /* background: #a03232; */
 }
 
 /* Scrollbar */
