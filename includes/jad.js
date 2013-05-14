@@ -1,4 +1,21 @@
 ﻿/* JS для админ-панели — нужно подписать все функции! */
+function pics_refresh(txt){
+	$('.pics').html('');
+	text = $(txt).val();
+	text = text.split('\n');
+	$.each(text, function(index, value) {
+		val = value.split('|');
+		if (val[1] == '') val[1] = 'без имени';
+		id = val[0].replace(".", "").replace("/", "").replace("/", "");
+		if (val[0] != '') $('.pics').append('<div id="' + id + '" class="pic"><img src="includes/phpThumb/phpThumb.php?src=' + val[0] + '&amp;w=150&amp;h=100&amp;q=0"><br>' + val[1] + '<br><a class="button small" onclick="pics_replace(\'#' + id + '\',\'' + txt + '\',\'' + value + '\');">Удалить</a></div>');
+	});
+}
+function pics_replace(id,txt,search){
+	text = $(txt).val();
+	text = text.replace(search + '\n', '');
+	$(txt).val(text);
+	$(id).hide('slow');
+}
 function sho(pid,name,admintip,act) {
 	if (act == 1) active = '<img class="icon2 i43" src=/images/1.gif> Выключить страницу</a>';
 	else active = '<img class="icon2 i44" src=/images/1.gif> Включить страницу</a>';

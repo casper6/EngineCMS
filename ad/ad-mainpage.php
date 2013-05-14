@@ -346,8 +346,10 @@ function create_main($type) {
 	</div>
 
 	<div id='textarea_block'>
+	
 	<h2>Содержание блока:</h2>
-	<textarea name=text rows=3 cols=86 class='w100 h155' id=textarea></textarea>
+	<div class='pics w100'></div>
+	<textarea name=text rows=3 cols=86 class='w100 h155' id=textarea onchange=\"pics_refresh('#textarea');\"></textarea>
 	</div>
 	<input type=hidden name=op value='".$admintip."_create_block'>
 	<input type=hidden name=id value=''>
@@ -879,7 +881,7 @@ function edit_main($id) {
 	<tr>
 	<td><b>Тип раздела:</b><br>
 	<i class=red>Для типа раздела «Анкеты-рейтинги» необходимо выбрать в настройках ниже возможность комментировать и голосовать за страницы.</i></td>
-	<td>".select("options[view]", "4,1,6,0", "анкеты-рейтинги,форум,статьи (на главной - разделы),статьи (на главной - страницы)", $view)."</td>
+	<td>".select("options[view]", "4,1,6,0", "анкеты-рейтинги,форум,статьи (на главной - папки),статьи (на главной - страницы)", $view)."</td>
 	</tr>
 	<td><b>Шаблон для комментариев</b> на странице  [<a href=sys.php?op=mainpage&amp;name=shablon target=_blank>Добавить</a>] (пока нет полной поддержки)</td>
 	<td>".select("options[comment_shablon]", $shablon_var."2,1,0", $shablon_names."ДвижОк: ArtistStyle,ДвижОк: диалоговый аля Joomla,ДвижОк: стандартный", $comment_shablon)."</td>

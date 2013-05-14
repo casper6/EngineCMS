@@ -45,7 +45,7 @@ function admin_footer() { // проверить вызов
   die();
 }
 ///////////////////////////////////////////////////////////////
-function scandirectory($dir, $echoscan="", $images) {
+function scandirectory($dir, $echoscan="", $images) { // переделать
   global $echoscan;
         $level = substr_count($dir,"/");
         for($line="", $counter=0; $counter<$level; ++$counter, $line.='--'){}
@@ -289,48 +289,48 @@ function help_shablon() {
 }
 ##########################################################################################
 function add_file_upload_form($id="textarea") {
-  return "<link rel='stylesheet' href='http://blueimp.github.com/Bootstrap-Image-Gallery/css/bootstrap-image-gallery.min.css'>
-  <link rel='stylesheet' href='includes/upload/css/jquery.fileupload-ui.css'>
-      <form id='fileupload' action='includes/upload/server/php/' method='POST' enctype='multipart/form-data'>
-      <label for='show_oldnames'><input type='checkbox' id='show_oldnames'><b>Добавлять имя файла</b> фотографии как её описание (<i>подходит для осмысленных и/или русских имен</i>)</label>
-      <br><div class='notice warning green'><span class='icon green medium' data-icon='('></span>Фотографии можно перенести из любой папки вашего компьютера, даже не нажимая кнопку «Добавить файлы...»</div>
-          <div class='row fileupload-buttonbar'>
-              <div style='padding:10px; padding-left:30px; margin-bottom:30px;'>
-                  <span class='btn btn-success fileinput-button'>
+  return "<form id='fileupload' action='includes/upload/server/php/' method='POST' enctype='multipart/form-data'>
+  <label for='show_oldnames'><input type='checkbox' id='show_oldnames' checked><b>Добавлять имя файла</b> фотографии как её описание (<i>подходит для осмысленных и/или русских имен</i>)</label><br><div class='notice warning green'><span class='icon green medium' data-icon='('></span>Фотографии можно перенести из любой папки вашего компьютера, даже не нажимая кнопку «Добавить файлы...»</div>
+  <div style='padding:10px; padding-left:30px; margin-bottom:30px;'>
+                  <span class='btn btn-success fileinput-button' style='position: relative;  overflow: hidden;  float: left;  margin-right: 5px;'>
                       <a class='button'>Добавить файлы...</a>
-                      <input type='file' name='files[]' multiple>
+                      <input id='fileupload' type='file' name='files[]' style='position: absolute;  top: 0;  right: 0;  margin: 0;  opacity: 0;  filter: alpha(opacity=0);  transform: translate(-300px, 0) scale(4);  font-size: 23px;  direction: ltr;  cursor: pointer;' data-url='server/php/' multiple>
+                      <a class='button small' onclick='$(\"#textarea\").toggle();'>Показать список</a>
                   </span>
               </div>
-              <div class='span5 fileupload-progress fade'>
-                  <div class='progress progress-success progress-striped active' role='progressbar' aria-valuemin='0' aria-valuemax='100'>
-                      <div class='bar' style='width:0%;'></div>
-                  </div>
-                  <div class='progress-extended'>&nbsp;</div>
-              </div>
-          </div>
-          <div class='fileupload-loading'></div>
-  <!-- Действия после загрузки -->
-  <script>$(function () { $('#fileupload').fileupload({
-      autoUpload: true,
+<div id='progress'><div class='bar' style='width: 0%;height: 18px;background: green;'></div></div>
+<script src='includes/upload/js/jquery.ui.widget.js'></script>
+<script src='includes/upload/js/jquery.iframe-transport.js'></script>
+<script src='includes/upload/js/jquery.fileupload.js'></script>
+<script>
+$(function () {
+    $('#fileupload').fileupload({
       dataType: 'json',
+      autoUpload: true,
+      sequentialUploads: true,
       done: function (e, data) {
-          data.context.text('Загрузка завершена.');
-          $.each(data.result, function (index, file) {
-        if (document.getElementById(\"show_oldnames\").checked == true) 
-          $(\"#".$id."\").append(\"/img/\" + file.name + \"|\" + file.oldname + \"\\n\");
-        else 
-          $(\"#".$id."\").append(\"/img/\" + file.name + \"|\\n\");
-          });
-      $(\"#textarea_block\").show();
+        $('#textarea').hide();
+        $('#textarea_block').show();
+        $.each(data.result.files, function (index, file) {
+          if (file.oldname != null) {
+            if (document.getElementById('show_oldnames').checked == true) 
+              $('#".$id."').append('/img/' + file.name + '|' + file.oldname + '\\n');
+            else 
+              $('#".$id."').append('/img/' + file.name + '|\\n');
+          }
+          pics_refresh('#".$id."');
+        });
+      },
+      progressall: function (e, data) {
+        var progress = parseInt(data.loaded / data.total * 100, 10);
+        $('#progress .bar').css(
+            'width',
+            progress + '%'
+        );
       }
-  });});</script>
-  <script src='includes/upload/js/vendor/jquery.ui.widget.js'></script>
-  <script src='includes/upload/js/jquery.iframe-transport.js'></script>
-  <script src='includes/upload/js/jquery.fileupload.js'></script>
-  <script src='includes/upload/js/jquery.fileupload-fp.js'></script>
-  <script src='includes/upload/js/jquery.fileupload-ui.js'></script>
-  <script src='includes/upload/js/main.js'></script>
-  <!--[if gte IE 8]><script src='includes/upload/js/cors/jquery.xdr-transport.js'></script><![endif]-->";
+    });
+});
+</script></form>";
 }
 ##########################################################################################
 

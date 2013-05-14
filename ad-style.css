@@ -23,7 +23,8 @@ font-weight:normal;
     background: green;
 }
 
-
+.pic {float: left; margin:2px; clear: right; width:154px;}
+#fileupload {clear: both;}
 
 .fon {background: url(/images/fon.png);}
 
@@ -191,7 +192,7 @@ img.bigicon {margin-bottom: 5px; width:128px; height:128px; border:0; float:left
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f4f5f7', endColorstr='#a8acb8',GradientType=0 ); /* IE6-9 */
 	border-bottom:1px solid #80868f;
 	text-align:center;
-	height: 33px;
+	height: 38px;
 	min-width:290px;
 }
 .yellow_grad {

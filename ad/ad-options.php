@@ -391,16 +391,6 @@ body {}
 	</td></tr>
 
 	<tr valign=top><td>
-	Показывать в администрировании страницы, добавленные посетителями:</td><td class=small>
-	".select("options[show_userposts]", "0,1", "НЕТ,ДА", $show_userposts)."
-	</td></tr>
-
-	<tr valign=top><td>
-	Показывать комментарии в администрировании:</td><td class=small>
-	".select("options[show_comments]", "0,1", "НЕТ,ДА", $show_comments)."
-	</td></tr>
-
-	<tr valign=top><td>
 	Дизайн для страницы поиска:</td><td>
 	".select("options[search_design]", $id_designs, $title_designs, $search_design)." В дизайне должен быть блок [содержание]
 	</td></tr>
@@ -408,12 +398,6 @@ body {}
 	<tr valign=top><td>
 	Дизайн для страницы тэгов (ключевых слов):</td><td class=small>
 	".select("options[tag_design]", $id_designs, $title_designs, $tag_design)." В дизайне должен быть блок [содержание]
-	</td></tr>
-
-	<tr valign=top><td>
-	Преобразование {Название раздела} и {Название страницы} в ссылки на эти раздел и страницу, соответственно:</td><td class=small>
-	".select("options[show_page_links]", "0,1", "НЕТ,ДА", $show_page_links)." 
-	<br>По-умолчанию отключено. Если вы создаете сайт с большим количеством страниц (более 500) — желательно отключить. В случае отключения останется возможность преобразования названий разделов.
 	</td></tr>
 
 	</table>
@@ -584,6 +568,22 @@ body {}
 	<br>Отключать его имеет смысл, если создано очень много страниц (более 20 тысяч) и хочется ускорить загрузку вкладки Содержание на 1-2 секунды.
 	</td></tr>
 
+	<tr valign=top><td>
+	Показывать в администрировании страницы, добавленные посетителями:</td><td class=small>
+	".select("options[show_userposts]", "0,1", "НЕТ,ДА", $show_userposts)."
+	</td></tr>
+
+	<tr valign=top><td>
+	Показывать комментарии в администрировании:</td><td class=small>
+	".select("options[show_comments]", "0,1", "НЕТ,ДА", $show_comments)."
+	</td></tr>
+
+	<tr valign=top><td>
+	Преобразование {Название раздела} и {Название страницы} в ссылки на эти раздел и страницу, соответственно:</td><td class=small>
+	".select("options[show_page_links]", "0,1", "НЕТ,ДА", $show_page_links)." 
+	<br>По-умолчанию отключено. Если вы создаете сайт с большим количеством страниц (более 500) — желательно отключить. В случае отключения останется возможность преобразования названий разделов.
+	</td></tr>
+	
 	<tr valign=top><td>
 	Включить ускорение вывода блоков (на вкладке Оформление):</td><td class=small>
 	".select("options[uskorenie_blokov]", "0,1", "НЕТ,ДА", $uskorenie_blokov)."
