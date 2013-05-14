@@ -288,7 +288,7 @@ function help_shablon() {
     <a title='Закрыть/Открыть справочное окно' id='show_shablon_var' class=punkt onclick=\"show_animate('shablon_var');\" style='float:right; display:none;'><div class='radius' style='font-size:12pt; width:20px; height: 20px; color: white; text-align:center; float:right; margin:5px; margin-bottom:0; background: #bbbbbb;'>&nbsp;&uarr;&nbsp;</div></a><div id=shablon_var style='display:none; width:95%; height:300px; scroll:auto;' class=block></div>";
 }
 ##########################################################################################
-function add_file_upload_form($id="textarea") {
+function add_file_upload_form($textarea="textarea") {
   return "<form id='fileupload' action='includes/upload/server/php/' method='POST' enctype='multipart/form-data'>
   <label for='show_oldnames'><input type='checkbox' id='show_oldnames' checked><b>Добавлять имя файла</b> фотографии как её описание (<i>подходит для осмысленных и/или русских имен</i>)</label><br><div class='notice warning green'><span class='icon green medium' data-icon='('></span>Фотографии можно перенести из любой папки вашего компьютера, даже не нажимая кнопку «Добавить файлы...»</div>
   <div style='padding:10px; padding-left:30px; margin-bottom:30px;'>
@@ -312,13 +312,13 @@ $(function () {
         $('#textarea').hide();
         $('#textarea_block').show();
         $.each(data.result.files, function (index, file) {
-          if (file.oldname != null) {
-            if (document.getElementById('show_oldnames').checked == true) 
-              $('#".$id."').append('/img/' + file.name + '|' + file.oldname + '\\n');
-            else 
-              $('#".$id."').append('/img/' + file.name + '|\\n');
-          }
-          pics_refresh('#".$id."');
+          id = file.name;
+          id = id.replace('.', '');
+          if (document.getElementById('show_oldnames').checked == false) file.oldname = '';
+          value = '/img/' + file.name + '|' + file.oldname;
+          $('#".$textarea."').append(value + '\\n');
+          if (file.oldname == null || file.oldname == '') file.oldname = 'без имени';
+          $('.pics').append('<div id=\"' + id + '\" class=\"pic\" style=\"background:url(\'includes/phpThumb/phpThumb.php?src=/img/' + file.name + '&amp;w=160&amp;h=100&amp;q=0\') no-repeat bottom white;\"><a class=\"button small red white\" onclick=\"pics_replace(\'#' + id + '\',\'#".$textarea."\', \'' + value + '\');\">×</a><span>' + file.oldname + '</span></div>');
         });
       },
       progressall: function (e, data) {

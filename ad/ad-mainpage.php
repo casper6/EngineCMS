@@ -346,7 +346,7 @@ function create_main($type) {
 	</div>
 
 	<div id='textarea_block'>
-	
+
 	<h2>Содержание блока:</h2>
 	<div class='pics w100'></div>
 	<textarea name=text rows=3 cols=86 class='w100 h155' id=textarea onchange=\"pics_refresh('#textarea');\"></textarea>
@@ -1693,7 +1693,10 @@ function edit_main($id) {
 	if ($name == 10 or $name == 5 or $name == 0) $red = 1; // дополнить список при необходимости
 	
 	echo "<span class=h2>Содержание блока:</span>";
-	if ($name != 31 && $name != 7 && $name != 10) redactor($red, $text, 'text'); // редактор: типа редактора, редактируемое поле
+	if ($name != 31 && $name != 7 && $name != 10 && $name != 6) redactor($red, $text, 'text'); // редактор: тип редактора, редактируемое поле
+	if ($name == 6) echo "<div class='pics w100'></div>
+	<textarea name=text rows=3 cols=86 class='w100 h155' id=textarea onchange=\"pics_refresh('#textarea');\">".str_replace("\n\n", "\n", $text)."</textarea>
+	<script>$(function(){pics_refresh('#textarea');$('#textarea').hide();})</script>";
 	if ($name == 31) redactor($red, $text, 'text', '', 'javascript');
 	if ($name == 7) redactor($red, "<?\n".$text."\n?>", 'text', '', 'php');
 
@@ -1857,7 +1860,7 @@ function edit_main($id) {
 	</pre></div>";
 
 	echo "</form>";
-	if ($name == 6) echo "<hr>".add_file_upload_form("text");
+	if ($name == 6) echo "<hr>".add_file_upload_form("textarea");
 	}
 	} ############################### ЗАКРЫТИЕ БЛОК
 
