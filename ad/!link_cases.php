@@ -119,5 +119,16 @@ switch($op) {
     case "txt_and_csv_zip":
     include("ad/ad-csv.php");
     break;
+	// парсер
+    case "parser_main":
+	case "parser_install":
+	case "parser_temp":
+	case "parser_temp_del":
+	case "parser_temp_edit":
+	case "parser_prev":
+	case "parser_clear":
+	case "parser_del":
+    include("ad/ad-parser.php");
+    break;
 }
 ?>

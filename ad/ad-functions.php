@@ -318,7 +318,7 @@ $(function () {
           value = '/img/' + file.name + '|' + file.oldname;
           $('#".$textarea."').append(value + '\\n');
           if (file.oldname == null || file.oldname == '') file.oldname = 'без имени';
-          $('.pics').append('<div id=\"' + id + '\" class=\"pic\" style=\"background:url(\'includes/phpThumb/phpThumb.php?src=/img/' + file.name + '&amp;w=160&amp;h=100&amp;q=0\') no-repeat bottom white;\"><a class=\"button small red white\" onclick=\"pics_replace(\'#' + id + '\',\'#".$textarea."\', \'' + value + '\');\">×</a><span>' + file.oldname + '</span></div>');
+          $('.pics').append('<div id=\"' + id + '\" class=\"pic\" style=\"background:url(\'includes/phpThumb/phpThumb.php?src=/img/' + file.name + '&amp;w=160&amp;h=100&amp;q=0\') no-repeat bottom white;\"><a title=\"Удалить фото\" class=\"button small red white\" onclick=\"pics_replace(\'#' + id + '\',\'#".$textarea."\', \'' + value + '\');\">×</a><span>' + file.oldname + '</span></div>');
         });
       },
       progressall: function (e, data) {
@@ -330,10 +330,9 @@ $(function () {
       }
     });
 });
-</script></form>";
+</script>
+</form>";
 }
-##########################################################################################
-
 ##########################################################################################
 function redactor($type, $txt, $name, $name2="", $style="html", $return="echo") {
   global $red4_div_convert, $add_clips;

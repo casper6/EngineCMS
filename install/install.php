@@ -2,6 +2,10 @@
 // Пустая база данных
 if (file_exists("mainfile.php")) require_once("mainfile.php");
 else echo "<li>mainfile.php не найден!";
+global $dbname;
+
+$db->sql_query("ALTER DATABASE ".$dbname." DEFAULT CHARACTER SET utf8;") or die('<li>Ошибка изменения кодировки БД '.$dbname);
+
 $db->sql_query("DROP TABLE IF EXISTS `".$prefix."_authors`;");
 $db->sql_query("CREATE TABLE `".$prefix."_authors` (
  `aid` varchar(25) NOT NULL,

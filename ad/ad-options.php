@@ -266,7 +266,7 @@ switch($kickstart) {
 	$kick_link = "http://960.gs";
 	$kick_name = "960gs(24)"; break;
 }
-if ($kickstart != 0) echo " <button class='small' onclick='location.href=\"".$kick_link."\"' title='Открыть сайт CSS-фреймворка «".$kick_name."»'><span class=\"icon small black\" data-icon=\"S\"></span> ".$kick_name."</button>";
+if ($kickstart != 0) echo " <a class='button small' href='".$kick_link."' title='Открыть сайт CSS-фреймворка «".$kick_name."»'><span class=\"icon small black\" data-icon=\"S\"></span> ".$kick_name."</a>";
 
 echo "</td><td class=small>
 ".select("options[kickstart]", "0,1,2,3,4,5,6,7,8,9,10,11", "-- НЕТ --,KickStart,CSSframework,Skeleton,Kube,Bootstrap,1140 Grid,Toast,Blueprint,YUI CSS Grids,960gs (12 и/или 16 колонок),960gs (24 колонки)", $kickstart, ' id=kickstart onchange="if ( $(\'#kickstart\').val() == 1) $(\'#frame1\').show(); else $(\'#frame1\').hide(); if ( $(\'#kickstart\').val() == 6) $(\'#frame6\').show(); else $(\'#frame6\').hide(); "')."

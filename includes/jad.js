@@ -7,7 +7,7 @@ function pics_refresh(txt){
 		val = value.split('|');
 		if (val[1] == '') val[1] = 'без имени';
 		id = val[0].replace(".", "").replace("/", "").replace("/", "");
-		if (val[0] != '') $('.pics').append('<div id="' + id + '" class="pic" style="background:url(\'includes/phpThumb/phpThumb.php?src=' + val[0] + '&amp;w=160&amp;h=100&amp;q=0\') no-repeat bottom white;"><a class="button small red white" onclick="pics_replace(\'#' + id + '\',\'' + txt + '\',\'' + value + '\');">×</a><span>' + val[1] + '</span></div>');
+		if (val[0] != '') $('.pics').append('<div id="' + id + '" class="pic" style="background:url(\'includes/phpThumb/phpThumb.php?src=' + val[0] + '&amp;w=160&amp;h=100&amp;q=0\') no-repeat bottom white;"><a title="Удалить фото" class="button small red white" onclick="pics_replace(\'#' + id + '\',\'' + txt + '\',\'' + value + '\');">×</a><span>' + val[1] + '</span></div>');
 	});
 }
 function pics_replace(id,txt,search){

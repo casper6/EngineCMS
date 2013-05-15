@@ -23,7 +23,7 @@ font-weight:normal;
     background: green;
 }
 
-.pic {float: left; margin:2px; clear: right; width:160px; height:200px; overflow:auto; border-radius: 5px; -moz-border-radius: 5; -webkit-border-radius: 5; border:1px solid #bbbbbb; padding:2px; }
+.pic {float: left; margin:2px; clear: right; width:160px; height:160px; overflow:auto; border-radius: 5px; -moz-border-radius: 5; -webkit-border-radius: 5; border:1px solid #bbbbbb; padding:2px; }
 .pic a.red {position: relative; right:2px; top:2px; float:right;}
 .pic span { background: white;}
 #fileupload {clear: both;}

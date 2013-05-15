@@ -1,9 +1,3 @@
-php_value upload_max_filesize 9G
-php_value post_max_size 9G
-php_value max_execution_time 200
-php_value max_input_time 200
-php_value memory_limit 256M
-
 # закрываем доступ к .htaccess
 <files .htaccess="">
 order allow,deny
@@ -18,18 +12,6 @@ ErrorDocument 401 /error.php?code=401
 ErrorDocument 403 /error.php?code=403
 ErrorDocument 404 /error.php?code=404
 ErrorDocument 500 /error.php?code=500
-
-# Запрет отображения ошибок
-php_flag display_errors Off
-php_flag ignore_repeated_errors On
-php_flag ignore_repeated_source On
-
-# Запрет «волшебных» кавычек
-php_flag magic_quotes_gpc 0
-php_flag magic_quotes_runtime 0
-
-# Запрет глобальных переменных
-php_flag register_globals Off
 
 RewriteEngine On
 RewriteBase /
