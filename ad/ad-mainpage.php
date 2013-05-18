@@ -1251,8 +1251,8 @@ function edit_main($id) {
 	$options = str_replace($module_name."|","",$useit);
 
 	// обнулили все опции от греха подальше
-	$titleshow=$media=$folder=$datashow=$tagdelete=$ipdatauser=$design=$open_all=$catshow=$main=$daleeshow=$openshow=$number=$add=$size=$papki_numbers=$zagolovokin=$menu=$notitlelink=$noli=$html=$show_title=$random=$showlinks=$open_new_window=$shablon=$show_new_pages=$reload_link_show=$reload_link_time=0;
-	$opros_type=$limkol=$pageshow=$only_question=$opros_result=$foto_gallery_type=$re_menu=1;
+	$titleshow=$media=$folder=$datashow=$tagdelete=$ipdatauser=$design=$open_all=$catshow=$main=$daleeshow=$openshow=$number=$add=$size=$papki_numbers=$zagolovokin=$menu=$noli=$html=$show_title=$random=$showlinks=$open_new_window=$shablon=$show_new_pages=$reload_link_show=$reload_link_time=0;
+	$opros_type=$limkol=$pageshow=$only_question=$opros_result=$foto_gallery_type=$re_menu=$notitlelink=1;
 	$addtitle="Добавить статью";
 	$dal="Далее...";
 	$first = "src=";
@@ -1808,7 +1808,7 @@ function edit_main($id) {
 		global $title_razdels;
 		$title_razdelsX = "";
 		foreach ($title_razdels as $key => $value) {
-			$title_razdelsX .= "<option value='-".$key."'>".$value."</option>";
+			if ($key != "index") $title_razdelsX .= "<option value='-".$key."'>".$value."</option>";
 		}
 		echo "<tr valign=top><td width=50%>
 		<a class='button small punkt' onclick='min_menu()'>← Вложенность -</a> 
@@ -1832,7 +1832,7 @@ function edit_main($id) {
 		<!-- <a class='button small punkt black' onclick='void(0)'>Папку</a> 
 		<a class='button small punkt black' onclick='void(0)'>Страницу</a> -->
 		<div id='razdel' style='display:none'>
-		<select class='w100' id='razdels' onchange='select_razdels()'>".$title_razdelsX."</select>
+		<select class='w100' id='razdels' onchange='select_razdels()'><option value=''>Выберите раздел</option>".$title_razdelsX."</select>
 		</div>
 		</td></tr>";
 	}

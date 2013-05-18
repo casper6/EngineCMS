@@ -62,15 +62,8 @@ echo "<!doctype html>
 <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js'></script>
 <script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js'></script>
 <script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/i18n/jquery-ui-i18n.min.js'></script> 
-<script src='includes/jquery.innerfade.js'></script>";
-/*
-<script>$(function(){
-  if ($('#'+window.location.hash).length) {
-    $('#'+window.location.hash).show();
-  }
-});</script>";
-*/
-echo "<link rel=\"stylesheet\" href=\"http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/base/jquery-ui.css\" media=\"all\" />
+<script src='includes/jquery.innerfade.js'></script>
+<link rel=\"stylesheet\" href=\"http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/base/jquery-ui.css\" media=\"all\" />
 <script type=\"text/javascript\" src=\"includes/css-frameworks/kickstart/js/ad-kickstart.js\"></script>
 <link rel=\"stylesheet\" type=\"text/css\" href=\"includes/css-frameworks/kickstart/css/ad-kickstart.css\" media=\"all\" />
 <link rel=\"stylesheet\" type=\"text/css\" href=\"includes/css-frameworks/kickstart/css/kickstart-forms.css\" media=\"all\" />
@@ -111,7 +104,7 @@ if ($deviceType != 'computer') $buttons = array('','','','','','');
 echo "<nobr>";
 
 if ($op == "adminMain") red_help(8);
-if ($op == "mainpage" && $type==2) red_help(9); 
+//if ($op == "mainpage" && $type==2) red_help(9); 
 
 echo "<button class='small' target=_blank onclick='window.open(\"/\")' title='Перейти на сайт (откроется в новом окне)'><span class=\"icon small black\" data-icon=\"4\"></span> На сайт</button> ".$post." <form method=post name=search action='/--search' style='display:inline;' class='nothing'><input type='search' placeholder='Поиск по сайту' name=slovo class=w45></form></nobr>
 </div>

@@ -344,11 +344,12 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
              
   echo "</select></div>";
   
-  echo "<div id='mainrazdel' class='dark_pole2'><a class='base_page' onclick=\"if ( $('#dop').is(':hidden') ) $('#mainrazdel').attr('class', 'dark_pole2sel'); else $('#mainrazdel').attr('class', 'dark_pole2'); $('#main').toggle(); $('#dop').toggle('slow'); \"><div id='mainrazdel'><span class='icon gray large in_b' data-icon='z'><span aria-hidden='true'>z</span></span><span class='plus20'>Дополнительные настройки</span></div></a></div> ";
+  echo "<div id='mainrazdel' class='dark_pole2'><a class='base_page' onclick=\"if ( $('#dop').is(':hidden') ) $('#mainrazdel').attr('class', 'dark_pole2sel'); else $('#mainrazdel').attr('class', 'dark_pole2'); $('#main').toggle(); $('#dop').toggle('slow'); \"><div id='mainrazdel'><div style=\"float:right\"><span class=\"f16 gray\">⟩</span></div><span class='icon gray large in_b' data-icon='z'><span aria-hidden='true'>z</span></span><span class='plus20'>Дополнительные настройки</span></div></a></div> ";
 
-  echo "</td><td style='padding:0;'><a class='punkt' title='Свернуть/развернуть левую колонку' onclick='$(\"#razdels\").toggle(\"slow\");'><div class='w100' style='width:16px; height:500px; background: gray; cursor: pointer;'></div></a></td><td>";
+  echo "</td><td style='padding:0;'><a class='punkt' title='Свернуть/развернуть левую колонку' onclick='$(\"#razdels\").toggle(\"slow\");'><div class='polosa_razdelitel'>||</div></a></td><td>";
 
-  echo "<div style='display:none' id='dop'>
+  echo "<div style='display:none' id='dop'><a title='Закрыть' class='punkt' onclick=\"if ( $('#dop').is(':hidden') ) $('#mainrazdel').attr('class', 'dark_pole2sel'); else $('#mainrazdel').attr('class', 'dark_pole2'); $('#main').toggle(); $('#dop').toggle('slow'); \"><div class='radius' style='font-size:12pt; width:20px; height: 20px; color: white; text-align:center; float:right; margin:5px; background: #bbbbbb;'>&nbsp;x&nbsp;</div></a>
+  
   <h3>Ключевые слова для поисковых систем: <a onclick=\"show('help10')\" class='help'>?</a></h3><textarea id=keywords2 name=keywords2 class='big w100' rows=2 cols=10>".$keywords."</textarea>
   <br><div id='help10' style='display:none;'><span class=small>Максимум 1000 символов. Разделять словосочетания желательно запятой. Если пусто - используются <b>Теги</b> (если и они пустые - используются Ключевые словосочетания из <a href=/sys.php?op=Configure target=_blank>Настроек портала</a>).</span><br></div>
 

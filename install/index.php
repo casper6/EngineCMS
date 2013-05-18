@@ -42,6 +42,8 @@ if (isset($_REQUEST['lang'])) {
 	$type = $_REQUEST['type'];
 	$a = $_REQUEST['a'];
 	$pass = md5($_REQUEST['pass']);
+	$email = $_REQUEST['email'];
+	$siteurl = $_REQUEST['siteurl'];
 
 	// Доп. настройки для разных типов сайтов
 	if ($type == 'company') {}
@@ -62,7 +64,7 @@ if (isset($_REQUEST['lang'])) {
 
 // date_default_timezone_set(\'Europe/Moscow\'); # Может не работать на вашем сервере
 ################### АДРЕС САЙТА
-$siteurl 			= "'.$prefix.'"; # Пример: ilost.ru или it.ilost.ru (домены третьего уровня использовать можно, папки — нельзя)
+$siteurl 			= "'.$siteurl.'"; # Пример: ilost.ru или it.ilost.ru (домены третьего уровня использовать можно, папки — нельзя)
 ################### БАЗА ДАННЫХ
 $dbhost 			= "'.$dbhost.'"; 	# Хост базы данных
 $dbuname 			= "'.$dbuname.'"; 	# Имя пользователя базы данных
@@ -177,7 +179,7 @@ if (stristr(htmlentities($_SERVER[\'PHP_SELF\']), "config.php")) { Header("Locat
 		else die('<li>Файл '.$design.'_install.php в папке install/themes не найден!');
 		echo "<li>Установка дизайна в БД окончена";
 	} else {
-		$db->sql_query("INSERT INTO `".$prefix."_config` VALUES ( 'Название сайта', '2013', '', '', '', '', '', '', '0', '0', '0', '|||||||||||||||||||||||||||||||||||||||||||||', '0', '1|1|1|1|1|0|0|1|17', '', '4', '0', '0', '.ht_backup');") or die('Не удалось записать настройку конфигурации сайта');
+		$db->sql_query("INSERT INTO `".$prefix."_config` VALUES ( 'Название сайта', '2013', '".$email."', '', '', '', '', '', '0', '0', '0', '|||||||||||||||||||||||||||||||||||||||||||||', '0', '1|1|1|1|1|0|0|1|17', '', '4', '0', '0', '.ht_backup');") or die('Не удалось записать настройку конфигурации сайта');
 		$db->sql_query("INSERT INTO `".$prefix."_mainpage` VALUES ( '1', '0', '', 'Главный дизайн', 'что-то в шапке<br>[содержание]<br>футер сайта', '20', '', '0', 'pages', '0', '', '');");
 		$db->sql_query("INSERT INTO `".$prefix."_mainpage` VALUES ( '24', '2', 'index', 'Главная страница', 'pages|design=1', 'Текст главной страницы', '', '0', 'pages', '0', '', '');");
 		$db->sql_query("INSERT INTO `".$prefix."_mainpage` VALUES ( '20', '1', 'index', 'Главный стиль', '
@@ -264,22 +266,7 @@ if (stristr(htmlentities($_SERVER[\'PHP_SELF\']), "config.php")) { Header("Locat
 $db->sql_query("INSERT INTO `".$prefix."_config` VALUES ( '«Такая-сякая», женский портал', '2013', 'takaya63@bk.ru', 'самара,женский портал,', 'Самарский женский портал', '<div style=\"display:none\">
 <!--LiveInternet counter--><script type=\"text/javascript\">document.write(\"<a href=\'http://www.liveinternet.ru/click\' target=_blank><img src=\'//counter.yadro.ru/hit?t26.1;r\" + escape(document.referrer) + ((typeof(screen)==\"undefined\")?\"\":\";s\"+screen.width+\"*\"+screen.height+\"*\"+(screen.colorDepth?screen.colorDepth:screen.pixelDepth)) + \";u\" + escape(document.URL) +\";h\"+escape(document.title.substring(0,80)) + \";\" + Math.random() + \"\' border=0 width=88 height=15 alt=\'\' title=\'LiveInternet: показано число посетителей за сегодня\'><\\/a>\")</script><!--/LiveInternet-->
 </div>', 'http://pda.liveinternet.ru/stat/такая63.рф/', 'http://gmail.com', '0', '0', '0', '||||||||||||||||||||+7 927 652 88 29|||||||||||||||<a href=\"mailto:takaya63@bk.ru\">takaya63@bk.ru</a>||||||||||', '1', '0|1|1|1|1|1|1|1|21|1|1|Bad Script.Lobster.Poiret One|0|/img/takaya_rec.jpg|Такая-сякая|51|8||0|monokai|monokai|monokai|monokai', ' 
-09:29 - 22 апреля 
-
-Добавление блока — информацию переместил в помощь, которую серьезно доработал.
-
-НОВОЕ:
-— можно переходить на второй редактор - все ошибки в нем исправлены
-— интерфейс немного улучшен, если что-то непонятно - звоните, всё подробно расскажу
-— теперь при создании статей ключевые слова и описание для них можно создавать автоматически, на вкладке Дополнительные настройки - кнопка Заполнить ключевые слова – лучше всего пользоваться именно автогенерацией, она основана на поиске в тексте основных слов
-
-Как добавлять баннеры:
-— Изменяем размер картинки баннера по ширине до нужного (размеры можно спросить у разработчика, измеряются в пикселях, «px»).
-— Жмем кнопку Блоки на главной администрирования — ищем в списке блоков нужный блок, к примеру «Баннер_на_Главной_перед_Акцией».
-— Нажимаем белый карандаш (редактировать), жмем кнопку Редактор справа сверху, жмем по второму редактору.
-— Добавляем картинку баннера — жмем в редакторе кнопку «Изображение» (иконка - картина с горами). Перетаскиваем файл картинки или жмем кнопку «Выбрать файл» и находим наш файл.
-— Если на картинку нужно поставить ссылку на другой сайт или страницу нашего сайта — жмем по картинке и вписываем ссылку на сайт в поле Ссылка.
-— Сохраняем (кнопка Сохранить в левом верхнем углу)', '4', '1', '0', '.ht_backup');");
+09:29 - 22 апреля', '4', '1', '0', '.ht_backup');");
 */
 
 	// Добавляем страницы в некоторые разделы
@@ -288,6 +275,10 @@ $db->sql_query("INSERT INTO `".$prefix."_config` VALUES ( '«Такая-сяка
 	// Добавляем админа
 	$db->sql_query("INSERT INTO `".$prefix."_authors` VALUES ( '".$a."', 'BOG', '".$pass."', '1', '', '0');") or die ('<li>Администратор не был добавлен в базу данных');
 	echo "<li>Права администратора установлены";
+
+	// Отправка email админу
+	if ($email != "") mail($email, '=?koi8-r?B?'.base64_encode(convert_cyr_string($a.", пароль для сайта ".$siteurl, "w","k")).'?=', "<h3>Здравствуйте, ".$a."!</h3><b>Вы создали сайт ".$siteurl."</b><br>Ваш псевдоним для входа в администрирование: ".$a."<br>Пароль: ".$pass."<br>Для входа в администрирование, перейдите на сайт по <a href='http://".$siteurl."/red'>ссылке</a>, введите псевдоним и пароль и нажмите «Войти».<br><br><br><br>Отвечать на это письмо не нужно - оно было создано сайтом автоматически.", "Content-Type: text/html; charset=utf-8\r\nFrom: ".$email."\r\n");
+
 	// Переход в админку
 	echo "<h1>Установка успешно завершилась. Удалите папку install</h1>
 	<a href=sys.php>Перейти в Администрирование сайта</a>";
@@ -335,9 +326,9 @@ $pass_bd = generate_password(15);
 	input {width:100%;}
 	</style>
 </head>
-<body>
+<body style="background:url('images/adfon/11.png')">
 <form>
-<div class="container">
+<div class="container" style="background:url('images/adfon/21.png')">
 	<div class="sixteen columns">
 				<h1 class="remove-bottom" style="margin-top: 40px">Установка CMS «ДвижОк»</h1>
 				<h5>Версия <? echo $ver; ?></h5>
@@ -356,10 +347,35 @@ $pass_bd = generate_password(15);
 		<div class="one-third column">
 			<h3>2. Настройки</h3>
 			<ul class="square">
+<script>
+	$(document).ready(function(){
+		var pattern = /^[a-zа-я0-9_-]+@[a-zа-я0-9-]+\.([a-zа-я]{1,6}\.)?[a-zа-я]{2,6}$/i; //name-_09@mail09-.ru
+		var mail = $('#mail');
+		mail.blur(function(){
+			if(mail.val() != ''){
+				if(mail.val().search(pattern) == 0){
+					$('#valid').text('Отлично.');
+					$('#submit').attr('disabled', false);
+					mail.removeClass('error').addClass('ok');
+				}else{
+					$('#valid').text('Email не подходит');
+					$('#submit').attr('disabled', true);
+					mail.addClass('error');
+				}
+			}else{
+				$('#valid').text('Поле email не должно быть пустым!');
+				mail.addClass('error');
+				$('#submit').attr('disabled', true);
+			}
+		});
+	});	
+</script>
 				<li><strong>Адрес сайта</strong>:<br><input name="siteurl" value="<? echo $siteurl; ?>"></li>
 				<li style='display:none'><strong>Язык</strong>:<br><select name="lang"><option value="ru-RU">Русский</option></select></li>
 				<li><strong>Псевдоним администратора</strong>:<br><input name="a" value="admin"></li>
-				<li><strong>Пароль администратора сайта</strong>:<br><input name="pass" value="<? echo $pass; ?>"><br><strong style='color:darkred'>Скопируйте</strong> или перепишите пароль!</li>
+				<li><strong>Email администратора сайта</strong>:<br><input name="email" id="mail" value="@gmail.com"><span id="valid"></span></li>
+				<li><strong>Пароль администратора сайта</strong>:<br><input name="pass" value="<? echo $pass; ?>"><br>
+					Будет отправлен на указанный email</li>
 				<li id='all_show'><a onclick='$("#blo_show").show();$("#cash_show").show();$("#all_show").hide();' style='color:darkgreen; cursor:pointer; text-decoration:none; border-bottom:1px dashed green;'>IP-блокировка и кеш отключены</a></li>
 				<li id='blo_show' style='display:none'><strong>Блокировка по IP-адресу</strong>:<br><select name="ipban"><option value="true">Включить</option><option value="false" selected>Отключить</option></select></li>
 				<li id='cash_show' style='display:none'><strong>Кеширование страниц сайта</strong>:<br><select name="site_cash"><option value="false">Отключено</option><option value="file">в файлы</option><option value="base">в базу данных</option></select></li>
@@ -403,7 +419,7 @@ $pass_bd = generate_password(15);
 		</div>
 
 		<div class="column">
-			<button type="submit" style="float:right; margin-left: 30px"><h3>Установить →</h3></button>
+			<button type="submit" id="submit" style="float:right; margin-left: 30px"><h3>Установить →</h3></button>
 
 			<p>Документация встроена в CMS. Если её недостаточно — пишите на <a href="mailto:13i@list.ru"><strong>13i@list.ru</strong></a> или стучитесь в skype <a href="skype:angel13i?add"><strong>angel13i</strong></a> — вы получите ответы на все вопросы, после чего встроенная помощь будет расширена и дополнена. Также принимаются предложения и пожелания.<hr>
 			<?

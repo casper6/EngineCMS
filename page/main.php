@@ -132,7 +132,7 @@ $links="";
         foreach ($c_title as $key2 => $cid_title2) {
           if ($c_parent[$key2]==$key) {
             $cid_title2 = str_replace(" ","&nbsp;",trim($cid_title2));
-            $links2 .= "<a href=/-".$DBName."_cat_".$key2.">$cid_title2</a>   ";
+            $links2 .= "<a href=/-".$DBName."_cat_".$key2.">".$cid_title2."</a>   ";
           }
         }
         if ($links2 != "") {
@@ -150,8 +150,7 @@ $links="";
 
 if (!isset($c_description[$cid])) $c_description[$cid] = "";
 
-if ($page == 2) $c_description[$cid] = ""; ###################
-################################################################
+if ($page == 2) $c_description[$cid] = "";
 ################################################################
 
 if (!isset($c_title[$cid])) $c_title[$cid] = "";
@@ -167,8 +166,8 @@ $title = "<span class='cat_podcategorii_link'>".$title."</span>";
 $title = getparent_page($parent_id,$title,$cid,$page);
 
 // <A class=cat_podcategorii_link href=\"\-".$DBName."_cat_".$cid."\">$title</a>
-if ($page == 1) $and = " $strelka ".$title."";
-if ($page == 2) $and = " $strelka <A href=/-".$DBName."_cat_".$cid.">".$title."</a>";
+if ($page == 1) $and = " ".$strelka." ".$title."";
+if ($page == 2) $and = " ".$strelka." <A href=/-".$DBName."_cat_".$cid.">".$title."</a>";
 
 
 $ret .= "<div class='cat_title'>";
@@ -178,6 +177,12 @@ if ($podrazdel_active_show > 0) $ret .= $and;
 $ret .= "</div> ";
 
 if ($razdel_link==2) $ret = "";
+// Добавление табов
+  global $include_tabs;
+  if (strpos(" ".$reclama, "{{")) {
+    if ($include_tabs == false) { include ('page/tabs.php'); $include_tabs = true; }
+    if (strpos(" ".$reclama, "{{")) $reclama = show_tabs($reclama);
+  }
 if (trim($reclama) != "" and $view!=4) $ret .= "<div class='cat_description'>".$reclama."</div>";
 
 //$result3 = $db->sql_query("SELECT `pid` FROM ".$prefix."_".$tip." where module='$DBName' and cid=$cid1");
@@ -195,12 +200,16 @@ $links2 .= "<div class='main_cat_links'>";
 	foreach ($c_title as $key => $cid_title) {
   $cid_title = str_replace(" ","&nbsp;",trim($cid_title));
   
-  if ($cid != 0 and $c_parent[$key]!=0 and $no_links_perehod == false) { $links2 .= "   </div><div class='podcategorii_cat_links'>"; $no_links_perehod = true;}
+  if ($cid != 0 and $c_parent[$key]!=0 and $no_links_perehod == false) { 
+    $links2 .= "   </div><div class='podcategorii_cat_links'>"; 
+    $no_links_perehod = true;
+  }
   
     if ($podrazdel_active_show == 2) {
-        if ($cid != $key and $c_parent[$cid] != $key) $links2 .= "   <a href='/-".$DBName."_cat_".$key."' class='no_active_podcategorii_link'>".$cid_title."</a>";
-        else $links2 .= "   <b><a href='/-".$DBName."_cat_".$key."' class='active_podcategorii_link'>".$cid_title."</a></b>";
-        
+        if ($cid != $key and $c_parent[$cid] != $key) 
+          $links2 .= "   <a href='/-".$DBName."_cat_".$key."' class='no_active_podcategorii_link'>".$cid_title."</a>";
+        else 
+          $links2 .= "   <b><a href='/-".$DBName."_cat_".$key."' class='active_podcategorii_link'>".$cid_title."</a></b>";
         
     } elseif ($podrazdel_active_show == 3) {
         if ($cid == $key) $sel = " selected"; else $sel = "";
@@ -372,7 +381,6 @@ $soderganie .= $soderganieOPEN.$soderganieMENU.$soderganieALL;
 $soderganie2 .= $soderganieOPEN.$soderganieALL;
 }
 ######################################################################################
-######################################################################################
 function showcat($cid=0, $pag=0, $slovo="") {
 global $strelka, $soderganie, $soderganie2, $tip, $DBName, $db, $prefix, $module_name, $admin, $name, $pagetitle, $keywords2, $description2;
 global $golos, $golosrazdel, $golostype, $post, $comments, $datashow, $sort, $lim, $folder, $media, $view, $col, $search, $search_papka, $tema, $tema_name, $tema_title, $tema_opis, $menushow, $base, $where, $order, $peopleshow, $show_add_post_on_first_page, $razdel_shablon, $comments_1, $comments_main, $limkol, $tags, $tag_text_show, $tags_type, $tags_show, $pagenumbers, $div_or_table; // настройки из БД
@@ -405,11 +413,9 @@ $lim2 = $lim * $limkol;
 $tagcloud = "";
 if ($tags_type != 0) {
 // Откуда будем добывать теги...
-
   if ($tags_type == 1) { $and = ""; $link_tag = "/--slovo_"; } // ИЗ всех разделов портала
   if ($tags_type == 2) { $and = " and module='$DBName'"; $link_tag = "/-".$DBName."_slovo_"; } // ИЗ текущего раздела
   if ($tags_type == 3) { $and = " and cid='$cid' and module='$DBName'"; $link_tag = "/-".$DBName."_cat_".$cid."_slovo_"; } // ИЗ текущей папки раздела
-  
     $tagss = array();
     $sql = "select search from ".$prefix."_pages where `tables`='pages' and (copy='0' or copy=pid) and active='1'".$and;
     $result = $db->sql_query($sql);
@@ -493,9 +499,9 @@ $c_name = array();
 $sql = "SELECT `cid`, `title` FROM ".$prefix."_pages_categories where `module`='$DBName' and `tables`='pages' and `cid`!='0' order by `sort`, `title`";
 $result = $db->sql_query($sql);
 while ($row = $db->sql_fetchrow($result)) {
-$x_cid = $row['cid'];
-$c_name[$x_cid] = $row['title'];
-//$c_pic[$x_cid] = $row['pic'];
+  $x_cid = $row['cid'];
+  $c_name[$x_cid] = $row['title'];
+  //$c_pic[$x_cid] = $row['pic'];
   if ($cid==$x_cid) { // ?????????????????? может быть убрать!
     $cid_title = $row['title'];
     //$cid_pic = $row['pic'];
@@ -602,6 +608,12 @@ $color = 1;
     $text = $row2['main_text'];
     if (trim($text) == "<br><br>") $text = "";
     $open_text = str_replace("[заголовок]","",$open_text); // Убираем Заголовок, использованный в блоке!
+    // Добавление табов
+    if (strpos(" ".$open_text, "{{")) {
+      global $include_tabs;
+      if ($include_tabs == false) { include ('page/tabs.php'); $include_tabs = true; }
+      if (strpos(" ".$open_text, "{{")) $open_text = show_tabs($open_text);
+    }
     $p_comm = $row2['comm'];
     $p_active = $row2['active'];
     $p_counter = $row2['counter'];
@@ -1140,55 +1152,19 @@ if ($cid=="") { // or ($active != 1 and !is_admin($admin))
     $bodytext = str_ireplace("<table","<table class=\"table_light\"", $bodytext);
   }
 
-// Разделение содержания на блоки
-$raz[0] = "{{";   $raz[1] = "}}";
-preg_match_all("/\\".$raz[0]."[^\\".$raz[1]."]+\\".$raz[1]."/s", $bodytext, $matches);
-$matches = $matches[0];
-$count_match = count($matches); // кол-во блоков
-if ($count_match > 0) {
-    $info_blocks = "";
-    $obzor = false;
-    $names_block = "<script>$(function() {  $('#rotate > ul').tabs({ fx: { opacity: 'toggle' } });  }); </script><div id=\"rotate\"><ul>";
-    for ( $i=0; $i < $count_match+1; $i++ ) { 
-      // Разделение блока
-      if (!isset($matches[$i])) $info_block = "";
-      else $info_block = explode($matches[$i],$bodytext);
-      $count_body = count($info_block);
-      // Первое разделение - поиск начального блока без названия
-      if ($i == 0) {
-      $ii = $i-1;
-            if (trim($info_block[0]) != "") {
-              $info_blocks .= "<div id=\"fragment-".$i."\">".$info_block[0]."</div>";
-              $names_block .= "<li><a href=\"#fragment-".$i."\"><span>Обзор</span></a></li>";
-              $obzor = true;
-              //$i=$i-1;
-            } //else {
-          //$info_blocks .= "<div id=\"fragment-".$i."\">".$info_block[0]."666</div>";
-          //}
-      } else {
-      if ($obzor == true) $ii = $i; else $ii = $i-1;
-        // Содержание блока
-        if ($count_match == $i) $info_blocks .= "<div id=\"fragment-".$ii."\">".$bodytext."</div>";
-        else $info_blocks .= "<div id=\"fragment-".$ii."\">".$info_block[0]."</div>";
-      }
-      
-      $bodytext = "";
-      // Оставляем неисследованную оставшуюся часть текста
-      for ( $j=1; $j < $count_body; $j++ ) { 
-          $bodytext .= $info_block[$j];
-      }
-      // Название блока
-      //if ($i == $count_match) {
-      if (!isset($matches[$i])) $name_block = "";
-      else $name_block = str_replace($raz[0],"",str_replace($raz[1],"",$matches[$i]));
-      if ($obzor == true) $iii = $i+1; else $iii = $i;
-      if (trim($name_block)!="") $names_block .= "<li><a href=\"#fragment-".$iii."\"><span>".$name_block."</span></a></li>";
-      //}
-
-    }
-    $names_block .= "</ul>".$info_blocks."</div>";
-    $bodytext = "".$names_block;
+// ============================================================================================
+// Добавление табов
+global $include_tabs;
+if (strpos(" ".$opentext, "{{")) {
+  if ($include_tabs == false) { include ('page/tabs.php'); $include_tabs = true; }
+  if (strpos(" ".$opentext, "{{")) $opentext = show_tabs($opentext);
 }
+if (strpos(" ".$bodytext, "{{")) {
+  if ($include_tabs == false) { include ('page/tabs.php'); $include_tabs = true; }
+  if (strpos(" ".$bodytext, "{{")) $bodytext = show_tabs($bodytext);
+}
+// ============================================================================================
+
 
   $module = $row['module'];
   $dat = explode(" ",$row['date']);

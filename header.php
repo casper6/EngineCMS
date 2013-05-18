@@ -14,7 +14,7 @@
 	require_once("mainfile.php");
 	global $strelka, $siteurl, $prefix, $name, $db, $admin, $sitename, $pagetitle, $pagetitle2, $registr, $pogoda, $flash, $keywords, $description, $counter, $startdate, $adminmail, $keywords2, $description2, $stopcopy, $nocash, $blocks, $http_siteurl, $display_errors, $gallery_css3, $gallery_lightbox, $gallery_carusel, $gallery_sly;
 	$nocash = false;
-	$gallery_css3 = $gallery_lightbox = $gallery_carusel = $gallery_sly = false;
+	$gallery_css3 = $gallery_lightbox = $gallery_carusel = $gallery_sly = $gallery_sly_full = false;
 	if ($name == "") $name = "index";
 
 if ($name=="-email") { // занесение мыла как скрытого комментария Убрать !!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -113,7 +113,7 @@ if ($name=="-email") { // занесение мыла как скрытого к
 			$main_options = "no";
 		}
 
-		global $soderganie, $soderganie2, $options, $ModuleName, $tip, $DBName, $page_cat, $http_siteur, $cid, $pid;
+		global $soderganie, $soderganie2, $options, $ModuleName, $tip, $DBName, $page_cat, $http_siteur, $cid, $pid, $include_tabs;
 		$options = $main_options;
 		$ModuleName = $main_title;
 		$DBName = $name; // важно не менять!
@@ -133,6 +133,11 @@ if ($name=="-email") { // занесение мыла как скрытого к
 			else {
 				$soderganie = str_replace("[название]", "<div class=cat_title><span class=cat_categorii_link>".$ModuleName."</span></div><div class=polosa></div>", $soda[0]);
 				$soderganie = str_replace("[страницы]", $soderganie2, $soderganie);
+				// Добавление табов
+			    if (strpos(" ".$soderganie, "{{")) {
+			      if ($include_tabs == false) { include ('page/tabs.php'); $include_tabs = true; }
+			      if (strpos(" ".$soderganie, "{{")) $soderganie = show_tabs($soderganie);
+			    }
 			}
 
 			if ($cid=="" and $pid=="" and $soda_col > 1) {
@@ -202,8 +207,8 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 		$block_color = $block_colorYYY[$idX];
 
 	// обнулили все опции блоков от греха подальше
-	$titleshow=$media=$folder=$datashow=$tagdelete=$ipdatauser=$design=$open_all=$catshow=$main=$daleeshow=$openshow=$number=$add=$size=$papki_numbers=$zagolovokin=$menu=$notitlelink=$noli=$html=$show_title=$random=$showlinks=$open_new_window=$shablon=$show_new_pages=$reload_link_show=$reload_link_time=$re_menu=0;
-	$opros_type=$limkol=$pageshow=$only_question=$opros_result=$foto_gallery_type=1;
+	$titleshow=$media=$folder=$datashow=$tagdelete=$ipdatauser=$design=$open_all=$catshow=$main=$daleeshow=$openshow=$number=$add=$size=$papki_numbers=$zagolovokin=$menu=$noli=$html=$show_title=$random=$showlinks=$open_new_window=$shablon=$show_new_pages=$reload_link_show=$reload_link_time=$re_menu=0;
+	$opros_type=$limkol=$pageshow=$only_question=$opros_result=$foto_gallery_type=$notitlelink=1;
 	$addtitle="Добавить статью";
 	$dal="Далее...";
 	$first = "src=";
@@ -617,6 +622,12 @@ case "1": # Блок комментариев модуля
 	$type = ""; break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 case "2": # Блок текста
+	// Добавление табов
+	global $include_tabs;
+	if (strpos(" ".$textX, "{{")) {
+	  if ($include_tabs == false) { include ('page/tabs.php'); $include_tabs = true; }
+	  if (strpos(" ".$textX, "{{")) $textX = show_tabs($textX);
+	}
 	$block = str_replace("[$titleX]", $design_open.$textX.$design_close, $block);
 	if ($titleshow != 0) $block = str_replace("[заголовок]", $titleX, $block);
 	break;
@@ -1702,25 +1713,25 @@ versions: 1.3.0, 1.1.2, 1.1.1, 1.1.0, 1.0.31, 1.0.30, 1.0.29, 1.0.28, 1.0.27, 1.
 
 */
 
-if ($sortable != 0) echo "<script type='text/javascript' src='includes/jquery.tinysort.min.js'></script>";
+if ($sortable != 0) echo "<script src='includes/jquery.tinysort.min.js'></script>";
 
 if ($jqueryui != 0) echo "<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js'></script>
-<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/i18n/jquery-ui-i18n.min.js'></script>
-<link rel='stylesheet' href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/base/jquery-ui.css' media='all' />";
+<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/i18n/jquery-ui-i18n.min.js'></script>
+<link rel='stylesheet' href='http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css' />";
 
 switch($kickstart) { // Выбор CSS-фреймворка
 	case 1: // KickStart
-	echo "<script type='text/javascript' src='includes/css-frameworks/kickstart/js/kickstart.js'></script><link rel='stylesheet' type='text/css' href='includes/css-frameworks/kickstart/css/kickstart.css' media='all' /><link rel='stylesheet' type='text/css' href='includes/css-frameworks/kickstart/style.css' media='all' />"; break;
+	echo "<script src='includes/css-frameworks/kickstart/js/kickstart.js'></script><link rel='stylesheet' type='text/css' href='includes/css-frameworks/kickstart/css/kickstart.css' media='all' /><link rel='stylesheet' type='text/css' href='includes/css-frameworks/kickstart/style.css' media='all' />"; break;
 	case 2: // CSSframework
 	echo "<link rel='stylesheet' type='text/css' href='includes/css-frameworks/css-framework.css' />"; break;
 	case 3: // Skeleton
 	echo "<link rel='stylesheet' href='includes/css-frameworks/skeleton/base.css'><link rel='stylesheet' href='includes/css-frameworks/skeleton/skeleton.css'><link rel='stylesheet' href='includes/css-frameworks/skeleton/layout.css'>"; break;
 	case 4: // Kube
-	echo "<link rel='stylesheet' type='text/css' href='includes/css-frameworks/kube100/kube.min.css' /><link rel='stylesheet' type='text/css' href='includes/css-frameworks/kube100/master.css' />"; break;
+	echo "<link rel='stylesheet' type='text/css' href='includes/css-frameworks/kube/kube.min.css' /><link rel='stylesheet' type='text/css' href='includes/css-frameworks/kube/master.css' /><script src='includes/css-frameworks/kube/kube.buttons.js'></script><script src='includes/css-frameworks/kube/kube.tabs.js'></script>"; break;
 	case 5: // Bootstrap
 	echo "<link href='includes/css-frameworks/bootstrap/css/bootstrap.min.css' rel='stylesheet'><link href='includes/css-frameworks/bootstrap/css/bootstrap-responsive.min.css' rel='stylesheet'><script src='includes/css-frameworks/bootstrap/js/bootstrap.min.js'></script>"; break;
 	case 6: // 1140 Grid
-	echo "<!--[if lte IE 9]><link rel='stylesheet' href='includes/css-frameworks/1140_cssgrid/ie.css' type='text/css' media='screen' /><![endif]--><link rel='stylesheet' href='includes/css-frameworks/1140_cssgrid/1140.css' type='text/css' media='screen' /><script type='text/javascript' src='includes/css-frameworks/1140_cssgrid/css3-mediaqueries.js'></script>"; break;
+	echo "<!--[if lte IE 9]><link rel='stylesheet' href='includes/css-frameworks/1140_cssgrid/ie.css' type='text/css' media='screen' /><![endif]--><link rel='stylesheet' href='includes/css-frameworks/1140_cssgrid/1140.css' type='text/css' media='screen' /><script src='includes/css-frameworks/1140_cssgrid/css3-mediaqueries.js'></script>"; break;
 	case 7: // Toast
 	echo "<link rel='stylesheet' type='text/css' href='includes/css-frameworks/toast/toast.css' />"; break;
 	case 8: // Blueprint

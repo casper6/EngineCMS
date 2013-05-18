@@ -225,7 +225,7 @@ function GraphicAdmin() {
 
 	if ($registr=='1') echo "&nbsp;&nbsp;&nbsp;<a href=".$admin_file.".php?op=MainUser>Пользователи</a> <a href=".$admin_file.".php?op=sortuser>Список</a>";
 
-	echo "<div class='black_grad'><button id=new_razdel_button title='Сортировка...' class='small black' onclick=\"show('sortirovka');\" style='float:left; margin:3px;'><span style='margin-right: -2px;' class=\"icon darkgrey small\" data-icon=\"|\"></span></button><button id=new_razdel_button title='Добавить раздел...' class='small black right3' onclick=\"openbox('10','Вы решили добавить раздел:'); $('.dark_pole2sel').attr('class', 'dark_pole2');\"><span class=\"mr-2 icon darkgrey small\" data-icon=\"+\"></span></button><span class='h1'>Разделы:</span>
+	echo "<div class='black_grad'><button id=new_razdel_button title='Сортировка...' class='small black' onclick=\"show('sortirovka');\" style='float:left; margin-left:3px;margin-top:3px;'><img src='images/sortirovka.png'></button><button id=new_razdel_button title='Добавить раздел...' class='small black right3' onclick=\"openbox('10','Вы решили добавить раздел:'); $('.dark_pole2sel').attr('class', 'dark_pole2');\"><span class=\"mr-2 icon darkgrey small\" data-icon=\"+\"></span></button><span class='h1'>Разделы:</span>
 		</div>".$razdel_txt."<div id='sortirovka' style='display:none;'>
 		".close_button('sortirovka')."<p>Сортировать разделы по: <p>".$razdel_sort_name[0].", ".$razdel_sort_name[1]." или ".$razdel_sort_name[2]."</p></div>";
 
@@ -305,7 +305,7 @@ function GraphicAdmin() {
 		}
 		$ver = mt_rand(10000, 99999); // получили случайное число
 
-		if (strpos(" ".$useit,"[содержание]")) {
+		if (strpos(" ".$useit,"[содержание]") || strpos(" ".$useit,"[страницы]")) {
 			$right = $iconpage.$type_opisX;
 			$ico = ",";
 			$reaction = "razdel_show(\"\", ".$id.", \"".$nam."\", \"".$text."\");";

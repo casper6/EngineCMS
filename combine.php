@@ -230,6 +230,14 @@ a.search_page_link {font-size:20px !important;}
 
 .ad_button {width:100px; display:block; text-align:center; float:left; margin:5px; line-height:1em !important; font-size:12px !important;}
 .ad_icon {height:32px; display:block; margin: 0 auto;}
+
+.nav-tabs ul li, .tabs ul li {background:none !important; padding: 0 !important;}
+ul.tabs {margin:10px 0 -1px 0 !important; padding: 0 !important;}
+ul.tabs li {background:none !important; padding: 0 !important; margin: 0 !important; }
+.tabs ul li.ui-tabs-active {background:white !important; }
+.nav-tabs, .nav-tabs ul {height:32px !important; }
+.nav-tabs {width:100% !important;}
+.ui-widget-header, ul.tabs li.current {border-bottom:0 !important;}
 ".$sha;
 
 $n = count($name);

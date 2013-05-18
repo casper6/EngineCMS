@@ -127,7 +127,7 @@ if ($row['realadmin'] == 1) {
 		include ("ad-header.php");
 		$ok = intval($ok);
 		// Получаем настройки из mainfile
-		global $sitename, $startdate, $adminmail, $keywords, $description, $counter, $statlink, $postlink, $stopcopy, $registr, $pogoda, $flash, $sgatie, $ht_backup, $captcha_ok, $xnocashe, $jqueryui, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $comment_send, $company_name, $company_fullname, $company_address, $company_time, $company_tel, $company_sot, $company_fax, $company_email, $company_map, $company_people, $search_design, $tag_design, $add_fonts, $site_cash, $normalize, $project_logotip, $project_name, $geo, $kolkey, $add_clips, $sortable, $color_tema_html, $color_tema_css, $color_tema_js, $color_tema_php;
+		global $sitename, $startdate, $adminmail, $keywords, $description, $counter, $statlink, $postlink, $stopcopy, $registr, $pogoda, $flash, $sgatie, $ht_backup, $captcha_ok, $xnocashe, $jqueryui, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $comment_send, $company_name, $company_fullname, $company_address, $company_time, $company_tel, $company_sot, $company_fax, $company_email, $company_map, $company_people, $search_design, $tag_design, $add_fonts, $site_cash, $normalize, $project_logotip, $project_name, $geo, $kolkey, $add_clips, $sortable, $color_tema_html, $color_tema_css, $color_tema_js, $color_tema_php, $tab_obzor, $tab_show;
 		
 		$ad_fon_option = ""; // Выбор фоновок для админки
 		for ($i=1; $i < 28; $i++) { // всего 27 фоновок + 1 по-умолчанию в папке images/ad-fon
@@ -152,8 +152,7 @@ echo "<table class='w100 mw800 mt5' style='padding:0; background: #e2e5ea;' cell
 
 	<div id='razdels' style='background:#e7e9ec;'>
 			<div class='black_grad'><span class='h1'>Настройки".$opt_save."</span></div>";
-	echo "<div id='mainrazdel8' class='dark_pole2'><a class='base_page' onclick=\"options_show('8','show_first')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\".\"></span><span class='plus20'>Перед началом разработки</span></div></a></div>";
-	echo "<div id='mainrazdel2' class='dark_pole2'><a class='base_page' onclick=\"options_show('2','show_options_fonts')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"i\"></span><span class='plus20'>Подключение шрифтов</span></div></a></div>";
+	echo "<div id='mainrazdel8' class='dark_pole2'><a class='base_page' onclick=\"options_show('8','show_first')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\".\"></span><span class='plus20'>Начальные настройки и Шрифты</span></div></a></div>";
 	echo "<div id='mainrazdel0' class='dark_pole2'><a class='base_page' onclick=\"options_show('0','show_options')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"Z\"></span><span class='plus20'>Основные настройки Сайта</span></div></a></div>";
 	echo "<div id='mainrazdel1' class='dark_pole2'><a class='base_page' onclick=\"options_show('1','show_options_company')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"Y\"></span><span class='plus20'>Карточка компании (мини блоки)</span></div></a></div>";
 	
@@ -212,22 +211,6 @@ echo "
 </td></tr>
 
 <tr valign=top><td style='min-width:250px;'>
-<b>Включить <a href='http://tinysort.sjeiti.com' target='_blank'>сортировку TinySort</a></b>:</td><td class=small>
-".select("options[sortable]", "0,1", "НЕТ,ДА", $sortable)."<br>
-Позволяет сортировать любые элементы, обращаясь к ним через jQuery. <a class='punkt' onclick=\"$('#sortable').toggle('slow');\">Пример</a>.
-<div id=sortable style='display:none;'>".close_button('sortable')."
-<pre>
-&lt;div id=sorter style='display:none;'&gt;Сортировка:
-&lt;a style=\"cursor:pointer;\" onclick=\"$('div#tovars>div#tovar').tsort('h3',{attr:'title'});\"&gt;по цене&lt;/a&gt;, 
-&lt;a style=\"cursor:pointer;\" onclick=\"$('div#tovars>div#tovar').tsort('h1',{charOrder:'абвгдђежзијклљмнњопрстћуфхцчџш'});\"&gt;по названию&lt;/a&gt;
-&lt;/div&gt;
-Можно показывать сортировку только при наличии сортируемых элементов:
-&lt;script&gt;$(document).ready(function() { if ( document.getElementById('tovar') != null ) $('#sorter').show('slow'); });&lt;/script&gt;
-</pre>
-</div>
-</td></tr>
-
-<tr valign=top><td style='min-width:250px;'>
 <b>Включить CSS-фреймворк</b>:<br>";
 
 global $kickstart;
@@ -266,7 +249,7 @@ switch($kickstart) {
 	$kick_link = "http://960.gs";
 	$kick_name = "960gs(24)"; break;
 }
-if ($kickstart != 0) echo " <a class='button small' href='".$kick_link."' title='Открыть сайт CSS-фреймворка «".$kick_name."»'><span class=\"icon small black\" data-icon=\"S\"></span> ".$kick_name."</a>";
+if ($kickstart != 0) echo " <a target='_blank' class='button small' href='".$kick_link."' title='Открыть сайт CSS-фреймворка «".$kick_name."»'><span class=\"icon small black\" data-icon=\"S\"></span> ".$kick_name."</a>";
 
 echo "</td><td class=small>
 ".select("options[kickstart]", "0,1,2,3,4,5,6,7,8,9,10,11", "-- НЕТ --,KickStart,CSSframework,Skeleton,Kube,Bootstrap,1140 Grid,Toast,Blueprint,YUI CSS Grids,960gs (12 и/или 16 колонок),960gs (24 колонки)", $kickstart, ' id=kickstart onchange="if ( $(\'#kickstart\').val() == 1) $(\'#frame1\').show(); else $(\'#frame1\').hide(); if ( $(\'#kickstart\').val() == 6) $(\'#frame6\').show(); else $(\'#frame6\').hide(); "')."
@@ -297,11 +280,32 @@ body {}
 
 <tr valign=top><td style='min-width:250px;'>
 <b>Включить <a href='http://jqueryui.com' target='_blank'>jQuery UI</a></b>:</td><td class=small>
-".select("options[jqueryui]", "0,1", "НЕТ,ДА", $jqueryui)."
+".select("options[jqueryui]", "0,1", "НЕТ,ДА", $jqueryui)."<br>Используется для вкладок (табов). При использовании css-фреймворка Cube или KickStart вкладки будут работать и при отключенном jQuery UI.
+</td></tr>
+
+<tr valign=top><td style='min-width:250px;'>
+<b>Включить вкладки («табы»)</b>:</td><td class=small>
+".select("options[tab_show]", "0,1", "НЕТ,ДА", $tab_show)."<br>Вкладки будут работать только при включенном jQuery UI или использовании css-фреймворка Cube или KickStart.<br><br>Название первой вкладки по-умолчанию (если вкладки начинаются с текста):<br>".input("options[tab_obzor]", $tab_obzor, "100%")."
+</td></tr>
+
+<tr valign=top><td style='min-width:250px;'>
+<b>Включить <a href='http://tinysort.sjeiti.com' target='_blank'>сортировку TinySort</a></b>:</td><td class=small>
+".select("options[sortable]", "0,1", "НЕТ,ДА", $sortable)."<br>
+Позволяет сортировать любые элементы, обращаясь к ним через jQuery. <a class='punkt' onclick=\"$('#sortable').toggle('slow');\">Пример</a>.
+<div id=sortable style='display:none;'>".close_button('sortable')."
+<pre>
+&lt;div id=sorter style='display:none;'&gt;Сортировка:
+&lt;a style=\"cursor:pointer;\" onclick=\"$('div#tovars>div#tovar').tsort('h3',{attr:'title'});\"&gt;по цене&lt;/a&gt;, 
+&lt;a style=\"cursor:pointer;\" onclick=\"$('div#tovars>div#tovar').tsort('h1',{charOrder:'абвгдђежзијклљмнњопрстћуфхцчџш'});\"&gt;по названию&lt;/a&gt;
+&lt;/div&gt;
+Можно показывать сортировку только при наличии сортируемых элементов:
+&lt;script&gt;$(document).ready(function() { if ( document.getElementById('tovar') != null ) $('#sorter').show('slow'); });&lt;/script&gt;
+</pre>
+</div>
 </td></tr>
 
 </table>
-См. также «Подключение шрифтов».
+<a class='button' onclick=\"options_show('2','show_options_fonts')\"><span class=\"icon gray large\" data-icon=\"i\"></span> Подключение шрифтов</a>
 
 <div style='text-align:center;'><input type='submit' value=' Сохранить настройки ' style='width:300px; height:40px;'></div>
 <input type='hidden' name='op' value='ConfigSave'>
@@ -1092,7 +1096,7 @@ echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>
 		global $prefix, $db, $options;
 		$mini_blocks = $options['company_name']."|||||".$options['company_fullname']."|||||".$options['company_address']."|||||".$options['company_time']."|||||".$options['company_tel']."|||||".$options['company_sot']."|||||".$options['company_fax']."|||||".$options['company_email']."|||||".$options['company_map']."|||||".$options['company_people'];
 
-		$advanced = $options['jqueryui']."|".$options['show_comments']."|".$options['show_userposts']."|".$options['show_page']."|".$options['show_reserv']."|".$options['uskorenie_blokov']."|".$options['kickstart']."|".$options['show_page_links']."|".$options['ad_fon']."|".$options['search_design']."|".$options['tag_design']."|".$options['add_fonts']."|".$options['normalize']."|".$options['project_logotip']."|".$options['project_name']."|".$options['geo']."|".$options['kolkey']."|".$options['add_clips']."|".$options['sortable']."|".$options['color_tema_html']."|".$options['color_tema_css']."|".$options['color_tema_js']."|".$options['color_tema_php'];
+		$advanced = $options['jqueryui']."|".$options['show_comments']."|".$options['show_userposts']."|".$options['show_page']."|".$options['show_reserv']."|".$options['uskorenie_blokov']."|".$options['kickstart']."|".$options['show_page_links']."|".$options['ad_fon']."|".$options['search_design']."|".$options['tag_design']."|".$options['add_fonts']."|".$options['normalize']."|".$options['project_logotip']."|".$options['project_name']."|".$options['geo']."|".$options['kolkey']."|".$options['add_clips']."|".$options['sortable']."|".$options['color_tema_html']."|".$options['color_tema_css']."|".$options['color_tema_js']."|".$options['color_tema_php']."|".$options['tab_obzor']."|".$options['tab_show'];
 		// sitename	startdate	adminmail	keywords	description	counter	statlink	postlink	registr	pogoda	flash	sgatie	stopcopy	nocashe	adminmes	red	comment	captcha_ok	ht_backup
 		$db->sql_query("UPDATE `".$prefix."_config` SET 
 			`sitename` = '".mysql_real_escape_string($options['sitename'])."',

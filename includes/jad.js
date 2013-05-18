@@ -225,7 +225,7 @@ function rep(id,type,razdel,papka) {
 	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'rep', 'type': type, 'id': id, 'string': papka+'*@%'+razdel },
 	    beforeSend: function(){ $('#rep'+id).html('Секундочку...'); },
-	    success: function(data){ $('#rep'+id).html(data); }
+	    success: function(data){ $('#rep'+id).html(data); if (type == 3) $('#page'+id).hide('slow'); }
 	});
 }
 function clo(pid) {
