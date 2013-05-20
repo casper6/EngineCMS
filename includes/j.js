@@ -10,26 +10,6 @@ function showopros(id, res, golos) {
 	$.get('opros.php', { num: id, res: res, golos: golos }, function(data) { $('#show_opros'+id).html( data ); }); 
 }
 
-/* Поиск объекта (используется ниже) */
-function getObject(obj) {  
-	var theObj
-	if (document.layers) {
-		if (typeof obj == "string") return document.layers[obj]
-		else return obj
-	}
-	if (document.all) {
-		if (typeof obj == "string") {
-			if (document.all(obj)!=null) return document.all(obj).style;
-			else return null;
-		} else return obj.style
-	}
-	if (document.getElementById) {
-		if (typeof obj == "string") return document.getElementById(obj).style
-		else return obj.style
-	}
-	return null;
-}
-
 /* Отображение скрытого DIV объекта  УДАЛИТЬ ДУБЛИКАТ!*/
 function show(obj) { 
 	with (document.getElementById(obj).style) { 
@@ -71,14 +51,14 @@ function getDateNow(){
 	d += nmonths;
 	return d;
 }
-/* ################################################################ */
+
 /* Скрытие DIV объекта */
 function hide(obj) {  
 	with (document.getElementById(obj).style) {
 	   display = "none";
 	}
 }
-/* ################################################################ */
+
 /* Отображение меню - DIV объекта (используется для смайлов в комментариях) */
 function SwitchMenu(obj) {
 	if (document.getElementById) {
@@ -94,8 +74,8 @@ function SwitchMenu(obj) {
 		}
 	}
 }
-/* ################################################################ */
-/* функции для работы текст. редактора комментариев */
+
+/* Функции для работы текст. редактора комментариев */
 function clc_bbcode(t,nu){
 	var el = document.getElementById("area"),
 	teg1 = "["+t+"]",
@@ -111,6 +91,7 @@ function clc_bbcode(t,nu){
 	} else {
 	el.value = el.value.substring(0,el.selectionStart)+teg1+el.value.substring(el.selectionStart,el.selectionEnd)+teg2+el.value.substring(el.selectionEnd);}
 }
+
 function otvet(сid, number, t) {
 	document.getElementById('comm_otvet_show').innerHTML='<p><b>Вы отвечаете.</b> <a class=\'no comm_write\' href=#addcomm onclick=\'otmena_otvet();\'>Отменить ответ</a><br><br>'; document.getElementById('comm_otvet').value = сid;
 	var el=document.getElementById('area');
@@ -122,10 +103,12 @@ function otvet(сid, number, t) {
 		el.value=el.value.substring(0,el.selectionStart)+el.value.substring(el.selectionStart,el.selectionEnd)+t+el.value.substring(el.selectionEnd);
 	}
 }
+
 function otmena_otvet() {
 	document.getElementById('comm_otvet_show').innerHTML = ''; 
 	document.getElementById('comm_otvet').value = 0;
 }
+
 function clc_name(t){
 	var el = document.getElementById("area");
 	el.focus();
@@ -136,7 +119,7 @@ function clc_name(t){
 		el.value = el.value.substring(0,el.selectionStart)+el.value.substring(el.selectionStart,el.selectionEnd)+t+el.value.substring(el.selectionEnd);
 	}
 }
-/* ################################################################ */
+
 /* Функция для обработки цитат при их вставке в текст. редактор комментариев */
 function citata_shock(t){
 	t = t.replace('<(/?)([i|b|u|hr|li]+)>','[$1$2]');
@@ -157,6 +140,22 @@ function citata_shock(t){
 	return t;
 }
 
+/* Функция для отправки формы средствами Ajax */
+function AjaxFormRequest(result_id,form_id,url) { 
+    jQuery.ajax({
+        url:     url, //Адрес подгружаемой страницы 
+        type:     "POST", //Тип запроса 
+        dataType: "html", //Тип данных 
+        data: jQuery("#"+form_id).serialize(),  
+        success: function(response) { //Если все нормально 
+        document.getElementById(result_id).innerHTML = response; 
+	    }, 
+	    error: function(response) { //Если ошибка 
+	    document.getElementById(result_id).innerHTML = "Ошибка при отправке формы"; 
+	    } 
+ 	}); 
+}
+
 function page_golos(id,name,gol,type) {
 	if (type == 0) { if (gol != 1 & gol != 2 & gol != 3 & gol != 4 & gol != 5 & gol != 6 ) gol = 1; }
 	if (type == 1) { if (gol != 6 ) gol = 1; }
@@ -166,5 +165,35 @@ function page_golos(id,name,gol,type) {
 	    data: {'func': 'savegolos', 'type': type, 'id': id, 'string': name+'*@%'+gol},
 	    beforeSend: function(){ $('#golos'+id).html('Секундочку...'); },
 	    success: function(data){ $('#golos'+id).html(data); }
+	});
+}
+
+function shop_show_order() {
+	$.ajax({ url: 'ajax.php', cache: false, dataType : "html",
+	    data: {'func': 'shop_show_order' },
+	    beforeSend: function(){ $('#shop_card').html('<img src="images/loading.gif">'); },
+	    success: function(data){ $('#shop_card').html(data); }
+	});
+}
+
+function shop_show_card() {
+	$.ajax({ url: 'ajax.php', cache: false, dataType : "html",
+	    data: {'func': 'shop_show_card' },
+	    beforeSend: function(){ $('#shop_card').html('<img src="images/loading.gif">'); },
+	    success: function(data){ $('#shop_card').html(data); }
+	});
+}
+
+function shop_add_tovar(id,price) {
+	$.ajax({ url: 'ajax.php', cache: false, dataType : "html",
+	    data: {'func': 'shop_add_tovar', 'id': id, 'string': price},
+	    success: function(data){ shop_show_card(); }
+	});
+}
+
+function shop_del_tovar(id) {
+	$.ajax({ url: 'ajax.php', cache: false, dataType : "html",
+	    data: {'func': 'shop_del_tovar', 'id': id},
+	    success: function(data){ shop_show_card(); }
 	});
 }

@@ -1,5 +1,28 @@
 <?php
 /* Движок: Content Management System */
+
+/*
+Замена иконок!
+<span class=\"icon gray large\" data-icon=\"Q\"></span> откл.
+<span class=\"icon gray large\" data-icon=\"H\"></span> СЕРДЦЕ
+<span class=\"icon gray large\" data-icon=\"J\"></span>
+<span class=\"icon gray large\" data-icon=\"K\"></span> НРАВИТСЯ
+<span class=\"icon gray large\" data-icon=\"T\"></span> корзина
+<span class=\"icon gray large\" data-icon=\"L\"></span> НЕ НРАВИТСЯ
+<span class=\"icon gray large\" data-icon=\";\"></span> ВЕРНУТЬ
+<span class=\"icon gray large\" data-icon=\"'\"></span> КОММЕНТАРИЙ
+<span class=\"icon gray large\" data-icon=\"D\"></span> бд
+<span class=\"icon gray large\" data-icon=\"Z\"></span> КЛЮЧ НАСТРОЙКИ
+<span class=\"icon gray large\" data-icon=\"X\"></span> ЗАКРЫТЬ
+<span class=\"icon gray large\" data-icon=\"C\"></span> ПОДТВЕРДИТЬ
+<span class=\"icon gray large\" data-icon=\"S\"></span> мэйл
+<span class=\"icon gray large\" data-icon=\"V\"></span> МОЛНИЯ
+<span class=\"icon gray large\" data-icon=\"F\"></span> ОГОНЬ  
+<span class=\"icon gray large\" data-icon=\"G\"></span>  ГАЙКА НАСТРОЕК
+
+*/
+
+
 define('ADMIN_FILE', true);
 if(isset($aid)) {
   if(!empty($aid) AND (!isset($admin) OR empty($admin)) AND $op!='login') {
@@ -227,7 +250,7 @@ function GraphicAdmin() {
 
 	echo "<div class='black_grad'><button id=new_razdel_button title='Сортировка...' class='small black' onclick=\"show('sortirovka');\" style='float:left; margin-left:3px;margin-top:3px;'><img src='images/sortirovka.png'></button><button id=new_razdel_button title='Добавить раздел...' class='small black right3' onclick=\"openbox('10','Вы решили добавить раздел:'); $('.dark_pole2sel').attr('class', 'dark_pole2');\"><span class=\"mr-2 icon darkgrey small\" data-icon=\"+\"></span></button><span class='h1'>Разделы:</span>
 		</div>".$razdel_txt."<div id='sortirovka' style='display:none;'>
-		".close_button('sortirovka')."<p>Сортировать разделы по: <p>".$razdel_sort_name[0].", ".$razdel_sort_name[1]." или ".$razdel_sort_name[2]."</p></div>";
+		".close_button('sortirovka')."<p class=f14>Сортировать разделы по: <p class=f14>".$razdel_sort_name[0].", ".$razdel_sort_name[1]." или ".$razdel_sort_name[2]."</p></div>";
 
 	$icon_size = "large";
 	if ($num_razdel > 5) $icon_size = "medium"; 
@@ -297,11 +320,10 @@ function GraphicAdmin() {
 			$row2 = $db->sql_fetchrow($result2);
 			$baza_name  = $row2['name']; // Название таблицы БД 
 			$type_opisX = " <nobr><a href=sys.php?op=base_base&name=".$nam." title='Открыть базу данных' style='margin-left:10px;'><img class=\"icon2 i34\" src=/images/1.gif></a>
-			<a href=sys.php?op=base_base_create_base&base=".$baza_name."&name=".$nam."&amp;red=1 title='Добавить строку в базу данных' style='margin-left:5px;'><img class=\"icon2 i29\" src=/images/1.gif></a></nobr>
-			";
+			<a href=sys.php?op=base_base_create_base&base=".$baza_name."&name=".$nam."&amp;red=1 title='Добавить строку в базу данных' style='margin-left:5px;'><img class=\"icon2 i29\" src=/images/1.gif></a></nobr>";
 		}
 		if (!strpos($options,"base=")) {
-			$type_opisX = "<nobr><span class='small radius' style='border-bottom: #aaaaaa 1px solid;'><b>&nbsp;".$type_opisX."&nbsp;</b></span></nobr>";
+			$type_opisX = "<span class='f14 radius bb1 pr10 pl10'>".$type_opisX."</span>";
 		}
 		$ver = mt_rand(10000, 99999); // получили случайное число
 

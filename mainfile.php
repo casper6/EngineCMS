@@ -129,14 +129,30 @@
   $ht_backup = $row['ht_backup']; // Файл, в котором лежит резервная копия .htaccess
   $captcha_ok = intval($row['captcha_ok']); // отключение проверки комментариев
   $jqueryui = $show_comments = $show_userposts = $normalize = "";
-  list($jqueryui, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $search_design, $tag_design, $add_fonts, $normalize, $project_logotip, $project_name, $geo, $kolkey, $add_clips, $sortable, $color_tema_html, $color_tema_css, $color_tema_js, $color_tema_php, $tab_obzor, $tab_show) = explode("|",trim($row['nocashe']));
+  list($jqueryui, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $search_design, $tag_design, $add_fonts, $normalize, $project_logotip, $project_name, $geo, $kolkey, $add_clips, $sortable, $color_tema_html, $color_tema_css, $color_tema_js, $color_tema_php, $tab_obzor, $tab_show, $shop_text_val1, $shop_text_val2, $shop_text_itogo, $shop_text_oformit, $shop_text_korzina, $shop_text_delete, $shop_pole, $shop_admin_mail, $shop_text_after_mail,$shop_spisok_pole, $shop_shablon_form_order, $shop_shablon_mail_client, $shop_shablon_mail_admin) = explode("|",trim($row['nocashe']));
   //if ($add_fonts != "") $add_fonts = explode(".",$add_fonts);
   $project_name = filter($project_name);
+
+  if ($shop_text_val2 == "") $shop_text_val2 = " руб.";
+  if ($shop_text_itogo == "") $shop_text_itogo = "Итого:";
+  if ($shop_text_oformit == "") $shop_text_oformit = "Оформить покупку";
+  if ($shop_text_korzina == "") $shop_text_korzina = "Ваша Корзина пуста.";
+  if ($shop_text_delete == "") $shop_text_delete = "×";
+  if ($shop_pole == "") $shop_pole = "";
+  if ($shop_admin_mail == "") $shop_admin_mail = $adminmail;
+  if ($shop_text_after_mail == "") $shop_text_after_mail = "<h1>Спасибо!</h1><h3>Ваш заказ успешно отправлен. В ближайшее время мы вам позвоним.</h3>";
+  if ($shop_spisok_pole == "") $shop_spisok_pole = "Ф.И.О.:*\nТелефон:*\nEmail:\nАдрес:\nДополнительная информация:";
+  if ($shop_shablon_form_order == "") $shop_shablon_form_order = "";
+  if ($shop_shablon_mail_client == "") $shop_shablon_mail_client = "";
+  if ($shop_shablon_mail_admin == "") $shop_shablon_mail_admin = "";
+
   if ($project_logotip == "") $project_logotip = "/img/logotip.png";
+
   if ($color_tema_html == "") $color_tema_html = "monokai";
   if ($color_tema_css == "") $color_tema_css = "monokai";
   if ($color_tema_js == "") $color_tema_js = "monokai";
   if ($color_tema_php == "") $color_tema_php = "monokai";
+
   if ($tab_obzor == "") $tab_obzor = "Обзор";
   if ($tab_show == "") $tab_show = "1";
   if ($jqueryui == "") $jqueryui = "1";

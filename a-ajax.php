@@ -5,19 +5,17 @@ header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache"); // HTTP/1.0
 require_once("mainfile.php");
-
-// Определяем устройство - компьютер, планшет или телефон
-require_once 'includes/Mobile_Detect.php';
-$detect = new Mobile_Detect;
-global $deviceType;
-$deviceType = ($detect->isMobile() ? ($detect->isTablet() ? 'tablet' : 'phone') : 'computer');
-
 global $prefix, $db, $module_name, $admin, $now, $adminmail, $ip, $siteurl;
 if (is_admin($admin)) {
   if (isset($_REQUEST['func']))   $func = $_REQUEST['func']; else die(); // Выбор функции
-  if (isset($_REQUEST['type']))   $type = $_REQUEST['type'];
-  if (isset($_REQUEST['id']))     $id = intval($_REQUEST['id']);
-  if (isset($_REQUEST['string'])) $string = $_REQUEST['string'];
+  if (isset($_REQUEST['type']))   $type = $_REQUEST['type']; else $type = 0;
+  if (isset($_REQUEST['id']))     $id = intval($_REQUEST['id']); else $id = 0;
+  if (isset($_REQUEST['string'])) $string = $_REQUEST['string']; else $string = "";
+  // Определяем устройство - компьютер, планшет или телефон
+  require_once 'includes/Mobile_Detect.php';
+  $detect = new Mobile_Detect;
+  global $deviceType;
+  $deviceType = ($detect->isMobile() ? ($detect->isTablet() ? 'tablet' : 'phone') : 'computer');
 /* ===================================================================================================== */
 if ($func == "oformlenie_show") { // Выводим содержание различных оформлений
   // Получаем названия -- заменить?

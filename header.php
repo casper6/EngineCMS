@@ -454,7 +454,11 @@ case "0": # Блок страниц раздела
 			$counterX = $row['counter'];
 			$golos = $row['golos'];
 			$comm = $row['comm'];
-			$foto_adres = $row['foto'];
+			$no_foto_open_text = preg_replace('/<img .*?>/is', '', $open_text);
+			if (preg_match_all('/<img(?:\\s[^<>]*?)?\\bsrc\\s*=\\s*(?|"([^"]*)"|\'([^\']*)\'|([^<>\'"\\s]*))[^<>]*>/i', $open_text, $m)) $foto_adres = $m[1][0];
+			else $foto_adres = "";
+			$no_html_open_text = strip_tags($open_text,"<ul><li><ol>");
+		//print_r($foto_adres);
 			$foto = "<img src='".$foto_adres."'>";
 			$search = $row['search'];
 			$price = $row['price']." руб."; // или другая валюта!
@@ -476,26 +480,16 @@ case "0": # Блок страниц раздела
 
 		if ($datashow == 1 or $shablon != "") { // Если показывать дату // доработать - функция из mainfile
 			$data = date2normal_view($row['date'])." ".$strelka." ";
-			/*
-			$dat = explode(" ",$row['date']);
-			$dat = explode("-",$dat[0]);
-			$p_date = intval($dat[2])." ".findMonthName($dat[1])." ".$dat[0];
-			$p_date_1 = $dat[2]." ".$dat[1]." ".$dat[0];
-			$date_now = date("d m Y");
-			$date_now2 = date("d m Y",time()-86400);
-			$date_now3 = date("d m Y",time()-172800);
-			if ($date_now == $p_date_1) $p_date = "Сегодня";
-			if ($date_now2 == $p_date_1) $p_date = "Вчера";
-			if ($date_now3 == $p_date_1) $p_date = "Позавчера";
-			$data = "".$p_date." $strelka ";
-			*/
 		} else $data = "";
+
+		// Начало замены
 
 		if ($shablon != "") {
 		  $tr = array(
 			"[№]"=>$p_id,
 			"[модуль]"=>$module,
 			"[№ папки]"=>$p_cid,
+			"[название папки]"=>$titles_papka[$p_cid],
 			"[название]"=>$title,
 			"[ссылка]"=>"<a href=-".$module."_page_".$p_id.$blank." class='block_title ".$class."'>".$title."</a>",
 			"[предисловие]"=>"<span id=block_open_text class='block_open_text ".$class."'>".$open_text."</span>",
@@ -507,6 +501,8 @@ case "0": # Блок страниц раздела
 			"[число комментарии]"=>$comm,
 			"[адрес фото]"=>$foto_adres,
 			"[фото]"=>$foto,
+			"[предисловие_без_фото]"=>$no_foto_open_text,
+			"[предисловие_без_html]"=>$no_html_open_text,
 			"[теги]"=>$search,
 			"[цена]"=>$price,
 			"[rss доступность]"=>$rss
@@ -524,37 +520,30 @@ case "0": # Блок страниц раздела
 		} else { // если без шаблона
 			 // Если показывать название папки
 			if (($catshow == 1 or $shablon != "") and $p_cid != 0) $cat = "<span class=\"block_li_cat ".$class."\">".$titles_papka[$p_cid]."</span> $strelka "; else $cat = "";
-					if ($openshow > 0) { // Если показывать предописание
-						//$textX .= "<div id=venzel class=\"venzel ".$class."\"></div>";
-						//if ($numlock > 1) $textX .= "<br>";
-						if (trim($main_text)!="" and $daleeshow == 1) {
-							if ($openshow == 1) {
-								$dalee = " <div id=dalee class=\"dalee ".$class."\"><a href=-".$module."_page_".$p_id.$blank.">".$dal."</a></div>";
-							} else {
-								$dalee = " <div id=dalee class=\"dalee ".$class."\">$dal</div>";
-							}
-						} else $dalee = "";
-						$open_text = "<span id=block_open_text class='block_open_text ".$class."'>".$open_text.$dalee."</span>";
-						
-						//if ($pic_ramka == 1) { // настройка используется для рамок изображений на сайте Самарских Родителей)
-							//$open_text = str_replace("<img","<div id=for_pic class=\"for_pic".$class."\"><img", str_replace("<IMG","<img",$open_text));
-						//}
-							if ($zagolovokin == 0) {
-								$zagolovok = "<span class='block_title ".$class."'><span class='block_li_data ".$class."'>".$data."</span>".$cat."<a class='block_title ".$class."' href='-".$module."_page_".$p_id.$blank."'>".$title."</a></span>";
-								$open_text = str_replace("[заголовок]", "", $open_text); 
-								//$zagolovok = str_replace("[заголовок]", "", $zagolovok); 
-							} else {
-								$zagolovok = "";
-								if ($openshow == 1) { 
-									$open_text = "<span class=a_block_title><a class=\"a_block_title ".$class."\" href=-".$module."_page_".$p_id.$blank.">".str_replace("[заголовок]","</span><span class=\"block_title ".$class."\"><span class=\"block_li_data ".$class."\">".$data."</span>".$cat."".$title."</span>",$open_text)."</a>"; // Вставляем Заголовок в блок!
-								} else {
-									$open_text = "<span class=a_block_title>".str_replace("[заголовок]","</span><span class=\"block_title ".$class."\">".$data."".$cat."".$title."</span>",$open_text).""; // Вставляем Заголовок в блок!
-								}
-							}
-						$textX .= "<div>".$zagolovok."".$open_text."</div>\n";
-					} else { // Если НЕ показывать предописание
-						$textX .= "<li class=\"block_li_title ".$class."\"><span class=\"block_li_data ".$class."\">".$data."</span>".$cat."<a href=-".$module."_page_".$p_id.$blank.">".$title."</a></li>";
+				if ($openshow > 0) { // Если показывать предописание
+					if (trim($main_text)!="" and $daleeshow == 1) {
+						if ($openshow == 1) {
+							$dalee = " <div id=dalee class=\"dalee ".$class."\"><a href=-".$module."_page_".$p_id.$blank.">".$dal."</a></div>";
+						} else {
+							$dalee = " <div id=dalee class=\"dalee ".$class."\">$dal</div>";
+						}
+					} else $dalee = "";
+					$open_text = "<span id=block_open_text class='block_open_text ".$class."'>".$open_text.$dalee."</span>";
+					if ($zagolovokin == 0) {
+						$zagolovok = "<span class='block_title ".$class."'><span class='block_li_data ".$class."'>".$data."</span>".$cat."<a class='block_title ".$class."' href='-".$module."_page_".$p_id.$blank."'>".$title."</a></span>";
+						$open_text = str_replace("[заголовок]", "", $open_text); 
+					} else {
+						$zagolovok = "";
+						if ($openshow == 1) { 
+							$open_text = "<span class=a_block_title><a class=\"a_block_title ".$class."\" href=-".$module."_page_".$p_id.$blank.">".str_replace("[заголовок]","</span><span class=\"block_title ".$class."\"><span class=\"block_li_data ".$class."\">".$data."</span>".$cat."".$title."</span>",$open_text)."</a>"; // Вставляем Заголовок в блок!
+						} else {
+							$open_text = "<span class=a_block_title>".str_replace("[заголовок]","</span><span class=\"block_title ".$class."\">".$data."".$cat."".$title."</span>",$open_text).""; // Вставляем Заголовок в блок!
+						}
 					}
+					$textX .= "<div>".$zagolovok."".$open_text."</div>\n";
+				} else { // Если НЕ показывать предописание
+					$textX .= "<li class=\"block_li_title ".$class."\"><span class=\"block_li_data ".$class."\">".$data."</span>".$cat."<a href=-".$module."_page_".$p_id.$blank.">".$title."</a></li>";
+				}
 		}			
 	}
 
@@ -705,7 +694,7 @@ case "4": # Блок папок раздела
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 case "5": # Блок голосования
 	$textX = "<script>$(showopros(".$idX.", 1, 0));</script>
-	<div id='show_opros".$idX."'>Загружается опрос...</div>";
+	<div id='show_opros".$idX."'><img src='images/loading.gif'></div>";
 	$block = str_replace("[".$titleX."]", $design_open.$textX.$design_close, $block);
 	$type = ""; break; 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1408,6 +1397,13 @@ case "31": # Блок JS
 			}
 		}
 	}
+	if (strpos($block, "[корзина]")) {
+		// Ставим ajax-блок Корзины
+		$sent = "<script>$(function() {	shop_show_card(); });</script><div id='shop_card'></div>";
+		$soderganie = str_replace("[корзина]", $sent, $soderganie);  // проверить soderganie и block
+		$block = str_replace("[корзина]", $sent, $block);
+	}
+
 	// Ставим почту
 	if (strpos($block, "письмо]")) {
 		// Заявка

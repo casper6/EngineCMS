@@ -1,5 +1,5 @@
 <?php
-$ver = '1.12'; // Версия CMS «ДвижОк»
+$ver = '1.13'; // Версия CMS «ДвижОк»
 header ("Content-Type: text/html; charset=utf-8");
 // Получение списка БД
 if (isset($_REQUEST['db'])) {
