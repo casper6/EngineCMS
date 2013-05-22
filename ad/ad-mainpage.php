@@ -1,7 +1,7 @@
 <?php
-$display_delete 	= true; # Админ-опция - для показа кнопок удаления основного содержания = true, для скрытия = false
-$display_addmenu 	= true; # Админ-опция - для показа кнопок создания основного содержания = true, для скрытия = false
 // Все «правила хорошего кода» написаны кровью, вытекшей из глаз программистов, читавших чужой код.
+$display_delete = true; # показ кнопок удаления основного содержания = true, для скрытия = false
+$display_addmenu = true; # показ кнопок создания основного содержания = true, для скрытия = false
 	if (strpos($_SERVER['PHP_SELF'], 'sys.php') === false) { die ("Доступ закрыт!"); }
 	$aid = trim($aid);
 	global $prefix, $db, $red;
@@ -136,7 +136,6 @@ function menu() {
 			if ($proc2 > 9) $proc2X = "<td class='red ffa4ac'>".$proc2."";
 			elseif ($proc2 > 5) $proc2X = "<td class='green b4f3b4'>".$proc2."";
 			else $proc2X = "<td class='f3f3a3'>".$proc2."";
-			
 			if ($proc2 > 2) {
 				$nu++;
 				$stat_page .= "<tr valign=top class='tr_hover'><td class='polosa gray'><a target=_blank href=/-".$row['module']."_page_".$row['pid'].">".$row['title']."</a><sup>".$nu."</sup></td><td width=100 class='polosa'><div class='h15 gradient' style='width:".$proc."%;'></div></td><td class='polosa'>".$row['counter']."</td>".$proc2X."</td><td class='polosa'>".$time."</td></tr>";
@@ -159,7 +158,6 @@ function mainpage($name="") {
 	elseif (intval($id)>0) { edit_main($id); }
 	elseif ($display_addmenu == false) echo "<center><br>Создание основных разделов сайта запрещено администратором.</center>";
 	else {
-		
 		echo "<table class='block_back w100 mw800' cellspacing=0 cellpadding=0><tr valign=top><td id='razdel_td' class='radius' width=340>
 
 			<div id='razdels' class='razdels'>
@@ -180,7 +178,6 @@ function mainpage($name="") {
 		 echo "<div id='mainrazdel5' class='dark_pole2'><a class='base_page' onclick=\"oformlenie_show('БД','5','base','/sys.php?op=mainpage&amp;name=base&amp;type=5')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='D'></span><span class='plus20'>Базы данных (таблицы)</span></div></a></div>";
 		 
 		echo "</div></td><td>
-
 			<div style='display:none;' id=addmain>
 			<div class='block_white2 radius add_oformlenie'>
 			<a title='Закрыть это окно' class=punkt onclick=\"show_animate('addmain')\"><div class='radius close_button'>&nbsp;x&nbsp;</div></a>
@@ -198,18 +195,13 @@ function mainpage($name="") {
 			Поля для страниц, аналог таксономии CMS Drupal</a>
 			<a href='sys.php?op=mainpage&amp;name=base&amp;type=5#1' class='bigicon'><img class='bigicon bi5' src='/images/1.gif'><b>Базу данных</b><br>
 			Удобная таблица с поиском для внутреннего или открытого использования</a>
-			<br><br>
-			</div></div>
-
+			<br><br></div></div>
 			<div class='m5'><button id='new_razdel_button' class='small' onclick='location.href=\"/sys.php?op=mainpage&amp;type=0&amp;id=1&amp;red=1\"' title='Редактировать главный дизайн'><span class='icon gray small' data-icon='7'></span>главный дизайн</button> 
 			<button id='new_razdel_button' class='small' onclick='location.href=\"/sys.php?op=mainpage&amp;type=1&amp;id=20\"' title='Редактировать главный стиль'><span class='icon gray small' data-icon='7'></span>главный стиль</button>
-
 			<div class='podrazdel radius' id='podrazdel'></div>
 			</td></tr></table>";
 		}
-	echo "</div>
-	</body>
-	</html>";
+	echo "</div></body></html>";
 }
 ###################################################################################################
 function create_main($type) {
@@ -273,9 +265,9 @@ function create_main($type) {
 	$typeX[2]  = "Текст или HTML"; 
 	$typeX[10] = "Меню сайта";
 	$typeX[5]  = "Голосование (опрос)"; 
-	$typeX[3]  = "Ротатор рекламы"; 
+	$typeX[3]  = "Ротатор – для блоков, текста или HTML"; 
 
-	$typeX[6]  = "Галерея из фото"; 
+	$typeX[6]  = "Фотогалерея"; 
 	$typeX[9]  = "Экстрактор страниц (по-умолчанию: фото)";
 
 	$typeX[4]  = "Папки раздела"; 
@@ -283,7 +275,7 @@ function create_main($type) {
 	$typeX[0]  = "Страницы раздела"; 
 	$typeX[1]  = "Комментарии раздела"; 
 
-	$typeX[12] = "Контактная форма";
+	$typeX[12] = "Форма для заполнения (анкеты, опросы и т.д.)";
 	$typeX[31] = "JavaScript";
 	$typeX[7]  = "PHP-код";
 	$typeX[11] = "Календарь";
@@ -499,7 +491,7 @@ function create_main($type) {
 	</div>
 	<br> <div class='notice warning black w100 mw800'>Если выбран дизайн, в нём обязательно должен быть блок [содержание], сам дизайн его обрамляет.</div></td></tr></table>";
 	break;
-	########################################################!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	########################################################
 	case "spisok": $type_opis = "поля (дополнительное поле для страниц)";
 		$create.="";
 			$modules = ""; // Выборка разделов заменить!
@@ -556,23 +548,23 @@ function create_main($type) {
 	########################################################
 	case "base": $type_opis = "базы данных (таблица)";
 	$create.="<div id=about class=block style='display:none;'>База данных — это таблица с удобным редактированием (по типу БД, а не электронных таблиц), поиском и фильтрами. Таблица может содержать любые поля и выводиться на страницы сайта или использоваться для внутреннего документооборота компании (доступно через администрирование).</b><br></div>
-	<table class='w100 mw800'><tr><td colspan=2>
+	
 	<input type='hidden' name='type' value='5'>
 	<input type='hidden' name='shablon' value=''>
-	</td></tr>
-	<tr valign=top><td width=50%>
-	<h2>Название:</h2><input type=text name=title size=30 class='w100 h40 f16' autofocus><br>(рус.)</td><td>
-	<h2>Обращение:</h2><input type=text name=namo size=30 class='w100 h40 f16'><br>(англ., без пробелов, мал. буквами)<br>
-	<b>Удалить</b> таблицу с таким же обращением (замена копии)? <select name='delete_table'><option value='1'>да</option><option value='0'>нет</option></select>
-	</td></tr>
-	<tr><td colspan=2>
-	<h2>Тип базы данных:</h2><select name='s_tip' class='w100 h40 f16'>
-	<option value='1'>открытая база данных (ограниченный доступ, полный доступ по паролю)</option>
-	<option value='2'>закрытая база данных (доступ по паролю)</option>
-	<option value='3'>интернет-магазин</option>
-	</select><br><br>
+	
+	<span class=h3>Название:</span><br>
+	<input type=text name=title size=30 class='w100 f16' id=rus_name autofocus><br>
+	Будет создан одноименный раздел, к которому подключится база данных. <a class=punkt onclick='$(\"#eng_name\").toggle(\"slow\");'>Англ. название</a> будет создано транслитом.
+      <div id=eng_name style='display:none;'>
+      <br><span class=h3>Англ. название:</span><br>
+      <input type=text name=namo size=30 class='w100 f16'><br>
+      <a href=# onclick=\"window.open('http://translate.google.ru/#ru/en/' + $('#rus_name').val(),'Перевод',' width=800,height=400'); return false;\"><b>Перевести русское название</b></a>. <i>Используются англ. буквы и знак «_», без пробелов. Примеры: «products», «catalog», «shop» и т.д.</i>
+      </div>
 
-	<a onclick=\"show_animate('excel')\" class='dark_pole'>Загрузить готовую таблицу</a><br>
+	<select name='delete_table' class='hide'><option value='1' selected>да</option><option value='0'>нет</option></select>
+	<select name='s_tip' class='hide'><option value='1' selected>открытая база данных (ограниченный доступ, полный доступ по паролю)</option><option value='2'>закрытая база данных (доступ по паролю)</option><option value='3'>интернет-магазин</option></select>
+
+	<p><a onclick=\"show_animate('excel')\" class='dark_pole'>Загрузить готовую таблицу</a></p>
 	<div style='display:none;' id=excel><div class=block_white2>
 	<b>Файл CSV</b> (в формат .CSV можно сохранить таблицу Excel или экспортировать из 1С, формат - utf-8) <br>
 	Если файл не выбран - будет создана пустая структура базы данных на основании Названий полей<br>
@@ -581,56 +573,55 @@ function create_main($type) {
 	<b>Разделение полей:</b> <select name=line_razdel><option value='##'>##</option><option value=';'>;</option><option value='#'>#</option></select> для 1С - ##, для Excel - ;<br>
 	<b>Экранирование полей:</b> <input type=text name=line_ekran size=5 value='\"'><br>
 	<b>Удалить первую строку?</b> <select name=delete_stroka><option value='1'>да</option><option value='0'>нет</option></select> если первая строка в таблице содержит названия столбцов
-	</div></div><br>
-
-	<b>Поля базы данных (названия столбцов):</b><br>
-
+	</div></div>
+	<div align=right><a class=pointer id=add_pole><span class=\"icon green large\" data-icon=\"p\"></span> Добавить столбец</a></div>
+	<span class=h2>Поля базы данных (названия столбцов):</span><br>
 	<a name=pole></a>
 	<table id=table  class='w100 mw800 table_light'>
 	  <tr valign=bottom>
-		<td width=18%>Имя поля <nobr>по-английски</nobr></td>
-		<td width=20%>Имя поля <nobr>по-русски</nobr></td>
+		<td width=40%>Название поля</td>
 		<td width=10%>Тип данных</td>
-		<td width=15%>Важно/Обязательно</td>
-		<td width=15%>Видимость</td>
-		<td width=20%>Замена информации</td>
-		<td width=2% align=center>-</td>
+		<td width=10%>Важно/Обязательно</td>
+		<td width=10%>Видимость</td>
+		<td width=28%>Замена информации</td>
+		<td width=2%></td>
 	  </tr>
-
-	<tr id=pole><td width=18%><input type=text name=pole_name[] size=15 class='w100' /></td><td width=20%><input type=text name=pole_rusname[] size=15 class='w100' /></td><td width=10%><label><select name=pole_tip[] class='w100'><option value='строка' selected=selected>Строка (до 250 букв)</option><option value='строкабезвариантов'>Строка без выбора вариантов</option><option value='число'>Число</option><option value='список'>Список</option><option value='текст'>Текст</option><option value='дата'>Дата</option><option value='датавремя'>Дата-Время</option><option value='фото'>Фото</option><option value='минифото'>МиниФото</option><option value='файл'>Файл</option><option value='ссылка'>Ссылка</option></select></label></td><td width=15%><label><select name=pole_main[] class='w100'><option value=0>не важно</option><option value=1>основная категория</option><option value=2>вторичная категория</option><option value=3>обязательно заполнять</option><option value=4>не важно и не печатать</option><option value=6>не важно, не печатать и не показывать</option><option value=7>обязательно, не печатать и не показывать</option><option value=5>пустая для печати</option></select></label></td><td width=15%><label><select name=pole_open[] class='w100'><option value=0 selected=selected>видно везде</option><option value=1>не видно нигде</option><option value=2>видно только на странице</option><option value=3>видно только по паролю</option></select></label></td><td width=20%><label><input type=text name=pole_rename[] size=15 class='w100' /></label></td><td><!-- <a href=# class=dark_pole id=del>X</a> --></td></tr>
+	<tr id=pole_0><td>
+	<input type=text name=pole_rusname[] size=15 class='w100' /><a class=punkt onclick='show_eng(this)'>Англ. название</a>
+	<span class='eng hide'><br><input type=text name=pole_name[] size=15 class='w100' /></span>
+	</td><td><select name=pole_tip[] class='w100'><option value='строка' selected=selected>Строка (до 250 букв)</option><option value='строкабезвариантов'>Строка без выбора вариантов</option><option value='число'>Число</option><option value='список'>Список</option><option value='текст'>Текст</option><option value='дата'>Дата</option><option value='датавремя'>Дата-Время</option><option value='фото'>Фото</option><option value='минифото'>МиниФото</option><option value='файл' disabled>Файл</option><option value='ссылка'>Ссылка</option></select></td><td><select name=pole_main[] class='w100'><option value=0>не важно</option><option value=1>основная категория</option><option value=2>вторичная категория</option><option value=3>обязательно заполнять</option><option value=4>не важно и не печатать</option><option value=6>не важно, не печатать и не показывать</option><option value=7>обязательно, не печатать и не показывать</option><option value=5>пустая для печати</option></select></td><td><select name=pole_open[] class='w100'><option value=0 selected=selected>видно везде</option><option value=1>не видно нигде</option><option value=2>видно только на странице</option><option value=3 disabled>видно только по паролю</option></select></td><td><input type=text name=pole_rename[] size=15 class='w100' /></td><td><a class=pointer onclick='del_pole(this)'><span class=\"icon red medium\" data-icon=\"X\"></span></a></td></tr>
 
 	</table>
+	<div id=id0></div>
 
-	  <div id=id0></div>
-	  
-	<input type=hidden id=nu size=3 value='1'>
-	<div align=right><a href=#pole class=dark_pole id=add_pole>Добавить поле в таблицу</a> (например: название, описание, количество или стоимость...)</div>
-
-	<script type=text/javascript>
-	$(document).ready(
-	function(){
+	<script>
+	var id = 1;
+	$(function(){
 		$('#add_pole').click(function(){
-		  $('#pole').clone().appendTo('#table');
-		  var newValue = parseInt($('#nu').val()) + 1;
-		  $('#nu').val(newValue);
-		});
-		$('#pole').click(function(){
-			// $('#pole').closest(this).empty();
-			// $(this).empty();
+		  $('#pole_0').clone().attr('id', 'pole_'+id).appendTo('#table');
+		  //$('#pole_'+id).closestattr('id', 'eng_pole_'+id)
+		  id = id + 1;
 		});
 	});
+	function show_eng(x) {
+		$(x).parents('tr').find('.eng').toggle(); 
+		//$(x).parents('.eng').hide();
+	}
+	function del_pole(x) {
+		if ($(x).parents('tr').attr('id') != 'pole') $(x).parents('tr').empty(); 
+		else alert('Первая строка не удаляется.');
+	}
 	</script>
 
-	<br><b>Добавить поле Голосование (golos, англ.)?</b> <select name=add_pole_golos><option value='1'>да</option><option value='0' selected>нет</option></select>
-	<br><b>Добавить поле Комментарии (comm, англ.)?</b> <select name=add_pole_comm><option value='1'>да</option><option value='0' selected>нет</option></select>
-	<br><b>Добавить поле Количество проданного товара (kol, англ.)?</b> <select name=add_pole_kol><option value='1'>да</option><option value='0' selected>нет</option></select>
+	<br><b>Добавить поле Голосование?</b> <select name=add_pole_golos><option value='1'>да</option><option value='0' selected>нет</option></select>
+	<br><b>Добавить поле Комментарии?</b> <select name=add_pole_comm><option value='1'>да</option><option value='0' selected>нет</option></select>
+	<br><b>Добавить поле Количество проданного товара?</b> <select name=add_pole_kol><option value='1'>да</option><option value='0' selected>нет</option></select>
 	<br><br>Если вы выбрали тип поля «Список» - в ячейке «Замена информации» напишите слова этого поля через запятую!
-	<br><br>Поля id (порядковый номер) и active (состояние активности) будут добавлены к любой таблице автоматически.<br><br>
-	<b>После создания базы данных, создайте Раздел для нее и подключите базу в настройках раздела вместо его страниц и папок.</b>
+	<br><br>Поля № и Активность будут добавлены к любой таблице.<br><br>
+	
 	<br><br>Готовые фильтры для англ. названий: data (дата), data2 (дата 2), men (менеджер), company (фирма)
 	<input type=hidden name=id value=''>
-	<input type=hidden name=op value=".$admintip."_save>
-	</td></tr></table>";
+	<input type=hidden name=op value=".$admintip."_save>";
 	break;
 	########################################################
 	case "shablon": $type_opis = "шаблона (оформление раздела или блока)";
@@ -659,8 +650,7 @@ function create_main($type) {
 	</div>
 	</form>";
 }
-
-#####################################################################################################################
+############################################################################################
 function edit_main($id) {
 	global $tip, $admintip, $prefix, $db, $red, $nastroi;
 	echo "<div id=podrazdel></div>";
@@ -744,8 +734,6 @@ function edit_main($id) {
 	$spisok_names = array("нет");
 	$result2 = $db->sql_query("select name, title, useit from ".$prefix."_mainpage where `tables`='pages' and type='4'");
 	while ($row2 = $db->sql_fetchrow($result2)) { 
-		//if ($row2['useit']==0) $use_it = "все поля"; 
-		//else { $use_it = $row2['useit']; $use_it = $razdel_names[$use_it]; }
 		if ($row2['useit'] != 0) { 
 			$use_it = $row2['useit']; 
 			if ( isset($razdel_names[$use_it]) ) $use_it = $razdel_names[$use_it];
@@ -792,7 +780,6 @@ function edit_main($id) {
 	<textarea class='big w100 h40 f16' name='title' rows='1' cols='10'>".$title."</textarea>
 	".help_design()."
 	<span class=h2>Содержание дизайна (HTML):</span><span class=f12>[содержание] - блок вывода страниц.</span>";
-	// [корзина] - общая корзина для всех разделов типа \"магазин\"<br>
   	redactor($red, $text, 'text'); // редактор: типа редактора, редактируемое поле
 
 	echo "<span class=h2>Использованные в дизайне стили CSS</span> <span class=f12>Зажмите Ctrl для выбора нескольких стилей</span><br>
@@ -810,7 +797,7 @@ function edit_main($id) {
 
 	if ($type == "2") { ############################### ОТКРЫТИЕ РАЗДЕЛА
 
-	############################################################################################################################
+	####################################################################
 	if ($nastroi == 1) { // начало редактирования настроек раздела
 
 	// выделим имени модуля раздела и настройки
@@ -1165,22 +1152,9 @@ function edit_main($id) {
 	</tr>
 	</table>
 	</div>";
-
-	/*
-	<a class='dark_pole align_center' onclick=\"show_animate('block11');\"><h2 style='color:red;'>В разработке...</h2>
-	</a><div id=block11 style='display: none;'>
-	<table width=90% cellpadding=2 cellspacing=0>
-	<tr bgcolor=#FF6666>
-	<td>Тип информации в разделе (по умолчанию - текст)</td>
-	<td>".select("options[media]", "4,3,2,1,0", "музыка,видео,flash,фотогалерея,текст", $media)."</td>
-	</tr>
-	</table>
-	</div>";
-	*/
-	############################################################################################################################
+	######################################################################
 	} else { // конец редактирования настроек раздела
 	// начало редактирования раздела
-		
 		echo "Редактирование раздела</span>";
 		if (intval($nastroi) != 1) red_vybor();
 		echo "</div>
@@ -1239,7 +1213,7 @@ function edit_main($id) {
 	$class=$alternative_title_link=$cid_open=$no_show_in_razdel=$watermark=$show_in_papka="";
 	$sort = "date desc";
 	$papka_sort = "sort, title";
-	$razdel_open_name = "Открыть раздел"; //
+	$razdel_open_name = "Открыть раздел";
 	$razdel_open2_name = "Открыть раздел";
 	$calendar = ""; // Календарь - перенаправление на дату из поля.
 	$show_in_razdel = "все";
@@ -1673,9 +1647,6 @@ function edit_main($id) {
 	<script>$(function(){pics_refresh('#textarea');$('#textarea').hide();})</script>";
 	if ($name == 31) redactor($red, $text, 'text', '', 'javascript');
 	if ($name == 7) redactor('2', "<? ".$text." ?>", 'text', '', 'php');
-
-	//if ($name == 10) $text = utf8_decode($text);
-
 	if ($name == 10 && $re_menu == 1) echo "<div style='display:none'>";
 	if ($name == 10 && $re_menu == 1) redactor($red, '', 'text', '');
 	elseif ($name == 10 && $re_menu != 1) redactor($red, $text, 'text', '');
@@ -1729,7 +1700,10 @@ function edit_main($id) {
 			var link = $("#link").val();
 			var link_title = $("#link_title").val();
 			x = "<option value=\'" + link + "\'>" + link_title + "</option>";
-			if (top == 1) { 
+			if (top == 2) { 
+				$("#menu_element option:selected").append( x ); 
+				//$("#menu_element :first").attr("selected", "selected");
+			} else if (top == 1) { 
 				$("#menu_element").prepend( x ); 
 				$("#menu_element :first").attr("selected", "selected");
 			} else {
@@ -1799,7 +1773,8 @@ function edit_main($id) {
 		<input id=link_title class='w100 mb10'>
 		<div id='izmena' style='display:none' class='mb20'><a class='button blue' onclick='red_menu()'>Изменить</a><br></div>
 		<a class='button green' onclick='add_menu(0)'>+ Добавить в конец меню</a>
-		<a class='button green small punkt' onclick='add_menu(1)'>в начало</a><br><br>
+		<a class='button green small punkt' onclick='add_menu(1)'>в начало</a>
+		<a class='button green small punkt' onclick='add_menu(2)'>после выбранного</a><br><br>
 
 		Выбрать для добавления в меню:<br><a class='button' onclick='$(\"#link\").val(\"/\");$(\"#link_title\").val(\"Главная\");'>Главная</a> 
 		<a class='button black' onclick='$(\"#razdel\").toggle();'>Раздел</a> 
@@ -1929,7 +1904,7 @@ $row = $db->sql_fetchrow($result);
 $mod_name = $row['name'];
 recash("/-".$mod_name); // Удаление кеша раздела
 
-if ($type == 2) {
+if ($type == 2 || $type == 5) {
 	if (trim($namo) == "") $namo = strtolow(translit_name(trim($title)));
 	else $namo = strtolow(translit_name(trim($namo)));
 }
@@ -2017,7 +1992,7 @@ if ($numrows = $db->sql_numrows($result) > 0) {
 		if ($s_tip==1 or $s_tip==4) $and = "&shablon=".$text; // если тип - текст или строка
 		if ($s_tip==2) $and = "&".$text; // если тип - файл
 		$text = "spisok|type=".$s_tip.$and;
-	} ////////////////////////////////////////////////////////////////////////
+	}
 
 	if ($type==5) { //////////////////////////////////////////////////////////
 		global $delete_table, $line_ekran, $line_close, $line_razdel, $delete_stroka, $add_pole_golos, $add_pole_comm, $add_pole_kol, $pole_rename, $pole_open, $pole_main, $pole_tip, $pole_rusname, $pole_name;
@@ -2029,10 +2004,11 @@ if ($numrows = $db->sql_numrows($result) > 0) {
 		$add_pole_kol = intval($add_pole_kol);
 
 		// Верстаем данные, которые заносятся в таблицу
-		//print_r($pole_name);
 		$text = array();
 		$n = count($pole_name);
 		for ($x=0; $x < $n; $x++) {
+			if (trim($namo) == "") $pole_name[$x] = strtolow(translit_name(trim($pole_rusname[$x])));
+			else $pole_name[$x] = strtolow(translit_name(trim($pole_name[$x])));
 			$text[] = $pole_name[$x]."#!#".$pole_rusname[$x]."#!#".$pole_tip[$x]."#!#".$pole_main[$x]."#!#".$pole_open[$x]."#!#".$pole_rename[$x];
 		}
 		$text2 = implode("/!/",$text);
@@ -2107,18 +2083,15 @@ if ($numrows = $db->sql_numrows($result) > 0) {
 	$shablon = mysql_real_escape_string(stripcslashes($shablon));
 	$db->sql_query("INSERT INTO ".$prefix."_mainpage (`id`, `type`, `name`, `title`, `text`, `useit`, `shablon`, `counter`, `tables`, `color`, `description`, `keywords`) VALUES (NULL, '".$type."', '".$namo."', '".$title."', '".$text."', '".$useit."', '".$shablon."', '0', 'pages', '0', '', '');") or die('Не удалось создать. Попробуйте еще раз и в случае неудачи обратитесь к разработчику.');
 		}
-
 	// узнаем id
 	if ($id == 0) $row2 = $db->sql_fetchrow($db->sql_query("select `id` from ".$prefix."_mainpage where `tables`='pages' and `type`='".$type."' and `name`='".$namo."' and `title`='".$title."' and `text`='".$text."' and `useit`='".$useit."'")) or die("SQL: select `id` from ".$prefix."_mainpage where `tables`='pages' and `type`='".$type."' and `name`='".$namo."' and `title`='".$title."' and `text`='".$text."' and `useit`='".$useit."'");
-
-	// после сохранения откроем настройку раздела или блока
-	//if ( ($nastroi == 1 and $type == 2) or ($id != 0 and $type == 2) ) Header("Location: sys.php"); 
+	// после сохранения откроем настройку раздела или блока 
 	if ($type == 2) Header("Location: sys.php?op=mainpage&id=".$row2['id']."&nastroi=1");
 	else Header("Location: sys.php?op=mainpage&type=element");
 	die;
 }
 ##################################################################################################
-function mainpage_razdel_color($id, $color) {
+function mainpage_razdel_color($id, $color) { // заменить на аякс?
 	global $tip, $admintip, $prefix, $db;
 	$db->sql_query("UPDATE ".$prefix."_mainpage SET `color`='".$color."' WHERE `tables`='pages' and `id`='".$id."';");
 	Header("Location: sys.php");
@@ -2232,7 +2205,7 @@ function spisok_help() { // проверить вызов
 	<div id=spisok_6 style='display:none;'><b>«число»:</b> можно написать заготовку-шаблон, которая будет использоваться по-умолчанию как значение данного поля.<br></div>
 	<div id=spisok_7 style='display:none;'><b>«регион»:</b> для него пока что нет никаких настроек и шаблон ему не нужен.</div>";
 }
-#####################################################################################################################
+#########################################################################################
 function block_help() { // проверить вызов
 	return "<hr>
 	<p>Параметры прописываются как передача переменных в скриптах, например: <b>size=10&open_all=1</b><br>
@@ -2316,7 +2289,6 @@ function block_help() { // проверить вызов
 	<td> сортировка папок, <font color=green>sort, title - по-умолчанию</font></td></tr>
 
 
-
 	<tr><td colspan=2><br><strong>Для блока опроса:</strong></td></tr>
 	<tr><td><strong>opros_type=</strong></td>
 	<td> тип опроса, <font color=green>1 - одиночный выбор (кружки)</font>, <font color=red>0 - множественный выбор (флажки)</font></td></tr>
@@ -2357,7 +2329,7 @@ function block_help() { // проверить вызов
 	<font color=green><b>зеленым - по умолчанию</b></font>, <font color=red><b>красным - не работает</b></font>
 	";
 }
-	#####################################################################################################################
+
 	switch ($op) {
 	    case "mainpage":
 		    if (isset($name)) { // узнать id
@@ -2366,8 +2338,7 @@ function block_help() { // проверить вызов
 				$id = $row['id'];
 		    }
 		    if (isset($id)) mainpage($id); else mainpage();
-	    break;
-		
+	    	break;
 	    case "mainpage_save":
 		    if (!isset($descriptionX)) $descriptionX = "";
 		    if (!isset($keywordsX)) $keywordsX = "";
@@ -2378,23 +2349,19 @@ function block_help() { // проверить вызов
 		    if (!isset($useit)) $useit = "";
 		    if (!isset($shablon)) $shablon = "";
 		    mainpage_save($id, $type, $namo, $title, $text, $useit, $shablon, $descriptionX, $keywordsX, $s_tip);
-	    break;
-		
+	    	break;
 	    case "mainpage_del":
 	    	mainpage_del($id, $type, $name);
-	    break;
-	    
+	    	break;
 		case "mainpage_recycle_spiski":
 			mainpage_recycle_spiski();
-		break;
-		
+			break;
 	    case "mainpage_create_block":
 	    	mainpage_create_block($title, $name, $text, $modul, $useit, $design);
-	    break;
-		
+	    	break;
 		case "mainpage_razdel_color":
 			mainpage_razdel_color($id, $color);
-		break;
+			break;
 	}
 }
 ?>

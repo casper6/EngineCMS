@@ -347,12 +347,9 @@ function redactor($type, $txt, $name, $name2="", $style="html", $return="echo") 
     if ($style == "css") $theme=$color_tema_css;
     if ($style == "php") $theme=$color_tema_php;
     if ($style == "javascript") $theme=$color_tema_js;
-    // Преобразование textarea (замена на русскую букву е, только для редактора)
-    //$txt = str_replace("textarea","tеxtarea",$txt); // ireplace
-    //$txt = str_replace("&","&amp;",$txt);
     $echo .= "<textarea id='".$name."X' class='hide' name='".$name."'>".$txt."</textarea>
     <pre id='".$name."' class='w100 h700'></pre><br>
-    <script src='http://rawgithub.com/ajaxorg/ace-builds/master/src-noconflict/ace.js' type='text/javascript' charset='utf-8'></script><script>var ".$name." = ace.edit('".$name."');
+    <script src='/includes/ace-redactor/ace.js'></script><script>var ".$name." = ace.edit('".$name."');
           ".$name.".getSession().setValue( $('#".$name."X').val() );
           ".$name.".setTheme('ace/theme/".$theme."');
           ".$name.".getSession().setMode('ace/mode/".$style."');

@@ -37,7 +37,7 @@ hr{clear:both;border-bottom:0;border-top:1px dotted #ccc;border-right:0;border-l
 .align_center_to_left {position: relative;right: 50%;float: right;}
 .align_center_to_right {position: relative;z-index: 1;right: -50%;}
 
-a.base_page {text-decoration:none; cursor:pointer;}
+a.base_page, .pointer {text-decoration:none; cursor:pointer;}
 a.base_page:hover {background:#FFFFFF;}
 .base_open_page {background:#BFFFBF;}
 

@@ -1,9 +1,5 @@
 <?php
-
-if(!eregi('image/', $_FILES['file']['type'])) {
-  echo 'Это не фотография!';
-  exit(0);
-}
+if(!eregi('image/', $_FILES['file']['type'])) exit(0);
 
 foreach ($_FILES['file'] as $secvalue) {
     $secvalue = str_replace("(", "&#040;", str_replace(")", "&#041;", $secvalue));
@@ -27,29 +23,28 @@ foreach ($_FILES['file'] as $secvalue) {
         die;
     }
 }
-$_FILES['file']['type'] = strtolower($_FILES['file']['type']);
-if ($_FILES['file']['type'] == 'image/png' 
-|| $_FILES['file']['type'] == 'image/jpg' 
-|| $_FILES['file']['type'] == 'image/gif' 
-|| $_FILES['file']['type'] == 'image/jpeg'
-|| $_FILES['file']['type'] == 'image/pjpeg') {	
-    $filename = md5(date('YmdHis')).'.jpg';
-    $file = '../img/'.$filename;
-    copy($_FILES['file']['tmp_name'], $file);
-	$array = array(
-		'filelink' => '/img/'.$filename
-	);
-	echo stripslashes(json_encode($array));   
-}
 
-function is_image($image_path) { 
-    if (!$f = fopen($image_path, 'rb')) return false;
-    $data = fread($f, 8);
-    fclose($f);
-    // проверка сигнатуры
-    if (array_pop(unpack('H12', $data)) == '474946383961' || array_pop(unpack('H12', $data)) == '474946383761') return 'gif';
-    else if (array_pop(unpack('H4', $data)) == 'ffd8') return 'jpg';
-    else if (array_pop(unpack('H16', $data)) == '89504e470d0a1a0a') return 'png';
-    return false;
+$folder =  '../img/';//директория в которую будет загружен файл
+$type = str_replace("image/","",strtolower($_FILES['file']['type']));
+if ($type == 'png' || $type == 'jpg' || $type == 'gif' || $type == 'jpeg' || $type == 'pjpeg') {
+  $foto =  md5(date('YmdHis')).'.'.$type;
+  if (is_uploaded_file($_FILES['file']['tmp_name'])) {
+    if (move_uploaded_file($_FILES['file']['tmp_name'], $folder.$foto)) {
+      $image = new Imagick($folder.$foto);
+      // сжатие
+      list($width, $height, $type, $attr) = getimagesize($folder.$foto);
+      if ($width > 1000) $image->thumbnailImage(1000,0); // по горизонтали до 1000 пикселей
+      else if ($height > 1200) $image->thumbnailImage(0,1200); // по вертикали до 1200 пикселей
+      // ориентация фото
+      $orientation = exif_read_data($folder.$foto);
+      if ($orientation['Orientation'] !== 0 && $orientation['Orientation'] !== 1 && $orientation['Orientation'] != "") {
+          $degres = ($orientation['Orientation']- 1) * 90; 
+          $image->rotateImage('', $degres);
+      }
+      $image->writeImage();
+    }
+    $array = array('filelink' => '/img/'.$foto);
+    echo stripslashes(json_encode($array)); 
+  }
 }
 ?>

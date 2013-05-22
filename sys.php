@@ -1,28 +1,10 @@
 <?php
-/* Движок: Content Management System */
-
-/*
-Замена иконок!
-<span class=\"icon gray large\" data-icon=\"Q\"></span> откл.
-<span class=\"icon gray large\" data-icon=\"H\"></span> СЕРДЦЕ
-<span class=\"icon gray large\" data-icon=\"J\"></span>
-<span class=\"icon gray large\" data-icon=\"K\"></span> НРАВИТСЯ
-<span class=\"icon gray large\" data-icon=\"T\"></span> корзина
-<span class=\"icon gray large\" data-icon=\"L\"></span> НЕ НРАВИТСЯ
-<span class=\"icon gray large\" data-icon=\";\"></span> ВЕРНУТЬ
-<span class=\"icon gray large\" data-icon=\"'\"></span> КОММЕНТАРИЙ
-<span class=\"icon gray large\" data-icon=\"D\"></span> бд
-<span class=\"icon gray large\" data-icon=\"Z\"></span> КЛЮЧ НАСТРОЙКИ
-<span class=\"icon gray large\" data-icon=\"X\"></span> ЗАКРЫТЬ
-<span class=\"icon gray large\" data-icon=\"C\"></span> ПОДТВЕРДИТЬ
-<span class=\"icon gray large\" data-icon=\"S\"></span> мэйл
-<span class=\"icon gray large\" data-icon=\"V\"></span> МОЛНИЯ
-<span class=\"icon gray large\" data-icon=\"F\"></span> ОГОНЬ  
-<span class=\"icon gray large\" data-icon=\"G\"></span>  ГАЙКА НАСТРОЕК
-
-*/
-
-
+// Все «правила хорошего кода» написаны кровью, вытекшей из глаз программистов, читавших чужой код.
+header("Expires: " . date("r", time() + 3600));
+header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache"); // HTTP/1.0
 define('ADMIN_FILE', true);
 if(isset($aid)) {
   if(!empty($aid) AND (!isset($admin) OR empty($admin)) AND $op!='login') {
@@ -110,10 +92,7 @@ global $razdel_sort; // Сортировка разделов в Содержа�
 $razdel_sort = intval($razdel_sort);
 if ( $razdel_sort == 1 or $razdel_sort == 2 or $razdel_sort == 0 ) setcookie("razdel_sort", $razdel_sort, time()+60*60*24*360);
 
-/******************/
-/* Вход в Админку */
-/******************/
-
+// Вход в Админку
 function login() {
 	global $admin_file, $lang;
 	mt_srand ((double)microtime()*1000000);
@@ -134,10 +113,9 @@ echo "<title>Вход в Администрирование</title>
 <meta name='author' content='13i'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0'>
 <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
-<!--[if lt IE 9]><script src='http://html5shim.googlecode.com/svn/trunk/html5.js'></script><![endif]-->
-<meta http-equiv='pragma' content='no-cache' /><meta http-equiv='no-cache' /><meta http-equiv='cache-control' content='no-cache' />
-<link rel='stylesheet' href='ad-style.css' type='text/css'>
-<link REL='shortcut icon' href='images/favicon_cms.png' type='image/x-icon'><script src='http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js'></script>
+<!--[if lt IE 9]><script src='includes/html5.js'></script><![endif]-->
+<meta http-equiv='pragma' content='no-cache' /><meta http-equiv='no-cache' /><meta http-equiv='cache-control' content='no-cache' /><link rel='stylesheet' href='ad-style.css' type='text/css'>
+<link REL='shortcut icon' href='images/favicon_cms.png' type='image/x-icon'><script src='includes/jquery183.min.js'></script>
 <script type='text/javascript' src='includes/css-frameworks/kickstart/js/kickstart.js'></script><link rel='stylesheet' type='text/css' href='includes/css-frameworks/kickstart/css/kickstart.css' media='all' /><link rel='stylesheet' type='text/css' href='includes/css-frameworks/kickstart/style.css' media='all' />
 </head>\n
 <body style='background: url(images/adfon/23.png);' class='elements'>\n
@@ -149,7 +127,7 @@ echo "<title>Вход в Администрирование</title>
 <input class='large green mt5 w100' type=submit value=' Войти '>
 <input type=hidden name=password value='".$random."'>
 <input type=hidden name=op value=login></form></div>
-<script>$('#form').submit(function(e) {e.preventDefault();$('#form').animate({opacity: 0.1}, 2500,function(){ $('#form').unbind('submit').submit(); });});</script></body></html>";
+<script>$('#form').submit(function(e) {e.preventDefault();$('#form').animate({opacity: 0.1}, 1500,function(){ $('#form').unbind('submit').submit(); });});</script></body></html>";
 }
 
 function GraphicAdmin() {
@@ -168,26 +146,20 @@ function GraphicAdmin() {
 				}
 				$db->sql_query('REPAIR TABLE '.implode(", ",$local_query));
 			}
-			//echo "База данных сжата до ".(intval($total_all)/1000)." Мбайт";
 		}
 	}
-	///////////////////////////////////////////////////////////////
 	// Показываем основные возможности - ред. разделов.
-	///////////////////////////////////////////////////////////////
-
 	// Комментарии
 	$comments = "";
 	$pageslist = "";
 	$pages = "pages";
-
 	$date_now1 = date("Y.m.d");
 	$date_now2 = date("Y.m.d",time()-86400);
 	$date_now3 = date("Y.m.d",time()-172800);
-	
 	$comm_segodnya = $db->sql_numrows($db->sql_query("select `cid` from ".$prefix."_".$pages."_comments where `tables`='pages' and data like '".$date_now1." %'"));
 	$comm_vchera = $db->sql_numrows($db->sql_query("select `cid` from ".$prefix."_".$pages."_comments where `tables`='pages' and data like '".$date_now2." %'"));
 	$comm_pozavchera = $db->sql_numrows($db->sql_query("select `cid` from ".$prefix."_".$pages."_comments where `tables`='pages' and data like '".$date_now3." %'"));
-		
+
 	if ($show_userposts != 0) {
 		$num_add_pages = $db->sql_numrows($db->sql_query("SELECT `pid` from ".$prefix."_pages where (`active`='2' or `active`='3') and `tables`!='del'"));
 	}
@@ -281,7 +253,7 @@ function GraphicAdmin() {
 		if ($nam!="index") {
 			if ($size < 1) $size = ""; 
 			if ($size_off < 1) $size_off = ""; else $size_off = "-".$size_off;
-			$type_opisX = "<span class='green' title='Включенные страницы'>".$size."</span>&nbsp;<span class='red' title='Отключенные страницы'>".$size_off."</span>"; //.$sizeX;
+			$type_opisX = "<span class='green' title='Включенные страницы'>".$size."</span>&nbsp;<span class='red' title='Отключенные страницы'>".$size_off."</span>";
 			if ($size < 1 and $size_off < 1) $type_opisX = "";
 		} elseif ($nam=="index") $type_opisX = "";
 		if ($current_type != $type) $current_type = $type;
@@ -289,7 +261,6 @@ function GraphicAdmin() {
 		$options = $text[1];
 		$text = $text[0];
 		if (strpos($options,"base=")) $text = "base";
-
 		switch ($color) { // Цвета разделов
 			case "1": // Частоупотребляемый зеленый
 			$color = "lightgreen"; break;
@@ -303,7 +274,7 @@ function GraphicAdmin() {
 			$color = "gray";
 			break;  // Стандартный белый
 		}
-		///////////// Для базы данных !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		// Для базы данных !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		$link = "";
 		$doping = "";
 		$iconpage = "";
@@ -366,21 +337,16 @@ function GraphicAdmin() {
 	if ($display_errors == true) print("<!-- запросов: $db->num_queries \n $db->num_q -->");
 
 	// Генерация XML-карты сайта
-	//////////////////////////////////////
 	$map = false;
 	if (file_exists("map.xml")) if (date("Y-m-d", filectime("map.xml")) == date("Y-m-d")) $map = true;
 	if ($map == false) {
-		//$db->sql_query("TRUNCATE TABLE `".$prefix."_cash`");
-
 		global $siteurl, $show_reserv;
 		$output = "";
 				$sql = "SELECT `pid`, `module`, `date` from ".$prefix."_".$pages." where `tables`='pages' and `active`='1' order by `date` desc limit 0,40000";
 				$result = $db->sql_query($sql) or die("Не могу добавить в карту сайта страницы. Обратитесь к разработчику.");
-				
 				while ($row = $db->sql_fetchrow($result)) {
 					$pid = $row['pid'];
 					$module = $row['module'];
-					//$comm = $row['comm'];
 					$dat = explode(" ",$row['date']);
 					$dat = $dat[0];
 					// Добавление страниц
@@ -388,8 +354,6 @@ function GraphicAdmin() {
 					// Добавление страниц с комментариями дополнительно
 					//if ($comm > 0) $output .= "<url>\n<loc>http://".$siteurl."/-".$module."_page_".$pid."_comm</loc>\n<lastmod>".$dat."</lastmod>\n<priority>0.6</priority>\n</url>\n";
 				}
-
-				//$output .= "\n";
 				// Добавление разделов
 				$sql = "SELECT `name` from ".$prefix."_mainpage where `tables`='pages' and `name`!='index' and `type`='2'";
 				$result = $db->sql_query($sql) or die("Не могу добавить разделы в карту сайта. Обратитесь к разработчику.");
@@ -398,7 +362,6 @@ function GraphicAdmin() {
 					$module = $row['name'];
 					$output .= "<url>\n<loc>http://".$siteurl."/-".$module."</loc>\n<changefreq>weekly</changefreq>\n<priority>0.5</priority>\n</url>\n";
 				}
-
 			// Добавление тегов
 			$tags = array();
 			$sql = "select search from ".$prefix."_pages where `tables`='pages' and active='1' limit 0,1000";
@@ -412,7 +375,6 @@ function GraphicAdmin() {
 					}
 				}
 			}
-
 			$tags = array_count_values($tags);
 			$tags = array_unique($tags);
 			if (count($tags) > 0) {
@@ -439,8 +401,8 @@ function GraphicAdmin() {
 	}
 	echo "</div>\n</body>\n</html>";
 }
-/////////////////////////////////////////////////////////
-function red_vybor() { // Выбор редактора (перенести в админку)
+
+function red_vybor() { // Выбор редактора
   global $url;
   $link = str_replace("&red=0","",str_replace("&red=1","",str_replace("&red=2","",str_replace("&red=3","",str_replace("&red=4","",$url)))));
   echo "
@@ -468,10 +430,11 @@ function red_vybor() { // Выбор редактора (перенести в �
 
   </div>";
 }
+
 function adminMain() {
 	include("ad-header.php");
 	GraphicAdmin();
-	admin_footer(); //include("ad-footer.php");
+	admin_footer();
 }
 
 if($admintest) {
@@ -490,8 +453,6 @@ if($admintest) {
 			setcookie("admin", false);
 			$admin = "";
 			die("Вы вышли из администрирования!");
-			//Header("Refresh: 2; url=".$admin_file.".php");
-			//admin_footer();
 			break;
 		case "login";
 			unset($op);

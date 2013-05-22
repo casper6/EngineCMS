@@ -1,7 +1,5 @@
 <?php
 	define('MODULE_FILE', true);
-	//ob_start();  // Начался вывод страницы с кешированием
-  	//ob_implicit_flush(0); 
   	session_start(); // Для капчи (проверочный код-картинка от спама) // проверить вызов
     // запрет пользователю посещать не свою страницу 
 	$urlus = getenv("REQUEST_URI");
@@ -39,17 +37,35 @@ if ($name=="-email") { // занесение мыла как скрытого к
 } else { // Сборка дизайна с разделом и Блоки
 	###################################################### БЛОКИ
 	$block = ""; // Определение раздела
-
-	if ($name=="-search") {		list($block, $stil) = include('page/search.php'); $pagetitle = $slov." — Поиск — "; }
-	elseif ($name=="-slovo") { 		list($block, $stil) = include('page/tags.php');	$pagetitle = $slovo." — Тэги — "; }
-	elseif ($name=="-register") { 	list($block, $stil) = include('page/reg.php'); $pagetitle = "Регистрация — "; }
-	elseif ($name=="-login") { 	list($block, $stil) = include('page/login.php'); $pagetitle = "Вход — "; }
-	elseif ($name=="-user") { 			list($block, $stil) = include('page/user.php');	$pagetitle = "Страница пользователя"; } 
-	elseif ($name=="-users") { 	list($block, $stil) = include('page/users.php'); $pagetitle = "Личная анкета — "; }
-	elseif ($name=="-adduser") { 	list($block, $stil) = include('page/adduser.php'); $pagetitle = "Добавление публикации — "; }
-	elseif ($name=="-edituser") { 	list($block, $stil) = include('page/edituser.php'); $pagetitle = "Редактирование личной анкеты — "; }
-	elseif ($name=="-logout") { 	list($block, $stil) = include('page/logout.php'); $pagetitle = "Вы вышли — "; }
-	else {
+	switch ($name) {
+	    case "-search":
+		    list($block, $stil) = include('page/search.php'); $pagetitle = $slov." — Поиск — ";
+	    	break;
+	    case "-slovo":
+		    list($block, $stil) = include('page/tags.php');	$pagetitle = $slovo." — Тэги — ";
+	    	break;
+	    case "-register":
+		    list($block, $stil) = include('page/reg.php'); $pagetitle = "Регистрация — ";
+	    	break;
+	    case "-login":
+		    list($block, $stil) = include('page/login.php'); $pagetitle = "Вход — ";
+	    	break;
+	    case "-user":
+		    list($block, $stil) = include('page/user.php');	$pagetitle = "Страница пользователя";
+	    	break;
+	    case "-users":
+		    list($block, $stil) = include('page/users.php'); $pagetitle = "Личная анкета — ";
+	    	break;
+	    case "-adduser":
+		    list($block, $stil) = include('page/adduser.php'); $pagetitle = "Добавление публикации — ";
+	    	break;
+	    case "-edituser":
+		    list($block, $stil) = include('page/edituser.php'); $pagetitle = "Редактирование личной анкеты — ";
+	    	break;
+	    case "-logout":
+		    list($block, $stil) = include('page/logout.php'); $pagetitle = "Вы вышли — ";
+	    	break;
+		default:
 		global $title_razdels, $txt_razdels, $useit_razdels, $pid, $class;
 
 		// Настройки раздела по-умолчанию
@@ -170,13 +186,13 @@ if ($name=="-email") { // занесение мыла как скрытого к
 		} else {
 			$block = str_replace("[содержание]", $main_file, $block);
 		}
-
+		break;
 	} // крышка определения поиска и тегов
 
 /////////////////////////////////////////////////////////////////////////////////////////
 
 	# НАЧАЛО Определение блоков и их заполнение
-	$sql2 = "select id,name,title,text,useit,shablon,color from ".$prefix."_mainpage where type='3'"; 
+	$sql2 = "select id,name,title,text,useit,shablon,color from ".$prefix."_mainpage where `type`='3' and `tables`='pages'"; 
 	// `name` != '$name' and 
 	// ИЗМЕНА: вынесено за пределы массива и вместо * замена
 	$result2 = $db->sql_query($sql2);
@@ -258,7 +274,7 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 	$block_title2 = "";
 	/////////////////////////////////////
 	if ($design != 0) {
-		$row7 = $db->sql_fetchrow($db->sql_query("select `text`, `useit` from ".$prefix."_mainpage where `id`='$design' and type='0'"));
+		$row7 = $db->sql_fetchrow($db->sql_query("select `text`, `useit` from ".$prefix."_mainpage where `id`='$design' and type='0' and `tables`='pages'"));
 		$design = explode("[содержание]", $row7['text']);
 		$stile = $row7['useit'];
 		// Добавляем стиль дизайна
@@ -1619,10 +1635,17 @@ if ($description2 == "") $description2 = $description;
 global $add_css, $data_page, $lang, $kickstart, $jqueryui, $normalize, $sortable, $add_fonts, $url, $admin, $pid, $now, $nocash; //, $slider;
 if (trim($add_css) != "") $stil .= "_add_".str_replace (" ","-", str_replace ("  "," ", trim($add_css))); 
 
-header("Cache-Control: public");
+// Кеширование: откл.
+//header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
 header("Expires: " . date("r", time() + 3600));
 if ($data_page != "") header ("Last-Modified: 0, ".$data_page." GMT");
-else header ("Last-Modified: ".gmdate("L, d M Y H:i:s")." GMT");
+else header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+//header("Cache-Control: public");
+header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache"); // HTTP/1.0
+
+
 header ("Content-Type: text/html; charset=utf-8");
 echo "<!doctype html>\n
 <!--[if lt IE 7 ]><html class='ie ie6 no-js lt-ie9 lt-ie8 lt-ie7' lang='".$lang."'> <![endif]-->
@@ -1642,10 +1665,10 @@ echo "<title>".$pagetit.$sitename."</title>
 <meta name='author' content=''>
 <meta name='viewport' content='width=device-width, initial-scale=1.0'>
 <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
-<!--[if lt IE 9]><script src='http://html5shim.googlecode.com/svn/trunk/html5.js'></script><![endif]-->
+<!--[if lt IE 9]><script src='includes/html5.js'></script><![endif]-->
 <!--[if IE]><script src='includes/iepngfix_tilebg.js'></script><![endif]-->
 <script src='includes/j.js'></script>
-<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js'></script>
+<script src='includes/jquery183.min.js'></script>
 <script src='includes/modernizr-1.5.min.js'></script>";
 
 if ($normalize != 0) echo "<link rel='stylesheet' type='text/css' href='includes/css-frameworks/normalize.css' />";
@@ -1711,9 +1734,9 @@ versions: 1.3.0, 1.1.2, 1.1.1, 1.1.0, 1.0.31, 1.0.30, 1.0.29, 1.0.28, 1.0.27, 1.
 
 if ($sortable != 0) echo "<script src='includes/jquery.tinysort.min.js'></script>";
 
-if ($jqueryui != 0) echo "<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js'></script>
-<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/i18n/jquery-ui-i18n.min.js'></script>
-<link rel='stylesheet' href='http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css' />";
+if ($jqueryui != 0) echo "<script src='includes/jquery-ui.min.js'></script>
+<script src='includes/jquery-ui-i18n.min.js'></script>
+<link rel='stylesheet' href='includes/jquery-ui.css' />";
 
 switch($kickstart) { // Выбор CSS-фреймворка
 	case 1: // KickStart
@@ -1788,7 +1811,7 @@ if (strlen($add_fonts)>1) {
 	}
 	
 	// Если включена SWF Flash поддержка
-	if ($flash==1) echo "<script src='http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js'></script><script src='includes/swffix_modified.js'></script>";
+	if ($flash==1) echo "<script src='includes/swfobject.js'></script><script src='includes/swffix_modified.js'></script>";
 
 	// Если включена защита от копирования (для школьников)
 	if ($stopcopy==1) echo "<script><!-- 
@@ -1840,6 +1863,5 @@ if (strlen($add_fonts)>1) {
 			}
 		}
 	}
-	// Запуск антивируса
-	antivirus(); 
+	antivirus(); // Запуск антивируса :)
 ?>

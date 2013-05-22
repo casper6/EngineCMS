@@ -1,15 +1,17 @@
 <?php
+// Все «правила хорошего кода» написаны кровью, вытекшей из глаз программистов, читавших чужой код.
   ob_start();  // Начался вывод страницы с кешированием
   ob_implicit_flush(0);
   mb_internal_encoding('UTF-8');
-  //$phpversion = preg_replace('/[a-z-]/', '', phpversion());
-  //if ($phpversion{0}==4) die ('Версия PHP — 4. Попросите хостинг-компанию установить PHP 5 версии.');
   require_once ('page/functions.php'); // Функции
   require_once ('page/sec.php'); // Функции безопасности
   require_once ('config.php'); // Настройки сайта
   require_once ('includes/db.php'); // Работа с базой данных
-  require_once ('includes/sql_layer.php'); // Функции для работы с БД: MySQL, mSQL, postgres и postgres_local
-  global $ipban, $display_errors, $pid, $site_cash;
+  require_once ('includes/sql_layer.php'); // Функции для работы с БД MySQL
+  require_once 'includes/Mobile_Detect.php'; // Определяем устройство - компьютер, планшет или телефон
+  $detect = new Mobile_Detect;
+  global $deviceType, $ipban, $display_errors, $pid, $site_cash;
+  $deviceType = ($detect->isMobile() ? ($detect->isTablet() ? 'tablet' : 'phone') : 'computer');
     if ( isset($admin) ) {
     if (is_admin($admin)) {
       require_once ('ad/ad-functions.php'); // Функции для администрирования
@@ -210,7 +212,7 @@
     $txt_razdels = array(); // список содержания разделов
     $useit_razdels = array(); // список настроек разделов
     $name_razdels = array(); // список англ. названий разделов
-    $sqlY = "SELECT `id`,`type`,`name`,`title`,`text`,`useit` from `".$prefix."_mainpage` where `tables`='pages' and (`type`='2' or `type`='5')";
+    $sqlY = "SELECT `id`,`type`,`name`,`title`,`text`,`useit` from `".$prefix."_mainpage` where `tables`='pages' && (`type`='1' || `type`='2' || `type`='5')";
     $resultY = $db->sql_query($sqlY);
     while ($rowY = $db->sql_fetchrow($resultY)) {
       $nameX = $rowY['name'];
