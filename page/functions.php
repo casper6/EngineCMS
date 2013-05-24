@@ -509,7 +509,7 @@ function select($name,$vars,$vars_name,$znachenie,$add='') { // генераци
     if ($znachenie == "1") $style1 = "style='display:none;'"; 
     else $style2 = "style='display:none;'";
     $id = md5($name);
-    $button = "<a class='button red white small punkt' id=on_".$id." onclick='$(\"#".$id." [value=1]\").attr(\"selected\", \"selected\");  $(\"#on_".$id."\").hide().next().show();'".$style1."><span class=\"icon white small\" data-icon=\"Q\"></span> Выключено</a><a class='button green small punkt' id=off_".$id." onclick='$(\"#".$id." [value=0]\").attr(\"selected\", \"selected\"); $(\"#off_".$id."\").hide().prev().show();'".$style2."><span class=\"icon white small\" data-icon=\"Q\"></span> Включено</a>";
+    $button = "<a title='Выключено' class='button red white small punkt' id=on_".$id." onclick='$(\"#".$id." [value=1]\").attr(\"selected\", \"selected\"); $(\"#on_".$id."\").hide().next().show();'".$style1."><span class=\"icon white small\" data-icon=\"Q\"></span></a><a title='Включено' class='button green small punkt' id=off_".$id." onclick='$(\"#".$id." [value=0]\").attr(\"selected\", \"selected\"); $(\"#off_".$id."\").hide().prev().show();'".$style2."><span class=\"icon white small\" data-icon=\"`\"></span></a>";
   } else { 
     $button = "";
     $id = $name;

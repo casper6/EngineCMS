@@ -56,8 +56,8 @@ function menu() {
 		<strong>В средней колонке</strong> также выводится предполагаемое имя, e-mail и телефон человека, искавшего этот запрос.<br>
 		<strong>В последней колонке:</strong> первое число - найдено в названии страниц, второе - в содержании.";
 		
-		if ($statlink != "") echo "<h2><img class='icon2 i41' src='/images/1.gif'><a href=".$statlink." target=_blank>Сторонняя статистика</a></h2>"; else echo "<div class='notice warning w100 mw800'>Сторонняя статистика не настроена. См. <a href='sys.php?op=Configure'>Настройки</a></div>";
-		echo "<h2><img class='icon2 i41' src='/images/1.gif' style='margin-top:10px'>Встроенная статистика:</h2>
+		if ($statlink != "") echo "<h2><span class=\"icon black medium\" data-icon=\"j\"></span> <a href=".$statlink." target=_blank>Сторонняя статистика</a></h2>"; else echo "<div class='notice warning w100 mw800'>Сторонняя статистика не настроена. См. <a href='sys.php?op=Configure'>Настройки</a></div>";
+		echo "<h2><span class=\"icon gray medium\" data-icon=\"j\"></span> Встроенная статистика:</h2>
 		<table cellpadding=2 class='w100 mw800 block radius'><tr valign=top><td width=25%>".$stat_razdel."</td><td width=30%>".$stat_page."</td><td>".$stat_search."</td></tr></table></div>
 		</body>
 		</html>";
@@ -83,7 +83,7 @@ function menu() {
 		$stat_search1 = $stat_search2 = $stat_search3 = $stat_search4 = array();
 		while ($row = $db->sql_fetchrow($result)) {
 			$id = $row['id'];
-			$del = " <div id='s_".$id."' style='display:inline;'><a onclick=delslovo('".$id."') class='punkt' title='Удалить слово'><img class='icon2 i21' src='/images/1.gif'></a></div>";
+			$del = " <div id='s_".$id."' style='display:inline;'><a onclick=delslovo('".$id."') class='punkt' title='Удалить слово'><span class=\"icon red small\" data-icon=\"F\"></span></a></div>";
 			$user_ip = $row['ip'];
 			$user_info = "";
 			if (isset($user_name[$user_ip])) if ($user_name[$user_ip] != '') $user_info .= "Имя: ".$user_name[$user_ip]." [".date2normal_view($row['data'], 2)."]";
@@ -547,50 +547,45 @@ function create_main($type) {
 	break;
 	########################################################
 	case "base": $type_opis = "базы данных (таблица)";
+	global $lang;
 	$create.="<div id=about class=block style='display:none;'>База данных — это таблица с удобным редактированием (по типу БД, а не электронных таблиц), поиском и фильтрами. Таблица может содержать любые поля и выводиться на страницы сайта или использоваться для внутреннего документооборота компании (доступно через администрирование).</b><br></div>
 	
 	<input type='hidden' name='type' value='5'>
 	<input type='hidden' name='shablon' value=''>
 	
-	<span class=h3>Название:</span><br>
-	<input type=text name=title size=30 class='w100 f16' id=rus_name autofocus><br>
-	Будет создан одноименный раздел, к которому подключится база данных. <a class=punkt onclick='$(\"#eng_name\").toggle(\"slow\");'>Англ. название</a> будет создано транслитом.
+	<p><span class=h3>Название:</span><br>
+	<input type=text name=title size=30 class='w100 f16' id=name_base autofocus><br>
+	<a class=punkt onclick='$(\"#eng_name\").toggle(\"slow\");'>Псевдоним</a> будет создан транслитом.
       <div id=eng_name style='display:none;'>
-      <br><span class=h3>Англ. название:</span><br>
+      <p><span class=h3>Псевдоним:</span><br>
       <input type=text name=namo size=30 class='w100 f16'><br>
-      <a href=# onclick=\"window.open('http://translate.google.ru/#ru/en/' + $('#rus_name').val(),'Перевод',' width=800,height=400'); return false;\"><b>Перевести русское название</b></a>. <i>Используются англ. буквы и знак «_», без пробелов. Примеры: «products», «catalog», «shop» и т.д.</i>
+      <a href=# onclick=\"window.open('http://translate.google.ru/#".$lang."/en/' + $('#name_base').val(),'Перевод',' width=800,height=400'); return false;\"><b>Перевести название</b></a>. <i>Используются англ. буквы и знак «_», без пробелов. Примеры: «products», «catalog», «shop» и т.д.</i>
       </div>
 
 	<select name='delete_table' class='hide'><option value='1' selected>да</option><option value='0'>нет</option></select>
-	<select name='s_tip' class='hide'><option value='1' selected>открытая база данных (ограниченный доступ, полный доступ по паролю)</option><option value='2'>закрытая база данных (доступ по паролю)</option><option value='3'>интернет-магазин</option></select>
 
-	<p><a onclick=\"show_animate('excel')\" class='dark_pole'>Загрузить готовую таблицу</a></p>
-	<div style='display:none;' id=excel><div class=block_white2>
-	<b>Файл CSV</b> (в формат .CSV можно сохранить таблицу Excel или экспортировать из 1С, формат - utf-8) <br>
-	Если файл не выбран - будет создана пустая структура базы данных на основании Названий полей<br>
-	<input type=file name='useit' size=30><br>
-	<b>Разделение строк:</b> <input type=text name=line_close size=5 value='\\r\\n'> возврат каретки: \\r, символ окончания линии: \\n<br>
-	<b>Разделение полей:</b> <select name=line_razdel><option value='##'>##</option><option value=';'>;</option><option value='#'>#</option></select> для 1С - ##, для Excel - ;<br>
-	<b>Экранирование полей:</b> <input type=text name=line_ekran size=5 value='\"'><br>
-	<b>Удалить первую строку?</b> <select name=delete_stroka><option value='1'>да</option><option value='0'>нет</option></select> если первая строка в таблице содержит названия столбцов
-	</div></div>
-	<div align=right><a class=pointer id=add_pole><span class=\"icon green large\" data-icon=\"p\"></span> Добавить столбец</a></div>
-	<span class=h2>Поля базы данных (названия столбцов):</span><br>
+	<p><span class=h3>База данных будет подключена к одноименному разделу, ...</span><br>
+	<select name='s_tip' class='w100 f16'><option value='1' selected>доступному на сайте</option><option value='2'>доступному только администратору</option></select>
+
+	<div style='float:right;'><a class='button green small' id=add_pole><span class=\"icon white medium\" data-icon=\"p\"></span> Добавить колонку</a></div>
+	
+	<p><span class=h2>Поля базы данных (названия колонок):</span><br>
 	<a name=pole></a>
 	<table id=table  class='w100 mw800 table_light'>
 	  <tr valign=bottom>
 		<td width=40%>Название поля</td>
 		<td width=10%>Тип данных</td>
-		<td width=10%>Важно/Обязательно</td>
-		<td width=10%>Видимость</td>
-		<td width=28%>Замена информации</td>
-		<td width=2%></td>
+		<td width=10%>Важность<sup>1</sup></td>
+		<td width=15%>Видимость <nobr>на сайте</nobr></td>
+		<td width=15%>Замена информации<sup>2</sup></td>
+		<td width=5%>Фильтр</td>
+		<td width=5%>Убрать</td>
 	  </tr>
 	<tr id=pole_0><td>
-	<input type=text name=pole_rusname[] size=15 class='w100' /><a class=punkt onclick='show_eng(this)'>Англ. название</a>
-	<span class='eng hide'><br><input type=text name=pole_name[] size=15 class='w100' /></span>
-	</td><td><select name=pole_tip[] class='w100'><option value='строка' selected=selected>Строка (до 250 букв)</option><option value='строкабезвариантов'>Строка без выбора вариантов</option><option value='число'>Число</option><option value='список'>Список</option><option value='текст'>Текст</option><option value='дата'>Дата</option><option value='датавремя'>Дата-Время</option><option value='фото'>Фото</option><option value='минифото'>МиниФото</option><option value='файл' disabled>Файл</option><option value='ссылка'>Ссылка</option></select></td><td><select name=pole_main[] class='w100'><option value=0>не важно</option><option value=1>основная категория</option><option value=2>вторичная категория</option><option value=3>обязательно заполнять</option><option value=4>не важно и не печатать</option><option value=6>не важно, не печатать и не показывать</option><option value=7>обязательно, не печатать и не показывать</option><option value=5>пустая для печати</option></select></td><td><select name=pole_open[] class='w100'><option value=0 selected=selected>видно везде</option><option value=1>не видно нигде</option><option value=2>видно только на странице</option><option value=3 disabled>видно только по паролю</option></select></td><td><input type=text name=pole_rename[] size=15 class='w100' /></td><td><a class=pointer onclick='del_pole(this)'><span class=\"icon red medium\" data-icon=\"X\"></span></a></td></tr>
-
+	<input type=text name=pole_rusname[] size=15 class='w100' /><a class=punkt onclick='show_eng(this)'>Псевдоним (будет создан автоматически)</a><span class='eng hide'>:<br><input type=text name=pole_name[] size=15 class='w100' /></span>
+	</td><td><select name=pole_tip[] class='w100'><option value='строка' selected=selected>Строка с выбором предыдущих значений (до 250 символов)</option><option value='строкабезвариантов'>Строка без выбора предыдущих значений (до 250 символов)</option><option value='число'>Число</option><option value='список'>Список (в поле «Замена информации» — слова через запятую)</option><option value='текст'>Текст</option><option value='дата'>Дата</option><option value='датавремя'>Дата/Время</option><option value='фото'>Фото</option><option value='минифото'>МиниФото</option><option value='файл' disabled>Файл</option><option value='ссылка'>Ссылка</option></select></td><td><select name=pole_main[] class='w100'><option value=0>не важно</option><option value=1>1. основная категория</option><option value=2>2. вторичная категория</option><option value=3>обязательно заполнять</option><option value=4>не важно и не печатать</option><option value=6>не важно, не печатать и не показывать</option><option value=7>обязательно, не печатать и не показывать</option><option value=5>пустая для печати</option></select></td><td><select name=pole_open[] class='w100'><option value=0 selected=selected>видно в таблице и на странице «Подробнее»</option><option value=2>видно после нажатия «Подробнее»</option><option value=1>не видно нигде</option></select></td><td><input type=text name=pole_rename[] size=15 class='w100' /></td><td>
+	".select("pole_filter[]", "0,1", "НЕТ,ДА", "0")."</td><td>
+	<a class='button small red white' onclick='del_pole(this)'><span class=\"icon  small\" data-icon=\"X\"></span></a></td></tr>
 	</table>
 	<div id=id0></div>
 
@@ -608,24 +603,45 @@ function create_main($type) {
 		//$(x).parents('.eng').hide();
 	}
 	function del_pole(x) {
-		if ($(x).parents('tr').attr('id') != 'pole') $(x).parents('tr').empty(); 
+		if ($(x).parents('tr').attr('id') != 'pole_0') $(x).parents('tr').empty(); 
 		else alert('Первая строка не удаляется.');
 	}
 	</script>
 
-	<br><b>Добавить поле Голосование?</b> <select name=add_pole_golos><option value='1'>да</option><option value='0' selected>нет</option></select>
-	<br><b>Добавить поле Комментарии?</b> <select name=add_pole_comm><option value='1'>да</option><option value='0' selected>нет</option></select>
-	<br><b>Добавить поле Количество проданного товара?</b> <select name=add_pole_kol><option value='1'>да</option><option value='0' selected>нет</option></select>
-	<br><br>Если вы выбрали тип поля «Список» - в ячейке «Замена информации» напишите слова этого поля через запятую!
-	<br><br>Поля № и Активность будут добавлены к любой таблице.<br><br>
+	<table><tr valign=top><td><span class=h3>Добавить поля:</span></td><td>
+	</td><td>«Голосование» ".select("add_pole_golos", "0,1", "НЕТ,ДА", "0")."
+	</td><td>«Комментарии» ".select("add_pole_comm", "0,1", "НЕТ,ДА", "0")."
+	</td><td>«Количество проданного товара» ".select("add_pole_kol", "0,1", "НЕТ,ДА", "0")."
+	</td></tr></table>
+
+	<p><a onclick=\"show_animate('excel')\" class='button small blue'><span class=\"icon black medium\" data-icon=\"(\"></span> Загрузить готовую таблицу (необязательно)</a></p>
+	<div style='display:none;' id=excel><div class=block_white2>
+	<b>Файл CSV</b> (в формат .CSV можно сохранить таблицу Excel или экспортировать из 1С, формат - utf-8) <br>
+	Если файл не выбран - будет создана пустая структура базы данных на основании Названий полей<br>
+	<input type=file name='useit' size=30><br>
+	<b>Разделение строк:</b> <input type=text name=line_close size=5 value='\\r\\n'> возврат каретки: \\r, символ окончания линии: \\n<br>
+	<b>Разделение полей:</b> <select name=line_razdel>
+	<option value='##'>##</option>
+	<option value=';'>;</option>
+	<option value='#'>#</option>
+	<option value=':'>:</option>
+	<option value=','>,</option>
+	</select> для 1С CSV - ##, для Excel CSV - ;<br>
+	<b>Экранирование полей:</b> <input type=text name=line_ekran size=5 value='\"'><br>
+	<b>Удалить первую строку?</b> ".select("delete_stroka", "0,1", "НЕТ,ДА", "1")." — если первая строка в таблице содержит названия колонок
+	</div></div>
+
+	<p><sup>1</sup> <b>«Важность»</b>: основная и вторичная категории выводятся в блоках БД и обязательны к заполнению. <i>Пример: таблица аренды недвижимости. Основная категория — список типов недвижимости (квартира,дом,участок), вторичная — список районов города (Центральный,Кировский,Советский). Блоки могут выводить количество строк в данных категориям.</i>
+	<p><sup>2</sup> <b>«Замена информации»</b>: при выборе типа данных «Строка», «Число», «Текст», «Дата», «Дата/Время» или «Ссылка» можно написать текст по-умолчанию.
+	<p>Поля № и Активность (включено/выключено) будут добавлены автоматически.<br><br>
 	
-	<br><br>Готовые фильтры для англ. названий: data (дата), data2 (дата 2), men (менеджер), company (фирма)
+	<p>Доступны фильтры для псевдонимов: data и data2 (дата), men (менеджер), company (компания)
 	<input type=hidden name=id value=''>
 	<input type=hidden name=op value=".$admintip."_save>";
 	break;
 	########################################################
 	case "shablon": $type_opis = "шаблона (оформление раздела или блока)";
-		$create.="<div id=about class=block style='display:none;'>Шаблоны используются для изменения внешнего вида разделов, страниц и блоков. Используются либо стандартные поля страниц, либо дополнительно созданные Поля. Для страниц можно использовать любой дизайн, блоки и разделы используют табличную основу — начало < table >, соответственно сами шаблоны должны начинаться с < tr > и заканчиваться на < /tr >. Для того, чтобы в шаблоне раздела предусмотреть возможность именования столбцов таблицы, например: Дата, Название, Ссылка... после самого шаблона раздела нужна написать ключевое слово [следующий] и написать шаблон именования столбцов, т.е. по сути скопировать шаблон строк раздела, но вместо заготовок автоматических вставок поставить в него названия соответствующих полей-столбцов.<br></div>
+		$create.="<div id=about class=block style='display:none;'>Шаблоны используются для изменения внешнего вида разделов, страниц и блоков. Используются либо стандартные поля страниц, либо дополнительно созданные Поля. Для страниц можно использовать любой дизайн, блоки и разделы используют табличную основу — начало < table >, соответственно сами шаблоны должны начинаться с < tr > и заканчиваться на < /tr >. Для того, чтобы в шаблоне раздела предусмотреть возможность именования колонок таблицы, например: Дата, Название, Ссылка... после самого шаблона раздела нужна написать ключевое слово [следующий] и написать шаблон именования колонок, т.е. по сути скопировать шаблон строк раздела, но вместо заготовок автоматических вставок поставить в него названия соответствующих полей-колонок.<br></div>
 		<table class='w100 mw800'><tr><td width=50%>
 		<h2>Название шаблона</h2>
 		<input type=text name=title size=40 class='w100 h40 f16' autofocus> (рус.)</td><td>
@@ -1680,11 +1696,13 @@ function edit_main($id) {
 		function min_menu() {
 			$("#menu_element :selected").text( $("#menu_element :selected").text().replace("→","") );
 			save_menu();
+			select_menu();
 		}
 		function max_menu() {
 			x = $("#menu_element :selected");
 			z = x.text().replace("→→","");
 			if (x.text() == z) { x.text( "→" + x.text() ); save_menu(); }
+			select_menu();
 		}
 		function del_menu() {
 			$("#menu_element :selected").remove();
@@ -1701,7 +1719,7 @@ function edit_main($id) {
 			var link_title = $("#link_title").val();
 			x = "<option value=\'" + link + "\'>" + link_title + "</option>";
 			if (top == 2) { 
-				$("#menu_element option:selected").append( x ); 
+				$("#menu_element option:selected").after( x ); 
 				//$("#menu_element :first").attr("selected", "selected");
 			} else if (top == 1) { 
 				$("#menu_element").prepend( x ); 
@@ -2005,9 +2023,10 @@ if ($numrows = $db->sql_numrows($result) > 0) {
 
 		// Верстаем данные, которые заносятся в таблицу
 		$text = array();
+		print_r($pole_rusname);
 		$n = count($pole_name);
 		for ($x=0; $x < $n; $x++) {
-			if (trim($namo) == "") $pole_name[$x] = strtolow(translit_name(trim($pole_rusname[$x])));
+			if (trim($pole_name[$x]) == "") $pole_name[$x] = strtolow(translit_name(trim($pole_rusname[$x])));
 			else $pole_name[$x] = strtolow(translit_name(trim($pole_name[$x])));
 			$text[] = $pole_name[$x]."#!#".$pole_rusname[$x]."#!#".$pole_tip[$x]."#!#".$pole_main[$x]."#!#".$pole_open[$x]."#!#".$pole_rename[$x];
 		}
@@ -2018,26 +2037,26 @@ if ($numrows = $db->sql_numrows($result) > 0) {
 		if ($delete_table == 1) $db->sql_query("DROP TABLE IF EXISTS `".$prefix."_base_".$namo."`;") or die("Не удалось удалить старую таблицу. SQL: $sql");
 
 		$sql = "CREATE TABLE `".$prefix."_base_".$namo."` (";
-		for ($x=0; $x < $n+1; $x++) {
+		$sql2 = array();
+		for ($x=0; $x < $n; $x++) {
 			$one = explode("#!#",$text[$x]);
-			$zap = "";
-			if ($x < $n-1) $zap = ", ";
+			//if ($x < $n-1) $zap = ", "; else $zap = "";
 			switch ($one[2]) {
-				case "текст": $sql .= "`$one[0]` TEXT NOT NULL $zap"; break;
-				case "строка": $sql .= "`$one[0]` VARCHAR( 255 ) NOT NULL $zap"; break;
-				case "строкабезвариантов": $sql .= "`$one[0]` VARCHAR( 255 ) NOT NULL $zap"; break;
-				case "список": $sql .= "`$one[0]` VARCHAR( 255 ) NOT NULL $zap"; break;
-				case "ссылка": $sql .= "`$one[0]` VARCHAR( 255 ) NOT NULL $zap"; break;
-				case "фото": $sql .= "`$one[0]` TEXT NOT NULL $zap"; break;
-				case "минифото": $sql .= "`$one[0]` TEXT NOT NULL $zap"; break;
-				case "файл": $sql .= "`$one[0]` TEXT NOT NULL $zap"; break;
-				case "число": $sql .= "`$one[0]` INT( 10 ) NOT NULL $zap"; break;
-				case "дата": $sql .= "`$one[0]` DATE NOT NULL $zap"; break;
-				case "датавремя": $sql .= "`$one[0]` DATETIME NOT NULL $zap"; break;
+				case "текст": $sql2[] = "`$one[0]` TEXT NOT NULL"; break;
+				case "строка": $sql2[] = "`$one[0]` VARCHAR( 255 ) NOT NULL"; break;
+				case "строкабезвариантов": $sql2[] = "`$one[0]` VARCHAR( 255 ) NOT NULL"; break;
+				case "список": $sql2[] = "`$one[0]` VARCHAR( 255 ) NOT NULL"; break;
+				case "ссылка": $sql2[] = "`$one[0]` VARCHAR( 255 ) NOT NULL"; break;
+				case "фото": $sql2[] = "`$one[0]` TEXT NOT NULL"; break;
+				case "минифото": $sql2[] = "`$one[0]` TEXT NOT NULL"; break;
+				case "файл": $sql2[] = "`$one[0]` TEXT NOT NULL"; break;
+				case "число": $sql2[] = "`$one[0]` INT( 10 ) NOT NULL"; break;
+				case "дата": $sql2[] = "`$one[0]` DATE NOT NULL"; break;
+				case "датавремя": $sql2[] = "`$one[0]` DATETIME NOT NULL"; break;
 			}
 			$all[] = trim($one[0]);
 		}
-		$sql .= ");";
+		$sql .= implode(",",$sql2).");";
 		$all = implode(",",$all);
 		if ($delete_stroka == 1) $del_stroka = " IGNORE 1 LINES"; else $del_stroka = ""; //  ($all)
 
@@ -2047,35 +2066,31 @@ if ($numrows = $db->sql_numrows($result) > 0) {
 		$line_close = str_replace('\"','"',str_replace("\\\\","\\",$line_close)); // убрать
 		$line_ekran = str_replace('\"','"',str_replace("\\\\","\\",$line_ekran));
 
-		// Создаем таблицу с именем $prefix_base_$namo
+		// Вставляем данные в таблицу с именем $prefix_base_$namo
 		if (trim($_FILES["useit"]["tmp_name"] != "")) {
-		$sql = "load data local infile '".mysql_real_escape_string($_FILES["useit"]["tmp_name"])."' INTO table ".$prefix."_base_".$namo." FIELDS TERMINATED BY '".$line_razdel."' ENCLOSED BY '". $line_ekran."' LINES TERMINATED BY '".$line_close."'".$del_stroka.";"; // local 
-		$db->sql_query($sql) or die("Не удалось добавить информацию из файла CSV в таблицу базы данных. SQL: $sql");
+			$sql = "load data local infile '".mysql_real_escape_string($_FILES["useit"]["tmp_name"])."' INTO table ".$prefix."_base_".$namo." FIELDS TERMINATED BY '".$line_razdel."' ENCLOSED BY '". $line_ekran."' LINES TERMINATED BY '".$line_close."'".$del_stroka.";"; // local 
+			$db->sql_query($sql) or die("Не удалось добавить информацию из файла CSV в таблицу базы данных. SQL: $sql");
 		} else echo "Файл не доступен";
 
 		$db->sql_query("ALTER TABLE `".$prefix."_base_".$namo."` ADD  `id` INT( 10 ) NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST ;");
-
 		$add = ""; // Добавление дополнительных параметров
 		if ($add_pole_golos == 1) {
 			$db->sql_query("ALTER TABLE `".$prefix."_base_".$namo."` ADD  `golos` INT( 10 ) DEFAULT  '1' NOT NULL ;");
 			$add .= "&golos=1";
 		}
-
 		if ($add_pole_comm == 1) {
 			$db->sql_query("ALTER TABLE `".$prefix."_base_".$namo."` ADD  `comm` INT( 10 ) DEFAULT  '1' NOT NULL ;");
 			$add .= "&comm=1";
 		}
-
 		if ($add_pole_kol == 1) {
 			$db->sql_query("ALTER TABLE `".$prefix."_base_".$namo."` ADD  `kol` INT( 10 ) DEFAULT  '1' NOT NULL ;");
 			$add .= "&kol=1";
 		}
-
 		$db->sql_query("ALTER TABLE `".$prefix."_base_".$namo."` ADD  `active` INT( 1 ) DEFAULT  '1' NOT NULL ;");
-
 		$text = "base|type=".$s_tip.$add."&options=".$text2;
 		$useit = "[содержание]";
-	} 
+	}
+
 	$namo = mysql_real_escape_string(stripcslashes($namo));
 	$title = mysql_real_escape_string(stripcslashes($title));
 	$text = mysql_real_escape_string(stripcslashes($text));
@@ -2084,10 +2099,22 @@ if ($numrows = $db->sql_numrows($result) > 0) {
 	$db->sql_query("INSERT INTO ".$prefix."_mainpage (`id`, `type`, `name`, `title`, `text`, `useit`, `shablon`, `counter`, `tables`, `color`, `description`, `keywords`) VALUES (NULL, '".$type."', '".$namo."', '".$title."', '".$text."', '".$useit."', '".$shablon."', '0', 'pages', '0', '', '');") or die('Не удалось создать. Попробуйте еще раз и в случае неудачи обратитесь к разработчику.');
 		}
 	// узнаем id
-	if ($id == 0) $row2 = $db->sql_fetchrow($db->sql_query("select `id` from ".$prefix."_mainpage where `tables`='pages' and `type`='".$type."' and `name`='".$namo."' and `title`='".$title."' and `text`='".$text."' and `useit`='".$useit."'")) or die("SQL: select `id` from ".$prefix."_mainpage where `tables`='pages' and `type`='".$type."' and `name`='".$namo."' and `title`='".$title."' and `text`='".$text."' and `useit`='".$useit."'");
-	// после сохранения откроем настройку раздела или блока 
-	if ($type == 2) Header("Location: sys.php?op=mainpage&id=".$row2['id']."&nastroi=1");
-	else Header("Location: sys.php?op=mainpage&type=element");
+	if ($id == 0 && ($type == 2 or $type==5)) {
+		$row2 = $db->sql_fetchrow($db->sql_query("select `id` from ".$prefix."_mainpage where `tables`='pages' and `type`='".$type."' and `name`='".$namo."' and `title`='".$title."' and `text`='".$text."' and `useit`='".$useit."'")) or die("SQL: select `id` from ".$prefix."_mainpage where `tables`='pages' and `type`='".$type."' and `name`='".$namo."' and `title`='".$title."' and `text`='".$text."' and `useit`='".$useit."'");
+		if ($type==5) { // Создаем раздел для БД
+			// База данных будет подключена к одноименному разделу, ... 
+			if ($s_tip == "1") 	$useit2 = "[содержание]"; // доступному на сайте
+				else 			$useit2 = ""; 			// доступному только администратору
+			$text2 = "pages|design=1&designpages=0&comments=0&lim=100&base=".$row2['id']; 
+			$db->sql_query("INSERT INTO ".$prefix."_mainpage (`id`, `type`, `name`, `title`, `text`, `useit`, `shablon`, `counter`, `tables`, `color`, `description`, `keywords`) VALUES (NULL, '2', '".$namo."', '".$title."', '".$text2."', '".$useit2."', '".$shablon."', '0', 'pages', '0', '', '');") or die('Не удалось создать раздел для БД. Попробуйте еще раз и в случае неудачи обратитесь к разработчику.');
+			// узнаем id папки для БД, чтобы перейти к ее настройке
+			$row2 = $db->sql_fetchrow($db->sql_query("select `id` from ".$prefix."_mainpage where `tables`='pages' and `type`='2' and `name`='".$namo."' and `title`='".$title."' and `text`='".$text2."' and `useit`='".$useit2."'")) or die("SQL: select `id` from ".$prefix."_mainpage where `tables`='pages' and `type`='2' and `name`='".$namo."' and `title`='".$title."' and `text`='".$text2."' and `useit`='".$useit2."'");
+		}
+		// после сохранения откроем настройку раздела или блока 
+		Header("Location: sys.php?op=mainpage&id=".$row2['id']."&nastroi=1");
+		die;
+	}
+	Header("Location: sys.php?op=mainpage&type=element");
 	die;
 }
 ##################################################################################################

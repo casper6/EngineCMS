@@ -115,9 +115,14 @@ $text2 = str_replace(',', ', ', $text[$comm_cid]);
     if ($admin_ok==1) $comment_admin = "<a href=/sys.php?op=base_comments_edit_comments&cid=".$comm_cid."&red=1 title='Изменить в HTML'><img src='/images/sys/edit_0.png' align=bottom width=16></a> <a href=/sys.php?op=base_pages_delit_comm&cid=".$comm_cid."&ok=ok&pid=".$pid." title='Удалить'><img align=bottom src=/images/sys/del.png width=16></a> "; else $comment_admin = "";
 
 if (strpos($sha,"[comment_ipbox]")) {
-  $ipbox = explode(".",$ip[$comm_cid]);
-  if ($avtor[$comm_cid] == "Администратор" or $avtor[$comm_cid] == "Админ" or $avtor[$comm_cid] == "админ") { $ipbox[0]=255; $ipbox[1]=0; $ipbox[2]=0; }
-  if ($avtor[$comm_cid] == "Редактор" or $avtor[$comm_cid] == "редактор" or $avtor[$comm_cid] == "Директор" or $avtor[$comm_cid] == "директор") { $ipbox[0]=205; $ipbox[1]=35; $ipbox[2]=189; }
+  if ($avtor[$comm_cid] == "Администратор" or $avtor[$comm_cid] == "Админ" or $avtor[$comm_cid] == "админ") { 
+    $ipbox[0]=255; $ipbox[1]=0; $ipbox[2]=0; 
+  } elseif ($avtor[$comm_cid] == "Редактор" or $avtor[$comm_cid] == "редактор" or $avtor[$comm_cid] == "Директор" or $avtor[$comm_cid] == "директор") { 
+    $ipbox[0]=205; $ipbox[1]=35; $ipbox[2]=189; 
+  } else { 
+    if ($ip[$comm_cid] != "unknown") $ipbox = explode(".",$ip[$comm_cid]);
+    else { $ipbox[0]=0; $ipbox[1]=0; $ipbox[2]=0; }
+  }
   /*
   if ($mail[$comm_cid] != "") {
         $avatar = $ava[$comm_cid];
@@ -125,13 +130,11 @@ if (strpos($sha,"[comment_ipbox]")) {
         if ($avatar == "no") $avatar = "";
   } else 
   */
-  $avatar = "";
-
+  $avatar = ""; // сделать настройку граватара!
   /*
   if ($avatar != "") $comm_ipbox = "<a title='Вы всегда можете поменять свой аватар' href='http://ru.gravatar.com/site/login/' target='_blank' rel='nofollow'><img src='".$avatar."?s=35' style='margin-right:10px; float:left; border:0; width:35px; height:35px;'></a>";
   else 
   */
-
   $comm_ipbox = "<div style='margin-right:10px; float:left; border:0; background: rgb(".$ipbox[0].", ".$ipbox[1].", ".$ipbox[2]."); width:35px; height:35px;'><a title='Чтобы изменить аватар, нажмите здесь и зарегистрируйтесь, введя адрес email' href='http://ru.gravatar.com/site/signup/' target='_blank' rel='nofollow'><img title='#".$comm_cid." ip:".$ip[$comm_cid]."' src=/images/avatar_new.png></a></div>";
 } else $comm_ipbox = "";
 

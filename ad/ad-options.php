@@ -169,8 +169,21 @@ echo "<table class='w100 mw800 mt5 block_back' cellspacing=0 cellpadding=0><tr v
 	echo "</div></td><td><form action='".$admin_file.".php' method='post' name=\"form\">";
 
 echo "
-<div id='show_options_razrab' class='show_pole' style='display:none;'>
-<p>Профессиональные мануалы по PHP, HTML, CSS, JS и jQuery</p>
+<div id='show_options_razrab' class='show_pole' style='display:none;'>";
+
+$phpversion = preg_replace('/[a-z-]/', '', phpversion());
+if ($phpversion{0}<4) die ('Версия PHP ниже плинтуса. Где же ты нарыл такое старьё?! 0_о');
+if ($phpversion{0}==4) die ('Версия PHP — 4. Попросите хостинг-компанию установить PHP как минимум версии 5.2.1');
+if ($phpversion{0}==5 && $phpversion{2}<2) 
+	echo "<p><b style='color:red;'>Версия PHP — 5.".$phpversion{2}.". Рекомендуется использовать PHP как минимум версии 5.2.1";
+if ( ( $phpversion{0}==5 && $phpversion{2}>3 ) || $phpversion{0}>5) 
+	echo "<p style='color:red;'>Версия PHP — 5.".$phpversion{2}.".<br>На 5.4 (и выше) CMS полноценно не тестировалась — вы можете попробовать и передать разработчику все возникшие ошибки или замечания.";
+if (!function_exists('curl_init')) 
+	echo "<p style='color:red;'>Желательно включить поддержку cURL на вашем хостинге.";
+if (!extension_loaded('imagick') || !class_exists("Imagick")) 
+	echo "<p style='color:red;'>Библиотека Imagick не установлена – вам придется самостоятельно уменьшать размер больших фотографий (полученных фотоаппаратом) перед вставкой в редактор. Советуем перейти на другой хостинг с поддержкой этой библиотеки или договориться с текущим хостингом о её подключении.";
+
+echo "<p><span class=h2>Профессиональные мануалы по PHP, HTML, CSS, JS и jQuery</span><br>
 	Русский:<ul class='alt base_open_page'>
 	<li><a href='http://htmlbook.ru'>Сайт — HTMLbook, Справочник по HTML и CSS</a></li>
 	<li><a href='http://css-live.ru'>Сайт — CSS-Live, Сборник информации по CSS</a></li>
@@ -199,7 +212,7 @@ echo "
 
 <div id='show_first' class='show_pole' style='display:none;'>
 	<a class='button' onclick=\"options_show('8','show_options_fonts')\"><span class=\"icon gray medium\" data-icon=\"i\"></span> Шрифты</a>
-	<a class='button' onclick=\"options_show('8','show_shop')\"><span class=\"icon gray medium\" data-icon=\"R\"></span> Магазин (в разработке)</a> ";
+	<a class='button' onclick=\"options_show('8','show_shop')\"><span class=\"icon gray medium\" data-icon=\"$\"></span> Магазин</a> ";
 	if (is_dir("includes/regions")) echo "<a class='button' href='sys.php?op=regions_main'><span class=\"icon gray medium\" data-icon=\"&\"></span> Регионы</a>";
 
 	echo "<hr><table class=table_light>

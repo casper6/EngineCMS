@@ -7,7 +7,7 @@ if (isset($_REQUEST['db'])) {
 	$dbuname = $_REQUEST['dbuname'];
 	$dbpass = $_REQUEST['dbpass'];
 	if (!mysql_connect($dbhost, $dbuname, $dbpass)) {
-		echo "Ошибка доступа к БД. Неправильно введены хост, имя и пароль БД."; exit;
+		echo "Ошибка доступа к БД. Неправильно введены хост, пользователь или пароль."; exit;
 	} else {
 		$q = mysql_query("SHOW DATABASES;");
 		// Добавить проверку кол-ва таблиц в БД для вывода подходящей БД
@@ -30,6 +30,7 @@ if (file_exists("config.php")) die("<h3>Найдена установленна�
 // Запуск установки ====================
 if (isset($_REQUEST['lang'])) {
 	$lang = $_REQUEST['lang'];
+	$lang_admin = $_REQUEST['lang_admin'];
 	$ipban = $_REQUEST['ipban'];
 	$site_cash = $_REQUEST['site_cash'];
 	$dbhost = $_REQUEST['dbhost'];
@@ -77,7 +78,8 @@ $display_errors 	= false; # Отладочная опция - для показ�
 $ipban 				= '.$ipban.'; # Админ-опция - для включения блокировки по IP = true, для отключения = false
 $site_cash    		= '.$site_cash.'; # Система кеширования: false - отключена, file - кеширование в файлы, base - кеширование в БД
 ################### НАСТРОЙКИ САЙТА
-$lang 				= "'.$lang.'"; // Язык
+$lang 				= "'.$lang.'"; // Язык сайта
+$lang_admin			= "'.$lang_admin.'"; // Язык администрирования
 $red4_div_convert 	= "convertDivs: true,"; // Поставьте false для отмены конвертации <DIV> в <P> в 2-м визуал. редакторе
 $more_smile			= false; // Дополнительные смайлики в комментариях, если true - включится
 $strelka			= "&rarr;";
@@ -326,13 +328,12 @@ $pass_bd = generate_password(15);
 	input {width:100%;}
 	</style>
 </head>
-<body style="background:url('images/adfon/11.png')">
+<body style="background:url('images/adfon/21.png')">
 <form>
-<div class="container" style="background:url('images/adfon/21.png')">
-	<div class="sixteen columns">
-				<h1 class="remove-bottom" style="margin-top: 40px">Установка CMS «ДвижОк»</h1>
-				<h5>Версия <? echo $ver; ?></h5>
-			<hr />
+<div class="container" style="background:url('images/fon.png');">
+	<div class="sixteen columns" style="background:url('install/logo.png') no-repeat right 5px; min-height:155px;">
+		<h1 class="remove-bottom" style="margin-top: 40px">Установка CMS «ДвижОк»</h1>
+		<h5>Версия <? echo $ver; ?></h5>
 	</div>
 		<div class="one-third column">
 			<h3>1. База данных</h3>
@@ -340,46 +341,54 @@ $pass_bd = generate_password(15);
 				<li><strong>Хост базы данных MySQL</strong> (сервер):<br><input id="dbhost" name="dbhost" value="localhost"></li>
 				<li><strong>Имя пользователя базы данных</strong>:<br><input id="dbuname" name="dbuname" value="root"></li>
 				<li><strong>Пароль пользователя базы данных</strong>:<br><input id="dbpass" name="dbpass" value="<? echo $pass_bd; ?>"></li>
-				<li><strong>Имя базы данных</strong>: <a onclick='x=$("#dbhost").val(); b=$("#dbuname").val(); c=$("#dbpass").val(); $.ajax({ url: "index.php?db=" + x + "&dbuname=" + b + "&dbpass=" + c, cache: false, dataType: "html", beforeSend: function(){ $("#db").html("Загрузка..."); }, success: function(data) { $("#db").html(data); } });' style='color:darkgreen; cursor:pointer; text-decoration:none; border-bottom:1px dashed green;'>Получить имя</a><br><div id='db'><input name="dbname" value=""></div></li>
+				<li><strong>Имя базы данных</strong>: <strong><a onclick='x=$("#dbhost").val(); b=$("#dbuname").val(); c=$("#dbpass").val(); $.ajax({ url: "index.php?db=" + x + "&dbuname=" + b + "&dbpass=" + c, cache: false, dataType: "html", beforeSend: function(){ $("#db").html("Загрузка..."); }, success: function(data) { $("#db").html(data); } });' style='color:darkgreen; cursor:pointer; text-decoration:none; border-bottom:1px dashed green;'>! Получить имя !</a></strong><br><div id='db'></div></li>
 				<li><a onclick='$("#prefix_show").toggle();' style='color:darkgreen; cursor:pointer; text-decoration:none; border-bottom:1px dashed green;'>Префикс таблиц</a>:<div id='prefix_show' style='display:none'><input name="prefix" value="dvizhok"><br>Если один сайт или на каждый – своя база данных, префикс необязателен.</div></li>
 			</ul>
 		</div>
 		<div class="one-third column">
 			<h3>2. Настройки</h3>
 			<ul class="square">
-<script>
-	$(document).ready(function(){
-		var pattern = /^[a-zа-я0-9_-]+@[a-zа-я0-9-]+\.([a-zа-я]{1,6}\.)?[a-zа-я]{2,6}$/i; //name-_09@mail09-.ru
-		var mail = $('#mail');
-		mail.blur(function(){
-			if(mail.val() != ''){
-				if(mail.val().search(pattern) == 0){
-					$('#valid').text('Отлично.');
-					$('#submit').attr('disabled', false);
-					mail.removeClass('error').addClass('ok');
-				}else{
-					$('#valid').text('Email не подходит');
-					$('#submit').attr('disabled', true);
-					mail.addClass('error');
-				}
-			}else{
-				$('#valid').text('Поле email не должно быть пустым!');
-				mail.addClass('error');
-				$('#submit').attr('disabled', true);
-			}
-		});
-	});	
-</script>
+		<script>
+			$(document).ready(function(){
+				var pattern = /^[a-zа-я0-9_-]+@[a-zа-я0-9-]+\.([a-zа-я]{1,6}\.)?[a-zа-я]{2,6}$/i; //name-_09@mail09-.ru
+				var mail = $('#mail');
+				mail.blur(function(){
+					if(mail.val() != ''){
+						if(mail.val().search(pattern) == 0){
+							$('#valid').text('Отлично.');
+							$('#submit').attr('disabled', false);
+							mail.removeClass('error').addClass('ok');
+						}else{
+							$('#valid').text('Email не подходит');
+							$('#submit').attr('disabled', true);
+							mail.addClass('error');
+						}
+					}else{
+						$('#valid').text('Поле email не должно быть пустым!');
+						mail.addClass('error');
+						$('#submit').attr('disabled', true);
+					}
+				});
+			});	
+		</script>
 				<li><strong>Адрес сайта</strong>:<br><input name="siteurl" value="<? echo $siteurl; ?>"></li>
-				<li style='display:none'><strong>Язык</strong>:<br><select name="lang"><option value="ru-RU">Русский</option></select></li>
+				<li><strong>Язык сайта</strong>:<br><select name="lang">
+					<option value="ru">Русский</option>
+					<option value="en" disabled>English (in development)</option>
+					<option value="az" disabled>Azərbaycan (inkişaf)</option>
+				</select></li>
+				<li><strong>Язык администрирования</strong>:<br><select name="lang_admin">
+					<option value="ru">Русский</option>
+					<option value="en" disabled>English (in development)</option>
+					<option value="az" disabled>Azərbaycan (inkişaf)</option>
+				</select></li>
 				<li><strong>Псевдоним администратора</strong>:<br><input name="a" value="admin"></li>
-				<li><strong>Email администратора сайта</strong>:<br><input name="email" id="mail" value="@gmail.com"><span id="valid"></span></li>
+				<li><strong>Email администратора сайта</strong>:<br><input name="email" id="mail" value=""><span id="valid"></span></li>
 				<li><strong>Пароль администратора сайта</strong>:<br><input name="pass" value="<? echo $pass; ?>"><br>
 					Будет отправлен на указанный email</li>
 				<li id='all_show'><a onclick='$("#blo_show").show();$("#cash_show").show();$("#all_show").hide();' style='color:darkgreen; cursor:pointer; text-decoration:none; border-bottom:1px dashed green;'>IP-блокировка и кеш отключены</a></li>
 				<li id='blo_show' style='display:none'><strong>Блокировка по IP-адресу</strong>:<br><select name="ipban"><option value="true">Включить</option><option value="false" selected>Отключить</option></select></li>
 				<li id='cash_show' style='display:none'><strong>Кеширование страниц сайта</strong>:<br><select name="site_cash"><option value="false">Отключено</option><option value="file">в файлы</option><option value="base">в базу данных</option></select></li>
-				
 			</ul>
 			
 		</div>
@@ -422,10 +431,12 @@ $pass_bd = generate_password(15);
 			<button type="submit" id="submit" style="float:right; margin-left: 30px"><h3>Установить →</h3></button>
 
 			<p>Документация встроена в CMS. Если её недостаточно — пишите на <a href="mailto:13i@list.ru"><strong>13i@list.ru</strong></a> или стучитесь в skype <a href="skype:angel13i?add"><strong>angel13i</strong></a> — вы получите ответы на все вопросы, после чего встроенная помощь будет расширена и дополнена. Также принимаются предложения и пожелания.<hr>
+				
 			<?
-			if ($phpversion{0}==5 && $phpversion{2}<2) echo "<b style='color:red;'>Версия PHP — 5.".$phpversion{2}.". Рекомендуется использовать PHP как минимум версии 5.2.1</b>";
-			if ( ( $phpversion{0}==5 && $phpversion{2}>3 ) || $phpversion{0}>5) echo "<b style='color:red;'>Версия PHP — 5.".$phpversion{2}.".<br>На 5.4 (и выше) CMS полноценно не тестировалась — вы можете попробовать и передать разработчику все возникшие ошибки или замечания.</b>";
-			if (!function_exists('curl_init')) echo "<b style='color:red;'>Желательно включить поддержку cURL на вашем хостинге.</b>";
+			if ($phpversion{0}==5 && $phpversion{2}<2) echo "<p><b style='color:red;'>Версия PHP — 5.".$phpversion{2}.". Рекомендуется использовать PHP как минимум версии 5.2.1";
+			if ( ( $phpversion{0}==5 && $phpversion{2}>3 ) || $phpversion{0}>5) echo "<p style='color:red;'>Версия PHP — 5.".$phpversion{2}.".<br>На 5.4 (и выше) CMS полноценно не тестировалась — вы можете попробовать и передать разработчику все возникшие ошибки или замечания.";
+			if (!function_exists('curl_init')) echo "<p style='color:red;'>Желательно включить поддержку cURL на вашем хостинге.";
+			if (!extension_loaded('imagick') || !class_exists("Imagick")) echo "<p style='color:red;'>Библиотека Imagick не установлена – вам придется самостоятельно уменьшать размер больших фотографий (полученных фотоаппаратом) перед вставкой в редактор. Советуем перейти на другой хостинг с поддержкой этой библиотеки или договориться с текущим хостингом о её подключении.";
 			?>
 		</div>
 

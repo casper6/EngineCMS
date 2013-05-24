@@ -14,7 +14,6 @@ if(isset($aid)) {
   }
 }
 require_once("mainfile.php");
-
 $checkurl = $_SERVER['REQUEST_URI'];
 if (preg_match("/AddAuthor/", $checkurl)) die ('Попытка взлома №6');
 if (preg_match("/UpdateAuthor/", $checkurl)) die ('Попытка взлома №7');
@@ -163,11 +162,10 @@ function GraphicAdmin() {
 	if ($show_userposts != 0) {
 		$num_add_pages = $db->sql_numrows($db->sql_query("SELECT `pid` from ".$prefix."_pages where (`active`='2' or `active`='3') and `tables`!='del'"));
 	}
-	$soderganie_menu = "<div style='margin-bottom:5px;'>
-	<button class='nothing small' id='hide_razdel' onclick=\"$('#show_razdel').show(); $('#razdels').hide(); $('#hide_razdel').hide(); $('#razdel_td').hide(); $('.dark_pole2sel').attr('class', 'dark_pole2');\" style='' title='Скрыть Разделы в кнопку'>&rarr;</button> <button class='small' id='show_razdel' style='display:none;' href=# onclick=\" $('#razdel_td').show(); $('#show_razdel').hide(); $('#razdels').show(); $('#hide_razdel').show();\"><span class=\"icon gray small\" data-icon=\",\"></span> Разделы</button> ";
+	$soderganie_menu = "<a class='punkt' id='hide_razdel' onclick=\"$('#show_razdel').show(); $('#razdels').hide(); $('#hide_razdel').hide(); $('#razdel_td').hide(); $('.dark_pole2sel').attr('class', 'dark_pole2');\" style='' title='Скрыть Разделы в кнопку'>&rarr;</a> <button class='small' id='show_razdel' style='display:none;' href=# onclick=\" $('#razdel_td').show(); $('#show_razdel').hide(); $('#razdels').show(); $('#hide_razdel').show();\"><span class=\"icon gray small\" data-icon=\",\"></span> Разделы</button> ";
  	
  	global $deviceType;
- 	$buttons = array(' Новое',' Проверить: ',' Корзина',' Старое',' Блоки',' Отзывы:', ' Вставить дату');
+ 	$buttons = array(' Новое',' Проверить: ',' Корзина',' Старое',' Блоки',' Отзывы:', ' Дата');
 	if ($deviceType != 'computer') $buttons = array('','','','','','','');
 
 	if ($show_comments != 0) {
@@ -190,8 +188,7 @@ function GraphicAdmin() {
 
 	$soderganie_menu .= " <button class='nothing small' onclick=\"oformlenie_show('блок','3','block','/sys.php?op=mainpage&name=block&type=3'); $('#hide_razdel').click();\" title='Резервные копии созданных ранее страниц'><span class=\"icon gray small\" data-icon=\"R\"></span>".$buttons[4]."</button> ";
 
-	$soderganie_menu .= "<button id='new_razdel_button' title='Добавить страницу...' class='medium green nothing' onclick='location.href=\"/sys.php?op=base_pages_add_page#1\"'><span class=\"icon white small\" data-icon=\"+\"></span> страницу</button>
-	</div>";
+	//$soderganie_menu .= "<button id='new_razdel_button' title='Добавить страницу...' class='medium green nothing' onclick='location.href=\"/sys.php?op=base_pages_add_page#1\"'><span class=\"icon white small\" data-icon=\"+\"></span> страницу</button>";
 
 	echo "<table style='background: url(/images/fon.png); padding:0;' cellspacing=0 cellpadding=0 class='w100 mw800 mt5'><tr valign=top><td id='razdel_td' class='radius nothing' style='background:#e7e9ec;'><div id='razdels'>";
 
@@ -233,7 +230,7 @@ function GraphicAdmin() {
 
     while ($row = $db->sql_fetchrow($result)) {
 	    $id = $row['id'];
-	    $type = $row['type']; 
+	    $type = $row['type'];
 	    $nam = $row['name']; 
 	    $title = strip_tags($row['title'], '<b><i>');
 	    if ($type == 3) $title = "[$title]";
@@ -253,7 +250,7 @@ function GraphicAdmin() {
 		if ($nam!="index") {
 			if ($size < 1) $size = ""; 
 			if ($size_off < 1) $size_off = ""; else $size_off = "-".$size_off;
-			$type_opisX = "<span class='green' title='Включенные страницы'>".$size."</span>&nbsp;<span class='red' title='Отключенные страницы'>".$size_off."</span>";
+			$type_opisX = "<span class='f14 radius bb1 pr10 pl10'><span class='green' title='Включенные страницы'>".$size."</span>&nbsp;<span class='red' title='Отключенные страницы'>".$size_off."</span></span>";
 			if ($size < 1 and $size_off < 1) $type_opisX = "";
 		} elseif ($nam=="index") $type_opisX = "";
 		if ($current_type != $type) $current_type = $type;
@@ -277,33 +274,40 @@ function GraphicAdmin() {
 		// Для базы данных !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		$link = "";
 		$doping = "";
-		$iconpage = "";
 		if (strpos($options,"base=")) {
 			$title = "БД «".trim($title)."»";
-			// Узнаем название БД
-			$sql2 = "SELECT `text` FROM ".$prefix."_mainpage where type='2' and name='".$nam."'";
-			$result2 = $db->sql_query($sql2);
-			$row2 = $db->sql_fetchrow($result2);
-			$module_options = explode("|",$row2['text']); $module_options = $module_options[1]; 
-			parse_str($module_options);
-			$sql2 = "SELECT name FROM ".$prefix."_mainpage where id='".$base."'";
-			$result2 = $db->sql_query($sql2);
-			$row2 = $db->sql_fetchrow($result2);
-			$baza_name  = $row2['name']; // Название таблицы БД 
-			$type_opisX = " <nobr><a href=sys.php?op=base_base&name=".$nam." title='Открыть базу данных' style='margin-left:10px;'><img class=\"icon2 i34\" src=/images/1.gif></a>
-			<a href=sys.php?op=base_base_create_base&base=".$baza_name."&name=".$nam."&amp;red=1 title='Добавить строку в базу данных' style='margin-left:5px;'><img class=\"icon2 i29\" src=/images/1.gif></a></nobr>";
+			// название БД = название раздела
+			// $sql2 = "SELECT `text` FROM ".$prefix."_mainpage where type='2' and name='".$nam."'";
+			// $result2 = $db->sql_query($sql2);
+			// $row2 = $db->sql_fetchrow($result2);
+			// $module_options = explode("|",$row2['text']);
+			// $module_options = $module_options[1]; 
+			// parse_str($module_options);
+			// $sql2 = "SELECT name FROM ".$prefix."_mainpage where id='".$base."'";
+			// $result2 = $db->sql_query($sql2);
+			// $row2 = $db->sql_fetchrow($result2);
+			$baza_name  = $nam; // $row2['name']; // Название таблицы БД 
+			$type_opisX = "<nobr><span class='f14 radius bb1 pr10 pl10'><span class='green' title='Записи в базе данных'>".$db->sql_numrows($db->sql_query("SELECT `id` FROM ".$prefix."_base_".$nam))."</span></span> 
+			<a class='button small blue ml10' href='sys.php?op=base_base&name=".$nam."' title='Открыть базу данных'><span class='icon white small' data-icon='s'></span></a>
+			<a class='button small green ml5' href='sys.php?op=base_base_create_base&base=".$baza_name."&name=".$nam."&amp;red=1#1' title='Добавить строку в базу данных'><span class='icon white small' data-icon='+'></span></a></nobr>";
 		}
 		if (!strpos($options,"base=")) {
-			$type_opisX = "<span class='f14 radius bb1 pr10 pl10'>".$type_opisX."</span>";
+			$type_opisX = "".$type_opisX."
+			<a class='button small green ml5' href='sys.php?op=base_pages_add_page&name=".$nam."#1' title='Добавить страницу в раздел'><span class='icon white small' data-icon='+'></span></a>";
 		}
 		$ver = mt_rand(10000, 99999); // получили случайное число
 
-		if (strpos(" ".$useit,"[содержание]") || strpos(" ".$useit,"[страницы]")) {
-			$right = $iconpage.$type_opisX;
+		if (strpos($options,"base=")) { // не содержит страниц
+			$right = $type_opisX;
+			$ico = "D";
+			$reaction = "razdel_show(\"\", ".$id.", \"".$nam."\", \"database\");";
+		} elseif (strpos(" ".$useit,"[содержание]") || strpos(" ".$useit,"[страницы]")) {
+			$right = $type_opisX;
 			$ico = ",";
 			$reaction = "razdel_show(\"\", ".$id.", \"".$nam."\", \"".$text."\");";
 		} else { // не содержит страниц
-			$right = "<span class='f14 gray'>&rang;</span>";
+			$title = "стр. «".trim($title)."»";
+			$right = "<a class='button small green ml5' href='sys.php?op=mainpage&type=2&id=".$id."#1' title='Редактировать страницу раздела'><span class='icon white small' data-icon='7'></span></a>";
 			$ico = ".";
 			$reaction = "razdel_show(\"\", ".$id.", \"".$nam."\", \"page\");";
 		}
@@ -312,7 +316,7 @@ function GraphicAdmin() {
 		</div></a></div>";
     }
 	echo "</div>
-	</td><td width=70%>".$soderganie_menu."<div class='podrazdel radius nothing' id='podrazdel'>";
+	</td><td width=65%>".$soderganie_menu."<div class='podrazdel radius nothing' id='podrazdel'>";
 
 	// ЗАПИСКИ
 	$row = $db->sql_fetchrow($db->sql_query("SELECT `adminmes` from ".$prefix."_config"));

@@ -17,15 +17,15 @@ function pics_replace(id,txt,search){
 	$(id).hide('slow');
 }
 function sho(pid,name,admintip,act) {
-	if (act == 1) active = '<img class="icon2 i43" src=/images/1.gif> Выключить страницу</a>';
-	else active = '<img class="icon2 i44" src=/images/1.gif> Включить страницу</a>';
-	if (document.getElementById('pid'+pid).innerHTML=='') document.getElementById('pid'+pid).innerHTML = '<span class=sho_page> <a href=-'+name+'_page_'+pid+' target=_blank title="Открыть страницу на сайте" class="punkt"><img class="icon2 i36" src="/images/1.gif"> Открыть страницу на сайте</a> <a target=_blank href="sys.php?op='+admintip+'_edit_page&pid='+pid+'#1" title="Редактировать страницу в Редакторе" class="punkt"><img class="icon2 i35" src=/images/1.gif> Редактировать страницу</a> <a onclick=offpage('+pid+',0) class="punkt" title="Включение/Выключение страницы">'+active+' <a onclick=replace("'+pid+'") class="punkt" title="Копировать/Переместить/Создать ярлык"><img class="icon2 i32" src=/images/1.gif> Копировать/Переместить/Создать ярлык</a> <a onclick=delpage("'+pid+'") class="punkt" title="Удалить страницу"><img class="icon2 i33" src=/images/1.gif> Удалить страницу в Корзину</a></span>';
+	if (act == 1) active = icon('red small','Q')+' Выключить страницу</a>';
+	else active = icon('green small','Q')+' Включить страницу</a>';
+	if (document.getElementById('pid'+pid).innerHTML=='') document.getElementById('pid'+pid).innerHTML = '<span class=sho_page> <a href=-'+name+'_page_'+pid+' target=_blank title="Открыть страницу на сайте" class="punkt">'+icon('blue small','s')+' Открыть страницу на сайте</a> <a target=_blank href="sys.php?op='+admintip+'_edit_page&pid='+pid+'#1" title="Редактировать страницу в Редакторе" class="punkt">'+icon('orange small','7')+' Редактировать страницу</a> <a onclick=offpage('+pid+',0) class="punkt" title="Включение/Выключение страницы">'+active+' <a onclick=replace("'+pid+'") class="punkt" title="Копировать/Переместить/Создать ярлык">'+icon('blue small','^')+' Копировать/Переместить/Создать ярлык</a> <a onclick=delpage("'+pid+'") class="punkt" title="Удалить страницу">'+icon('red small','T')+' Удалить страницу в Корзину</a></span>';
 	else document.getElementById('pid'+pid).innerHTML = '';
 }
 function papka_show(cid, name, sort, id, xxx) {
 	show('podpapka'+cid);
 	if (document.getElementById('papka'+cid).innerHTML=='') { 
-		document.getElementById('papka'+cid).innerHTML = '&nbsp; <a target=_blank href=-'+name+'_cat_'+cid+' title="Посмотреть (открыть эту папку на сайте)"><img class="icon2 i36" src="/images/1.gif"></a> <a target=_blank href="sys.php?op=edit_base_pages_category&cid='+cid+'#1" title="Изменить папку в Редакторе"><img class="icon2 i35" src=/images/1.gif></a> <a target=_blank href="sys.php?op=edit_base_pages_category&cid='+cid+'&red=1#1" title="Изменить папку в HTML"><img class="icon2 i34" src=/images/1.gif></a>&nbsp;&nbsp;&nbsp;<a onclick=delpapka("'+cid+'") style="cursor:pointer;" title="Удалить папку"><img class="icon2 i33" src=/images/1.gif></a>';
+		document.getElementById('papka'+cid).innerHTML = '&nbsp; <a target=_blank href=-'+name+'_cat_'+cid+' title="Посмотреть (открыть эту папку на сайте)">'+icon('blue small','s')+'</a> <a target=_blank href="sys.php?op=edit_base_pages_category&cid='+cid+'#1" title="Изменить папку в Редакторе">'+icon('orange small','7')+'</a> <a target=_blank href="sys.php?op=edit_base_pages_category&cid='+cid+'&red=1#1" title="Изменить папку в HTML">'+icon('black small','7')+'</a>&nbsp;&nbsp;&nbsp;<a onclick=delpapka("'+cid+'") style="cursor:pointer;" title="Удалить папку">'+icon('red small','F')+'</a>';
 		papka(cid, sort, id,xxx);
 	} else {
 		document.getElementById('papka'+cid).innerHTML = '';
@@ -35,46 +35,40 @@ function papka_show(cid, name, sort, id, xxx) {
 function papka(cid, sort, id, xxx) {
 	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'papka', 'id': id, 'string': cid+'*@%'+sort},
-	    beforeSend: function(){ $('#podpapka'+cid).html('<br>Загрузка страниц и подпапок...'); },
+	    beforeSend: function(){ $('#podpapka'+cid).html('<br><img src=images/loading.gif> Загрузка страниц и подпапок...'); },
 	    success: function(data){ $('#podpapka'+cid).html(data); }
 	});
 }
 function show_otvet_comm(cid, name, mail, mod) {
-	if (document.getElementById('otvet_comm'+cid).innerHTML =='') {
-		document.getElementById('otvet_comm'+cid).innerHTML = '<input type=text id="otvet_comm_sender'+cid+'" value="Администратор" size=15 style="width:100%;"><br><textarea style="width:100%;height:150px;" id="otvet_comm_txt'+cid+'"></textarea><dt><a onclick=\'new_otvet(0, '+cid+', document.getElementById("otvet_comm_sender'+cid+'").value, document.getElementById("otvet_comm_txt'+cid+'").value, "'+mail+'", "'+mod+'")\' class=punkt><img class="icon2 i11" src=/images/1.gif align=left><strong>Отправить ответ</strong></a> (по email и через сайт)';
-		if (mail != '') document.getElementById('otvet_comm'+cid).innerHTML += '<br><a onclick=\'new_otvet(1, '+cid+', document.getElementById("otvet_comm_sender'+cid+'").value, document.getElementById("otvet_comm_txt'+cid+'").value, "'+mail+'", "'+mod+'")\' class=punkt><img class="icon2 i2" src=/images/1.gif align=left>Ответить по email</a> (без комментария на сайте)<br><br><a onclick=\'new_otvet(2, '+cid+', document.getElementById("otvet_comm_sender'+cid+'").value, document.getElementById("otvet_comm_txt'+cid+'").value, "'+mail+'", "'+mod+'")\' class=punkt><img class="icon2 i10" src=/images/1.gif align=left>Ответить через сайт</a> (без уведомления на email)<br>';
-		document.getElementById('otvet_comm_txt'+cid).focus(); 
-		document.getElementById('otvet_comm_txt'+cid).value = name+', '; 
-	} else document.getElementById('otvet_comm'+cid).innerHTML = '';
+	if ($('#otvet_comm'+cid).html() == '') {
+		$('#show_otvet_link'+cid).hide();
+		$('#otvet_comm'+cid).html('<div style="float:left;">'+icon('gray medium','u')+'</div><input type=text id="otvet_comm_sender'+cid+'" value="Администратор" size=15 style="width:90%; max-width:800px;"><br>'+icon('gray medium','@')+' Текст ответа:<br><textarea style="width:95%; max-width:800px;height:100px;" id="otvet_comm_txt'+cid+'"></textarea><dt><a onclick=\'new_otvet(0, '+cid+', document.getElementById("otvet_comm_sender'+cid+'").value, document.getElementById("otvet_comm_txt'+cid+'").value, "'+mail+'", "'+mod+'")\' class="button">'+icon('orange small','\'')+' Отправить ответ</a> (по email и через сайт)');
+		if (mail != '') $('#otvet_comm'+cid).append('Отправить только: <a onclick=\'new_otvet(1, '+cid+', document.getElementById("otvet_comm_sender'+cid+'").value, document.getElementById("otvet_comm_txt'+cid+'").value, "'+mail+'", "'+mod+'")\' class=punkt>по email</a> или <a onclick=\'new_otvet(2, '+cid+', document.getElementById("otvet_comm_sender'+cid+'").value, document.getElementById("otvet_comm_txt'+cid+'").value, "'+mail+'", "'+mod+'")\' class=punkt>через сайт</a>');
+		$('#otvet_comm'+cid).append('<br><div id="otvet_send'+cid+'"></div>');
+		$('#otvet_comm_txt'+cid).focus(); 
+		$('#otvet_comm_txt'+cid).val(name+', '); 
+	}
 }
 function new_otvet(type, id, sender, info, mail, mod) {
 	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'comm_otvet', 'id': id, 'type': type, 'string': sender+'*@%'+info+'*@%'+mail+'*@%'+mod},
-	    beforeSend: function(){ $('#otvet_comm'+id).html('<b>Отправляю ответ...</b>'); },
-	    success: function(data){ $('#otvet_comm'+id).html(data); }
+	    beforeSend: function(){ $('#otvet_send'+id).html('<img src=images/loading.gif> Отправляю ответ...'); },
+	    success: function(data){ $('#otvet_send'+id).html('<span class=h1>'+icon('green medium','c')+data+'</span>'); }
 	});
 }
 function trash_pics() {
 	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'trash_pics'},
-	    beforeSend: function(){ $('#show_options_oldfotos').html('<br>Загружаю список фотографий...'); },
+	    beforeSend: function(){ $('#show_options_oldfotos').html('<br><img src=images/loading.gif> Загружаю список фотографий...'); },
 	    success: function(data){ $('#show_options_oldfotos').html(data); }
 	});
 }
 function replace(id) {
 	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'replace', 'id': id},
-	    beforeSend: function(){ $('#pid'+id).html('<br>Загрузка функций копирования/перемещения и создания ярлыков...'); },
+	    beforeSend: function(){ $('#pid'+id).html('<br><img src=images/loading.gif> Загрузка функций копирования/перемещения и создания ярлыков...'); },
 	    success: function(data){ $('#pid'+id).html(data); }
 	});
-}
-function men3(id, name, admintip) {
-	if (document.getElementById('id'+id).innerHTML=='') document.getElementById('id'+id).innerHTML = '<a href="sys.php?op=edit_'+admintip+'&id='+id+'" title="Изменить элемент списка в Редакторе"><img src=images/admin/spisok_editor.gif></a> <a href="sys.php?op=edit_'+admintip+'&id='+id+'&red=1" title="Изменить элемент списка в HTML)"><img src=images/admin/spisok_noeditor.gif></a> &nbsp; <a href="sys.php?op='+admintip+'_del&name='+name+'&id='+id+'" title="Удалить элемент списка"><img src=images/admin/spisok_delete.gif></a>';
-	else document.getElementById('id'+id).innerHTML = '';
-}
-function add_pole(minus, id) {
-	if (minus==false) document.getElementById('id0').innerHTML += '<div id=div'+id+'><table width=100% border=0 cellspacing=0 cellpadding=5><tr><td width=18%><input type=text name=pole_name['+id+'] size=15 style="width:100%;" /></td><td width=20%><input type=text name=pole_rusname['+id+'] size=15 style="width:100%;" /></td><td width=10%><label><select name=pole_tip['+id+'] style="width:100%;"><option value="строка" selected=selected>Строка (до 250 букв)</option><option value="строкабезвариантов">Строка без выбора вариантов</option><option value="число">Число</option><option value="список">Список</option><option value="текст">Текст</option><option value="дата">Дата</option><option value="датавремя">Дата-Время</option><option value="фото">Фото</option><option value="минифото">МиниФото</option><option value="файл">Файл</option><option value="ссылка">Ссылка</option></select></label></td><td width=15%><label><select name=pole_main['+id+'] style="width:100%;"><option value=0>не важно</option><option value=1>основная категория</option><option value=2>вторичная категория</option><option value=3>обязательно заполнять</option><option value=4>не важно и не печатать</option><option value=6>не важно, не печатать и не показывать</option><option value=7>обязательно, не печатать и не показывать</option><option value=5>пустая для печати</option></select></label></td><td width=15%><label><select name=pole_open['+id+'] style="width:100%;"><option value=0 selected=selected>видно везде</option><option value=1>не видно нигде</option><option value=2>видно только на странице</option><option value=3>видно только по паролю</option></select></label></td><td width=20%><label><input type=text name=pole_rename['+id+'] size=15 style="width:100%;" /></label></td><td></td></tr></table></div>';
-	else document.getElementById('id'+id).innerHTML = '';
 }
 function select_button(id) {
 	$('.dark_pole2sel').attr('class', 'dark_pole2');
@@ -88,10 +82,10 @@ function options_show(id,type) {
 function oformlenie_show(title,id,type,link) {
 	var txt;
 	select_button(id);
-	txt = '<a class="button" style="margin-top:4px;margin-bottom:10px;" title="Добавить '+title+'" target=_blank href='+link+'#1><img class="icon2 i39" src=/images/1.gif>Добавить '+title+'</a><br>';
+	txt = '<a class="button" style="margin-top:4px;margin-bottom:10px;" title="Добавить '+title+'" target=_blank href='+link+'#1> + Добавить '+title+'</a><br>';
 	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'oformlenie_show', 'type': type },
-	    beforeSend: function(){ $('#podrazdel').html( txt + '<br>Загрузка...' ); },
+	    beforeSend: function(){ $('#podrazdel').html( txt + '<br><img src=images/loading.gif> Загрузка...' ); },
 	    success: function(data){ $('#podrazdel').html( txt + data ); }
 	});
 }
@@ -99,21 +93,27 @@ function razdel_show(title,id,name,type,xxx,sort) {
 	var txt;
 	select_button(id);
 	xxx = Math.floor( Math.random() * (100000 - 9) ) + 10;
+	colors = '<a href="sys.php?op=mainpage_razdel_color&id='+id+'&color=0" title="Без цветовой маркировки">'+icon('gray small',',')+'</a><a href="sys.php?op=mainpage_razdel_color&id='+id+'&color=1" title="Раздел часто используется">'+icon('lightgreen small',',')+'</a><a href="sys.php?op=mainpage_razdel_color&id='+id+'&color=2" title="Раздел редко используется">'+icon('lightyellow small',',')+'</a><a href="sys.php?op=mainpage_razdel_color&id='+id+'&color=3" title="Раздел не используется">'+icon('lightred small',',')+'</a><a href="sys.php?op=mainpage_razdel_color&id='+id+'&color=4" title="Новый раздел, в разработке">'+icon('lightblue small',',')+'</a>';
 	if (id == 0) txt = '<h1>'+title+'</h1>';
 	else {
-		txt = '<div class=pt10><nobr><ul class="button-bar"><li><a target=_blank class=blue href=-'+name+' title="Открыть этот раздел на сайте"><img class="icon2 i36" src="/images/1.gif">Открыть</a></li><li><a href="sys.php?op=mainpage&amp;type=2&id='+id+'#1" title="Редактировать Главную страницу этого раздела и Шаблон для заполнения страниц"><img class="icon2 i35" src=/images/1.gif>Редактировать</a></li><li><a href="sys.php?op=mainpage&id='+id+'&amp;type=2&nastroi=1#1" title="Настройки (опции) раздела"><img class="icon2 i38" src=/images/1.gif class=left>Настроить</a></li><li><a onclick=show("del_raz'+id+'") title="Удалить этот раздел"><img class="icon2 i33" src=/images/1.gif></a></li></ul></nobr><div id=del_raz'+id+' style="display:none"><br><br><div class=block><h1>Вы хотите удалить этот раздел и всё его содержимое?</h1><a onclick=\'delrazdel("'+id+'");show("del_raz'+id+'");show("mainrazdel'+id+'");razdel_show("Раздел удалён", 0)\' title="Удалить этот раздел" class="button red white">Удалить</a> <a onclick=show("del_raz'+id+'") title="Не удалять" class="ml50 button green">НЕ удалять</a></div></div></div>'; 
+		txt = '<div class=pt10><nobr><ul class="button-bar"><li><a target=_blank class=blue href=-'+name+' title="Открыть этот раздел на сайте">'+icon('blue small','s')+' Открыть</a></li><li><a href="sys.php?op=mainpage&amp;type=2&id='+id+'#1" title="Редактировать Главную страницу этого раздела и Шаблон для заполнения страниц">'+icon('orange medium','7')+' Редактировать</a></li><li><a href="sys.php?op=mainpage&id='+id+'&amp;type=2&nastroi=1#1" title="Настройки (опции) раздела">'+icon('orange medium','V')+' Настроить</a></li><li><a class=pointer onclick=show("del_raz'+id+'") title="Удалить этот раздел">'+icon('red small','F')+'</a></li></ul></nobr><div id=del_raz'+id+' style="display:none"><br><br><div class=block><h1>Вы хотите удалить этот раздел и всё его содержимое?</h1><a onclick=\'delrazdel("'+id+'");show("del_raz'+id+'");show("mainrazdel'+id+'");razdel_show("Раздел удалён", 0)\' title="Удалить этот раздел" class="button red white">'+icon('white medium','F')+' Удалить</a> <a onclick=show("del_raz'+id+'") title="Не удалять" class="ml50 button green">НЕ удалять</a></div></div></div>'; 
 		if (type == 'pages') {
-			txt = txt+'<div class="mt5 mb20"><nobr><a class="button green" title="Добавить страницу (в редакторе)" target=_blank href="sys.php?op=base_pages_add_page&name='+name+'#1"><img class="icon2 i39" src=/images/1.gif>Добавить страницу</a><a onclick="add_papka(\''+id+'\',1)" class="button small green" title="Добавить несколько страниц">цы</a> <a onclick="add_papka(\''+id+'\',0)" class="button small green"><img class="icon2 i40" src=/images/1.gif>Создать папку</a> <a href="sys.php?op=mainpage_razdel_color&id='+id+'&color=0" title="Без цветовой маркировки"><div class="but_color radius"><img class=icon3 src=/images/1.gif></div></a><a href="sys.php?op=mainpage_razdel_color&id='+id+'&color=1" title="Раздел часто используется"><div class="but_color2 radius"><img class=icon3 src=/images/1.gif></div></a><a href="sys.php?op=mainpage_razdel_color&id='+id+'&color=2" title="Раздел редко используется"><div class="but_color3 radius"><img class=icon3 src=/images/1.gif></div></a><a href="sys.php?op=mainpage_razdel_color&id='+id+'&color=3" title="Раздел не используется"><div class="but_color4 radius"><img class=icon3 src=/images/1.gif></div></a><a href="sys.php?op=mainpage_razdel_color&id='+id+'&color=4" title="Новый раздел, в разработке"><div class="but_color5 radius"><img class=icon3 src=/images/1.gif></div></a></nobr> <div id="add_papka" style="display:none;"></div></div>';
-		} else txt = txt+'<div style="margin-top: 5px; margin-bottom: 20px;"><nobr><a href="sys.php?op=mainpage_razdel_color&id='+id+'&color=0" title="Без цветовой маркировки"><div class="but_color radius"><img class=icon3 src=/images/1.gif></div></a><a href="sys.php?op=mainpage_razdel_color&id='+id+'&color=1" title="Раздел часто используется"><div class="but_color2 radius"><img class=icon3 src=/images/1.gif></div></a><a href="sys.php?op=mainpage_razdel_color&id='+id+'&color=2" title="Раздел редко используется"><div class="but_color3 radius"><img class=icon3 src=/images/1.gif></div></a><a href="sys.php?op=mainpage_razdel_color&id='+id+'&color=3" title="Раздел не используется"><div class="but_color4 radius"><img class=icon3 src=/images/1.gif></div></a><a href="sys.php?op=mainpage_razdel_color&id='+id+'&color=4" title="Новый раздел, в разработке"><div class="but_color5 radius"><img class=icon3 src=/images/1.gif></div></a></nobr></div>';
+			txt = txt+'<div class="mt5 mb20"><nobr><a class="button green" title="Добавить страницу (в редакторе)" target=_blank href="sys.php?op=base_pages_add_page&name='+name+'#1">'+icon('white small','+')+' Добавить страницу</a><a onclick="add_papka(\''+id+'\',1)" class="button small green" title="Добавить несколько страниц">цы</a> <a onclick="add_papka(\''+id+'\',0)" class="button small green">'+icon('yellow small',',')+' Создать папку</a> ' + colors + '</nobr> <div id="add_papka" style="display:none;"></div></div>';
+		} else if (type == 'database') {
+			txt = txt+'<div class="mt5 mb20"><nobr><a class="button green" href="sys.php?op=base_base_create_base&base='+name+'&name='+name+'&amp;red=1#1" title="Добавить строку в базу данных">'+icon('white small','+')+' Добавить строку</a> <a class="button blue" href="sys.php?op=base_base&name='+name+'" title="Открыть базу данных">'+icon('white small','s')+' Открыть таблицу</a> ' + colors + '</nobr></div>';
+		} else txt = txt+'<div style="margin-top: 5px; margin-bottom: 20px;"><nobr>' + colors + '</nobr></div>';
 		if (type == 'page') txt = txt+'Раздел не содержит блока отображения страниц — [содержание], поэтому сам является страницей.<br>Для изменения содержания раздела нажмите кнопку Редактировать.<br>Для размещения в разделе страниц и/или папок — добавьте в содержание раздела блок [содержание]';
 	}
 	document.getElementById('podrazdel').innerHTML = txt;
 	if (type == 'pages') { razdel(id, sort, xxx, txt); }
 }
+function icon(classes,data) {
+	return '<span class="icon '+classes+'" data-icon="'+data+'" style="display: inline-block; "><span aria-hidden="true">'+data+'</span></span>';
+}
 function razdel(id, sort, re, txt) {
 	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'razdel', 'id': id, 'string': re+'*@%'+sort},
-	    beforeSend: function(){ $('#podrazdel').html('<br>Загрузка страниц и папок раздела...'); },
+	    beforeSend: function(){ $('#podrazdel').html('<br><img src=images/loading.gif> Загрузка страниц и папок раздела...'); },
 	    success: function(data){ $('#podrazdel').html(txt + data + '<hr>'); }
 	});
 }
@@ -121,7 +121,7 @@ function add_papka(id,pages) {
 	if (pages==0) pages = 'add_papka'; else pages = 'add_pages';
 	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
 	    data: {'func': pages, 'id': id},
-	    beforeSend: function(){ $('#add_papka').toggle(); $('#add_papka').html('<br>Загрузка списка папок раздела...'); },
+	    beforeSend: function(){ $('#add_papka').toggle(); $('#add_papka').html('<br><img src=images/loading.gif> Загрузка списка папок раздела...'); },
 	    success: function(data){ $('#add_papka').html(data); }
 	});
 }
@@ -143,11 +143,13 @@ function offpage(id,on) {
 }
 function openbox(id,name) {
 	var add = '';
-	if (name == 'Комментарии') add = '<span style="margin-left: 20px;"><img class="icon2 i21" src=/images/1.gif>Удалить: <a href="sys.php?op=delete_noactive_comm" class="gray nothing"> отключенные</a>, <a href="sys.php?op=delete_system_comm" class="gray nothing">системные</a> <a href="sys.php?op=base_comments" style="margin-left: 20px;" class="gray nothing"><img class="icon2 i36" src=/images/1.gif class=left>Открыть все</a> <nobr><span style="margin-left: 20px;"><img class="icon2 i11" src="/images/1.gif" valign=bottom>Показать: <a class="nothing punkt" onclick="openbox(\'6\',\'Отключенные комментарии\');">отключенные</a>, <a class="nothing punkt" onclick="openbox(\'7\',\'Комментарии без ответов\');">без ответов</a></span></nobr><br><br>';
-	if (name == 'Комментарии без ответов') add = '<a href="sys.php?op=delete_noactive_comm" style="margin-left: 20px;" class="gray nothing"><img class="icon2 i21" src=/images/1.gif>Удалить отключенные</a> <a href="sys.php?op=base_comments" style="margin-left: 20px;" class="gray nothing"><img class="icon2 i36" src=/images/1.gif class=left>Открыть все</a> <nobr><span style="margin-left: 20px;"><img class="icon2 i11" src="/images/1.gif" valign=bottom>Показать: <a class="nothing punkt" onclick="openbox(\'6\',\'Отключенные комментарии\');">отключенные</a>, <b>без ответов</b></span></nobr><br><br>';
-	if (name == 'Отключенные комментарии') add = '<a href="sys.php?op=delete_noactive_comm" style="margin-left: 20px;" class="gray nothing"><img class="icon2 i21" src=/images/1.gif>Удалить отключенные</a> <a href="sys.php?op=base_comments" style="margin-left: 20px;" class="gray nothing"><img class="icon2 i36" src=/images/1.gif class=left>Открыть все</a> <nobr><span style="margin-left: 20px;"><img class="icon2 i11" src="/images/1.gif" valign=bottom>Показать: <b>отключенные</b>, <a class="nothing punkt" onclick="openbox(\'7\',\'Комментарии без ответов\');">без ответов</a></span></nobr><br><br>';
-	if (name == 'Корзина') add = 'При удалении страниц, они попадают в Корзину для окончательного удаления или восстановления.<br><a href="sys.php?op=delete_all_pages&del=del" style="margin-left: 20px;" class="gray nothing"><img class="icon2 i21" src=/images/1.gif>Очистить Корзину</a><br><br>';
-	if (name == 'Резервные копии') add = 'При редактировании страниц создаются их копии для восстановления при необходимости. Внимание: восстанавливая предыдущий вариант страницы, вы заменяете новый!<br><a href="sys.php?op=delete_all_pages&del=backup" style="margin-left: 20px;" class="gray nothing"><img class="icon2 i21" src=/images/1.gif>Удалить все копии</a><br><br>';
+	var no_answer_comm = '<a class="nothing punkt" onclick="openbox(\'7\',\'Комментарии без ответов\');">без ответов</a>';
+	var no_active_comm = '<a class="nothing punkt" onclick="openbox(\'6\',\'Отключенные комментарии\');">отключенные</a>';
+	if (name == 'Комментарии без ответов') no_answer_comm = '<b>без ответов</b>';
+	if (name == 'Отключенные комментарии') no_active_comm = '<b>отключенные</b>';
+	if (name == 'Комментарии' || name == 'Комментарии без ответов' || name == 'Отключенные комментарии') add = '<span style="margin-left: 20px;">'+icon('red small','F')+'Удалить: <a href="sys.php?op=delete_noactive_comm" class="gray nothing"> отключенные</a>, <a href="sys.php?op=delete_system_comm" class="gray nothing">системные</a> <a href="sys.php?op=base_comments" style="margin-left: 20px;" class="gray nothing">'+icon('blue small','s')+'Открыть все</a> <nobr><span style="margin-left: 20px;">'+icon('orange small','\'')+'Показать: '+no_active_comm+', '+no_answer_comm+'</span></nobr><br><br>';
+	if (name == 'Корзина') add = 'При удалении страниц, они попадают в Корзину для окончательного удаления или восстановления.<br><a href="sys.php?op=delete_all_pages&del=del" style="margin-left: 20px;" class="gray nothing">'+icon('red small','F')+'Очистить Корзину</a><br><br>';
+	if (name == 'Резервные копии') add = 'При редактировании страниц создаются их копии для восстановления при необходимости. Внимание: восстанавливая предыдущий вариант страницы, вы заменяете новый!<br><a href="sys.php?op=delete_all_pages&del=backup" style="margin-left: 20px;" class="gray nothing">'+icon('red small','F')+'Удалить все копии</a><br><br>';
 	if (name == 'Добавленное посетителями') add = 'Эти страницы нуждаются в проверке и включении.<br><br>';
 	if (name == 'Новое и отредактированное') add = 'История последних изменений<br><br>';
 	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
@@ -159,8 +161,8 @@ function openbox(id,name) {
 function delslovo(id) {
 	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'delslovo', 'id': id},
-	    beforeSend: function(){ $('#s_'+id).html('Удаляем...'); },
-	    success: function(data){ $('#s_'+id).html('<b class=green>удалено</b>'); }
+	    beforeSend: function(){ $('#s_'+id).html(' <img src=images/loading.gif> Удаляю...'); },
+	    success: function(data){ $('#s_'+id).html(' <b class=green>Удалено</b>'); }
 	});
 }
 function delpage(id) {
@@ -169,7 +171,6 @@ function delpage(id) {
 	});
 	$('#page'+id).hide();
 	$('#1page'+id).hide();
-	//$('#2page'+id).hide();
 }
 function deletepage(id) {
 	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
@@ -194,7 +195,7 @@ function delcomm(id) {
 function del_file(file, id) {
 	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'delfile', 'type': file },
-	    beforeSend: function(){ $('#file'+id).html('Удаляю...'); },
+	    beforeSend: function(){ $('#file'+id).html('<img src=images/loading.gif> Удаляю...'); },
 	    success: function(data){ $('#file'+id).hide(); }
 	});
 }
@@ -224,7 +225,7 @@ function delrazdel(id) {
 function rep(id,type,razdel,papka) {
 	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'rep', 'type': type, 'id': id, 'string': papka+'*@%'+razdel },
-	    beforeSend: function(){ $('#rep'+id).html('Секундочку...'); },
+	    beforeSend: function(){ $('#rep'+id).html('<img src=images/loading.gif> Секундочку...'); },
 	    success: function(data){ $('#rep'+id).html(data); if (type == 3) $('#page'+id).hide('slow'); }
 	});
 }
@@ -234,11 +235,10 @@ function clo(pid) {
 function izmenapapka(select,papka,razdel,id,type) {
 	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'izmenapapka', 'id': id, 'type': type, 'string': select+'*@%'+papka+'*@%'+razdel },
-	    beforeSend: function(){ $('#izmenapapka'+id).html('Загружаю...'); },
+	    beforeSend: function(){ $('#izmenapapka'+id).html('<img src=images/loading.gif> Загружаю...'); },
 	    success: function(data){ $('#izmenapapka'+id).html(data); }
 	});
 }
-
 function delpapka(id) {
 	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'delpapka', 'id': id },

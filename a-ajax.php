@@ -24,22 +24,20 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
     $info .= "<table width=100% class=table_light>";
     if (!isset($nam)) $nam = "";
 
-
     while ($row = $db->sql_fetchrow($result)) {
        $useit = explode(" ", trim($row['useit']));
        $css = "";
        foreach( $useit as $value ) {
-        if ($value) $css .= " <a href='/sys.php?op=mainpage&id=".$value."' title='Редактировать' class='gray'><i>".$title_razdels_by_id[$value]."</i><img class='icon2 i34' src='/images/1.gif'></a> ";
+        if ($value) $css .= " <a href='/sys.php?op=mainpage&id=".$value."' title='Редактировать' class='gray'><i>".$title_razdels_by_id[$value]."</i>".icon('black small','7')."</a> ";
        }
-       if ($css == "") $css = "<i class='red'>стиль не выбран</i><br>"; else $css = "Подключенные стили (css): ".$css."<br>";
-       if ($row['title'] != "Главный дизайн") $delx = "<a class='padleft30' href=/sys.php?op=mainpage_del&id=".$row['id']."&type=0&name=".$nam." title='Удалить дизайн ".$row['title']."'><img class='icon2 i21' src='/images/1.gif'></a>";
-        else $delx = "<span class='padleft30'><img title='Основной дизайн нельзя удалить' class='icon2 i44' src='/images/1.gif'>";
+       if ($css == "") $css = "<i class='red'>стиль не выбран</i><br>";
+       else $css = "Подключенные стили (css): ".$css."<br>";
+       if ($row['title'] != "Главный дизайн") $delx = "<a class='padleft30' href=/sys.php?op=mainpage_del&id=".$row['id']."&type=0&name=".$nam." title='Удалить дизайн ".$row['title']."'>".icon('red small','F')."</a>";
+        else $delx = "<span class='padleft30'>".icon('gray small','X');
         
        $info .= "<tr valign='top'><td><h2>".$row['title']." &darr;</h2>
        <div style='float:right; display: inline;'>
-       <a href='sys.php?op=mainpage&id=".$row['id']."&red=1' title='Редактировать в HTML'><img class='icon2 i34' src='/images/1.gif'></a> 
-       ".$delx."
-       </div>";
+       <a href='sys.php?op=mainpage&id=".$row['id']."&red=1' title='Редактировать в HTML'>".icon('orange small','7')."</a> ".$delx."</div>";
       ///////
        $sql2 = "select id,name,title from ".$prefix."_mainpage where `tables`='pages' and type='2' and text like '%design=".$row['id']."&%' order by title, name";
        $result2 = $db->sql_query($sql2);
@@ -77,11 +75,9 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
     $result = $db->sql_query($sql);
     $info = "<table class=table_light width=50% style='min-width:500px;'>";
     while ($row = $db->sql_fetchrow($result)) {
-     if ($css == "") $css = "<i class='gray'>стиль не выбран</i><br>"; 
-     else $css = "Подключенные стили (css): ".$css."<br>";
-     if ($row['title'] != "Главный стиль") $delx = "<a class='padleft30' href='/sys.php?op=mainpage_del&id=".$row['id']."&type=1' title='Удалить стиль «".$row['title']."»'><img class='icon2 i21' src='/images/1.gif'></a>";
-     else $delx = "<span class='padleft30'><img title='Основной стиль нельзя удалить' class='icon2 i44' src='/images/1.gif'>";
-     $info .= "<tr><td><h2>".$row['title']."<div style='float:right; display: inline;'><a href='sys.php?op=mainpage&type=1&id=".$row['id']."' title='Редактировать'><img class='icon2 i34' src='/images/1.gif'></a> ".$delx."</h2></div></td></tr>";
+     if ($row['title'] != "Главный стиль") $delx = "<a class='padleft30' href='/sys.php?op=mainpage_del&id=".$row['id']."&type=1' title='Удалить стиль «".$row['title']."»'>".icon('red small','F')."</a>";
+     else $delx = "<span class='padleft30'>".icon('gray small','X');
+     $info .= "<tr><td><h2>".$row['title']."<div style='float:right; display: inline;'><a href='sys.php?op=mainpage&type=1&id=".$row['id']."' title='Редактировать'>".icon('black small','7')."</a> ".$delx."</h2></div></td></tr>";
     }
     $info .= "</table>";
   break;
@@ -176,9 +172,9 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
       } else $title = '<a href="sys.php?op=mainpage&type=3&id='.$row['id'].'&red=1">'.$row['title'].'</a>';
 
       if ($row['color'] != "1") {
-        $icon_disable = "43"; $text_disable = "Отключить блок"; $class_disable = "";
+        $icon_disable = "red"; $text_disable = "Отключить блок"; $class_disable = "";
       } else {
-        $icon_disable = "44"; $text_disable = "Включить блок"; $class_disable = " bggray";
+        $icon_disable = "green"; $text_disable = "Включить блок"; $class_disable = " bggray";
       }
       if ($n == $row['name']) $nu = "-";  else { $n = $row['name']; $nu = $row['name']; }
       $bgcolor = "#FFeecc"; //FFddaa
@@ -187,10 +183,10 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
        else $block = "<tr valign=top><td style='background:white;'><br><h2>".$block_names[$nu]." &darr;</h2></td></tr><tr id='block_".$row['id']."'><td class='padleft30".$class_disable."'>";
       $title = $block.$title;
       $blocks_ok = $title."<div style='margin-left:20px; display: inline; float:right;'>
-       <a href='sys.php?op=mainpage&type=3&id=".$row['id']."&red=1' title='Редактировать в HTML'><img class='icon2 i34' src='/images/1.gif'></a> 
-       <a href='sys.php?op=mainpage&type=3&id=".$row['id']."&nastroi=1' title='Настроить блок'><img class='icon2 i38' src='/images/1.gif'></a> 
-       <a class='punkt' onclick='offblock(".$row['id'].")' title='".$text_disable."'><img class='icon2 i".$icon_disable."' src='/images/1.gif'></a>  
-       <a class='padleft30 punkt' onclick='delblock(".$row['id'].")' title='Удалить блок'><img class='icon2 i21' src='/images/1.gif'></a>
+       <a href='sys.php?op=mainpage&type=3&id=".$row['id']."&red=1' title='Редактировать в HTML'>".icon('black small','7')."</a> 
+       <a href='sys.php?op=mainpage&type=3&id=".$row['id']."&nastroi=1' title='Настроить блок'>".icon('yellow medium','V')."</a> 
+       <a class='padleft30 punkt' onclick='offblock(".$row['id'].")' title='".$text_disable."'>".icon($icon_disable.' small','Q')."</a>  
+       <a class='padleft30 punkt' onclick='delblock(".$row['id'].")' title='Удалить блок'>".icon('red small','F')."</a>
        </div>
        </td></tr>";
       $blocks_no .= $blocks_ok;
@@ -213,8 +209,8 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
       $useit_module = "";
       $text = $row['text'];
       global $admin_file;
-      $redactor = "<div style='float:right;'><a href='sys.php?op=mainpage&id=".$id."&red=1&type=6' title='Редактировать'><img class='icon2 i34' src='/images/1.gif'></a> ";
-      $redactor .= "<a class='padleft30' href='sys.php?op=mainpage_del&id=".$id."&type=6&name=$nam' title='Удалить'><img class='icon2 i33' src='/images/1.gif'></a></div>"; // удаление базы данных
+      $redactor = "<div style='float:right;'><a href='sys.php?op=mainpage&id=".$id."&red=1&type=6' title='Редактировать'>".icon('black small','7')."</a> ";
+      $redactor .= "<a class='padleft30' href='sys.php?op=mainpage_del&id=".$id."&type=6&name=$nam' title='Удалить'>".icon('red small','F')."</a></div>"; // удаление базы данных
       $info .= "<tr><td>".$redactor."<h2>".$title."</h2></td></tr>";
     }
     $info .= "</table>";
@@ -245,12 +241,12 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
       if ($useit==0) $m_title = "все разделы";
       $type_opisX = "Раздел: ".$m_title.".<br>Тип: ".$and.".</sup>";
       $adres = "$title";
-      $redactor = "<div style='float:right;'><a href='sys.php?op=mainpage&id=".$id."&red=1&type=4' title='Редактировать'><img class='icon2 i34' src='/images/1.gif'></a> 
-      <a class='padleft30' href='sys.php?op=mainpage_del&id=".$id."&type=4&name=$nam' title='Удалить поле'><img class='icon2 i33' src='/images/1.gif'></a></div>";
+      $redactor = "<div style='float:right;'><a href='sys.php?op=mainpage&id=".$id."&red=1&type=4' title='Редактировать'>".icon('black small','7')."</a> 
+      <a class='padleft30' href='sys.php?op=mainpage_del&id=".$id."&type=4&name=$nam' title='Удалить поле'>".icon('red small','F')."</a></div>";
       $info .= "<tr><td>".$redactor."<h2>".$title." &darr;</h2><sup style=\"color:#999999;\">Используется в шаблонах: [".$nam."]</sup><br>
       ".$type_opisX."</td></tr>";
     }
-    $info .= "</table><br><a class=\"dark_pole\" title=\"Очистить пустые поля\" href='sys.php?op=mainpage_recycle_spiski'><img class=\"icon2 i33\" src=/images/1.gif class=left>Очистить пустые поля</a>";
+    $info .= "</table><br><a class=\"dark_pole\" title=\"Очистить пустые поля\" href='sys.php?op=mainpage_recycle_spiski'>".icon('red small','x')."Очистить пустые поля</a>";
   break;
 
 
@@ -286,10 +282,10 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
       $view = "&nbsp;&nbsp;"; 
       $redactor = "";
       $and = "";
-      $redactor .= "<div style='float:right;'><a class='padleft30' href='sys.php?op=mainpage_del&id=".$id."&type=5&name=$nam' title='Удалить базу данных'><img class='icon2 i33' src='/images/1.gif'></a></div>"; // удаление базы данных
-      $info .= "<tr><td>".$adres." <sup style=\"color:#999999;\">".$and."</sup>&nbsp;&nbsp;<font color=#dddddd>".$view2."</font> ".$redactor."&nbsp;".$and2."".$view."&nbsp;&nbsp;".$link."</td></tr>";
+      $redactor .= "<div style='float:right;'><a class='padleft30' href='sys.php?op=mainpage_del&id=".$id."&type=5&name=$nam' title='Удалить базу данных'>".icon('red small','F')."</a></div>"; // удаление базы данных
+      $info .= "<tr><td>".$adres." <sup style=\"color:#999999;\">".$and."</sup>&nbsp;&nbsp;<font color=#dddddd>".$view2."</font> ".$redactor."&nbsp;".$view."&nbsp;&nbsp;".$link."</td></tr>";
     }
-    $info .= "</table><div class=green>Для редактирования таблицы подключите её к разделу через его настройки.</div>";
+    $info .= "</table><div class=green>Для редактирования таблица должна быть подключена к разделу (подключение возможно через настройки раздела).<br>При создании таблицы она автоматически создает одноименный раздел и подключается к нему.<br>Редактируется таблица через раздел — на вкладке Содержание.</div>";
   break;
 
   default:
@@ -473,7 +469,7 @@ if ($func == "addpages") { // Добавляем страницы
 if ($func == "offpage") { // вкл./выкл. страницы
   $color=""; $nowork = "";
   $active = $db->sql_fetchrow($db->sql_query("SELECT pid, module, title, active FROM ".$prefix."_pages where pid='$id'"));
-  if ($active['active'] == 1) { $act = 0; $color=" class=noact"; $nowork="<img class=\"icon2 i43\" src=/images/1.gif class=left title='Страница отключена.\nНажав по ней и выбрав такой же значок, вы можете ее включить.'>"; } 
+  if ($active['active'] == 1) { $act = 0; $color=" class=noact"; $nowork = icon('red small','Q'); } 
   else $act = 1;
   $db->sql_query("UPDATE ".$prefix."_pages SET `active`='$act' WHERE pid='$id'"); 
   echo "<div id=\"page".$active['pid']."\"><a href=#".mt_rand(10000, 99999).$active['pid']." onclick='sho(".$active['pid'].", \"".$active['module']."\", \"base_pages\",".$act.");'".$color." class='punkt no'>".$nowork."".$active['title']."</a><div id='pid".$active['pid']."' class=pid></div></div>"; exit;
@@ -622,7 +618,7 @@ if ($func == "add_papka") { // Создание папки
 }
 ######################################################################################
 if ($func == "opengarbage") { // Открытие вкладок Содержания
-  global $title_razdel_and_bd;
+  global $title_razdel_and_bd, $lang;
   $color=$pageslistdel=$nowork = "";
 
   if ($id == 10) {
@@ -660,14 +656,14 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
       }
     $pageslistdel .= "<form method='post' action=sys.php>
       <TABLE width=100% class='table_light'><tr><td>
-      <span class=h2>Название раздела (по-русски):</span><br>
-      <input id=rus_name type=text name=title size=30 class=w100 autofocus><br>
-      <a class=punkt onclick='$(\"#eng_name\").toggle(\"slow\");'>Англ. название</a> будет создано транслитом. <i>Примеры: «О нас», «Наша продукция», «Каталог», «Контакты» и т.д.</i><br>
+      <span class=h2>Название раздела:</span><br>
+      <input id=name_razdel type=text name=title size=30 class=w100 autofocus><br>
+      <i>Примеры: «О нас», «Наша продукция», «Каталог», «Контакты» и т.д.</i> <a class=punkt onclick='$(\"#psevdonim\").toggle(\"slow\");'>Псевдоним</a> будет создан транслитом.<br>
       </td></tr>
-      <tr id=eng_name style='display:none;'><td>
-      <span class=h3>Англ. название:</span><br>
+      <tr id=psevdonim style='display:none;'><td>
+      <span class=h3>Псевдоним:</span><br>
       <input type=text name=namo size=30 class=w100><br>
-      <a href=# onclick=\"window.open('http://translate.google.ru/#ru/en/' + $('#rus_name').val(),'Перевод',' width=800,height=400'); return false;\"><b>Перевести русское название</b></a>. <i>Используются англ. буквы и знак «_», без пробелов. Примеры: «about_me», «product», «catalog», «contact» и т.д.</i>
+      <a href=# onclick=\"window.open('http://translate.google.ru/#".$lang."/en/' + $('#name_razdel').val(),'Перевод',' width=800,height=400'); return false;\"><b>Перевести название</b></a>. <i>Используются англ. буквы и знак «_», без пробелов. Примеры: «about_me», «product», «catalog», «contact» и т.д.</i>
       </td></tr><tr><td>
       <span class=h2>Использовать настройки:</span><br><select name=text size=10 class=w100>
       <option value='[название]'>• раздел будет отдельной страницей без вложенных папок и страниц</option>
@@ -705,9 +701,9 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
         if ($row6['active'] == 1) { $p_active_color = "white"; $vkl_title = ""; }
         else {
           $p_active_color = "#dddddd";
-          $vkl_title = "<a onclick=offpage(".$pid.",1) class=\"punkt\" title=\"Включение страницы\"><img class=\"icon2 i44\" src=/images/1.gif>Включить</a>";
+          $vkl_title = "<a onclick=offpage(".$pid.",1) class=\"punkt\" title=\"Включение страницы\">".icon('white small','`')."Включить</a>";
         }
-        $pageslistdel .= "<tr id=1page".$pid." bgcolor=".$p_active_color." class='tr_hover'><td class='".$gray_date."'><nobr>".$date."</nobr></td><td>".$m_title."</td><td>".$vkl_title."</td><td><a title='Удалить страницу в Корзину' onclick=delpage(".$pid.") style=\"cursor:pointer;\"><img class=\"icon2 i33\" src=/images/1.gif align=right></a><a title='Изменить страницу' href='sys.php?op=base_pages_edit_page&name=".$module."&pid=".$pid."'><img class=\"icon2 i35\" src=/images/1.gif></a> <a title='Открыть страницу на сайте' target=_blank href=-".$module."_page_".$pid.">".$title."</a>&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>";
+        $pageslistdel .= "<tr id=1page".$pid." bgcolor=".$p_active_color." class='tr_hover'><td class='".$gray_date."'><nobr>".$date."</nobr></td><td>".$m_title."</td><td>".$vkl_title."</td><td><a title='Удалить страницу в Корзину' onclick=delpage(".$pid.") class='pointer' style='float:right;'>".icon('red small','T')."</a><a title='Изменить страницу' href='sys.php?op=base_pages_edit_page&name=".$module."&pid=".$pid."'>".icon('orange small','7')."<a title='Открыть страницу на сайте' target=_blank href=-".$module."_page_".$pid.">".$title."</a>&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>";
     }
     $pageslistdel .= "</tbody></table>";
 
@@ -721,7 +717,7 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
       $module = $row7['module'];
       if (!isset($module)) $title_razdel_and_bd[$module] = "РАЗДЕЛ УДАЛЁН! &rarr; $module";
       $date = date2normal_view(str_replace(".","-",$row7['date']), 2, 1);
-      $pageslistdel .= "<tr id=1page".$pid." bgcolor=#ffffff class='tr_hover'><td class='gray'><nobr>".$date."</nobr></td><td class='gray'>".$title_razdel_and_bd[$module]."</td><td><a onclick=offpage(".$pid.",1) class=\"punkt\" title=\"Включение страницы\"><img class=\"icon2 i44\" src=/images/1.gif>Включить</a></td><td><a title='Удалить страницу в Корзину' onclick=delpage(".$pid.") style=\"cursor:pointer;\"><img class=\"icon2 i33\" src=/images/1.gif align=right></a><a title='Изменить страницу в Редакторе' href='sys.php?op=base_pages_edit_page&name=".$module."&pid=".$pid."'><img class=\"icon2 i35\" src=/images/1.gif></a> <a title='Открыть страницу на сайте' target=_blank href=-".$module."_page_".$pid.">".$title."</a>&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>";
+      $pageslistdel .= "<tr id=1page".$pid." bgcolor=#ffffff class='tr_hover'><td class='gray'><nobr>".$date."</nobr></td><td class='gray'>".$title_razdel_and_bd[$module]."</td><td><a onclick=offpage(".$pid.",1) class=\"punkt\" title=\"Включение страницы\">".icon('white small','`')."Включить</a></td><td><a title='Удалить страницу в Корзину' onclick=delpage(".$pid.") class='pointer' style='float:right;'>".icon('red small','T')."</a><a title='Изменить страницу в Редакторе' href='sys.php?op=base_pages_edit_page&name=".$module."&pid=".$pid."'>".icon('orange small','7')."</a><a title='Открыть страницу на сайте' target=_blank href=-".$module."_page_".$pid.">".$title."</a>&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>";
     }
   $pageslistdel .= "</tbody></table><i>Максимум отображения: 10.000 страниц.</i>";
 
@@ -736,7 +732,7 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
     }
     if ($id == 7) { // без ответов
       $limit = 100;
-      $sql = "SELECT `drevo` from ".$prefix."_pages_comments where `tables`='pages'".$line_id." and `active`!='0' and `num`!='0' and `drevo`!='0' order by `data` desc limit 0,1000000";
+      $sql = "SELECT `drevo` from ".$prefix."_pages_comments where `tables`='pages' and `active`!='0' and `num`!='0' and `drevo`!='0' order by `data` desc limit 0,1000000";
       $result = $db->sql_query($sql);
       $drevos = array();
       while ($row = $db->sql_fetchrow($result)) {
@@ -778,10 +774,10 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
       else $otvet = "";
       if ($row5['active'] == 0) {
         $bgcolor = " bgcolor='#dddddd' class='ffa4ac'"; 
-        $vkl = "<img class=\"icon2 i44\" src=/images/1.gif align=right title='Включить комментарий'>";
+        $vkl = "<div style='float:right; margin-left:10px;' title='Включить комментарий'>".icon('green small','Q')."</div>";
       } else {
         $bgcolor = " bgcolor='white'";
-        $vkl = "<img class=\"icon2 i43\" src=/images/1.gif align=right title='Отключить комментарий'>";
+        $vkl = "<div style='float:right; margin-left:10px;' title='Отключить комментарий'>".icon('red small','Q')."</div>";
       }
       $textline = mb_substr(strip_tags($txt), 0, 45, 'UTF-8');
       if (strlen($textline)<strlen($txt)) $textline .= "...";
@@ -790,23 +786,25 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
       if ($num != 0) {
         if (!isset($module)) $titl_mainpage = "РАЗДЕЛ УДАЛЁН! &rarr; $module";
         else $titl_mainpage = trim($title_razdel_and_bd[$module]);
-        if ($del == true) $del = "<a title='Удалить отключенный комментарий' onclick=delcomm(".$cid.") class=punkt><img class='icon2 i21' src='/images/1.gif' align=right></a>"; else $del = "";
+        //if ($del == true) 
+          $del = "<a title='Удалить отключенный комментарий' onclick=delcomm(".$cid.") class=punkt><div style='float:right; margin-left:20px;' title='Отключить комментарий'>".icon('red small','F')."</div></a>"; 
+          //else $del = "";
         $pageslistdel .= "<tr onclick=show('comm".$cid."') title='Показать комментарий...' valign=top style='cursor:pointer;' class='tr_hover' id=1comm".$cid.$bgcolor."><td class='gray'><nobr>".$data."</nobr></td><td>".$del."<a onclick=offcomm(".$cid.") class=punkt>".$vkl."</a>
 
-        <a title='Изменить комментарий' href='sys.php?op=base_comments_edit_comments&cid=".$cid."'><img class='icon2 i35' src=/images/1.gif align=right></a>
+        <a style='float:right;' title='Изменить комментарий' href='sys.php?op=base_comments_edit_comments&cid=".$cid."'>".icon('orange small','7')."</a>
 
         <i>".$avtor2."</i><span class='gray'> ".$pishet." разделе «".$titl_mainpage."» на странице </span><a title='Открыть на сайте...' target=_blank href='-".$module."_page_".$num."#comm_".$cid."'>".$titles."</a>: <span class='gray'>".$textline."</span></td></tr>
         <tr><td colspan=2".$bgcolor." style='padding:0; margin:0;'>
         <div style='display:none;' id=comm".$cid.">
-        <br>".$otvet.$mails.$tel."<br>
+        ".$otvet.$mails.$tel."<br><br>
         <div class=bggray>".$txt."</div><br>
-        <a onclick=\"show_otvet_comm($cid,'".$avtor."','".$mail."','".$module."')\" class=punkt><img class='icon2 i11' src='/images/1.gif' align=left>Ответить на комментарий</a>
+        <a id='show_otvet_link".$cid."' onclick=\"show_otvet_comm($cid,'".$avtor."','".$mail."','".$module."')\" class='button medium'>".icon('orange small','\'')." Ответить на комментарий</a>
         <div id=otvet_comm".$cid."></div><br><br>
         </div>
         </td></tr>";
       } else {
-        if ($mail != "") $pageslistdel .= "<tr valign=top id=1comm".$cid.$bgcolor."><td class='gray'><nobr>".$data."</nobr></td><td><a title='Удалить подписку' onclick=delcomm(".$cid.") class=punkt><img class='icon2 i21' src='/images/1.gif' align=right></a><a title='Изменить подписку' href='sys.php?op=base_comments_edit_comments&cid=".$cid."'><img class='icon2 i35' src='/images/1.gif' align=right></a> <span class=green>Подписка на рассылку</span>, ".$avtor." &rarr; ".$mail."</td></tr>";
-        else $pageslistdel .= "<tr valign=top id=1comm".$cid.$bgcolor."><td class='gray'><nobr>".$data."</nobr></td><td><a title='Удалить сообщение' onclick=delcomm(".$cid.") class=punkt><img class='icon2 i21' src='/images/1.gif' align=right></a> <span class=green>".$avtor."</span> &rarr; ".$txt."</td></tr>";
+        if ($mail != "") $pageslistdel .= "<tr valign=top id=1comm".$cid.$bgcolor."><td class='gray'><nobr>".$data."</nobr></td><td><a title='Удалить подписку' onclick=delcomm(".$cid.") class=punkt>".icon('red small','F')."</a><a style='float:right;' title='Изменить подписку' href='sys.php?op=base_comments_edit_comments&cid=".$cid."'>".icon('orange small','7')."</a> <span class=green>Подписка на рассылку</span>, ".$avtor." &rarr; ".$mail."</td></tr>";
+        else $pageslistdel .= "<tr valign=top id=1comm".$cid.$bgcolor."><td class='gray'><nobr>".$data."</nobr></td><td><a style='float:right;' title='Удалить сообщение' onclick=delcomm(".$cid.") class=punkt>".icon('red small','F')."</a> <span class=green>".$avtor."</span> &rarr; ".$txt."</td></tr>";
       }
     }
   } else {
@@ -828,12 +826,12 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
       $title = strip_tags($row6['title'], '<b><strong><em><i>');
       if (trim($title) == "") $title = "< страница без названия >";
       $module = $row6['module'];
-      if (!isset($title_razdel_and_bd[$module])) $title_razdel_and_bd[$module] = "РАЗДЕЛ УДАЛЁН! &rarr; $module";
+      if (!isset($title_razdel_and_bd[$module])) $title_razdel_and_bd[$module] = "РАЗДЕЛ УДАЛЁН &rarr; $module";
       $date = date2normal_view(str_replace(".","-",$row6['redate']), 2, 1);
-      if ($id == 1) $recreate = "<a title='Восстановить страницу...\nЕсли её раздел или папка удалены, сначала отредактируйте и восстановите из резервных копий!' onclick=resetpage(".$pid.") style=\"cursor:pointer;\"><img class=\"icon2 i37\" src=/images/1.gif></a>";
-      if ($id == 2) $recreate = "<a title='Заменить этой копией оригинал...\nПодумайте, прежде чем нажимать!' onclick=resetpage(".$pid.") style=\"cursor:pointer;\"><img class=\"icon2 i24\" src=/images/1.gif></a>";
-      $pageslistdel .= "<tr valign=top id=".$iid.$pid." bgcolor=#ffffff class='tr_hover'><td><nobr>".$date."</nobr></td><td>".$title_razdel_and_bd[$module]."</td><td><a title='Удалить страницу (без возможности восстановления)' onclick=deletepage(".$pid.") style=\"cursor:pointer;\"><img class=\"icon2 i21\" src=/images/1.gif align=right></a>     
-      <a target=_blank title='Изменить страницу' href='sys.php?op=base_pages_edit_page&name=".$module."&pid=".$pid."'><img class=\"icon2 i35\" src=/images/1.gif class=left></a><a target=_blank title='Изменить страницу в HTML' href='sys.php?op=base_pages_edit_page&name=".$module."&pid=".$pid."&red=1'><img class=\"icon2 i34\" src=/images/1.gif class=left></a>
+      if ($id == 1) $recreate = "<a title='Восстановить страницу...\nЕсли её раздел или папка удалены, сначала отредактируйте и восстановите из резервных копий!' onclick=resetpage(".$pid.") style=\"cursor:pointer;\">".icon('green small',';')."</a>";
+      if ($id == 2) $recreate = "<a title='Заменить этой копией оригинал...\nПодумайте, прежде чем нажимать!' onclick=resetpage(".$pid.") style=\"cursor:pointer;\">".icon('green small',';')."</a>";
+      $pageslistdel .= "<tr valign=top id=".$iid.$pid." bgcolor=#ffffff class='tr_hover'><td><nobr>".$date."</nobr></td><td>".$title_razdel_and_bd[$module]."</td><td><a title='Удалить страницу (без возможности восстановления)' onclick=deletepage(".$pid.") class='pointer' style='float:right;'>".icon('red small','F')."</a>     
+      <a target='_blank' title='Изменить страницу' href='sys.php?op=base_pages_edit_page&name=".$module."&pid=".$pid."'>".icon('orange small','7')."</a><a target=_blank title='Изменить страницу в HTML' href='sys.php?op=base_pages_edit_page&name=".$module."&pid=".$pid."&red=1'>".icon('black small','7')."</a>
      ".$title."&nbsp;&nbsp;".$recreate."</td></tr>";
     }
   }
@@ -1003,8 +1001,8 @@ if ($func == "papka") { // Папка
         if ($cid_pages == 0 and $cid_papki == 0) $pusto = "<span class='small red'>пустая папка</span>";
         if ($cid_pages > 0) $pusto = "<span class='small'>содержит $cid_pages ".num_ending($cid_pages, Array('страниц','страницу','страницы'))."</span>";
         if ($cid_papki > 0) $pusto = "<span class='small'>содержит $cid_papki ".num_ending($cid_papki, Array('папок','папку','папки'))."</span>";
-        if ($cid_pages > 0 and $cid_papki > 0) $pusto = "<span class='small'>содержит $cid_papki ".num_ending($cid_papki, Array('папок','папку','папки'))." и $cid_pages ".num_ending($cid_pages, Array('страниц','страницу','страницы'))."</span>";
-        $list .= "<div id=\"cid".$с_cid."\"><a name=\"open_pages_".$с_cid."\"></a><a class=\"no green punkt\" onclick='papka_show($с_cid, \"$name_raz\", \"$sort\", \"$id\",(Math.floor( Math.random() * (10000 - 10 + 1) ) + 10));'><img class=\"icon2 i40\" src=/images/1.gif class=left>".$name_cid."</a> ".$pusto." <div id=\"papka".$с_cid."\" style='display:inline; margin-left:5px;'></div><div id=\"podpapka".$с_cid."\" style='display:none;'></div><br></div>";
+        if ($cid_pages > 0 and $cid_papki > 0) $pusto = "<span class='small'>содержит $cid_papki ".num_ending($cid_papki, Array('папок','папку','папки'))." и ".$cid_pages." ".num_ending($cid_pages, Array('страниц','страницу','страницы'))."</span>";
+        $list .= "<div id=\"cid".$с_cid."\"><a name=\"open_pages_".$с_cid."\"></a><a class=\"no green punkt\" onclick='papka_show($с_cid, \"$name_raz\", \"$sort\", \"$id\",(Math.floor( Math.random() * (10000 - 10 + 1) ) + 10));'>".icon('orange small',',')." ".$name_cid."</a> ".$pusto." <div id=\"papka".$с_cid."\" style='display:inline; margin-left:5px;'></div><div id=\"podpapka".$с_cid."\" style='display:none;'></div><br></div>";
       }
     }
     // Страницы папки
@@ -1036,25 +1034,25 @@ if ($func == "papka") { // Папка
         if ($keywords == "") $keydes = "<span class=red title='Нет ключевых слов'>*</span>"; 
         if ($description == "") $keydes = "<span class=red title='Нет описания'>*</span>"; 
         if ($keywords == "" and $description == "") $keydes = "<span class=red title='Нет описания и ключевых слов'>**</span>"; 
-        if ($comm != 0) $keydes .= " <img class=\"icon2 i10\" src=/images/1.gif title='Комментарии:'>".$comm." "; 
-        if ($counter != 0) $keydes .= " <img class=\"icon2 i42\" src=/images/1.gif title='Посещения:'>".$counter." "; 
+        if ($comm != 0) $keydes .= " ".icon('gray small','\'').$comm." "; 
+        if ($counter != 0) $keydes .= " ".icon('gray small','s').$counter." "; 
         if ($mainpage == 1) $keydes .= "<span class=green title='Страница отмечена для Главной страницы'>*</span> "; 
         if ($rss == 0) $keydes .= " <span class=rss title='Отключен RSS'>rss</span> "; 
         global $deviceType;
         if ($deviceType != 'computer') {$copy=""; $date=""; $keydes=""; }
         $ver = mt_rand(10000, 99999); // получили случайное число
-        $color=""; $nowork = "";
-        if ($active == 0) { $color=" class=noact"; $nowork="<img class=\"icon2 i43\" src=/images/1.gif class=left title='Страница отключена.\nНажав по ней и выбрав такой же значок, вы можете ее включить.'>";}
-        if ($active == 2) { $color=" class=deact"; $nowork="<img class=\"icon2 i44\" src=/images/1.gif class=left title='Страница требует проверки.\nНажмите по ней и выберите один из редакторов. Проверьте страницу и поставьте галочку Включить.'>";}
-        if ($active == 3) { $color=" class=deact"; $nowork="<img class=\"icon2 i44\" src=/images/1.gif class=left title='Страница требует проверки!!!\nНажмите по ней и выберите один из редакторов. Проверьте страницу и поставьте галочку Включить.'>";}
+        $color=""; $nowork = icon('white small','.')." ";
+        if ($active == 0) { $color=" class=noact"; $nowork = icon('red small','Q');}
+        if ($active == 2 || $active == 3) { $color=" class=deact"; $nowork = icon('red small','!');;}
+
         $pg = "<div id=\"page".$pid."\" class='gray openpage'><a href=#".$ver.$pid." onclick='sho($pid, \"$name\", \"base_pages\",".$active.");'".$color." class=punkt>".$nowork."".$title."</a>".$copy." ".$date." ".$keydes." <div id='pid".$pid."' class=pid></div></div>";
         if ($no_pages < $granica+1) $list .= $pg; 
         if ($no_pages > $granica) $dop_list .= $pg;
         $no_pages++;
       }
       $siz_page = $siz_page - $granica;
-      if ($siz_page > 0) $list .= "<a id='doplistshow".$cid."' onmouseover='show(\"doplistshow".$cid."\"); show(\"doplist".$cid."\");' onclick='show(\"doplistshow".$cid."\"); show(\"doplist".$cid."\");' style='cursor:pointer;'><img class=\"icon2 i37\" src=/images/1.gif class=left><u>Раскрыть ещё $siz_page ".num_ending($siz_page, Array('страниц','страницу','страницы'))."</u></a><div style='display:none;' id=\"doplist".$cid."\">".$dop_list."</div>";
-    } else $list .= "<img class=\"icon2 i39\" src=/images/1.gif class=left><span class=gray>В этой папке нет страниц.</span>";
+      if ($siz_page > 0) $list .= "<a id='doplistshow".$cid."' onmouseover='show(\"doplistshow".$cid."\"); show(\"doplist".$cid."\");' onclick='show(\"doplistshow".$cid."\"); show(\"doplist".$cid."\");' class='punkt'>".icon('black small','|')." Раскрыть ещё ".$siz_page." ".num_ending($siz_page, Array('страниц','страницу','страницы'))."</u></a><div style='display:none;' id=\"doplist".$cid."\">".$dop_list."</div>";
+    } else $list .= icon('black small','.')." <span class=gray>В этой папке нет страниц.</span>";
     $list = "<div style='margin-left:15px; border-left: 1px dotted #999999;'>".$list."</div>";
     echo "<div class=block_white>".$list."</div>"; exit;
 }
@@ -1083,17 +1081,17 @@ if ($func == "razdel") { // Папка
       $с_cid = $rows['cid'];
       $name_cid = strip_tags($rows['title'], '<b><i>');
       $cid_pages = $db->sql_numrows($db->sql_query("select pid from ".$prefix."_pages where `tables`='pages' and module='$name_raz' and cid='$с_cid'"));
-      if (trim($name_cid) == "") $name_cid = "<span class=red>Папка без Названия. Отредактируйте или удалите!</span>";
+      if (trim($name_cid) == "") $name_cid = "<span class=red>Папка без Названия. Отредактируйте!</span>";
       $cid_papki = $db->sql_numrows($db->sql_query("select cid from ".$prefix."_pages_categories where `tables`='pages' and module='$name_raz' and parent_id='$с_cid'"));
       if ($cid_pages == 0 and $cid_papki == 0) $pusto = "<span class='small red'>пустая папка</span>";
       if ($cid_pages > 0) $pusto = "<span class='small'>содержит $cid_pages ".num_ending($cid_pages, Array('страниц','страницу','страницы'))."</span>";
       if ($cid_papki > 0) $pusto = "<span class='small'>содержит $cid_papki ".num_ending($cid_papki, Array('папок','папку','папки'))."</span>";
       if ($cid_pages > 0 and $cid_papki > 0) $pusto = "<span class='small'>содержит ".$cid_papki." ".num_ending($cid_papki, Array('папок','папку','папки'))." и ".$cid_pages." ".num_ending($cid_pages, Array('страниц','страницу','страницы'))."</span>";
-      $list .= "<div id=\"cid".$с_cid."\"><a name=\"open_pages_".$с_cid."\"></a><a class=\"no green punkt\" onclick='papka_show(".$с_cid.", \"".$name_raz."\", \"".$sort."\", \"".$id."\",(Math.floor( Math.random() * (10000 - 10 + 1) ) + 10));'><img class=\"icon2 i40\" src=/images/1.gif class=left>".$name_cid."</a> ".$pusto." <div id=\"papka".$с_cid."\" style='display:inline; margin-left:5px;'></div><div id=\"podpapka".$с_cid."\" style='display:none;'></div><br></div>";
+      $list .= "<div id=\"cid".$с_cid."\"><a name=\"open_pages_".$с_cid."\"></a><a class=\"no green punkt\" onclick='papka_show(".$с_cid.", \"".$name_raz."\", \"".$sort."\", \"".$id."\",(Math.floor( Math.random() * (10000 - 10 + 1) ) + 10));'>".icon('orange small',',')." ".$name_cid."</a> ".$pusto." <div id=\"papka".$с_cid."\" style='display:inline; margin-left:5px;'></div><div id=\"podpapka".$с_cid."\" style='display:none;'></div><br></div>";
     }
   } else {
       $nopapka = 1;
-      $list .= "<img class=\"icon2 i40\" src=/images/1.gif class=left><span class=gray>В этом разделе нет папок.</span>";
+      $list .= icon('yellow small',',')." <span class=gray>В этом разделе нет папок.</span>";
   }
   // Страницы раздела
   $dop_list = "";
@@ -1112,7 +1110,7 @@ if ($func == "razdel") { // Папка
       $name = $rows['module'];
       $title = strip_tags($rows['title'], '<b><i>');
       $active = $rows['active'];
-      if (trim($title) == "") $title = "<span class=red>Страница без Названия. Отредактируйте или удалите!</span>";
+      if (trim($title) == "") $title = "<span class=red>Страница без Названия. Отредактируйте!</span>";
       $counter = intval($rows['counter']);
       $comm = intval($rows['comm']);
       $mainpage = intval($rows['mainpage']);
@@ -1125,36 +1123,35 @@ if ($func == "razdel") { // Папка
       if ($keywords == "") $keydes = "<span class=red title='Нет ключевых слов'>*</span>"; 
       if ($description == "") $keydes = "<span class=red title='Нет описания'>*</span>"; 
       if ($keywords == "" and $description == "") $keydes = "<span class=red title='Нет описания и ключевых слов'>**</span>";
-      if ($comm != 0) $keydes .= " <img class=\"icon2 i10\" src=/images/1.gif title='Комментарии:'>".$comm." "; 
-      if ($counter != 0) $keydes .= " <img class=\"icon2 i42\" src=/images/1.gif title='Посещения:'>".$counter." "; 
+      if ($comm != 0) $keydes .= " ".icon('gray small','\'').$comm." "; 
+      if ($counter != 0) $keydes .= " ".icon('gray small','s').$counter." "; 
       if ($mainpage == 1) $keydes .= "<span class=green title='Страница отмечена для Главной страницы'>*</span> "; 
       if ($rss == 0) $keydes .= " <span class=rss title='Отключен RSS'>rss</span> ";  
       $ver = mt_rand(10000, 99999); // получили случайное число
-      $color=""; $nowork = "";
+      $color=""; $nowork = icon('white small','.')." ";
 
       global $deviceType;
         if ($deviceType != 'computer') {$copy=""; $date=""; $keydes=""; }
 
-      if ($active == 0) { $color=" class=noact"; $nowork="<img class=\"icon2 i43\" src=/images/1.gif class=left title='Страница отключена.\nНажав по ней и выбрав такой же значок, вы можете ее включить.'>";}
-      if ($active == 2) { $color=" class=deact"; $nowork="<img class=\"icon2 i44\" src=/images/1.gif class=left title='Страница требует проверки.\nНажмите по ней и выберите один из редакторов. Проверьте страницу и поставьте галочку Включить.'>";}
-      if ($active == 3) { $color=" class=deact"; $nowork="<img class=\"icon2 i44\" src=/images/1.gif class=left title='Страница требует проверки!!!\nНажмите по ней и выберите один из редакторов. Проверьте страницу и поставьте галочку Включить.'>";}
+      if ($active == 0) { $color=" class=noact"; $nowork=icon('red small','Q');}
+      if ($active == 2 || $active == 3) { $color=" class=deact"; $nowork=icon('red small','!');}
       $pg = "<div id=\"page".$pid."\" class='gray openpage'><a href=#".$ver.$pid." onclick='sho($pid, \"$name\", \"base_pages\",".$active.");'".$color." class=punkt>".$nowork."".$title."</a>".$copy." ".$date." ".$keydes." <div id='pid".$pid."' class=pid></div></div>";
       if ($no_pages < $granica+1) $list .= $pg; 
       if ($no_pages > $granica) $dop_list .= $pg;
       $no_pages++;
     }
   $siz_page = $siz_page - $granica;
-  if ($siz_page > 0) $list .= "<a id='doplistshow".$name_raz."' onmouseover='show(\"doplistshow".$name_raz."\"); show(\"doplist".$name_raz."\");' onclick='show(\"doplistshow".$name_raz."\"); show(\"doplist".$name_raz."\");' style='cursor:pointer;'><img class=\"icon2 i37\" src=/images/1.gif class=left><u>Раскрыть ещё $siz_page ".num_ending($siz_page, Array('страниц','страницу','страницы'))."</u></a><div style='display:none;' id=\"doplist".$name_raz."\">".$dop_list."</div>";
+  if ($siz_page > 0) $list .= "<a id='doplistshow".$name_raz."' onmouseover='show(\"doplistshow".$name_raz."\"); show(\"doplist".$name_raz."\");' onclick='show(\"doplistshow".$name_raz."\"); show(\"doplist".$name_raz."\");' class='punkt'>".icon('black small','|')." Раскрыть ещё ".$siz_page." ".num_ending($siz_page, Array('страниц','страницу','страницы'))."</a><div style='display:none;' id=\"doplist".$name_raz."\">".$dop_list."</div>";
   } else {
       $nopage = 1;
-      $list .= "<img class=\"icon2 i39\" src=/images/1.gif class=left><span class=gray>В корневой папке этого раздела нет страниц.</span>";
+      $list .= icon('black small','.')." <span class=gray>В корневой папке этого раздела нет страниц.</span>";
   }
   $list .= "<br><br></div>";
   if ($nopage == 1 and $nopapka == 1) {
-
+    $list2 = "";
   } else {
       $list2 = "<div style=\"margin-left:20px; float:right;\">
-      <button class='small' onclick=show('sortir_page')><img src=/images/sortirovka.png></button>
+      <button class='small' onclick=show('sortir_page')><img src='/images/sortirovka.png'></button>
       <div id=sortir_page style='display:none;'><br>Сортировать страницы:<br>";
       // Сортировка страниц
       $pages_list = array("по дате создания","по алфавиту","по дате изменения","по кол-ву комментариев","по кол-ву просмотров","сначала — отключенные");
@@ -1169,5 +1166,8 @@ if ($func == "razdel") { // Папка
   }
   echo $list2.$list; exit;
 }
+}
+function icon($classes,$data) {
+  return '<span class="icon '.$classes.'" data-icon="'.$data.'" style="display: inline-block; "><span aria-hidden="true">'.$data.'</span></span>';
 }
 ?>

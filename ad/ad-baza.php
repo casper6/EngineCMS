@@ -601,12 +601,12 @@ function base_base_edit_base($id, $base, $name, $red=0) {
 }
 #####################################################################################################################
 function base_base_create_base($base, $name, $red=0) {
-    global $tip, $admintip, $prefix, $db, $title_mainpage2, $ok;
+    global $tip, $admintip, $prefix, $db, $title_razdel_and_bd, $ok;
     $alerts  = "";
     include("ad-header.php");
     echo "<br><a href=/sys.php?op=base_base&name=".$name." style='padding-left:5px;padding-right:5px;' class='punkt radius'> &larr; Вернуться к базе данных </a></b><br>";
     if (intval($ok) == 1) echo "<h2 class=green>Строка успешно добавлена. Добавим еще одну?</h2>";
-    echo "<h1>Добавление строки к базе данных «".trim($title_mainpage2[$name])."»</h1>";
+    echo "<h1>Добавление строки к базе данных «".trim($title_razdel_and_bd[$name])."»</h1>";
     $sql2 = "SELECT text FROM ".$prefix."_mainpage WHERE name='$base' and type='5'";
     $result2 = $db->sql_query($sql2);
     $row2 = $db->sql_fetchrow($result2);
@@ -626,7 +626,7 @@ function base_base_create_base($base, $name, $red=0) {
 
     $rowY = array();
             
-    for ($x=0; $x < $n+1; $x++) {
+    for ($x=0; $x < $n; $x++) {
     	$one = explode("#!#",$options[$x]); // #!#  ранее !
         $rowY[] = $one[0];
         if ($one[3] != 5) { // Если это не пустая ячейка, т.е. Важность не равна «пустая для печати»
@@ -865,15 +865,15 @@ function base_base_delit_base($base, $name, $id, $ok) {
     global $tip, $admintip, $prefix, $db;
     $id = intval($id);
     if($ok) {
-    $db->sql_query("DELETE FROM ".$prefix."_base_".$base." WHERE id='$id'");
-    Header("Location: sys.php?op=".$admintip."&name=$name#1");
+        $db->sql_query("DELETE FROM ".$prefix."_base_".$base." WHERE id='$id'");
+        Header("Location: sys.php?op=".$admintip."&name=$name#1");
+    } else {
+        include("ad-header.php");
+        echo "<br><center><b>Удаление строки из таблицы</b><br><br>";
+        echo "Внимание! Вы хотите удалить строку <b>№ $id</b>.<br><br>";
+        echo "Это правда?<br><br>[ <a href=\"sys.php?op=".$admintip."&name=$name#1\"><b>НЕТ</b></a> | <a href=\"sys.php?op=".$admintip."_delit_base&name=$name&base=$base&id=$id&ok=1\"><b>ДА</b></a> ]</center><br><br>";
+        admin_footer();
     }
-    else {
-    include("ad-header.php");
-    echo "<br><center><b>Удаление строки из таблицы</b><br><br>";
-    echo "Внимание! Вы хотите удалить строку <b>№ $id</b>.<br><br>";
-    echo "Это правда?<br><br>[ <a href=\"sys.php?op=".$admintip."&name=$name#1\"><b>НЕТ</b></a> | <a href=\"sys.php?op=".$admintip."_delit_base&name=$name&base=$base&id=$id&ok=1\"><b>ДА</b></a> ]</center><br><br>";
-    admin_footer();
 }
 #####################################################################################################################
 function base_pause_pass($id, $pause, $cat) {

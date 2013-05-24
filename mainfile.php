@@ -8,10 +8,12 @@
   require_once ('config.php'); // Настройки сайта
   require_once ('includes/db.php'); // Работа с базой данных
   require_once ('includes/sql_layer.php'); // Функции для работы с БД MySQL
-  require_once 'includes/Mobile_Detect.php'; // Определяем устройство - компьютер, планшет или телефон
+
+  require_once ('includes/Mobile_Detect.php'); // Определяем устройство - компьютер, планшет или телефон
   $detect = new Mobile_Detect;
   global $deviceType, $ipban, $display_errors, $pid, $site_cash;
   $deviceType = ($detect->isMobile() ? ($detect->isTablet() ? 'tablet' : 'phone') : 'computer');
+
     if ( isset($admin) ) {
     if (is_admin($admin)) {
       require_once ('ad/ad-functions.php'); // Функции для администрирования
@@ -212,7 +214,8 @@
     $txt_razdels = array(); // список содержания разделов
     $useit_razdels = array(); // список настроек разделов
     $name_razdels = array(); // список англ. названий разделов
-    $sqlY = "SELECT `id`,`type`,`name`,`title`,`text`,`useit` from `".$prefix."_mainpage` where `tables`='pages' && (`type`='1' || `type`='2' || `type`='5')";
+    //$sqlY = "SELECT `id`,`type`,`name`,`title`,`text`,`useit` from `".$prefix."_mainpage` where `tables`='pages' and (`type`='2' or `type`='5')";
+    $sqlY = "SELECT `id`,`type`,`name`,`title`,`text`,`useit` from `".$prefix."_mainpage` where `tables`='pages' and (`type`='1' or `type`='2' or `type`='5')";//`type`='1' or 
     $resultY = $db->sql_query($sqlY);
     while ($rowY = $db->sql_fetchrow($resultY)) {
       $nameX = $rowY['name'];
@@ -221,11 +224,15 @@
       $title_razdel_and_bd[$nameX] = $rowY['title']; 
       if ($rowY['type'] == 5) $title_razdel_and_bd[$nameX] = "База данных «".$title_razdel_and_bd[$nameX]."»";
       else {
-        $name_razdels[$idX] = $rowY['name'];
-        $title_razdels_by_id[$idX] = $rowY['title'];
-        $title_razdels[$nameX] = $rowY['title']; 
-        $txt_razdels[$nameX] = $rowY['text'];
-        $useit_razdels[$nameX] = $rowY['useit'];
+        if ($rowY['type'] != 1) {
+          $name_razdels[$idX] = $rowY['name'];
+          $title_razdels[$nameX] = $rowY['title']; 
+          $txt_razdels[$nameX] = $rowY['text'];
+          $useit_razdels[$nameX] = $rowY['useit'];
+          $title_razdels_by_id[$idX] = $rowY['title'];
+        } else {
+          $title_razdels_by_id[$idX] = $rowY['title'];
+        }
       }
     }
     

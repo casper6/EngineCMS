@@ -20,15 +20,6 @@ switch($op) {
     include("ad/ad-comm.php");
     break;
 
-    case "base_spisok":
-    case "base_spisok_add_spisok":
-    case "base_spisok_save_spisok":
-    case "base_spisok_edit_spisok":
-    case "base_spisok_edit_sv_spisok":
-    case "base_spisok_delit_spisok":
-    include("ad/ad-pole.php");
-    break;
-
     case "base_pages":
     case "base_pages_cat":
     case "base_pages_teleport":

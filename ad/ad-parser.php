@@ -131,12 +131,13 @@ Descriptions: </td><td><input type='text' size='100' name='d' value='".$resd['ur
 $res2 = $db->sql_query("SELECT * FROM ".$prefix."_parser where class='h".$res['url']."'");
 $rty = '';
 while ($row = $db->sql_fetchrow($res2)) {
+if ($row['config'] == 0)
 echo "<option value='".$row['url']."'>".$row['url']."</option>";
 $el = explode('|',$row['text']);
 $rty .= '<tr><td>'.$row['url'].'</td><td>'.$row['config'].'</td><td>'.$row['title'].'</td><td>'.$el[0].'</td><td>'.$el[1].'</td><td><a href="#" onclick="parser(9,'.$row['id'].')">Удалить</a></td><td></tr>';
 }
 echo "</select></td></tr><tr><td>
-номер элемента:</td><td><input id='nomer' value='false'></td></tr><tr><td>
+номер элемента:</td><td><input id='nomer' value='0'></td></tr><tr><td>
 элемент:</td><td><input id='elem' value='div .myclass'></td></tr><tr><td>
 извлекаем:</td><td><input id='metod' value='plaintext'></td></tr></table>
 <button type='submit' onclick='parser(8,".$id.")' class='medium green'><span class='mr-2 icon white medium' data-icon='c' style='display: inline-block; '></span>Добавить правило</button>
@@ -176,8 +177,9 @@ global $prefix, $db;
 $id = $_GET['id'];
 include("ad-header.php");
 parser_js();
+$site = $db->sql_fetchrow($db->sql_query("SELECT url FROM ".$prefix."_parser where id='".$id."'"));
 echo "<div style='background: #e2e5ea;'><div class='black_grad' style='height:45px;'>
-	<span class='h1'>Настройка импорта</span></div>
+	<span class='h1'>Настройка импорта - ".$site['url']."</span></div>
 	<table width='100%'><tr><td>
 	<b>Если:</b> <select class='esli'>
 	<option value='0'>URL</option>
@@ -186,15 +188,15 @@ echo "<div style='background: #e2e5ea;'><div class='black_grad' style='height:45
 	<b>Записать в:</b> <select class='imv'>";
 		$res = $db->sql_query("SELECT id, title, name FROM ".$prefix."_mainpage where type='2' and id !='24'");
 while ($row = $db->sql_fetchrow($res)) {
-echo "<option value='".$row['id']."|0'>".$row['title']."</option>";
+echo "<option value='".$row['name']."|0'>".$row['title']."</option>";
 		$res3 = $db->sql_query("SELECT cid, title FROM ".$prefix."_pages_categories where module='".$row['name']."'");
 while ($row3 = $db->sql_fetchrow($res3)) {
-echo "<option value='".$row['name']."|".$row3['cid']."'>".$row3['title']."</option>";
+echo "<option value='".$row['name']."|".$row3['cid']."'>Папка - ".$row3['title']."</option>";
 }
 }
 	echo "</select></td><td>
 	<b>Используя шаблон:</b> <select class='sh'>";
-	$res2 = $db->sql_query("SELECT id, url FROM ".$prefix."_parser where class='h'");
+	$res2 = $db->sql_query("SELECT id, url, config FROM ".$prefix."_parser where class='h'");
 while ($row = $db->sql_fetchrow($res2)) {
 echo "<option value='".$row['id']."'>".$row['url']."</option>";
 }
@@ -261,7 +263,12 @@ function parser(action,id){
 						 var elem =document.getElementById('elem').value;
                          var metod =document.getElementById('metod').value;}
 	 if ( action == 11) { var esli = $('select.esli').val();
-	 var sodr =document.getElementById('sodr').value;  }					 
+	 var sodr =document.getElementById('sodr').value;  }
+if ( action == 12) { var esli = $('select.esli').val();
+	 var sodr =document.getElementById('sodr').value;
+var imv = $('select.imv').val();
+var sh = $('select.sh').val();
+var plag = $('select.plag').val();	 }	 
 	  xps=new XMLHttpRequest(); xps.onreadystatechange=function() {
     if (xps.readyState==4 && xps.status==200)
 	if ( action == 1) { document.getElementById('result').innerHTML = xps.responseText; }
@@ -273,7 +280,7 @@ function parser(action,id){
 	if ( action == 8) {  document.getElementById('temp').innerHTML = xps.responseText; 	}
 	if ( action == 9) {  document.getElementById('temp').innerHTML = xps.responseText; 	}
 	if ( action == 10) {  document.getElementById('progect_info').innerHTML = xps.responseText; }
-	if ( action == 11) {  document.getElementById('progect_info').innerHTML = xps.responseText; alert(esli+sodr); }
+	if ( action == 11) {  document.getElementById('progect_info').innerHTML = xps.responseText; }
 	if ( action == 12) {  document.getElementById('progect_info').innerHTML = xps.responseText; }
 	}
 	 xps.open('POST','parser.php',true); 
@@ -287,7 +294,8 @@ if ( action == 7) { xps.send('action=7&site='+id); }
 if ( action == 8) { xps.send('action=8&site='+id+'&nomer='+nomer+'&ishod='+ishod+'&name='+name+'&elem='+elem+'&metod='+metod); }
 if ( action == 9) { xps.send('action=9&site='+id); }
 if ( action == 10) { xps.send('action=10&site='+id); }
-if ( action == 11) { xps.send('action=11&site='+id+'&esli'+esli+'&sodr'+sodr); }
+if ( action == 11) { xps.send('action=11&site='+id+'&esli='+esli+'&sodr='+sodr); }
+if ( action == 12) { xps.send('action=12&site='+id+'&esli='+esli+'&sodr='+sodr+'&imv='+imv+'&sh='+sh+'&plag='+plag); }
   }
     function parser_site(id){
 	var xps = id; $('#but2'+id).hide(); $('#a'+id).hide(); document.getElementById('config'+id).innerHTML = '';

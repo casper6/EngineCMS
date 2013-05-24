@@ -30,18 +30,25 @@ if ($type == 'png' || $type == 'jpg' || $type == 'gif' || $type == 'jpeg' || $ty
   $foto =  md5(date('YmdHis')).'.'.$type;
   if (is_uploaded_file($_FILES['file']['tmp_name'])) {
     if (move_uploaded_file($_FILES['file']['tmp_name'], $folder.$foto)) {
-      $image = new Imagick($folder.$foto);
-      // сжатие
-      list($width, $height, $type, $attr) = getimagesize($folder.$foto);
-      if ($width > 1000) $image->thumbnailImage(1000,0); // по горизонтали до 1000 пикселей
-      else if ($height > 1200) $image->thumbnailImage(0,1200); // по вертикали до 1200 пикселей
-      // ориентация фото
-      $orientation = exif_read_data($folder.$foto);
-      if ($orientation['Orientation'] !== 0 && $orientation['Orientation'] !== 1 && $orientation['Orientation'] != "") {
-          $degres = ($orientation['Orientation']- 1) * 90; 
-          $image->rotateImage('', $degres);
+      if (extension_loaded('imagick') && class_exists("Imagick")) {
+        $image = new Imagick($folder.$foto);
+        // сжатие
+        list($width, $height, $type, $attr) = getimagesize($folder.$foto);
+        if ($width > 1000) $image->thumbnailImage(1000,0); // по горизонтали до 1000 пикселей
+        else if ($height > 1200) $image->thumbnailImage(0,1200); // по вертикали до 1200 пикселей
+        // наводим резкость, если превью мелкое
+        if ($width < 300) $image->sharpenImage(4, 1);
+        //закругляем углы
+        $thumb->roundCorners(5, 5);
+        // ориентация фото
+        $orientation = exif_read_data($folder.$foto);
+        if ($orientation['Orientation'] !== 0 && $orientation['Orientation'] !== 1 && $orientation['Orientation'] != "") {
+            $degres = ($orientation['Orientation']- 1) * 90; 
+            $image->rotateImage('', $degres);
+        }
+        $image->writeImage();
+        $image->destroy();
       }
-      $image->writeImage();
     }
     $array = array('filelink' => '/img/'.$foto);
     echo stripslashes(json_encode($array)); 

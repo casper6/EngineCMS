@@ -317,32 +317,33 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
     $result = $db->sql_query($sql);
     $numrows = $db->sql_numrows($result);
     if ($numrows > 10) $size = 10*16; else $size = ($numrows+2)*16;
-    echo "</select>
-    <div class='in_r'><div id=showa class='in_r'><a style='cursor:pointer;' onclick=\"show('hidea'); show('showa'); $('#to_papka').width(500); $('#to_papka').height(400);\">развернуть &rarr;</a></div><div id=hidea style='display:none;'><a style='cursor:pointer;' onclick=\"show('showa'); show('hidea'); $('#to_papka').width(300); $('#to_papka').height(155);\">&larr; свернуть</a></div></div>
-    <span class=h2>Папка:</span><br><div id='izmenapapka'><select name=cid id='to_papka' size=4 class='f12 mb20 w100 h155'><option value=0 selected>Основная папка («корень»)</option>";
-    while ($row = $db->sql_fetchrow($result)) {
-      $cid2 = $row['cid'];
-      $title = $row['title'];
-      $parentid = $row['parent_id'];
-      $sel = "";
-      if (isset($cid)) if ($cid == $cid2) $sel = "selected";
-      if ($parentid == 0) {
-        // занести в переменную
-        $first_opt[$cid2] = "<option value=".$cid2." ".$sel." style='background:#fdf;'>".$title."</option>"; 
-      } else {
-        $title = "&bull; ".getparent($name,$parentid,$title);
-        // вывести и очистить переменную
-        echo $first_opt[$parentid];
-        $first_opt[$parentid] = "";
-        echo "<option value='".$cid2."' ".$sel.">".$title."</option>";
+    echo "</select>";
+
+    if ($numrows > 0) {
+      echo "<div class='in_r'><div id=showa class='in_r'><a style='cursor:pointer;' onclick=\"show('hidea'); show('showa'); $('#to_papka').width(500); $('#to_papka').height(400);\">развернуть &rarr;</a></div><div id=hidea style='display:none;'><a style='cursor:pointer;' onclick=\"show('showa'); show('hidea'); $('#to_papka').width(300); $('#to_papka').height(155);\">&larr; свернуть</a></div></div><span class=h2>Папка:</span><br><div id='izmenapapka'><select name=cid id='to_papka' size=4 class='f12 mb20 w100 h155'><option value=0 selected>Основная папка («корень»)</option>";
+      while ($row = $db->sql_fetchrow($result)) {
+        $cid2 = $row['cid'];
+        $title = $row['title'];
+        $parentid = $row['parent_id'];
+        $sel = "";
+        if (isset($cid)) if ($cid == $cid2) $sel = "selected";
+        if ($parentid == 0) {
+          // занести в переменную
+          $first_opt[$cid2] = "<option value=".$cid2." ".$sel." style='background:#fdf;'>".$title."</option>"; 
+        } else {
+          $title = "&bull; ".getparent($name,$parentid,$title);
+          // вывести и очистить переменную
+          echo $first_opt[$parentid];
+          $first_opt[$parentid] = "";
+          echo "<option value='".$cid2."' ".$sel.">".$title."</option>";
+        }
       }
-    }
-    if (isset($first_opt)) if (count($first_opt) > 0) 
-      foreach( $first_opt as $key => $value ) {
-        if ($first_opt[$key] != "") echo $first_opt[$key];
-      }
-             
-  echo "</select></div>";
+      if (isset($first_opt)) if (count($first_opt) > 0) 
+        foreach( $first_opt as $key => $value ) {
+          if ($first_opt[$key] != "") echo $first_opt[$key];
+        }
+    echo "</select></div>";
+    } else echo "<input type=hidden name=cid value='0'><i>В разделе нет папок.</i><br><br>";    
   
   echo "<div id='mainrazdel' class='dark_pole2'><a class='base_page' onclick=\"if ( $('#dop').is(':hidden') ) $('#mainrazdel').attr('class', 'dark_pole2sel'); else $('#mainrazdel').attr('class', 'dark_pole2'); $('#main').toggle(); $('#dop').toggle('slow'); \"><div id='mainrazdel'><div style=\"float:right\"><span class=\"f16 gray\">⟩</span></div><span class='icon gray large in_b' data-icon='z'><span aria-hidden='true'>z</span></span><span class='plus20'>Дополнительные настройки</span></div></a></div> ";
 
