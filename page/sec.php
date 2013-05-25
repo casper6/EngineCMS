@@ -112,18 +112,19 @@
 
   // Сабж для использующих вредоносный HTML-код
   $htmltags = "<center><img src=\"/images/logo_admin.png\"><br><br><b>Вы использовали запрещенные символы HTML-кода. Вероятно вы - взломщик.</b><br><br>[ <a href=\"javascript:history.go(-1)\"><b>Вернитесь назад и больше не вводите HTML-теги.</b></a> ]";
-
+/*
+      (preg_match("/<[^>]*object*\"?[^>]*>/i", $secvalue)) ||
+      (preg_match("/<[^>]*iframe*\"?[^>]*>/i", $secvalue)) ||
+      (preg_match("/<[^>]*img*\"?[^>]*>/i", $secvalue)) ||
+*/
   if (!defined('ADMIN_FILE')) {
     foreach ($_GET as $secvalue) {
       $secvalue = str_replace("(", "&#040;", str_replace(")", "&#041;", $secvalue));
       if ( (preg_match("/<[^>]*script*\"?[^>]*>/i", $secvalue)) ||
-      (preg_match("/<[^>]*object*\"?[^>]*>/i", $secvalue)) ||
-      (preg_match("/<[^>]*iframe*\"?[^>]*>/i", $secvalue)) ||
       (preg_match("/<[^>]*applet*\"?[^>]*>/i", $secvalue)) ||
       (preg_match("/<[^>]*meta*\"?[^>]*>/i", $secvalue)) ||
       (preg_match("/<[^>]*style*\"?[^>]*>/i", $secvalue)) ||
       (preg_match("/<[^>]*form*\"?[^>]*>/i", $secvalue)) ||
-      (preg_match("/<[^>]*img*\"?[^>]*>/i", $secvalue)) ||
       (preg_match("/<[^>]*onmouseover*\"?[^>]*>/i", $secvalue)) ||
         (preg_match("/<[^>]*onmouseout*\"?[^>]*>/i", $secvalue)) ||
         (preg_match("/<[^>]*onmousemove*\"?[^>]*>/i", $secvalue)) ||
@@ -141,13 +142,10 @@
     foreach ($_POST as $secvalue) {
       $secvalue = str_replace("(", "&#040;", str_replace(")", "&#041;", $secvalue));
       if ( (preg_match("/<[^>]*script*\"?[^>]*>/i", $secvalue)) ||
-      (preg_match("/<[^>]*object*\"?[^>]*>/i", $secvalue)) ||
-      (preg_match("/<[^>]*iframe*\"?[^>]*>/i", $secvalue)) ||
       (preg_match("/<[^>]*applet*\"?[^>]*>/i", $secvalue)) ||
       (preg_match("/<[^>]*meta*\"?[^>]*>/i", $secvalue)) ||
       (preg_match("/<[^>]*style*\"?[^>]*>/i", $secvalue)) ||
       (preg_match("/<[^>]*form*\"?[^>]*>/i", $secvalue)) ||
-      (preg_match("/<[^>]*img*\"?[^>]*>/i", $secvalue)) ||
       (preg_match("/<[^>]*onmouseover*\"?[^>]*>/i", $secvalue)) ||
         (preg_match("/<[^>]*onmouseout*\"?[^>]*>/i", $secvalue)) ||
         (preg_match("/<[^>]*onmousemove*\"?[^>]*>/i", $secvalue)) ||

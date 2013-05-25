@@ -364,14 +364,15 @@ function redactor($type, $txt, $name, $name2="", $style="html", $return="echo") 
     $txt = str_replace("&","&amp;",$txt);
     $echo .= "<textarea id='".$name."' class='w100 h155' name='".$name."'>".$txt."</textarea><br>";
   } elseif ($type=="3") {
-    $echo .= "<script type='text/javascript'> 
+    $echo .= "<script> 
     $(document).ready(function()
     {  $('#".$name."').editor({ focus: true, toolbar: 'classic', css: ['/ed/js/editor/css/editor.css'] });";
   if ($name2 != "") $echo .= "\n$('#".$name2."').editor({ css: ['/ed/js/editor/css/editor.css'], toolbar: 'classic', upload: 'upload.php' });\n";
   $echo .= "});
     </script><textarea id='".$name."' name='".$name."' style='width: 100%; height: 220px;'>".$txt."</textarea>";
   } elseif ($type=="4") {
-    $echo .= "<script type='text/javascript'>
+    //           iframe: true,          css: 'css_20.css',
+    $echo .= "<script>
     function ButtonMore(obj, event, key){ obj.insertHtml('<!--more-->'); }
     function ButtonBlock(obj, event, key){ obj.insertHtml('[Название блока]'); }
     function ButtonLink(obj, event, key){ obj.insertHtml('{Название страницы или раздела}'); }
@@ -381,7 +382,7 @@ function redactor($type, $txt, $name, $name2="", $style="html", $return="echo") 
             button_link: {title: 'Вставка блока (например, галереи фотографий)',callback: ButtonBlock},
             button_block: {title: 'Вставка быстрой ссылки на страницу или раздел',callback: ButtonLink}
           }, 
-          mobile: false, 
+          mobile: true, 
           observeImages: true, 
           ".$red4_div_convert." imageUpload: 'ed2/image_upload.php', fileUpload: 'ed2/file_upload.php', 
           lang: 'ru', 
@@ -425,7 +426,7 @@ function redactor2($type, $txt, $name, $style="html") {
     //$txt = str_replace("&","&amp;",$txt);
     echo "<textarea id='".$name."X' class='hide' name='".$name."'>".$txt."</textarea>
     <pre id='".$name."' class='w100 h700'></pre><br>
-    <script src='http://rawgithub.com/ajaxorg/ace-builds/master/src-noconflict/ace.js' type='text/javascript' charset='utf-8'></script><script>var ".$name." = ace.edit('".$name."');
+    <script src='http://rawgithub.com/ajaxorg/ace-builds/master/src-noconflict/ace.js' charset='utf-8'></script><script>var ".$name." = ace.edit('".$name."');
           ".$name.".getSession().setValue( $('#".$name."X').val() );
           ".$name.".setTheme('ace/theme/".$theme."');
           ".$name.".getSession().setMode('ace/mode/".$style."');

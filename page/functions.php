@@ -343,7 +343,7 @@ function translit_name($cyr_str) { # Транслит названий файл�
    "с"=>"s","т"=>"t","у"=>"u","ф"=>"f","х"=>"h","ц"=>"ts","ч"=>"ch","ш"=>"sh","щ"=>"sch","ъ"=>"",
    "ы"=>"yi","ь"=>"","э"=>"e","ю"=>"yu","я"=>"ya",
    "«"=>"","»"=>"","."=>"",","=>"","!"=>"",":"=>"","("=>"",")"=>"","["=>"","]"=>"","{"=>"","}"=>"",";"=>"","?"=>""," "=>"_");
-   return $str = iconv ( "UTF-8", "UTF-8//IGNORE", strtr ( $cyr_str, $tr ) );
+   return iconv ( "UTF-8", "UTF-8//IGNORE", strtr ( $cyr_str, $tr ) );
 }
 ///////////////////////////////////////////////////////////////
 function dateresize($dat) { // Функция для приведения даты в формат кол-ва дней (примерно)
@@ -591,11 +591,13 @@ function block_names() { // Функция для получения назва�
   return $blocks;
 }
 ///////////////////////////////////////////////////////////////
+/*
 function upload_foto_file($text){ // доработать
   return "<br><a onclick=\"show('upload_file'); hide('upload_foto');\" style='cursor:pointer;'><u>Загрузка фото или других файлов</u></a><br><div id='upload_file' style='display:none;'><div class=block2>
   <form action='http://www.onlinedisk.ru/upload/' method='POST' enctype='multipart/form-data' id='upload_file' target=_blank><b>Выберите файл:</b><br><input name=\"file\" type=\"file\" size=50><input type=\"submit\" value=\"Загрузить\"><input type=hidden name=MAX_FILE_SIZE value=30000> 
   </form><b>На открывшейся странице</b> скопируйте текст в поле под словом «Для форумов» и вставьте ниже ".$text.".</div></div><br><br>";
 }
+*/
 ///////////////////////////////////////////////////////////////
 function recash($url, $main=1) { // Обновление кеша
   global $db, $prefix, $site_cash;
@@ -823,5 +825,26 @@ function validate_email($email) { // Проверка мыла
 function in_arrayi($needle, $haystack) {
   return in_array(strtolower($needle), array_map('strtolower', $haystack));
 }
-##########################################################################################
+///////////////////////////////////////////////////////////////
+function site_redactor($nolink=false) {
+  global $lang;
+  if ($nolink == false) $add = ", 'video', 'link'"; else $add = "";
+  return "<script src='ed2/redactor.js'></script>
+<link rel='stylesheet' href='ed2/redactor.css' />
+<script src='ed2/".$lang.".js'></script>
+<script>$(function() { 
+      $('.redactor').redactor({
+          mobile: true, 
+          observeImages: false, 
+          convertDivs: true,
+          imageUpload: 'ed2/image_upload.php',
+          fileUpload: 'ed2/file_upload.php', 
+          lang: '".$lang."', 
+          buttons: ['bold', 'italic', 'deleted', '|', 'image', 'file'".$add."],
+          autoresize: true, 
+          allowedTags: ['a', 'p', 'b', 'i', 'img', 'iframe', 'object', 'param'],
+          minHeight: 300 }); } );
+    </script>";
+}
+///////////////////////////////////////////////////////////////
 ?>

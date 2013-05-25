@@ -94,7 +94,7 @@ $text2 = str_replace(',', ', ', $text[$comm_cid]);
 //$text2 = str_replace(' ,', ',', $text2);
 //$text2 = str_replace(' ...', '...', $text2);
 //$text2 = str_replace(' руб ', ' руб. ', $text2); $text2 = str_replace(' руб,', ' руб.,', $text2); $text2 = str_replace(' руб!', ' руб.!', $text2);
-  $text2 = "<div id='comm_".$comm_cid."' class='overcomm'>".$text2."</div>";
+  $text2 = "<div id='comm_".$comm_cid."' class='comm_text'>".$text2."</div>";
 
     $ver = mt_rand(10000, 99999); // получили случайное число
     $nus = $numb.$nu;

@@ -91,7 +91,7 @@ if ($realadmin==1) {
         while ($rows = $db->sql_fetchrow($result)) {
             if ($col == 0) { $col = 1; $color = "#ffffff"; } else { $col = 0; $color = "#ddffff"; }
             $comm_cid = $rows['cid'];
-            $pc_cid = $rows['pccid'];
+            if (isset($rows['pccid'])) $pc_cid = $rows['pccid']; else $pc_cid = 0;
             $comm_text = $rows['text'];
             $comm_golos = $rows['golos'];
             $comm_page = $rows['num'];
@@ -200,7 +200,7 @@ if ($realadmin==1) {
         $row = $db->sql_fetchrow($result);
         $mod = $row['module'];
         recash("/-".$mod."_page_".$num); // Обновление кеша ##
-        Header("Location: sys.php?op=".$admintip."&pid=$num");
+        Header("Location: sys.php?op=".$admintip."&pid=$num&name=".$mod);
     }
     ##########################################################
     function comm_links($records,$r_start=0,$URL,$inpage=20) { // Строчка выбора страниц < 1 2 3 >

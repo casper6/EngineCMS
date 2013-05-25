@@ -19,7 +19,7 @@ global $strelka, $go, $cid, $pid, $all, $avtor, $to, $info, $num, $ip, $golos, $
 // настройки раздела из БД
 global $post, $comments, $datashow, $sort, $lim, $foto, $view, $search, $search_papka, $tema, $tema_name, $tema_title, $tema_opis, $menushow, $design; 
 
-$media=$folder=$col=$view=$golos=$golosrazdel=$post=$comments=$datashow=$favorites=$socialnetwork=$search=$search_papka=$put_in_blog=$base=$vetki=$citata=$media_comment=$no_html_in_opentext=$no_html_in_text=$show_add_post_on_first_page=$show_add_post_fileform=$razdel_shablon=$page_shablon=$comments_all=$comments_num=$comments_mail=$comments_adres=$comments_tel=$comments_desc=$golostype=$pagenumbers=$comments_main=$tags_type=$tema_zapret_comm=$pagekol=$table_light=$designpages=$comments_add=$div_or_table=0;
+$media=$folder=$col=$view=$golos=$golosrazdel=$post=$comments=$datashow=$favorites=$socialnetwork=$search=$search_papka=$put_in_blog=$base=$vetki=$citata=$media_comment=$no_html_in_opentext=$no_html_in_text=$show_add_post_on_first_page=$media_post=$razdel_shablon=$page_shablon=$comments_all=$comments_num=$comments_mail=$comments_adres=$comments_tel=$comments_desc=$golostype=$pagenumbers=$comments_main=$tags_type=$tema_zapret_comm=$pagekol=$table_light=$designpages=$comments_add=$div_or_table=0;
 
 $menushow=$titleshow=$razdel_link=$peopleshow=$design=$tags=$podrobno=$podrazdel_active_show=$podrazdel_show=$tipograf=$limkol=$tags_show=$tema_zapret=1;
 $comment_shablon=2;
@@ -1652,7 +1652,7 @@ function addcomm($pid) {
   $usercomm=1; # писать неюзерам нельзя РЕАЛИЗОВАТЬ!!!
   $commentagain=0;
 
-  global $soderganie, $tip, $DBName, $db, $prefix, $cookie, $module_name, $media_comment, $comments_mail, $comments_adres, $comments_tel, $comments_2, $comments_3, $comments_4, $comments_5, $comments_6, $comments_7;
+  global $soderganie, $tip, $DBName, $db, $prefix, $cookie, $module_name, $media_comment, $comments_mail, $comments_adres, $comments_tel, $comments_2, $comments_3, $comments_4, $comments_5, $comments_6, $comments_7, $tema_zapret_comm;
   $pid = intval($pid);
   // Понадобится если будут спамить в обход капче! Тогда использовать проверку времени!!!
   //$ip = getenv("REMOTE_ADDR"); // IP
@@ -1681,9 +1681,7 @@ function addcomm($pid) {
 
   //$ver = mt_rand(10000, 99999); // получили случайное число
 
-   $ret .= "<div class=send_comment>".$comments_2."</div><br>";
-
-  if ($media_comment==1) $ret .= upload_foto_file("в своем комментарии");
+  $ret .= "<div class=send_comment>".$comments_2."</div><br>";
 
   $ret .= "<form method='post' action='/-".$DBName."?go=savecomm' name='add' class='addcomm'>
   <input name='num' value='".$pid."' type='hidden'>
@@ -1705,35 +1703,32 @@ function addcomm($pid) {
 
   if ($comments_tel == 1 or $comments_tel == 3) $ret .= "".$comments_6." <input type=text name='tel' id='tel' value=\"".$tel."\" size=17>"; else $ret .= "<input type=hidden name='tel' id='tel' value=\"".$tel."\">";
 
-  $ret .= "<table width=100% cellspacing=0 cellpadding=0><tr valign=bottom><td width=350>".$comments_7."</td><td>
-  <DIV class='editor' style='margin-top:10px; width:100%;'> 
-  <DIV class='editorbutton' onclick=\"clc_bbcode('жирный',1)\"><IMG title='Жирный текст' src='images/bold.gif'></DIV>
-  <DIV class='editorbutton' onclick=\"clc_bbcode('цитата',1)\"><IMG title='Вставить цитату' src='images/quote.gif'></DIV>";
-  
-  global $more_smile;
-  if ($more_smile == true or $more_smile == false) $ret .= "<div id=\"cont\" class=\"editorbutton\" OnClick=\"show('onoffsmilies0');\" style=\"cursor: pointer;\"><img title=\"Показать смайлы: эмоции\" src=\"images/smilies/07.gif\"></div>";
+  $kcaptcha = "<table width=100% style='margin:0;'><tr valign=top><td width=50%><img src='kcaptcha/index.php?".session_name()."=".session_id()."' style='border-radius: 5px; float:left; margin-right:10px;'>Введите цифры:<br><input type='text' name='keystring' size='5' maxlength='3'></td><td><input class='comm_submit' type='submit' name='ok' value='Отправить'></td></tr></table>";
 
-  if ($more_smile == true) $ret .= "<div id=\"cont\" class=\"editorbutton\" OnClick=\"show('onoffsmilies1');\" style=\"cursor: pointer;\"><img title=\"Смайлы: альтернативная коллекция :)\" src=\"images/smilies/75.gif\"></div>
-  <div id=\"cont\" class=\"editorbutton\" OnClick=\"show('onoffsmilies2');\" style=\"cursor: pointer;\"><img title=\"Смайлы: если эмоций маловато :)\" src=\"images/smilies/17.gif\"></div>
-  <div id=\"cont\" class=\"editorbutton\" OnClick=\"show('onoffsmilies3');\" style=\"cursor: pointer;\"><img title=\"Смайлы: аниме-эмоции o_O\" src=\"images/smilies/18.gif\"></div>";
-  $ret .= "</td></tr></table>
-  <TEXTAREA id=area rows=7 style='font-size:18px;' name=info></TEXTAREA>
+  if ($tema_zapret_comm == 1 || $tema_zapret_comm == 2) $nolink = true; else $nolink = false;
+  if ($media_comment==1) $ret .= site_redactor($nolink)."<div class='comm_label_textarea'>".$comments_7."</div><textarea id='area' class='redactor comm_textarea' name='info' style='width: 100%; height: 220px;'></textarea>".$kcaptcha;
+  //upload_foto_file("в своем комментарии");
 
-  <table width=100%><tr valign=top>
-  <td width=200>Введите цифры: <input type=text name=keystring size='3' maxlength='3'></td>
-  <td width=110><img src='kcaptcha/index.php?".session_name()."=".session_id()."' style='border-radius: 10px;'></td>
-  <td><input class='comm_submit' type='submit' name='ok' value='Отправить'>
-  </td></tr></table>
-
-  <div id=\"onoffsmilies0\" class=\"editor\" style=\"display:none;\"><br><div class=\"editorbutton\">
-  ".smile_generate(array("01","02","03","04","05","06","07","08","09",10,11,12,13,14,15,16,17,18))." <div OnClick=\"show('onoffsmilies0');\" style=\"cursor: pointer;\">Закрыть</div></div><br></div>"; // убран лишний div
-
-  if ($more_smile == true) $ret .= "
-  <div id=\"onoffsmilies1\" style=\"display:none;\"><br><br><div class=\"editorbutton\">".smile_generate(array(75,76,77,78,79,80,81,82,83,84,85,86,87,88))."</div></div>
-  <div id=\"onoffsmilies2\" style=\"display:none;\"><br><br><div class=\"editorbutton\">".smile_generate(array(20,21,22,23,24,25,26,27,28,29,30,31,33,34,36,37,38,39,40,42,43,44,45,46,47,48,49,50,51,53,54,55,56,57,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74))."</div></div>
-  <div id=\"onoffsmilies3\" style=\"display:none;\"><br><br><div class=\"editorbutton\">".smile_generate(array(90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162))."</div></div>
-  "; // </DIV>
-
+  if ($media_comment==0) {
+    $ret .= "<table width=100% cellspacing=0 cellpadding=0><tr valign=bottom><td width=350>".$comments_7."</td><td>
+    <DIV class='editor' style='margin-top:10px; width:100%;'> 
+    <DIV class='editorbutton' onclick=\"clc_bbcode('жирный',1)\"><IMG title='Жирный текст' src='images/bold.gif'></DIV>
+    <DIV class='editorbutton' onclick=\"clc_bbcode('цитата',1)\"><IMG title='Вставить цитату' src='images/quote.gif'></DIV>";
+    global $more_smile;
+    if ($more_smile == true or $more_smile == false) $ret .= "<div id=\"cont\" class=\"editorbutton\" OnClick=\"show('onoffsmilies0');\" style=\"cursor: pointer;\"><img title=\"Показать смайлы: эмоции\" src=\"images/smilies/07.gif\"></div>";
+    if ($more_smile == true) $ret .= "<div id=\"cont\" class=\"editorbutton\" OnClick=\"show('onoffsmilies1');\" style=\"cursor: pointer;\"><img title=\"Смайлы: альтернативная коллекция :)\" src=\"images/smilies/75.gif\"></div>
+    <div id=\"cont\" class=\"editorbutton\" OnClick=\"show('onoffsmilies2');\" style=\"cursor: pointer;\"><img title=\"Смайлы: если эмоций маловато :)\" src=\"images/smilies/17.gif\"></div>
+    <div id=\"cont\" class=\"editorbutton\" OnClick=\"show('onoffsmilies3');\" style=\"cursor: pointer;\"><img title=\"Смайлы: аниме-эмоции o_O\" src=\"images/smilies/18.gif\"></div>";
+    $ret .= "</td></tr></table>
+    <TEXTAREA id=area rows=7 style='font-size:18px;' name=info></TEXTAREA>
+    ".$kcaptcha."
+    <div id=\"onoffsmilies0\" class=\"editor\" style=\"display:none;\"><br><div class=\"editorbutton\">
+    ".smile_generate(array("01","02","03","04","05","06","07","08","09",10,11,12,13,14,15,16,17,18))." <div OnClick=\"show('onoffsmilies0');\" style=\"cursor: pointer;\">Закрыть</div></div><br></div>"; // убран лишний div
+    if ($more_smile == true) $ret .= "
+    <div id=\"onoffsmilies1\" style=\"display:none;\"><br><br><div class=\"editorbutton\">".smile_generate(array(75,76,77,78,79,80,81,82,83,84,85,86,87,88))."</div></div>
+    <div id=\"onoffsmilies2\" style=\"display:none;\"><br><br><div class=\"editorbutton\">".smile_generate(array(20,21,22,23,24,25,26,27,28,29,30,31,33,34,36,37,38,39,40,42,43,44,45,46,47,48,49,50,51,53,54,55,56,57,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74))."</div></div>
+    <div id=\"onoffsmilies3\" style=\"display:none;\"><br><br><div class=\"editorbutton\">".smile_generate(array(90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162))."</div></div>"; // </DIV>
+  }
   $ret .= "</div></form>";
   // Для добавления фотографии к комментарию, введите свой email в комментарий и зарегистрируйтесь на <a href='http://ru.gravatar.com/site/signup/' target='_blank' rel='nofollow'>сайте «Gravatar»</a>, если вы не сделали этого ранее.
   return $ret;
@@ -1880,7 +1875,7 @@ function addpost($cid) {
   # Настройка-----------------
   $usercomm=1; # писать неюзерам нельзя РЕАЛИЗОВАТЬ!!!
   # Настройка-----------------
-  global $soderganie, $tip, $show_add_post_fileform, $DBName, $db, $prefix, $cookie, $module_name, $admin, $tema, $tema_name, $tema_title, $tema_opis, $post;
+  global $soderganie, $tip, $media_post, $DBName, $db, $prefix, $cookie, $module_name, $admin, $tema, $tema_name, $tema_title, $tema_opis, $post, $tema_zapret;
   $cid = intval($cid);
 
   $sql = "select id, shablon from ".$prefix."_mainpage where `tables`='pages' and name='$DBName' and type='2'";
@@ -1901,8 +1896,6 @@ function addpost($cid) {
   $ret .= "<a name='send_post'></a><div style='display:none;' id='minus2' class='send_post'><p><b>".$tema.":</b></div>
   <div class='send_post' id='cross2'><p><a href='#send_post' onclick=\"show('minus2'); show('panel2'); show('cross2')\" class='send_post'> ".$tema." </a></div>
   <div style='display:none' id='panel2' class='addpost'>";
-
-  if ($show_add_post_fileform == 1) $ret .= upload_foto_file("в поле «".$tema_opis."»");
 
   $ret .= "<form method='post' action='/-".$DBName."?go=savepost' name='addpost' class='addpost'><input name='go' value='savepost' type='hidden'>";
 
@@ -1942,12 +1935,18 @@ function addpost($cid) {
 
   $ret .= "<label for=title><b>".$tema_title.":</b></label> <input type=text name=post_title size=40 maxlength=255 style='width:98%;'><br>";
 
-  if (trim($tema_name)!="no") $ret .= "<br><label for=avtor><b>".$tema_name.":</b></label> <br>
-  <TEXTAREA rows=3 cols=20 id=avtor style='width:98%;' name=avtor>".$shablon1."</TEXTAREA><br>";
-  else $ret .= "<input type=hidden name='avtor' value=\"".$avt."\">";
+  //if ($show_add_post_fileform == 1) 
+  $kcaptcha = "<table width=100% style='margin:0;'><tr valign=top><td width=50%><img src='kcaptcha/index.php?".session_name()."=".session_id()."' style='border-radius: 5px; float:left; margin-right:10px;'>Введите цифры:<br><input type='text' name='keystring' size='5' maxlength='3'></td><td><input class='comm_submit' type='submit' name='ok' value='Отправить'></td></tr></table>";
 
-  if (trim($tema_opis)!="no") $ret .= "<br><b>".$tema_opis.":</b><br>
-  <TEXTAREA rows=10 cols=20 id=area style='width:98%;' name=info>".$shablon2."</TEXTAREA>"; // ".$shablon."
+  if ($tema_zapret == 1 || $tema_zapret == 2) $nolink = true; else $nolink = false;
+  if ($media_post==1) $ret .= site_redactor($nolink);
+  $ret .= "<input type='hidden' name='avtor' id='avtor'>
+  <input type='hidden' name='mail' id='mail'>";
+
+  if (trim($tema_name)!="no") $ret .= "<br><label for=avtory><b>".$tema_name.":</b></label> <br><TEXTAREA rows=3 cols=20 id=avtor style='width:100%;' name=avtory class='post_textarea post_name'>".$shablon1."</TEXTAREA><br>";
+  else $ret .= "<input type=hidden name='avtory' value=\"".$avt."\">";
+
+  if (trim($tema_opis)!="no") $ret .= "<br><b>".$tema_opis.":</b><br><TEXTAREA rows=10 cols=20 id=area style='width: 100%; height: 220px;' name=info class='redactor post_textarea post_opis'>".$shablon2."</TEXTAREA>";
   else $ret .= "<input type=hidden name=info>";
 
   global $view;
@@ -2044,8 +2043,7 @@ function addpost($cid) {
       }
     }
   } // end if ($view==4) {
-  $ret .= "<input type='hidden' name='keystring' value='".$chars[array_rand($chars)]."'>
-  <br><br><center><input class='comm_submit' type='submit' name='ok' value='Отправить'></center>";
+  $ret .= "<input type='hidden' name='keystring' value='".$chars[array_rand($chars)]."'>".$kcaptcha;
 
   if ($post==2) $ret .= "<br>Информация будет добавлена на сайт сразу после проверки администратором.";
   //if ($post==3) $ret .= "<br>Информация будет добавлена на сайт, но появится в RSS только после проверки администратором.";
@@ -2054,40 +2052,34 @@ function addpost($cid) {
 }
 ###########################################
 // Сохранение страницы, добавленной посетителем
-function savepost ($avtor, $post_title, $info, $num, $cid, $add){
-  //mb_internal_encoding('utf-8'); 
+function savepost ($avtory, $avtor, $mail, $post_title, $info, $num, $cid, $add){
   global $ip;
   $link = getenv("HTTP_REFERER");
-  global $_POST, $soderganie, $tip, $DBName, $db, $prefix, $module_name, $post, $admin, $tema_zapret;
+  global $_SESSION, $_POST, $soderganie, $tip, $lang, $media_post, $DBName, $now, $db, $prefix, $module_name, $post, $admin, $tema_zapret, $tema_zapret, $captcha_ok;
   // Ввести проверку на активность - проверка постов администратором
-  // СДЕЛАТЬ ЗАЩИТУ!!!
 
-  $inform = "Информация добавлена на сайт.";
   $active = 3;
-  if ($post==1) $active = 1;
+  if ($post==1) { $inform = "Информация добавлена на сайт."; $active = 1; }
   if ($post==2) { $active = 3; $inform = "Информация будет добавлена на сайт после проверки администратором."; }
   if ($post==3) { $active = 2; $inform = "Информация добавлена на сайт, но в ближайшее время пройдет модерацию."; }
   if (is_admin($admin)) $active = 1;
 
-  $date = date("Y-m-d H:i:s");
+  //$date = date("Y-m-d H:i:s");
   //$ip = getenv("REMOTE_ADDR"); // IP
   $num = intval($num);
-  $avtor = trim(str_replace("  "," ",filter($avtor, "nohtml")));
+  $avtory = trim(str_replace("  "," ",filter($avtory, "nohtml")));
   $post_title = trim(str_replace("document.cookie","", str_replace("  "," ",filter($post_title, "nohtml"))));
-  $info = bbcode(trim(str_replace("document.cookie","",filter($info, "nohtml"))));
 
-  //$ok = false;
-  //if (function_exists('mb_strlen')) {
-  //if(mb_strlen($_POST['keystring']) == 2) $ok = true;
-  //} else 
-  $ok = true;
+  if ($media_post == 0) $info = bbcode(trim(str_replace("document.cookie","",filter($info, "nohtml"))));
+  if ($media_post == 1) $info = filter($info);
 
-  $pattern = "/onlinedisk.ru\/image\/"."(\d+)"."\/IMG"."(\d+)".".jpg"."/i";
-  $replacement = "onlinedisk.ru/get_image.php?id=$1";
-  $avtor =  preg_replace($pattern, $replacement, $avtor);
-  $info =  preg_replace($pattern, $replacement, $info);
+  //$pattern = "/onlinedisk.ru\/image\/"."(\d+)"."\/IMG"."(\d+)".".jpg"."/i";
+  //$replacement = "onlinedisk.ru/get_image.php?id=$1";
+  //$avtor =  preg_replace($pattern, $replacement, $avtor);
+  //$info =  preg_replace($pattern, $replacement, $info);
 
   // Узнаем настройку раздела
+  /*
   $sql3 = "select `text` from `".$prefix."_mainpage` where `name`='$DBName' and `type`='2'";
   $result3 = $db->sql_query($sql3);
   $row3 = $db->sql_fetchrow($result3);
@@ -2096,180 +2088,187 @@ function savepost ($avtor, $post_title, $info, $num, $cid, $add){
     $main_options = $main_file[1];
     parse_str($main_options);
   }
+  */
+  if (($tema_zapret == 1 || $tema_zapret == 2) and ( strpos(" ".$avtory.$info.$post_title, "://") or strpos(" ".$avtory.$info.$post_title, "www.") ) ) die('Запрещено размещать информацию, содержащую ссылки. Это защита от спама. <br><b>Если ссылку разместить необходимо - пишите ее без http:// и www');
 
-  if (($tema_zapret == 1 || $tema_zapret == 2) and ( (strpos(" ".$avtor, "http://")) or (strpos(" ".$info, "http://")) or (strpos(" ".$post_title, "http://")) ) ) die('Запрещено размещать информацию, содержащую ссылки. Это защита от спама. <br><b>Если ссылку разместить необходимо - пишите ее без http://</b>');
+  if ($lang == "ru") 
+      if ($avtor != "" || $mail != "" || 
+        (!preg_match("#[а-яА-Я]#i",$info) && $media_post == 0) || 
+        (!preg_match("#[а-яА-Я]#i",$info) && $media_post == 1 && !strpos(" ".$info, 'a') && !strpos(" ".$info, 'img') && !strpos(" ".$info, 'iframe') && !strpos(" ".$info, 'object') ) ) die('Запрещено размещать спам.');
 
-  if ($ok == true) {
-  $db->sql_query("INSERT INTO ".$prefix."_pages (pid, module, cid, title, open_text, main_text, date, redate, counter, active, golos, comm, foto, search, mainpage, rss) VALUES (NULL, '$DBName', '$num', '$post_title', '$avtor', '$info', '$date', '$date', '0', '$active', '0', '0', '', '', '', '0')") or die('Ошибка базы данных: Не удается добавить вашу информацию.');
+  $addpost = false;
+  if ($avtory != "" AND $info != "") {
+      if( ( (isset($_SESSION['captcha_keystring']) && $_SESSION['captcha_keystring'] == $_POST['keystring']) or $captcha_ok == 1) ) {
+        $addpost = true;
+        // возможно стоит вставить проверку промежутка времени между двумя постами...
+      } else {
+        if (is_admin($admin)) {
+          $addpost = true;
+        } else die("<b>Ошибка: Вы неправильно ввели цифровой код, необходимый для подтверждения вашей человечности!</b><p>Нажмите кнопку Назад в браузере, чтобы вернуться на предыдущую страницу. Обновите страницу [клавиша F5], если код не изменится на новый.");
+      }
+    } else die("<b>Ошибка: Вы не ввели основную информацию!</b><p>Нажмите кнопку Назад в браузере, чтобы вернуться на предыдущую страницу");
 
+  if ($addpost == true) {
+    // добавим страницу
+    $db->sql_query("INSERT INTO ".$prefix."_pages (pid, module, cid, title, open_text, main_text, date, redate, counter, active, golos, comm, foto, search, mainpage, rss) VALUES (NULL, '$DBName', '".mysql_real_escape_string($num)."', '".mysql_real_escape_string($post_title)."', '".mysql_real_escape_string($avtory)."', '".mysql_real_escape_string($info)."', '$now', '$now', '0', '$active', '0', '0', '', '', '', '0')") or die('Ошибка базы данных: Не удается добавить вашу информацию.');
 
-  // Узнаем получившийся номер страницы ID
-  $sql = "select `pid` from ".$prefix."_pages where `tables`='pages' and `title`='".$post_title."' and `date`='".$date."'";
-  $result = $db->sql_query($sql);
-  $row = $db->sql_fetchrow($result);
-  $page_id = $row['pid'];
+    // получим id добавленной страницы
+    $row = $db->sql_fetchrow($db->sql_query("select `pid` from ".$prefix."_pages where `tables`='pages' and `title`='".$post_title."' and `date`='".$now."'"));
+    $page_id = $row['pid'];
 
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // РАБОТА СО СПИСКАМИ
-  if (is_array($add)) {
-    foreach ($add as $name => $elements) {
-      // Получение информации о каждом списке
-      $sql = "select * from ".$prefix."_mainpage where `tables`='pages' and `name`='$name' and `type`='4'";
-      $result = $db->sql_query($sql);
-      $row = $db->sql_fetchrow($result);
-      $s_id = $row['id'];
-      $options = explode("|", $row['text']); $options = $options[1];
-      $type=0; $shablon=""; 
-      parse_str($options); // раскладка всех настроек списка
-      //if ($type!=1) { $type=0; $type_name="список"; } else { $type_name="текст"; }
+    // РАБОТА СО СПИСКАМИ
+    if (is_array($add)) {
+      foreach ($add as $name => $elements) {
+        // Получение информации о каждом списке
+        $sql = "select * from ".$prefix."_mainpage where `tables`='pages' and `name`='$name' and `type`='4'";
+        $result = $db->sql_query($sql);
+        $row = $db->sql_fetchrow($result);
+        $s_id = $row['id'];
+        $options = explode("|", $row['text']); $options = $options[1];
+        $type=0; $shablon=""; 
+        parse_str($options); // раскладка всех настроек списка
+        //if ($type!=1) { $type=0; $type_name="список"; } else { $type_name="текст"; }
 
-      switch($type) {
-        ////////////////////////////////////////////////////////////////////////////
-        case "4": // строка
-                // Проверяем наличие подобного текста
-                $sql = "SELECT `name`, `pages` FROM ".$prefix."_spiski WHERE `type`='$name' and `name`='".$elements."'";
-                $result = $db->sql_query($sql);
-                $numrows = $db->sql_numrows($result);
-                if ($numrows > 0) { // если элемент найден
-                    $row = $db->sql_fetchrow($result);
-                    $s_pages = $row['pages'];
-                    $s_name = $row['name'];
-                        if (strpos($agent," $page_id ") < 1 and $s_name == $elements) {
-                            $s_pages .= " $page_id ";
-                            $s_pages = str_replace("  "," ",$s_pages);
-                            $db->sql_query("UPDATE ".$prefix."_spiski SET `pages`='".$s_pages."' WHERE `type`='".$name."' and `name`='".$elements."'") or die ('Ошибка: Не удалось обновить список.');
-                        } else {
-                            $db->sql_query("INSERT INTO ".$prefix."_spiski (`id`, `type`, `name`, `opis`, `sort`, `pages`, `parent`) VALUES (NULL, '".$name."', '".$elements."', '', '0', ' ".$page_id." ', '0');") or die ('Ошибка: Не удалось сохранить список.');
-                        }
-                } else { // если элемент новый
-                    $db->sql_query("INSERT INTO ".$prefix."_spiski (`id`, `type`, `name`, `opis`, `sort`, `pages`, `parent`) VALUES (NULL, '".$name."', '".$elements."', '', '0', ' ".$page_id." ', '0');") or die ('Ошибка: Не удалось сохранить список.');
-                }
-        break;
-        ////////////////////////////////////////////////////////////////////////////
-        case "3": // период времени
-                // создаем диапазон дат и все их проверяем
-                $elements = explode("|",$elements);
-                $dat1 = date2normal_view($elements[0], 1);
-                $dat2 = date2normal_view($elements[1], 1);
-                $period = period($dat1, $dat2);
+        switch($type) {
+          ////////////////////////////////////////////////////////////////////////////
+          case "4": // строка
+                  // Проверяем наличие подобного текста
+                  $sql = "SELECT `name`, `pages` FROM ".$prefix."_spiski WHERE `type`='$name' and `name`='".$elements."'";
+                  $result = $db->sql_query($sql);
+                  $numrows = $db->sql_numrows($result);
+                  if ($numrows > 0) { // если элемент найден
+                      $row = $db->sql_fetchrow($result);
+                      $s_pages = $row['pages'];
+                      $s_name = $row['name'];
+                          if (strpos($agent," $page_id ") < 1 and $s_name == $elements) {
+                              $s_pages .= " $page_id ";
+                              $s_pages = str_replace("  "," ",$s_pages);
+                              $db->sql_query("UPDATE ".$prefix."_spiski SET `pages`='".$s_pages."' WHERE `type`='".$name."' and `name`='".$elements."'") or die ('Ошибка: Не удалось обновить список.');
+                          } else {
+                              $db->sql_query("INSERT INTO ".$prefix."_spiski (`id`, `type`, `name`, `opis`, `sort`, `pages`, `parent`) VALUES (NULL, '".$name."', '".$elements."', '', '0', ' ".$page_id." ', '0');") or die ('Ошибка: Не удалось сохранить список.');
+                          }
+                  } else { // если элемент новый
+                      $db->sql_query("INSERT INTO ".$prefix."_spiski (`id`, `type`, `name`, `opis`, `sort`, `pages`, `parent`) VALUES (NULL, '".$name."', '".$elements."', '', '0', ' ".$page_id." ', '0');") or die ('Ошибка: Не удалось сохранить список.');
+                  }
+          break;
+          ////////////////////////////////////////////////////////////////////////////
+          case "3": // период времени
+                  // создаем диапазон дат и все их проверяем
+                  $elements = explode("|",$elements);
+                  $dat1 = date2normal_view($elements[0], 1);
+                  $dat2 = date2normal_view($elements[1], 1);
+                  $period = period($dat1, $dat2);
 
-                // и все даты проверяем на наличие в БД
-                $upd = array();
-                $noupd = array();
+                  // и все даты проверяем на наличие в БД
+                  $upd = array();
+                  $noupd = array();
 
-                $sql = "SELECT `name`, `pages` FROM ".$prefix."_spiski WHERE `type`='".$name."' order by `name`";
-                $result = $db->sql_query($sql);
+                  $sql = "SELECT `name`, `pages` FROM ".$prefix."_spiski WHERE `type`='".$name."' order by `name`";
+                  $result = $db->sql_query($sql);
 
-                while ($row = $db->sql_fetchrow($result)) {
-                $nam = $row['name']; // дата
-                $pag = trim($row['pages']); // страницы
-                if (in_array($nam, $period)!=FALSE) { 
-                $noupd[] = $nam; // для INSERT
-                if (strstr($pag,$page_id)==FALSE) $upd[] = $nam; // для UPDATE
-                }
-                }
+                  while ($row = $db->sql_fetchrow($result)) {
+                  $nam = $row['name']; // дата
+                  $pag = trim($row['pages']); // страницы
+                  if (in_array($nam, $period)!=FALSE) { 
+                  $noupd[] = $nam; // для INSERT
+                  if (strstr($pag,$page_id)==FALSE) $upd[] = $nam; // для UPDATE
+                  }
+                  }
 
-                $insert = array();
-                $update = array();
-                foreach ($upd as $up) {
-                //if (!in_array($up, $noupd)) 
-                $update[] = "name='$up'";
-                }
-                foreach ($period as $per) {
-                if (!in_array($per, $noupd)) $insert[] = "(NULL, '".$name."', '".$per."', '', '0', ' ".$page_id." ', '0')";
-                }
+                  $insert = array();
+                  $update = array();
+                  foreach ($upd as $up) {
+                  //if (!in_array($up, $noupd)) 
+                  $update[] = "name='$up'";
+                  }
+                  foreach ($period as $per) {
+                  if (!in_array($per, $noupd)) $insert[] = "(NULL, '".$name."', '".$per."', '', '0', ' ".$page_id." ', '0')";
+                  }
 
-                $insert = implode(", ",$insert);
-                $update = implode(" or ",$update);
+                  $insert = implode(", ",$insert);
+                  $update = implode(" or ",$update);
 
-                $sql = "SELECT `name`, `pages` FROM ".$prefix."_spiski WHERE `type`='$name' and (".$update.") order by `name`";
-                $result = $db->sql_query($sql);
-                while ($row = $db->sql_fetchrow($result)) {
-                $na = $row['name']; // дата
-                $pa = $row['pages']; // страницы
-                    if (trim($update) != "") {
-                    $db->sql_query("UPDATE ".$prefix."_spiski SET `pages` = ' ".$pa." ".$page_id." ' WHERE `type`='".$name."' and `name`='".$na."'") or die ("Ошибка: Не удалось обновить списки. ".$page_id." ".$name);
-                    //print ("UPDATE ".$prefix."_spiski SET pages = ' $pa $page_id ' WHERE type='$name' and name='$na'<br>");
-                    }
-                }
-                if (trim($insert) != "") $db->sql_query("INSERT INTO ".$prefix."_spiski (`id`, `type`, `name`, `opis`, `sort`, `pages`, `parent`) VALUES ".$insert.";") or die ('Ошибка: Не удалось сохранить списки.');
-                    //print ("INSERT INTO ".$prefix."_spiski (id, type, name, opis, sort, pages, parent) VALUES ".$insert.";<br>");
+                  $sql = "SELECT `name`, `pages` FROM ".$prefix."_spiski WHERE `type`='$name' and (".$update.") order by `name`";
+                  $result = $db->sql_query($sql);
+                  while ($row = $db->sql_fetchrow($result)) {
+                  $na = $row['name']; // дата
+                  $pa = $row['pages']; // страницы
+                      if (trim($update) != "") {
+                      $db->sql_query("UPDATE ".$prefix."_spiski SET `pages` = ' ".$pa." ".$page_id." ' WHERE `type`='".$name."' and `name`='".$na."'") or die ("Ошибка: Не удалось обновить списки. ".$page_id." ".$name);
+                      //print ("UPDATE ".$prefix."_spiski SET pages = ' $pa $page_id ' WHERE type='$name' and name='$na'<br>");
+                      }
+                  }
+                  if (trim($insert) != "") $db->sql_query("INSERT INTO ".$prefix."_spiski (`id`, `type`, `name`, `opis`, `sort`, `pages`, `parent`) VALUES ".$insert.";") or die ('Ошибка: Не удалось сохранить списки.');
+                      //print ("INSERT INTO ".$prefix."_spiski (id, type, name, opis, sort, pages, parent) VALUES ".$insert.";<br>");
 
-        break;
-        ////////////////////////////////////////////////////////////////////////////
-        case "2": // файл НЕОКОНЧЕНО!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                // Смотрим настройки - тип файла и что с ним делать
+          break;
+          ////////////////////////////////////////////////////////////////////////////
+          case "2": // файл НЕОКОНЧЕНО!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                  // Смотрим настройки - тип файла и что с ним делать
 
-                // Закачиваем файл
+                  // Закачиваем файл
 
-                // Транслит файла и смена имени на тип и дату
+                  // Транслит файла и смена имени на тип и дату
 
-                // Изменение размеров
+                  // Изменение размеров
 
-                // Записываем ссылку на него в определенное поле
+                  // Записываем ссылку на него в определенное поле
 
-        break;
-        ////////////////////////////////////////////////////////////////////////////
-        case "1": // текст
-                // Проверяем наличие подобного текста
-                $sql = "SELECT `name`, `pages` FROM ".$prefix."_spiski WHERE `type`='".$name."' and `name`='".$elements."'";
-                $result = $db->sql_query($sql);
-                $numrows = $db->sql_numrows($result);
-                if ($numrows > 0) { // если элемент найден
-                    $row = $db->sql_fetchrow($result);
-                    $s_pages = $row['pages'];
-                    $s_name = $row['name'];
-                        if (strpos($s_pages," $page_id ") < 1 and $s_name == $elements) {
-                            $s_pages .= " $page_id ";
-                            $s_pages = str_replace("  "," ",$s_pages);
-                            $db->sql_query("UPDATE ".$prefix."_spiski SET `pages`='".$s_pages."' WHERE `type`='".$name."' and `name`='".$elements."'") or die ('Ошибка: Не удалось обновить список.');
-                            //echo "up";
-                        } else {
-                            $db->sql_query("INSERT INTO ".$prefix."_spiski (id, type, name, opis, sort, pages, parent) VALUES (NULL, '$name', '$elements', '', '0', ' $page_id ', '0');") or die ('Ошибка: Не удалось сохранить список.');
-                            //echo "in1";
-                        }
-                } else { // если элемент новый
-                    $db->sql_query("INSERT INTO ".$prefix."_spiski (id, type, name, opis, sort, pages, parent) VALUES (NULL, '$name', '$elements', '', '0', ' $page_id ', '0');") or die ('Ошибка: Не удалось сохранить список.');
-                    //echo "in2";
-                }
-        break;
-        ////////////////////////////////////////////////////////////////////////////
-        case "0": // список
-                // Проверяем сколько элементов в списке
-                $num = count($elements);
-                for ($x=0; $x < $num; $x++) { // посчитали сколько номеров списка
-                    if ($elements[$x] != 0) {
-                    // узнаем какие страницы уже есть у этого номера из списка
-                    $sql = "SELECT `pages` FROM ".$prefix."_spiski WHERE `id`='".$elements[$x]."'";
-                    $result = $db->sql_query($sql);
-                    $row = $db->sql_fetchrow($result);
-                    $s_pages = $row['pages'];
-                    if (strpos($s_pages," ".$page_id." ") < 1) {
-                    $s_pages .= " ".$page_id." ";
-                    $s_pages = str_replace("  "," ",$s_pages);
-                    // теперь присвоем каждому из элементов списка id страницы, которую редактируем.
-                    $db->sql_query("UPDATE ".$prefix."_spiski SET `pages`='".$s_pages."' WHERE `id`='".$elements[$x]."'") or die('Ошибка при добавлении страницы в элемент списка');
-                    }
+          break;
+          ////////////////////////////////////////////////////////////////////////////
+          case "1": // текст
+                  // Проверяем наличие подобного текста
+                  $sql = "SELECT `name`, `pages` FROM ".$prefix."_spiski WHERE `type`='".$name."' and `name`='".$elements."'";
+                  $result = $db->sql_query($sql);
+                  $numrows = $db->sql_numrows($result);
+                  if ($numrows > 0) { // если элемент найден
+                      $row = $db->sql_fetchrow($result);
+                      $s_pages = $row['pages'];
+                      $s_name = $row['name'];
+                          if (strpos($s_pages," $page_id ") < 1 and $s_name == $elements) {
+                              $s_pages .= " $page_id ";
+                              $s_pages = str_replace("  "," ",$s_pages);
+                              $db->sql_query("UPDATE ".$prefix."_spiski SET `pages`='".$s_pages."' WHERE `type`='".$name."' and `name`='".$elements."'") or die ('Ошибка: Не удалось обновить список.');
+                              //echo "up";
+                          } else {
+                              $db->sql_query("INSERT INTO ".$prefix."_spiski (id, type, name, opis, sort, pages, parent) VALUES (NULL, '$name', '$elements', '', '0', ' $page_id ', '0');") or die ('Ошибка: Не удалось сохранить список.');
+                              //echo "in1";
+                          }
+                  } else { // если элемент новый
+                      $db->sql_query("INSERT INTO ".$prefix."_spiski (id, type, name, opis, sort, pages, parent) VALUES (NULL, '$name', '$elements', '', '0', ' $page_id ', '0');") or die ('Ошибка: Не удалось сохранить список.');
+                      //echo "in2";
+                  }
+          break;
+          ////////////////////////////////////////////////////////////////////////////
+          case "0": // список
+                  // Проверяем сколько элементов в списке
+                  $num = count($elements);
+                  for ($x=0; $x < $num; $x++) { // посчитали сколько номеров списка
+                      if ($elements[$x] != 0) {
+                      // узнаем какие страницы уже есть у этого номера из списка
+                      $sql = "SELECT `pages` FROM ".$prefix."_spiski WHERE `id`='".$elements[$x]."'";
+                      $result = $db->sql_query($sql);
+                      $row = $db->sql_fetchrow($result);
+                      $s_pages = $row['pages'];
+                      if (strpos($s_pages," ".$page_id." ") < 1) {
+                      $s_pages .= " ".$page_id." ";
+                      $s_pages = str_replace("  "," ",$s_pages);
+                      // теперь присвоем каждому из элементов списка id страницы, которую редактируем.
+                      $db->sql_query("UPDATE ".$prefix."_spiski SET `pages`='".$s_pages."' WHERE `id`='".$elements[$x]."'") or die('Ошибка при добавлении страницы в элемент списка');
+                      }
 
-                    }
-                }
-        break;
-        ///////////////////
-      } // switch
-    } // for
-  } // if
+                      }
+                  }
+          break;
+        } // switch
+      } // for
+    } // if
+    $location = "/-".$DBName.""; // _cat_".$num."#comm
+  } else die("<b>Ошибка:</b> По всей видимости - вы используете программу для отправки сообщений. Вводите всё вручную.");
 
-  $location = "/-".$DBName.""; // _cat_".$num."#comm
-  } else {
-    //mb_internal_encoding('utf-8'); 
-    //$xx = mb_strlen($_POST['keystring']); 
-    //$len = strlen($_POST['keystring']);
-    die("<b>Ошибка:</b> По всей видимости - вы используете программу для отправки сообщений. Вводите всё вручную.");
-  }
+  unset($_SESSION['captcha_keystring']);
 
-
-  //unset($_SESSION['captcha_keystring']);
-
+  header ("Content-Type: text/html; charset=utf-8");
   echo "<html><head><meta http-equiv='Refresh' content='6; URL=".$location."'></head><body>
   <h2>Спасибо!</h2>".$inform."<br>Через 6 секунд откроется предыдущая страница.<br>Также вы можете перейти на <a href=/>Главную</a>.
   </body></html>";
@@ -2497,14 +2496,14 @@ function savereiting ($avtor, $info, $num, $cid, $gol, $date1, $minus, $plus){
   unset($_SESSION['captcha_keystring']);
   Header("Location: $location");
 }
-########################################### htmlspecialchars($text, ENT_QUOTES);
+###########################################
 // Сохранение комментария
 function savecomm($avtor, $avtory, $info, $num, $comm_otvet, $maily, $mail, $adres, $tel){
   $link = getenv("HTTP_REFERER");
   $active = 1;
   $commentagain = 0; # 1 = Запрет комментариев повторно - перевести в функции!!!
   //echo $avtory;
-  global $admin, $_SESSION, $_POST, $soderganie, $tip, $DBName, $db, $prefix, $module_name, $comments_add, $captcha_ok, $tema_zapret_comm, $now, $ip, $adminmail, $comment_send, $siteurl;
+  global $admin, $_SESSION, $_POST, $soderganie, $tip, $lang, $media_comment, $DBName, $db, $prefix, $module_name, $comments_add, $captcha_ok, $tema_zapret_comm, $now, $ip, $adminmail, $comment_send, $siteurl;
 
   // переопределение ip
   if (isset($_COOKIE["comment"])) {
@@ -2515,9 +2514,6 @@ function savecomm($avtor, $avtory, $info, $num, $comm_otvet, $maily, $mail, $adr
   }
 
   if ($comments_add == 2) $active = 0;
-
-  //$location = "/-".$DBName;
-
   if ($comments_add != 0) {
     $num = intval($num);
     $comm_otvet = intval($comm_otvet);
@@ -2525,44 +2521,40 @@ function savecomm($avtor, $avtory, $info, $num, $comm_otvet, $maily, $mail, $adr
     $maily = str_replace("  "," ",filter($maily));
     $adres = str_replace("  "," ",filter($adres));
     $tel = str_replace("  "," ",filter($tel));
-    $info = bbcode(str_replace("document.cookie","",filter($info)));
-
+    if ($media_comment == 0) $info = bbcode(str_replace("document.cookie","",filter($info)));
+    if ($media_comment == 1) $info = filter(str_replace("<p><p>","<p>",str_replace("</p></p>","</p>",str_replace("</p><br></p>","</p>",$info))));
     //$info = str_replace("http://".$siteurl, $siteurl, $info);
     //$info = str_replace("http://www.onlinedisk.ru", "www.onlinedisk.ru", $info);
 
-    $info = str_replace(":)", "<img src=/images/smilies/04.gif>", $info);
-    $info = str_replace(":(", "<img src=/images/smilies/11.gif>", $info);
+    //$info = str_replace(":)", "<img src=/images/smilies/04.gif>", $info);
+    //$info = str_replace(":(", "<img src=/images/smilies/11.gif>", $info);
 
     $info = str_replace(" ,", ",", $info);
     $info = str_replace("!", "! ", str_replace(" !", "!", $info));
     $info = str_replace("! !", "!", str_replace("! ! !", "!!!", $info));
 
-    //$cyr = range("А","я");
-    //foreach($cyr as $lit) { 
-      //$info = str_replace($lit.".", $lit.". ", $info);
-      //$info = str_replace($lit.",", $lit.", ", $info);
-    //}
+    if (($tema_zapret_comm == 1 || $tema_zapret_comm == 2) and ( strpos(" ".$avtory.$info.$maily.$adres.$tel, "://") or strpos(" ".$avtory.$info.$maily.$adres.$tel, "www.") ) ) die('Запрещено размещать информацию, содержащую ссылки. Это защита от спама. <br><b>Если ссылку разместить необходимо - пишите ее без http:// и www');
 
-    //$info = str_replace(". ..", "...", $info);
-
-    if (($tema_zapret_comm == 1 || $tema_zapret_comm == 2) and ( strpos(" ".$avtory.$info.$maily.$adres.$tel, "://") or strpos(" ".$avtory.$info.$maily.$adres.$tel, "www.") ) ) die('Запрещено размещать информацию, содержащую ссылки.');
-
-    if ($avtor != "" or $mail != "" or !preg_match("#[а-яА-Я]#i",$info)) die('Запрещено размещать спам.');
+    if ($lang == "ru") 
+      if ($avtor != "" or $mail != "" or (!preg_match("#[а-яА-Я]#i",$info) && !strpos(" ".$info, 'a') && !strpos(" ".$info, 'img') && !strpos(" ".$info, 'iframe') && !strpos(" ".$info, 'object') ) ) die('Запрещено размещать спам.');
 
     //$open_mails = array(".hu","quantumwise.com",".hu","insproiws.com",".br",".nl",".fr",".cn","usa.net","nasimke.com","ymail.com","mail.com","yahoo.com","hotmail.com","msn.com","yandex.com","gmx.com","i.ua","meta.ua","yandex.ua","ukr.net","bigmir.net");
     //$open_mails2 = array("hu","br","nl","fr","cn","com","net","ua","uk","nl","de","fd");
 
     // Разрешаем активацию входящих email для .ru и gmail.com
-    $mail_server = explode("@",$maily);
-    $mail_server = $mail_server[1];
-    $mail_server2 = explode(".",$mail_server);
-    if ($mail_server2[2] != "") $mail_server2[2] = ".".$mail_server2[2];
-    $mail_server2 = $mail_server2[1].$mail_server2[2];
-    //if (in_array($mail_server,$open_mails)) $active = 0; 
-    //if (in_array($mail_server2,$open_mails2)) $active = 0;
-    if ($mail_server == "gmail.com") $active = 1;
-    if ($mail_server2 == "ru") $active = 1;
-
+    if (trim($maily) != "") {
+      $mail_server = explode("@",$maily);
+      $mail_server = $mail_server[1];
+      $mail_server2 = explode(".",$mail_server);
+      if ($mail_server2[2] != "") $mail_server2[2] = ".".$mail_server2[2];
+      $mail_server2 = $mail_server2[1].$mail_server2[2];
+      //if (in_array($mail_server,$open_mails)) $active = 0; 
+      //if (in_array($mail_server2,$open_mails2)) $active = 0;
+      if ($mail_server == "gmail.com") $active = 1;
+      if ($lang == "ru") if ($mail_server2 == "ru") $active = 1;
+      if ($lang == "az") if ($mail_server2 == "az") $active = 1;
+      if ($lang == "en") if ($mail_server2 == "com" || $mail_server2 == "net" || $mail_server2 == "ord" || $mail_server2 == "gov") $active = 1;
+    } else $active = 1;
     //$pattern = "/www.onlinedisk.ru\/image\/"."(\d+)"."\/"."([а-яА-ЯA-Za-z0-9 _-]+)".".jpg"."/i";
     //$replacement = "<a href=http://www.onlinedisk.ru/get_image.php?id=$1 target=_blank><img src=/includes/phpThumb/phpThumb.php?src=http://www.onlinedisk.ru/get_image.php?id=$1&w=200&h=200&q=45 width=200 /></a> ";
     //$info =  preg_replace($pattern, $replacement, $info);
@@ -2587,9 +2579,9 @@ function savecomm($avtor, $avtory, $info, $num, $comm_otvet, $maily, $mail, $adr
         if (is_admin($admin)) { 
           $addcomm = true;
           $maily = $adminmail; // под вопросом!
-        } else die("<b>Ошибка: Вы неправильно ввели цифровой код, необходимый для подтверждения вашей человечности!</b><p>Нажмите кнопку Назад в браузере, чтобы вернуться на предыдущую страницу. Обновите страницу [клавиша F5], если код АнтиСпама не изменится на новый.");
+        } else die("<b>Ошибка: Вы неправильно ввели цифровой код, необходимый для подтверждения вашей человечности!</b><p>Нажмите кнопку Назад в браузере, чтобы вернуться на предыдущую страницу. Обновите страницу [клавиша F5], если код не изменится на новый.");
       }
-    } else die("<b>Ошибка: Вы не ввели сообщение или свое имя!</b><p>Нажмите кнопку Назад в браузере, чтобы вернуться на предыдущую страницу");
+    } else die("<b>Ошибка: Вы не ввели основную информацию!</b><p>Нажмите кнопку Назад в браузере, чтобы вернуться на предыдущую страницу");
 
     // Проверка наличия подобного комментария.
     $sql = "SELECT cid FROM ".$prefix."_".$tip."_comments WHERE text='$info' and num='$num'";
@@ -2598,13 +2590,15 @@ function savecomm($avtor, $avtory, $info, $num, $comm_otvet, $maily, $mail, $adr
       if ($addcomm != false) { 
             // добавим в куки имя, телефон, адрес и мыло
             setcookie("comment", "$avtory|$maily|$adres|$tel|$ip", time()+60*60*24*360);
+            // запишем комментарий в БД
             $db->sql_query("INSERT INTO ".$prefix."_".$tip."_comments ( `cid` , `num` , `avtor` , `mail` , `text` , `ip` , `data`, `drevo`, `adres`, `tel`, `active` ) VALUES ('', '".mysql_real_escape_string($num)."', '".mysql_real_escape_string($avtory)."', '".mysql_real_escape_string($maily)."', '".mysql_real_escape_string($info)."', '$ip', '$now', '".mysql_real_escape_string($comm_otvet)."', '".mysql_real_escape_string($adres)."', '".mysql_real_escape_string($tel)."', '$active')");
+            // Обновим счетчик комментариев страницы
             $db->sql_query("UPDATE ".$prefix."_".$tip." SET comm=comm+1 WHERE pid='$num'");
       }
   
     // Отправка извещения на mail в случае ответа на коммент
 
-    // получим название модуля
+    // получим название раздела
       $sql4 = "SELECT `module` from ".$prefix."_pages where `pid` = '$num'";
       $result4 = $db->sql_query($sql4);
       $row4 = $db->sql_fetchrow($result4);
@@ -2909,7 +2903,7 @@ break;
 case "savepost":
 if (!isset($post_title)) $post_title = "";
 if (!isset($add)) $add = "";
-savepost ($avtor, $post_title, $info, $num, $cid, $add);
+savepost ($avtory, $avtor, $mail, $post_title, $info, $num, $cid, $add);
 break;
 
 case "search":

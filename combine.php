@@ -37,6 +37,8 @@ $contents = "
 .editor_file_ico_xls 	{ background: url(ed/js/editor/i/fileicons/xls.png) no-repeat; }
 .editor_file_ico_zip 	{ background: url(ed/js/editor/i/fileicons/zip.png) no-repeat; }
 
+.redactor_toolbar li {padding-left:5px !important;}
+
 .comm_form #avtory, .comm_form #maily, .comm_form #adres, .comm_form #tel, .comm_form #area {width: 99%;}
 
 /* Магазин */
@@ -66,8 +68,6 @@ input:focus {
   -webkit-box-shadow: 0 0 5px rgba(81, 203, 238, 1);
   -moz-box-shadow: 0 0 5px rgba(81, 203, 238, 1);
 }
-
-.overcomm {max-height:150px; overflow:auto;}
 
 .radius {
 	border: 1px solid #cccccc;
@@ -237,6 +237,8 @@ input[type=search]:focus {
   box-shadow: 0 0 5px rgba(109,207,246,.5); /* Эффект свечения */
 }
 .main_search_button {display:none !important;}
+
+.comm_label_textarea {padding-top:10px;}
 
 .button {cursor:pointer; text-decoration: underline;}
 

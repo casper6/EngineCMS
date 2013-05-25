@@ -786,9 +786,9 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
       if ($num != 0) {
         if (!isset($module)) $titl_mainpage = "РАЗДЕЛ УДАЛЁН! &rarr; $module";
         else $titl_mainpage = trim($title_razdel_and_bd[$module]);
-        //if ($del == true) 
-          $del = "<a title='Удалить отключенный комментарий' onclick=delcomm(".$cid.") class=punkt><div style='float:right; margin-left:20px;' title='Отключить комментарий'>".icon('red small','F')."</div></a>"; 
-          //else $del = "";
+        //if ($del == true) $del = "<a title='Удалить отключенный комментарий' onclick=delcomm(".$cid.") class=punkt><div style='float:right; margin-left:20px;' title='Отключить комментарий'>".icon('red small','F')."</div></a>"; 
+        //else 
+        $del = "";
         $pageslistdel .= "<tr onclick=show('comm".$cid."') title='Показать комментарий...' valign=top style='cursor:pointer;' class='tr_hover' id=1comm".$cid.$bgcolor."><td class='gray'><nobr>".$data."</nobr></td><td>".$del."<a onclick=offcomm(".$cid.") class=punkt>".$vkl."</a>
 
         <a style='float:right;' title='Изменить комментарий' href='sys.php?op=base_comments_edit_comments&cid=".$cid."'>".icon('orange small','7')."</a>

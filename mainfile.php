@@ -14,6 +14,10 @@
   global $deviceType, $ipban, $display_errors, $pid, $site_cash;
   $deviceType = ($detect->isMobile() ? ($detect->isTablet() ? 'tablet' : 'phone') : 'computer');
 
+  // Переходная опция - убрать после переделки установщика
+  global $lang;
+  if ($lang == "ru-RU") $lang = "ru";
+
     if ( isset($admin) ) {
     if (is_admin($admin)) {
       require_once ('ad/ad-functions.php'); // Функции для администрирования

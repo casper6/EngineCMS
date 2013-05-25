@@ -822,7 +822,7 @@ function edit_main($id) {
 	$options = str_replace($module_name."|","",$text);
 
 	// обнулили все опции от греха подальше
-	$media=$folder=$col=$view=$golos=$golosrazdel=$post=$comments=$datashow=$favorites=$socialnetwork=$search=$search_papka=$put_in_blog=$base=$vetki=$citata=$media_comment=$no_html_in_opentext=$no_html_in_text=$show_add_post_on_first_page=$show_add_post_fileform=$razdel_shablon=$page_shablon=$comments_all=$comments_num=$comments_mail=$comments_adres=$comments_tel=$comments_desc=$golostype=$pagenumbers=$comments_main=$tags_type=$pagekol=$table_light=$designpages=$comments_add=$div_or_table=0;
+	$media=$folder=$col=$view=$golos=$golosrazdel=$post=$comments=$datashow=$favorites=$socialnetwork=$search=$search_papka=$put_in_blog=$base=$vetki=$citata=$media_comment=$no_html_in_opentext=$no_html_in_text=$show_add_post_on_first_page=$media_post=$razdel_shablon=$page_shablon=$comments_all=$comments_num=$comments_mail=$comments_adres=$comments_tel=$comments_desc=$golostype=$pagenumbers=$comments_main=$tags_type=$pagekol=$table_light=$designpages=$comments_add=$div_or_table=0;
 
 	$menushow=$titleshow=$razdel_link=$peopleshow=$design=$tags=$podrobno=$podrazdel_active_show=$podrazdel_show=$tipograf=$limkol=$tags_show=$tema_zapret=$tema_zapret_comm=1;
 
@@ -1082,7 +1082,9 @@ function edit_main($id) {
 	<td>".select("options[comments_all]", "1,0", "ДА,НЕТ", $comments_all)."</td>
 	</tr>
 	<tr>
-	<td>Включить информацию о возможности помещения графики, музыки и видео в комментарии на страницах.</td>
+	<td><b>Включить визуальный редактор</b> в форме добавления комментария.
+	<br>Кнопки редактора: жирность, наклон, зачеркнуто, добавить картинку, видео, файл и ссылку.
+	<br>Запрешенные форматы файлов: exe, php, js, html и xml</td>
 	<td>".select("options[media_comment]", "1,0", "ДА,НЕТ", $media_comment)."</td>
 	</tr>
 	<tr>
@@ -1116,9 +1118,11 @@ function edit_main($id) {
 	<td><b>Показывать на главной</b> странице раздела Добавление страницы.</td>
 	<td>".select("options[show_add_post_on_first_page]", "1,0", "ДА,НЕТ", $show_add_post_on_first_page)."</td>
 	</tr>
-	<tr class=hide>
-	<td>Показывать форму загрузки фото или файла.</td>
-	<td>".select("options[show_add_post_fileform]", "1,0", "ДА,НЕТ", $show_add_post_fileform)."</td>
+	<tr>
+	<td><b>Включить визуальный редактор</b> в форме добавления страницы.
+	<br>Кнопки редактора: жирность, наклон, зачеркнуто, добавить картинку, видео, файл и ссылку.
+	<br>Запрешенные форматы файлов: exe, php, js, html и xml</td>
+	<td>".select("options[media_post]", "1,0", "ДА,НЕТ", $media_post)."</td>
 	</tr>
 	<tr>
 	<td>Замена названия кнопки «Открыть новую темую». Например: «Добавить новость», «Разместить статью», «Добавить фото», «Добавить организацию».</td>
