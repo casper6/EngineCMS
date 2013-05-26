@@ -14,8 +14,8 @@
   global $deviceType, $ipban, $display_errors, $pid, $site_cash;
   $deviceType = ($detect->isMobile() ? ($detect->isTablet() ? 'tablet' : 'phone') : 'computer');
 
-  // Переходная опция - убрать после переделки установщика
   global $lang;
+  // Переходная рудиментарная опция - убрать после переделки установщика
   if ($lang == "ru-RU") $lang = "ru";
 
     if ( isset($admin) ) {
@@ -23,7 +23,7 @@
       require_once ('ad/ad-functions.php'); // Функции для администрирования
       if (isset($cash)) if ($cash == "del") { // Удаление всего кеша админом
 	  if ( $site_cash == "base"){
-        $db->sql_query("TRUNCATE TABLE `".$prefix."_cash`") or die('Не удалось стереть кеш...'); 
+        $db->sql_query("TRUNCATE TABLE `".$prefix."_cash`") or die(aa("Не удалось стереть кеш...")); 
 		}
 		if ( $site_cash == "file"){
 		$files = glob("cashe/*");
@@ -35,7 +35,7 @@
             }   
         }
     }}
-        die("Кеш удален. Можно <a href=\"javascript:self.close()\">закрыть</a> эту вкладку."); 
+        die(aa("Кеш удален. Можно <a href=\"javascript:self.close()\">закрыть</a> эту вкладку.")); 
       }
     }
   } else $admin = "";
@@ -110,7 +110,7 @@
       if (is_admin($admin)) $txt = page_admin($txt, $pid); // добавляем на стр. кнопку её редактирования
     }
     echo $txt; // Выводим страницу
-    if ($display_errors == true) print("\n<!-- \nзапросов к БД: $db->num_queries \n$db->num_q -->"); // Запросы к БД
+    if ($display_errors == true) print("\n<!-- \n".aa("запросов к БД").": $db->num_queries \n$db->num_q -->"); // Запросы к БД
     die(); // Закончили вывод страницы из кеша
 ##########################################################################################
   } else { // переходим к настройкам сайта и генерации страницы без кеша
@@ -141,15 +141,15 @@
   //if ($add_fonts != "") $add_fonts = explode(".",$add_fonts);
   $project_name = filter($project_name);
 
-  if ($shop_text_val2 == "") $shop_text_val2 = " руб.";
-  if ($shop_text_itogo == "") $shop_text_itogo = "Итого:";
-  if ($shop_text_oformit == "") $shop_text_oformit = "Оформить покупку";
-  if ($shop_text_korzina == "") $shop_text_korzina = "Ваша Корзина пуста.";
+  if ($shop_text_val2 == "") $shop_text_val2 = ss(" руб.");
+  if ($shop_text_itogo == "") $shop_text_itogo = ss("Итого:");
+  if ($shop_text_oformit == "") $shop_text_oformit = ss("Оформить покупку");
+  if ($shop_text_korzina == "") $shop_text_korzina = ss("Ваша Корзина пуста.");
   if ($shop_text_delete == "") $shop_text_delete = "×";
   if ($shop_pole == "") $shop_pole = "";
   if ($shop_admin_mail == "") $shop_admin_mail = $adminmail;
-  if ($shop_text_after_mail == "") $shop_text_after_mail = "<h1>Спасибо!</h1><h3>Ваш заказ успешно отправлен. В ближайшее время мы вам позвоним.</h3>";
-  if ($shop_spisok_pole == "") $shop_spisok_pole = "Ф.И.О.:*\nТелефон:*\nEmail:\nАдрес:\nДополнительная информация:";
+  if ($shop_text_after_mail == "") $shop_text_after_mail = ss("<h1>Спасибо!</h1><h3>Ваш заказ успешно отправлен. В ближайшее время мы вам позвоним.</h3>");
+  if ($shop_spisok_pole == "") $shop_spisok_pole = ss("Ф.И.О.:*\nТелефон:*\nEmail:\nАдрес:\nДополнительная информация:");
   if ($shop_shablon_form_order == "") $shop_shablon_form_order = "";
   if ($shop_shablon_mail_client == "") $shop_shablon_mail_client = "";
   if ($shop_shablon_mail_admin == "") $shop_shablon_mail_admin = "";
@@ -161,7 +161,7 @@
   if ($color_tema_js == "") $color_tema_js = "monokai";
   if ($color_tema_php == "") $color_tema_php = "monokai";
 
-  if ($tab_obzor == "") $tab_obzor = "Обзор";
+  if ($tab_obzor == "") $tab_obzor = ss("Обзор");
   if ($tab_show == "") $tab_show = "1";
   if ($jqueryui == "") $jqueryui = "1";
   if ($normalize == "") $normalize = "0";
@@ -226,7 +226,7 @@
       $idX = $rowY['id'];
       $id_razdel_and_bd[$nameX] = $rowY['id']; 
       $title_razdel_and_bd[$nameX] = $rowY['title']; 
-      if ($rowY['type'] == 5) $title_razdel_and_bd[$nameX] = "База данных «".$title_razdel_and_bd[$nameX]."»";
+      if ($rowY['type'] == 5) $title_razdel_and_bd[$nameX] = aa("База данных")." «".$title_razdel_and_bd[$nameX]."»";
       else {
         if ($rowY['type'] != 1) {
           $name_razdels[$idX] = $rowY['name'];
@@ -247,5 +247,29 @@
 #############################
 function close_button($txt) { // Кнопка для закрытия, обращение по id объекта
   return "<a title='Закрыть' class='punkt' onclick=\"$('#".$txt."').hide('slow');\"><div class='radius' style='font-size:12pt; width:20px; height: 20px; color: white; text-align:center; float:right; margin:5px; background: #bbbbbb;'>&nbsp;x&nbsp;</div></a>";
+}
+#############################
+function aa($t) { // Функция перевода админки / Translate administration function
+  global $lang_admin;
+  if ($lang_admin == 'ru') return $t; // Русский — по-умолчанию.
+  else {
+    if (file_exists('language/adm_'.$lang_admin.'.php')) {
+      $l = include ('language/adm_'.$lang_admin.'.php');
+      if (isset($l[$t])) return $l[$t];
+      else return " [ Error: no translate for: ".$t." ] ";
+    } else return " [ Error: no language file: language/adm_".$lang_admin.".php ] ";
+  } 
+}
+#############################
+function ss($t) { // Функция перевода сайта / Translate function
+  global $lang;
+  if ($lang == 'ru') return $t; // Русский — по-умолчанию.
+  else {
+    if (file_exists('language/'.$lang.'.php')) {
+      $l = include ('language/'.$lang.'.php');
+      if (isset($l[$t])) return $l[$t];
+      else return " [ Error: no translate for: ".$t." ] ";
+    } else return " [ Error: no language file: language/".$lang.".php ] ";
+  } 
 }
 ?>

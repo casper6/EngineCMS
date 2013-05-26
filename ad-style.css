@@ -398,13 +398,14 @@ p {margin-top: 15px;margin-left: 5px;}
 .dark_pole3 {border:0; border-radius: 5px; -moz-border-radius: 5; -webkit-border-radius: 5; padding:2px; color:white !important; margin:2px; background:#8c8c8c; text-decoration:none; display: inline-block;}
 
 
-.dark_pole2 { max-height:44px; overflow:hidden; border-top: 1px solid #edeef0; border-bottom: 1px solid #d8dadc; padding:5px;}
+.dark_pole2 { min-height:28px; max-height:44px; overflow:hidden; border-top: 1px solid #edeef0; border-bottom: 1px solid #d8dadc; padding:5px;}
 .dark_pole:hover, .dark_pole2:hover, .dark_pole2:hover h2, .dark_pole3:hover {color:black !important; background:#eeeeee; cursor:pointer;}
 
 .sortirovka, 
 .dark_pole2sel,
 .dark_pole2:hover,
 .sho_page a:hover { 
+	min-height:28px; max-height:44px; 
 	border-top: 1px solid #40a7f7; border-bottom: 1px solid #4782d7;
 	background: #0374ed; /* Old browsers */
 	background: -moz-linear-gradient(top,  #058bf5 0%, #0160e6 100%); /* FF3.6+ */
@@ -416,6 +417,8 @@ p {margin-top: 15px;margin-left: 5px;}
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#058bf5', endColorstr='#0160e6',GradientType=0 ); /* IE6-9 */
 	padding:5px;
 }
+
+.sho_page a:hover { min-height:18px;}
 
 .dark_pole2sel span, .dark_pole2:hover span { color: white; max-height:44px; overflow:hidden; }
 .dark_pole2sel .f14, .dark_pole2:hover .f14 { color: #058bf5 !important; }
