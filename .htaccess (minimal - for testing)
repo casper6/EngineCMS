@@ -1,0 +1,9 @@
+RewriteEngine On
+RewriteBase /
+RewriteRule ^red sys.php
+RewriteRule ^-([a-zA-Z0-9_-]*)_page_([0-9]*)_com_([0-9]*) header.php?name=$1&go=page&pid=$2&com=$3
+RewriteRule ^-([a-zA-Z0-9_-]*)_page_([0-9]*)_comm header.php?name=$1&go=page&pid=$2&comm=ok
+RewriteRule ^-([a-zA-Z0-9_-]*)_page_([0-9]*) header.php?name=$1&go=page&pid=$2
+RewriteRule ^-([a-zA-Z0-9_-]*) header.php?name=$1
+RewriteRule ^css_([0-9-]*)_add_([a-z0-9_-]*).css combine.php?type=css&files=$1&add=$2
+RewriteRule ^css_([0-9-]*).css combine.php?type=css&files=$1

@@ -32,40 +32,36 @@ function FixQuotes($what = "",$strip="") {
   return $what;
 }
 /////////////////////////////////////////////////////////
-function delQuotes($string) { # Фильтры текста
-  $tmp="";    # string buffer
-  $result=""; # result string
+function delQuotes($string) { # Фильтр текста
+  $tmp="";    
+  $result=""; 
   $i=0;
-  $attrib=-1; # Are us in an HTML attrib ?   -1: no attrib   0: name of the attrib   1: value of the atrib
-  $quote=0;   # Is a string quote delimited opened ? 0=no, 1=yes
+  $attrib=-1; 
+  $quote=0;   
   $len = strlen($string);
   while ($i<$len) {
-    switch($string[$i]) { # What car is it in the buffer ?
-    case "\"": #"       # a quote.
-    if ($quote==0) {
-      $quote=1;
-    } else {
+    switch($string[$i]) {
+      case "\"": 
+        if ($quote==0) $quote=1;
+        else {
       $quote=0;
-      if (($attrib>0) && ($tmp != "")) { $result .= "=\"$tmp\""; }
+          if (($attrib>0) && ($tmp != "")) $result .= "=\"".$tmp."\"";
       $tmp="";
       $attrib=-1;
     }
     break;
-    case "=":           # an equal - attrib delimiter
-    if ($quote==0) {  # Is it found in a string ?
+      case "=":           
+        if ($quote==0) {  
     $attrib=1;
-    if ($tmp!="") $result.=" $tmp";
+          if ($tmp!="") $result.=" ".$tmp;
     $tmp="";
     } else $tmp .= '=';
     break;
-    case " ":           # a blank ?
-    if ($attrib>0) {  # add it to the string, if one opened.
-    $tmp .= $string[$i];
-    }
+      case " ":           
+        if ($attrib>0) $tmp .= $string[$i];
     break;
-    default:            # Other
-    if ($attrib<0)    # If we weren't in an attrib, set attrib to 0
-    $attrib=0;
+      default:            
+        if ($attrib<0) $attrib=0;
     $tmp .= $string[$i];
     break;
     }
@@ -73,55 +69,23 @@ function delQuotes($string) { # Фильтры текста
   }
   if (($quote!=0) && ($tmp != "")) {
     if ($attrib==1) $result .= "=";
-    /* If it is the value of an atrib, add the '=' */
-    $result .= "\"$tmp\"";  /* Add quote if needed (the reason of the function ;-) */
+    $result .= "\"".$tmp."\"";
   }
   return $result;
 }
 /////////////////////////////////////////////////////////
 function check_html ($str, $strip="") {
-  /* The core of this code has been lifted from phpslash */
-  /* which is licenced under the GPL. */
-  if ($strip == "nohtml")
-  $str = stripslashes($str);
+  if ($strip == "nohtml") $str = stripslashes($str);
   $str = eregi_replace("<[[:space:]]*([^>]*)[[:space:]]*>",'<\\1>', $str);
   $str = eregi_replace("<a[^>]*href[[:space:]]*=[[:space:]]*\"?[[:space:]]*([^\" >]*)[[:space:]]*\"?[^>]*>",'<a href="\\1">', $str);
   $str = eregi_replace("<[[:space:]]* img[[:space:]]*([^>]*)[[:space:]]*>", '', $str);
   $str = eregi_replace("<a[^>]*href[[:space:]]*=[[:space:]]*\"?javascript[[:punct:]]*\"?[^>]*>", '', $str);
-  /*
-  $tmp = "";
-  while (ereg("<(/?[[:alpha:]]*)[[:space:]]*([^>]*)>",$str,$reg)) {
-    $i = strpos($str,$reg[0]);
-    $l = strlen($reg[0]);
-    if ($reg[1][0] == "/") $tag = strtolower(substr($reg[1],1));
-    else $tag = strtolower($reg[1]);
-    if ($reg[1][0] == "/") $tag = "</$tag>";
-    elseif ($reg[2] == "") $tag = "<$tag>";
-    else {
-      $attrb_list=delQuotes($reg[2]);
-      $tag = "<$tag" . $attrb_list . ">";
-    }
-    $tmp .= substr($str,0,$i) . $tag;
-    $str = substr($str,$i+$l);
-  }
-  $str = $tmp . $str;
-  */
   return $str;
   exit;
-  /* Squash PHP tags unconditionally */
-  $str = ereg_replace("<\?","",$str);
-  return $str;
+  //$str = ereg_replace("<\?","",$str);
+  //return $str;
 }
 /////////////////////////////////////////////////////////
-/*
-function filter($what, $strip="") {
-  if ($strip == "nohtml") {
-    $what = trim( strip_tags ( $what ) ); // check_html
-  }
-  $what = stripslashes(FixQuotes($what));
-  return($what);
-}
-*/
 function filter($what, $strip="", $save="") {
   if ($strip == "nohtml") {
     $what = check_html($what, $strip);
@@ -137,35 +101,15 @@ function filter($what, $strip="", $save="") {
   return($what);
 }
 /////////////////////////////////////////////////////////
-function getuseragent() { // удалить
-  return htmlspecialchars($_SERVER["HTTP_USER_AGENT"]);
-}
-/////////////////////////////////////////////////////////
 function getip() { // Получаем IP-адрес
-  if (getenv('REMOTE_ADDR'))  {
-    $user_ip = getenv('REMOTE_ADDR');
-  }
-  elseif (getenv('HTTP_FORWARDED_FOR')) {
-    $user_ip = getenv('HTTP_FORWARDED_FOR');
-  }
-  elseif (getenv('HTTP_X_FORWARDED_FOR')) {
-    $user_ip = getenv('HTTP_X_FORWARDED_FOR');
-  }
-  elseif (getenv('HTTP_X_COMING_FROM'))  {
-    $user_ip = getenv('HTTP_X_COMING_FROM');
-  }
-  elseif (getenv('HTTP_VIA')) {
-    $user_ip = getenv('HTTP_VIA');
-  }
-  elseif (getenv('HTTP_XROXY_CONNECTION')) {
-    $user_ip = getenv('HTTP_XROXY_CONNECTION');
-  }
-  elseif (getenv('HTTP_CLIENT_IP'))  {
-    $user_ip = getenv('HTTP_CLIENT_IP');
-  }
-  else {
-    $user_ip='unknown';
-  }
+  if (getenv('REMOTE_ADDR')) $user_ip = getenv('REMOTE_ADDR');
+  elseif (getenv('HTTP_FORWARDED_FOR')) $user_ip = getenv('HTTP_FORWARDED_FOR');
+  elseif (getenv('HTTP_X_FORWARDED_FOR')) $user_ip = getenv('HTTP_X_FORWARDED_FOR');
+  elseif (getenv('HTTP_X_COMING_FROM')) $user_ip = getenv('HTTP_X_COMING_FROM');
+  elseif (getenv('HTTP_VIA')) $user_ip = getenv('HTTP_VIA');
+  elseif (getenv('HTTP_XROXY_CONNECTION')) $user_ip = getenv('HTTP_XROXY_CONNECTION');
+  elseif (getenv('HTTP_CLIENT_IP')) $user_ip = getenv('HTTP_CLIENT_IP');
+  else $user_ip='unknown';
   if (15<strlen($user_ip)) {
     $ar = explode (', ', $user_ip);
     $so=sizeof($ar)-1;
@@ -174,29 +118,25 @@ function getip() { // Получаем IP-адрес
         $user_ip = $ar[$i];
         break;
       }
-      if ($i==$so) {
-        $user_ip = 'unknown';
-      }
+      if ($i==$so) $user_ip = 'unknown';
     }
   }
-  if (preg_match ('/[^0-9\.]/', $user_ip)) {
-    $user_ip = 'unknown';
-  }
+  if (preg_match ('/[^0-9\.]/', $user_ip)) $user_ip = 'unknown';
   return $user_ip;
 }
 /////////////////////////////////////////////////////////
-function findMonthName($m, $language="") { // Функция определения имени месяца по его числу
+function findMonthName($m) { // Функция определения имени месяца по его числу
   $m = intval($m);
-  if ($language == "english short") $month = array("","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sen","Oct","Nov","Dec");
-  else $month = array("", "января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря");
+  // english "Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sen,Oct,Nov,Dec");
+  $month = explode(",", "?,".ss("января,февраля,марта,апреля,мая,июня,июля,августа,сентября,октября,ноября,декабря"));
   return $month[$m];
 }
 ////////////////////////////////////////////////////////
 function tipograf($text, $p=0) { // Типографика - все основные знаки препинания
   if ($p==0) $text = "<p>".trim($text)."</p>";
   // Смайлы (можно добавить замену смайлов)
-  $text=str_replace(" :) ", "<img src=/images/smilies/04.gif>", $text);
-  $text=str_replace(" :( ", "<img src=/images/smilies/11.gif>", $text);
+  //$text=str_replace(" :) ", "<img src=/images/smilies/04.gif>", $text);
+  //$text=str_replace(" :( ", "<img src=/images/smilies/11.gif>", $text);
   $zamena = array(
   "<div><br /> 
   </div>"=>"<br>",
@@ -314,10 +254,16 @@ function tipograf($text, $p=0) { // Типографика - все основн
   return $text;
 }
 ///////////////////////////////////////////////////////////////
-function strtolow($txt, $t=1) { # Большие буквы в маленькие (и наоборот, при t=0)
-  $from   = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЬЫЭЮЯABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  $to     = 'абвгдеёжзийклмнопрстуфхцчшщъьыэюяabcdefghijklmnopqrstuvwxyz';
-  if ($t==1) $txt = strtr($txt, $from, $to); elseif ($t==0) $txt = strtr($txt, $to, $from);
+function strtolow($txt, $t=1) { # Конвертация регистра букв
+  // t = 1 – все буквы маленькие
+  // t = 0 – ВСЕ БУКВЫ БОЛЬШИЕ
+  // t = 2 – Первые Буквы Большие
+  //$from   = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЬЫЭЮЯABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  //$to     = 'абвгдеёжзийклмнопрстуфхцчшщъьыэюяabcdefghijklmnopqrstuvwxyz';
+  //if ($t==1) $txt = strtr($txt, $from, $to); 
+  //elseif ($t==0) $txt = strtr($txt, $to, $from);
+  $case = array('MB_CASE_UPPER','MB_CASE_LOWER','MB_CASE_TITLE');
+  $txt = mb_convert_case($value, $case[$t]);
   return $txt;
 }
 ///////////////////////////////////////////////////////////////
@@ -363,8 +309,7 @@ function date2normal_view($dat, $r=0, $t=0, $eng=0) { // Функция для �
   global $lang, $data_days;
   if ($lang != "ru-RU") $eng = 1;
   if ($data_days == true) $r = 2;
-
-  if ($eng == 0) $months = array("?", "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь");
+  if ($eng == 0) $months = explode(",", "?,".ss("январь,февраль,март,апрель,май,июнь,июль,август,сентябрь,октябрь,ноябрь,декабрь"));
   else $months = array("?", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
   $year = date("Y");
   if ($t != 0) {
@@ -390,11 +335,11 @@ function date2normal_view($dat, $r=0, $t=0, $eng=0) { // Функция для �
       $date_now3 = date("d m Y",time()-172800);
       $date_now4 = date("d m Y",time()+86400);
       $date_now5 = date("d m Y",time()+172800);
-      if ($date_now == $datax1_1) $data = "сегодня";
-      if ($date_now2 == $datax1_1) $data = "вчера";
-      if ($date_now3 == $datax1_1) $data = "позавчера";
-      if ($date_now4 == $datax1_1) $data = "завтра";
-      if ($date_now5 == $datax1_1) $data = "послезавтра";
+      if ($date_now == $datax1_1) $data = ss("сегодня");
+      if ($date_now2 == $datax1_1) $data = ss("вчера");
+      if ($date_now3 == $datax1_1) $data = ss("позавчера");
+      if ($date_now4 == $datax1_1) $data = ss("завтра");
+      if ($date_now5 == $datax1_1) $data = ss("послезавтра");
       $data = str_replace(" ".$year, "", $data);
     }
     if ($t != 0) $data .= $time;
@@ -496,8 +441,8 @@ function my_calendar($fill='', $modul, $showdate='') { // Функция выв�
     }
     $calendar .= "</tr>";
   } 
-  $calendar .= "</table><font class='small black'>Сегодня: ".date2normal_view($monthandyear.$daynow)."</font>";
-  if (trim($showdate) != "0-00-00" and trim($showdate) != "" and $showdate != $monthandyear.$daynow) $calendar .= "<br><font class='small red'>Выбрано: ".date2normal_view($showdate)."</font>";
+  $calendar .= "</table><font class='small black'>".ss("Сегодня: ").date2normal_view($monthandyear.$daynow)."</font>";
+  if (trim($showdate) != "0-00-00" and trim($showdate) != "" and $showdate != $monthandyear.$daynow) $calendar .= "<br><font class='small red'>".ss("Выбрано: ").date2normal_view($showdate)."</font>";
   return $calendar;
 }
 ////////////////////////////////////////////////////////////
@@ -509,7 +454,7 @@ function select($name,$vars,$vars_name,$znachenie,$add='') { // генераци
     if ($znachenie == "1") $style1 = "style='display:none;'"; 
     else $style2 = "style='display:none;'";
     $id = md5($name);
-    $button = "<a title='Выключено' class='button red white small punkt' id=on_".$id." onclick='$(\"#".$id." [value=1]\").attr(\"selected\", \"selected\"); $(\"#on_".$id."\").hide().next().show();'".$style1."><span class=\"icon white small\" data-icon=\"Q\"></span></a><a title='Включено' class='button green small punkt' id=off_".$id." onclick='$(\"#".$id." [value=0]\").attr(\"selected\", \"selected\"); $(\"#off_".$id."\").hide().prev().show();'".$style2."><span class=\"icon white small\" data-icon=\"`\"></span></a>";
+    $button = "<a title='".ss("Выключено")."' class='button red white small punkt' id=on_".$id." onclick='$(\"#".$id." [value=1]\").attr(\"selected\", \"selected\"); $(\"#on_".$id."\").hide().next().show();'".$style1."><span class=\"icon white small\" data-icon=\"Q\"></span></a><a title='".ss("Включено")."' class='button green small punkt' id=off_".$id." onclick='$(\"#".$id." [value=0]\").attr(\"selected\", \"selected\"); $(\"#off_".$id."\").hide().prev().show();'".$style2."><span class=\"icon white small\" data-icon=\"`\"></span></a>";
   } else { 
     $button = "";
     $id = $name;
@@ -562,9 +507,9 @@ function WhatArrayElement($array, $value, $keys=0) { // функция для п
 }
 ///////////////////////////////////////////////////////////////
 function form($module, $text, $type="open") { // Функция для форматирования текста страниц
-  // type: open, main
+  // type: open, main - text
   global $db, $prefix;
-  $result8 = $db->sql_query("select text from ".$prefix."_mainpage where type='2' and name='".$module."'");
+  $result8 = $db->sql_query("select `text` from ".$prefix."_mainpage where `type`='2' and `name`='".$module."'");
   $row8 = $db->sql_fetchrow($result8);
   $text2 = $row8['text'];
   if (strpos($text2,"tipograf=0") < 1) { // Типограф
@@ -574,15 +519,13 @@ function form($module, $text, $type="open") { // Функция для форм�
   if (strpos($text2,"no_html_in_text=1") > 1 and $type=="main") strip_tags($text, '<a><img>'); // Удаление HTML из предисловия
   if (strpos($text2,"table_light=1") > 0 and $type=="main") // Добавление класса table_light
     $text = str_replace("<table", "<table class='table_light'", $text);
-  //if (get_magic_quotes_gpc($text)) $text = stripslashes($text);
-  //$text = filter($text);
   return $text;
 }
 ///////////////////////////////////////////////////////////////// проверить дубликат
 function block_names() { // Функция для получения названий всех блоков (для дизайна и шаблонов) 
   global $db, $prefix;
   $blocks = "";
-  $sql3 = "select title from ".$prefix."_mainpage where type='3'";
+  $sql3 = "select `title` from ".$prefix."_mainpage where `type`='3'";
   $result3 = $db->sql_query($sql3);
   while ($row3 = $db->sql_fetchrow($result3)) {
     $title_modul = trim($row3['title']);
@@ -626,16 +569,18 @@ function recash($url, $main=1) { // Обновление кеша
 }
 ///////////////////////////////////////////////////////////////
 function obrez($word) { // Функция обрезания окончаний
+  global $lang;
+  if ($lang != "ru") {
+    return $word;
+  } else {
   $result = ''; $make = 0;
-  //Окончания
-  $closes = array('овая','овый','овое','ёвое','евое','ная','ной','ный','ные','ый','ые','ий','ой','ая','ов','ах','ав','ях','ое','ям','ом','ем','ей','ёй','ай','ец','а','е','и','о','у','ь','ы','ю','я');
+    $closes = array('овая','овый','овое','ёвое','евое','ная','ной','ный','ные','ый','ые','ий','ой','ая','ов','ах','ав','ях','ое','ям','ом','ем','ей','ёй','ай','ец','а','е','и','о','у','ь','ы','ю','я'); //Окончания
   $word_count = mb_strlen($word);
   if ($word_count >= 4) foreach ($closes AS $part) 
     if (preg_match('/(.*)'.$part.' /', $word)) {
       $wordX = mb_substr($word, 0, $word_count - mb_strlen($part));
       if ($wordX != $word) { $word = $wordX; break; }
     }
-
     $chars = array('а','е','ё','й','и','о','у','ь','ы','э','ю','я'); //Буквы
     for ($position = $word_count-1; $position >= 0; $position--) {
       $char = mb_substr($word, $position, 1);
@@ -643,35 +588,31 @@ function obrez($word) { // Функция обрезания окончаний
       if ($position==2) $make = 1;
       if ($make==1) $result = $char.$result;
     }
-
   return $result;
+}
 }
 ///////////////////////////////////////////////////////////////
 function getparent($name, $parentid, $title) { // получение родительской папки
     global $prefix, $db;
-    $sql = "select title, parent_id from ".$prefix."_pages_categories where module='$name' and `tables`='pages' and cid='$parentid' order by cid";
+    $sql = "select `title`, `parent_id` from ".$prefix."_pages_categories where `module`='".$name."' and `tables`='pages' and `cid`='".$parentid."' order by `cid`";
     $result = $db->sql_query($sql);
     $row = $db->sql_fetchrow($result);
     $ptitle = strip_tags($row['title'], '<b><i>');
     $pparentid = $row['parent_id'];
     if ($ptitle!="") $title = $ptitle."/".$title;
-    if ($pparentid!=0) {
-      $title = getparent($name,$pparentid,$title);
-    }
+    if ($pparentid!=0) $title = getparent($name,$pparentid,$title);
     return $title;
 }
 ///////////////////////////////////////////////////////////////
 function getparent_spiski($name, $parent, $title) { // получение родительского списка
     global $tip, $admintip, $prefix,$db;
-    $sql = "select name, parent from ".$prefix."_spiski where type='$name' and id='$parent'";
-    $result = $db->sql_query($sql) or die('Ошибка: Не далось подключиться к спискам');
+    $sql = "select `name`, `parent` from ".$prefix."_spiski where `type`='".$name."' and `id`='".$parent."'";
+    $result = $db->sql_query($sql);
     $row = $db->sql_fetchrow($result);
     $ptitle = $row['name'];
     $pparent = $row['parent'];
     if ($ptitle!="") $title = $ptitle."/".$title;
-    if ($pparent!=0) {
-      $title = getparent_spiski($name, $pparent, $title);
-    }
+    if ($pparent!=0) $title = getparent_spiski($name, $pparent, $title);
     return $title;
 }
 /////////////////////////////////////////////////////////////// сделать настройку
@@ -686,8 +627,8 @@ function antivirus($x=0) { // антивирус для защиты от htacce
       if (file_exists('.htaccess')) unlink('.htaccess');
       copy($ht_backup, '.htaccess');
       // Оповестим админа
-      if ($x == 0) $subg = "Найден и обезврежен «.htaccess»-вирус."; 
-      elseif ($x == 1) $subg = "Вирус теперь поражает и резервную копию .htaccess — пора залезть в Настройки Администрирования и поменять название файла резервной копии.";
+      if ($x == 0) $subg = aa("Найден и обезврежен «.htaccess»-вирус."); 
+      elseif ($x == 1) $subg = aa("Вирус теперь поражает и резервную копию .htaccess — пора обновить оба файла, взяв их из дистрибутива, а также в [Настройки -> Настройки Администрирования] поменять название файла с резервной копией .htaccess");
       system_mes($subg);
       if ($x == 0) antivirus("1");
     }
@@ -696,7 +637,7 @@ function antivirus($x=0) { // антивирус для защиты от htacce
 ///////////////////////////////////////////////////////////////
 function system_mes($subg) { // Отправка системного сообщения администратору (в список «Комментарии»)
   global $prefix, $db, $now;
-  $db->sql_query("INSERT INTO ".$prefix."_pages_comments ( `cid` , `num` , `avtor` , `mail` , `text` , `ip` , `data`, `drevo`, `adres`, `tel`, `active` ) VALUES ('', '0', 'ДвижОк', '', '".$subg."', '', '$now', '', '', '', '1')");
+  $db->sql_query("INSERT INTO ".$prefix."_pages_comments ( `cid` , `num` , `avtor` , `mail` , `text` , `ip` , `data`, `drevo`, `adres`, `tel`, `active` ) VALUES ('', '0', '".aa("ДвижОк")."', '', '".$subg."', '', '".$now."', '', '', '', '1')");
 }
 /////////////////////////////////////////////////////////////////
 function vhodyagie($id,$par,$num) { // Функция подсчета входящих в подкатегории страниц
@@ -711,6 +652,10 @@ function vhodyagie($id,$par,$num) { // Функция подсчета вход�
 }
 /////////////////////////////////////////////////////////////////
 function predlogi($text) { // Добавление к предлогам неразрывного пробела, для типографики страниц
+  global $lang;
+  if ($lang != "ru") {
+    return $text;
+  } else {
   $predlogi = array(" а","А"," в","В"," и","И"," к","К"," о","О"," у","У"," я","Я"," во","Во"," до","До"," за","За"," из","Из"," на","На"," не","Не"," ни","Ни"," но","Но"," об","Об"," то","То"," для","Для"," или","Или"," над","Над"," обо","Обо"," про","Про"," около","Около"," перед","Перед"," после","После"," против","Против"," напротив","Напротив");
   foreach ($predlogi as $value) {
     $text = str_replace($value." ", $value."&nbsp;",$text);
@@ -719,6 +664,7 @@ function predlogi($text) { // Добавление к предлогам нер�
   $text = str_replace(" же ","&nbsp;же ",$text);
   $text = str_replace(" - "," &mdash; ",$text); // Тире и дефиз
   return $text;
+}
 }
 /////////////////////////////////////////////////////////////////
 function time_otschet($tim, $txt, $do) { // JavaScript обратного отсчета времени
@@ -737,7 +683,7 @@ function time_otschet($tim, $txt, $do) { // JavaScript обратного отс
     if (RemainsMinutes<10){RemainsMinutes=\"0\"+RemainsMinutes}; 
     var lastSec=secInLastHour-RemainsMinutes*60;
     if (lastSec<10){lastSec=\"0\"+lastSec}; 
-    document.getElementById(\"RemainsFullDays\").innerHTML=\"<b style='font-size:1.3em;'>\"+RemainsFullDays+\"</b><span id='Rem'> дн</span>\"; 
+    document.getElementById(\"RemainsFullDays\").innerHTML=\"<b style='font-size:1.3em;'>\"+RemainsFullDays+\"</b><span id='Rem'> дней</span>\"; 
     document.getElementById(\"RemainsFullHours\").innerHTML=\"<b>\"+RemainsFullHours+\"</b><span id='Rem'> ч</span>\"; 
     document.getElementById(\"RemainsMinutes\").innerHTML=\"<b>\"+RemainsMinutes+\"</b><span id='Rem'> м</span>\"; 
     document.getElementById(\"lastSec\").innerHTML=\"<b>\"+lastSec+\"</b><span id='Rem'> с</span>\"; <!-- highslide start  -->
