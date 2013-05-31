@@ -11,7 +11,7 @@ if(isset($aid)) {
   unset($aid);
   unset($admin);
   die(aa("Доступ закрыт! (sys)"));
-  } else $aid = (int)mysql_real_escape_string($aid);
+  }
 }
 require_once("mainfile.php");
 $checkurl = $_SERVER['REQUEST_URI'];
@@ -130,8 +130,8 @@ echo "<title>".aa("Вход в Администрирование")."</title>
 
 function GraphicAdmin() {
 	global $aid, $admin, $prefix, $db, $counter, $admin_file, $show_comments, $show_userposts, $razdel_sort, $registr, $show_page;
-	$row = $db->sql_fetchrow($db->sql_query("SELECT `realadmin` FROM ".$prefix."_authors WHERE `aid`='".$aid."'"));
-	$realadmin = intval($row['realadmin']);
+	//$row = $db->sql_fetchrow($db->sql_query("SELECT `realadmin` FROM ".$prefix."_authors WHERE `aid`='".$aid."'"));
+	//$realadmin = intval($row['realadmin']);
 	$inf_base = "";
 	if (file_exists("map.xml")) {
 		if (date("Y-m-d", filectime("map.xml")) != date("Y-m-d")) {

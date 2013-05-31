@@ -14,7 +14,7 @@ function is_admin($admin) { // Проверка админа
   $aid = substr(addslashes($aid), 0, 25);
   if (!empty($aid) && !empty($pwd)) {
     global $prefix, $db;
-    $sql = "SELECT pwd FROM ".$prefix."_authors WHERE aid='$aid' limit 1";
+    $sql = "SELECT `pwd` FROM ".$prefix."_authors WHERE `aid`='".$aid."' limit 1";
     $result = $db->sql_query($sql);
     $pass = $db->sql_fetchrow($result);
     $db->sql_freeresult($result);
@@ -133,6 +133,7 @@ function findMonthName($m) { // Функция определения имени
 }
 ////////////////////////////////////////////////////////
 function tipograf($text, $p=0) { // Типографика - все основные знаки препинания
+  global $lang;
   if ($p==0) $text = "<p>".trim($text)."</p>";
   // Смайлы (можно добавить замену смайлов)
   //$text=str_replace(" :) ", "<img src=/images/smilies/04.gif>", $text);
@@ -250,7 +251,7 @@ function tipograf($text, $p=0) { // Типографика - все основн
   // Кавычки! («ёлочки» - &laquo; и &raquo или „лапки“ - &#132; и &#147;)
   //$text = preg_replace('/(^|\s)"(\S)/', '$1&laquo;$2', $text);
   //$text = preg_replace('/(\S)"([ .,?!])/', '$1&raquo;$2', $text);
-  if ($p!=2) $text = predlogi($text);
+  if ($p!=2 && $lang=="ru") $text = predlogi($text);
   return $text;
 }
 ///////////////////////////////////////////////////////////////
@@ -510,7 +511,7 @@ function WhatArrayElement($array, $value, $keys=0) { // функция для п
 function form($module, $text, $type="open") { // Функция для форматирования текста страниц
   // type: open, main - text
   global $db, $prefix;
-  $result8 = $db->sql_query("select `text` from ".$prefix."_mainpage where `type`='2' and `name`='".$module."'");
+  $result8 = $db->sql_query("select `text` from ".$prefix."_mainpage where `type`='2' and `name`='".mysql_real_escape_string($module)."'");
   $row8 = $db->sql_fetchrow($result8);
   $text2 = $row8['text'];
   if (strpos($text2,"tipograf=0") < 1) { // Типограф
@@ -549,21 +550,22 @@ function recash($url, $main=1) { // Обновление кеша
   if ($site_cash == "base") { // если кеш хранится в БД
     if ($main == 1) $db->sql_query("DELETE FROM ".$prefix."_cash WHERE `url`='/'");
     if (mb_strpos($url,"_page_")) {
-      $db->sql_query("DELETE FROM ".$prefix."_cash WHERE `url`='".$u[0]."'");
-      $db->sql_query("DELETE FROM ".$prefix."_cash WHERE `url` LIKE '".$u[0]."_cat_%'");
+      $db->sql_query("DELETE FROM ".$prefix."_cash WHERE `url`='".mysql_real_escape_string($u[0])."'");
+      $db->sql_query("DELETE FROM ".$prefix."_cash WHERE `url` LIKE '".mysql_real_escape_string($u[0])."_cat_%'");
     }
-    $db->sql_query("DELETE FROM ".$prefix."_cash WHERE `url`='".$url."'"); 
+    $db->sql_query("DELETE FROM ".$prefix."_cash WHERE `url`='".mysql_real_escape_string($url)."'"); 
   } else { // если кеш файловый
-    if ($main == 1) if (file_exists("cashe/-index")) unlink("cashe/-index");
-	if (mb_strpos($url,"_page_")) {
+    if ($main == 1) 
+      if (file_exists("cashe/-index")) unlink("cashe/-index");
+  	if (mb_strpos($url,"_page_")) {
       if (file_exists("cashe/".$u[0])) unlink("cashe/".$u[0]);
-	  	$files = glob("cashe/".$u[0]."_cat_*");
-    $c = count($files);
-    if (count($files) > 0) {
+  	  $files = glob("cashe/".$u[0]."_cat_*");
+      $c = count($files);
+      if (count($files) > 0) {
         foreach ($files as $file) {
-            if (file_exists($file)) unlink($file);
+          if (file_exists($file)) unlink($file);
         }
-    } 
+      }
     }
     if (file_exists("cashe/".$url)) unlink("cashe/".$url);
   }
@@ -574,28 +576,28 @@ function obrez($word) { // Функция обрезания окончаний
   if ($lang != "ru") {
     return $word;
   } else {
-  $result = ''; $make = 0;
-    $closes = array('овая','овый','овое','ёвое','евое','ная','ной','ный','ные','ый','ые','ий','ой','ая','ов','ах','ав','ях','ое','ям','ом','ем','ей','ёй','ай','ец','а','е','и','о','у','ь','ы','ю','я'); //Окончания
-  $word_count = mb_strlen($word);
-  if ($word_count >= 4) foreach ($closes AS $part) 
-    if (preg_match('/(.*)'.$part.' /', $word)) {
-      $wordX = mb_substr($word, 0, $word_count - mb_strlen($part));
-      if ($wordX != $word) { $word = $wordX; break; }
-    }
-    $chars = array('а','е','ё','й','и','о','у','ь','ы','э','ю','я'); //Буквы
-    for ($position = $word_count-1; $position >= 0; $position--) {
-      $char = mb_substr($word, $position, 1);
-      if (!in_array($char,$chars)) $make = 1;
-      if ($position==2) $make = 1;
-      if ($make==1) $result = $char.$result;
-    }
-  return $result;
-}
+    $result = ''; $make = 0;
+      $closes = array('овая','овый','овое','ёвое','евое','ная','ной','ный','ные','ый','ые','ий','ой','ая','ов','ах','ав','ях','ое','ям','ом','ем','ей','ёй','ай','ец','а','е','и','о','у','ь','ы','ю','я'); //Окончания
+    $word_count = mb_strlen($word);
+    if ($word_count >= 4) foreach ($closes AS $part) 
+      if (preg_match('/(.*)'.$part.' /', $word)) {
+        $wordX = mb_substr($word, 0, $word_count - mb_strlen($part));
+        if ($wordX != $word) { $word = $wordX; break; }
+      }
+      $chars = array('а','е','ё','й','и','о','у','ь','ы','э','ю','я'); //Буквы
+      for ($position = $word_count-1; $position >= 0; $position--) {
+        $char = mb_substr($word, $position, 1);
+        if (!in_array($char,$chars)) $make = 1;
+        if ($position==2) $make = 1;
+        if ($make==1) $result = $char.$result;
+      }
+    return $result;
+  }
 }
 ///////////////////////////////////////////////////////////////
 function getparent($name, $parentid, $title) { // получение родительской папки
     global $prefix, $db;
-    $sql = "select `title`, `parent_id` from ".$prefix."_pages_categories where `module`='".$name."' and `tables`='pages' and `cid`='".$parentid."' order by `cid`";
+    $sql = "select `title`, `parent_id` from ".$prefix."_pages_categories where `module`='".mysql_real_escape_string($name)."' and `tables`='pages' and `cid`='".mysql_real_escape_string($parentid)."' order by `cid`";
     $result = $db->sql_query($sql);
     $row = $db->sql_fetchrow($result);
     $ptitle = strip_tags($row['title'], '<b><i>');
@@ -607,7 +609,7 @@ function getparent($name, $parentid, $title) { // получение родит�
 ///////////////////////////////////////////////////////////////
 function getparent_spiski($name, $parent, $title) { // получение родительского списка
     global $tip, $admintip, $prefix,$db;
-    $sql = "select `name`, `parent` from ".$prefix."_spiski where `type`='".$name."' and `id`='".$parent."'";
+    $sql = "select `name`, `parent` from ".$prefix."_spiski where `type`='".mysql_real_escape_string($name)."' and `id`='".mysql_real_escape_string($parent)."'";
     $result = $db->sql_query($sql);
     $row = $db->sql_fetchrow($result);
     $ptitle = $row['name'];
@@ -638,7 +640,7 @@ function antivirus($x=0) { // антивирус для защиты от htacce
 ///////////////////////////////////////////////////////////////
 function system_mes($subg) { // Отправка системного сообщения администратору (в список «Комментарии»)
   global $prefix, $db, $now;
-  $db->sql_query("INSERT INTO ".$prefix."_pages_comments ( `cid` , `num` , `avtor` , `mail` , `text` , `ip` , `data`, `drevo`, `adres`, `tel`, `active` ) VALUES ('', '0', '".aa("ДвижОк")."', '', '".$subg."', '', '".$now."', '', '', '', '1')");
+  $db->sql_query("INSERT INTO ".$prefix."_pages_comments ( `cid` , `num` , `avtor` , `mail` , `text` , `ip` , `data`, `drevo`, `adres`, `tel`, `active` ) VALUES ('', '0', '".aa("ДвижОк")."', '', '".mysql_real_escape_string($subg)."', '', '".mysql_real_escape_string($now)."', '', '', '', '1')");
 }
 /////////////////////////////////////////////////////////////////
 function vhodyagie($id,$par,$num) { // Функция подсчета входящих в подкатегории страниц
@@ -657,15 +659,15 @@ function predlogi($text) { // Добавление к предлогам нер�
   if ($lang != "ru") {
     return $text;
   } else {
-  $predlogi = array(" а","А"," в","В"," и","И"," к","К"," о","О"," у","У"," я","Я"," во","Во"," до","До"," за","За"," из","Из"," на","На"," не","Не"," ни","Ни"," но","Но"," об","Об"," то","То"," для","Для"," или","Или"," над","Над"," обо","Обо"," про","Про"," около","Около"," перед","Перед"," после","После"," против","Против"," напротив","Напротив");
-  foreach ($predlogi as $value) {
-    $text = str_replace($value." ", $value."&nbsp;",$text);
+    $predlogi = array(" а","А"," в","В"," и","И"," к","К"," о","О"," у","У"," я","Я"," во","Во"," до","До"," за","За"," из","Из"," на","На"," не","Не"," ни","Ни"," но","Но"," об","Об"," то","То"," для","Для"," или","Или"," над","Над"," обо","Обо"," про","Про"," около","Около"," перед","Перед"," после","После"," против","Против"," напротив","Напротив");
+    foreach ($predlogi as $value) {
+      $text = str_replace($value." ", $value."&nbsp;",$text);
+    }
+    $text = str_replace("кое-как","<nobr>кое-как</nobr>",$text);
+    $text = str_replace(" же ","&nbsp;же ",$text);
+    $text = str_replace(" - "," &mdash; ",$text); // Тире и дефиз
+    return $text;
   }
-  $text = str_replace("кое-как","<nobr>кое-как</nobr>",$text);
-  $text = str_replace(" же ","&nbsp;же ",$text);
-  $text = str_replace(" - "," &mdash; ",$text); // Тире и дефиз
-  return $text;
-}
 }
 /////////////////////////////////////////////////////////////////
 function time_otschet($tim, $txt, $do) { // JavaScript обратного отсчета времени
@@ -684,10 +686,10 @@ function time_otschet($tim, $txt, $do) { // JavaScript обратного отс
     if (RemainsMinutes<10){RemainsMinutes=\"0\"+RemainsMinutes}; 
     var lastSec=secInLastHour-RemainsMinutes*60;
     if (lastSec<10){lastSec=\"0\"+lastSec}; 
-    document.getElementById(\"RemainsFullDays\").innerHTML=\"<b style='font-size:1.3em;'>\"+RemainsFullDays+\"</b><span id='Rem'> дней</span>\"; 
-    document.getElementById(\"RemainsFullHours\").innerHTML=\"<b>\"+RemainsFullHours+\"</b><span id='Rem'> ч</span>\"; 
-    document.getElementById(\"RemainsMinutes\").innerHTML=\"<b>\"+RemainsMinutes+\"</b><span id='Rem'> м</span>\"; 
-    document.getElementById(\"lastSec\").innerHTML=\"<b>\"+lastSec+\"</b><span id='Rem'> с</span>\"; <!-- highslide start  -->
+    document.getElementById(\"RemainsFullDays\").innerHTML=\"<b style='font-size:1.3em;'>\"+RemainsFullDays+\"</b><span id='Rem'> ".ss("дней")."</span>\"; 
+    document.getElementById(\"RemainsFullHours\").innerHTML=\"<b>\"+RemainsFullHours+\"</b><span id='Rem'> ".ss("ч")."</span>\"; 
+    document.getElementById(\"RemainsMinutes\").innerHTML=\"<b>\"+RemainsMinutes+\"</b><span id='Rem'> ".ss("м")."</span>\"; 
+    document.getElementById(\"lastSec\").innerHTML=\"<b>\"+lastSec+\"</b><span id='Rem'> ".ss("с")."</span>\"; <!-- highslide start  -->
     setTimeout('fulltime()',10)
   } 
   </script> 
@@ -705,7 +707,7 @@ function time_otschet($tim, $txt, $do) { // JavaScript обратного отс
 function text_shablon() { // список шаблонов
     global $prefix, $db;
     $text_shablon = array(); 
-    $sqlZ = "SELECT `id`,`text` from ".$prefix."_mainpage where `tables`='pages' and type='6'";
+    $sqlZ = "SELECT `id`,`text` from ".$prefix."_mainpage where `tables`='pages' and `type`='6'";
     $resultZ = $db->sql_query($sqlZ);
     while ($rowZ = $db->sql_fetchrow($resultZ)) {
       $idZ = $rowZ['id'];
@@ -719,7 +721,7 @@ function titles_papka($cid=0,$all=0) { // список названий папо
     $cid = intval($cid);
     if ($cid == 0) {
       $titles_papka = array(); 
-      if ($all==0) $and = " and parent_id='0'"; else $and = "";
+      if ($all==0) $and = " and `parent_id`='0'"; else $and = "";
       //$cid_module = array(); // список принадлежности папок к разделам
       $result = $db->sql_query("SELECT `cid`,`title` from ".$prefix."_pages_categories where `tables`='pages'".$and." order by `title`");
       while ($row = $db->sql_fetchrow($result)) {
@@ -729,7 +731,7 @@ function titles_papka($cid=0,$all=0) { // список названий папо
       }
       return $titles_papka;
     } else {
-      $result = $db->sql_query("SELECT `title` from ".$prefix."_pages_categories where `cid`='".$cid."'");
+      $result = $db->sql_query("SELECT `title` from ".$prefix."_pages_categories where `cid`='".mysql_real_escape_string($cid)."'");
       $row = $db->sql_fetchrow($result);
       $title_papka = $row['title'];
       return $title_papka;
@@ -739,7 +741,7 @@ function titles_papka($cid=0,$all=0) { // список названий папо
 function design_and_style($design) { // Определение дизайна
   global $prefix, $db;
   if (isset($design)) {
-    $sql4 = "select `text`, `useit` from ".$prefix."_mainpage where `tables`='pages' and `id`='$design' and type='0'";
+    $sql4 = "select `text`, `useit` from ".$prefix."_mainpage where `tables`='pages' and `id`='".mysql_real_escape_string($design)."' and type='0'";
     $result4 = $db->sql_query($sql4);
     $numrows = $db->sql_numrows($result4);
   } else $numrows = 0;
@@ -788,7 +790,7 @@ function site_redactor($nolink=false) {
           fileUpload: 'ed2/file_upload.php', 
           lang: '".$lang."', 
           buttons: ['bold', 'italic', 'deleted', '|', 'image', 'file'".$add."],
-          autoresize: true, 
+          autoresize: true,
           allowedTags: ['a', 'p', 'b', 'i', 'img', 'iframe', 'object', 'param'],
           minHeight: 300 }); } );
     </script>";

@@ -18,14 +18,14 @@
   $m_title[$m_name] = $row3['title'];
   }
   
-  $res1 = $db->sql_query("SELECT `pid` FROM ".$prefix."_pages where `tables`='pages' and active='1' and (copy='0' or copy=pid) and (search LIKE '% ".$slovo." %') order by date desc");
+  $res1 = $db->sql_query("SELECT `pid` FROM ".$prefix."_pages where `tables`='pages' and `active`='1' and (`copy`='0' or `copy`=`pid`) and (`search` LIKE '% ".$slovo." %') order by `date` desc");
   $numrows = $db->sql_numrows($res1);
   if ($numrows==0) {
   $numrows = "ничего не найдено...";
   $nu = explode(" ",$slov);
   if ($nu>1) $numrows .= "<br>Данный тег не обнаружен.";
   }
-  $soderganie .= "<center><div class=main_search_line align=left><table border=0 cellspacing=1 cellpadding=0><tr><td><b>Вы выбрали тег</b> (ключевое слово): <b>$slov.</b> Найдено: $numrows</td></tr></table></div><br><div class=main_search align=left><ol>
+  $soderganie .= "<center><div class=main_search_line align=left><table border=0 cellspacing=1 cellpadding=0><tr><td><b>Вы выбрали тег</b> (ключевое слово): <b>".$slov.".</b> Найдено: ".$numrows."</td></tr></table></div><br><div class=main_search align=left><ol>
   ";
     if ($numrows!=0) {
     $pids = array(); // Список похожих

@@ -799,7 +799,7 @@ function edit_main($id) {
   	redactor($red, $text, 'text'); // редактор: типа редактора, редактируемое поле
 
 	echo "<span class=h2>Использованные в дизайне стили CSS</span> <span class=f12>Зажмите Ctrl для выбора нескольких стилей</span><br>
-	<select name='useit[]' size=2 class=f12 multiple='multiple'>".$styles."</select></div>";
+	<select name='useit[]' size=6 class=f12 multiple='multiple'>".$styles."</select></div>";
 	} ############################### ЗАКРЫТИЕ ДИЗАЙН
 
 	if ($type == "1") { ############################### ОТКРЫТИЕ СТИЛЬ
@@ -2102,7 +2102,7 @@ function mainpage_save($id=0, $type, $namo, $title, $text, $useit, $shablon, $de
 		$shablon = mysql_real_escape_string(stripcslashes($shablon));
 		$db->sql_query("INSERT INTO ".$prefix."_mainpage (`id`, `type`, `name`, `title`, `text`, `useit`, `shablon`, `counter`, `tables`, `color`, `description`, `keywords`) VALUES (NULL, '".$type."', '".$namo."', '".$title."', '".$text."', '".$useit."', '".$shablon."', '0', 'pages', '0', '', '');") or die('Не удалось создать. Попробуйте еще раз и в случае неудачи обратитесь к разработчику.');
 	}
-	
+
 	// узнаем id
 	if ($id == 0 && ($type == 2 or $type==5)) {
 		$row2 = $db->sql_fetchrow($db->sql_query("select `id` from ".$prefix."_mainpage where `tables`='pages' and `type`='".$type."' and `name`='".$namo."' and `title`='".$title."' and `text`='".$text."' and `useit`='".$useit."'")) or die("SQL: select `id` from ".$prefix."_mainpage where `tables`='pages' and `type`='".$type."' and `name`='".$namo."' and `title`='".$title."' and `text`='".$text."' and `useit`='".$useit."'");

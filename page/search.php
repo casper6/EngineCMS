@@ -223,7 +223,7 @@ else {
       }
       $pids = array_merge($pids1,$pids2);
       $nu = count($pids);
-      if ($nu != 0) { $soderganie .= "<h2>".ss("В папках:")." ".$nu."</h2>"; $allnum += $nu; }
+      if ($nu != 0) { $soderganie .= "<h2>".ss("В подразделах:")." ".$nu."</h2>"; $allnum += $nu; }
 
       foreach ($pids as $p_cid) {
         $soderganie .= "<li>".ss("папка")." <a class='search_page_link' href='/-".$rr_module[$p_cid]."_cat_".$p_cid."'>".$rr_title[$p_cid]."</a>";

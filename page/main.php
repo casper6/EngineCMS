@@ -527,7 +527,7 @@ function showcat($cid=0, $pag=0, $slovo="") {
     $add_css = " razdel_".$view;
   } else {
     // Доступ к шаблону
-    $sql = "select `text` from ".$prefix."_mainpage where `tables`='pages' and `id`='".(int)mysql_real_escape_string($razdel_shablon)."' and `type`='6'";
+    $sql = "select `text` from ".$prefix."_mainpage where `tables`='pages' and `id`='".mysql_real_escape_string($razdel_shablon)."' and `type`='6'";
     $result = $db->sql_query($sql);
     $row = $db->sql_fetchrow($result);
     $sha_first = "";
@@ -544,7 +544,7 @@ function showcat($cid=0, $pag=0, $slovo="") {
       $sql = "select `id` from ".$prefix."_mainpage where `tables`='pages' and name='".$DBName."' and type='2'";
       $result7 = $db->sql_query($sql);
       $row7 = $db->sql_fetchrow($result7);
-      $r_id = (int)mysql_real_escape_string($row7['id']);
+      $r_id = mysql_real_escape_string($row7['id']);
       $result5 = $db->sql_query("SELECT `id`, `name`, `text` FROM ".$prefix."_mainpage WHERE `tables`='pages' and (`useit` = '".$r_id."' or `useit` = '0') and `type`='4'");
       while ($row5 = $db->sql_fetchrow($result5)) {
         $s_id = $row5['id'];
@@ -842,7 +842,7 @@ function showcat($cid=0, $pag=0, $slovo="") {
       $add_css .= " razdel_".$view;
     } else {
       // Доступ к шаблону
-      $sql = "select `text` from ".$prefix."_mainpage where `tables`='pages' and `id`='".(int)mysql_real_escape_string($razdel_shablon)."' and `type`='6'";
+      $sql = "select `text` from ".$prefix."_mainpage where `tables`='pages' and `id`='".mysql_real_escape_string($razdel_shablon)."' and `type`='6'";
       $result = $db->sql_query($sql);
       $row = $db->sql_fetchrow($result);
       $sha = $row['text'];
@@ -870,7 +870,7 @@ function showcat($cid=0, $pag=0, $slovo="") {
     $first = "";
     $second = "";
 
-    $sql = "SELECT `name`, `title`, `text` FROM ".$prefix."_mainpage where `tables`='pages' and `id`='".(int)mysql_real_escape_string($base)."'";
+    $sql = "SELECT `name`, `title`, `text` FROM ".$prefix."_mainpage where `tables`='pages' and `id`='".mysql_real_escape_string($base)."'";
     $result = $db->sql_query($sql);
     $row = $db->sql_fetchrow($result);
     //$baza_title  = $row['title']; // Название БД
@@ -888,7 +888,7 @@ function showcat($cid=0, $pag=0, $slovo="") {
           $and .= " and ".$second."='".$second1."'";
         }
         if ($option!=0) {
-          $sql = "SELECT `text` FROM ".$prefix."_mainpage where `tables`='pages' and `type`='3' and `id`='".(int)mysql_real_escape_string($option)."'";
+          $sql = "SELECT `text` FROM ".$prefix."_mainpage where `tables`='pages' and `type`='3' and `id`='".mysql_real_escape_string($option)."'";
           $result = $db->sql_query($sql);
           $row = $db->sql_fetchrow($result);
           $option  = trim($row['text']); 
@@ -1102,7 +1102,7 @@ function page($pid, $all) {
     ############################3
     $cat_title = "";
     if ($cid != 0) {
-      $sqlZ = "SELECT `title` FROM ".$prefix."_pages_categories WHERE `cid`='".(int)mysql_real_escape_string($cid)."' and `tables`='pages'";
+      $sqlZ = "SELECT `title` FROM ".$prefix."_pages_categories WHERE `cid`='".mysql_real_escape_string($cid)."' and `tables`='pages'";
       $resultZ = $db->sql_query($sqlZ);
       $rowZ = $db->sql_fetchrow($resultZ);
       if ($rowZ['title'] != "") $cat_title = $rowZ['title']." /";
@@ -1465,7 +1465,7 @@ function page($pid, $all) {
     $sha = shablon_show("page", $view);
   } else { // Если используются внешние шаблоны
     // Доступ к шаблону
-    $sql = "select `text` from ".$prefix."_mainpage where `tables`='pages' and `id`='".(int)mysql_real_escape_string($page_shablon)."' and `type`='6'";
+    $sql = "select `text` from ".$prefix."_mainpage where `tables`='pages' and `id`='".mysql_real_escape_string($page_shablon)."' and `type`='6'";
     $result = $db->sql_query($sql);
     $row = $db->sql_fetchrow($result);
     $sha = $row['text'];
@@ -1477,7 +1477,7 @@ function page($pid, $all) {
     global $id_razdel_and_bd;
     $r_id = $id_razdel_and_bd[$DBName];
 
-    $result5 = $db->sql_query("SELECT `id`, `name`, `text` FROM ".$prefix."_mainpage WHERE `tables`='pages' and (`useit` = '".(int)mysql_real_escape_string($r_id)."' or `useit` = '0') and `type`='4'");
+    $result5 = $db->sql_query("SELECT `id`, `name`, `text` FROM ".$prefix."_mainpage WHERE `tables`='pages' and (`useit` = '".mysql_real_escape_string($r_id)."' or `useit` = '0') and `type`='4'");
     while ($row5 = $db->sql_fetchrow($result5)) {
       $s_id = $row5['id'];
       $n = $row5['name'];
@@ -1655,7 +1655,7 @@ function addbase($base,$name,$spa=0) {
   $soderganie .= "<form method=\"POST\" action=\"/-".$DBName."\" enctype=\"multipart/form-data\">
   <table width=100%><tr valign=top><td>";
 
-  $sql2 = "SELECT `name`, `text` FROM ".$prefix."_mainpage WHERE `tables`='pages' and `id`='".(int)mysql_real_escape_string($base)."' and `type`='5'";
+  $sql2 = "SELECT `name`, `text` FROM ".$prefix."_mainpage WHERE `tables`='pages' and `id`='".mysql_real_escape_string($base)."' and `type`='5'";
   $result2 = $db->sql_query($sql2);
   $row2 = $db->sql_fetchrow($result2);
   // Верстаем данные, которые заносятся в таблицу
@@ -2029,10 +2029,10 @@ function savepost ($avtory, $avtor, $mail, $post_title, $info, $num, $cid, $add)
                               $s_pages = str_replace("  "," ",$s_pages);
                               $db->sql_query("UPDATE ".$prefix."_spiski SET `pages`='".$s_pages."' WHERE `type`='".mysql_real_escape_string($name)."' and `name`='".mysql_real_escape_string($elements)."'") or die (ss("Ошибка: Не удалось обновить список."));
                           } else {
-                              $db->sql_query("INSERT INTO ".$prefix."_spiski (`id`, `type`, `name`, `opis`, `sort`, `pages`, `parent`) VALUES (NULL, '".mysql_real_escape_string($name)."', '".mysql_real_escape_string($elements)."', '', '0', ' ".(int)mysql_real_escape_string($page_id)." ', '0');") or die (ss("Ошибка: Не удалось сохранить список."));
+                              $db->sql_query("INSERT INTO ".$prefix."_spiski (`id`, `type`, `name`, `opis`, `sort`, `pages`, `parent`) VALUES (NULL, '".mysql_real_escape_string($name)."', '".mysql_real_escape_string($elements)."', '', '0', ' ".mysql_real_escape_string($page_id)." ', '0');") or die (ss("Ошибка: Не удалось сохранить список."));
                           }
                   } else { // если элемент новый
-                      $db->sql_query("INSERT INTO ".$prefix."_spiski (`id`, `type`, `name`, `opis`, `sort`, `pages`, `parent`) VALUES (NULL, '".mysql_real_escape_string($name)."', '".mysql_real_escape_string($elements)."', '', '0', ' ".(int)mysql_real_escape_string($page_id)." ', '0');") or die (ss("Ошибка: Не удалось сохранить список."));
+                      $db->sql_query("INSERT INTO ".$prefix."_spiski (`id`, `type`, `name`, `opis`, `sort`, `pages`, `parent`) VALUES (NULL, '".mysql_real_escape_string($name)."', '".mysql_real_escape_string($elements)."', '', '0', ' ".mysql_real_escape_string($page_id)." ', '0');") or die (ss("Ошибка: Не удалось сохранить список."));
                   }
           break;
           ////////////////////////////////////////////////////////////////////////////
@@ -2074,7 +2074,7 @@ function savepost ($avtory, $avtor, $mail, $post_title, $info, $num, $cid, $add)
                     $na = $row['name']; // дата
                     $pa = $row['pages']; // страницы
                     if (trim($update) != "")
-                      $db->sql_query("UPDATE ".$prefix."_spiski SET `pages` = ' ".mysql_real_escape_string($pa)." ".(int)mysql_real_escape_string($page_id)." ' WHERE `type`='".mysql_real_escape_string($name)."' and `name`='".mysql_real_escape_string($na)."'") or die (ss("Ошибка: Не удалось обновить списки."));
+                      $db->sql_query("UPDATE ".$prefix."_spiski SET `pages` = ' ".mysql_real_escape_string($pa)." ".mysql_real_escape_string($page_id)." ' WHERE `type`='".mysql_real_escape_string($name)."' and `name`='".mysql_real_escape_string($na)."'") or die (ss("Ошибка: Не удалось обновить списки."));
                   }
                   if (trim($insert) != "") $db->sql_query("INSERT INTO ".$prefix."_spiski (`id`, `type`, `name`, `opis`, `sort`, `pages`, `parent`) VALUES ".$insert.";") or die (ss("Ошибка: Не удалось сохранить списки."));
 
@@ -2103,11 +2103,11 @@ function savepost ($avtory, $avtor, $mail, $post_title, $info, $num, $cid, $add)
                               $db->sql_query("UPDATE ".$prefix."_spiski SET `pages`='".mysql_real_escape_string($s_pages)."' WHERE `type`='".mysql_real_escape_string($name)."' and `name`='".mysql_real_escape_string($elements)."'") or die ('Ошибка: Не удалось обновить списки.');
                               //echo "up";
                           } else {
-                              $db->sql_query("INSERT INTO ".$prefix."_spiski (id, type, name, opis, sort, pages, parent) VALUES (NULL, '".mysql_real_escape_string($name)."', '".mysql_real_escape_string($elements)."', '', '0', ' ".(int)mysql_real_escape_string($page_id)." ', '0');") or die (ss("Ошибка: Не удалось сохранить списки."));
+                              $db->sql_query("INSERT INTO ".$prefix."_spiski (id, type, name, opis, sort, pages, parent) VALUES (NULL, '".mysql_real_escape_string($name)."', '".mysql_real_escape_string($elements)."', '', '0', ' ".mysql_real_escape_string($page_id)." ', '0');") or die (ss("Ошибка: Не удалось сохранить списки."));
                               //echo "in1";
                           }
                   } else { // если элемент новый
-                      $db->sql_query("INSERT INTO ".$prefix."_spiski (id, type, name, opis, sort, pages, parent) VALUES (NULL, '".mysql_real_escape_string($name)."', '".mysql_real_escape_string($elements)."', '', '0', ' ".(int)mysql_real_escape_string($page_id)." ', '0');") or die (ss("Ошибка: Не удалось сохранить списки."));
+                      $db->sql_query("INSERT INTO ".$prefix."_spiski (id, type, name, opis, sort, pages, parent) VALUES (NULL, '".mysql_real_escape_string($name)."', '".mysql_real_escape_string($elements)."', '', '0', ' ".mysql_real_escape_string($page_id)." ', '0');") or die (ss("Ошибка: Не удалось сохранить списки."));
                       //echo "in2";
                   }
           break;
@@ -2118,7 +2118,7 @@ function savepost ($avtory, $avtor, $mail, $post_title, $info, $num, $cid, $add)
                   for ($x=0; $x < $num; $x++) { // посчитали сколько номеров списка
                     if ($elements[$x] != 0) {
                       // узнаем какие страницы уже есть у этого номера из списка
-                      $sql = "SELECT `pages` FROM ".$prefix."_spiski WHERE `id`='".(int)mysql_real_escape_string($elements[$x])."'";
+                      $sql = "SELECT `pages` FROM ".$prefix."_spiski WHERE `id`='".mysql_real_escape_string($elements[$x])."'";
                       $result = $db->sql_query($sql);
                       $row = $db->sql_fetchrow($result);
                       $s_pages = $row['pages'];
@@ -2126,7 +2126,7 @@ function savepost ($avtory, $avtor, $mail, $post_title, $info, $num, $cid, $add)
                         $s_pages .= " ".$page_id." ";
                         $s_pages = str_replace("  "," ",$s_pages);
                         // теперь присвоем каждому из элементов списка id страницы, которую редактируем.
-                        $db->sql_query("UPDATE ".$prefix."_spiski SET `pages`='".$s_pages."' WHERE `id`='".(int)mysql_real_escape_string($elements[$x])."'") or die(ss("Ошибка: Не удалось добавить страницы в список."));
+                        $db->sql_query("UPDATE ".$prefix."_spiski SET `pages`='".$s_pages."' WHERE `id`='".mysql_real_escape_string($elements[$x])."'") or die(ss("Ошибка: Не удалось добавить страницы в список."));
                       }
                     }
                   }
@@ -2703,7 +2703,7 @@ function getparent_page($parent_id,$title,$cid,$page) {
     $pparent_id = "";
     $ptitle = "";
     if ($parent_id != 0) {
-      $sql = "select `title`, `parent_id` from ".$prefix."_pages_categories where `module`='".mysql_real_escape_string($DBName)."' and `tables`='pages' and `cid`='".(int)mysql_real_escape_string($parent_id)."'";
+      $sql = "select `title`, `parent_id` from ".$prefix."_pages_categories where `module`='".mysql_real_escape_string($DBName)."' and `tables`='pages' and `cid`='".mysql_real_escape_string($parent_id)."'";
       $res = $db->sql_query($sql);
       $row = $db->sql_fetchrow($res);
       $ptitle = strip_tags($row['title']);
@@ -2727,7 +2727,7 @@ function getparent_for_addpost($name, $parentid, $title) {
     $pparent_id = "";
     $ptitle = "";
     if ($pparent_id != 0) {
-      $sql = "select `title`, `parent_id` from ".$prefix."_pages_categories where `module`='".mysql_real_escape_string($name)."' and `tables`='pages' and `cid`='".(int)mysql_real_escape_string($parentid)."'";
+      $sql = "select `title`, `parent_id` from ".$prefix."_pages_categories where `module`='".mysql_real_escape_string($name)."' and `tables`='pages' and `cid`='".mysql_real_escape_string($parentid)."'";
       $res = $db->sql_query($sql);
       $row = $db->sql_fetchrow($res);
       $ptitle = strip_tags($row['title']);
