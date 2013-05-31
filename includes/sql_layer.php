@@ -2,11 +2,10 @@
 if (stristr(htmlentities($_SERVER['PHP_SELF']), "sql_layer.php")) { Header("Location: ../index.php"); die(); }
 
 # $dbtype = "MySQL";
-# $dbtype = "mSQL";
 # $dbtype = "postgres";
-# $dbtype = "postgres_local"; // When postmaster start without "-i" option.
+# $dbtype = "postgres_local"; // Когда postmaster запускается без опции "-i".
 
-# sql_connect($host, $user, $password, $db) — returns the connection ID
+# sql_connect($host, $user, $password, $db) — возвращает ID соединения.
 
 class ResultSet {
 	var $result;
@@ -30,13 +29,6 @@ switch ($dbtype) {
         return $dbi;
     break;;
 
-    case "mSQL":
-         $dbi=msql_connect($host);
-	 msql_select_db($db);
-	 return $dbi;
-    break;;
-
-
     case "postgres":
          $dbi=@pg_connect("host=$host user=$user password=$password port=5432 dbname=$db");
          return $dbi;
@@ -58,11 +50,6 @@ switch ($dbtype) {
     case "MySQL":
         $dbi=@mysql_close($id);
         return $dbi;
-    break;;
-
-    case "mSQL":
-         $dbi=@msql_close($id);
-         return $dbi;
     break;;
 
     case "postgres":
@@ -89,11 +76,6 @@ if($sql_debug) echo "SQL query: ".str_replace(",",", ",$query)."<BR>";
 switch ($dbtype) {
     case "MySQL":
         $res=@mysql_query($query, $id);
-        return $res;
-    break;;
-
-    case "mSQL":
-        $res=@msql_query($query, $id);
         return $res;
     break;;
 
@@ -125,11 +107,6 @@ switch ($dbtype) {
         return $rows;
     break;;
 
-    case "mSQL":  
-        $rows=msql_num_rows($res);
-        return $rows;
-    break;;
-
     case "postgres":
     case "postgres_local":
         $rows=pg_numrows( $res->get_result() );
@@ -153,11 +130,6 @@ switch ($dbtype) {
 
     case "MySQL":
         $row = mysql_fetch_row($res);
-        return $row;
-    break;;
-
-    case "mSQL":
-        $row = msql_fetch_row($res);
         return $row;
     break;;
 
@@ -193,12 +165,6 @@ switch ($dbtype) {
         return $row;
     break;;
 
-    case "mSQL":
-        $row = array();
-        $row = msql_fetch_array($res);
-        return $row;
-    break;;
-
     case "postgres":
     case "postgres_local":
 	if( $res->get_total_rows() > $res->get_fetched_rows() ) {
@@ -222,12 +188,6 @@ switch ($dbtype) {
 	else return false;
     break;;
 
-    case "mSQL":
-        $row = msql_fetch_object($res);
-	if($row) return $row;
-	else return false;
-    break;;
-
     case "postgres":
     case "postgres_local":
 	if( $res->get_total_rows() > $res->get_fetched_rows() ) {
@@ -247,11 +207,6 @@ global $siteurl, $dbtype;
 switch ($dbtype) {
     case "MySQL":
         $row = mysql_free_result($res);
-        return $row;
-    break;;
-
-	case "mSQL":
-        $row = msql_free_result($res);
         return $row;
     break;;
 

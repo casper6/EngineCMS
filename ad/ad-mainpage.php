@@ -1919,189 +1919,190 @@ function edit_main($id) {
 }
 ###################################################################################################
 function mainpage_save($id=0, $type, $namo, $title, $text, $useit, $shablon, $descriptionX, $keywordsX, $s_tip) {
-global $sgatie, $tip, $admintip, $prefix, $db, $nastroi;
-$sql = "select name from ".$prefix."_mainpage where `id`='".$id."'";
-$result = $db->sql_query($sql);
-$row = $db->sql_fetchrow($result);
-$mod_name = $row['name'];
-recash("/-".$mod_name); // Удаление кеша раздела
+	global $sgatie, $tip, $admintip, $prefix, $db, $nastroi;
+	$sql = "select name from ".$prefix."_mainpage where `id`='".$id."'";
+	$result = $db->sql_query($sql);
+	$row = $db->sql_fetchrow($result);
+	$mod_name = $row['name'];
+	recash("/-".$mod_name); // Удаление кеша раздела
 
-if ($type == 2 || $type == 5) {
-	if (trim($namo) == "") $namo = strtolow(translit_name(trim($title)));
-	else $namo = strtolow(translit_name(trim($namo)));
-}
-
-if ($nastroi == 1) { // Настройка раздела или блока
-	global $options, $module_name;
-	$text = array();
-	foreach ($options as $key => $option) {
-		if (($key=="base" and $option=="") or ($key=="base" and $option=="0") or $key=="module_name") {} else $text[] = $key."=".$option;
-		if ($key=="module_name") $module_name = $option;
+	if ($type == 2 || $type == 5) {
+		if (trim($namo) == "") $namo = strtolow(translit_name(trim($title)));
+		else $namo = strtolow(translit_name(trim($namo)));
 	}
-	if ($type!=2) $text = $module_name."|".implode("&",$text);
-	else $text = "pages|".implode("&",$text);
-	// Обновление
-	global $siteurl;
-	if ($type!=2) {
-		$db->sql_query("UPDATE ".$prefix."_mainpage SET `useit`='".$text."', `tables`='pages' WHERE `id`='".$id."';") or die('Не удалось обновить содержание.');
+
+	if ($nastroi == 1) { // Настройка раздела или блока
+		global $options, $module_name;
+		$text = array();
+		foreach ($options as $key => $option) {
+			if (($key=="base" and $option=="") or ($key=="base" and $option=="0") or $key=="module_name") {} else $text[] = $key."=".$option;
+			if ($key=="module_name") $module_name = $option;
+		}
+		if ($type!=2) $text = $module_name."|".implode("&",$text);
+		else $text = "pages|".implode("&",$text);
+		// Обновление
+		global $siteurl;
+		if ($type!=2) {
+			$db->sql_query("UPDATE ".$prefix."_mainpage SET `useit`='".$text."', `tables`='pages' WHERE `id`='".$id."';") or die('Не удалось обновить содержание.');
+		} else {
+			$db->sql_query("UPDATE ".$prefix."_mainpage SET `text`='".$text."', `tables`='pages' WHERE `id`='".$id."';") or die('Не удалось обновить содержание.');
+		}
+		if ($type == 3) Header("Location: sys.php?op=mainpage&type=element");
+		else Header("Location: sys.php");
+		die();
+	}
+
+	if (trim($title)=="") die('Вы не написали название! Вернитесь и заполните это поле.');
+	if ($type == 0) {
+		$n = count($useit); // обработка полученных стилей дизайна (массив Select)
+		$styles = "";
+		for ($x=0; $x < $n; $x++) {
+			$styles .= " $useit[$x]";
+		}
+		$useit = trim($styles);
+		if ($sgatie==1) $text = str_replace("
+				","",$text);
+	}
+
+	$text = str_replace("<P>&nbsp;</P>"," ", str_replace("  "," ", str_replace("   "," ", trim($text))));
+
+	$namo = mysql_real_escape_string($namo);
+	$text = mysql_real_escape_string($text);
+	$useit = mysql_real_escape_string($useit);
+	$descriptionX = mysql_real_escape_string($descriptionX);
+	$keywordsX = mysql_real_escape_string($keywordsX);
+
+	// Обратное преобразование textarea (замена на англ. букву e, костыль для текстового редактора)
+	$text = str_replace("tеxtarea","textarea",$text); // ireplace
+	$useit = str_replace("tеxtarea","textarea",$useit); // ireplace
+
+	$sql = "select text from ".$prefix."_mainpage where `tables`='pages' and id='".$id."'";
+	$result = $db->sql_query($sql);
+
+	if ($numrows = $db->sql_numrows($result) > 0) {
+		// Обновление
+		if ($type==3 && $namo == 7) $text = str_replace("<? ", "", str_replace(" ?>", "", $text));
+		$db->sql_query("UPDATE ".$prefix."_mainpage SET `name`='".$namo."', `title`='".$title."', `text`='".$text."', `useit`='".$useit."', `shablon`='".$shablon."', `tables`='pages', `description`='".$descriptionX."', `keywords`='".$keywordsX."' WHERE `id`='".$id."';") or die('Не удалось обновить содержание. Попробуйте нажать в Редакторе на кнопку "Чистка HTML"');
+
+		if ($type == 2) Header("Location: sys.php");
+		else Header("Location: sys.php?op=mainpage&type=element");
+		die();
 	} else {
-		$db->sql_query("UPDATE ".$prefix."_mainpage SET `text`='".$text."', `tables`='pages' WHERE `id`='".$id."';") or die('Не удалось обновить содержание.');
-	}
-	if ($type == 3) Header("Location: sys.php?op=mainpage&type=element");
-	else Header("Location: sys.php");
-	die();
-}
 
-if (trim($title)=="") die('Вы не написали название! Вернитесь и заполните это поле.');
-if ($type == 0) {
-	$n = count($useit); // обработка полученных стилей дизайна (массив Select)
-	$styles = "";
-	for ($x=0; $x < $n; $x++) {
-		$styles .= " $useit[$x]";
-	}
-	$useit = trim($styles);
-	if ($sgatie==1) $text = str_replace("
-			","",$text);
-}
+		// Создание
+		if ($type==2) { 
+			if ($text == "[название]") {
+				$text = "pages|design=".$useit;
+				$useit = "[название]Текст раздела «".$title."». Для редактирования откройте Администрирование — слева выберите этот раздел, затем справа нажмите по кнопке Редактировать.<br>Блок &#91;название&#93; в данном случае выводит название раздела.<br>Если вы хотите вывести (вместо названия и последующего произвольного текста) статьи, добавленные в этот раздел — напишите блок &#91;содержание&#93; вместо блока &#91;название&#93;.<br>Более подробная справка доступна при редактировании раздела.";
+			} else { 
+				$text = "pages|".trim($text)."&design=".$useit; 
+				$useit = "[содержание]";
+			}
+		}
 
-$text = str_replace("<P>&nbsp;</P>"," ", str_replace("  "," ", str_replace("   "," ", trim($text))));
+		if ($type==4) { //////////////////////////////////////////////////////////
+			$elements = explode("\r\n",$text);
+			// Создаем поле
+			$n = count($elements);
+			if ($n > 0 and $s_tip==0) {
+				for ($x=0; $x < $n; $x++) {
+					$element = str_replace("  "," ",trim($elements[$x]));
+					if ($element != "") $db->sql_query("INSERT INTO ".$prefix."_spiski (`id`, `type`, `name`, `opis`, `sort`, `pages`, `parent`) VALUES (NULL, '".mysql_real_escape_string($namo)."', '".mysql_real_escape_string($element)."', '', '0', '', '0');") or die('Не удалось создать поле.');
+				}
+			}
+			$and = ""; 
+			if ($s_tip==1 or $s_tip==4) $and = "&shablon=".$text; // если тип - текст или строка
+			if ($s_tip==2) $and = "&".$text; // если тип - файл
+			$text = "spisok|type=".$s_tip.$and;
+		}
 
-$namo = mysql_real_escape_string($namo);
-$text = mysql_real_escape_string($text);
-$useit = mysql_real_escape_string($useit);
-$descriptionX = mysql_real_escape_string($descriptionX);
-$keywordsX = mysql_real_escape_string($keywordsX);
+		if ($type==5) { //////////////////////////////////////////////////////////
+			global $delete_table, $line_ekran, $line_close, $line_razdel, $delete_stroka, $add_pole_golos, $add_pole_comm, $add_pole_kol, $pole_rename, $pole_open, $pole_main, $pole_tip, $pole_rusname, $pole_name;
 
-// Обратное преобразование textarea (замена на англ. букву e, костыль для текстового редактора)
-$text = str_replace("tеxtarea","textarea",$text); // ireplace
-$useit = str_replace("tеxtarea","textarea",$useit); // ireplace
+			$delete_table = intval($delete_table);
+			$delete_stroka = intval($delete_stroka);
+			$add_pole_golos = intval($add_pole_golos);
+			$add_pole_comm = intval($add_pole_comm);
+			$add_pole_kol = intval($add_pole_kol);
 
-$sql = "select text from ".$prefix."_mainpage where `tables`='pages' and id='".$id."'";
-$result = $db->sql_query($sql);
+			// Верстаем данные, которые заносятся в таблицу
+			$text = array();
+			print_r($pole_rusname);
+			$n = count($pole_name);
+			for ($x=0; $x < $n; $x++) {
+				if (trim($pole_name[$x]) == "") $pole_name[$x] = strtolow(translit_name(trim($pole_rusname[$x])));
+				else $pole_name[$x] = strtolow(translit_name(trim($pole_name[$x])));
+				$text[] = $pole_name[$x]."#!#".$pole_rusname[$x]."#!#".$pole_tip[$x]."#!#".$pole_main[$x]."#!#".$pole_open[$x]."#!#".$pole_rename[$x];
+			}
+			$text2 = implode("/!/",$text);
 
-if ($numrows = $db->sql_numrows($result) > 0) {
-	// Обновление
-	if ($type==3 && $namo == 7) $text = str_replace("<? ", "", str_replace(" ?>", "", $text));
-	$db->sql_query("UPDATE ".$prefix."_mainpage SET `name`='".$namo."', `title`='".$title."', `text`='".$text."', `useit`='".$useit."', `shablon`='".$shablon."', `tables`='pages', `description`='".$descriptionX."', `keywords`='".$keywordsX."' WHERE `id`='".$id."';") or die('Не удалось обновить содержание. Попробуйте нажать в Редакторе на кнопку "Чистка HTML"');
+			$all = array();
 
-	if ($type == 2) Header("Location: sys.php");
-	else Header("Location: sys.php?op=mainpage&type=element");
-	die();
-} else {
+			if ($delete_table == 1) $db->sql_query("DROP TABLE IF EXISTS `".$prefix."_base_".$namo."`;") or die("Не удалось удалить старую таблицу. SQL: $sql");
 
-	// Создание
-	if ($type==2) { 
-		if ($text == "[название]") {
-			$text = "pages|design=".$useit;
-			$useit = "[название]Текст раздела «".$title."». Для редактирования откройте Администрирование — слева выберите этот раздел, затем справа нажмите по кнопке Редактировать.<br>Блок &#91;название&#93; в данном случае выводит название раздела.<br>Если вы хотите вывести (вместо названия и последующего произвольного текста) статьи, добавленные в этот раздел — напишите блок &#91;содержание&#93; вместо блока &#91;название&#93;.<br>Более подробная справка доступна при редактировании раздела.";
-		} else { 
-			$text = "pages|".trim($text)."&design=".$useit; 
+			$sql = "CREATE TABLE `".$prefix."_base_".$namo."` (";
+			$sql2 = array();
+			for ($x=0; $x < $n; $x++) {
+				$one = explode("#!#",$text[$x]);
+				//if ($x < $n-1) $zap = ", "; else $zap = "";
+				switch ($one[2]) {
+					case "текст": $sql2[] = "`$one[0]` TEXT NOT NULL"; break;
+					case "строка": $sql2[] = "`$one[0]` VARCHAR( 255 ) NOT NULL"; break;
+					case "строкабезвариантов": $sql2[] = "`$one[0]` VARCHAR( 255 ) NOT NULL"; break;
+					case "список": $sql2[] = "`$one[0]` VARCHAR( 255 ) NOT NULL"; break;
+					case "ссылка": $sql2[] = "`$one[0]` VARCHAR( 255 ) NOT NULL"; break;
+					case "фото": $sql2[] = "`$one[0]` TEXT NOT NULL"; break;
+					case "минифото": $sql2[] = "`$one[0]` TEXT NOT NULL"; break;
+					case "файл": $sql2[] = "`$one[0]` TEXT NOT NULL"; break;
+					case "число": $sql2[] = "`$one[0]` INT( 10 ) NOT NULL"; break;
+					case "дата": $sql2[] = "`$one[0]` DATE NOT NULL"; break;
+					case "датавремя": $sql2[] = "`$one[0]` DATETIME NOT NULL"; break;
+				}
+				$all[] = trim($one[0]);
+			}
+			$sql .= implode(",",$sql2).");";
+			$all = implode(",",$all);
+			if ($delete_stroka == 1) $del_stroka = " IGNORE 1 LINES"; else $del_stroka = ""; //  ($all)
+
+			if ($delete_table == 1) $vozmogno = ", возможно такая таблица уже существует"; else $vozmogno = "";
+			$db->sql_query($sql) or die("Не удалось создать таблицу".$vozmogno.". SQL: $sql");
+
+			$line_close = str_replace('\"','"',str_replace("\\\\","\\",$line_close)); // убрать
+			$line_ekran = str_replace('\"','"',str_replace("\\\\","\\",$line_ekran));
+
+			// Вставляем данные в таблицу с именем $prefix_base_$namo
+			if (trim($_FILES["useit"]["tmp_name"] != "")) {
+				$sql = "load data local infile '".mysql_real_escape_string($_FILES["useit"]["tmp_name"])."' INTO table ".$prefix."_base_".$namo." FIELDS TERMINATED BY '".$line_razdel."' ENCLOSED BY '". $line_ekran."' LINES TERMINATED BY '".$line_close."'".$del_stroka.";"; // local 
+				$db->sql_query($sql) or die("Не удалось добавить информацию из файла CSV в таблицу базы данных. SQL: $sql");
+			} else echo "Файл не доступен";
+
+			$db->sql_query("ALTER TABLE `".$prefix."_base_".$namo."` ADD  `id` INT( 10 ) NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST ;");
+			$add = ""; // Добавление дополнительных параметров
+			if ($add_pole_golos == 1) {
+				$db->sql_query("ALTER TABLE `".$prefix."_base_".$namo."` ADD  `golos` INT( 10 ) DEFAULT  '1' NOT NULL ;");
+				$add .= "&golos=1";
+			}
+			if ($add_pole_comm == 1) {
+				$db->sql_query("ALTER TABLE `".$prefix."_base_".$namo."` ADD  `comm` INT( 10 ) DEFAULT  '1' NOT NULL ;");
+				$add .= "&comm=1";
+			}
+			if ($add_pole_kol == 1) {
+				$db->sql_query("ALTER TABLE `".$prefix."_base_".$namo."` ADD  `kol` INT( 10 ) DEFAULT  '1' NOT NULL ;");
+				$add .= "&kol=1";
+			}
+			$db->sql_query("ALTER TABLE `".$prefix."_base_".$namo."` ADD  `active` INT( 1 ) DEFAULT  '1' NOT NULL ;");
+			$text = "base|type=".$s_tip.$add."&options=".$text2;
 			$useit = "[содержание]";
 		}
+
+		$namo = mysql_real_escape_string(stripcslashes($namo));
+		$title = mysql_real_escape_string(stripcslashes($title));
+		$text = mysql_real_escape_string(stripcslashes($text));
+		$useit = mysql_real_escape_string(stripcslashes($useit));
+		$shablon = mysql_real_escape_string(stripcslashes($shablon));
+		$db->sql_query("INSERT INTO ".$prefix."_mainpage (`id`, `type`, `name`, `title`, `text`, `useit`, `shablon`, `counter`, `tables`, `color`, `description`, `keywords`) VALUES (NULL, '".$type."', '".$namo."', '".$title."', '".$text."', '".$useit."', '".$shablon."', '0', 'pages', '0', '', '');") or die('Не удалось создать. Попробуйте еще раз и в случае неудачи обратитесь к разработчику.');
 	}
-
-	if ($type==4) { //////////////////////////////////////////////////////////
-		$elements = explode("\r\n",$text);
-		// Создаем поле
-		$n = count($elements);
-		if ($n > 0 and $s_tip==0) {
-			for ($x=0; $x < $n; $x++) {
-				$element = str_replace("  "," ",trim($elements[$x]));
-				if ($element != "") $db->sql_query("INSERT INTO ".$prefix."_spiski (`id`, `type`, `name`, `opis`, `sort`, `pages`, `parent`) VALUES (NULL, '".mysql_real_escape_string($namo)."', '".mysql_real_escape_string($element)."', '', '0', '', '0');") or die('Не удалось создать поле.');
-			}
-		}
-		$and = ""; 
-		if ($s_tip==1 or $s_tip==4) $and = "&shablon=".$text; // если тип - текст или строка
-		if ($s_tip==2) $and = "&".$text; // если тип - файл
-		$text = "spisok|type=".$s_tip.$and;
-	}
-
-	if ($type==5) { //////////////////////////////////////////////////////////
-		global $delete_table, $line_ekran, $line_close, $line_razdel, $delete_stroka, $add_pole_golos, $add_pole_comm, $add_pole_kol, $pole_rename, $pole_open, $pole_main, $pole_tip, $pole_rusname, $pole_name;
-
-		$delete_table = intval($delete_table);
-		$delete_stroka = intval($delete_stroka);
-		$add_pole_golos = intval($add_pole_golos);
-		$add_pole_comm = intval($add_pole_comm);
-		$add_pole_kol = intval($add_pole_kol);
-
-		// Верстаем данные, которые заносятся в таблицу
-		$text = array();
-		print_r($pole_rusname);
-		$n = count($pole_name);
-		for ($x=0; $x < $n; $x++) {
-			if (trim($pole_name[$x]) == "") $pole_name[$x] = strtolow(translit_name(trim($pole_rusname[$x])));
-			else $pole_name[$x] = strtolow(translit_name(trim($pole_name[$x])));
-			$text[] = $pole_name[$x]."#!#".$pole_rusname[$x]."#!#".$pole_tip[$x]."#!#".$pole_main[$x]."#!#".$pole_open[$x]."#!#".$pole_rename[$x];
-		}
-		$text2 = implode("/!/",$text);
-
-		$all = array();
-
-		if ($delete_table == 1) $db->sql_query("DROP TABLE IF EXISTS `".$prefix."_base_".$namo."`;") or die("Не удалось удалить старую таблицу. SQL: $sql");
-
-		$sql = "CREATE TABLE `".$prefix."_base_".$namo."` (";
-		$sql2 = array();
-		for ($x=0; $x < $n; $x++) {
-			$one = explode("#!#",$text[$x]);
-			//if ($x < $n-1) $zap = ", "; else $zap = "";
-			switch ($one[2]) {
-				case "текст": $sql2[] = "`$one[0]` TEXT NOT NULL"; break;
-				case "строка": $sql2[] = "`$one[0]` VARCHAR( 255 ) NOT NULL"; break;
-				case "строкабезвариантов": $sql2[] = "`$one[0]` VARCHAR( 255 ) NOT NULL"; break;
-				case "список": $sql2[] = "`$one[0]` VARCHAR( 255 ) NOT NULL"; break;
-				case "ссылка": $sql2[] = "`$one[0]` VARCHAR( 255 ) NOT NULL"; break;
-				case "фото": $sql2[] = "`$one[0]` TEXT NOT NULL"; break;
-				case "минифото": $sql2[] = "`$one[0]` TEXT NOT NULL"; break;
-				case "файл": $sql2[] = "`$one[0]` TEXT NOT NULL"; break;
-				case "число": $sql2[] = "`$one[0]` INT( 10 ) NOT NULL"; break;
-				case "дата": $sql2[] = "`$one[0]` DATE NOT NULL"; break;
-				case "датавремя": $sql2[] = "`$one[0]` DATETIME NOT NULL"; break;
-			}
-			$all[] = trim($one[0]);
-		}
-		$sql .= implode(",",$sql2).");";
-		$all = implode(",",$all);
-		if ($delete_stroka == 1) $del_stroka = " IGNORE 1 LINES"; else $del_stroka = ""; //  ($all)
-
-		if ($delete_table == 1) $vozmogno = ", возможно такая таблица уже существует"; else $vozmogno = "";
-		$db->sql_query($sql) or die("Не удалось создать таблицу".$vozmogno.". SQL: $sql");
-
-		$line_close = str_replace('\"','"',str_replace("\\\\","\\",$line_close)); // убрать
-		$line_ekran = str_replace('\"','"',str_replace("\\\\","\\",$line_ekran));
-
-		// Вставляем данные в таблицу с именем $prefix_base_$namo
-		if (trim($_FILES["useit"]["tmp_name"] != "")) {
-			$sql = "load data local infile '".mysql_real_escape_string($_FILES["useit"]["tmp_name"])."' INTO table ".$prefix."_base_".$namo." FIELDS TERMINATED BY '".$line_razdel."' ENCLOSED BY '". $line_ekran."' LINES TERMINATED BY '".$line_close."'".$del_stroka.";"; // local 
-			$db->sql_query($sql) or die("Не удалось добавить информацию из файла CSV в таблицу базы данных. SQL: $sql");
-		} else echo "Файл не доступен";
-
-		$db->sql_query("ALTER TABLE `".$prefix."_base_".$namo."` ADD  `id` INT( 10 ) NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST ;");
-		$add = ""; // Добавление дополнительных параметров
-		if ($add_pole_golos == 1) {
-			$db->sql_query("ALTER TABLE `".$prefix."_base_".$namo."` ADD  `golos` INT( 10 ) DEFAULT  '1' NOT NULL ;");
-			$add .= "&golos=1";
-		}
-		if ($add_pole_comm == 1) {
-			$db->sql_query("ALTER TABLE `".$prefix."_base_".$namo."` ADD  `comm` INT( 10 ) DEFAULT  '1' NOT NULL ;");
-			$add .= "&comm=1";
-		}
-		if ($add_pole_kol == 1) {
-			$db->sql_query("ALTER TABLE `".$prefix."_base_".$namo."` ADD  `kol` INT( 10 ) DEFAULT  '1' NOT NULL ;");
-			$add .= "&kol=1";
-		}
-		$db->sql_query("ALTER TABLE `".$prefix."_base_".$namo."` ADD  `active` INT( 1 ) DEFAULT  '1' NOT NULL ;");
-		$text = "base|type=".$s_tip.$add."&options=".$text2;
-		$useit = "[содержание]";
-	}
-
-	$namo = mysql_real_escape_string(stripcslashes($namo));
-	$title = mysql_real_escape_string(stripcslashes($title));
-	$text = mysql_real_escape_string(stripcslashes($text));
-	$useit = mysql_real_escape_string(stripcslashes($useit));
-	$shablon = mysql_real_escape_string(stripcslashes($shablon));
-	$db->sql_query("INSERT INTO ".$prefix."_mainpage (`id`, `type`, `name`, `title`, `text`, `useit`, `shablon`, `counter`, `tables`, `color`, `description`, `keywords`) VALUES (NULL, '".$type."', '".$namo."', '".$title."', '".$text."', '".$useit."', '".$shablon."', '0', 'pages', '0', '', '');") or die('Не удалось создать. Попробуйте еще раз и в случае неудачи обратитесь к разработчику.');
-		}
+	
 	// узнаем id
 	if ($id == 0 && ($type == 2 or $type==5)) {
 		$row2 = $db->sql_fetchrow($db->sql_query("select `id` from ".$prefix."_mainpage where `tables`='pages' and `type`='".$type."' and `name`='".$namo."' and `title`='".$title."' and `text`='".$text."' and `useit`='".$useit."'")) or die("SQL: select `id` from ".$prefix."_mainpage where `tables`='pages' and `type`='".$type."' and `name`='".$namo."' and `title`='".$title."' and `text`='".$text."' and `useit`='".$useit."'");

@@ -1,4 +1,13 @@
-﻿/* JS для админ-панели — нужно подписать все функции! */
+﻿/* JS для админ-панели — подписать все функции! */
+
+function aa(t,lang_admin,lang_admin_text) { // Функция перевода сайта / Translate function
+  if (lang_admin == 'ru') return t; // Русский — по-умолчанию.
+  else {
+      if (lang_admin_text[t]) return lang_admin_text[t];
+      else return " [ Error: no translate for: "+t+" ] ";
+  } 
+}
+
 function pics_refresh(txt){
 	$('.pics').html('');
 	text = $(txt).val();
@@ -244,4 +253,27 @@ function delpapka(id) {
 	    data: {'func': 'delpapka', 'id': id },
 	    beforeSend: function(){ $('#cid'+id).hide(); }
 	});
+}
+/* Текущая дата и время */
+function getDateNow(){
+	var now = new Date(),
+	tim = ((now.getHours()<10)?"0":"")+now.getHours()+":"+((now.getMinutes()<10)?"0":"")+now.getMinutes(),
+	e = now.getDate(),
+	month = ['', 'января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'],
+	d = tim + ' - ' + e + ' ',
+	nmonths = month[ (now.getMonth() + 1)];
+	d += nmonths;
+	return d;
+}
+
+function show_animate(obj) {
+	with (document.getElementById(obj).style) {
+	   if (display == "none") { 
+		   $(document.getElementById(obj)).show();  
+		   $(".nothing").fadeTo('slow', 0.4); 
+		} else {
+		   $(document.getElementById(obj)).hide();  
+		   $(".nothing").fadeTo('slow', 1); 
+		}
+	}
 }

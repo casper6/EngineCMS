@@ -52,17 +52,15 @@
     ini_set('display_errors', 0);
     error_reporting(8191); // было 0, но 8191 - запрещает вывод всех ошибок PHP 4, 5 и 6
   }
-
   $now = date("Y.m.d H:i:s");
   $referer = getenv("HTTP_REFERER"); // REQUEST_URI
   $url = getenv("REQUEST_URI"); //substr(getenv("REQUEST_URI"), 1);
   $data = $now;
   $url0 = str_replace("http://".$siteurl,"",$url);
   $url0 = str_replace("http%3A%2F%2F".$siteurl."%2F","/",$url0);
-
-  $pid = intval($pid);
+  $pid = mysql_real_escape_string(intval($pid));
   if ($pid > 0) if (!is_admin($admin)) { // Простой счетчик посещаемости страниц
-    $db->sql_query("UPDATE ".$prefix."_pages SET counter=counter+1 WHERE pid='$pid'");
+    $db->sql_query("UPDATE ".$prefix."_pages SET `counter`=counter+1 WHERE `pid`='".$pid."'");
     recash($url0);
   }
 ##########################################################################################
@@ -74,7 +72,7 @@
   $numrows = 0;
   // если кеш на базе
 	if ($site_cash == "base" and $num_post == 0) {
-    $sql = "SELECT `text`, `data` FROM ".$prefix."_cash where `url`='$url0' limit 1";
+    $sql = "SELECT `text`, `data` FROM ".$prefix."_cash where `url`='".mysql_real_escape_string($url0)."' limit 1";
     $result = $db->sql_query($sql);
     $numrows = $db->sql_numrows($result);
   }
@@ -180,7 +178,7 @@
   $red_type = intval($row['red']); // редактор
   if (!isset($red) or $red=="") $red = $red_type;
   else {
-      if ($red != "1" && $red != "2") $db->sql_query("UPDATE ".$prefix."_config SET red='$red' WHERE red='$red_type'");
+      if ($red != "1" && $red != "2") $db->sql_query("UPDATE ".$prefix."_config SET `red`='".mysql_real_escape_string($red)."' WHERE `red`='".mysql_real_escape_string($red_type)."'");
   }
   $comment_send = intval($row['comment']); // отправка комментариев админу
   $ip = getip(); //getenv("REMOTE_ADDR"); // IP
@@ -248,28 +246,30 @@
 function close_button($txt) { // Кнопка для закрытия, обращение по id объекта
   return "<a title='Закрыть' class='punkt' onclick=\"$('#".$txt."').hide('slow');\"><div class='radius' style='font-size:12pt; width:20px; height: 20px; color: white; text-align:center; float:right; margin:5px; background: #bbbbbb;'>&nbsp;x&nbsp;</div></a>";
 }
+
+// локализация
+global $lang, $lang_admin;
+if ($lang_admin != 'ru')  $lang_text_admin = include ('language/adm_'.$lang_admin.'.php');
+if ($lang != 'ru')        $lang_text = include ('language/'.$lang.'.php');
 #############################
 function aa($t) { // Функция перевода админки / Translate administration function
-  global $lang_admin;
+  global $lang_admin, $lang_text_admin;
   if ($lang_admin == 'ru') return $t; // Русский — по-умолчанию.
-  else {
-    if (file_exists('language/adm_'.$lang_admin.'.php')) {
-      $l = include ('language/adm_'.$lang_admin.'.php');
-      if (isset($l[$t])) return $l[$t];
-      else return " [ Error: no translate for: ".$t." ] ";
-    } else return " [ Error: no language file: language/adm_".$lang_admin.".php ] ";
-  } 
+  else 
+    if (isset($lang_text_admin[$t])) return $lang_text_admin[$t];
+    else return " [ No translate for: ".$t." ] ";
 }
 #############################
 function ss($t) { // Функция перевода сайта / Translate function
-  global $lang;
+  global $lang, $lang_text;
   if ($lang == 'ru') return $t; // Русский — по-умолчанию.
-  else {
-    if (file_exists('language/'.$lang.'.php')) {
-      $l = include ('language/'.$lang.'.php');
-      if (isset($l[$t])) return $l[$t];
-      else return " [ Error: no translate for: ".$t." ] ";
-    } else return " [ Error: no language file: language/".$lang.".php ] ";
-  } 
+  else
+    if (isset($lang_text[$t])) return $lang_text[$t];
+    else return " [ No translate for: ".$t." ] ";
 }
+#############################
+function getFromPOST($name, $value) {
+  return isset($_REQUEST[$name]) ? $_REQUEST[$name] : $value;
+}
+#############################
 ?>

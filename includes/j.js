@@ -1,7 +1,15 @@
-﻿/* Проверка формы голосования */
+﻿function ss(t,lang,lang_text) { // Функция перевода сайта / Translate function
+  if (lang == 'ru') return t; // Русский — по-умолчанию.
+  else {
+      if (lang_text[t]) return lang_text[t];
+      else return " [ Error: no translate for: "+t+" ] ";
+  } 
+}
+
+/* Проверка формы голосования */
 var valueOpros = -1;
 function CheckForm(opros_num){
-  if(valueOpros == -1) alert('Вы не выбрали ни одного ответа!');
+  if(valueOpros == -1) alert('?');
   else $(showopros(opros_num,2,valueOpros));
 }
 
@@ -10,68 +18,13 @@ function showopros(id, res, golos) {
 	$.get('opros.php', { num: id, res: res, golos: golos }, function(data) { $('#show_opros'+id).html( data ); }); 
 }
 
-/* Отображение скрытого DIV объекта  УДАЛИТЬ ДУБЛИКАТ!*/
-function show(obj) { 
-	with (document.getElementById(obj).style) { 
-		if (display == "none") display = "inline"; 
-		else display = "none"; 
-	}
-}
-
-function show_animate(obj) {
-	with (document.getElementById(obj).style) {
-	   if (display == "none") { 
-		   $(document.getElementById(obj)).show();  
-		   $(".nothing").fadeTo('slow', 0.4); 
-		} else {
-		   $(document.getElementById(obj)).hide();  
-		   $(".nothing").fadeTo('slow', 1); 
-		}
-	}
-}
-
-/* Изменение размеров */
+/* Изменение размеров ПРОВЕРИТЬ! */
 function resize(obj, width1, width2, height1, height2) { 
 	with (document.getElementById(obj).style) {
 	   if (width != width2) width = width2;
 	   else width = width1;
 	   if (height != height2) height = height2;
 	   else height = height1;
-	}
-}
-
-/* Текущая дата и время */
-function getDateNow(){
-	var now = new Date(),
-	tim = ((now.getHours()<10)?"0":"")+now.getHours()+":"+((now.getMinutes()<10)?"0":"")+now.getMinutes(),
-	e = now.getDate(),
-	month = ['', 'января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'],
-	d = tim + ' - ' + e + ' ',
-	nmonths = month[ (now.getMonth() + 1)];
-	d += nmonths;
-	return d;
-}
-
-/* Скрытие DIV объекта */
-function hide(obj) {  
-	with (document.getElementById(obj).style) {
-	   display = "none";
-	}
-}
-
-/* Отображение меню - DIV объекта (используется для смайлов в комментариях) */
-function SwitchMenu(obj) {
-	if (document.getElementById) {
-		var el = document.getElementById(obj);
-		var ar = document.getElementById("cont").getElementsByTagName("div");
-		if (el.style.display == "none") {
-			for (var i=0; i<ar.length; i++) {
-			ar[i].style.display = "none";
-			}
-		el.style.display = "block";
-		} else {
-		el.style.display = "none";
-		}
 	}
 }
 
@@ -91,9 +44,9 @@ function clc_bbcode(t,nu){
 	} else {
 	el.value = el.value.substring(0,el.selectionStart)+teg1+el.value.substring(el.selectionStart,el.selectionEnd)+teg2+el.value.substring(el.selectionEnd);}
 }
-
+ 
 function otvet(сid, number, t) {
-	document.getElementById('comm_otvet_show').innerHTML='<p><b>Вы отвечаете.</b> <a class=\'no comm_write\' href=#addcomm onclick=\'otmena_otvet();\'>Отменить ответ</a><br><br>'; document.getElementById('comm_otvet').value = сid;
+	//document.getElementById('comm_otvet_show').innerHTML='<p><b>Вы отвечаете.</b> <a class=\'no comm_write\' href=#addcomm onclick=\'otmena_otvet();\'>Отменить ответ</a><br><br>'; document.getElementById('comm_otvet').value = сid;
 	var el=document.getElementById('area');
 	el.focus();
 	if (el.selectionStart==null) {
@@ -148,10 +101,10 @@ function AjaxFormRequest(result_id,form_id,url) {
         dataType: "html", //Тип данных 
         data: jQuery("#"+form_id).serialize(),  
         success: function(response) { //Если все нормально 
-        document.getElementById(result_id).innerHTML = response; 
+        	document.getElementById(result_id).innerHTML = response; 
 	    }, 
 	    error: function(response) { //Если ошибка 
-	    document.getElementById(result_id).innerHTML = "Ошибка при отправке формы"; 
+	    	document.getElementById(result_id).innerHTML = "Error: ajax form"; 
 	    } 
  	}); 
 }
@@ -163,7 +116,7 @@ function page_golos(id,name,gol,type) {
 	if (type == 3) { if (gol != 1 & gol != 6) gol = 0;}
 	$.ajax({ url: 'ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'savegolos', 'type': type, 'id': id, 'string': name+'*@%'+gol},
-	    beforeSend: function(){ $('#golos'+id).html('Секундочку...'); },
+	    beforeSend: function(){ $('#golos'+id).html('<img src="images/loading.gif">'); },
 	    success: function(data){ $('#golos'+id).html(data); }
 	});
 }
@@ -196,4 +149,19 @@ function shop_del_tovar(id) {
 	    data: {'func': 'shop_del_tovar', 'id': id},
 	    success: function(data){ shop_show_card(); }
 	});
+}
+
+/* Отображение скрытого DIV объекта  УДАЛИТЬ */
+function show(obj) { 
+	with (document.getElementById(obj).style) { 
+		if (display == "none") display = "inline"; 
+		else display = "none"; 
+	}
+}
+
+/* Скрытие DIV объекта  УДАЛИТЬ */
+function hide(obj) {  
+	with (document.getElementById(obj).style) {
+	   display = "none";
+	}
 }

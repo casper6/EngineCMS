@@ -1,14 +1,6 @@
 <?php
 	define('MODULE_FILE', true);
   	session_start(); // Для капчи (проверочный код-картинка от спама) // проверить вызов
-    // запрет пользователю посещать не свою страницу 
-	$urlus = getenv("REQUEST_URI");
-    if (substr_count($urlus, "--users" ) == 1 || substr_count($urlus, "--edituser" ) == 1) {
-		if ($_GET["user"] !== $_COOKIE['user_id']) { Header("Location: error.php?code=123"); die; } 
-	}
-	if ( substr_count($urlus, "--adduser" ) == 1) {
-		if ( $_GET["group"] !== $_COOKIE['user_group']) { Header("Location: error.php?code=123"); die; } 
-	}
 	require_once("mainfile.php");
 	global $strelka, $siteurl, $prefix, $name, $db, $admin, $sitename, $pagetitle, $pagetitle2, $registr, $pogoda, $flash, $keywords, $description, $counter, $startdate, $adminmail, $keywords2, $description2, $stopcopy, $nocash, $blocks, $http_siteurl, $display_errors, $gallery_css3, $gallery_lightbox, $gallery_carusel, $gallery_sly;
 	$nocash = false;
@@ -1670,6 +1662,8 @@ echo "<title>".$pagetit.$sitename."</title>
 <script src='includes/j.js'></script>
 <script src='includes/jquery183.min.js'></script>
 <script src='includes/modernizr-1.5.min.js'></script>";
+
+if ($lang != 'ru') echo "<script src=\"language/".$lang.".js\"></script>";
 
 if ($normalize != 0) echo "<link rel='stylesheet' type='text/css' href='includes/css-frameworks/normalize.css' />";
 

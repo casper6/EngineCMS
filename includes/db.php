@@ -5,14 +5,16 @@ if (stristr($_SERVER['PHP_SELF'], "db.php")) {
 }
 if(!defined("SQL_LAYER")) {
 define("SQL_LAYER","mysql");
+global $display_errors;
 class sql_db {
+	//global $display_errors;
 	var $db_connect_id;
 	var $query_result;
 	var $row = array();
 	var $rowset = array();
 	var $num_queries = 0;
 	var $num_q = "";
-	// Constructor
+	// Конструктор
 	function sql_db($sqlserver, $sqluser, $sqlpassword, $database, $persistency = true)	{
 		$this->persistency = $persistency;
 		$this->user = $sqluser;
@@ -33,7 +35,7 @@ class sql_db {
 			return $this->db_connect_id;
 		} else return false;
 	}
-	// Other base methods
+	// Другие основные методы
 	function sql_close() {
 		if($this->db_connect_id) {
 			if($this->query_result) @mysql_free_result($this->query_result);
@@ -41,17 +43,18 @@ class sql_db {
 			return $result;
 		} else return false;
 	}
-	// Base query method
+	// Основной метод запроса
 	function sql_query($query = "", $transaction = FALSE) {
-		// Remove any pre-existing queries
+		// Удаляем ранее вызванные запросы
+		//global $display_errors;
 		unset($this->query_result);
 		if($query != "") {
 			$this->query_result = @mysql_query($query, $this->db_connect_id);
-			$this->num_queries++; // Подсчет кол-ва обращений к БД
+			if ($display_errors == true) $this->num_queries++; // Подсчет кол-ва обращений к БД
 			$end_time = microtime();
 			$end_array = explode(" ",$end_time);
 			$end_time = $end_array[1] + $end_array[0];
-			$this->num_q .= $end_time." --- ".$query."\n"; // Список обращений ##################
+			if ($display_errors == true) $this->num_q .= $end_time." --- ".$query."\n"; // Список обращений ##################
 		}
 		if($this->query_result) {
 			unset($this->row[$this->query_result]);
@@ -59,7 +62,7 @@ class sql_db {
 			return $this->query_result;
 		} else return ( $transaction == END_TRANSACTION ) ? true : false;
 	}
-	// Other query methods
+	// Другие методы запросов
 	function sql_numrows($query_id = 0) {
 		if(!$query_id) $query_id = $this->query_result;
 		if($query_id) {
@@ -94,14 +97,12 @@ class sql_db {
 			return $result;
 		} else return false;
 	}
-
 	function sql_fetchrow($query_id = 0) {
 		if(!$query_id) $query_id = $this->query_result;
 		if($query_id and !is_integer($query_id)) {
 		return mysql_fetch_array($query_id);
 		} else return false;
 	}
-
 	function sql_fetchrowset($query_id = 0) {
 		if(!$query_id) $query_id = $this->query_result;
 		if($query_id) {
@@ -155,13 +156,12 @@ class sql_db {
 		$result["code"] = @mysql_errno($this->db_connect_id);
 		return $result;
 	}
-} // class sql_db
-
+  } // class sql_db
 } // if ... define
-
 $db = new sql_db($dbhost, $dbuname, $dbpass, $dbname, false);
+mysql_query('SET NAMES UTF8');
 mysql_query ("set character_set_client='utf8'");
 mysql_query ("set character_set_results='utf8'");
 mysql_query ("set collation_connection='utf8_general_ci'");
-if(!$db->db_connect_id) die("<br><br><center><br><br><b>В данный момент проводится техническое обслуживание сервера.<br><br>Приносим свои извинения и просим Вас зайти немного позже.</center></b>");
+if(!$db->db_connect_id) die("<br><br><center><br><br><b>".ss("В данный момент проводится техническое обслуживание сервера.<br><br>Приносим свои извинения и просим Вас зайти немного позже.")."</center></b>");
 ?>

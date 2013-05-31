@@ -347,6 +347,7 @@ function redactor($type, $txt, $name, $name2="", $style="html", $return="echo") 
     if ($style == "css") $theme=$color_tema_css;
     if ($style == "php") $theme=$color_tema_php;
     if ($style == "javascript") $theme=$color_tema_js;
+    // section>h2+ul.nav>li.nav-item$*5>a
     $echo .= "<textarea id='".$name."X' class='hide' name='".$name."'>".$txt."</textarea>
     <pre id='".$name."' class='w100 h700'></pre><br>
     <script src='/includes/ace-redactor/ace.js'></script><script>var ".$name." = ace.edit('".$name."');
