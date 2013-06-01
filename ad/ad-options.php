@@ -629,9 +629,35 @@ body {}
 
 
 <div id='show_options_adspeed' class='show_pole' style='display:none;'>";
-
-	if ($site_cash == true) echo "<a class='button' target='_blank' href='?cash=del' style='margin-bottom:5px;'><span class=\"icon medium gray\" data-icon=\"T\"></span>Очистить кеш</a>";
-	else echo "<div class=\"notice warning\">Кеширование страниц отключено. Включить можно через config.php</div>";
+	
+	// Получаем количество добавленных в кеш страниц, а также занимаемый ими размер
+	if ($site_cash == "file" || $site_cash == "base") {
+		if ($site_cash == "base") {
+			$row = $db->sql_fetchrow($db->sql_query("SELECT COUNT(`id`) i FROM ".$prefix."_cash"));
+			$num = $row['i'];
+			$rows = $db->sql_fetchrow($db->sql_query("SHOW TABLE STATUS LIKE '".$prefix."_cash'"));
+			$cash_size = "страниц в базе данных: ".$num.", размер: ".round( $rows['Data_length'] / 1048576, 3)." Мбайт";
+		}
+		if ($site_cash == "file") {
+			//Применение glob("cashe/"."*") здесь невозможно — если файлов будет больше 100.000 — функция выдаст ошибку.
+			$num = 0;
+			$file_size = 0;
+			if ($handle = opendir("cashe/")) {
+			    while (false !== ($file = readdir($handle))) {
+			        if ($file != "." && $file != ".." && $file != ".htaccess") {
+			        	$num ++;
+			        	$size = filesize("cashe/".$file);
+				        $file_size = $file_size + $size;
+				        // Можно сделать вывод файлов в кеше, не факт, что это нужно
+				        //echo "$file - ".filesize("cashe/".$file)."<br>"; 
+				    }
+			    }
+			    closedir($handle);
+			}
+			$cash_size = "страниц в файлах: ".$num.", размер: ".round( $file_size / 1048576, 3)." Мбайт";
+		}
+		echo "<a class='button' target='_blank' href='?cash=del' style='margin-bottom:5px;'><span class=\"icon medium gray\" data-icon=\"T\"></span>Очистить кеш (".$cash_size.")</a>";
+	} else echo "<div class=\"notice warning\">Кеширование страниц отключено. Включить можно в файле config.php — \$site_cash</div>";
 
 	echo "<table class='table_light'>
 

@@ -54,37 +54,70 @@
   }
   $now = date("Y.m.d H:i:s");
   $referer = getenv("HTTP_REFERER"); // REQUEST_URI
-  $url = getenv("REQUEST_URI"); //substr(getenv("REQUEST_URI"), 1);
+  $url = getenv("REQUEST_URI"); //REQUEST_URI substr(getenv("REQUEST_URI"), 1);
   $data = $now;
-  $url0 = str_replace("http://".$siteurl,"",$url);
-  $url0 = str_replace("http%3A%2F%2F".$siteurl."%2F","/",$url0);
+  //ftp://77.222.56.238//public_html/cashe/http%253A%252F%252Fxn--80aaaabhgr4cps3ajao.xn--p1ai-public_page_19061
+  // ftp://77.222.56.238//public_html/cashe/http%253A%252F%252Fxn--80aaaabhgr4cps3ajao.xn--p1ai_-public_page_9126
+  // ftp://77.222.56.238//public_html/cashe/http%253A%252F%252Fxn--80aaaabhgr4cps3ajao.xn--p1ai_-public_page_8268
+  // ftp://77.222.56.238//public_html/cashe/http%253A%252F%252Fxn--80aaaabhgr4cps3ajao.xn--p1ai%252F-public_page_8005
+  // ftp://77.222.56.238//public_html/cashe/http%253A%252F%252Fxn--80aaaabhgr4cps3ajao.xn--p1ai%252F-public_page_7775
+  //str_replace("","-",
+
+  // обработка ссылки
+  /*
+  //if (strpos($url, "/-")) {
+      $url = explode("/-", $url); 
+      if ($url[1]!="") $url = "-".$url[1];
+      else $url = $url[0];
+  //}
+  if (strpos($url, "%252F-")) { 
+      $url = explode("%252F-", $url); 
+      $url = "-".$url[1];
+  }
+  if (strpos($url, "%2F")) { 
+      $url = explode("%2F-", $url); 
+      $url = "-".$url[1];
+  }
+  $url = str_replace("/", "", $url);
+  if ($url == '') $url = "-index";
+
+phpinfo();
+*/
+$url = str_replace("/", "", $url); 
+if ($url == '') $url = "-index";
+
+global $url_link;
+if ($pid != 0) $url_link = "-".$name."_page_".$pid;
+elseif ($cid != 0) $url_link = "-".$name."_cat_".$cid;
+elseif ($name != "")  $url_link = "-".$name;
+else $url_link = "";
+
+  //$url0 = str_replace("http://".$siteurl,"",$url);
+  //$url0 = str_replace("http%3A%2F%2F".$siteurl."%2F","/",$url0);
   $pid = mysql_real_escape_string(intval($pid));
   if ($pid > 0) if (!is_admin($admin)) { // Простой счетчик посещаемости страниц
     $db->sql_query("UPDATE ".$prefix."_pages SET `counter`=counter+1 WHERE `pid`='".$pid."'");
-    recash($url0);
+    recash($url_link);
   }
 ##########################################################################################
 // Отдаем страницу из кеша
   // Сколько дней хранить кеш
   if ($pid > 0) $cashe_day = 30;  // если это страница
-  else $cashe_day = 1; // если это главная страница, разделы и папки
+  else $cashe_day = 2; // если это главная страница, разделы и папки
+
+
 
   $numrows = 0;
   // если кеш на базе
 	if ($site_cash == "base" and $num_post == 0) {
-    $sql = "SELECT `text`, `data` FROM ".$prefix."_cash where `url`='".mysql_real_escape_string($url0)."' limit 1";
+    $sql = "SELECT `text`, `data` FROM ".$prefix."_cash where `url`='".mysql_real_escape_string($url_link)."' limit 1";
     $result = $db->sql_query($sql);
     $numrows = $db->sql_numrows($result);
   }
 	// если кеш на файлах
 	if ($site_cash == "file" and $num_post == 0) {
-  	if ($url0 == '/') { 
-    	$url0 = "-index";
-    	if (file_exists("cashe/".$url0)) $numrows = 1;
-  	} else {
-      $url0 = str_replace("/","_",$url0); // «защита»
-  		if (file_exists("cashe/".$url0)) $numrows = 1;
-  	}
+  	if ($url_link == '/' or $url_link == '') $url_link = "-index";
+    if (file_exists("cashe/".$url_link)) $numrows = 1;
   }
   if ($numrows > 0) {
     // Ставим страницу из кеша
@@ -96,12 +129,12 @@
   	}
   	// если кеш на файлах
   	if ( $site_cash == "file") {
-    	$dni = dateresize(date("Y.m.d H:i:s", fileatime("cashe/".$url0))) + $cashe_day;
-    	$txt = stripcslashes(file_get_contents("cashe/".$url0));
+    	$dni = dateresize(date("Y.m.d H:i:s", fileatime("cashe/".$url_link))) + $cashe_day;
+    	$txt = stripcslashes(file_get_contents("cashe/".$url_link));
   	}
     $nowX = dateresize(date("Y.m.d "));
     if ($dni <= $nowX) { // Обновление
-      recash($url0, 0); // стираем страницу из кеша
+      recash($url_link, 0); // стираем страницу из кеша
     }
     
     if ( isset($admin) ) { // Если это администратор...

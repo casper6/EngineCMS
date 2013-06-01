@@ -1820,7 +1820,6 @@ if (strlen($add_fonts)>1) {
 	ob_end_clean();
 	if (is_admin($admin)) echo page_admin($txt,$pid); // добавили функции админа к страничке
 	else echo $txt;
-
 	// если в config.php выбрано «показывать ошибки», помимо этого покажет запросы к БД и их количество
 	if ($display_errors == true) print("<!-- запросов: $db->num_queries \n $db->num_q -->");
 
@@ -1829,31 +1828,61 @@ if (strlen($add_fonts)>1) {
 		$numrows = 0;
 		$txt = addslashes($txt);
 		// Запрет кеширования
+		/*
+		ftp://77.222.56.238//public_html/cashe/http%253A%252F%252Fxn--80aaaabhgr4cps3ajao.xn--p1ai_-public_page_8412
+		ftp://77.222.56.238//public_html/cashe/http%253A%252F%252Fxn--80aaaabhgr4cps3ajao.xn--p1ai_-public_page_8268
+		-index
+		http%253A%252F%252Fwww.xn--80aaaabhgr4cps3ajao.xn--p1ai%252F-public_page_9299
+		_%3Fq%3Duser
+		_-public_page_10966_comm
+		http%253A%252F%252Fwww.xn--80aaaabhgr4cps3ajao.xn--p1ai%252F-public_page_10755
+		*/
 		//$nocash = explode(" ","/?name=-search /--search ".trim(str_replace("  "," ",str_replace("\n"," ",$nocash))));
-		$url0 = str_replace("http://".$siteurl,"",$url);
-		$url0 = str_replace("http%3A%2F%2F".$siteurl."%2F","/",$url0);
+		//$url0 = str_replace("http://".$siteurl,"",$url);
+		//$url0 = str_replace("http%3A%2F%2F".$siteurl."%2F","/",$url0);
 		// если кеш на базе
-		if ($site_cash == "base") {
-		    $numrows = $db->sql_numrows($db->sql_query("SELECT `data` FROM ".$prefix."_cash where `url`='$url0' limit 1"));
+		/*
+		if (strpos($url, "/-")) {
+		    $url = explode("/-", $url); 
+		    $url = "-".$url[1]; 
 		}
-		// если кеш на файлах
-		if ($site_cash == "file") {
-			if ($url0 == '/') {
-				$url0 = "-index";
-				if (file_exists("cashe/".$url0)) $numrows = 1;
-			} else {
-				$url0 = str_replace("/","_",$url0); // «защита»
-				if (file_exists("cashe/".$url0)) $numrows = 1;
+		if (strpos($url, "%252F-")) { 
+		    $url = explode("%252F-", $url); 
+		    $url = "-".$url[1];
+		}
+		if (strpos($url, "%2F")) { 
+		    $url = explode("%2F-", $url); 
+		    $url = "-".$url[1];
+		}
+		$url = str_replace("/", "", $url);
+		if ($url == '') $url = "-index";
+		*/
+
+		global $url_link;
+		if ($url_link != "") {
+			if ($site_cash == "base") {
+			    $numrows = $db->sql_fetchrow($db->sql_query("SELECT count(`id`) i FROM ".$prefix."_cash where `url`='".$url_link."' limit 1"));
+			    $numrows = $numrows['i'];
 			}
-		}
-	    if ($numrows == 0 and !strpos($url0,"-search") and !strpos($url0,"_cat_") and !strpos($url0,"savecomm") and !strpos($url0,"savepost")) {
-			// Добавление в кеш
-			if ($site_cash == "base") // если кеш в БД
-				$db->sql_query("INSERT INTO `".$prefix."_cash` (`id`, `url`, `data`, `text`) VALUES (NULL, '$url0', '$now', '$txt');") or die ("Обновите страницу, нажав F5 !!!");
-			else { // если кеш в файлах
-				$filestr = fopen ("cashe/".$url0,"w+");
-				fwrite($filestr, $txt);
-				fclose ($filestr);
+			// если кеш на файлах
+			if ($site_cash == "file") {
+				//if ($url == '/') {
+					//$url = "-index";
+					//if (file_exists("cashe/".$url)) $numrows = 1;
+				//} else {
+					//$url = str_replace("/","_",$url); // «защита»
+					if (file_exists("cashe/".$url_link)) $numrows = 1;
+				//}
+			}
+		    if ($numrows == 0 && $url_link != "-search" && $url_link != "savecomm" && $url_link != "savepost") { // !mb_strpos($url,"_cat_") && 
+				// Добавление в кеш
+				if ($site_cash == "base") // если кеш в БД
+					$db->sql_query("INSERT INTO `".$prefix."_cash` (`id`, `url`, `data`, `text`) VALUES (NULL, '".$url_link."', '".$now."', '".$txt."');") or die ("Обновите страницу, нажав F5 !!!");
+				elseif ($site_cash == "file") { // если кеш в файлах
+					$filestr = fopen ("cashe/".$url_link,"w+");
+					fwrite($filestr, $txt);
+					fclose ($filestr);
+				}
 			}
 		}
 	}
