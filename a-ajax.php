@@ -18,10 +18,38 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
   $admintip = "mainpage";
   switch($type) {
 
+  case "trash":
+    $n = "";
+    $oformlenie_names = array("-"=>"",
+      "0"=>"Дизайн", 
+      "1"=>"Стиль", 
+      "3"=>"Блоки", 
+      "4"=>"Шаблоны", 
+      "5"=>"Поля", 
+      "6"=>"Базы данных");
+    $sql = "select id,type,title,useit from ".$prefix."_mainpage where `tables`='del' and type != '2' order by type, title, name";
+    $result = $db->sql_query($sql);
+    $info .= "<table width=100% class='table_light'>";
+    if (!isset($nam)) $nam = "";
+    while ($row = $db->sql_fetchrow($result)) {
+      if ($n == $row['type']) $nu = "-";  
+      else { $n = $nu = $row['type']; }
+      if ($nu == "-") $block = "<tr valign=top id='block_".$row['id']."'><td class='padleft30'>"; 
+      else $block = "<tr valign=top><td style='background:white;'><br><h2>".$oformlenie_names[$nu]." &darr;</h2></td></tr><tr id='block_".$row['id']."'><td class='padleft30'>";
+      $title = $block.$row['title'];
+      $info = $title."<div style='float:right; display: inline;'>
+       <a href='sys.php?op=mainpage&id=".$row['id']."&red=1' title='Редактировать'>".icon('orange small','7')."</a> 
+       <a href='sys.php?op=mainpage&id=".$row['id']."&red=1' title='Восстановить'>".icon('orange small','7')."</a> 
+       <a class='padleft30' href=/sys.php?op=mainpage_del&id=".$row['id']."&type=0&name=".$nam." title='Удалить ".$row['title']."'>".icon('red small','F')."</a>
+       </div></td></tr>";
+    }
+    $info .= "</table>";
+  break;
+
   case "design":
     $sql = "select id,title,useit from ".$prefix."_mainpage where `tables`='pages' and type='0' order by title, name";
     $result = $db->sql_query($sql);
-    $info .= "<table width=100% class=table_light>";
+    $info .= "<table width=100% class='table_light'>";
     if (!isset($nam)) $nam = "";
 
     while ($row = $db->sql_fetchrow($result)) {

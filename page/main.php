@@ -732,6 +732,7 @@ function showcat($cid=0, $pag=0, $slovo="") {
     }
 
     // Дополнение - преобразователь ссылок. //////////////////////
+    /*
     $links_zamena = array(
       aa("[ссылка]")=>"<a href=/-".$DBName."_page_".$p_pid." class=open_page_link>".ss("Читать дальше")."</a> &rarr;",
       "<hr class=\"editor_cut\">"=>"<a href=/-".$DBName."_page_".$p_pid." class=open_page_link>".ss("Читать дальше")."</a> &rarr;",
@@ -739,6 +740,7 @@ function showcat($cid=0, $pag=0, $slovo="") {
       aa("[ссылка-")=>"<a href=/-".$DBName."_page_".$p_pid." class=open_page_link>",
       );
     $open_text = strtr($open_text, $links_zamena);
+    */
     //////////////////////////////////////////////////////////////
 
   if ($pсid==0) $c_name[$pсid] = "";
@@ -1039,12 +1041,14 @@ function page($pid, $all) {
     $desc = $row['description'];
     $title = str_replace("<p>","",str_replace("</p>","",filter($row['title'])));
     $titl = str_replace("\"","",$title); 
+
     $opentext = str_replace("jpg\"><img ","jpg\" class=\"lightbox\" rel=\"page\"><img ", str_replace("<img ","<img title='$titl' ", filter($row['open_text'])));
     $bodytext = str_replace("jpg\"><img ","jpg\" class=\"lightbox\" rel=\"page\"><img ", str_replace("<img ","<img title='$titl' ", filter($row['main_text'])));
     $nocomm = $row['nocomm'];
     // Вырезание авто-ссылок
-    $opentext = preg_replace("/[".aa("ссылка")."-.*-".aa("ссылка")."]/Uis", "", $opentext);
-    $opentext = str_replace("[".aa("ссылка")."]", "", $opentext);
+    //$opentext = preg_replace('/[ссылка-.*-ссылка]/Uis', '', $opentext);
+    //$opentext = preg_replace("/[".aa("ссылка")."-.*-".aa("ссылка")."]/Uis", "", $opentext);
+    //$opentext = str_replace("[".aa("ссылка")."]", "", $opentext);
     $opentext = str_replace('<hr class="editor_cut">', '', $opentext);
     
     global $table_light;
@@ -1072,7 +1076,6 @@ function page($pid, $all) {
     $comm = $row['comm'];
     $opentext = str_replace(aa("[заголовок]"),"",$opentext);
     // Убираем Заголовок, использованный в блоке!
-
     if ($keys == "") $keys = $search; $keywords2 = $keys;
     if ($desc == "") $description2 = $title; else $description2 = $desc;
     $page_tim = $dat[1];
@@ -1159,8 +1162,8 @@ function page($pid, $all) {
 
   $page_opentext = "";
   if ($page_shablon == 0) {
-  if ($view == 1) $page_opentext = "<div class=page_forum_avtor>".$opentext."</div>";
-  else $page_opentext = "<div class=page_opentext>".$opentext."</div>";
+    if ($view == 1) $page_opentext = "<div class=page_forum_avtor>".$opentext."</div>";
+    else $page_opentext = "<div class=page_opentext>".$opentext."</div>";
   } else $page_opentext = $opentext;
 
   if (!isset($no_opentext)) $no_opentext = "";

@@ -196,9 +196,12 @@ function mainpage($name="") {
 			<a href='sys.php?op=mainpage&amp;name=base&amp;type=5#1' class='bigicon'><img class='bigicon bi5' src='/images/1.gif'><b>Базу данных</b><br>
 			Удобная таблица с поиском для внутреннего или открытого использования</a>
 			<br><br></div></div>
-			<div class='m5'><button id='new_razdel_button' class='small' onclick='location.href=\"/sys.php?op=mainpage&amp;type=0&amp;id=1&amp;red=1\"' title='Редактировать главный дизайн'><span class='icon gray small' data-icon='7'></span>главный дизайн</button> 
-			<button id='new_razdel_button' class='small' onclick='location.href=\"/sys.php?op=mainpage&amp;type=1&amp;id=20\"' title='Редактировать главный стиль'><span class='icon gray small' data-icon='7'></span>главный стиль</button>
-			<div class='podrazdel radius' id='podrazdel'></div>
+			<div class='m5'><button id='new_razdel_button' class='small' onclick='location.href=\"/sys.php?op=mainpage&amp;type=0&amp;id=1&amp;red=1\"' title='Редактировать главный дизайн'><span class='icon gray medium' data-icon='7'></span>Главный дизайн</button> 
+			<button id='new_razdel_button' class='small' onclick='location.href=\"/sys.php?op=mainpage&amp;type=1&amp;id=20\"' title='Редактировать главный стиль'><span class='icon gray medium' data-icon='7'></span>Главный стиль</button>";
+
+		echo " <a class='button small' onclick=\"oformlenie_show('<span class=h2>Корзина оформления</span><p>При удалении объекта оформления, он попадает в «Корзину оформления» для окончательного удаления или восстановления.<p><a href=#>Очистить Корзину</a>','2','trash','')\"><span class='icon gray medium' data-icon='T'></span>Корзина оформления</a>";
+
+		echo "<hr><div class='podrazdel radius' id='podrazdel'></div>
 			</td></tr></table>";
 		}
 	echo "</div></body></html>";

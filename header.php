@@ -1824,7 +1824,7 @@ if (strlen($add_fonts)>1) {
 	if ($display_errors == true) print("<!-- запросов: $db->num_queries \n $db->num_q -->");
 
 	// Проверка добавляемой информации
-	if ( !strpos(" ".$txt, "Ошибка: «Адрес раздела»" ) && $site_cash != false) {
+	if ( $site_cash != false ) {
 		$numrows = 0;
 		$txt = addslashes($txt);
 		// Запрет кеширования
@@ -1866,8 +1866,7 @@ if (strlen($add_fonts)>1) {
 			}
 			// если кеш на файлах
 			if ($site_cash == "file") {
-				//if ($url == '/') {
-					//$url = "-index";
+				if ($url_link == '/' || $url_link == '') $url_link = "-index";
 					//if (file_exists("cashe/".$url)) $numrows = 1;
 				//} else {
 					//$url = str_replace("/","_",$url); // «защита»
@@ -1877,7 +1876,7 @@ if (strlen($add_fonts)>1) {
 		    if ($numrows == 0 && $url_link != "-search" && $url_link != "savecomm" && $url_link != "savepost") { // !mb_strpos($url,"_cat_") && 
 				// Добавление в кеш
 				if ($site_cash == "base") // если кеш в БД
-					$db->sql_query("INSERT INTO `".$prefix."_cash` (`id`, `url`, `data`, `text`) VALUES (NULL, '".$url_link."', '".$now."', '".$txt."');") or die ("Обновите страницу, нажав F5 !!!");
+					$db->sql_query("INSERT INTO `".$prefix."_cash` (`id`, `url`, `data`, `text`) VALUES (NULL, '".$url_link."', '".$now."', '".$txt."');") or die (ss("Обновите страницу, (нажав F5)."));
 				elseif ($site_cash == "file") { // если кеш в файлах
 					$filestr = fopen ("cashe/".$url_link,"w+");
 					fwrite($filestr, $txt);

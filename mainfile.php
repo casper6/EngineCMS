@@ -103,7 +103,7 @@ else $url_link = "";
 // Отдаем страницу из кеша
   // Сколько дней хранить кеш
   if ($pid > 0) $cashe_day = 30;  // если это страница
-  else $cashe_day = 2; // если это главная страница, разделы и папки
+  else $cashe_day = 1; // если это главная страница, разделы и папки
 
 
 
@@ -117,7 +117,7 @@ else $url_link = "";
 	// если кеш на файлах
 	if ($site_cash == "file" and $num_post == 0) {
   	if ($url_link == '/' or $url_link == '') $url_link = "-index";
-    if (file_exists("cashe/".$url_link)) $numrows = 1;
+    if (file_exists("cashe/".$url_link) && $url_link != "-index") $numrows = 1;
   }
   if ($numrows > 0) {
     // Ставим страницу из кеша
@@ -141,7 +141,7 @@ else $url_link = "";
       if (is_admin($admin)) $txt = page_admin($txt, $pid); // добавляем на стр. кнопку её редактирования
     }
     echo $txt; // Выводим страницу
-    if ($display_errors == true) print("\n<!-- \n".aa("запросов к БД").": $db->num_queries \n$db->num_q -->"); // Запросы к БД
+    if ($display_errors == true) print("\n<!-- \n".aa("запросов к БД").": ".$db->num_queries." \n".$db->num_q." -->"); // Запросы к БД
     die(); // Закончили вывод страницы из кеша
 ##########################################################################################
   } else { // переходим к настройкам сайта и генерации страницы без кеша
@@ -185,7 +185,7 @@ else $url_link = "";
   if ($shop_shablon_mail_client == "") $shop_shablon_mail_client = "";
   if ($shop_shablon_mail_admin == "") $shop_shablon_mail_admin = "";
 
-  if ($project_logotip == "") $project_logotip = "/img/logotip.png";
+  if ($project_logotip == "") $project_logotip = "img/logotip.png";
 
   if ($color_tema_html == "") $color_tema_html = "monokai";
   if ($color_tema_css == "") $color_tema_css = "monokai";

@@ -91,7 +91,7 @@ function options_show(id,type) {
 function oformlenie_show(title,id,type,link) {
 	var txt;
 	select_button(id);
-	txt = '<a class="button" style="margin-top:4px;margin-bottom:10px;" title="Добавить '+title+'" target=_blank href='+link+'#1> + Добавить '+title+'</a><br>';
+	if (id!=2) txt = '<a class="button" style="margin-top:4px;margin-bottom:10px;" title="Добавить '+title+'" target=_blank href='+link+'#1> + Добавить '+title+'</a><br>'; else txt = title;
 	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'oformlenie_show', 'type': type },
 	    beforeSend: function(){ $('#podrazdel').html( txt + '<br><img src=images/loading.gif> Загрузка...' ); },
