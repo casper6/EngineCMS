@@ -39,7 +39,7 @@ if ($type == 'png' || $type == 'jpg' || $type == 'gif' || $type == 'jpeg' || $ty
         // наводим резкость, если превью мелкое
         if ($width < 300) $image->sharpenImage(4, 1);
         //закругляем углы
-        $thumb->roundCorners(5, 5);
+        //$image->roundCorners(5, 5);
         // ориентация фото
         $orientation = exif_read_data($folder.$foto);
         if ($orientation['Orientation'] !== 0 && $orientation['Orientation'] !== 1 && $orientation['Orientation'] != "") {

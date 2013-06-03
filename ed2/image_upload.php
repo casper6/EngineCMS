@@ -43,7 +43,7 @@ if (!empty($_FILES['file']['name'])) {
           // наводим резкость, если превью мелкое
           if ($width < 300) $image->sharpenImage(4, 1);
           //закругляем углы
-          $thumb->roundCorners(5, 5);
+          //$image->roundCorners(5, 5);
           // ориентация фото
           $orientation = exif_read_data($folder.$foto);
           if ($orientation['Orientation'] !== 0 && $orientation['Orientation'] !== 1 && $orientation['Orientation'] != "") {
@@ -56,7 +56,7 @@ if (!empty($_FILES['file']['name'])) {
       }
       $array = array('filelink' => str_replace("..","",$folder).$foto);
       if (is_image($folder.$foto)) 
-        echo stripslashes(json_encode($array)); 
+        echo stripslashes(json_encode($array)); // 
     }
   }
 }
