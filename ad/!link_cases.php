@@ -38,7 +38,7 @@ switch($op) {
     case "delete_noactive_comm":
     case "delete_system_comm":
     case "base_delit_comm":
-    case "delete_all_pages":
+    case "delete_all":
     case "base_pages_re":
     include("ad/ad-page.php");
     break;

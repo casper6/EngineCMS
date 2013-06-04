@@ -14,9 +14,11 @@
   global $deviceType, $ipban, $display_errors, $pid, $site_cash;
   $deviceType = ($detect->isMobile() ? ($detect->isTablet() ? 'tablet' : 'phone') : 'computer');
 
-  global $lang;
+  //global $lang;
   // Переходная рудиментарная опция - убрать после переделки установщика
+  if (!isset($lang)) $lang = "ru";
   if ($lang == "ru-RU") $lang = "ru";
+  if (!isset($lang_admin)) $lang_admin = "ru";
 
     if ( isset($admin) ) {
     if (is_admin($admin)) {

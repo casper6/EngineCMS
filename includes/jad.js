@@ -28,7 +28,7 @@ function pics_replace(id,txt,search){
 function sho(pid,name,admintip,act) {
 	if (act == 1) active = icon('red small','Q')+' Выключить страницу</a>';
 	else active = icon('green small','Q')+' Включить страницу</a>';
-	if (document.getElementById('pid'+pid).innerHTML=='') document.getElementById('pid'+pid).innerHTML = '<span class=sho_page> <a href=-'+name+'_page_'+pid+' target=_blank title="Открыть страницу на сайте" class="punkt">'+icon('blue small','s')+' Открыть страницу на сайте</a> <a target=_blank href="sys.php?op='+admintip+'_edit_page&pid='+pid+'#1" title="Редактировать страницу в Редакторе" class="punkt">'+icon('orange small','7')+' Редактировать страницу</a> <a onclick=offpage('+pid+',0) class="punkt" title="Включение/Выключение страницы">'+active+' <a onclick=replace("'+pid+'") class="punkt" title="Копировать/Переместить/Создать ярлык">'+icon('blue small','^')+' Копировать/Переместить/Создать ярлык</a> <a onclick=delpage("'+pid+'") class="punkt" title="Удалить страницу">'+icon('red small','T')+' Удалить страницу в Корзину</a></span>';
+	if (document.getElementById('pid'+pid).innerHTML=='') document.getElementById('pid'+pid).innerHTML = '<span class=sho_page> <a href=-'+name+'_page_'+pid+' target=_blank title="Открыть страницу на сайте" class="punkt">'+icon('blue small','s')+' Открыть страницу на сайте</a> <a target=_blank href="sys.php?op='+admintip+'_edit_page&pid='+pid+'#1" title="Редактировать страницу в Редакторе" class="punkt">'+icon('orange small','7')+' Редактировать страницу</a> <a onclick=offpage('+pid+',0) class="punkt" title="Включение/Выключение страницы">'+active+' <a onclick=replace("'+pid+'") class="punkt" title="Копировать/Переместить/Создать ярлык">'+icon('blue small','^')+' Копировать/Переместить/Создать ярлык</a> <a onclick=delpage("'+pid+'") class="punkt" title="Удалить страницу">'+icon('red small','T')+' Удалить страницу в Удаленное</a></span>';
 	else document.getElementById('pid'+pid).innerHTML = '';
 }
 function papka_show(cid, name, sort, id, xxx) {
@@ -91,7 +91,8 @@ function options_show(id,type) {
 function oformlenie_show(title,id,type,link) {
 	var txt;
 	select_button(id);
-	if (id!=2) txt = '<a class="button" style="margin-top:4px;margin-bottom:10px;" title="Добавить '+title+'" target=_blank href='+link+'#1> + Добавить '+title+'</a><br>'; else txt = title;
+	if (id!=2) txt = '<a class="button green" style="margin-top:4px;margin-bottom:10px;" target="_blank" href='+link+'#1> '+icon('white small','+')+' Добавить '+title+'</a> ';
+	else txt = '<span class=h2>Удаленное оформление</span><p>При удалении объекта оформления, он попадает в «Удаленное оформление» для окончательного удаления или восстановления.<p>'+icon('red small','F')+' <a href=sys.php?op=delete_all&del=design>Очистить Удаленное</a>';
 	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'oformlenie_show', 'type': type },
 	    beforeSend: function(){ $('#podrazdel').html( txt + '<br><img src=images/loading.gif> Загрузка...' ); },
@@ -157,8 +158,8 @@ function openbox(id,name) {
 	if (name == 'Комментарии без ответов') no_answer_comm = '<b>без ответов</b>';
 	if (name == 'Отключенные комментарии') no_active_comm = '<b>отключенные</b>';
 	if (name == 'Комментарии' || name == 'Комментарии без ответов' || name == 'Отключенные комментарии') add = '<span style="margin-left: 20px;">'+icon('red small','F')+'Удалить: <a href="sys.php?op=delete_noactive_comm" class="gray nothing"> отключенные</a>, <a href="sys.php?op=delete_system_comm" class="gray nothing">системные</a> <a href="sys.php?op=base_comments" style="margin-left: 20px;" class="gray nothing">'+icon('blue small','s')+'Открыть все</a> <nobr><span style="margin-left: 20px;">'+icon('orange small','\'')+'Показать: '+no_active_comm+', '+no_answer_comm+'</span></nobr><br><br>';
-	if (name == 'Корзина') add = 'При удалении страниц, они попадают в Корзину для окончательного удаления или восстановления.<br><a href="sys.php?op=delete_all_pages&del=del" style="margin-left: 20px;" class="gray nothing">'+icon('red small','F')+'Очистить Корзину</a><br><br>';
-	if (name == 'Резервные копии') add = 'При редактировании страниц создаются их копии для восстановления при необходимости. Внимание: восстанавливая предыдущий вариант страницы, вы заменяете новый!<br><a href="sys.php?op=delete_all_pages&del=backup" style="margin-left: 20px;" class="gray nothing">'+icon('red small','F')+'Удалить все копии</a><br><br>';
+	if (name == 'Удаленное') add = 'При удалении страниц, они попадают в Удаленное для окончательного удаления или восстановления.<br>'+icon('red small','F')+' <a href="sys.php?op=delete_all&del=del" class="gray nothing">Очистить Удаленное</a><br><br>';
+	if (name == 'Резервные копии') add = 'При редактировании страниц создаются их копии для восстановления при необходимости. Внимание: восстанавливая предыдущий вариант страницы, вы заменяете новый!<br><a href="sys.php?op=delete_all&del=backup" style="margin-left: 20px;" class="gray nothing">'+icon('red small','F')+'Удалить все копии</a><br><br>';
 	if (name == 'Добавленное посетителями') add = 'Эти страницы нуждаются в проверке и включении.<br><br>';
 	if (name == 'Новое и отредактированное') add = 'История последних изменений<br><br>';
 	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
@@ -208,9 +209,9 @@ function del_file(file, id) {
 	    success: function(data){ $('#file'+id).hide(); }
 	});
 }
-function delblock(id) {
+function delblock(id,type) {
 	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
-	    data: {'func': 'delblock', 'id': id },
+	    data: {'func': 'delblock', 'id': id, 'type': type },
 	    beforeSend: function(){ $('#block_'+id).hide(); },
 	});
 }

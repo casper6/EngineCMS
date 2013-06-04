@@ -176,13 +176,18 @@ function delete_page_base_pages($pid) {
   Header("Location: sys.php");
 }
 
-function delete_all_pages($del="del") {
+function delete_all($del="del") {
   global $tip, $prefix, $db; 
-  if ($del != "backup") $del = "del"; // в дальнейшем можно расширить
-  $db->sql_query("DELETE FROM ".$prefix."_".$tip." WHERE `tables`='$del'") or die('1');
-  $db->sql_query("DELETE FROM ".$prefix."_".$tip."_categories WHERE `tables`='$del'") or die('2');
-  $db->sql_query("DELETE FROM ".$prefix."_mainpage WHERE `tables`='$del'") or die('3'); 
-  Header("Location: sys.php");
+  if ($del == "design") {
+    $db->sql_query("DELETE FROM ".$prefix."_mainpage WHERE `tables`='del' and `type`!='2'") or die('Error: 0'); 
+    Header("Location: sys.php?op=mainpage&type=element");
+  } else {
+    if ($del != "backup") $del = "del"; // в дальнейшем можно расширить
+    $db->sql_query("DELETE FROM ".$prefix."_".$tip." WHERE `tables`='".$del."'") or die('Error: 1');
+    $db->sql_query("DELETE FROM ".$prefix."_".$tip."_categories WHERE `tables`='".$del."'") or die('Error: 2');
+    $db->sql_query("DELETE FROM ".$prefix."_mainpage WHERE `tables`='".$del."' and `type`='2'") or die('Error: 3');
+    Header("Location: sys.php");
+  }
 }
 
 # СТРАНИЦЫ =================
@@ -1208,8 +1213,8 @@ function base_pages_re($link) {
       base_delit_comm();
       break;
       
-      case "delete_all_pages":
-      delete_all_pages($del);
+      case "delete_all":
+      delete_all($del);
       break;
       
       case "base_pages_re":

@@ -24,12 +24,12 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
       "0"=>"Дизайн", 
       "1"=>"Стиль", 
       "3"=>"Блоки", 
-      "4"=>"Шаблоны", 
-      "5"=>"Поля", 
-      "6"=>"Базы данных");
-    $sql = "select id,type,title,useit from ".$prefix."_mainpage where `tables`='del' and type != '2' order by type, title, name";
+      "4"=>"Поля", 
+      "5"=>"Базы данных", 
+      "6"=>"Шаблоны");
+    $sql = "select `id`,`type`,`title`,`useit` from ".$prefix."_mainpage where `tables`='del' and `type` != '2' order by `type`, `title`, `name`";
     $result = $db->sql_query($sql);
-    $info .= "<table width=100% class='table_light'>";
+    $info = "<table width=100% class='table_light'>";
     if (!isset($nam)) $nam = "";
     while ($row = $db->sql_fetchrow($result)) {
       if ($n == $row['type']) $nu = "-";  
@@ -37,17 +37,17 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
       if ($nu == "-") $block = "<tr valign=top id='block_".$row['id']."'><td class='padleft30'>"; 
       else $block = "<tr valign=top><td style='background:white;'><br><h2>".$oformlenie_names[$nu]." &darr;</h2></td></tr><tr id='block_".$row['id']."'><td class='padleft30'>";
       $title = $block.$row['title'];
-      $info = $title."<div style='float:right; display: inline;'>
-       <a href='sys.php?op=mainpage&id=".$row['id']."&red=1' title='Редактировать'>".icon('orange small','7')."</a> 
-       <a href='sys.php?op=mainpage&id=".$row['id']."&red=1' title='Восстановить'>".icon('orange small','7')."</a> 
-       <a class='padleft30' href=/sys.php?op=mainpage_del&id=".$row['id']."&type=0&name=".$nam." title='Удалить ".$row['title']."'>".icon('red small','F')."</a>
+      $info .= $title."<div style='float:right; display: inline;'>
+       <a target='_blank' href='sys.php?op=mainpage&type=".$row['type']."&id=".$row['id']."&red=1' title='Редактировать'>".icon('black small','7')."</a> 
+       <a class='padleft30 punkt' onclick='delblock(".$row['id'].",2)' title='Восстановить'>".icon('green small',';')."</a> 
+       <a class='padleft30 punkt' onclick='delblock(".$row['id'].",1)' title='Удалить'>".icon('red small','F')."</a>
        </div></td></tr>";
     }
     $info .= "</table>";
   break;
 
   case "design":
-    $sql = "select id,title,useit from ".$prefix."_mainpage where `tables`='pages' and type='0' order by title, name";
+    $sql = "select `id`,`title`,`useit` from ".$prefix."_mainpage where `tables`='pages' and `type`='0' order by `title`, `name`";
     $result = $db->sql_query($sql);
     $info .= "<table width=100% class='table_light'>";
     if (!isset($nam)) $nam = "";
@@ -60,10 +60,10 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
        }
        if ($css == "") $css = "<i class='red'>стиль не выбран</i><br>";
        else $css = "Подключенные стили (css): ".$css."<br>";
-       if ($row['title'] != "Главный дизайн") $delx = "<a class='padleft30' href=/sys.php?op=mainpage_del&id=".$row['id']."&type=0&name=".$nam." title='Удалить дизайн ".$row['title']."'>".icon('red small','F')."</a>";
+       if ($row['title'] != "Главный дизайн") $delx = "<a class='padleft30 punkt' onclick='delblock(".$row['id'].",0)' title='Удалить'>".icon('red small','F')."</a>";
         else $delx = "<span class='padleft30'>".icon('gray small','X');
         
-       $info .= "<tr valign='top'><td><h2>".$row['title']." &darr;</h2>
+       $info .= "<tr valign='top' id='block_".$row['id']."'><td><h2>".$row['title']." &darr;</h2>
        <div style='float:right; display: inline;'>
        <a href='sys.php?op=mainpage&id=".$row['id']."&red=1' title='Редактировать в HTML'>".icon('orange small','7')."</a> ".$delx."</div>";
       ///////
@@ -99,13 +99,13 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
 
 
   case "css":
-    $sql = "select * from ".$prefix."_mainpage where `tables`='pages' and type='1' order by title, name";
+    $sql = "select `id`, `title` from ".$prefix."_mainpage where `tables`='pages' and `type`='1' order by `title`, `name`";
     $result = $db->sql_query($sql);
-    $info = "<table class=table_light width=50% style='min-width:500px;'>";
+    $info = "<table width=100% class=table_light>";
     while ($row = $db->sql_fetchrow($result)) {
-     if ($row['title'] != "Главный стиль") $delx = "<a class='padleft30' href='/sys.php?op=mainpage_del&id=".$row['id']."&type=1' title='Удалить стиль «".$row['title']."»'>".icon('red small','F')."</a>";
+     if ($row['title'] != "Главный стиль") $delx = "<a class='padleft30 punkt' onclick='delblock(".$row['id'].",0)' title='Удалить'>".icon('red small','F')."</a>";
      else $delx = "<span class='padleft30'>".icon('gray small','X');
-     $info .= "<tr><td><h2>".$row['title']."<div style='float:right; display: inline;'><a href='sys.php?op=mainpage&type=1&id=".$row['id']."' title='Редактировать'>".icon('black small','7')."</a> ".$delx."</h2></div></td></tr>";
+     $info .= "<tr id='block_".$row['id']."'><td><h2>".$row['title']."<div style='float:right; display: inline;'><a href='sys.php?op=mainpage&type=1&id=".$row['id']."' title='Редактировать'>".icon('black small','7')."</a> ".$delx."</h2></div></td></tr>";
     }
     $info .= "</table>";
   break;
@@ -134,7 +134,7 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
       "22"=>"База данных (<i>количество по 2 колонкам</i>)", 
       "23"=>"База данных (<i>список колонок</i>)");
     global $uskorenie_blokov;
-    $sql = "select id,name,title,color from ".$prefix."_mainpage where `tables`='pages' and type='3' order by name, title";
+    $sql = "select `id`,`name`,`title`,`color` from ".$prefix."_mainpage where `tables`='pages' and `type`='3' order by `name`, `title`";
     $result = $db->sql_query($sql);
     $n = $blocks_no = $blocks_yes = "";
     while ($row = $db->sql_fetchrow($result)) {
@@ -214,52 +214,50 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
        <a href='sys.php?op=mainpage&type=3&id=".$row['id']."&red=1' title='Редактировать в HTML'>".icon('black small','7')."</a> 
        <a href='sys.php?op=mainpage&type=3&id=".$row['id']."&nastroi=1' title='Настроить блок'>".icon('yellow medium','V')."</a> 
        <a class='padleft30 punkt' onclick='offblock(".$row['id'].")' title='".$text_disable."'>".icon($icon_disable.' small','Q')."</a>  
-       <a class='padleft30 punkt' onclick='delblock(".$row['id'].")' title='Удалить блок'>".icon('red small','F')."</a>
+       <a class='padleft30 punkt' onclick='delblock(".$row['id'].",0)' title='Удалить блок'>".icon('red small','F')."</a>
        </div>
        </td></tr>";
       $blocks_no .= $blocks_ok;
     }
-    $info .= "<span class=green>Названия блоков в [квадратных скобках] можно использовать для вставки в дизайн, разделы, папки, страницы или другие блоки (т.е. в любом месте сайта).</span><table class='table_light w100'>".$blocks_no."</table>";
+    $info .= "<br><span class=green>Названия блоков в [квадратных скобках] можно использовать для вставки в дизайн, разделы, папки, страницы, шаблоны или другие блоки (т.е. в любом месте сайта).</span><table class='table_light w100'>".$blocks_no."</table>";
   break;
 
 
   case "shablon": // 6
-    $sql = "select * from ".$prefix."_mainpage where `tables`='pages' and type='6' order by type, title, name";
+    $sql = "select `id`, `title` from ".$prefix."_mainpage where `tables`='pages' and `type`='6' order by `type`, `title`, `name`";
     $result = $db->sql_query($sql);
-    $current_type = "";
     $info .= "<table width=60% class=table_light>";
     while ($row = $db->sql_fetchrow($result)) {
-      $id = $row['id'];
-      $type = $row['type'];
-      $nam = $row['name']; 
-      $title = $row['title'];
-      $useit = $row['useit'];
-      $useit_module = "";
-      $text = $row['text'];
-      global $admin_file;
-      $redactor = "<div style='float:right;'><a href='sys.php?op=mainpage&id=".$id."&red=1&type=6' title='Редактировать'>".icon('black small','7')."</a> ";
-      $redactor .= "<a class='padleft30' href='sys.php?op=mainpage_del&id=".$id."&type=6&name=$nam' title='Удалить'>".icon('red small','F')."</a></div>"; // удаление базы данных
-      $info .= "<tr><td>".$redactor."<h2>".$title."</h2></td></tr>";
+      //$id = $row['id'];
+      //$type = $row['type'];
+      //$nam = $row['name']; 
+      //$title = $row['title'];
+      //$useit = $row['useit'];
+      //$useit_module = "";
+      //$text = $row['text'];
+      $redactor = "<div style='float:right;'><a href='sys.php?op=mainpage&id=".$row['id']."&red=1&type=6' title='Редактировать'>".icon('black small','7')."</a> ";
+      $redactor .= "<a class='padleft30 punkt' onclick='delblock(".$row['id'].",0)' title='Удалить'>".icon('red small','F')."</a></div>";
+      $info .= "<tr id='block_".$row['id']."'><td>".$redactor."<h2>".$row['title']."</h2></td></tr>";
     }
     $info .= "</table>";
   break;
 
 
   case "pole": // 4
-    $sql = "select * from ".$prefix."_mainpage where `tables`='pages' and type = '4' order by type, title, name";
+    $sql = "select `id`,`name`,`title`,`useit`,`text` from ".$prefix."_mainpage where `tables`='pages' and `type` = '4' order by `type`, `title`, `name`";
     $result = $db->sql_query($sql);
-    $current_type = "";
-    $info .= "<table width=100% class=table_light>";
+    $info .= "<a class='button small red white' href='sys.php?op=mainpage_recycle_spiski'>".icon('white small','x')." Очистить пустые поля</a>
+    <table width=100% class=table_light>";
     while ($row = $db->sql_fetchrow($result)) {
-      $id = $row['id'];
-      $type = $row['type']; 
-      $nam = $row['name']; 
-      $title = $row['title'];
+      //$id = $row['id']; 
+      //$nam = $row['name']; 
+      //$title = $row['title'];
       $useit = $row['useit'];
-      $text = $row['text'];
+      //$text = $row['text'];
       $and = "";
-      global $admin_file;
-      $s_tip = explode("|",$text); $s_tip = explode("&",$s_tip[1]); $s_tip = explode("=",$s_tip[0]); 
+      $s_tip = explode("|",$row['text']); 
+      $s_tip = explode("&",$s_tip[1]); 
+      $s_tip = explode("=",$s_tip[0]); 
       if ($s_tip[1]==0) $and = "список фраз на выбор";
       if ($s_tip[1]==1) $and = "текст";
       if ($s_tip[1]==2) $and = "файл";
@@ -268,52 +266,33 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
       $m_title = "<a href=/-".$useit.">".$title_razdels_by_id[$useit]."</a>";
       if ($useit==0) $m_title = "все разделы";
       $type_opisX = "Раздел: ".$m_title.".<br>Тип: ".$and.".</sup>";
-      $adres = "$title";
-      $redactor = "<div style='float:right;'><a href='sys.php?op=mainpage&id=".$id."&red=1&type=4' title='Редактировать'>".icon('black small','7')."</a> 
-      <a class='padleft30' href='sys.php?op=mainpage_del&id=".$id."&type=4&name=$nam' title='Удалить поле'>".icon('red small','F')."</a></div>";
-      $info .= "<tr><td>".$redactor."<h2>".$title." &darr;</h2><sup style=\"color:#999999;\">Используется в шаблонах: [".$nam."]</sup><br>
+      $adres = $row['title'];
+      $redactor = "<div style='float:right;'><a href='sys.php?op=mainpage&id=".$row['id']."&red=1&type=4' title='Редактировать'>".icon('black small','7')."</a> 
+      <a class='padleft30 punkt' onclick='delblock(".$row['id'].",0)' title='Удалить'>".icon('red small','F')."</a></div>";
+      $info .= "<tr id='block_".$row['id']."'><td>".$redactor."<h2>".$row['title']." &darr;</h2><sup style=\"color:#999999;\">Используется в шаблонах: [".$row['name']."]</sup><br>
       ".$type_opisX."</td></tr>";
     }
-    $info .= "</table><br><a class=\"dark_pole\" title=\"Очистить пустые поля\" href='sys.php?op=mainpage_recycle_spiski'>".icon('red small','x')."Очистить пустые поля</a>";
+    $info .= "</table>";
   break;
 
 
   case "base": // 5
-    $sql = "select * from ".$prefix."_mainpage where `tables`='pages' and type = '5' order by type, title, name";
+    $sql = "select `id`,`name`,`title`,`text` from ".$prefix."_mainpage where `tables`='pages' and `type` = '5' order by `type`, `title`, `name`";
     $result = $db->sql_query($sql);
-    $current_type = "";
     $info .= "<table width=60% class=table_light>";
     while ($row = $db->sql_fetchrow($result)) {
-      $id = $row['id'];
-      $type = $row['type']; 
-      $nam = $row['name']; 
-      $title = $row['title'];
-      $useit = $row['useit'];
-      $useit_module = "";
-      $text = $row['text'];
-      $and = "";
-      global $admin_file;
       $ti = "";
-      $text = explode("|",$text);
+      $text = explode("|",$row['text']);
       $options = $text[1];
       $text = $text[0];
       if (strpos(" ".$options,"base=")) $text = "base";
-      $adres = "$title";
-      if ($nam != "index") {
+      if ($row['name'] != "index") {
         if (!strpos(" ".$options,"base=")) $link = ""; 
-        else $link = "<a href=/sys.php?op=base_base&name=$nam title='Раскрыть содержание раздела базы данных'><img src='images/admin/".$type_opis[8].".gif' style='background: green; width: 20px; height: 20px;'></a>&nbsp;"; 
+        else $link = "<a class='button medium' href=/sys.php?op=base_base&name=".$row['name'].">".icon('blue small','s')." открыть базу данных</a>"; 
       } else $link = "";
-      $adres = "$title";
-      $link = "";
-      $view2 = "";
-      $adres = "$title";
-      $view = "&nbsp;&nbsp;"; 
-      $redactor = "";
-      $and = "";
-      $redactor .= "<div style='float:right;'><a class='padleft30' href='sys.php?op=mainpage_del&id=".$id."&type=5&name=$nam' title='Удалить базу данных'>".icon('red small','F')."</a></div>"; // удаление базы данных
-      $info .= "<tr><td>".$adres." <sup style=\"color:#999999;\">".$and."</sup>&nbsp;&nbsp;<font color=#dddddd>".$view2."</font> ".$redactor."&nbsp;".$view."&nbsp;&nbsp;".$link."</td></tr>";
+      $info .= "<tr id='block_".$row['id']."'><td><div style='float:right;'><a class='padleft30 punkt' onclick='delblock(".$row['id'].",0)' title='Удалить'>".icon('red small','F')."</a></div>".$row['title']." ".$link."</td></tr>";
     }
-    $info .= "</table><div class=green>Для редактирования таблица должна быть подключена к разделу (подключение возможно через настройки раздела).<br>При создании таблицы она автоматически создает одноименный раздел и подключается к нему.<br>Редактируется таблица через раздел — на вкладке Содержание.</div>";
+    $info .= "</table><p>Для редактирования таблица должна быть подключена к разделу (подключение возможно через настройки раздела).<br>При создании таблицы она автоматически создает одноименный раздел и подключается к нему.<br>Редактируется таблица через раздел — на вкладке Содержание.</p>";
   break;
 
   default:
@@ -513,8 +492,13 @@ if ($func == "delrazdel") { // Удаление раздела
   exit;
 }
 ######################################################################################
-if ($func == "delblock") { // Удаление блока
-  $db->sql_query("UPDATE ".$prefix."_mainpage SET `tables`='del' WHERE id='$id'"); 
+if ($func == "delblock") { 
+  // type=0 Удаление оформления в Удаленные
+  // type=1 Полное удаление оформления
+  // type=2 Восстановление оформления
+  if ($type==0) $db->sql_query("UPDATE ".$prefix."_mainpage SET `tables`='del' WHERE `id`='".$id."'"); 
+  if ($type==1) $db->sql_query("DELETE from ".$prefix."_mainpage WHERE `id`='".$id."'");
+  if ($type==2) $db->sql_query("UPDATE ".$prefix."_mainpage SET `tables`='pages' WHERE `id`='".$id."'");
   exit;
 }
 ######################################################################################
@@ -726,12 +710,12 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
         if (!isset($module)) $title_razdel_and_bd[$module] = "РАЗДЕЛ УДАЛЁН! &rarr; $module";
         $m_title = $title_razdel_and_bd[$module];
 
-        if ($row6['active'] == 1) { $p_active_color = "white"; $vkl_title = ""; }
+        if ($row6['active'] == 1) { $p_active_color = ""; $vkl_title = ""; }
         else {
-          $p_active_color = "#dddddd";
+          $p_active_color = " bgcolor=#dddddd";
           $vkl_title = "<a onclick=offpage(".$pid.",1) class=\"punkt\" title=\"Включение страницы\">".icon('white small','`')."Включить</a>";
         }
-        $pageslistdel .= "<tr id=1page".$pid." bgcolor=".$p_active_color." class='tr_hover'><td class='".$gray_date."'><nobr>".$date."</nobr></td><td>".$m_title."</td><td>".$vkl_title."</td><td><a title='Удалить страницу в Корзину' onclick=delpage(".$pid.") class='pointer' style='float:right;'>".icon('red small','T')."</a><a title='Изменить страницу' href='sys.php?op=base_pages_edit_page&name=".$module."&pid=".$pid."'>".icon('orange small','7')."<a title='Открыть страницу на сайте' target=_blank href=-".$module."_page_".$pid.">".$title."</a>&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>";
+        $pageslistdel .= "<tr id=1page".$pid."".$p_active_color." class='tr_hover'><td class='".$gray_date."'><nobr>".$date."</nobr></td><td>".$m_title."</td><td>".$vkl_title."</td><td><a title='Удалить страницу в Удаленные' onclick=delpage(".$pid.") class='pointer' style='float:right;'>".icon('red small','T')."</a><a title='Изменить страницу' href='sys.php?op=base_pages_edit_page&name=".$module."&pid=".$pid."'>".icon('orange small','7')."<a title='Открыть страницу на сайте' target=_blank href=-".$module."_page_".$pid.">".$title."</a>&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>";
     }
     $pageslistdel .= "</tbody></table>";
 
@@ -745,7 +729,7 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
       $module = $row7['module'];
       if (!isset($module)) $title_razdel_and_bd[$module] = "РАЗДЕЛ УДАЛЁН! &rarr; $module";
       $date = date2normal_view(str_replace(".","-",$row7['date']), 2, 1);
-      $pageslistdel .= "<tr id=1page".$pid." bgcolor=#ffffff class='tr_hover'><td class='gray'><nobr>".$date."</nobr></td><td class='gray'>".$title_razdel_and_bd[$module]."</td><td><a onclick=offpage(".$pid.",1) class=\"punkt\" title=\"Включение страницы\">".icon('white small','`')."Включить</a></td><td><a title='Удалить страницу в Корзину' onclick=delpage(".$pid.") class='pointer' style='float:right;'>".icon('red small','T')."</a><a title='Изменить страницу в Редакторе' href='sys.php?op=base_pages_edit_page&name=".$module."&pid=".$pid."'>".icon('orange small','7')."</a><a title='Открыть страницу на сайте' target=_blank href=-".$module."_page_".$pid.">".$title."</a>&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>";
+      $pageslistdel .= "<tr id=1page".$pid." class='tr_hover'><td class='gray'><nobr>".$date."</nobr></td><td class='gray'>".$title_razdel_and_bd[$module]."</td><td><a onclick=offpage(".$pid.",1) class=\"punkt\" title=\"Включение страницы\">".icon('white small','`')."Включить</a></td><td><a title='Удалить страницу в Удаленные' onclick=delpage(".$pid.") class='pointer' style='float:right;'>".icon('red small','T')."</a><a title='Изменить страницу в Редакторе' href='sys.php?op=base_pages_edit_page&name=".$module."&pid=".$pid."'>".icon('orange small','7')."</a><a title='Открыть страницу на сайте' target=_blank href=-".$module."_page_".$pid.">".$title."</a>&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>";
     }
   $pageslistdel .= "</tbody></table><i>Максимум отображения: 10.000 страниц.</i>";
 
@@ -839,6 +823,18 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
     if ($id == 1) { $deistvo = "del"; $slovo = "Дата удаления"; }
     if ($id == 2) { $deistvo = "backup"; $slovo = "Дата изменения оригинала"; }
 
+    if ($id == 1) {
+      $sql3 = "select `id`, `title` from ".$prefix."_mainpage where `type`='2' and `tables`='del'";
+      $result3 = $db->sql_query($sql3);
+      $pageslistdel .= "<h2>Разделы:</h2><table width=100% class=table_light>";
+      while ($row = $db->sql_fetchrow($result3)) {
+        $pageslistdel .= "<tr id='block_".$row['id']."'><td><div style='float:right; display: inline;'><a target='_blank' href='sys.php?op=mainpage&type=2&id=".$row['id']."' title='Редактировать'>".icon('black small','7')."</a> 
+       <a class='padleft30 punkt' onclick='delblock(".$row['id'].",2)' title='Восстановить'>".icon('green small',';')."</a> 
+       <a class='padleft30 punkt' onclick='delblock(".$row['id'].",1)' title='Удалить'>".icon('red small','F')."</a></div>
+       <h2>".$row['title']."</h2></td></tr>";
+      }
+      $pageslistdel .= "</table><br>";
+    }
     $sql = "SELECT count(`pid`) from ".$prefix."_pages where `tables`='".$deistvo."'";
     $iid = $deistvo."page";
     $numrows = $db->sql_fetchrow( $db->sql_query($sql) );
@@ -847,7 +843,7 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
     $sql6 = "SELECT `pid`, `module`, `title`, `redate` from ".$prefix."_pages where `tables`='".$deistvo."' order by `redate` desc limit 500";
     $iid = $deistvo."page";
     $result6 = $db->sql_query($sql6);
-    $pageslistdel .= "Всего: ".$numrows.". Показаны только последние 500 штук. 
+    $pageslistdel .= "<h2>Страницы (".$numrows."):</h2>
         <table width=100% class=table_light><thead><tr><th>".$slovo."</th><th>Раздел </th><th>Страница</th></tr></thead><tbody>";
     while ($row6 = $db->sql_fetchrow($result6)) {
       $pid = $row6['pid'];
@@ -858,7 +854,7 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
       $date = date2normal_view(str_replace(".","-",$row6['redate']), 2, 1);
       if ($id == 1) $recreate = "<a title='Восстановить страницу...\nЕсли её раздел или папка удалены, сначала отредактируйте и восстановите из резервных копий!' onclick=resetpage(".$pid.") style=\"cursor:pointer;\">".icon('green small',';')."</a>";
       if ($id == 2) $recreate = "<a title='Заменить этой копией оригинал...\nПодумайте, прежде чем нажимать!' onclick=resetpage(".$pid.") style=\"cursor:pointer;\">".icon('green small',';')."</a>";
-      $pageslistdel .= "<tr valign=top id=".$iid.$pid." bgcolor=#ffffff class='tr_hover'><td><nobr>".$date."</nobr></td><td>".$title_razdel_and_bd[$module]."</td><td><a title='Удалить страницу (без возможности восстановления)' onclick=deletepage(".$pid.") class='pointer' style='float:right;'>".icon('red small','F')."</a>     
+      $pageslistdel .= "<tr valign=top id=".$iid.$pid."><td><nobr>".$date."</nobr></td><td>".$title_razdel_and_bd[$module]."</td><td><a title='Удалить страницу (без возможности восстановления)' onclick=deletepage(".$pid.") class='pointer' style='float:right;'>".icon('red small','F')."</a>     
       <a target='_blank' title='Изменить страницу' href='sys.php?op=base_pages_edit_page&name=".$module."&pid=".$pid."'>".icon('orange small','7')."</a><a target=_blank title='Изменить страницу в HTML' href='sys.php?op=base_pages_edit_page&name=".$module."&pid=".$pid."&red=1'>".icon('black small','7')."</a>
      ".$title."&nbsp;&nbsp;".$recreate."</td></tr>";
     }

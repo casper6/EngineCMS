@@ -164,7 +164,7 @@ function GraphicAdmin() {
 	$soderganie_menu = "<a class='punkt' id='hide_razdel' onclick=\"$('#show_razdel').show(); $('#razdels').hide(); $('#hide_razdel').hide(); $('#razdel_td').hide(); $('.dark_pole2sel').attr('class', 'dark_pole2');\" style='' title='".aa("Скрыть Разделы в кнопку")."'>&rarr;</a> <button class='small' id='show_razdel' style='display:none;' href=# onclick=\" $('#razdel_td').show(); $('#show_razdel').hide(); $('#razdels').show(); $('#hide_razdel').show();\"><span class=\"icon gray small\" data-icon=\",\"></span> ".aa("Разделы")."</button> ";
  	
  	global $deviceType;
- 	$buttons = explode(",", aa(" Новое, Проверить: , Корзина, Старое, Блоки, Отзывы:, Дата"));
+ 	$buttons = explode(",", aa(" Новое, Проверить: , Удаленное, Старое, Блоки, Отзывы:, Дата"));
 	if ($deviceType != 'computer') $buttons = array('','','','','','','');
 
 	if ($comm_segodnya > 0) $color_comm = " orange"; else $color_comm = "";
@@ -176,7 +176,8 @@ function GraphicAdmin() {
 	if ($num_add_pages > 0 and $show_userposts != 0) $soderganie_menu .= "<button class='nothing small orange' style='color: red;' onclick=\"openbox('4','".aa("Добавленное посетителями")."'); $('#hide_razdel').click();\"><span class=\"icon gray small\" data-icon=\"u\"></span><nobr>".$buttons[1]."<strong>".$num_add_pages."</strong></nobr></button>";
 
 	$del_page = $db->sql_numrows($db->sql_query("SELECT `pid` from ".$prefix."_".$pages." where `tables`='del' limit 0,1"));
-	if ($del_page > 0) $soderganie_menu .= "<button class='nothing small' onclick=\"openbox('1','".aa("Корзина")."'); $('#hide_razdel').click();\" title='".aa("Удаленные страницы")."'><span class=\"icon gray small\" data-icon=\"T\"></span>".$buttons[2]."</button>";
+	$del_razdel = $db->sql_numrows($db->sql_query("SELECT `id` from ".$prefix."_mainpage where `type`='2' and `tables`='del' limit 0,1"));
+	if ($del_page > 0 || $del_razdel > 0) $soderganie_menu .= "<button class='nothing small' onclick=\"openbox('1','".aa("Удаленное")."'); $('#hide_razdel').click();\" title='".aa("Удаленные страницы")."'><span class=\"icon gray small\" data-icon=\"T\"></span>".$buttons[2]."</button>";
 
 	$backup_page = $db->sql_numrows($db->sql_query("SELECT `pid` from ".$prefix."_".$pages." where `tables`='backup' limit 0,1"));
 	if ($backup_page > 0) $soderganie_menu .= "<button class='nothing small' onclick=\"openbox('2','".aa("Резервные копии")."'); $('#hide_razdel').click();\" title='".aa("Резервные копии созданных ранее страниц")."'><span class=\"icon gray small\" data-icon=\"t\"></span>".$buttons[3]."</button>";

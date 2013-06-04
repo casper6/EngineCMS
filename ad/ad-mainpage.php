@@ -198,8 +198,8 @@ function mainpage($name="") {
 			<br><br></div></div>
 			<div class='m5'><button id='new_razdel_button' class='small' onclick='location.href=\"/sys.php?op=mainpage&amp;type=0&amp;id=1&amp;red=1\"' title='Редактировать главный дизайн'><span class='icon gray medium' data-icon='7'></span>Главный дизайн</button> 
 			<button id='new_razdel_button' class='small' onclick='location.href=\"/sys.php?op=mainpage&amp;type=1&amp;id=20\"' title='Редактировать главный стиль'><span class='icon gray medium' data-icon='7'></span>Главный стиль</button>";
-
-		echo " <a class='button small' onclick=\"oformlenie_show('<span class=h2>Корзина оформления</span><p>При удалении объекта оформления, он попадает в «Корзину оформления» для окончательного удаления или восстановления.<p><a href=#>Очистить Корзину</a>','2','trash','')\"><span class='icon gray medium' data-icon='T'></span>Корзина оформления</a>";
+ 
+		echo " <a class='button small' onclick=\"oformlenie_show('','2','trash','')\"><span class='icon gray medium' data-icon='T'></span>Удаленное оформление</a>";
 
 		echo "<hr><div class='podrazdel radius' id='podrazdel'></div>
 			</td></tr></table>";
