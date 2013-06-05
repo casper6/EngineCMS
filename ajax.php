@@ -100,11 +100,14 @@ if ($func == "shop_send_order") {
 		}
 		$order .= "<br>ИТОГО: ".$shop_text_val1.$itogo.$shop_text_val2."<br>";
 		// Отправка письма
-		if(!mail($shop_admin_mail, "=?utf-8?b?" . base64_encode($subject) . "?=", $order, "MIME-Version: 1.0\r\nContent-type: text/html; charset=utf-8\r\nFrom: =?utf-8?b?" . base64_encode("Администратор") . "?= <" . $shop_admin_mail . ">")) echo "Не удалось отправить заказ.";
-	    else { 
+		//if(!
+			mail($shop_admin_mail, "=?utf-8?b?" . base64_encode($subject) . "?=", $order, "MIME-Version: 1.0\r\nContent-type: text/html; charset=utf-8\r\nFrom: =?utf-8?b?" . base64_encode("Администратор") . "?= <" . $shop_admin_mail . ">");
+			//) echo "Не удалось отправить заказ.";
+	    //else { 
 	    	echo $shop_text_after_mail; 
+	    	system_mes($order); // Отправляем системное сообщение админу
 	    	setcookie ('shop_tovar', ''); // очищаем куки
-	    }
+	    //}
 	} 
 	exit();
 }

@@ -58,56 +58,41 @@
   $referer = getenv("HTTP_REFERER"); // REQUEST_URI
   $url = getenv("REQUEST_URI"); //REQUEST_URI substr(getenv("REQUEST_URI"), 1);
   $data = $now;
-  //ftp://77.222.56.238//public_html/cashe/http%253A%252F%252Fxn--80aaaabhgr4cps3ajao.xn--p1ai-public_page_19061
-  // ftp://77.222.56.238//public_html/cashe/http%253A%252F%252Fxn--80aaaabhgr4cps3ajao.xn--p1ai_-public_page_9126
-  // ftp://77.222.56.238//public_html/cashe/http%253A%252F%252Fxn--80aaaabhgr4cps3ajao.xn--p1ai_-public_page_8268
-  // ftp://77.222.56.238//public_html/cashe/http%253A%252F%252Fxn--80aaaabhgr4cps3ajao.xn--p1ai%252F-public_page_8005
-  // ftp://77.222.56.238//public_html/cashe/http%253A%252F%252Fxn--80aaaabhgr4cps3ajao.xn--p1ai%252F-public_page_7775
-  //str_replace("","-",
-
-  // обработка ссылки
-  /*
-  //if (strpos($url, "/-")) {
-      $url = explode("/-", $url); 
-      if ($url[1]!="") $url = "-".$url[1];
-      else $url = $url[0];
-  //}
-  if (strpos($url, "%252F-")) { 
-      $url = explode("%252F-", $url); 
-      $url = "-".$url[1];
-  }
-  if (strpos($url, "%2F")) { 
-      $url = explode("%2F-", $url); 
-      $url = "-".$url[1];
-  }
-  $url = str_replace("/", "", $url);
+  
+  $url = str_replace("/", "", $url); 
   if ($url == '') $url = "-index";
 
-phpinfo();
-*/
-$url = str_replace("/", "", $url); 
-if ($url == '') $url = "-index";
-
-global $url_link;
-if ($pid != 0) $url_link = "-".$name."_page_".$pid;
-elseif ($cid != 0) $url_link = "-".$name."_cat_".$cid;
-elseif ($name != "")  $url_link = "-".$name;
-else $url_link = "";
-
-  //$url0 = str_replace("http://".$siteurl,"",$url);
-  //$url0 = str_replace("http%3A%2F%2F".$siteurl."%2F","/",$url0);
+  global $url_link;
+  // Определение страницы для кеша без лишних параметров
+  $url_link = "";
+  if (!isset($go) && isset($name)) $url_link = "-".$name;
+  else {
+    if ($go == 'addbase') $url_link = "-".$name."_addbase_".$spa;
+    if ($go == 'showdate') $url_link = "-".$name."_date_".$showdate;
+    if ($go == 'showcat') {
+      if (isset($first) && isset($second)) $url_link = "-".$name."_first_".$first."_second_".$second;
+      if (isset($first) && isset($option)) $url_link = "-".$name."_first_".$first."_opt_".$option;
+      if (isset($cid) && isset($slovo)) $url_link = "-".$name."_cat_".$cid."_slovo_".$slovo;
+      if (!isset($cid) && isset($slovo)) $url_link = "-".$name."_slovo_".$slovo;
+      if (isset($cid) && isset($pag)) $url_link = "-".$name."_cat_".$cid."_page_".$pag;
+      if (isset($cid) && !isset($pag) && !isset($slovo) && !isset($first)) $url_link = "-".$name."_cat_".$cid;
+    }
+    if ($go == 'page') {
+      if (isset($pid)) $url_link = "-".$name."_page_".$pid;
+      if (isset($pid) && isset($com)) $url_link = "-".$name."_page_".$pid."_com_".$com;
+      if (isset($pid) && isset($comm)) $url_link = "-".$name."_page_".$pid."_comm";
+    }
+  }
   $pid = mysql_real_escape_string(intval($pid));
   if ($pid > 0) if (!is_admin($admin)) { // Простой счетчик посещаемости страниц
     $db->sql_query("UPDATE ".$prefix."_pages SET `counter`=counter+1 WHERE `pid`='".$pid."'");
     recash($url_link);
   }
 ##########################################################################################
-// Отдаем страницу из кеша
+  // Отдаем страницу из кеша
   // Сколько дней хранить кеш
   if ($pid > 0) $cashe_day = 30;  // если это страница
   else $cashe_day = 1; // если это главная страница, разделы и папки
-
-
 
   $numrows = 0;
   // если кеш на базе
@@ -121,7 +106,8 @@ else $url_link = "";
   	if ($url_link == '/' or $url_link == '') $url_link = "-index";
     if (file_exists("cashe/".$url_link) && $url_link != "-index") $numrows = 1;
   }
-  if ($numrows > 0) {
+
+  if ($numrows > 0 and $url_link != "") {
     // Ставим страницу из кеша
 	  // если кеш на базе
 		if ( $site_cash == "base") {

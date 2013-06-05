@@ -300,9 +300,8 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 	}
 
 	if ($html == 1) { $design_close = ""; $design_open = ""; $block_title = ""; $block_title2 = ""; }
-	if ($blocks == 1) { $design_close .= "</div>"; $design_open = "<div class=show_block><div class=show_block_title>".$titleX." 
-	<a href='sys.php?op=mainpage&id=".$idX."&red=1' title='Редактировать в HTML'><img align=right class='icon2 i34' src='/images/1.gif'></a><a href='sys.php?op=mainpage&id=".$idX."&nastroi=1' title='Настроить блок'><img align=right class='icon2 i38' src='/images/1.gif'></a>
-	</div>".$design_open; }
+	if ($blocks == 1) { $design_close .= "</div>"; $design_open = "<div class=show_block><div class=show_block_title><a href='sys.php?op=mainpage&id=".$idX."&nastroi=1' title='Настроить блок'><img align=right width=16 src='/images/sys/cog.png'></a>
+	<a href='sys.php?op=mainpage&id=".$idX."&red=1' title='Редактировать в HTML'><img align=right width=16 src='/images/sys/edit.png'></a>".$titleX."</div>".$design_open; }
 
 	// Определяем наличие шаблонов
 	if (trim($shablon) != "") {

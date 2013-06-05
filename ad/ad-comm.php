@@ -190,17 +190,17 @@ if ($realadmin==1) {
     }
     ###########################################################
     function base_comments_edit_sv_comments($cid, $text, $golos, $num, $dataX, $avtor2, $mail, $adres, $tel, $act, $drevo) {
-        global $tip, $admintip, $prefix, $db;
+        global $admintip, $prefix, $db;
         if ($cid == $drevo) die ('Комментарий не может быть ответом сам на себя!');
-        $text = mysql_real_escape_string(FixQuotes(str_replace("&amp;","&",$text)));
+        $text = str_replace("&amp;","&",$text);
         // cid num avtor mail text ip data golos --- comments
-        $db->sql_query("UPDATE ".$prefix."_".$tip."_comments SET num='$num', avtor='$avtor2', mail='$mail', text='$text', data='$dataX', golos='$golos', drevo='$drevo', adres='$adres', tel='$tel', active='$act' WHERE cid='$cid'") or die('Не могу сохранить изменения в комментарии...');
-        $sql = "select module from ".$prefix."_".$tip." where pid = '$num'";
+        $db->sql_query("UPDATE ".$prefix."_pages_comments SET num='".mysql_real_escape_string($num)."', avtor='".mysql_real_escape_string($avtor2)."', mail='".mysql_real_escape_string($mail)."', text='".mysql_real_escape_string($text)."', data='".mysql_real_escape_string($dataX)."', golos='".mysql_real_escape_string($golos)."', drevo='".mysql_real_escape_string($drevo)."', adres='".mysql_real_escape_string($adres)."', tel='".mysql_real_escape_string($tel)."', active='".mysql_real_escape_string($act)."' WHERE cid='".mysql_real_escape_string($cid)."'") or die('Не могу сохранить изменения в комментарии...');
+        $sql = "select module from ".$prefix."_pages where `pid` = '".mysql_real_escape_string($num)."'";
         $result = $db->sql_query($sql);
         $row = $db->sql_fetchrow($result);
         $mod = $row['module'];
-        recash("/-".$mod."_page_".$num); // Обновление кеша ##
-        Header("Location: sys.php?op=".$admintip."&pid=$num&name=".$mod);
+        recash("/-".$mod."_page_".$num); // Обновление кеша
+        Header("Location: sys.php?op=".$admintip."&pid=".$num."&name=".$mod);
     }
     ##########################################################
     function comm_links($records,$r_start=0,$URL,$inpage=20) { // Строчка выбора страниц < 1 2 3 >

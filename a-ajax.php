@@ -246,7 +246,7 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
   case "pole": // 4
     $sql = "select `id`,`name`,`title`,`useit`,`text` from ".$prefix."_mainpage where `tables`='pages' and `type` = '4' order by `type`, `title`, `name`";
     $result = $db->sql_query($sql);
-    $info .= "<a class='button small red white' href='sys.php?op=mainpage_recycle_spiski'>".icon('white small','x')." Очистить пустые поля</a>
+    if ($db->sql_fetchrow($result) != null) $info .= "<a class='button small red white' href='sys.php?op=mainpage_recycle_spiski'>".icon('white small','x')." Очистить пустые поля</a>
     <table width=100% class=table_light>";
     while ($row = $db->sql_fetchrow($result)) {
       //$id = $row['id']; 
