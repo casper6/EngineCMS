@@ -835,6 +835,7 @@ function base_pages_save_page($cid, $module, $title, $open_text, $main_text, $fo
   }
   }
   }
+
   $db->sql_query("DELETE FROM ".$prefix."_spiski WHERE name='-00-00'"); 
   // Удаление ошибок. Потом поправить, чтобы не было их!!!
   Header("Location: sys.php?op=base_pages_add_page&name=".$module."&razdel=".$cid."&red=".$red."&new=1&pid=".$page_id."#1");
@@ -1100,7 +1101,7 @@ function base_pages_edit_sv_page($pid, $module, $cid, $title, $open_text, $main_
     }
   }
   $db->sql_query("DELETE FROM ".$prefix."_spiski WHERE name='-00-00'"); // Удаление ошибок. Потом поправить, чтобы не было их!!!
-  Header("Location: sys.php?op=base_pages_edit_page&name=".$name."&new=1&pid=".$pid);
+  Header("Location: sys.php?op=base_pages_edit_page&name=".$module."&new=1&pid=".$pid);
 }
 #####################################################################################################################
 function base_pages_delit_page($name,$pid, $ok) {

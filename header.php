@@ -753,6 +753,9 @@ case "6": # Фотогалерея
 	$type = ""; break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 case "7": # Блок PHP // проверить eval
+	/*
+	$textX = str_replace("<? ", "", str_replace(" ?>", "", $textX));
+	*/
 	eval($textX); // Все содержится в переменной $txt, а eval() - для выполнения кода
 	if (!isset($txt)) $txt = "";
 	$block = str_replace("[$titleX]", $design_open.$txt.$design_close, $block);
@@ -1656,10 +1659,10 @@ echo "<title>".$pagetit.$sitename."</title>
 <meta name='author' content=''>
 <meta name='viewport' content='width=device-width, initial-scale=1.0'>
 <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
-<!--[if lt IE 9]><script src='includes/html5.js'></script><![endif]-->
+<!--[if lt IE 9]><script src='http://html5shim.googlecode.com/svn/trunk/html5.js'></script><![endif]-->
 <!--[if IE]><script src='includes/iepngfix_tilebg.js'></script><![endif]-->
 <script src='includes/j.js'></script>
-<script src='includes/jquery183.min.js'></script>
+<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js'></script>
 <script src='includes/modernizr-1.5.min.js'></script>";
 
 if ($lang != 'ru') echo "<script src=\"language/".$lang.".js\"></script>";
@@ -1667,6 +1670,9 @@ if ($lang != 'ru') echo "<script src=\"language/".$lang.".js\"></script>";
 if ($normalize != 0) echo "<link rel='stylesheet' type='text/css' href='includes/css-frameworks/normalize.css' />";
 
 /*
+<script src='includes/html5.js'></script>
+<script src='includes/jquery.min.js'></script>
+<script src='includes/modernizr-1.5.min.js'></script>
 if ($slider == 1) echo "<script src='includes/jquery.innerfade.js'></script>";
 if ($slider == 2) echo "<script src='includes/jquery.slides.min.js'></script>";
 if ($slider == 3) echo "<script src='includes/jquery.aslideshow.pack.js'></script>";
@@ -1721,15 +1727,17 @@ snippet: <script src="//ajax.googleapis.com/ajax/libs/webfont/1.3.0/webfont.js">
 site: https://developers.google.com/webfonts/docs/webfont_loader
 versions: 1.3.0, 1.1.2, 1.1.1, 1.1.0, 1.0.31, 1.0.30, 1.0.29, 1.0.28, 1.0.27, 1.0.26, 1.0.25, 1.0.24, 1.0.23, 1.0.22, 1.0.21, 1.0.19, 1.0.18, 1.0.17, 1.0.16, 1.0.15, 1.0.14, 1.0.13, 1.0.12, 1.0.11, 1.0.10, 1.0.9, 1.0.6, 1.0.5, 1.0.4, 1.0.3, 1.0.2, 1.0.1, 1.0.0
 
-
+<script src='includes/jquery-ui.min.js'></script>
+<script src='includes/jquery-ui-i18n.min.js'></script>
+<link rel='stylesheet' href='includes/jquery-ui.css' />
 
 */
 
 if ($sortable != 0) echo "<script src='includes/jquery.tinysort.min.js'></script>";
 
-if ($jqueryui != 0) echo "<script src='includes/jquery-ui.min.js'></script>
-<script src='includes/jquery-ui-i18n.min.js'></script>
-<link rel='stylesheet' href='includes/jquery-ui.css' />";
+if ($jqueryui != 0) echo "<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js'></script>
+<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/i18n/jquery-ui-i18n.min.js'></script>
+<link rel='stylesheet' href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css' media='all' />";
 
 switch($kickstart) { // Выбор CSS-фреймворка
 	case 1: // KickStart
@@ -1754,7 +1762,6 @@ switch($kickstart) { // Выбор CSS-фреймворка
 	echo "<link rel='stylesheet' href='includes/css-frameworks/960gs/reset.css' /><link rel='stylesheet' href='includes/css-frameworks/960gs/text.css' /><link rel='stylesheet' href='includes/css-frameworks/960gs/960.css' />"; break;
 	case 11: // 960gs (24 колонки)
 	echo "<link rel='stylesheet' href='includes/css-frameworks/960gs/reset.css' /><link rel='stylesheet' href='includes/css-frameworks/960gs/text.css' /><link rel='stylesheet' href='includes/css-frameworks/960gs/960_24_col.css' />"; break;
-
 	default:
 	break;
 }

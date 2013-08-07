@@ -1663,13 +1663,18 @@ function edit_main($id) {
 
 	if ($name == 10 or $name == 5 or $name == 0) $red = 1; // дополнить список при необходимости
 	
+
+
 	echo "<span class=h2>Содержание блока:</span>";
 	if ($name != 31 && $name != 7 && $name != 10 && $name != 6) redactor($red, $text, 'text'); // редактор: тип редактора, редактируемое поле
 	if ($name == 6) echo "<div class='pics w100'></div>
 	<textarea name=text rows=3 cols=86 class='w100 h155' id=textarea onchange=\"pics_refresh('#textarea');\">".str_replace("\n\n", "\n", $text)."</textarea>
 	<script>$(function(){pics_refresh('#textarea');$('#textarea').hide();})</script>";
 	if ($name == 31) redactor($red, $text, 'text', '', 'javascript');
-	if ($name == 7) redactor('2', "<? ".$text." ?>", 'text', '', 'php');
+	if ($name == 7) {
+		$text = str_replace("<? ", "", str_replace(" ?>", "", $text));
+		redactor('2', "<? \n".$text."\n ?>", 'text', '', 'php');
+	}
 	if ($name == 10 && $re_menu == 1) echo "<div style='display:none'>";
 	if ($name == 10 && $re_menu == 1) redactor($red, '', 'text', '');
 	elseif ($name == 10 && $re_menu != 1) redactor($red, $text, 'text', '');

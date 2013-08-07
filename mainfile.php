@@ -80,7 +80,7 @@
     if ($go == 'page') {
       if (isset($pid)) $url_link = "-".$name."_page_".$pid;
       if (isset($pid) && isset($com)) $url_link = "-".$name."_page_".$pid."_com_".$com;
-      if (isset($pid) && isset($comm)) $url_link = "-".$name."_page_".$pid."_comm";
+      //if (isset($pid) && isset($comm)) $url_link = "-".$name."_page_".$pid."_comm";
     }
   }
   $pid = mysql_real_escape_string(intval($pid));

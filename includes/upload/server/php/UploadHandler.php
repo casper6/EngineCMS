@@ -453,6 +453,7 @@ class UploadHandler
         // Remove path information and dots around the filename, to prevent uploading
         // into different directories or replacing hidden system files.
         // Also remove control characters and spaces (\x00..\x20) around the filename:
+        /*
         $name = trim(basename(stripslashes($name)), ".\x00..\x20");
         // Use a timestamp for empty filenames:
         if (!$name) {
@@ -463,6 +464,7 @@ class UploadHandler
             preg_match('/^image\/(gif|jpe?g|png)/', $type, $matches)) {
             $name .= '.'.$matches[1];
         }
+        */
         return $name;
     }
 
@@ -519,7 +521,9 @@ class UploadHandler
         //$file->name = basename(stripslashes($name));
         $extension = strrchr($file->name, '.');   
         $file_name_only = explode($extension , $file->name);
-        $file->oldname = $file_name_only[0];
+        $file->oldname = str_replace(".jpg", "", str_replace(".jpeg", "", 
+            str_replace(".gif", "", str_replace(".png", "", str_replace(".JPG", "", str_replace(".JPEG", "", 
+            str_replace(".GIF", "", str_replace(".PNG", "", $file->name))))))));
         $changed_name = md5(time().$file_name_only[0]).$extension ;
         $file->name = $changed_name;
         
