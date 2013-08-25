@@ -131,6 +131,7 @@ if ($name=="-email") { // занесение мыла как скрытого к
 			require_once("page/main.php");
 
 			$soda = explode("[следующий]",$soda);
+
 			// $soda[0] - для всех
 			// $soda[1] - только для главной страницы
 			// $soda[2] - только для папок
@@ -148,7 +149,7 @@ if ($name=="-email") { // занесение мыла как скрытого к
 			    }
 			}
 
-			if ($cid=="" and $pid=="" and $soda_col > 1) {
+			if ($cid=="" and ($pid=="" or $pid==0) and $soda_col > 1) {
 				if (strpos(" ".$soda[1],"[содержание]")) $soderganie = str_replace("[содержание]", $soderganie, $soda[1]);
 				else {
 					$soderganie = str_replace("[название]", "<div class=cat_title><A class=cat_categorii_link href=-".$DBName.">".$ModuleName."</a></div><div class=polosa></div>", $soda[1]);
@@ -159,10 +160,10 @@ if ($name=="-email") { // занесение мыла как скрытого к
 			//if ($cid=="" and $pid=="" and $soda_col > 1) $soderganie = str_replace("[содержание]", $soderganie, $soda[1]); 
 			// Содержание главной страницы раздела
 
-			if ($cid!="" and $pid=="" and $soda_col > 2) $soderganie = str_replace("[содержание]", $soderganie, $soda[2]); 
+			if ($cid!="" and ($pid=="" or $pid==0) and $soda_col > 2) $soderganie = str_replace("[содержание]", $soderganie, $soda[2]); 
 			// Содержание главной страницы раздела
 
-			if ($cid=="" and $pid!="" and $soda_col > 3) $soderganie = str_replace("[содержание]", $soderganie, $soda[3]); 
+			if ($cid=="" and $pid!="" and $pid!=0 and $soda_col > 3) $soderganie = str_replace("[содержание]", $soderganie, $soda[3]); 
 			// Содержание главной страницы раздела
 
 			$block = str_replace("[содержание]", $soderganie, $block); 

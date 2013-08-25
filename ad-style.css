@@ -372,7 +372,6 @@ p {margin-top: 15px;margin-left: 5px;}
 .no {margin-bottom: 10px; padding: 0px; display:inline; text-decoration:none;}
 
 .skin_texture {
-	background:url(/images/skin_texture.jpg); 
 	height:40px; 
 	padding:5px;
 	-webkit-border-top-right-radius: 10px;
@@ -381,6 +380,7 @@ p {margin-top: 15px;margin-left: 5px;}
 	-moz-border-radius-topleft: 10px;
 	border-top-right-radius: 10px;
 	border-top-left-radius: 10px;
+	background:url(images/skin_texture.jpg); 
 	}
 .skin_texture span.h3 {color:white !important;}
 
