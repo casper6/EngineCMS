@@ -1,11 +1,11 @@
-﻿// Снег
-  //Configure below to change URL path to the snow image
+﻿// Осенние листья
+  //Configure below to change URL path to the list image
   var snowsrc="/includes/list.gif"
-  // Configure below to change number of snow to render
-  var no = 13;
-  // Configure whether snow should disappear after x seconds (0=never):
+  // Configure below to change number of list to render
+  var no = 17;
+  // Configure whether list should disappear after x seconds (0=never):
   var hidesnowtime = 0;
-  // Configure how much snow should drop down before fading ("windowheight" or "pageheight")
+  // Configure how much list should drop down before fading ("windowheight" or "pageheight")
   var snowdistance = "pageheight";
 
 ///////////Stop Config//////////////////////////////////
@@ -45,9 +45,9 @@
     sty[i] = 0.7 + Math.random();     // set step variables
 		if (ie4up||ns6up) {
       if (i == 0) {
-        document.write("<div id=\"dot"+ i +"\" style=\"POSITION: absolute; Z-INDEX: "+ i +"; VISIBILITY: visible; TOP: 15px; LEFT: 15px;\"><a href=\"http://dynamicdrive.com\"><img src='"+snowsrc+"' border=\"0\"><\/a><\/div>");
+        document.write("<div id=\"dot"+ i +"\" style=\"POSITION: absolute; Z-INDEX: 100"+ i +"; VISIBILITY: visible; TOP: 15px; LEFT: 15px;\"><a href=\"http://dynamicdrive.com\"><img src='"+snowsrc+"' border=\"0\"><\/a><\/div>");
       } else {
-        document.write("<div id=\"dot"+ i +"\" style=\"POSITION: absolute; Z-INDEX: "+ i +"; VISIBILITY: visible; TOP: 15px; LEFT: 15px;\"><img src='"+snowsrc+"' border=\"0\"><\/div>");
+        document.write("<div id=\"dot"+ i +"\" style=\"POSITION: absolute; Z-INDEX: 100"+ i +"; VISIBILITY: visible; TOP: 15px; LEFT: 15px;\"><img src='"+snowsrc+"' border=\"0\"><\/div>");
       }
     }
   }

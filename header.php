@@ -1805,7 +1805,7 @@ if (strlen($add_fonts)>1) {
 	//if ($kickstart == 4) echo "<div id='page'>";
 	echo $block; // Вывод страницы
 
-	if ($url=="/") {
+	if ($url=="-index") {
 		if ($pogoda==1) echo "<script src='includes/sneg.js'></script>\n";
 		if ($pogoda==2) echo "<script src='includes/list.js'></script>\n";
 		if ($pogoda==3) { echo "<script src='includes/shar.js'></script>\n"; include("includes/ballon.htm"); }
