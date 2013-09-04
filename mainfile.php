@@ -65,7 +65,7 @@
   global $url_link;
   // Определение страницы для кеша без лишних параметров
   $url_link = "";
-  if (!isset($go) && isset($name)) $url_link = "-".$name;
+  if (!isset($go) && isset($name) && !isset($op)) $url_link = "-".$name;
   else {
     if ($go == 'addbase') $url_link = "-".$name."_addbase_".$spa;
     if ($go == 'showdate') $url_link = "-".$name."_date_".$showdate;

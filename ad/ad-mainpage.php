@@ -48,12 +48,12 @@ function menu() {
 			$user_ip = $row['ip'];
 			$user_info = "";
 			if (isset($user_name[$user_ip])) if ($user_name[$user_ip] != '') $user_info .= "Имя: ".$user_name[$user_ip];
-			if (isset($user_mail[$user_ip])) if ($user_mail[$user_ip] != '') $user_info .= "<br>E-mail: ".$user_mail[$user_ip];
+			if (isset($user_mail[$user_ip])) if ($user_mail[$user_ip] != '') $user_info .= "<br>Email: ".$user_mail[$user_ip];
 			if (isset($user_tel[$user_ip])) if ($user_tel[$user_ip] != '') $user_info .= "<br>Тел. ".$user_tel[$user_ip];
 			$stat_search .= "<tr valign=top><td class='polosa gray'>".date2normal_view($row['data'], 2, 1)."</td><td class='polosa'>".$row['slovo']."<br><span class='gray'>".$user_info."</span></td><td class='polosa gray'>".$row['pages']."</td></tr>";
 		}
 		$stat_search = "<strong>Искали через поиск на сайте:</strong> <a href='sys.php?op=mainpage&amp;type=stat_search'>См. всё &rarr;</a><table class='w100 table_light'>".$stat_search."</table>
-		<strong>В средней колонке</strong> также выводится предполагаемое имя, e-mail и телефон человека, искавшего этот запрос.<br>
+		<strong>В средней колонке</strong> также выводится предполагаемое имя, email и телефон человека, искавшего этот запрос.<br>
 		<strong>В последней колонке:</strong> первое число - найдено в названии страниц, второе - в содержании.";
 		
 		if ($statlink != "") echo "<h2><span class=\"icon black medium\" data-icon=\"j\"></span> <a href=".$statlink." target=_blank>Сторонняя статистика</a></h2>"; else echo "<div class='notice warning w100 mw800'>Сторонняя статистика не настроена. См. <a href='sys.php?op=Configure'>Настройки</a></div>";
@@ -87,7 +87,7 @@ function menu() {
 			$user_ip = $row['ip'];
 			$user_info = "";
 			if (isset($user_name[$user_ip])) if ($user_name[$user_ip] != '') $user_info .= "Имя: ".$user_name[$user_ip]." [".date2normal_view($row['data'], 2)."]";
-			if (isset($user_mail[$user_ip])) if ($user_mail[$user_ip] != '') $user_info .= " E-mail: ".$user_mail[$user_ip];
+			if (isset($user_mail[$user_ip])) if ($user_mail[$user_ip] != '') $user_info .= " Email: ".$user_mail[$user_ip];
 			if (isset($user_tel[$user_ip])) if ($user_tel[$user_ip] != '') $user_info .= " Тел. ".$user_tel[$user_ip];
 			//$str = "<tr valign=top><td class='polosa gray'>".date2normal_view($row['data'], 2)."</td><td class='polosa'>".$row['slovo'].$del."<br><span class='gray'>".$user_info."</span></td><td class='polosa gray'>".$row['pages']."</td></tr>";
 			if (trim($row['slovo']) != "") {
@@ -841,7 +841,7 @@ function edit_main($id) {
 	$comments_1 = "Комментарии";
 	$comments_2 = "Оставьте ваш вопрос или комментарий:";
 	$comments_3 = "Ваше имя:";
-	$comments_4 = "Ваш e-mail:";
+	$comments_4 = "Ваш email:";
 	$comments_5 = "Ваш адрес:";
 	$comments_6 = "Ваш телефон:";
 	$comments_7 = "Ваш вопрос или комментарий:";

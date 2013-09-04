@@ -183,31 +183,7 @@ if (!function_exists('curl_init'))
 if (!extension_loaded('imagick') || !class_exists("Imagick")) 
 	echo "<p style='color:red;'>Библиотека Imagick не установлена – вам придется самостоятельно уменьшать размер больших фотографий (полученных фотоаппаратом) перед вставкой в редактор. Советуем перейти на другой хостинг с поддержкой этой библиотеки или договориться с текущим хостингом о её подключении.";
 
-echo "<p><span class=h2>Профессиональные мануалы по PHP, HTML, CSS, JS и jQuery</span><br>
-	Русский:<ul class='alt base_open_page'>
-	<li><a href='http://htmlbook.ru'>Сайт — HTMLbook, Справочник по HTML и CSS</a></li>
-	<li><a href='http://css-live.ru'>Сайт — CSS-Live, Сборник информации по CSS</a></li>
-	<li><a href='http://habrahabr.ru'>Сайт — ХабраХабр, айтишный социальный блог</a></li>
-	<li><a href='http://web-standards.ru'>Сайт — Веб-стандарты, российское сообщество разработчиков, статьи</a></li>
-	<li><a href='http://habrahabr.ru/post/159101/'>Статья — Базовые стили и полезные CSS-сниппеты</a></li>
-	<li><a href='http://habrahabr.ru/post/158577/'>Статья — jQuery-сниппеты и плагины для iPad</a></li>
-	<li><a href='http://efimov.ws/main/develop/javascript/650-effektnyix-jquery-mootools-css-plaginov-i-skriptov-dlya-veb-razrabotchikov.html'>700+ эффектных jQuery Mootools CSS решений для веб-разработчиков</a></li>
-	<li><a href=''></a></li>
-	<li><a href=''></a></li>
-	<li><a href=''></a></li>
-	</ul>
-
-	English:<ul class='alt base_open_page'>
-	<li><a href='http://www.smashingmagazine.com'>Сайт — SmashingMagazine: Вебдизайн, CSS, HTML</a></li>
-	<li><a href='http://www.netmagazine.com'>Сайт — NetMagazine: инструкции и примеры веб-дизайна</a></li>
-	<li><a href='http://www.impressivewebs.com'>Сайт — ImpressiveWebs: статьи, инструкции и примеры веб-дизайна, CSS</a></li>
-	<li><a href='http://lea.verou.me'>Сайт — Lea.Verou: статьи и проекты по веб-дизайну</a></li>
-	<li><a href='http://css-tricks.com'>Сайт — CSS-Tricks: CSS-трюки, статьи, сниппеты</a></li>
-	<li><a href='http://coding.smashingmagazine.com/2012/05/31/50-jquery-function-demos-for-aspiring-web-developers/'>Статья — Примеры функций jQuery, 50 шт.</a></li>
-	
-	
-	<li><a href=''></a></li>
-	</ul>
+echo "<p><a href='http://hotel-s.ru' target='_blank'>Официальный сайт CMS «ДвижОк»</a>
 	</div>	
 
 <div id='show_first' class='show_pole' style='display:none;'>
