@@ -1,6 +1,7 @@
 ﻿// Осенние листья
   //Configure below to change URL path to the list image
-  var snowsrc="/includes/list.gif"
+  var snowsrc="/includes/list.gif";
+  var snowsrc2="/includes/list2.png"; // второй листик
   // Configure below to change number of list to render
   var no = 17;
   // Configure whether list should disappear after x seconds (0=never):
@@ -44,11 +45,8 @@
     stx[i] = 0.02 + Math.random()/10; // set step variables
     sty[i] = 0.7 + Math.random();     // set step variables
 		if (ie4up||ns6up) {
-      if (i == 0) {
-        document.write("<div id=\"dot"+ i +"\" style=\"POSITION: absolute; Z-INDEX: 100"+ i +"; VISIBILITY: visible; TOP: 15px; LEFT: 15px;\"><a href=\"http://dynamicdrive.com\"><img src='"+snowsrc+"' border=\"0\"><\/a><\/div>");
-      } else {
-        document.write("<div id=\"dot"+ i +"\" style=\"POSITION: absolute; Z-INDEX: 100"+ i +"; VISIBILITY: visible; TOP: 15px; LEFT: 15px;\"><img src='"+snowsrc+"' border=\"0\"><\/div>");
-      }
+      if (i % 2 == 0) document.write("<div id=\"dot"+ i +"\" style=\"POSITION: absolute; Z-INDEX: 100"+ i +"; VISIBILITY: visible; TOP: 15px; LEFT: 15px;\"><img src='"+snowsrc+"' border=\"0\"><\/div>");
+      else document.write("<div id=\"dot"+ i +"\" style=\"POSITION: absolute; Z-INDEX: 100"+ i +"; VISIBILITY: visible; TOP: 15px; LEFT: 15px;\"><img src='"+snowsrc2+"' border=\"0\"><\/div>");
     }
   }
 

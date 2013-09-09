@@ -156,10 +156,43 @@
   $ht_backup = $row['ht_backup']; // Файл, в котором лежит резервная копия .htaccess
   $captcha_ok = intval($row['captcha_ok']); // отключение проверки комментариев
   $jqueryui = $show_comments = $show_userposts = $normalize = "";
-  list($jqueryui, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $search_design, $tag_design, $add_fonts, $normalize, $project_logotip, $project_name, $geo, $kolkey, $add_clips, $sortable, $color_tema_html, $color_tema_css, $color_tema_js, $color_tema_php, $tab_obzor, $tab_show, $shop_text_val1, $shop_text_val2, $shop_text_itogo, $shop_text_oformit, $shop_text_korzina, $shop_text_delete, $shop_pole, $shop_admin_mail, $shop_text_after_mail,$shop_spisok_pole, $shop_shablon_form_order, $shop_shablon_mail_client, $shop_shablon_mail_admin) = explode("|",trim($row['nocashe']));
+  // Получаем настройки
+  list($jqueryui, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $search_design, $tag_design, $add_fonts, $normalize, $project_logotip, $project_name, $geo, $kolkey, $add_clips, $sortable, $color_tema_html, $color_tema_css, $color_tema_js, $color_tema_php, $tab_obzor, $tab_show, $shop_text_val1, $shop_text_val2, $shop_text_itogo, $shop_text_oformit, $shop_text_korzina, $shop_text_delete, $shop_pole, $shop_admin_mail, $shop_text_after_mail,$shop_spisok_pole, $shop_shablon_form_order, $shop_shablon_mail_client, $shop_shablon_mail_admin,$ed2_button_html,$ed2_button_formatting, $ed2_button_bold, $ed2_button_italic, $ed2_button_deleted, $ed2_button_underline, $ed2_button_unorderedlist, $ed2_button_orderedlist, $ed2_button_outdent, $ed2_button_indent, $ed2_button_image, $ed2_button_video, $ed2_button_file, $ed2_button_table, $ed2_button_link, $ed2_button_alignment, $ed2_button_horizontalrule, $ed2_button_more, $ed2_button_link2, $ed2_button_block, $ed2_button_pre, $ed2_button_fullscreen, $ed2_button_clips, $ed2_button_fontcolor, $ed2_button_fontsize, $ed2_button_fontfamily, $ed2_minHeight, $ed2_direction) = explode("|",trim($row['nocashe']));
   //if ($add_fonts != "") $add_fonts = explode(".",$add_fonts);
   $project_name = filter($project_name);
 
+// Настройки второго редактора
+if ($ed2_button_html == "" && $ed2_button_bold == "" && $ed2_button_link == "") $ed2_button_html=$ed2_button_formatting=$ed2_button_bold=$ed2_button_italic=$ed2_button_deleted=$ed2_button_underline=$ed2_button_unorderedlist=$ed2_button_orderedlist=$ed2_button_outdent=$ed2_button_indent=$ed2_button_image=$ed2_button_video=$ed2_button_file=$ed2_button_table=$ed2_button_link=$ed2_button_alignment=$ed2_button_horizontalrule=$ed2_button_more=$ed2_button_fullscreen=$ed2_button_clips = " checked";
+  if ($ed2_direction == "") $ed2_direction = "ltl";
+  if ($ed2_minHeight == "") $ed2_minHeight = "300";
+  if ($ed2_button_html == "1") $ed2_button_html = " checked";
+  if ($ed2_button_formatting == "1") $ed2_button_formatting = " checked";
+  if ($ed2_button_bold == "1") $ed2_button_bold = " checked";
+  if ($ed2_button_italic == "1") $ed2_button_italic = " checked";
+  if ($ed2_button_deleted == "1") $ed2_button_deleted = " checked";
+  if ($ed2_button_underline == "1") $ed2_button_underline = " checked";
+  if ($ed2_button_unorderedlist == "1") $ed2_button_unorderedlist = " checked";
+  if ($ed2_button_orderedlist == "1") $ed2_button_orderedlist = " checked";
+  if ($ed2_button_outdent == "1") $ed2_button_outdent = " checked";
+  if ($ed2_button_indent == "1") $ed2_button_indent = " checked";
+  if ($ed2_button_image == "1") $ed2_button_image = " checked";
+  if ($ed2_button_video == "1") $ed2_button_video = " checked";
+  if ($ed2_button_file == "1") $ed2_button_file = " checked";
+  if ($ed2_button_table == "1") $ed2_button_table = " checked";
+  if ($ed2_button_link == "1") $ed2_button_link = " checked";
+  if ($ed2_button_alignment == "1") $ed2_button_alignment = " checked";
+  if ($ed2_button_horizontalrule == "1") $ed2_button_horizontalrule = " checked";
+  if ($ed2_button_more == "1") $ed2_button_more = " checked";
+  if ($ed2_button_link2 == "1") $ed2_button_link2 = " checked";
+  if ($ed2_button_block == "1") $ed2_button_block = " checked";
+  if ($ed2_button_pre == "1") $ed2_button_pre = " checked";
+  if ($ed2_button_fullscreen == "1") $ed2_button_fullscreen = " checked";
+  if ($ed2_button_clips == "1") $ed2_button_clips = " checked";
+  if ($ed2_button_fontcolor == "1") $ed2_button_fontcolor = " checked";
+  if ($ed2_button_fontsize == "1") $ed2_button_fontsize = " checked";
+  if ($ed2_button_fontfamily == "1") $ed2_button_fontfamily = " checked";
+
+// Настройки магазина
   if ($shop_text_val2 == "") $shop_text_val2 = ss(" руб.");
   if ($shop_text_itogo == "") $shop_text_itogo = ss("Итого:");
   if ($shop_text_oformit == "") $shop_text_oformit = ss("Оформить покупку");
@@ -173,13 +206,14 @@
   if ($shop_shablon_mail_client == "") $shop_shablon_mail_client = "";
   if ($shop_shablon_mail_admin == "") $shop_shablon_mail_admin = "";
 
-  if ($project_logotip == "") $project_logotip = "img/logotip.png";
-
+// Настройки невизуального редактора с подсветкой кода
   if ($color_tema_html == "") $color_tema_html = "monokai";
   if ($color_tema_css == "") $color_tema_css = "monokai";
   if ($color_tema_js == "") $color_tema_js = "monokai";
   if ($color_tema_php == "") $color_tema_php = "monokai";
 
+// Остальные настройки
+  if ($project_logotip == "") $project_logotip = "img/logotip.png";  
   if ($tab_obzor == "") $tab_obzor = ss("Обзор");
   if ($tab_show == "") $tab_show = "1";
   if ($jqueryui == "") $jqueryui = "1";

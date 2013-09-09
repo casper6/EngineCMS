@@ -158,9 +158,9 @@ function mainpage($name="") {
 	elseif (intval($id)>0) { edit_main($id); }
 	elseif ($display_addmenu == false) echo "<center><br>Создание основных разделов сайта запрещено администратором.</center>";
 	else {
-		echo "<table class='block_back w100 mw800' cellspacing=0 cellpadding=0><tr valign=top><td id='razdel_td' class='radius' width=340>
+		echo "<table class='block_back w100 mw800 pm0' cellspacing=0 cellpadding=0><tr valign=top><td id='razdel_td' class='radius'>
 
-			<div id='razdels' class='razdels'>
+			<div id='razdels' class='razdels' style='width:340px;'>
 			<div class='black_grad h40'><button id=new_razdel_button title='Добавить оформление...' class='small black right3' onclick=\"show_animate('addmain');\"><span class='mr-2 icon darkgrey small' data-icon='+'></button>
 			<span class='h1'>Оформление:</span>
 			</div>";
@@ -177,8 +177,9 @@ function mainpage($name="") {
 		 ////////////////////// БАЗЫ ДАННЫХ 5
 		 echo "<div id='mainrazdel5' class='dark_pole2'><a class='base_page' onclick=\"oformlenie_show('БД','5','base','/sys.php?op=mainpage&amp;name=base&amp;type=5')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='D'></span><span class='plus20'>Базы данных (таблицы)</span></div></a></div>";
 		 
-		echo "</div></td><td>
-			<div style='display:none;' id=addmain>
+		echo "</div></td>
+	<td style='padding:0;'><a class='punkt' title='Свернуть/развернуть левую колонку' onclick='$(\"#razdels\").toggle(\"slow\");'><div class='polosa_razdelitel'>||</div></a></td>
+	<td style='width:100%;'><div style='display:none;' id=addmain>
 			<div class='block_white2 radius add_oformlenie'>
 			<a title='Закрыть это окно' class=punkt onclick=\"show_animate('addmain')\"><div class='radius close_button'>&nbsp;x&nbsp;</div></a>
 

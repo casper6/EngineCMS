@@ -320,7 +320,7 @@ $(function () {
           if (document.getElementById('show_oldnames').checked == false) file.oldname = '';
           value = '/img/' + file.name + '|' + file.oldname;
           $('#".$textarea."').append(value + '\\n');
-          if (file.oldname == null || file.oldname == '') file.oldname = 'без имени';
+          if (file.oldname == null || file.oldname == '' || typeof file.oldname == 'undefined') file.oldname = 'без имени';
           $('.pics').append('<div id=\"' + id + '\" class=\"pic\" style=\"background:url(\'includes/phpThumb/phpThumb.php?src=/img/' + file.name + '&amp;w=160&amp;h=100&amp;q=0\') no-repeat bottom white;\"><a title=\"Удалить фото\" class=\"button small red white\" onclick=\"pics_replace(\'#' + id + '\',\'#".$textarea."\', \'' + value + '\');\">×</a><span>' + file.oldname + '</span></div>');
         });
       },
@@ -338,7 +338,7 @@ $(function () {
 }
 ##########################################################################################
 function redactor($type, $txt, $name, $name2="", $style="html", $return="echo") {
-  global $red4_div_convert, $add_clips;
+  global $red4_div_convert, $add_clips, $lang_admin;
   $echo = "";
   if ($type=="0") {
   } elseif ($type=="2") {
@@ -372,24 +372,55 @@ function redactor($type, $txt, $name, $name2="", $style="html", $return="echo") 
   $echo .= "});
     </script><textarea id='".$name."' name='".$name."' style='width: 100%; height: 220px;'>".$txt."</textarea>";
   } elseif ($type=="4") {
-    //           iframe: true,          css: 'css_20.css',
+    global $ed2_button_html, $ed2_button_formatting, $ed2_button_bold, $ed2_button_italic, $ed2_button_deleted, $ed2_button_underline, $ed2_button_unorderedlist, $ed2_button_orderedlist, $ed2_button_outdent, $ed2_button_indent, $ed2_button_image, $ed2_button_video, $ed2_button_file, $ed2_button_table, $ed2_button_link, $ed2_button_alignment, $ed2_button_horizontalrule, $ed2_button_more, $ed2_button_link2, $ed2_button_block, $ed2_button_pre, $ed2_button_fullscreen, $ed2_button_clips, $ed2_button_fontcolor, $ed2_button_fontsize, $ed2_button_fontfamily, $ed2_minHeight, $ed2_direction;
+    $ed2_html=$ed2_formatting=$ed2_bold=$ed2_italic=$ed2_deleted=$ed2_underline=$ed2_unorderedlist=$ed2_orderedlist=$ed2_outdent=$ed2_indent=$ed2_image=$ed2_video=$ed2_file=$ed2_table=$ed2_link=$ed2_alignment=$ed2_horizontalrule="";
+    if ($ed2_button_html == " checked") $ed2_html = "'html', ";
+    if ($ed2_button_formatting == " checked") $ed2_formatting = "'|', 'formatting', ";
+    if ($ed2_button_bold == " checked") $ed2_bold = "'|', 'bold',";
+    if ($ed2_button_italic == " checked") $ed2_italic = "'italic',";
+    if ($ed2_button_deleted == " checked") $ed2_deleted = "'deleted',";
+    if ($ed2_button_underline == " checked") $ed2_underline = "'underline',";
+    if ($ed2_button_unorderedlist == " checked") $ed2_unorderedlist = "'|', 'unorderedlist',";
+    if ($ed2_button_orderedlist == " checked") $ed2_orderedlist = "'orderedlist',";
+    if ($ed2_button_outdent == " checked") $ed2_outdent = "'outdent',";
+    if ($ed2_button_indent == " checked") $ed2_indent = "'indent',";
+    if ($ed2_button_image == " checked") $ed2_image = "'|', 'image',";
+    if ($ed2_button_video == " checked") $ed2_video = "'video',";
+    if ($ed2_button_file == " checked") $ed2_file = "'file', ";
+    if ($ed2_button_table == " checked") $ed2_table = "'table',";
+    if ($ed2_button_link == " checked") $ed2_link = "'link',";
+    if ($ed2_button_alignment == " checked") $ed2_alignment = "'|', 'alignment',";
+    if ($ed2_button_horizontalrule == " checked") $ed2_horizontalrule = "'|', 'horizontalrule',";
+    if ($ed2_button_more == " checked") $ed2_more = "'|', 'button_more',";
+    if ($ed2_button_link2 == " checked") $ed2_link2 = "'button_link',";
+    if ($ed2_button_block == " checked") $ed2_block = "'button_block',";
+    if ($ed2_button_pre == " checked") $ed2_pre = "'pre'";
+    if ($ed2_button_fullscreen == " checked") $ed2_fullscreen = "'fullscreen',";
+    if ($ed2_button_clips == " checked") $ed2_clips = "'clips',";
+    if ($ed2_button_fontcolor == " checked") $ed2_fontcolor = "'fontcolor',";
+    if ($ed2_button_fontsize == " checked") $ed2_fontsize = "'fontsize',";
+    if ($ed2_button_fontfamily == " checked") $ed2_fontfamily = "'fontfamily'";
+    // iframe: true, css: 'css_20.css',
     $echo .= "<script>
-    function ButtonMore(obj, event, key){ obj.insertHtml('<!--more-->'); }
-    function ButtonBlock(obj, event, key){ obj.insertHtml('[Название блока]'); }
-    function ButtonLink(obj, event, key){ obj.insertHtml('{Название страницы или раздела}'); }
     $(document).ready(function() { 
-      $('.redactor').redactor({ buttonsAdd: ['|', 'button_more', 'button_link', 'button_block'], buttonsCustom: {
-            button_more: {title: 'Вставка ссылки на полное содержание (для предисловия)',callback: ButtonMore},
-            button_link: {title: 'Вставка блока (например, галереи фотографий)',callback: ButtonBlock},
-            button_block: {title: 'Вставка быстрой ссылки на страницу или раздел',callback: ButtonLink}
+      $('.redactor').redactor({ 
+        buttons: [".$ed2_html.$ed2_formatting.$ed2_bold.$ed2_italic.$ed2_deleted.$ed2_underline.$ed2_unorderedlist.$ed2_orderedlist.$ed2_outdent.$ed2_indent.$ed2_image.$ed2_video.$ed2_file.$ed2_table.$ed2_link.$ed2_alignment.$ed2_horizontalrule.$ed2_more.$ed2_link2.$ed2_block.$ed2_pre."], 
+        buttonsCustom: {
+            button_more: {title: 'Вставка ссылки на полное содержание (для предисловия)',callback: function (){ this.insertHtml('<!--more-->'); }},
+            button_link: {title: '[] — Вставка блока (например, галереи фотографий)',callback: function (){ this.insertHtml('[Название блока]'); }},
+            button_block: {title: '{} — Вставка быстрой ссылки на страницу или раздел',callback: function (){ this.insertHtml('{Название страницы или раздела}'); }},
+            pre: {title: '<PRE>', callback: function(){ this.formatBlocks('pre'); }}
           }, 
           mobile: true, 
           observeImages: true, 
-          ".$red4_div_convert." imageUpload: 'ed2/image_upload.php', fileUpload: 'ed2/file_upload.php', 
-          lang: 'ru', 
-          autoresize: true, 
-          minHeight: 300,
-          plugins: ['fullscreen','clips'] }); } );
+          ".$red4_div_convert." 
+          imageUpload: 'ed2/image_upload.php', 
+          fileUpload: 'ed2/file_upload.php', 
+          clipboardUploadUrl: 'ed2/clipboard_upload.php', 
+          lang: '".$lang_admin."', 
+          minHeight: ".$ed2_minHeight.",
+          direction: '".$ed2_direction."',
+          plugins: [".$ed2_fullscreen.$ed2_clips.$ed2_fontcolor.$ed2_fontsize.$ed2_fontfamily."] }); } );
     </script><textarea id='".$name."' class='redactor' name='".$name."' style='width: 100%; height: 220px;'>".$txt."</textarea>";
     $clip_title = array('«Рыба» для заполнения тестовых страниц');
     $clip_text = array('<p>Социальная парадигма, на первый взгляд, определяет антропологический феномен толпы, говорится в докладе ОБСЕ. Политическая психология ограничивает эмпирический доиндустриальный тип политической культуры, указывает в своем исследовании К.Поппер. Демократия участия, как бы это ни казалось парадоксальным, ограничивает социализм, последнее особенно ярко выражено в ранних работах В.И.Ленина. Правовое государство, согласно традиционным представлениям, постоянно. Политическое лидерство отражает феномен толпы, впрочем, это несколько расходится с концепцией Истона.<p>Понятие политического конфликта, особенно в условиях политической нестабильности, означает культ личности (отметим, что это особенно важно для гармонизации политических интересов и интеграции общества). Политическое учение Руссо сохраняет феномен толпы, исчерпывающее исследование чего дал М.Кастельс в труде "Информационная эпоха". Политическое учение Августина, в первом приближении, доказывает механизм власти (приводится по работе Д.Белла "Грядущее постиндустриальное общество"). Либеральная теория, в первом приближении, сохраняет онтологический тоталитарный тип политической культуры, если взять за основу только формально-юридический аспект. Постиндустриализм существенно формирует культ личности, что было отмечено П.Лазарсфельдом. Демократия участия, с другой стороны, вызывает плюралистический доиндустриальный тип политической культуры, впрочем, это несколько расходится с концепцией Истона.');

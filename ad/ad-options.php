@@ -148,16 +148,15 @@ if ($row['realadmin'] == 1) {
 $opt_save = ":";
 if ($ok==1) $opt_save = " сохранены";
 
-echo "<table class='w100 mw800 mt5 block_back' cellspacing=0 cellpadding=0><tr valign=top><td id='razdel_td' class='radius nothing' width=340>
+echo "<table class='w100 mw800 pm0 block_back' cellspacing=0 cellpadding=0><tr valign=top><td id='razdel_td' class='radius nothing'>
 
-	<div id='razdels' style='background:#e7e9ec;'>
+	<div id='razdels' style='background:#e7e9ec; width:340px;'>
 			<div class='black_grad'><span class='h1'>Настройки".$opt_save."</span></div>";
-	echo "<div id='mainrazdel8' class='dark_pole2'><a class='base_page' onclick=\"options_show('8','show_first')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\".\"></span><span class='plus20'>Начальные настройки и Шрифты</span></div></a></div>";
+	echo "<div id='mainrazdel8' class='dark_pole2sel'><a class='base_page' onclick=\"options_show('8','show_first')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\".\"></span><span class='plus20'>Начальные настройки и Шрифты</span></div></a></div>";
 	echo "<div id='mainrazdel0' class='dark_pole2'><a class='base_page' onclick=\"options_show('0','show_options')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"Z\"></span><span class='plus20'>Основные настройки Сайта</span></div></a></div>";
 	echo "<div id='mainrazdel1' class='dark_pole2'><a class='base_page' onclick=\"options_show('1','show_options_company')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"Y\"></span><span class='plus20'>Карточка компании (мини блоки)</span></div></a></div>";
 	
-	echo "<div class='right3'><button id=mainrazdel9 style='float:right;' title='Добавить заготовку...' class='dark_pole2' onclick=\"options_show('5','show_options_zagotovka'); $('#add_clip').show('slow');\"><span class='mr-2 icon darkgrey small' data-icon='+'></span><span class='plus20'>Добавить</span></button></div>
-	<div id='mainrazdel5' class='dark_pole2'><a class='base_page' onclick=\"options_show('5','show_options_zagotovka')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"7\"></span><span class='plus20'>Заготовки редактора</span></div></a></div>";
+	echo "<div id='mainrazdel5' class='dark_pole2'><a class='base_page' onclick=\"options_show('5','show_options_zagotovka')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"7\"></span><span class='plus20'>Настройки редактора</span></div></a></div>";
 	echo "<div id='mainrazdel3' class='dark_pole2'><a class='base_page' onclick=\"options_show('3','show_options_adspeed')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"z\"></span><span class='plus20'>Настройки Администрирования</span></div></a></div>";
 	echo "<div id='mainrazdel4' class='dark_pole2'><a class='base_page' onclick=\"options_show('4','show_options_pass_block')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"O\"></span><span class='plus20'>Смена пароля и Блокировка по IP</span></div></a></div>";
 	echo "<div id='mainrazdel7' class='dark_pole2'><a class='base_page' onclick=\"options_show('7','show_options_oldfotos'); trash_pics();\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"1\"></span><span class='plus20'>Удаление старых фото</span></div></a></div>";
@@ -166,7 +165,9 @@ echo "<table class='w100 mw800 mt5 block_back' cellspacing=0 cellpadding=0><tr v
     echo "<div id='mainrazdel11' class='dark_pole2'><a class='base_page' href='sys.php?op=txt_and_csv_main'><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"(\"></span><span class='plus20'>Импорт из txt и csv (в разработке)</span></div></a></div>";
 	echo "<div id='mainrazdel10' class='dark_pole2'><a class='base_page' onclick=\"options_show('10','show_options_razrab');\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"b\"></span><span class='plus20'>Информация для разработчиков</span></div></a></div>";
 
-	echo "</div></td><td><form action='".$admin_file.".php' method='post' name=\"form\">";
+	echo "</div></td>
+	<td style='padding:0;'><a class='punkt' title='Свернуть/развернуть левую колонку' onclick='$(\"#razdels\").toggle(\"slow\");'><div class='polosa_razdelitel'>||</div></a></td>
+	<td style='width:100%;'><form action='".$admin_file.".php' method='post' name=\"form\">";
 
 echo "
 <div id='show_options_razrab' class='show_pole' style='display:none;'>";
@@ -186,7 +187,7 @@ if (!extension_loaded('imagick') || !class_exists("Imagick"))
 echo "<p><a href='http://hotel-s.ru' target='_blank'>Официальный сайт CMS «ДвижОк»</a>
 	</div>	
 
-<div id='show_first' class='show_pole' style='display:none;'>
+<div id='show_first' class='show_pole'>
 	<a class='button' onclick=\"options_show('8','show_options_fonts')\"><span class=\"icon gray medium\" data-icon=\"i\"></span> Шрифты</a>
 	<a class='button' onclick=\"options_show('8','show_shop')\"><span class=\"icon gray medium\" data-icon=\"$\"></span> Магазин</a> ";
 	if (is_dir("includes/regions")) echo "<a class='button' href='sys.php?op=regions_main'><span class=\"icon gray medium\" data-icon=\"&\"></span> Регионы</a>";
@@ -369,8 +370,8 @@ body {}
 <div id='show_options' class='show_pole' style='display:none;'>
 	<table class=table_light>
 
-	<tr valign=top><td>
-	Название сайта (для заголовка title):</td><td class=small>
+	<tr valign=top><td style='min-width:250px;'>
+	Название сайта (для title):</td><td class=small>
 	".input("options[sitename]", $sitename, "100%")."
 	</td></tr><tr valign=top><td>
 	Логотип сайта/компании:</td><td class=small>
@@ -635,6 +636,10 @@ body {}
 		echo "<a class='button' target='_blank' href='?cash=del' style='margin-bottom:5px;'><span class=\"icon medium gray\" data-icon=\"T\"></span>Очистить кеш (".$cash_size.")</a>";
 	} else echo "<div class=\"notice warning\">Кеширование страниц отключено. Включить можно в файле config.php — \$site_cash</div>";
 
+	// Цветовые схемы невизуального редактора
+	$color_themes = "chrome,clouds,crimson_editor,dawn,dreamweaver,eclipse,github,solarized_light,textmate,tomorrow,xcode,ambiance,chaos,clouds_midnight,cobalt,idle_fingers,kr_theme,merbivore,merbivore_soft,mono_industrial,monokai,pastel_on_dark,solarized_dark,terminal,tomorrow_night,tomorrow_night_blue,tomorrow_night_bright,tomorrow_night_eighties,twilight,vibrant_ink";
+	$color_themes_names = "Chrome (светлая),Clouds (светлая),Crimson Editor (светлая),Dawn (светлая),Dreamweaver (светлая),Eclipse (светлая),GitHub (светлая),Solarized Light (светлая),TextMate (светлая),Tomorrow (светлая),XCode (светлая),Ambiance (темная),Chaos (темная),Clouds Midnight (темная),Cobalt (темная),idleFingers (темная),krTheme (темная),Merbivore (темная),Merbivore Soft (темная),Mono Industrial (темная),Monokai (темная),Pastel on dark (темная),Solarized Dark (темная),Terminal (темная),Tomorrow Night (темная),Tomorrow Night Blue (темная),Tomorrow Night Bright (темная),Tomorrow Night 80s (темная),Twilight (темная),Vibrant Ink (темная)";
+
 	echo "<table class='table_light'>
 
 	<tr valign=top><td style='min-width:250px;'>
@@ -692,20 +697,64 @@ body {}
 	".input("options[kolkey]", $kolkey, "3", "number")."
 	</td></tr>
 
-	<tr valign=top><td>
-	Цветовая тема подсветки редактора кода:</td><td class=small>HTML:
-	".select("options[color_tema_html]", "chrome,clouds,crimson_editor,dawn,dreamweaver,eclipse,github,solarized_light,textmate,tomorrow,xcode,ambiance,chaos,clouds_midnight,cobalt,idle_fingers,kr_theme,merbivore,merbivore_soft,mono_industrial,monokai,pastel_on_dark,solarized_dark,terminal,tomorrow_night,tomorrow_night_blue,tomorrow_night_bright,tomorrow_night_eighties,twilight,vibrant_ink", "Chrome (светлая),Clouds (светлая),Crimson Editor (светлая),Dawn (светлая),Dreamweaver (светлая),Eclipse (светлая),GitHub (светлая),Solarized Light (светлая),TextMate (светлая),Tomorrow (светлая),XCode (светлая),Ambiance (темная),Chaos (темная),Clouds Midnight (темная),Cobalt (темная),idleFingers (темная),krTheme (темная),Merbivore (темная),Merbivore Soft (темная),Mono Industrial (темная),Monokai (темная),Pastel on dark (темная),Solarized Dark (темная),Terminal (темная),Tomorrow Night (темная),Tomorrow Night Blue (темная),Tomorrow Night Bright (темная),Tomorrow Night 80s (темная),Twilight (темная),Vibrant Ink (темная)", $color_tema_html)."<br>CSS:
-	".select("options[color_tema_css]", "chrome,clouds,crimson_editor,dawn,dreamweaver,eclipse,github,solarized_light,textmate,tomorrow,xcode,ambiance,chaos,clouds_midnight,cobalt,idle_fingers,kr_theme,merbivore,merbivore_soft,mono_industrial,monokai,pastel_on_dark,solarized_dark,terminal,tomorrow_night,tomorrow_night_blue,tomorrow_night_bright,tomorrow_night_eighties,twilight,vibrant_ink", "Chrome (светлая),Clouds (светлая),Crimson Editor (светлая),Dawn (светлая),Dreamweaver (светлая),Eclipse (светлая),GitHub (светлая),Solarized Light (светлая),TextMate (светлая),Tomorrow (светлая),XCode (светлая),Ambiance (темная),Chaos (темная),Clouds Midnight (темная),Cobalt (темная),idleFingers (темная),krTheme (темная),Merbivore (темная),Merbivore Soft (темная),Mono Industrial (темная),Monokai (темная),Pastel on dark (темная),Solarized Dark (темная),Terminal (темная),Tomorrow Night (темная),Tomorrow Night Blue (темная),Tomorrow Night Bright (темная),Tomorrow Night 80s (темная),Twilight (темная),Vibrant Ink (темная)", $color_tema_css)."<br>JS:
-	".select("options[color_tema_js]", "chrome,clouds,crimson_editor,dawn,dreamweaver,eclipse,github,solarized_light,textmate,tomorrow,xcode,ambiance,chaos,clouds_midnight,cobalt,idle_fingers,kr_theme,merbivore,merbivore_soft,mono_industrial,monokai,pastel_on_dark,solarized_dark,terminal,tomorrow_night,tomorrow_night_blue,tomorrow_night_bright,tomorrow_night_eighties,twilight,vibrant_ink", "Chrome (светлая),Clouds (светлая),Crimson Editor (светлая),Dawn (светлая),Dreamweaver (светлая),Eclipse (светлая),GitHub (светлая),Solarized Light (светлая),TextMate (светлая),Tomorrow (светлая),XCode (светлая),Ambiance (темная),Chaos (темная),Clouds Midnight (темная),Cobalt (темная),idleFingers (темная),krTheme (темная),Merbivore (темная),Merbivore Soft (темная),Mono Industrial (темная),Monokai (темная),Pastel on dark (темная),Solarized Dark (темная),Terminal (темная),Tomorrow Night (темная),Tomorrow Night Blue (темная),Tomorrow Night Bright (темная),Tomorrow Night 80s (темная),Twilight (темная),Vibrant Ink (темная)", $color_tema_js)."<br>PHP:
-	".select("options[color_tema_php]", "chrome,clouds,crimson_editor,dawn,dreamweaver,eclipse,github,solarized_light,textmate,tomorrow,xcode,ambiance,chaos,clouds_midnight,cobalt,idle_fingers,kr_theme,merbivore,merbivore_soft,mono_industrial,monokai,pastel_on_dark,solarized_dark,terminal,tomorrow_night,tomorrow_night_blue,tomorrow_night_bright,tomorrow_night_eighties,twilight,vibrant_ink", "Chrome (светлая),Clouds (светлая),Crimson Editor (светлая),Dawn (светлая),Dreamweaver (светлая),Eclipse (светлая),GitHub (светлая),Solarized Light (светлая),TextMate (светлая),Tomorrow (светлая),XCode (светлая),Ambiance (темная),Chaos (темная),Clouds Midnight (темная),Cobalt (темная),idleFingers (темная),krTheme (темная),Merbivore (темная),Merbivore Soft (темная),Mono Industrial (темная),Monokai (темная),Pastel on dark (темная),Solarized Dark (темная),Terminal (темная),Tomorrow Night (темная),Tomorrow Night Blue (темная),Tomorrow Night Bright (темная),Tomorrow Night 80s (темная),Twilight (темная),Vibrant Ink (темная)", $color_tema_php)."
-	</td></tr>
-
 	</table>
 	<div style='text-align:center;'><input type='submit' value=' Сохранить настройки ' style='width:300px; height:40px;'></div>
 	</div>";
 
 echo "<div id='show_options_zagotovka' class='show_pole' style='display:none;'>
-	<p>Вы можете добавить <b>шаблонные заготовки</b> для использования во <b>втором</b> редакторе. Это позволит быстро вставлять в предисловие или содержание страницы заранее заготовленные куски текста или HTML-кода, и, в отличии от обычной вставки блоков, также сразу их редактировать. Если на всех страницах раздела используется один и тот же шаблон - его можно задать при редактировании самого раздела (внизу). Заготовки же для редактора используются в случае вставки многочисленных (чаще всего небольших) элементов на странице, т.е. позволяют решить немного другие задачи. Пример: красивая рамочка, DIV с css-классом для цветного выделения текста, заготовка определенной таблицы и т.д.</p>";
+	
+	<table class='table_light' width='100%'>
+
+	<tr><td colspan=3><h1>Невизуальный редактор с подсветкой кода</h1><img src='images/2.png'></td></tr>
+	<tr valign=top><td style='max-width:150px;'>
+	Цветовая тема:</td><td class=small>
+	HTML:".select("options[color_tema_html]", $color_themes, $color_themes_names, $color_tema_html)."<br>
+	CSS:".select("options[color_tema_css]", $color_themes, $color_themes_names, $color_tema_css)."</td><td class=small>
+	JS:".select("options[color_tema_js]", $color_themes, $color_themes_names, $color_tema_js)."<br>
+	PHP:".select("options[color_tema_php]", $color_themes, $color_themes_names, $color_tema_php)."
+	</td></tr>
+
+	<tr><td colspan=3><h1>2й визуальный редактор (серые кнопки)</h1><img src='images/4.jpg'></td></tr>
+	<tr valign=top><td style='max-width:150px;'>
+	Выберите кнопки редактора:</td><td class=small>";
+
+global $ed2_button_html, $ed2_button_formatting, $ed2_button_bold, $ed2_button_italic, $ed2_button_deleted, $ed2_button_underline, $ed2_button_unorderedlist, $ed2_button_orderedlist, $ed2_button_outdent, $ed2_button_indent, $ed2_button_image, $ed2_button_video, $ed2_button_file, $ed2_button_table, $ed2_button_link, $ed2_button_alignment, $ed2_button_horizontalrule, $ed2_button_more, $ed2_button_link2, $ed2_button_block, $ed2_button_pre, $ed2_button_fullscreen, $ed2_button_clips, $ed2_button_fontcolor, $ed2_button_fontsize, $ed2_button_fontfamily, $ed2_minHeight, $ed2_direction;
+echo "
+".input('options[ed2_button_html]','1','','checkbox',$ed2_button_html)." Код (режим просмотра HTML)<br>
+".input('options[ed2_button_formatting]','1','','checkbox',$ed2_button_formatting)." Форматирование текста<br>
+".input('options[ed2_button_bold]','1','','checkbox',$ed2_button_bold)." Полужирный<br>
+".input('options[ed2_button_italic]','1','','checkbox',$ed2_button_italic)." Наклонный (курсив)<br>
+".input('options[ed2_button_deleted]','1','','checkbox',$ed2_button_deleted)." Зачеркнутый<br>
+".input('options[ed2_button_underline]','1','','checkbox',$ed2_button_underline)." Подчеркнутый<br>
+".input('options[ed2_button_unorderedlist]','1','','checkbox',$ed2_button_unorderedlist)." • Обычный список<br>
+".input('options[ed2_button_orderedlist]','1','','checkbox',$ed2_button_orderedlist)." 1. Нумерованный список<br>
+".input('options[ed2_button_outdent]','1','','checkbox',$ed2_button_outdent)." < Уменьшить отступ<br>
+".input('options[ed2_button_indent]','1','','checkbox',$ed2_button_indent)." > Увеличить отступ<br>
+".input('options[ed2_button_image]','1','','checkbox',$ed2_button_image)." Изображение<br>
+".input('options[ed2_button_video]','1','','checkbox',$ed2_button_video)." Видео<br>
+".input('options[ed2_button_file]','1','','checkbox',$ed2_button_file)." Файл<br>
+".input('options[ed2_button_table]','1','','checkbox',$ed2_button_table)." Таблица<br>
+".input('options[ed2_button_link]','1','','checkbox',$ed2_button_link)." Ссылка<br>
+</td><td class=small>
+".input('options[ed2_button_alignment]','1','','checkbox',$ed2_button_alignment)." Выравнивание текста<br>
+".input('options[ed2_button_horizontalrule]','1','','checkbox',$ed2_button_horizontalrule)." Горизонтальная линия<br>
+".input('options[ed2_button_more]','1','','checkbox',$ed2_button_more)." Ссылка на полное содержание (для предисловия)<br>
+".input('options[ed2_button_link2]','1','','checkbox',$ed2_button_link2)." [] Вставка блока<br>
+".input('options[ed2_button_block]','1','','checkbox',$ed2_button_block)." {} Вставка ссылки на страницу или раздел*<br>
+".input('options[ed2_button_pre]','1','','checkbox',$ed2_button_pre)." Предварительно форматированный текст (PRE)<br>
+".input('options[ed2_button_fullscreen]','1','','checkbox',$ed2_button_fullscreen)." Во весь экран (кнопка справа)<br>
+".input('options[ed2_button_clips]','1','','checkbox',$ed2_button_clips)." <b>Заготовки</b> (шаблоны, можно добавить ниже ↓)<br>
+".input('options[ed2_button_fontcolor]','1','','checkbox',$ed2_button_fontcolor)." Цвет текста<br>
+".input('options[ed2_button_fontsize]','1','','checkbox',$ed2_button_fontsize)." Размер текста (нежелательно!)<br>
+".input('options[ed2_button_fontfamily]','1','','checkbox',$ed2_button_fontfamily)." Шрифт текста (нежелательно!)<br>
+Высота поля редактора: ".input('options[ed2_minHeight]',$ed2_minHeight, "10")."<br>
+Направление текста: ".select('options[ed2_direction]','ltl,rtl','слева направо,справа налево (по-арабски)',$ed2_direction)."<br>
+	</td></tr>
+
+	</table>
+
+	<p>Вы можете добавить шаблонные <b>заготовки</b> для использования во втором редакторе. Это позволит быстро вставлять в предисловие или содержание страницы заранее заготовленные куски текста или HTML-кода, и, в отличии от обычной вставки блоков, также сразу их редактировать. Если на всех страницах раздела используется один и тот же шаблон - его можно задать при редактировании самого раздела (внизу). Заготовки же для редактора используются в случае вставки многочисленных (чаще всего небольших) элементов на странице, т.е. позволяют решить немного другие задачи. Пример: красивая рамочка, DIV с css-классом для цветного выделения текста, заготовка определенной таблицы и т.д.</p>";
+
 	$add_clips1 = "";
 	if (strlen($add_clips) > 1) {
 		$add_clips2 = explode("?%?",$add_clips);
@@ -740,17 +789,18 @@ echo "<div id='show_options_zagotovka' class='show_pole' style='display:none;'>
 	</script>
 
 	<div style='display:none;' id='add_clip' class=block>
-	".close_button("add_clip")."
+	
 	<h3>Название заготовки:</h3>
 	<input id='clips' class=w100>
-	<h3>Текст заготовки (можно использовать HTML):</h3>
+	<h3>Текст заготовки (можно использовать HTML и [блоки]):</h3>
 	<textarea id='texts' class=w100></textarea><br>
 	<a class='button' onclick='add_clip(); save_clips();'>Добавить &darr;</a>
 	</div>
 
-	<h3>Используемые заготовки:</h3>
+	<h2><a id='button_add_clip' title='Добавить заготовку...' class='mr10 button small green' onclick=\"$('#add_clip').show('slow'); $('#button_add_clip').hide('slow');\"><span class='mr-2 icon darkgrey small' data-icon='+'></span><span class='plus20'>Добавить</span></a>
+	Используемые заготовки:</h2>
 	<select style='margin-top:5px;' name='options[add_clips]' id=\"add_clips\" onchange=\"clip()\" size=10 class='w100'>".$add_clips1."</select>
-	<a class='button' onclick='del_clip(); save_clips();'>Удалить</a>
+	<a class='button white red' onclick='del_clip(); save_clips();'>Удалить</a>
 	<input id='clips_spisok' type=hidden name='options[add_clips]' value='".$add_clips."'>
 
 	<div id='clip_preview' style='margin:10px; padding:10px; clear: both; background:white;'>Здесь будет показана выбранная заготовка.</div>
@@ -1178,7 +1228,12 @@ echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>
 		global $prefix, $db, $options;
 		$mini_blocks = $options['company_name']."|||||".$options['company_fullname']."|||||".$options['company_address']."|||||".$options['company_time']."|||||".$options['company_tel']."|||||".$options['company_sot']."|||||".$options['company_fax']."|||||".$options['company_email']."|||||".$options['company_map']."|||||".$options['company_people'];
 
-		$advanced = $options['jqueryui']."|".$options['show_comments']."|".$options['show_userposts']."|".$options['show_page']."|".$options['show_reserv']."|".$options['uskorenie_blokov']."|".$options['kickstart']."|".$options['show_page_links']."|".$options['ad_fon']."|".$options['search_design']."|".$options['tag_design']."|".$options['add_fonts']."|".$options['normalize']."|".$options['project_logotip']."|".$options['project_name']."|".$options['geo']."|".$options['kolkey']."|".$options['add_clips']."|".$options['sortable']."|".$options['color_tema_html']."|".$options['color_tema_css']."|".$options['color_tema_js']."|".$options['color_tema_php']."|".$options['tab_obzor']."|".$options['tab_show']."|".$options['shop_text_val1']."|".$options['shop_text_val2']."|".$options['shop_text_itogo']."|".$options['shop_text_oformit']."|".$options['shop_text_korzina']."|".$options['shop_text_delete']."|".$options['shop_pole']."|".$options['shop_admin_mail']."|".$options['shop_text_after_mail']."|".$options['shop_spisok_pole']."|".$options['shop_shablon_form_order']."|".$options['shop_shablon_mail_client']."|".$options['shop_shablon_mail_admin'];
+//if ($options['ed2_button_html'] != 1) $options['ed2_button_html'] = 0;
+//if ($options['ed2_button_bold'] != 1) $options['ed2_button_bold'] = 0;
+
+		$ed2_buttons = $options['ed2_button_html']."|".$options['ed2_button_formatting']."|".$options['ed2_button_bold']."|".$options['ed2_button_italic']."|".$options['ed2_button_deleted']."|".$options['ed2_button_underline']."|".$options['ed2_button_unorderedlist']."|".$options['ed2_button_orderedlist']."|".$options['ed2_button_outdent']."|".$options['ed2_button_indent']."|".$options['ed2_button_image']."|".$options['ed2_button_video']."|".$options['ed2_button_file']."|".$options['ed2_button_table']."|".$options['ed2_button_link']."|".$options['ed2_button_alignment']."|".$options['ed2_button_horizontalrule']."|".$options['ed2_button_more']."|".$options['ed2_button_link2']."|".$options['ed2_button_block']."|".$options['ed2_button_pre']."|".$options['ed2_button_fullscreen']."|".$options['ed2_button_clips']."|".$options['ed2_button_fontcolor']."|".$options['ed2_button_fontsize']."|".$options['ed2_button_fontfamily']."|".$options['ed2_minHeight']."|".$options['ed2_direction'];
+
+		$advanced = $options['jqueryui']."|".$options['show_comments']."|".$options['show_userposts']."|".$options['show_page']."|".$options['show_reserv']."|".$options['uskorenie_blokov']."|".$options['kickstart']."|".$options['show_page_links']."|".$options['ad_fon']."|".$options['search_design']."|".$options['tag_design']."|".$options['add_fonts']."|".$options['normalize']."|".$options['project_logotip']."|".$options['project_name']."|".$options['geo']."|".$options['kolkey']."|".$options['add_clips']."|".$options['sortable']."|".$options['color_tema_html']."|".$options['color_tema_css']."|".$options['color_tema_js']."|".$options['color_tema_php']."|".$options['tab_obzor']."|".$options['tab_show']."|".$options['shop_text_val1']."|".$options['shop_text_val2']."|".$options['shop_text_itogo']."|".$options['shop_text_oformit']."|".$options['shop_text_korzina']."|".$options['shop_text_delete']."|".$options['shop_pole']."|".$options['shop_admin_mail']."|".$options['shop_text_after_mail']."|".$options['shop_spisok_pole']."|".$options['shop_shablon_form_order']."|".$options['shop_shablon_mail_client']."|".$options['shop_shablon_mail_admin']."|".$ed2_buttons;
 		// sitename	startdate	adminmail	keywords	description	counter	statlink	postlink	registr	pogoda	flash	sgatie	stopcopy	nocashe	adminmes	red	comment	captcha_ok	ht_backup
 		$db->sql_query("UPDATE `".$prefix."_config` SET 
 			`sitename` = '".mysql_real_escape_string($options['sitename'])."',
