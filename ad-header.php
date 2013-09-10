@@ -3,38 +3,28 @@ if (stristr(htmlentities($_SERVER['PHP_SELF']), "ad-header.php")) {
 	Header("Location: index.php"); die();
 }
 global $deviceType, $postlink, $name, $sitename, $op, $type, $red, $prefix, $db, $id, $nastroi, $lang_admin;
-$color1=$color2=$color3=$color4="gray"; // Цвета 4х кнопок основных категорий админки (Содержание...)
 if ($postlink != "") $post = "<button class='small' onclick='location.href=\"".$postlink."\"' title='".aa("Открыть почтовый сайт...")."'><span class='icon small black' data-icon='@'></span> ".aa("Почта")."</button> "; else $post="";
+
+// Определяем заголовок страницы (title) и цвета кнопок главного меню (какой раздел администрирования выбран)
+$color1 = $color2 = $color3 = $color4 = "gray"; // Цвета 4х кнопок основных категорий админки (Содержание...)
+$color1 = "black";
 $title = aa("Управление сайтом");
-$color1="black";
-if ($op == "base_pages_add_page") $title = aa("Добавление страницы в раздел");
-if ($op == "edit_base_pages_category") $title = aa("Редактирование папки");
-if ($op == "base_pages_edit_page") $title = aa("Редактирование страницы");
-if ($op == "subscribe") {$title = aa("Рассылка (список адресатов и их email'ов)"); $color1="gray"; $color3="black";}
-if ($op == "Configure") {$title = aa("Настройка сайта и администратора"); $color1="gray"; $color3="black";}
-if ($op == "mainpage" and $id > 0) {$title = aa("Редактирование оформления"); $color1="gray"; $color2="black";}
-if ($op == "mainpage" and $type == 0) {$title = aa("Редактирование дизайна (HTML)"); $color1="gray"; $color2="black";}
-if ($op == "mainpage" and $type == 1) {$title = aa("Редактирование стиля (CSS)"); $color1="gray"; $color2="black";}
-if ($op == "mainpage" and $type == 2) $title = aa("Редактирование раздела");
-if ($op == "mainpage" and $type == 3) {$title = aa("Редактирование блока"); $color1="gray"; $color2="black";}
-if ($op == "mainpage" and $type == 4) {$title = aa("Редактирование поля"); $color1="gray"; $color2="black";}
-if ($op == "mainpage" and $type == 5) {$title = aa("Редактирование базы данных"); $color1="gray"; $color2="black";}
-if ($op == "mainpage" and $type == 6) {$title = aa("Редактирование шаблона"); $color1="gray"; $color2="black";}
-if ($op == "mainpage" and $name == "design") {$title = aa("Добавление дизайна (HTML)"); $color1="gray"; $color2="black";}
-if ($op == "mainpage" and $name == "css") {$title = aa("Добавление стиля (CSS)"); $color1="gray"; $color2="black";}
-if ($op == "mainpage" and $name == "block") {$title = aa("Добавление блока"); $color1="gray"; $color2="black";}
-if ($op == "mainpage" and $name == "spisok") {$title = aa("Добавление поля"); $color1="gray"; $color2="black";}
-if ($op == "mainpage" and $name == "base") {$title = aa("Добавление базы данных"); $color1="gray"; $color2="black";}
-if ($op == "mainpage" and $name == "shablon") {$title = aa("Добавление шаблона"); $color1="gray"; $color2="black";}
-if ($op == "mainpage" and $nastroi == 1) {$title = aa("Настройка элемента сайта"); $color1="gray"; $color3="black";}
-if ($op == "mainpage" and $nastroi == 1 and $type == 3) {$title = aa("Настройка блока"); $color1="gray"; $color3="black";}
-if ($op == "users") {$title = aa("Настройка пользователей"); $color1="gray"; $color3="black";}
-if ($op == "mainpage" and $nastroi == 1 and $type == 2) {$title = aa("Настройка раздела"); $color1="gray"; $color3="black";}
-if ($op == "mainpage" and $type == "element") {$title = aa("Оформление сайта"); $color1="gray"; $color2="black";}
-if ($op == "mainpage" and $type == "stat") {$title = aa("Общая статистика"); $color1="gray"; $color2="gray"; $color4="black";}
-if ($op == "mainpage" and $type == "stat_page") {$title = aa("Статистика посещений страниц"); $color1="gray"; $color2="gray"; $color4="black";}
-if ($op == "mainpage" and $type == "stat_search") {$title = aa("Статистика поисковых запросов"); $color1="gray"; $color2="gray"; $color4="black";}
-// http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js
+$titles_text = array("base_pages_add_page" => aa("Добавление страницы в раздел"),"base_pages_edit_page"  => aa("Редактирование страницы"),"edit_base_pages_category"  => aa("Редактирование папки"),"subscribe" => aa("Рассылка (список адресатов и их email'ов)"),"Configure" => aa("Настройка сайта и администратора"),"users" => aa("Настройка пользователей"),"mainpage" => aa("Редактирование оформления"),"mainpage_0" => aa("Редактирование дизайна (HTML)"),"mainpage_1" => aa("Редактирование стиля (CSS)"),"mainpage_2" => aa("Редактирование раздела"),"mainpage_3" => aa("Редактирование блока"),"mainpage_4" => aa("Редактирование поля"),"mainpage_5" => aa("Редактирование базы данных"),"mainpage_6" => aa("Редактирование шаблона"),"mainpage_design" => aa("Добавление дизайна (HTML)"),"mainpage_css" => aa("Добавление стиля (CSS)"),"mainpage_block" => aa("Добавление блока"),"mainpage_spisok" => aa("Добавление поля"),"mainpage_base" => aa("Добавление базы данных"),"mainpage_shablon" => aa("Добавление шаблона"),"mainpage_nastroi" => aa("Настройка элемента сайта"),"mainpage_nastroi2" => aa("Настройка раздела"),"mainpage_nastroi3" => aa("Настройка блока"),"mainpage_element" => aa("Оформление сайта"),"mainpage_stat" => aa("Общая статистика"),"mainpage_stat_page" => aa("Статистика посещений страниц"),"mainpage_stat_search" => aa("Статистика поисковых запросов") );
+if (isset($titles_text[$op])) $title = $titles_text[$op];
+if ($op == "subscribe" || $op == "Configure" || $op == "users") { $color1 = "gray"; $color3 = "black"; }
+if ($op == "mainpage") {
+	$color1 = "gray"; $color2 = "black";
+	if (isset($type)) $title = $titles_text[$op."_".$type];
+	if ($type == 2) { $color2 = "gray"; $color1 = "black"; }
+	if (isset($name)) $title = $titles_text[$op."_".$name];
+	if ($nastroi == 1) { 
+		$title = $titles_text[$op."_nastroi"]; 
+		$color2 = "gray"; $color3 = "black";
+		if ($type == 3 || $type == 2) $titles_text[$op."_nastroi".$type];
+	}
+	if (strripos($type, "stat") !== false) { $color2 = "gray"; $color4 = "black"; }
+}
+
 header ("Content-Type: text/html; charset=utf-8");
 echo "<!doctype html>
 <html lang='".$lang_admin."' dir='ltr'>
@@ -91,8 +81,8 @@ global $buttons;
 $buttons = explode(",", aa(" Содержание, Оформление, Настройки, Статистика, ПОМОЩЬ, "));
 if ($deviceType != 'computer') $buttons = array('','','','','','');
 echo "<nobr>";
-if ($op == "adminMain") echo "<button class='small' onclick=\"openbox('8','".aa("Помощь")."'); $('#show_razdel').click();\" title='".aa("Открыть справочную информацию")."'><span class='icon small' data-icon='n'></span>".$buttons[4]."</button> ";
-echo "<button class='small' target=_blank onclick='window.open(\"/\")' title='".aa("Перейти на сайт (откроется в новом окне)")."'><span class='icon small' data-icon='4'></span> ".aa("На сайт")."</button> ".$post." <form method=post name=search action='/--search' style='display:inline;' class='nothing'><input type='search' placeholder='".aa("Поиск по сайту")."' name=slovo class=w45></form></nobr></div>
+echo "<button class='small' onclick=\"openbox('8','".aa("Помощь")."'); $('#show_razdel').click();\" title='".aa("Открыть справочную информацию")."'><span class='icon small' data-icon='n'></span>".$buttons[4]."</button> 
+	<button class='small' target=_blank onclick='window.open(\"/\")' title='".aa("Перейти на сайт (откроется в новом окне)")."'><span class='icon small' data-icon='4'></span> ".aa("На сайт")."</button> ".$post." <form method=post name=search action='/--search' style='display:inline;' class='nothing'><input type='search' placeholder='".aa("Поиск по сайту")."' name=slovo class=w45></form></nobr></div>
 <ul class='button-bar'>
 <li class='first ".$color1."'><a title='".aa("Содержание сайта: разделы, папки, страницы и комментарии")."' href='sys.php'><span class='icon gray small' data-icon=','></span>".$buttons[0]."</a></li>
 <li class='".$color2."'><a title='".aa("Дизайн, стиль, блоки и прочие элементы оформления сайта")."' href='sys.php?op=mainpage&amp;type=element'><span class='icon gray small' data-icon='Y'></span>".$buttons[1]."</a></li>

@@ -170,7 +170,7 @@ function GraphicAdmin() {
 	if ($comm_segodnya > 0) $color_comm = " orange"; else $color_comm = "";
 	if ($show_comments == 1) $soderganie_menu .= "<button class='nothing small".$color_comm."' onclick=\"openbox('3','".aa("Комментарии")."'); $('#razdels').hide('slow')\" title='".aa("Комментарии за сегодня/вчера/позавчера")."'><span class=\"icon gray small\" data-icon=\"'\"></span><nobr>".$buttons[5]." ".$comm_segodnya."/".$comm_vchera."/".$comm_pozavchera."</nobr></button>";
 
-	$soderganie_menu .= " <button class='nothing small' onclick=\"openbox('5','".aa("Новое и отредактированное")."'); $('#razdels').hide('slow')\"><span class=\"icon gray small\" data-icon=\"M\"></span>".$buttons[0]."</button>";
+	$soderganie_menu .= " <button class='nothing small' onclick=\"openbox('5','".aa("Новое и отредактированное")."'); $('#razdels').hide('slow')\" title='".aa("Новые и отредактированные страницы, свежие изменения")."'><span class=\"icon gray small\" data-icon=\"M\"></span>".$buttons[0]."</button>";
 	if (!isset($num_add_pages)) $num_add_pages = 0;
 
 	if ($num_add_pages > 0 and $show_userposts != 0) $soderganie_menu .= "<button class='nothing small orange' style='color: red;' onclick=\"openbox('4','".aa("Добавленное посетителями")."'); $('#razdels').hide('slow')\"><span class=\"icon gray small\" data-icon=\"u\"></span><nobr>".$buttons[1]."<strong>".$num_add_pages."</strong></nobr></button>";
@@ -285,7 +285,7 @@ function GraphicAdmin() {
 			// $row2 = $db->sql_fetchrow($result2);
 			$baza_name  = $nam; // $row2['name']; // Название таблицы БД 
 			$type_opisX = "<nobr><span class='f14 radius bb1 pr10 pl10'><span class='green' title='".aa("Записи в базе данных")."'>".$db->sql_numrows($db->sql_query("SELECT `id` FROM ".$prefix."_base_".$nam))."</span></span> 
-			<a class='button small blue ml10' href='sys.php?op=base_base&name=".$nam."' title='".aa("Открыть базу данных")."'><span class='icon white small' data-icon='s'></span></a>
+			<a class='button small ml10' href='sys.php?op=base_base&name=".$nam."' title='".aa("Открыть базу данных")."'><span class='icon small' data-icon='s'></span></a>
 			<a class='button small ml5' href='sys.php?op=base_base_create_base&base=".$baza_name."&name=".$nam."&amp;red=1#1' title='".aa("Добавить строку в базу данных")."'><span class='icon small' data-icon='+'></span></a></nobr>";
 		}
 		if (!strpos($options,"base=")) {

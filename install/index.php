@@ -1,5 +1,5 @@
 <?php
-$ver = '1.15'; // Версия CMS «ДвижОк»
+$ver = '1.15'; // Версия EngineCMS
 header ("Content-Type: text/html; charset=utf-8");
 // Получение списка БД
 if (isset($_REQUEST['db'])) {
@@ -24,7 +24,7 @@ if (isset($_REQUEST['db'])) {
 }
 
 // Проверка наличия файла config.php
-if (file_exists("config.php")) die("<h3>Найдена установленная CMS «ДвижОк»</h3><li>Если вы только что её установили – удалите каталог install в корне сайта на сервере – после этого сайт заработает.<li>Если по какой-то другой причине в корне сайта оказался файл config.php, CMS еще не установлена и вы запустили её установку (или вы решили переустановить CMS) — удалите файл config.php в корне сайта и обновите эту страницу (нажав F5).");
+if (file_exists("config.php")) die("<h3>Найдена установленная EngineCMS</h3><li>Если вы только что её установили – удалите каталог install в корне сайта на сервере – после этого сайт заработает.<li>Если по какой-то другой причине в корне сайта оказался файл config.php, CMS еще не установлена и вы запустили её установку (или вы решили переустановить CMS) — удалите файл config.php в корне сайта и обновите эту страницу (нажав F5).");
 	// <li>Если данный сайт создан ранее — вы можете <a href=#>обновить базу данных</a> до новой версии.
 
 // Запуск установки ====================
@@ -57,7 +57,7 @@ if (isset($_REQUEST['lang'])) {
 	// Создание config.php
 	$conf = '<?php
 ##############################################
-## ДвижОк CMS (Content Management System)   ##
+## EngineCMS (Content Management System)    ##
 ## Распространяется по GNU GPL 3 версии.	##
 ## 2006-2013 © Влад Мерк, г. Самара         ##
 ## 13i@list.ru | http://hotel-s.ru          ##
@@ -264,15 +264,8 @@ if (stristr(htmlentities($_SERVER[\'PHP_SELF\']), "config.php")) { Header("Locat
 		8 – KickStart вертикальное 3 уровня (справа)
 		9 – KickStart горизонтальное 3 уровня (слева) */
 	$db->sql_query("INSERT INTO `".$prefix."_mainpage` VALUES (NULL, '3', '10', 'Главное меню', '".$menu_block."', '|design=0&show_in_razdel=все&no_show_in_razdel=&html=0&titleshow=0&menu=0', 'block-main_menu', '0', 'pages', '0', '', '');");
-/*	
-$db->sql_query("INSERT INTO `".$prefix."_config` VALUES ( '«Такая-сякая», женский портал', '2013', 'takaya63@bk.ru', 'самара,женский портал,', 'Самарский женский портал', '<div style=\"display:none\">
-<!--LiveInternet counter--><script type=\"text/javascript\">document.write(\"<a href=\'http://www.liveinternet.ru/click\' target=_blank><img src=\'//counter.yadro.ru/hit?t26.1;r\" + escape(document.referrer) + ((typeof(screen)==\"undefined\")?\"\":\";s\"+screen.width+\"*\"+screen.height+\"*\"+(screen.colorDepth?screen.colorDepth:screen.pixelDepth)) + \";u\" + escape(document.URL) +\";h\"+escape(document.title.substring(0,80)) + \";\" + Math.random() + \"\' border=0 width=88 height=15 alt=\'\' title=\'LiveInternet: показано число посетителей за сегодня\'><\\/a>\")</script><!--/LiveInternet-->
-</div>', 'http://pda.liveinternet.ru/stat/такая63.рф/', 'http://gmail.com', '0', '0', '0', '||||||||||||||||||||+7 927 652 88 29|||||||||||||||<a href=\"mailto:takaya63@bk.ru\">takaya63@bk.ru</a>||||||||||', '1', '0|1|1|1|1|1|1|1|21|1|1|Bad Script.Lobster.Poiret One|0|/img/takaya_rec.jpg|Такая-сякая|51|8||0|monokai|monokai|monokai|monokai', ' 
-09:29 - 22 апреля', '4', '1', '0', '.ht_backup');");
-*/
 
 	// Добавляем страницы в некоторые разделы
-
 
 	// Добавляем админа
 	$db->sql_query("INSERT INTO `".$prefix."_authors` VALUES ( '".$a."', 'BOG', '".$pass."', '1', '', '0');") or die ('<li>Администратор не был добавлен в базу данных');
@@ -314,7 +307,7 @@ $pass_bd = generate_password(15);
 <!--[if (gte IE 9)|!(IE)]><!--><html lang="ru"> <!--<![endif]-->
 <head>
 	<meta charset="utf-8">
-	<title>Установка CMS «ДвижОк»</title>
+	<title>Установка EngineCMS</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 	<link rel="stylesheet" href="../includes/css-frameworks/skeleton/base.css">
 	<link rel="stylesheet" href="../includes/css-frameworks/skeleton/skeleton.css">
@@ -330,11 +323,11 @@ $pass_bd = generate_password(15);
 </head>
 <body style="background:url('images/adfon/21.png')">
 <form>
-<div class="container" style="background:url('images/fon.png');">
-	<div class="sixteen columns" style="background:url('install/logo.png') no-repeat right 5px; min-height:155px;">
-		<h1 class="remove-bottom" style="margin-top: 40px">Установка CMS «ДвижОк»</h1>
-		<h5>Версия <? echo $ver; ?></h5>
-	</div>
+	<div class="container" style="background:url('images/fon.png');">
+		<div class="sixteen columns" style="background:url('install/logo.png') no-repeat right 5px; min-height:155px;">
+			<h1 class="remove-bottom" style="margin-top: 40px">Установка EngineCMS</h1>
+			<h5>Версия <? echo $ver; ?></h5>
+		</div>
 		<div class="one-third column">
 			<h3>1. База данных</h3>
 			<ul class="square">
@@ -439,8 +432,7 @@ $pass_bd = generate_password(15);
 			if (!extension_loaded('imagick') || !class_exists("Imagick")) echo "<p style='color:red;'>Библиотека Imagick не установлена – вам придется самостоятельно уменьшать размер больших фотографий (полученных фотоаппаратом) перед вставкой в редактор. Советуем перейти на другой хостинг с поддержкой этой библиотеки или договориться с текущим хостингом о её подключении.";
 			?>
 		</div>
-
-</div>
+	</div>
 </form>
 </body>
 </html>
