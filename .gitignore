@@ -1,3 +1,5 @@
 backup/
+cashe/
 config.php
+includes/phpThumb/cache/
 img/

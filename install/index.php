@@ -299,6 +299,53 @@ function generate_password($number) {  // Генерируем пароль
 }
 $pass = generate_password(20);
 $pass_bd = generate_password(15);
+
+// Azərbaycan (inkişaf)
+$languages = array("Albanian"=>"sq",
+"Arabic"=>"ar",
+"Argentinian Spanish"=>"es_ar",
+"Azərbaycan"=>"az",
+"Belorussian"=>"by",
+"Bosnian"=>"ba",
+"Brazilian Portuguese"=>"pt_br",
+"Bulgarian"=>"bg",
+"Catalan"=>"ca",
+"Chinese Simplified"=>"zh_cn",
+"Chinese Traditional"=>"zh_tw",
+"Croatian"=>"hr",
+"Czech"=>"cs",
+"Danish"=>"da",
+"Dutch"=>"nl",
+"Esperanto"=>"eo",
+"Finnish"=>"fi",
+"French"=>"fr",
+"German"=>"de",
+"Greek"=>"el",
+"Hungarian"=>"hu",
+"Hebrew"=>"he",
+"Indonesian"=>"id",
+"Italian"=>"it",
+"Japanese"=>"ja",
+"Korean"=>"ko",
+"Latvian"=>"lv",
+"Lithuanian"=>"lt",
+"Macedonian"=>"mk",
+"Norwegian (Bokmål)"=>"no_NB",
+"Persian"=>"fa",
+"Polish"=>"pl",
+"Portuguese"=>"pt_pt",
+"Romanian"=>"ro",
+"Русский"=>"ru",
+"Serbian (Cyrillic)"=>"sr-cir",
+"Serbian (Latin)"=>"sr-lat",
+"Slovak"=>"sk",
+"Slovenian"=>"sl",
+"Spanish"=>"es",
+"Swedish"=>"sv",
+"Thai"=>"th",
+"Turkish"=>"tr",
+"Ukrainian"=>"ua",
+"Vietnamese"=>"vi");
 ?>
 <!DOCTYPE html>
 <!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
@@ -366,14 +413,12 @@ $pass_bd = generate_password(15);
 		</script>
 				<li><strong>Адрес сайта</strong>:<br><input name="siteurl" value="<? echo $siteurl; ?>"></li>
 				<li><strong>Язык сайта</strong>:<br><select name="lang">
-					<option value="ru">Русский</option>
+					<option value="ru" selected>Русский</option>
 					<option value="en" disabled>English (in development)</option>
-					<option value="az" disabled>Azərbaycan (inkişaf)</option>
 				</select></li>
 				<li><strong>Язык администрирования</strong>:<br><select name="lang_admin">
-					<option value="ru">Русский</option>
+					<option value="ru" selected>Русский</option>
 					<option value="en" disabled>English (in development)</option>
-					<option value="az" disabled>Azərbaycan (inkişaf)</option>
 				</select></li>
 				<li><strong>Псевдоним администратора</strong>:<br><input name="a" value="admin"></li>
 				<li><strong>Email администратора сайта</strong>:<br><input name="email" id="mail" value=""><span id="valid"></span></li>

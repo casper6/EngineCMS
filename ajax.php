@@ -235,7 +235,7 @@ if ($func == "savegolos") { // Сохраняем голосование
 	list($name, $gol) = explode("*@%", $string);
 		$type = intval($type);
 		$ip = getenv("REMOTE_ADDR"); // IP
-		if ($gol == 6 and is_admin($admin)) {
+		if ($gol == 6 and is_admin($admin)) { // Доделать
 			$db->sql_query("UPDATE ".$prefix."_pages SET golos='0' WHERE pid='$id';");
 			$db->sql_query("DELETE from ".$prefix."_pages_golos WHERE num='$id';");
 			$info = $udaleny;
@@ -250,51 +250,49 @@ if ($func == "savegolos") { // Сохраняем голосование
 		if ($type == 1) $gol = 1;
 		if ($type == 2 or $type == 3) if ($gol != 1) $gol = -1;
 		if ($type != 0) {
-				$sql = "SELECT golos FROM ".$prefix."_pages where pid='$id'";
-				$row2 = $db->sql_fetchrow($db->sql_query($sql));
-				$resnum = $db->sql_query($sql);
-				$numrows = $db->sql_numrows($resnum);
-					if (($numrows > 0 and $tmp == $golos_id) or $id==0) {
-						$info = $golosovali;
-					} else {
-						$golos = $row2['golos'] + $gol;
-						$db->sql_query("UPDATE ".$prefix."_pages SET golos='".$golos."' WHERE pid='$id';");
-						$db->sql_query("INSERT INTO ".$prefix."_pages_golos (`gid`, `ip`, `golos`, `num`, `data`) VALUES ('', '$ip', '$gol', '$id', '$dat')");
-						setcookie ($golos_id, $golos_id,time()+2678400,"/");
-					}
+			$sql = "SELECT golos FROM ".$prefix."_pages where pid='$id'";
+			$row2 = $db->sql_fetchrow($db->sql_query($sql));
+			$resnum = $db->sql_query($sql);
+			$numrows = $db->sql_numrows($resnum);
+			if (($numrows > 0 and $tmp == $golos_id) or $id==0) {
+				$info = $golosovali;
+			} else {
+				$golos = $row2['golos'] + $gol;
+				$db->sql_query("UPDATE ".$prefix."_pages SET golos='".$golos."' WHERE pid='$id';");
+				$db->sql_query("INSERT INTO ".$prefix."_pages_golos (`gid`, `ip`, `golos`, `num`, `data`) VALUES ('', '$ip', '$gol', '$id', '$dat')");
+				setcookie ($golos_id, $golos_id,time()+2678400,"/");
+			}
 		} else {
-					$sql = "SELECT data FROM ".$prefix."_pages_golos WHERE ip='$ip' AND num='$id'";
-					$resnum = $db->sql_query($sql);
-					$row = $db->sql_fetchrow($result);
-					$date = $row['data'];
-					$date2 = dateresize($date);
-					$date = dateresize($dat);
-					$numrows = $db->sql_numrows($resnum);
-					if ($numrows > 0 or $tmp==$golos_id or $id==0) {
-						$info = $golosovali;
-					} else {
-						$db->sql_query("INSERT INTO ".$prefix."_pages_golos (`gid`, `ip`, `golos`, `num`, `data`) VALUES ('', '$ip', '$gol', '$id', '$dat')");
-						setcookie ($golos_id, $golos_id,time()+2678400,"/");
-					}
+			$sql = "SELECT data FROM ".$prefix."_pages_golos WHERE ip='$ip' AND num='$id'";
+			$resnum = $db->sql_query($sql);
+			$row = $db->sql_fetchrow($result);
+			$date = $row['data'];
+			$date2 = dateresize($date);
+			$date = dateresize($dat);
+			$numrows = $db->sql_numrows($resnum);
+			if ($numrows > 0 or $tmp==$golos_id or $id==0) {
+				$info = $golosovali;
+			} else {
+				$db->sql_query("INSERT INTO ".$prefix."_pages_golos (`gid`, `ip`, `golos`, `num`, `data`) VALUES ('', '$ip', '$gol', '$id', '$dat')");
+				setcookie ($golos_id, $golos_id,time()+2678400,"/");
+			}
 		}
 		$sqlX = "SELECT module from ".$prefix."_pages where pid = '$id'";
 		$resultX = $db->sql_query($sqlX);
 		$rowX = $db->sql_fetchrow($resultX);
 		$mod = $rowX['module'];
 		recash("/-".$mod."_page_".$id); // Обновление кеша
+		/*
 		if ($type != 0) {
 			$sql2 = "SELECT golos FROM ".$prefix."_pages where pid='$id'";
 			$result2 = $db->sql_query($sql2);
 			$row2 = $db->sql_fetchrow($result2);
 			$golos = $row2['golos'];
 		}
-		if ($type == 1) 
-			$info .= $spasibo;
-		if ($type == 2 or $type == 3) {
+		if ($type == 2 || $type == 3) {
 			$sql23 = "SELECT golos FROM ".$prefix."_pages_golos WHERE num='$id'";
 			$result23 = $db->sql_query($sql23);
 			$numrows23 = $db->sql_numrows($result23);
-			$info .= $spasibo;
 		}
 		if ($type == 0) {
 			$sql2 = "SELECT golos FROM ".$prefix."_pages_golos WHERE num='$id'";
@@ -309,8 +307,9 @@ if ($func == "savegolos") { // Сохраняем голосование
 			$sersv2 = number_format($proc,2)/10;
 			$sersv1 = number_format($sersv2,2);
 			$sersv = 90*$sersv/100;
-			$info .= $spasibo;
 		}
+		*/
+		if ($info != $golosovali) $info .= $spasibo;
 	echo $info; exit();
 }
 ?>

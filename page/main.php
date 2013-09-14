@@ -669,9 +669,7 @@ function showcat($cid=0, $pag=0, $slovo="") {
           if ($p_comm>0) $all_page_comments = " <div class='cat_page_comments'><nobr><a title='".ss("раскрыть")." ".$comments_1."' href='/-".$DBName."_page_".$p_pid."_comm#comm'><img width='16' src='/images/sys/028.png' align='bottom' title='".$comments_1.":' style='padding-right:5px;'><b>".$p_comm."</b></a></nobr></div>";
           else $all_page_comments = "";
         } ////////////////////////////////////////////////////////
-  //} else { // Если используются внешние шаблоны, созданные в CMS
-  //}
-      
+  
       $pagelink = "/-".$DBName."_page_".$p_pid;
       $pagelinktitle = "<A href='".$pagelink."'><h1 class='cat_page_title'>".$title."</h1></A>";
       if (strlen($text) < 10 and $comments != 1) {
@@ -681,39 +679,8 @@ function showcat($cid=0, $pag=0, $slovo="") {
 
     $golosraz = "";
     if ($golosrazdel != 0) {
-      $golos_id = $prefix.'golos'.$p_pid;
-      
-      if (isset($golos_id) and isset($GLOBALS[$golos_id])) $tmp = $GLOBALS[$golos_id]; else $tmp = "";
-      
-      global $pages_golos, $pages_golos_num;
-      if (!isset($pages_golos_num[$p_pid])) $pages_golos_num[$p_pid] = 0;
-      if ($golostype == 0) {
-        if (!isset($pages_golos[$p_pid])) $pages_golos[$p_pid] = 0;
-        if (isset($pages_golos_num[$p_pid]) and $pages_golos[$p_pid] != 0) $proc = $pages_golos[$p_pid] / $pages_golos_num[$p_pid] * 10;
-        else {$pages_golos_num[$p_pid] = 0; $proc = 1;}
-        $sersv = $proc*2;
-        $sersv2 = number_format($proc,2)/10;
-        $sersv1 = number_format($sersv2,2)." ".ss("из")." 5";
-        if ($sersv1 == "0.10 из 5") $sersv1 = ss("Никто не голосовал");
-        else $sersv1 .= "</b> <img src=\"/images/sys/007.png\" width=16 style='margin-right:3px;' title='".ss("Голосовали:")."' /><b>".$pages_golos_num[$p_pid];
-        $sersv = 90*$sersv/100;
-      }
-      $gol = "<div id=golos".$p_pid." class='golosa'>";
-    
-      if ($golostype == 0) 
-        $gol .= "<table border=0 width=100% cellspacing=0 cellpadding=0><tr valign=top><td width=90 style=\"background:url(/images/zvezda_hide.gif) #FF6600 ".$sersv."px repeat-y; width:90px;\"><a onclick=\"page_golos(".$p_pid.",'".$DBName."',1,".$golostype.")\" title='+1' style='cursor:pointer;'><img src=\"/images/zvezda_golos.gif\" width=18 /></a><a onclick=\"page_golos(".$p_pid.",'".$DBName."',2,".$golostype.")\" title='+2' style='cursor:pointer;'><img src=\"/images/zvezda_golos.gif\" width=18 /></a><a onclick=\"page_golos(".$p_pid.",'".$DBName."',3,".$golostype.")\" title='+3' style='cursor:pointer;'><img src=\"/images/zvezda_golos.gif\" width=18 /></a><a onclick=\"page_golos(".$p_pid.",'".$DBName."',4,".$golostype.")\" title='+4' style='cursor:pointer;'><img src=\"/images/zvezda_golos.gif\" width=18 /></a><a onclick=\"page_golos(".$p_pid.",'".$DBName."',5,".$golostype.")\" title='+5' style='cursor:pointer;'><img src=\"/images/zvezda_golos.gif\" width=18 /></a></td><td width=3></td><td><img src=\"/images/sys/082.png\" width=16 style='margin-right:3px;' title='".ss("Оценка:")."' /><b>".$sersv1."</b></td></tr></table>";
-    
-      if ($golostype == 1) 
-        $gol .= "<a onclick=\"page_golos(".$p_pid.",'".$DBName."',1,".$golostype.")\" title='".ss("Проголосовать")."' style='cursor:pointer;'><img src=\"/images/sys/102.png\" width=16 style='margin-right:3px;' /><u>".ss("Проголосовать")."</u></a> <img src=\"/images/sys/082.png\" width=16 style='margin-right:3px;' title='".ss("Голоса:")."' /><b>".$golos."</b></nobr>";
-
-      if ($golostype == 2) 
-        $gol .= "<a onclick=\"page_golos(".$p_pid.",'".$DBName."',1,".$golostype.")\" title='+1' style='cursor:pointer;'><img src=\"/images/sys/add_2.png\" width=16 style='margin-right:3px;' /></a> <a onclick=\"page_golos(".$p_pid.",'".$DBName."',0,".$golostype.")\" title='-1' style='cursor:pointer;'><img src=\"/images/sys/minus.png\" width=16 style='margin-right:3px;' /></a> <img src=\"/images/sys/082.png\" width=16 style='margin-right:3px;' title='".ss("Рейтинг:")."' /><b>".$golos."</b> <img src=\"/images/sys/007.png\" width=16 style='margin-right:3px;' title='".ss("Голосовали:")."' /><b>".$pages_golos_num[$p_pid]."</b>"; // 
-
-      if ($golostype == 3) 
-        $gol .= "<a onclick=\"page_golos(".$p_pid.",'".$DBName."',1,".$golostype.")\" title='".ss("Мне понравилось")."' style='cursor:pointer; margin-right:10px;'><img src=\"/images/icon_yes.png\" width=16 style='margin-right:3px;' /></a> <a onclick=\"page_golos(".$p_pid.",'".$DBName."',0,".$golostype.")\" title='".ss("Мне не понравилось")."' style='cursor:pointer;'><img src=\"/images/icon_no.png\" width=16 style='margin-right:10px;' /></a> <img src=\"/images/sys/082.png\" width=16 style='margin-right:3px;' title='".ss("Рейтинг:")."' /><b>".$golos."</b> <img src=\"/images/sys/007.png\" width=16 style='margin-right:3px;' title='".ss("Голосовали:")."' /><b>".$pages_golos_num[$p_pid]."</b>"; // 
-    
-      $gol .= "</div>";
-      $golosraz = $gol;
+      require_once ("golos.php");
+      $golosraz = golos_show($p_pid, $golostype, $golos); // (страница, тип рейтинга, кол-во рейтинга для типов 1, 2 и 3)
     }
     
     $page_tags = "";
@@ -1241,41 +1208,8 @@ function page($pid, $all) {
 
   // Рейтинг #######################################
   if ($golos==1 and $view!=4) {
-    // !!! УБРАНО gol - позволяет запрещать голосование для отдельных страниц, выставив значение в 0!
-    $sql2 = "SELECT `golos` FROM ".$prefix."_pages_golos WHERE `num`='".$pid."'";
-    $result2 = $db->sql_query($sql2);
-    $numrows23 = $db->sql_numrows($result2);
-    $golos_id = $prefix.'golos'.$pid;
-    if (isset($golos_id) and isset($GLOBALS[$golos_id])) $tmp = $GLOBALS[$golos_id];
-    else $tmp = "";
-    $golo = array();
-    while($row2 = $db->sql_fetchrow($result2)) {
-      $golo[] = $row2['golos'];
-    }
-    if ($numrows23 == 0) $proc = 0;
-    else $proc = array_sum($golo)/$numrows23*10;
-    $sersv = $proc*2;
-    $sersv2 = number_format($proc,2)/10;
-    $sersv1 = number_format($sersv2,2);
-    $sersv = 90 * $sersv / 100;
-    $golo = "";
-    $golo .= "<div id=golos".$pid." class='golosa'>";
-
-    if ($golostype == 0) 
-    $golo .= "<table border=0 width=100% cellspacing=0 cellpadding=0><tr valign=top><td width=100><table border=0 width=90 cellspacing=0 cellpadding=0><tr valign=top><td><div style=\"background:url(/images/zvezda_hide.gif) #FF6600 ".$sersv."px repeat-y; width:90px; height:16px; margin:0; padding:0;\"><a onclick=\"page_golos(".$pid.",'".$DBName."',1,".$golostype.")\" title='+1' style='cursor:pointer;'><img src=\"/images/zvezda_golos.gif\" width=18 /></a><a onclick=\"page_golos(".$pid.",'".$DBName."',2,".$golostype.")\" title='+2' style='cursor:pointer;'><img src=\"/images/zvezda_golos.gif\" width=18 /></a><a onclick=\"page_golos(".$pid.",'".$DBName."',3,".$golostype.")\" title='+3' style='cursor:pointer;'><img src=\"/images/zvezda_golos.gif\" width=18 /></a><a onclick=\"page_golos(".$pid.",'".$DBName."',4,".$golostype.")\" title='+4' style='cursor:pointer;'><img src=\"/images/zvezda_golos.gif\" width=18 /></a><a onclick=\"page_golos(".$pid.",'".$DBName."',5,".$golostype.")\" title='+5' style='cursor:pointer;'><img src=\"/images/zvezda_golos.gif\" width=18 /></a></div></td></tr></table></td><td><img src=\"/images/sys/082.png\" width=16 style='margin-right:3px;' title='".ss("Оценка:")."' /><b>".$sersv1." из 5</b> <img src=\"/images/sys/007.png\" width=16 style='margin-right:3px;' title='".ss("Голосовали:")."' /><b>".$numrows23."</b></td></tr></table>";
-
-    if ($golostype == 1) 
-    $golo .= "<a onclick=\"page_golos(".$pid.",'".$DBName."',1,".$golostype.")\" title='".ss("Проголосовать")."' style='cursor:pointer;'><img src=\"/images/sys/102.png\" width=16 style='margin-right:3px;' /><u>".ss("Проголосовать")."</u></a> <img src=\"/images/sys/082.png\" width=16 style='margin-right:3px;' title='".ss("Голоса:")."' /><b>".$gol."</b></nobr>";
-
-    if ($golostype == 2) 
-    $golo .= "<a onclick=\"page_golos(".$pid.",'".$DBName."',1,".$golostype.")\" title='+1' style='cursor:pointer;'><img src=\"/images/sys/add_2.png\" width=16 style='margin-right:5px;' /></a> <a onclick=\"page_golos(".$pid.",'".$DBName."',0,".$golostype.")\" title='-1' style='cursor:pointer;'><img src=\"/images/sys/minus.png\" width=16 style='margin-right:3px;' /></a> <img src=\"/images/sys/082.png\" width=16 style='margin-right:5px;' title='".ss("Рейтинг:")."' /><b>".$gol."</b> <img src=\"/images/sys/007.png\" width=16 style='margin-right:3px;' title='".ss("Голосовали:")."' /><b>".$numrows23."</b>"; // 
-
-    if ($golostype == 3) 
-    $golo .= "<a onclick=\"page_golos(".$pid.",'".$DBName."',1,".$golostype.")\" title='".ss("Мне понравилось")."' style='cursor:pointer; margin-right:10px;'><img src=\"/images/icon_yes.png\" width=16 style='margin-right:3px;' /></a> <a onclick=\"page_golos(".$pid.",'".$DBName."',0,".$golostype.")\" title='".ss("Мне не понравилось")."' style='cursor:pointer;'><img src=\"/images/icon_no.png\" width=16 style='margin-right:10px;' /></a> <img src=\"/images/sys/082.png\" width=16 style='margin-right:3px;' title='".ss("Рейтинг:")."' /><b>".$gol."</b> <img src=\"/images/sys/007.png\" width=16 style='margin-right:3px;' title='".ss("Голосовали:")."' /><b>".$numrows23."</b>"; // 
-
-    $golo .= "</div><div class=venzel></div>";
-
-    $page_reiting = $golo;
+    require_once ("golos.php");
+    $page_reiting = golos_show($pid, $golostype, $gol); // (страница, тип рейтинга, кол-во рейтинга для типов 1, 2 и 3)
   } else $page_reiting = ""; // END OF Рейтинг #######################################
 
   global $comments;
