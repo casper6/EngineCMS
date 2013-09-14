@@ -329,7 +329,7 @@ function GraphicAdmin() {
 	if (!empty($project_name)) echo "<br><font style='font-size:44px; color:gray;'>".$project_name."</font>";
 	echo "</div>
 	<form action='".$admin_file.".php?op=mes' method='post' name=form class='nothing' class=w100>
-		<div class='black_grad' style='height:242px;'>
+		<div class='black_grad' style='height:242px; border: #ddd 1px solid;'>
 		<button class='small punkt' type=submit style='float:left; margin:3px;'><span class=\"icon gray small\" data-icon=\"c\"></span> ".aa("Сохранить")."</button><span class='h3'>".$mes_ok."</span>
 		<a style='float:right; margin:3px;' onclick=\"document.getElementById('adminmes').value+='\\r'+getDateNow()+'  '\" title='".aa("Вставить дату и время (в конце текста)")."' class='button small punkt ml20'><span class=\"icon gray small\" data-icon=\"6\"></span>".$buttons[6]."</a>
 		<textarea id=adminmes name=adminmes rows=3 cols=40 style='width:99%' class=' f14 yellow_grad h200'>".$adminmes."</textarea>

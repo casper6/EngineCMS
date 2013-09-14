@@ -65,8 +65,11 @@
   global $url_link;
   // Определение страницы для кеша без лишних параметров
   $url_link = "";
-  if (!isset($go) && isset($name) && !isset($op)) $url_link = "-".$name;
-  else {
+  if (!isset($go)) {
+    if (isset($name) && !isset($op)) $url_link = "-".$name;
+    //$go = "";
+    $url_link = "-index";
+  } else {
     if ($go == 'addbase') $url_link = "-".$name."_addbase_".$spa;
     if ($go == 'showdate') $url_link = "-".$name."_date_".$showdate;
     if ($go == 'showcat') {
@@ -83,31 +86,32 @@
       //if (isset($pid) && isset($comm)) $url_link = "-".$name."_page_".$pid."_comm";
     }
   }
+
   $pid = mysql_real_escape_string(intval($pid));
-  if ($pid > 0) if (!is_admin($admin)) { // Простой счетчик посещаемости страниц
-    $db->sql_query("UPDATE ".$prefix."_pages SET `counter`=counter+1 WHERE `pid`='".$pid."'");
-    recash($url_link);
-  }
-##########################################################################################
-  // Отдаем страницу из кеша
-  // Сколько дней хранить кеш
-  if ($pid > 0) $cashe_day = 30;  // если это страница
-  else $cashe_day = 1; // если это главная страница, разделы и папки
-
   $numrows = 0;
-  // если кеш на базе
-	if ($site_cash == "base" and $num_post == 0) {
-    $sql = "SELECT `text`, `data` FROM ".$prefix."_cash where `url`='".mysql_real_escape_string($url_link)."' limit 1";
-    $result = $db->sql_query($sql);
-    $numrows = $db->sql_numrows($result);
-  }
-	// если кеш на файлах
-	if ($site_cash == "file" and $num_post == 0) {
-  	if ($url_link == '/' or $url_link == '') $url_link = "-index";
-    if (file_exists("cashe/".$url_link) && $url_link != "-index") $numrows = 1;
-  }
+  if (!is_admin($admin)) { 
+##########################################################################################
+    // Отдаем страницу из кеша
+    // Сколько дней хранить кеш
+    if ($pid > 0) {
+      $cashe_day = 30;  // если это страница
+      $db->sql_query("UPDATE ".$prefix."_pages SET `counter`=counter+1 WHERE `pid`='".$pid."'"); // Простой счетчик посещаемости страниц
+      recash($url_link);
+    } else $cashe_day = 1; // если это главная страница, разделы и папки
 
-  if ($numrows > 0 and $url_link != "") {
+    // если кеш на базе
+  	if ($site_cash == "base" and $num_post == 0) {
+      $sql = "SELECT `text`, `data` FROM ".$prefix."_cash where `url`='".mysql_real_escape_string($url_link)."' limit 1";
+      $result = $db->sql_query($sql);
+      $numrows = $db->sql_numrows($result);
+    }
+  	// если кеш на файлах
+  	if ($site_cash == "file" and $num_post == 0) {
+    	if ($url_link == '/' or $url_link == '') $url_link = "-index";
+      if (file_exists("cashe/".$url_link) && $url_link != "-index") $numrows = 1;
+    }
+  }
+  if ($numrows > 0 && $url_link != "" && !is_admin($admin)) {
     // Ставим страницу из кеша
 	  // если кеш на базе
 		if ( $site_cash == "base") {

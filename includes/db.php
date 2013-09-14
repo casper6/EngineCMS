@@ -5,9 +5,7 @@ if (stristr($_SERVER['PHP_SELF'], "db.php")) {
 }
 if(!defined("SQL_LAYER")) {
 define("SQL_LAYER","mysql");
-global $display_errors;
 class sql_db {
-	//global $display_errors;
 	var $db_connect_id;
 	var $query_result;
 	var $row = array();
@@ -46,7 +44,7 @@ class sql_db {
 	// Основной метод запроса
 	function sql_query($query = "", $transaction = FALSE) {
 		// Удаляем ранее вызванные запросы
-		//global $display_errors;
+		global $display_errors;
 		unset($this->query_result);
 		if($query != "") {
 			$this->query_result = @mysql_query($query, $this->db_connect_id);

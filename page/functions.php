@@ -536,14 +536,6 @@ function block_names() { // Функция для получения назва�
   return $blocks;
 }
 ///////////////////////////////////////////////////////////////
-/*
-function upload_foto_file($text){ // доработать
-  return "<br><a onclick=\"show('upload_file'); hide('upload_foto');\" style='cursor:pointer;'><u>Загрузка фото или других файлов</u></a><br><div id='upload_file' style='display:none;'><div class=block2>
-  <form action='http://www.onlinedisk.ru/upload/' method='POST' enctype='multipart/form-data' id='upload_file' target=_blank><b>Выберите файл:</b><br><input name=\"file\" type=\"file\" size=50><input type=\"submit\" value=\"Загрузить\"><input type=hidden name=MAX_FILE_SIZE value=30000> 
-  </form><b>На открывшейся странице</b> скопируйте текст в поле под словом «Для форумов» и вставьте ниже ".$text.".</div></div><br><br>";
-}
-*/
-///////////////////////////////////////////////////////////////
 function recash($url, $main=1) { // Обновление кеша
   global $db, $prefix, $site_cash;
   $u = explode("_page_",$url);
@@ -567,7 +559,7 @@ function recash($url, $main=1) { // Обновление кеша
         }
       }
     }
-    if (file_exists("cashe/".$url)) unlink("cashe/".$url);
+    if (file_exists("cashe/".$url) && $url != "/") unlink("cashe/".$url);
   }
 }
 ///////////////////////////////////////////////////////////////

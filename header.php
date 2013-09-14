@@ -967,7 +967,7 @@ case "9": # Блок мини-фото - экстрактор предописа
 	$type = ""; break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 case "10": # Блок меню
-	global $siteurl, $url;
+	global $siteurl, $url, $re_menu, $class;
 		$url1 = $url;
 		if ($url1 == "") $url1 = "/";
 		$url1 = str_replace("http://".$siteurl,"",$url1);
@@ -976,6 +976,62 @@ case "10": # Блок меню
 		$url3 = str_replace("/","",$url1);
 		$url2 = explode("_",$url1);
 		$url2 = $url2[0];
+	if ($re_menu != "1" && $re_menu != "0") {
+		// Создаем меню из папок выбранного в настройках меню раздела
+		// Определяем отношение подпапок к папкам
+		$sql = "SELECT cid, title, parent_id from ".$prefix."_pages_categories where module='$re_menu' and `tables`='pages' order by cid";
+		$result = $db->sql_query($sql);
+		$papki = $title = $par = array();
+		while ($row = $db->sql_fetchrow($result)) {
+			$id = $row['cid'];
+			$title[$id] = $row['title'];
+			$par[$id] = $row['parent_id'];
+		}
+		$lvl_open = "<ul>";
+		$lvl_close = "</ul>";
+		$el_open = "<li>";
+		$el_close = "</li>";
+		$url_open = '<a class="li1menu_link" href="';
+		$url_close1 = '">';
+		$url_close2 = "</a>";
+		if ($menu == "1") {
+			$el_open = "<td align=center>";
+			$el_close = "</td>";
+			$url_open = '<a class="table1menu_link" href="';
+			$url_close1 = '"><div class="li2menu_div">';
+			$url_close2 = "</div></a>";
+		} elseif ($menu == "2") {
+			$lvl_open = '<ul class="ul_tree">';
+			$url_open = '<a class="li2menu_link" href="';
+		}
+		$textXX = "";
+		foreach ($title as $id => $nam) {
+			if ($par[$id]==0) { // папка, содержащая подпапки
+				$textXX .= $el_open.$url_open.'-'.$re_menu.'_cat_'.$id.$url_close1.$nam.$url_close2;
+				if (in_array($id, $par) && $menu!="1" && $menu!="3" && $menu!="5") {
+					$textXX .= $lvl_open;
+					foreach ($title as $id2 => $nam2) {
+						if ($par[$id2]==$id) { // папка, содержащая подпапки
+							$textXX .= $el_open.$url_open.'-'.$re_menu.'_cat_'.$id2.$url_close1.$nam2.$url_close2;
+							if (in_array($id2, $par) && $menu!="2") {
+								$textXX .= $lvl_open;
+								foreach ($title as $id3 => $nam3) {
+									if ($par[$id3]==$id2) { // подпапка
+										$textXX .= $el_open.$url_open.'-'.$re_menu.'_cat_'.$id3.$url_close1.$nam3.$url_close2.$el_close;
+									}
+								}
+								$textXX .= $lvl_close;
+							}
+							$textXX .= $el_close;
+						}
+					}
+					$textXX .= $lvl_close;
+				}
+				$textXX .= $el_close;
+			}
+		}
+	} else {
+		// Добавить поиск и замену блоков в меню
 		$tr = array("[b]"=>"<b>","[B]"=>"<b>","[/b]"=>"</b>","[/B]"=>"</b>","[i]"=>"<i>","[I]"=>"<i>","[/i]"=>"</i>","[/I]"=>"</i>","http://".$siteurl=>"");
 		$textX = strtr($textX,$tr);
 		$tr = array("[уровень открыть]"=>"<ul>","[уровень закрыть]"=>"</ul>","[элемент открыть]"=>"<li>","[элемент закрыть]"=>"</li>","[/url]"=>"</a>","[url="=>"<a class='li1menu_link' href=","[/URL]"=>"</a>","[URL="=>"<a class='li1menu_link' href=","]"=>">");
@@ -991,7 +1047,7 @@ case "10": # Блок меню
 			$textXX = str_replace("<li><a class='li1menu_link mainmenu_open' href=".$url3.">", "<li class='li_mainmenu_open'><a class='li1menu_link mainmenu_open' href=".$url3.">", $textXX);
 
 			$textXX = str_replace("mainmenu_open mainmenu_open", "mainmenu_open", $textXX);
-
+	}
 			//if ($menu == 7 or $menu == 8 or $menu == 9) $textXX = str_replace("<li class='li_mainmenu_open'><a class='li1menu_link mainmenu_open' href", "<li class='current'><a href", $textXX);
 		//} else {
 			if ($menu == 7 or $menu == 8 or $menu == 9) $textXX = str_replace("<li class='li_mainmenu_open'><a class='li1menu_link mainmenu_open' href='/'>", "<li class='current'><a href='/'>", $textXX);
@@ -1009,26 +1065,32 @@ case "10": # Блок меню
 		case "3": // гор влево 1 уровень
 			$class_menu = "menu-h"; break;
 		case "1": // Таблица гор выравнивание по всей таблице 1 уровень
-			$tr = array( // без 3 уровней!
-			"[элемент открыть]"=>"<td align=center>","[элемент закрыть]"=>"</td>",
-			"[/url]"=>"</div></a>","[url="=>"<a class='table1menu_link' href=\"",
-			"[/URL]"=>"</div></a>","[URL="=>"<a class='table1menu_link' href=\"","]"=>"\"><div class=li2menu_div>"
-			);
-			$textXX = strtr($textX,$tr);
-			$textXX = "<table class='table1menu' width=100% cellspacing=0 cellpadding=0><tr valign=bottom>".$textXX."</tr></table>";
+			if ($re_menu == "1" || $re_menu == "0") {
+				$tr = array( // без 3 уровней!
+				"[элемент открыть]"=>"<td align=center>","[элемент закрыть]"=>"</td>",
+				"[/url]"=>"</div></a>","[url="=>"<a class='table1menu_link' href=\"",
+				"[/URL]"=>"</div></a>","[URL="=>"<a class='table1menu_link' href=\"","]"=>"\"><div class=li2menu_div>"
+				);
+				$textXX = strtr($textX,$tr);
+			}
 			$textXX = str_replace("' href=\"".$url1."\">", " mainmenu_open' href=\"".$url1."\" >", $textXX);
 			$textXX = str_replace("' href=\"".$url2."\">", " mainmenu_open' href=\"".$url2."\" >", $textXX);
 			$textXX = str_replace("' href=\"".$url3."\">", " mainmenu_open' href=\"".$url3."\" >", $textXX);
+			if ($class != "") $class_menu = $class; else $class_menu = "table1menu";
+			$textXX = "<table class='".$class_menu."' width=100% cellspacing=0 cellpadding=0><tr valign=bottom>".$textXX."</tr></table>";
 		break;
 		case "2": // вертикальное 2 уровня
-			$tr = array( // без 3 уровней!
-			"[уровень открыть]"=>"<ul class=ul_tree>","[уровень закрыть]"=>"</ul>","[элемент открыть]"=>"<li>","[элемент закрыть]"=>"</li>", "[/url]"=>"</a>","[url="=>"<a class=li2menu_link href=\"","[/URL]"=>"</a>","[URL="=>"<a class=li2menu_link href=\"","]"=>"\">"
-			);
-			$textXX = strtr($textX,$tr);
-			$textXX = "<div class=suckerdiv><ul id=suckertree1>".$textXX."</ul></div>";
+			if ($re_menu == "1" || $re_menu == "0") {
+				$tr = array( // без 3 уровней!
+				"[уровень открыть]"=>"<ul class=ul_tree>","[уровень закрыть]"=>"</ul>","[элемент открыть]"=>"<li>","[элемент закрыть]"=>"</li>", "[/url]"=>"</a>","[url="=>"<a class=li2menu_link href=\"","[/URL]"=>"</a>","[URL="=>"<a class=li2menu_link href=\"","]"=>"\">"
+				);
+				$textXX = strtr($textX,$tr);
+			}
 			$textXX = str_replace("<li><a class=li2menu_link href=\"".$url1."\">", "<li class=li_openlink><a class=li2menu_openlink href=\"".$url1."\">", $textXX);
 			$textXX = str_replace("<li><a class=li2menu_link href=\"".$url2."\">", "<li class=li_openlink><a class=li2menu_openlink href=\"".$url2."\">", $textXX);
 			$textXX = str_replace("<li><a class=li2menu_link href=\"".$url3."\">", "<li class=li_openlink><a class=li2menu_openlink href=\"".$url3."\">", $textXX);
+			if ($class != "") $class_menu = $class; else $class_menu = "suckerdiv";
+			$textXX = "<div class='".$class_menu."'><ul id=suckertree1>".$textXX."</ul></div>";
 		break;
 	 	case "7": // KickStart вертикальное 3 уровня (слева)
 			$class_menu = "menu vertical"; break;
@@ -1036,7 +1098,10 @@ case "10": # Блок меню
 			$class_menu = "menu vertical right"; break;
 		case "9": // KickStart горизонтальное 3 уровня (слева)
 			$class_menu = "menu"; break;
+		///
+
 	}
+	if ($class != "") $class_menu = $class;
 	if ($menu != "1" and $menu != "2") $textXX = "<ul id=\"menu\" class=\"".$class_menu."\">".$textXX."</ul>";
 	$block = str_replace("[$titleX]", $design_open.$textXX.$design_close, $block);
 	$type = ""; break;

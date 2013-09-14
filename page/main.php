@@ -2699,7 +2699,7 @@ function search($slovo="", $modul, $papka=0) {
   }
 }
 ###########################################
-function getparent_page($parent_id,$title,$cid,$page) {
+function getparent_page($parent_id,$title,$cid=0,$page=0) {
   global $strelka, $soderganie, $soderganie2, $DBName, $prefix, $db, $getparent_cash;
   $cash = $parent_id.$DBName.$cid;
   if (!isset($getparent_cash[$cash])) {

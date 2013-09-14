@@ -409,11 +409,11 @@ if ($func == "izmenapapka") { // Отображение списка папок 
   $info = "";
   $sql = "select cid, module, title, parent_id from ".$prefix."_pages_categories where module='".$select."' and `tables`='pages' order by parent_id, title";
   $result = $db->sql_query($sql) or $info = "Ошибка. Попробуйте обновить страницу. Не поможет — обращайтесь к разработчику.";
-
-  if ($type == "addpage") $info .= "<select name=cid id='to_papka' size=2 style='font-size:11px; width:248px; height:200px;'>";
-  elseif ($type == "editdir") $info .= "<select name=parent_id id='to_papka' size=2 style='font-size:11px; width:248px; height:200px;'>";
-  elseif ($type == "izmenapage") $info .= "<select style='width:100%' name=to_papka id='to_papka".$id."' size=10>";
-
+  switch ($type) {
+    case "addpage": $info .= "<select name=cid id='to_papka' size=2 style='font-size:11px; width:248px; height:200px;'>"; break;
+    case "editdir": $info .= "<select name=parent_id id='to_papka' size=2 style='font-size:11px; width:248px; height:200px;'>"; break;
+    case "izmenapage": $info .= "<select style='width:100%' name=to_papka id='to_papka".$id."' size=10>"; break;
+  }
   $info .= "<option value=0 selected>Основная папка («корень»)</option>";
       while ($row = $db->sql_fetchrow($result)) {
                $cid3 = $row['cid'];
@@ -793,6 +793,7 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
       }
       $textline = mb_substr(strip_tags($txt), 0, 45, 'UTF-8');
       if (strlen($textline)<strlen($txt)) $textline .= "...";
+
       if ($avtor == "Администратор") $avtor2 = "<span class=red>".$avtor."</span>";
       else $avtor2 = $avtor;
       if ($num != 0) {
@@ -816,7 +817,11 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
         </td></tr>";
       } else {
         if ($mail != "") $pageslistdel .= "<tr valign=top id=1comm".$cid.$bgcolor."><td class='gray'><nobr>".$data."</nobr></td><td><a title='Удалить подписку' onclick=delcomm(".$cid.") class=punkt>".icon('red small','F')."</a><a style='float:right;' title='Изменить подписку' href='sys.php?op=base_comments_edit_comments&cid=".$cid."'>".icon('orange small','7')."</a> <span class=green>Подписка на рассылку</span>, ".$avtor." &rarr; ".$mail."</td></tr>";
-        else $pageslistdel .= "<tr valign=top id=1comm".$cid.$bgcolor."><td class='gray'><nobr>".$data."</nobr></td><td><a style='float:right;' title='Удалить сообщение' onclick=delcomm(".$cid.") class=punkt>".icon('red small','F')."</a> <span class=green>".$avtor."</span> &rarr; ".$txt."</td></tr>";
+        else {
+          // Преобразование адреса URL в ссылку (с учетом тире)
+          $txt = preg_replace('@(https?://([-\w\.]+)+(:\d+)?(/([-\w/_\.]*(\?\S+)?)?)?)@', '<a href="$1" terget="_blank">$1</a>', $txt);
+          $pageslistdel .= "<tr valign=top id=1comm".$cid.$bgcolor."><td class='gray'><nobr>".$data."</nobr></td><td><a style='float:right;' title='Удалить сообщение' onclick=delcomm(".$cid.") class=punkt>".icon('red small','F')."</a> <span class=green>".$avtor."</span> &rarr; ".$txt."</td></tr>";
+        }
       }
     }
   } else {
@@ -1003,12 +1008,15 @@ if ($func == "replace") { // Перемещение страницы
 if ($func == "papka") { // Папка
   list($cid, $sort) = explode("*@%", $string);
   $list = "";
-  if ($sort==1) $order = "title, date desc";
-  elseif ($sort==0) $order = "date desc";
-  elseif ($sort==2) $order = "redate desc";
-  elseif ($sort==3) $order = "comm desc";
-  elseif ($sort==4) $order = "counter desc";
-  elseif ($sort==5) $order = "active";
+  switch ($sort) {
+    case "0": $order = "date desc"; break;
+    case "2": $order = "redate desc";  break;
+    case "3": $order = "comm desc"; break;
+    case "4": $order = "counter desc"; break;
+    case "5": $order = "active"; break;
+    case "1":
+    default: $order = "title, date desc"; break;
+  }
   global $name_razdels;
   $name_raz = $name_razdels[$id];
     // Подпапки этой папки
@@ -1083,12 +1091,15 @@ if ($func == "papka") { // Папка
 ######################################################################################
 if ($func == "razdel") { // Папка
   list($re, $sort) = explode("*@%", $string);
-  if ($sort==1) $order = "title, date desc";
-  elseif ($sort==0) $order = "date desc";
-  elseif ($sort==2) $order = "redate desc";
-  elseif ($sort==3) $order = "comm desc";
-  elseif ($sort==4) $order = "counter desc";
-  elseif ($sort==5) $order = "active";
+  switch ($sort) {
+    case "0": $order = "date desc"; break;
+    case "2": $order = "redate desc";  break;
+    case "3": $order = "comm desc"; break;
+    case "4": $order = "counter desc"; break;
+    case "5": $order = "active"; break;
+    case "1":
+    default: $order = "title, date desc"; break;
+  }
   global $name_razdels;
   $list = "";
   $name_raz = $name_razdels[$id];
