@@ -1,27 +1,22 @@
 <?php
-    if (strpos($_SERVER['PHP_SELF'], 'sys.php') === false) { die ("Доступ закрыт!"); }
+    if (strpos($_SERVER['PHP_SELF'], 'sys.php') === false) { die (aa("Доступ закрыт!")); }
     $aid = trim($aid);
     global $prefix, $db, $red;
-    $sql = "select realadmin from ".$prefix."_authors where aid='$aid'";
-    $result = $db->sql_query($sql);
-    $row = $db->sql_fetchrow($result);
+    $row = $db->sql_fetchrow($db->sql_query("select `realadmin` from ".$prefix."_authors where `aid`='".$aid."'"));
     $realadmin = $row['realadmin'];
-    if ($realadmin==1) {
-    $tip = "pages";
-    $admintip = "base_base";
+    if ($realadmin == 1) {
 #####################################################################################################################
 function base_base($name) {
-    global $tip, $admintip, $prefix, $db, $p, $sortir, $data_sort, $data_sort2, $men_sort, $firm_sort, $interval_sort, $search_sort, $doc;
-    if ($p=="") $p=0;
-    if ($doc=="") {
+    global $prefix, $db, $p, $sortir, $data_sort, $data_sort2, $men_sort, $firm_sort, $interval_sort, $search_sort, $doc;
+    if ($p == "") $p=0;
+    if ($doc == "") {
         include("ad-header.php");
-        echo "<a name=1></a>";
     } else {
         ob_start();
         header("Content-Disposition: attachment; Content-type: application/msword; filename=База_данных.htm"); 
     }
     // Определяем имя и настройки раздела
-    $sql = "SELECT id, title, text FROM ".$prefix."_mainpage where type='2' and name='$name'";
+    $sql = "SELECT `id`, `title`, `text` FROM ".$prefix."_mainpage where `type`='2' and `name`='".$name."'";
     $result = $db->sql_query($sql);
     $row = $db->sql_fetchrow($result);
     $module_id = $row['id']; // номер раздела
@@ -32,7 +27,7 @@ function base_base($name) {
     parse_str($module_options); // Настройки раздела
     $offset = $p * $lim;
 
-    $sql = "SELECT name, title, text FROM ".$prefix."_mainpage where id='$base'";
+    $sql = "SELECT `name`, `title`, `text` FROM ".$prefix."_mainpage where `id`='".$base."'";
     $result = $db->sql_query($sql);
     $row = $db->sql_fetchrow($result);
     $baza_title  = $row['title']; // Название БД
@@ -137,10 +132,10 @@ function base_base($name) {
                 $info = $row['info'];
                 $pause = $row['pause'];
                 $color = "white";
-                if ($pause == 1) { $color="pink"; $pause = "<a href=/sys.php?op=".$admintip."_pause_pass&id=".$id."&pause=0&cat=$name title='Возобновить'><img class='icon2 i44' src='/images/1.gif' align=bottom></a>"; 
-                } else $pause = "<a href=/sys.php?op=".$admintip."_pause_pass&id=".$id."&pause=1&cat=$name title='Отключить'><img class='icon2 i43' src='/images/1.gif' align=bottom></a>";
+                if ($pause == 1) { $color="pink"; $pause = "<a href=/sys.php?op=base_base_pause_pass&id=".$id."&pause=0&cat=$name title='Возобновить'><img class='icon2 i44' src='/images/1.gif' align=bottom></a>"; 
+                } else $pause = "<a href=/sys.php?op=base_base_pause_pass&id=".$id."&pause=1&cat=$name title='Отключить'><img class='icon2 i43' src='/images/1.gif' align=bottom></a>";
                 $passwords .= "<tr bgcolor=$color><td>".$data."</td><td>".$user."</td><td>".$pass."</td><td>".$info."</td><td>
-                $pause <a href=/sys.php?op=".$admintip."_pause_pass&id=$id&pause=3&cat=$name title='Удалить'><img class=\"icon2 i33\" src=/images/1.gif></a> 
+                $pause <a href=/sys.php?op=base_base_pause_pass&id=$id&pause=3&cat=$name title='Удалить'><img class=\"icon2 i33\" src=/images/1.gif></a> 
                 </td></tr>";
             }
             echo "<a class=punkt onclick=\"show('passwords');\"><strong>Список паролей</strong></a>
@@ -150,7 +145,7 @@ function base_base($name) {
             <br>
             <form method=\"POST\" action=\"sys.php\" enctype=\"multipart/form-data\"><strong>Создать новый пароль</strong><br>
             Информация: <input type=text name=info value=\"\" style='width:400px;'> <input type=submit value=\"Создать\">
-            <input type=hidden name=op value=".$admintip."_new_pass>
+            <input type=hidden name=op value=base_base_new_pass>
             <input type=hidden name=use value=\"Администратор\"><input type=hidden name=base value=\"$base\"><input type=hidden name=cat value=\"$name\">
             </form>
             </div><br>";
@@ -410,7 +405,7 @@ function base_base($name) {
 }
 #############################################################################################
 function base_base_edit_base($id, $base, $name, $red=0) {
-    global $tip, $admintip, $prefix, $db;
+    global $prefix, $db;
     include("ad-header.php");
     echo "<br><a href=/sys.php?op=base_base&name=".$name." style='padding-left:5px;padding-right:5px;' class='punkt radius'> &larr; Вернуться к базе данных </a></b><br>";
     echo "<h1>Редактирование строки №$id в базе данных</h1>";
@@ -484,7 +479,7 @@ function base_base_edit_base($id, $base, $name, $red=0) {
                 if ($nu < 100) $opt .= "<option value=\"".$r."\">".$r."</option>";
                 $nu++;
                 }
-                if ($one[4] == 0 or $one[4] == 2) echo "<select name=vybor[".$one[0]."] onchange=\"document.getElementById('".$one[0]."').value = this.value;\" style='width:110px;'><option value=\"\" style=\"background:#dddddd;\">варианты...</option>".$opt."</select>
+                if ($one[4] == 0 or $one[4] == 2) echo "<select name=vybor[".$one[0]."] onchange=\"$('#".$one[0]."').val(this.value);\" style='width:110px;'><option value=\"\" style=\"background:#dddddd;\">".aa("варианты...")."</option>".$opt."</select>
                 <input type=hidden name=\"type[".$one[0]."]\" value=\"строка\"></p>"; 
             break;
 
@@ -591,7 +586,7 @@ function base_base_edit_base($id, $base, $name, $red=0) {
     <option value='3'".$sel3." style='background:#ffffff;'>Открытая информация</option>
     </select>
     </td></tr></table>
-    <input type='hidden' name='op' value='".$admintip."_edit_sv_base'>
+    <input type='hidden' name='op' value='base_base_edit_sv_base'>
     <input type='hidden' name='id' value='".$id."'>
     <input type='hidden' name='base' value='".$base."'>
     <input type='hidden' name='name' value='".$name."'>
@@ -601,7 +596,7 @@ function base_base_edit_base($id, $base, $name, $red=0) {
 }
 #####################################################################################################################
 function base_base_create_base($base, $name, $red=0) {
-    global $tip, $admintip, $prefix, $db, $title_razdel_and_bd, $ok;
+    global $prefix, $db, $title_razdel_and_bd, $ok;
     $alerts  = "";
     include("ad-header.php");
     echo "<br><a href=/sys.php?op=base_base&name=".$name." style='padding-left:5px;padding-right:5px;' class='punkt radius'> &larr; Вернуться к базе данных </a></b><br>";
@@ -779,7 +774,7 @@ function base_base_create_base($base, $name, $red=0) {
     <option value=\"3\"".$sel3." style=\"background:#ffffff;\">Открытая информация</option>
     </select>
     </td></tr></table>
-    <input type=hidden name=op value=".$admintip."_edit_sv_base>
+    <input type=hidden name=op value=base_base_edit_sv_base>
     <input type=hidden name=id value=0>
     <input type=hidden name=base value=$base>
     <input type=hidden name=name value=$name>
@@ -789,7 +784,7 @@ function base_base_create_base($base, $name, $red=0) {
 }
 #####################################################################################################################
 function base_base_edit_sv_base($id=0, $text, $type, $base, $name, $active) {
-    global $tip, $admintip, $prefix, $db;
+    global $prefix, $db;
     $set = array();
     foreach ($text as $key => $txt) {
         switch ($type[$key]) {
@@ -825,7 +820,7 @@ function base_base_edit_sv_base($id=0, $text, $type, $base, $name, $active) {
         Header("Location: ".$referer."&ok=1"); // отправка на повтор
         exit;
     }
-    Header("Location: sys.php?op=".$admintip."&name=".$name."");
+    Header("Location: sys.php?op=base_base&name=".$name."");
 }
 #####################################################################################################################
 function base_links($records,$r_start=0,$URL,$inpage=20,$top="top") { // Строчка выбора страниц < 1 2 3 >
@@ -862,36 +857,36 @@ function base_links($records,$r_start=0,$URL,$inpage=20,$top="top") { // Стр�
 }
 #####################################################################################################################
 function base_base_delit_base($base, $name, $id, $ok) {
-    global $tip, $admintip, $prefix, $db;
+    global $prefix, $db;
     $id = intval($id);
     if($ok) {
         $db->sql_query("DELETE FROM ".$prefix."_base_".$base." WHERE id='$id'");
-        Header("Location: sys.php?op=".$admintip."&name=$name#1");
+        Header("Location: sys.php?op=base_base&name=$name#1");
     } else {
         include("ad-header.php");
         echo "<br><center><b>Удаление строки из таблицы</b><br><br>";
         echo "Внимание! Вы хотите удалить строку <b>№ $id</b>.<br><br>";
-        echo "Это правда?<br><br>[ <a href=\"sys.php?op=".$admintip."&name=$name#1\"><b>НЕТ</b></a> | <a href=\"sys.php?op=".$admintip."_delit_base&name=$name&base=$base&id=$id&ok=1\"><b>ДА</b></a> ]</center><br><br>";
+        echo "Это правда?<br><br>[ <a href=\"sys.php?op=base_base&name=$name#1\"><b>НЕТ</b></a> | <a href=\"sys.php?op=base_base_delit_base&name=$name&base=$base&id=$id&ok=1\"><b>ДА</b></a> ]</center><br><br>";
         admin_footer();
     }
 }
 #####################################################################################################################
 function base_pause_pass($id, $pause, $cat) {
-    global $tip, $admintip, $prefix, $db;
+    global $prefix, $db;
     if ($pause==1 or $pause==0) $db->sql_query("UPDATE ".$prefix."_bases SET pause='".$pause."' WHERE id='".$id."'");
     if ($pause==3) $db->sql_query("DELETE FROM ".$prefix."_bases WHERE id='$id'");
-    Header("Location: sys.php?op=".$admintip."&name=$cat#1");
+    Header("Location: sys.php?op=base_base&name=$cat#1");
 }
 #####################################################################################################################
 function base_new_pass($base, $use, $cat, $info) {
-    global $tip, $admintip, $prefix, $db;
+    global $prefix, $db;
     // Генерация пароля
     $pass = generate_password(15); // 15 символов в пароле
     // Проверка наличия такого пароля ???
     $date = date("Y.m.d H:i:s");
     if ($use != "Администратор") $use = "Пользователь";
     if (trim($base) != "") $db->sql_query("INSERT INTO `".$prefix."_bases` (`id`, `base`, `data`, `user`, `pass`, `pause`, `info`) VALUES (NULL, '$base', '$date', '$use', '$pass', '0', '$info');");
-    Header("Location: sys.php?op=".$admintip."&name=$cat#1");
+    Header("Location: sys.php?op=base_base&name=$cat#1");
 }
 ##############################################################
 function vybor_stroka($base, $name, $stroka, $now="выберите", $width=200) {

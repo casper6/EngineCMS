@@ -11,7 +11,7 @@ if (isset($_REQUEST['func']))   $func = $_REQUEST['func']; else die(); // Выб
 if (isset($_REQUEST['type']))   $type = $_REQUEST['type']; else $type = 0;
 if (isset($_REQUEST['id']))     $id = intval($_REQUEST['id']); else $id = 0;
 if (isset($_REQUEST['string'])) $string = $_REQUEST['string']; else $string = "";
-///////////////////////////////////////////////////////////
+///////////////////////////////////
 if ($func == "shop_del_tovar") {
 	$tovars = "";
 	$info = array();
@@ -33,7 +33,7 @@ if ($func == "shop_del_tovar") {
 		else $tovars = "";
 	setcookie ('shop_tovar', $tovars, time()+60*60*24*60); // список товаров|id страницы товара$стоимость товара
 }
-///////////////////////////////////////////////////////////
+/////////////////////////////////////
 if ($func == "shop_add_tovar") {
 	$tovars = "";
 	$count = 0;
@@ -71,8 +71,8 @@ if ($func == "shop_add_tovar") {
 ///////////////////////////////////////////////////////////
 if ($func == "shop_send_order") {
 	global $now, $shop_pole, $shop_text_mail, $shop_text_after_mail, $shop_admin_mail, $shop_spisok_pole, $shop_text_val1, $shop_text_val2, $siteurl; // ;
-	$subject = "Новый заказ";
-	$order = "Время приема заказа: ".$now."<br>";
+	$subject = aa("Новый заказ");
+	$order = aa("Время приема заказа:")." ".$now."<br>";
 	// Список контактных данных
 	foreach ($string as $key => $value) {
 		$order .= str_replace("mail_", "", $key).": ".$value."<br>";
@@ -93,21 +93,17 @@ if ($func == "shop_send_order") {
 					$itogo += intval($tovar[1]) * $count;
 					$count = " x ".$count;
 				}
-				$order .= "<br>Товар ".$tovar[2]."<br>
-				Ссылка на товар: http://".$siteurl."/-".$name_razdel."_page_".$id_page."<br>
-				Стоимость: ".$shop_text_val1.$tovar[1].$shop_text_val2.$count."<br>";
+				$order .= "<br>".aa("Товар")." ".$tovar[2]."<br>
+				".aa("Ссылка на товар:")." http://".$siteurl."/-".$name_razdel."_page_".$id_page."<br>
+				".aa("Стоимость:")." ".$shop_text_val1.$tovar[1].$shop_text_val2.$count."<br>";
 			}
 		}
-		$order .= "<br>ИТОГО: ".$shop_text_val1.$itogo.$shop_text_val2."<br>";
+		$order .= "<br>".aa("ИТОГО:")." ".$shop_text_val1.$itogo.$shop_text_val2."<br>";
 		// Отправка письма
-		//if(!
-			mail($shop_admin_mail, "=?utf-8?b?" . base64_encode($subject) . "?=", $order, "MIME-Version: 1.0\r\nContent-type: text/html; charset=utf-8\r\nFrom: =?utf-8?b?" . base64_encode("Администратор") . "?= <" . $shop_admin_mail . ">");
-			//) echo "Не удалось отправить заказ.";
-	    //else { 
-	    	echo $shop_text_after_mail; 
-	    	system_mes($order); // Отправляем системное сообщение админу
-	    	setcookie ('shop_tovar', ''); // очищаем куки
-	    //}
+		mail($shop_admin_mail, "=?utf-8?b?" . base64_encode($subject) . "?=", $order, "MIME-Version: 1.0\r\nContent-type: text/html; charset=utf-8\r\nFrom: =?utf-8?b?" . base64_encode(aa("Администратор")) . "?= <" . $shop_admin_mail . ">");
+    	echo $shop_text_after_mail; 
+    	system_mes($order); // Отправляем системное сообщение админу
+    	setcookie ('shop_tovar', ''); // очищаем куки
 	} 
 	exit();
 }
@@ -115,7 +111,7 @@ if ($func == "shop_send_order") {
 if ($func == "shop_show_order") {
 	global $shop_pole, $shop_text_mail, $shop_text_return, $shop_spisok_pole; // $shop_text_after_mail, $shop_admin_mail;
 	// types - text, email, tel
-	$shop_text_return = "Вернуться";
+	$shop_text_return = ss("Вернуться");
 	$pole = $onclick = "";
 	// Получаем поля
 	$shop_spisok_pole = explode("\n",$shop_spisok_pole);
@@ -124,23 +120,30 @@ if ($func == "shop_show_order") {
 		if (strpos($value, "*")) {
 			$value = str_replace("*", "", $value);
 			$add = "<sup class='red'>*</sup>";
-			$onclick .= "if ($('#mail_".translit_name($value)."').val() == '') al = al + 'Заполните поле «".$value."».\\n';";
+			$onclick .= "if ($('#mail_".translit_name($value)."').val() == '') al = al + '".ss("Заполните поле")." «".$value."».\\n';";
 		} else $add = "";
-
 		// Определение типа текстового поля
 		$type = "text";
 		$v = mb_convert_case($value, MB_CASE_LOWER);
-		if (stripos(" ".$v, "тел.")!==false || stripos(" ".$v, "телефон")!==false || stripos(" ".$v, "сот.")!==false || stripos(" ".$v, "сотовый")!==false || stripos(" ".$v, "факс")!==false || stripos(" ".$v, "тел/")!==false) $type = "tel";
-		if (stripos(" ".$v, "mail")!==false || stripos(" ".$v, "электропочта") || stripos(" ".$v, "электронная почта")!==false || stripos(" ".$v, "мэйл")!==false || stripos(" ".$v, "мейл")!==false) $type = "email";
-		if (stripos(" ".$v, "дата")!==false) $type = "date";
-		if (stripos(" ".$v, "время")!==false) $type = "time";
-		if (stripos(" ".$v, "дата")!==false && stripos(" ".$v, "время")!==false) $type = "datetime";
-		if (stripos(" ".$v, "пароль")!==false) $type = "password";
-		if (stripos(" ".$v, "месяц")!==false) $type = "month";
-		if (stripos(" ".$v, "цвет")!==false) $type = "color";
-		if (stripos(" ".$v, "неделя")!==false) $type = "week";
-		if (stripos(" ".$v, "ссылка")!==false || stripos(" ".$v, "url")!==false || stripos(" ".$v, "link")!==false || stripos(" ".$v, "адрес страницы")!==false || stripos(" ".$v, "адрес в интернете")!==false || stripos(" ".$v, "интернет адрес")!==false) $type = "url";
-		if (stripos(" ".$v, "сколько")!==false || stripos(" ".$v, "как много")!==false || stripos(" ".$v, "как часто")!==false) $type = "number";
+
+		$type_texts = array(
+			"tel"=>ss("тел.;телефон;сот.;сотовый;факс;тел/"),
+			"email"=>ss("mail;электропочта;электронная почта;мэйл;мейл"),
+			"date"=>ss("дата"),
+			"time"=>ss("время"),
+			"datetime"=>ss("дата;время"),
+			"password"=>ss("пароль"),
+			"month"=>ss("месяц"),
+			"color"=>ss("цвет"),
+			"week"=>ss("неделя"),
+			"url"=>ss("ссылка;url;link;линк;адрес сайта;адрес страницы;адрес в интернете;интернет адрес"),
+			"number"=>ss("сколько;как много;как часто")
+			);
+		foreach ($type_texts as $ke => $valu) {
+			$valu2 = explode(";",$valu);
+			foreach ($valu2 as $val)
+				if (stripos(" ".$v, $val)!==false) $type = $ke;
+		}
 
 		$pole .= "<p><label for='string[mail_".translit_name($value)."]'>".$value.$add."</label><br>
 		<input type='".$type."' name='string[mail_".translit_name($value)."]' id='mail_".translit_name($value)."' class='shop_form_input' /> ";
@@ -149,12 +152,11 @@ if ($func == "shop_show_order") {
 	<p>".$shop_text_mail."
 	<form action='' class='shop_order_form' method=post id='order_form'>
 		".$pole."
-		<p><input type='button' value='Отправить' onClick=\"AjaxFormRequest('shop_card', 'order_form', 'ajax.php');\" />";
-	if ($onclick != "") $info .= "<p>Поля, помеченные <sup class='red'>*</sup> обязательны к заполнению.";
+		<p><input type='button' value='".ss("Отправить")."' onClick=\"AjaxFormRequest('shop_card', 'order_form', 'ajax.php');\" />";
+	if ($onclick != "") $info .= "<p>".ss("Поля, помеченные")." <sup class='red'>*</sup> ".ss("обязательны к заполнению.");
 	$info .= "<div class='shop_card_oformlenie'><a onclick='shop_show_card()'>".$shop_text_return."</a></div>
 	<input name='func' value='shop_send_order' type='hidden'>
 	</form>";
-	// al=''; ".$onclick." if (al) { alert(al); return false; } else 
 	echo $info;
 	exit();
 }
@@ -183,12 +185,11 @@ if ($func == "shop_show_card") {
 					$count = " x ".$count;
 				}
 				if ($pic != "") $pic = "<a href='".$tovar[3]."' title='".$tovar[2]."' class='lightbox' rel='group'><div class='shop_card_minifoto' style='background:url(\"includes/phpThumb/phpThumb.php?src=".$tovar[3]."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0\") center center no-repeat;'></div></a>";
-				//$title_razdel = $title_razdels[$name_razdel];
 				$info .= "<div class='shop_card'>
 				<div class='shop_card_price'><b>".$shop_text_val1.$tovar[1].$shop_text_val2.$count."</b>
 				<a class='shop_card_del' onclick='shop_del_tovar(".$id_page.")'>".$shop_text_delete."</a></div>
 				".$pic."<a target='_blank' href='-".$name_razdel."_page_".$id_page."'>".$tovar[2]."</a>
-				</div>"; // <br>".$title_razdel."
+				</div>"; 
 			}
 		}
 		$info .= "
@@ -204,13 +205,13 @@ if ($func == "registration_form") {
 	$info = "";
 	$result = $db->sql_query("SELECT `id`, `name` FROM ".$prefix."_mainpage where `name`!='config' and `type`='10'");
 	$cnt = $db->sql_numrows($result);
-	if ($cnt == 0) $info .= "Для регистрации необходимо создать группу.";
+	if ($cnt == 0) $info .= ss("Для регистрации необходимо создать группу.");
 	else {
 	    // Вывести форму на экран 
 	    $info .= "<form class='regforma' action='--register' method='post'>
-	    <br><input class='regmail' type='email' name='em' value='' placeholder='Email'>";
+	    <br><input class='regmail' type='email' name='em' value='' placeholder='".ss("Email")."'>";
 	    if ($cnt > 1) {
-	        $info .= "<br><select name='groups' class='groups'><option value='0'>Выберите группу</option>";
+	        $info .= "<br><select name='groups' class='groups'><option value='0'>".ss("Выберите группу")."</option>";
 	        while ($row = $db->sql_fetchrow($result)) {
 	          $info .= "<option value='".$row['id']."'>".$row['name']."</option>";
 	        }
@@ -218,26 +219,26 @@ if ($func == "registration_form") {
 	    }
 	    $row = $db->sql_fetchrow($db->sql_query("SELECT `useit` FROM ".$prefix."_mainpage where `name`='config' and `type`='10'"));
 	    if ($row['useit'] == 1) {
-	        $info .= "<br>Выберите местоположение";
+	        $info .= "<br>".ss("Выберите местоположение");
 	        $soderganie .= include("includes/regions/meny.html");
 	    }
-	    $info .= "<br><input type='submit' name='submit' value='Зарегистрироваться'></form>"; 
+	    $info .= "<br><input type='submit' name='submit' value='".ss("Зарегистрироваться")."'></form>"; 
 	}
 	echo $info; exit();
 }
 ///////////////////////////////////////////////////////////
 if ($func == "savegolos") { // Сохраняем голосование
-	$spasibo = " <b class=green>Спасибо за ваше неравнодушие!</b>";
-	$golosovali = "<b class=red>Вы уже голосовали!</b>";
-	$udaleny = "Голоса удалены.";
+	$spasibo = " <b class=green>".ss("Спасибо за ваше неравнодушие!")."</b>";
+	$golosovali = "<b class=red>".ss("Вы уже голосовали!")."</b>";
+	$udaleny = ss("Голоса удалены.");
 	$info = "";
 	if (isset($golos_id) and isset($GLOBALS[$golos_id])) $tmp = $GLOBALS[$golos_id]; else $tmp = ""; // поставлено от голосования
 	list($name, $gol) = explode("*@%", $string);
 		$type = intval($type);
 		$ip = getenv("REMOTE_ADDR"); // IP
 		if ($gol == 6 and is_admin($admin)) { // Доделать
-			$db->sql_query("UPDATE ".$prefix."_pages SET golos='0' WHERE pid='$id';");
-			$db->sql_query("DELETE from ".$prefix."_pages_golos WHERE num='$id';");
+			$db->sql_query("UPDATE ".$prefix."_pages SET golos='0' WHERE pid='".$id."';");
+			$db->sql_query("DELETE from ".$prefix."_pages_golos WHERE num='".$id."';");
 			$info = $udaleny;
 			echo $info;	exit;
 		}
@@ -250,7 +251,7 @@ if ($func == "savegolos") { // Сохраняем голосование
 		if ($type == 1) $gol = 1;
 		if ($type == 2 or $type == 3) if ($gol != 1) $gol = -1;
 		if ($type != 0) {
-			$sql = "SELECT golos FROM ".$prefix."_pages where pid='$id'";
+			$sql = "SELECT `golos` FROM ".$prefix."_pages where `pid`='".$id."'";
 			$row2 = $db->sql_fetchrow($db->sql_query($sql));
 			$resnum = $db->sql_query($sql);
 			$numrows = $db->sql_numrows($resnum);
@@ -258,12 +259,12 @@ if ($func == "savegolos") { // Сохраняем голосование
 				$info = $golosovali;
 			} else {
 				$golos = $row2['golos'] + $gol;
-				$db->sql_query("UPDATE ".$prefix."_pages SET golos='".$golos."' WHERE pid='$id';");
+				$db->sql_query("UPDATE ".$prefix."_pages SET `golos`='".$golos."' WHERE `pid`='".$id."';");
 				$db->sql_query("INSERT INTO ".$prefix."_pages_golos (`gid`, `ip`, `golos`, `num`, `data`) VALUES ('', '$ip', '$gol', '$id', '$dat')");
 				setcookie ($golos_id, $golos_id,time()+2678400,"/");
 			}
 		} else {
-			$sql = "SELECT data FROM ".$prefix."_pages_golos WHERE ip='$ip' AND num='$id'";
+			$sql = "SELECT `data` FROM ".$prefix."_pages_golos WHERE `ip`='$ip' AND `num`='".$id."'";
 			$resnum = $db->sql_query($sql);
 			$row = $db->sql_fetchrow($result);
 			$date = $row['data'];
@@ -277,38 +278,11 @@ if ($func == "savegolos") { // Сохраняем голосование
 				setcookie ($golos_id, $golos_id,time()+2678400,"/");
 			}
 		}
-		$sqlX = "SELECT module from ".$prefix."_pages where pid = '$id'";
+		$sqlX = "SELECT `module` from ".$prefix."_pages where `pid`='".$id."'";
 		$resultX = $db->sql_query($sqlX);
 		$rowX = $db->sql_fetchrow($resultX);
 		$mod = $rowX['module'];
 		recash("/-".$mod."_page_".$id); // Обновление кеша
-		/*
-		if ($type != 0) {
-			$sql2 = "SELECT golos FROM ".$prefix."_pages where pid='$id'";
-			$result2 = $db->sql_query($sql2);
-			$row2 = $db->sql_fetchrow($result2);
-			$golos = $row2['golos'];
-		}
-		if ($type == 2 || $type == 3) {
-			$sql23 = "SELECT golos FROM ".$prefix."_pages_golos WHERE num='$id'";
-			$result23 = $db->sql_query($sql23);
-			$numrows23 = $db->sql_numrows($result23);
-		}
-		if ($type == 0) {
-			$sql2 = "SELECT golos FROM ".$prefix."_pages_golos WHERE num='$id'";
-			$result2 = $db->sql_query($sql2);
-			$numrows2 = $db->sql_numrows($result2);
-			$golo=array();
-			while($row2 = $db->sql_fetchrow($result2)) {
-				$golo[] = $row2['golos'];
-			}
-			$proc = array_sum($golo)/$numrows2*10;
-			$sersv = $proc*2;
-			$sersv2 = number_format($proc,2)/10;
-			$sersv1 = number_format($sersv2,2);
-			$sersv = 90*$sersv/100;
-		}
-		*/
 		if ($info != $golosovali) $info .= $spasibo;
 	echo $info; exit();
 }

@@ -1,52 +1,47 @@
 <?php
-if (strpos($_SERVER['PHP_SELF'], 'sys.php') === false) { die ("Доступ закрыт!"); }
+if (strpos($_SERVER['PHP_SELF'], 'sys.php') === false) { die (aa("Доступ закрыт!")); }
 $aid = trim($aid);
 global $prefix, $db, $red;
-$sql = "select realadmin from ".$prefix."_authors where aid='$aid'";
-$result = $db->sql_query($sql);
-$row = $db->sql_fetchrow($result);
+$row = $db->sql_fetchrow($db->sql_query("select `realadmin` from ".$prefix."_authors where `aid`='".$aid."'"));
 $realadmin = $row['realadmin'];
 if ($realadmin==1) {
-    $tip = "pages";
-    $admintip = "base_comments";
     ##################################################################################################
     function base_comments($name=0, $cid=0, $pid=0) {
-        global $tip, $admintip, $prefix, $db, $bgcolor1, $bgcolor2, $spisoknum, $bgcolor3, $bgcolor4, $p;
+        global $prefix, $db, $bgcolor1, $bgcolor2, $spisoknum, $bgcolor3, $bgcolor4, $p;
         include("ad-header.php");
-        echo "<a name=1></a>";
         $lim = 50; // Настройка кол-ва выводимых комментариев.
         $offset = $p * $lim;
-        // Определяем все разделы
+        // Определяем все разделы // --- Доработать - взять всё из mainfile !!!
         $module_title = array();
         $module_names = array();
         $sql = "SELECT name, title FROM ".$prefix."_mainpage where `tables`='pages' and type='2' and name!='index'";
-        $result = $db->sql_query($sql) or die("Не удалось собрать разделы... ");
+        $result = $db->sql_query($sql) or die(aa("Не удалось собрать разделы... "));
         while ($rows = $db->sql_fetchrow($result)) {
-        $module_name = $rows['name'];
-        $module_names[] = $rows['name'];
-        $module_title[$module_name] = $rows['title'];
+            $module_name = $rows['name'];
+            $module_names[] = $rows['name'];
+            $module_title[$module_name] = $rows['title'];
         }
         // Определяем все папки
         $papka_module = array();
         $papka_title = array();
         $sql = "SELECT cid, module, title FROM ".$prefix."_pages_categories where `tables`='pages'";
-        $result = $db->sql_query($sql) or die("Не удалось собрать папки... ");
+        $result = $db->sql_query($sql) or die(aa("Не удалось собрать папки... "));
         while ($rows = $db->sql_fetchrow($result)) {
-        $papka_cid = $rows['cid'];
-        $papka_module[$papka_cid] = $rows['module'];
-        $papka_title[$papka_cid] = $rows['title'];
+            $papka_cid = $rows['cid'];
+            $papka_module[$papka_cid] = $rows['module'];
+            $papka_title[$papka_cid] = $rows['title'];
         }
         // Определяем все страницы
         $page_cid = array();
         $page_module = array();
         $page_title = array();
         $sql = "SELECT pid, cid, module, title FROM ".$prefix."_pages where `tables`='pages'";
-        $result = $db->sql_query($sql) or die("Не удалось собрать страницы... ");
+        $result = $db->sql_query($sql) or die(aa("Не удалось собрать страницы... "));
         while ($rows = $db->sql_fetchrow($result)) {
-        $page_pid = $rows['pid'];
-        $page_cid[$page_pid] = $rows['cid'];
-        $page_module[$page_pid] = $rows['module'];
-        $page_title[$page_pid] = $rows['title'];
+            $page_pid = $rows['pid'];
+            $page_cid[$page_pid] = $rows['cid'];
+            $page_module[$page_pid] = $rows['module'];
+            $page_title[$page_pid] = $rows['title'];
         }
         $page = "все";
         $papka = "все";
@@ -134,8 +129,8 @@ if ($realadmin==1) {
     }
     #####################################################################################################################
     function base_comments_edit_comments($cid) {
-    global $tip, $admintip, $prefix, $db, $red;
-        $sql = "SELECT * FROM ".$prefix."_".$tip."_comments WHERE cid='$cid'";
+    global $prefix, $db, $red;
+        $sql = "SELECT * FROM ".$prefix."_pages_comments WHERE cid='$cid'";
         $result = $db->sql_query($sql);
         $row = $db->sql_fetchrow($result);
         $comm_cid = $row['cid'];
@@ -182,7 +177,7 @@ if ($realadmin==1) {
 
         if ($comm_golos > 0) echo "<font color=red>|&| - это символы-разделители в тексте комментария анкет-рейтингов, делят предпросмотр анкеты и саму анкету, НЕ ТРОГАТЬ!!!.</font><br>";
 
-        echo "<input type=hidden name=op value=".$admintip."_edit_sv_comments>
+        echo "<input type=hidden name=op value=base_comments_edit_sv_comments>
         <input type=hidden name=cid value=$cid>
         </td></tr></table>
         </form>";
@@ -190,7 +185,7 @@ if ($realadmin==1) {
     }
     ###########################################################
     function base_comments_edit_sv_comments($cid, $text, $golos, $num, $dataX, $avtor2, $mail, $adres, $tel, $act, $drevo) {
-        global $admintip, $prefix, $db;
+        global $prefix, $db;
         if ($cid == $drevo) die ('Комментарий не может быть ответом сам на себя!');
         $text = str_replace("&amp;","&",$text);
         // cid num avtor mail text ip data golos --- comments
@@ -200,7 +195,7 @@ if ($realadmin==1) {
         $row = $db->sql_fetchrow($result);
         $mod = $row['module'];
         recash("/-".$mod."_page_".$num); // Обновление кеша
-        Header("Location: sys.php?op=".$admintip."&pid=".$num."&name=".$mod);
+        Header("Location: sys.php?op=base_comments&pid=".$num."&name=".$mod);
     }
     ##########################################################
     function comm_links($records,$r_start=0,$URL,$inpage=20) { // Строчка выбора страниц < 1 2 3 >
@@ -237,14 +232,14 @@ if ($realadmin==1) {
     }
     ##################################################
     function base_comments_status($name, $pid, $cid) {
-        global $tip, $admintip, $prefix, $db;
-        $sql = "select active from ".$prefix."_".$tip."_comments where cid='$cid'";
+        global $prefix, $db;
+        $sql = "select active from ".$prefix."_pages_comments where cid='$cid'";
         $result = $db->sql_query($sql);
         $row = $db->sql_fetchrow($result);
         $act = $row['active'];
-        if ($act == 0 or $act == 2) $db->sql_query("UPDATE ".$prefix."_".$tip."_comments SET active='1' WHERE cid='$cid'") or die('Не удалось включить комментарий. Вероятно какие-то проблемы с базой данных. Администратор поможет решить проблему.');
-        if ($act == 1) $db->sql_query("UPDATE ".$prefix."_".$tip."_comments SET active='0' WHERE cid='$cid'") or die('Не удалось отключить комментарий. Вероятно какие-то проблемы с базой данных. Администратор поможет решить проблему.');
-        Header("Location: sys.php?op=".$admintip."&name=$name&pid=$pid");
+        if ($act == 0 or $act == 2) $db->sql_query("UPDATE ".$prefix."_pages_comments SET active='1' WHERE cid='$cid'") or die('Не удалось включить комментарий. Вероятно какие-то проблемы с базой данных. Администратор поможет решить проблему.');
+        if ($act == 1) $db->sql_query("UPDATE ".$prefix."_pages_comments SET active='0' WHERE cid='$cid'") or die('Не удалось отключить комментарий. Вероятно какие-то проблемы с базой данных. Администратор поможет решить проблему.');
+        Header("Location: sys.php?op=base_comments&name=$name&pid=$pid");
     }
     switch ($op) {
         case "base_comments":

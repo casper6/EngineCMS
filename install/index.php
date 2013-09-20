@@ -181,7 +181,7 @@ if (stristr(htmlentities($_SERVER[\'PHP_SELF\']), "config.php")) { Header("Locat
 		else die('<li>Файл '.$design.'_install.php в папке install/themes не найден!');
 		echo "<li>Установка дизайна в БД окончена";
 	} else {
-		$db->sql_query("INSERT INTO `".$prefix."_config` VALUES ( 'Название сайта', '2013', '".$email."', '', '', '', '', '', '0', '0', '0', '|||||||||||||||||||||||||||||||||||||||||||||', '0', '1|1|1|1|1|0|0|1|17', '', '4', '0', '0', '.ht_backup');") or die('Не удалось записать настройку конфигурации сайта');
+		$db->sql_query("INSERT INTO `".$prefix."_config` VALUES ( 'Название сайта', '2013', '".$email."', '', '', '', '', '', '0', '0', '0', '|||||||||||||||||||||||||||||||||||||||||||||', '0', '1|1|1|1|1|0|0|1|20', '', '4', '0', '0', '.ht_backup');") or die('Не удалось записать настройку конфигурации сайта');
 		$db->sql_query("INSERT INTO `".$prefix."_mainpage` VALUES ( '1', '0', '', 'Главный дизайн', 'что-то в шапке<br>[содержание]<br>футер сайта', '20', '', '0', 'pages', '0', '', '');");
 		$db->sql_query("INSERT INTO `".$prefix."_mainpage` VALUES ( '24', '2', 'index', 'Главная страница', 'pages|design=1', 'Текст главной страницы', '', '0', 'pages', '0', '', '');");
 		$db->sql_query("INSERT INTO `".$prefix."_mainpage` VALUES ( '20', '1', 'index', 'Главный стиль', '

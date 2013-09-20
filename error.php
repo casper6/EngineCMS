@@ -28,7 +28,7 @@
   if ($code == "666") {
     header("HTTP/1.0 404 Not Found");
     die("<h1 style='color:red;'>Ошибка</h1>
-    <center style='margin-top:40px;'><img src=/images/icon_no.png> <b>Запрашиваемая страница не существует.</b><br>Вероятно, что зделудлен или адрес раздела был введен неправильно (к примеру, с использованием русских букв или пробелов).<br><br>Вы можете перейти на <a href='/''>Главную страницу</a> <br>или попробовать найти нужную информацию на сайте<br>с помощью быстрого поиска: <form method=POST action=\"/--search\" style='display:inline;' class=main_search_form>
+    <center style='margin-top:40px;'><img src=/images/icon_no.png> <b>Запрашиваемая страница не существует.</b><br>Вероятно, что раздел сайта удален или адрес раздела был введен неправильно (к примеру, с использованием русских букв или пробелов).<br><br>Вы можете перейти на <a href='/''>Главную страницу</a> <br>или попробовать найти нужную информацию на сайте<br>с помощью быстрого поиска: <form method=POST action=\"/--search\" style='display:inline;' class=main_search_form>
     <input type=search name=slovo class=main_search_input><input type='submit' name='ok' value='Найти' class='main_search_button'>
     </form><br><img src='/images/404.jpg'></center>");
   }

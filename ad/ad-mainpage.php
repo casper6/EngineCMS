@@ -152,7 +152,6 @@ function menu() {
 function mainpage($name="") {
 	global $tip, $admintip, $prefix, $db, $name, $id, $display_delete, $display_addmenu;
 	include("ad-header.php");
-	echo "<a name=1></a>";
 	menu();
 	if ($name=="design" or $name=="css" or $name=="module" or $name=="block" or $name=="spisok" or $name=="base" or $name=="shablon") { create_main($name); }
 	elseif (intval($id)>0) { edit_main($id); }
@@ -210,7 +209,6 @@ function mainpage($name="") {
 ###################################################################################################
 function create_main($type) {
 	global $tip, $admintip, $prefix, $db;
-	echo "<a name=1></a>";
 	$create = ""; 
 	switch ($type) {
 	case "design": $type_opis = "дизайна (HTML-разметка, внешний вид сайта)";
@@ -516,15 +514,28 @@ function create_main($type) {
 			}
 			// Добавлены пользователи USERAD
 	$create.="<div id=about class=block style='display:none;'>В Разделах сайта есть папки, в папках лежат страницы (статьи, новости и т.д.). У каждой страницы несколько полей для хранения информации: название, дата, предисловие, содержание и т.д. Если вдруг для какого либо раздела (или для всех разделов) не хватает подобного поля - его можно добавить. Примеры использования полей: отдельное поле для ввода автора (для статей), поле для загрузки фотографии (для фотогалереи), выбор из раскрывающегося списка определенного населенного пункта (для каталога предприятий), период времени (для афиши) и т.д. А для того, чтобы поля начали отображаться на страницах - есть произвольные шаблоны, которые можно создать и подключить к любому разделу (См. в настройках раздела - Шаблон для всего раздела или Шаблон для страницы).<br><b>Поле может принадлежать или какому-то одному разделу или сразу всем разделам.</b><br></div>
-	<table class='w100 mw800'><tr><td width=50%>
+	<table class='w100 mw800'><tr valign=top><td width=50%>
 	<input type=hidden name=type value='4'>
 	<h2>Название поля</h2><input type=text name=title size=40 class='w100 h40 f16' autofocus><br>(рус.)</td><td>
 	<h2>Обращение</h2><input type=text name=namo size=40 class='w100 h40 f16'><br>(англ., без пробелов) Используется для вывода в шаблонах как: [обращение]</td></tr>
-	<tr><td width=50%>
+	<tr valign=top><td width=50%>
 	<input type=hidden name=shablon value=''>
-	<h2>Выберите раздел:</h2><select name='useit' class='w100 h40 f16'><option value='0'>все разделы</option>".$modules."</select></td><td>
+	<h2>Выберите раздел:</h2><select name='useit' id='razdels' class='w100 h40 f16' onchange='check_papka()'><option value='0'>все разделы</option>".$modules."</select><div class='show_papka hide'>
+	<a class='button' onclick=\"$('#izmenapapka0').toggle(); $('#papka1').toggle();\">Выбор папок</a>
+
+	<div id='izmenapapka0' class='hide w100'><select id='papki' name='shablon[]'><option value='0'></option></select></div>
+	<span id='papka1' class='hide'>".aa("Для выбора нескольких зажмите <nobr>клавишу <code>Ctrl</code></nobr> <nobr>или <code>⌘Cmd</code> (на МакОС).</nobr>")."</div>
+	
+	<script>function check_papka() { 
+	if ($('#razdels').val() != '0') { $('.show_papka').show('slow'); 
+	izmenapapka($('#razdels').val(), 0, '',0,'papka_in_pole'); }
+	else { $('.show_papka').hide('fast'); $('#papki').hide('fast'); }
+	}</script>
+
+
+	</td><td>
 	<h2>Выберите тип поля:</h2><select name='s_tip' class='w100 h40 f16' id=s_tip onchange=\"
-	if ($('#s_tip').val()==0) { $('#spisok_0').html( $('#spisok_1').html() ); }
+	if ($('#s_tip').val()==0 || $('#s_tip').val()==7) { $('#spisok_0').html( $('#spisok_1').html() ); }
 	if ($('#s_tip').val()==1) { $('#spisok_0').html( $('#spisok_2').html() ); }
 	if ($('#s_tip').val()==2) { $('#spisok_0').html( $('#spisok_3').html() ); }
 	if ($('#s_tip').val()==4) { $('#spisok_0').html( $('#spisok_5').html() ); }
@@ -533,12 +544,12 @@ function create_main($type) {
 	if ($('#s_tip').val()==3) { $('#spisok_0').html( $('#spisok_4').html() ); $('#textarea').hide(); }
 	if ($('#s_tip').val()!=3 && $('#s_tip').val()!=6) { $('#textarea').show(); }
 	\">
-	<option value='0'>список слов (словосочетания разделяются Enter'ом)</option>
+	<option value='0'>список слов (выбор одного значения)</option>
+	<option value='7'>список слов (выбор нескольких значений)</option>
 	<option value='1'>текст (можно написать шаблон)</option>
 	<option value='4'>строка (можно написать шаблон)</option>
 	<option value='5'>число (можно написать шаблон)</option>
-	<option value='6'>регион (регионы можно выбрать в настройках)</option>
-	<option value='2' disabled>файл (указать какой, куда и что с ним делать)</option>
+	<option value='6'>регион (регионы можно включить в настройках)</option>
 	<option value='3'>период времени (две даты, актуально для Афиши)</option>
 	</select></td></tr>
 	<tr><td colspan=2>
@@ -548,6 +559,7 @@ function create_main($type) {
 	<input type=hidden name=id value=''>
 	<input type=hidden name=op value=".$admintip."_save>
 	</td></tr></table>";
+	// <option value='2' disabled>файл (указать какой, куда и что с ним делать)</option>
 	break;
 	########################################################
 	case "base": $type_opis = "базы данных (таблица)";
@@ -802,8 +814,9 @@ function edit_main($id) {
 	<span class=h2>Содержание дизайна (HTML):</span><span class=f12>[содержание] - блок вывода страниц.</span>";
   	redactor($red, $text, 'text'); // редактор: типа редактора, редактируемое поле
 
-	echo "<span class=h2>Использованные в дизайне стили CSS</span> <span class=f12>Зажмите Ctrl для выбора нескольких стилей</span><br>
-	<select name='useit[]' size=6 class=f12 multiple='multiple'>".$styles."</select></div>";
+	echo "<span class=h2>Использованные в дизайне стили CSS</span>
+	<select name='useit[]' size=6 class='w100' multiple='multiple'>".$styles."</select>
+	".aa("Для выбора нескольких зажмите <nobr>клавишу <code>Ctrl</code></nobr> <nobr>или <code>⌘Cmd</code> (на МакОС).</nobr>")."</div>";
 	} ############################### ЗАКРЫТИЕ ДИЗАЙН
 
 	if ($type == "1") { ############################### ОТКРЫТИЕ СТИЛЬ
@@ -1218,6 +1231,7 @@ function edit_main($id) {
 	global $nastroi;
 
 	// выделим имени модуля раздела и настройки
+
 	$options = explode("|",$useit);
 	$module_name = $options[0];
 	$options = str_replace($module_name."|","",$useit);
@@ -1269,7 +1283,7 @@ function edit_main($id) {
 	<td><b>Блок использует содержание Раздела:</b><ul><li><b>всех разделов</b> – оставьте поле пустым, <li><b>определенного раздела</b> — выберите этот раздел и нажмите «Добавить», <li><b>нескольких разделов</b> — добавьте несколько разделов через запятую, <li><b>открытого раздела</b> — выберите из меню разделов пункт «открытого раздела» и добавьте его или напишите в поле «open_razdel» (без кавычек). При выводе страниц открытого раздела на Главной странице блок исчезнет совсем, при выводе в разделе без страниц будет выведен заголовок, если он разрешен в настройках блока.</ul></td>
 	<td>".input("options[module_name]", $module_name, "25","input"," id='add_razdel'")." 
 <a class='button small' onclick='add_raz();'>&larr; Добавить</a><br>
-".select("razdels", $razdel_engname.",open_razdel", $razdel_name."ко всем Разделам,открытого раздела")."
+".select("razdels", $razdel_engname.",open_razdel", $razdel_name."ко всем Разделам,открытого раздела","")."
 <script>function add_raz() { 
 	if ($('#razdels').val() != '') {
 		if ($('#razdels').val() == 'open_razdel') $('#add_razdel').val( $('#razdels').val() ); 
@@ -1277,7 +1291,7 @@ function edit_main($id) {
 			if ($('#add_razdel').val() == 'open_razdel') $('#add_razdel').val( '' ); 
 			$('#add_razdel').val( $('#add_razdel').val() + $('#razdels').val() + ',' );
 		}
-	}
+	} else $('#add_razdel').val('');
 }</script>
 	</td></tr>";
 	}
@@ -1979,7 +1993,6 @@ function mainpage_save($id=0, $type, $namo, $title, $text, $useit, $shablon, $de
 	}
 
 	$text = str_replace("<P>&nbsp;</P>"," ", str_replace("  "," ", str_replace("   "," ", trim($text))));
-
 	$namo = mysql_real_escape_string($namo);
 	$text = mysql_real_escape_string($text);
 	$useit = mysql_real_escape_string($useit);
@@ -1987,8 +2000,8 @@ function mainpage_save($id=0, $type, $namo, $title, $text, $useit, $shablon, $de
 	$keywordsX = mysql_real_escape_string($keywordsX);
 
 	// Обратное преобразование textarea (замена на англ. букву e, костыль для текстового редактора)
-	$text = str_replace("tеxtarea","textarea",$text); // ireplace
-	$useit = str_replace("tеxtarea","textarea",$useit); // ireplace
+	//$text = str_replace("tеxtarea","textarea",$text); // ireplace
+	//$useit = str_replace("tеxtarea","textarea",$useit); // ireplace
 
 	$sql = "select text from ".$prefix."_mainpage where `tables`='pages' and id='".$id."'";
 	$result = $db->sql_query($sql);
@@ -2004,7 +2017,7 @@ function mainpage_save($id=0, $type, $namo, $title, $text, $useit, $shablon, $de
 	} else {
 
 		// Создание
-		if ($type==2) { 
+		if ($type==2) {
 			if ($text == "[название]") {
 				$text = "pages|design=".$useit;
 				$useit = "[название]Текст раздела «".$title."». Для редактирования откройте Администрирование — слева выберите этот раздел, затем справа нажмите по кнопке Редактировать.<br>Блок &#91;название&#93; в данном случае выводит название раздела.<br>Если вы хотите вывести (вместо названия и последующего произвольного текста) статьи, добавленные в этот раздел — напишите блок &#91;содержание&#93; вместо блока &#91;название&#93;.<br>Более подробная справка доступна при редактировании раздела.";
@@ -2013,21 +2026,21 @@ function mainpage_save($id=0, $type, $namo, $title, $text, $useit, $shablon, $de
 				$useit = "[содержание]";
 			}
 		}
-
 		if ($type==4) { //////////////////////////////////////////////////////////
-			$elements = explode("\r\n",$text);
-			// Создаем поле
+			$elements = explode('\\r\\n',$text);
+			// Создаем списки для поля
 			$n = count($elements);
-			if ($n > 0 and $s_tip==0) {
+			if ($n > 0 and ($s_tip==0 || $s_tip==7)) {
 				for ($x=0; $x < $n; $x++) {
 					$element = str_replace("  "," ",trim($elements[$x]));
-					if ($element != "") $db->sql_query("INSERT INTO ".$prefix."_spiski (`id`, `type`, `name`, `opis`, `sort`, `pages`, `parent`) VALUES (NULL, '".mysql_real_escape_string($namo)."', '".mysql_real_escape_string($element)."', '', '0', '', '0');") or die('Не удалось создать поле.');
+					if ($element != "") $db->sql_query("INSERT INTO ".$prefix."_spiski (`id`, `type`, `name`, `opis`, `sort`, `pages`, `parent`) VALUES (NULL, '".$namo."', '".$element."', '', '0', '', '0');") or die('Не удалось создать поле.');
 				}
 			}
 			$and = ""; 
 			if ($s_tip==1 or $s_tip==4) $and = "&shablon=".$text; // если тип - текст или строка
 			if ($s_tip==2) $and = "&".$text; // если тип - файл
 			$text = "spisok|type=".$s_tip.$and;
+			$shablon = " ".implode(" ", $shablon)." "; // получаем папки поля
 		}
 
 		if ($type==5) { //////////////////////////////////////////////////////////
@@ -2108,12 +2121,6 @@ function mainpage_save($id=0, $type, $namo, $title, $text, $useit, $shablon, $de
 			$text = "base|type=".$s_tip.$add."&options=".$text2;
 			$useit = "[содержание]";
 		}
-
-		$namo = mysql_real_escape_string(stripcslashes($namo));
-		$title = mysql_real_escape_string(stripcslashes($title));
-		$text = mysql_real_escape_string(stripcslashes($text));
-		$useit = mysql_real_escape_string(stripcslashes($useit));
-		$shablon = mysql_real_escape_string(stripcslashes($shablon));
 		$db->sql_query("INSERT INTO ".$prefix."_mainpage (`id`, `type`, `name`, `title`, `text`, `useit`, `shablon`, `counter`, `tables`, `color`, `description`, `keywords`) VALUES (NULL, '".$type."', '".$namo."', '".$title."', '".$text."', '".$useit."', '".$shablon."', '0', 'pages', '0', '', '');") or die('Не удалось создать. Попробуйте еще раз и в случае неудачи обратитесь к разработчику.');
 	}
 
@@ -2190,6 +2197,7 @@ function mainpage_del($id, $type, $name="") {
 	}
 }
 ##################################################################################################
+/*
 function mainpage_recycle_spiski() {
 	global $admintip, $prefix, $db;
 	$sql = "select name from ".$prefix."_mainpage where type='4' and text like '%type=1%'";
@@ -2200,17 +2208,18 @@ function mainpage_recycle_spiski() {
 	}
 	Header("Location: sys.php");
 }
+*/
 ##################################################################################################
 function mainpage_create_block($title, $name, $text, $modul, $useit, $design) {
-	global $tip, $admintip, $prefix, $db, $name_razdels;
+	global $tip, $admintip, $prefix, $db; //, $name_razdels;
 	# id type name title text useit shablon
 	$title = trim($title); // Название блока
 	$name = intval($name); // тип блока
 	$useit = "|".trim($useit); // настройки блока
 	if (trim($title) == "") $title = "Вы забыли ввести название этого блока! ОТРЕДАКТИРУЙТЕ!";
-	if ($modul != 0) {
-		$modul_name = $name_razdels[$modul];
-		$useit = $modul_name.$useit;
+	if ($modul != "0" && $modul != "allrazdely") {
+		//$modul_name = $name_razdels[$modul]; 
+		$useit = $modul.",".$useit;
 		$shablon = "block-".$modul_name."-".$name; // css блока имеет вид: block-англ.имя раздела-тип блока
 	} else $shablon = "block-".strtolow(translit_name(trim($title))); // транслитерация имени блока
 	if ($design != 0) $useit .= "&design=$design";

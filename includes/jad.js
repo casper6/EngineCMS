@@ -48,6 +48,13 @@ function papka(cid, sort, id, xxx) {
 	    success: function(data){ $('#podpapka'+cid).html(data); }
 	});
 }
+function show_pole(id, page_id, razdel, cid) {
+	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
+	    data: {'func': 'show_pole', 'id': id, 'string': razdel+'*@%'+page_id+'*@%'+cid},
+	    beforeSend: function(){ $('#pole').html('<br><img src=images/loading.gif> Загрузка...'); },
+	    success: function(data){ $('#pole').html(data); }
+	});
+}
 function show_otvet_comm(cid, name, mail, mod) {
 	if ($('#otvet_comm'+cid).html() == '') {
 		$('#show_otvet_link'+cid).hide();
@@ -242,9 +249,9 @@ function rep(id,type,razdel,papka) {
 function clo(pid) {
 	document.getElementById('pid'+pid).innerHTML = '';
 }
-function izmenapapka(select,papka,razdel,id,type) {
+function izmenapapka(select,papka,this_cid,id,type) {
 	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
-	    data: {'func': 'izmenapapka', 'id': id, 'type': type, 'string': select+'*@%'+papka+'*@%'+razdel },
+	    data: {'func': 'izmenapapka', 'id': id, 'type': type, 'string': select+'*@%'+papka+'*@%'+this_cid },
 	    beforeSend: function(){ $('#izmenapapka'+id).html('<img src=images/loading.gif> Загружаю...'); },
 	    success: function(data){ $('#izmenapapka'+id).html(data); }
 	});

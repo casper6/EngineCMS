@@ -12,50 +12,62 @@ if ($name=="-email") { // занесение мыла как скрытого к
 	$avtor = trim(str_replace("  "," ",filter($avtor, "nohtml")));
 	$mail = trim(str_replace("  "," ",filter($mail, "nohtml")));
 	if (!strpos($mail, "@")) {
-		echo "<h2>Вы указали неправильный Email.</h2>Попробуйте еще раз
-		<form method=POST action=\"/--email\" class=main_mail_form><table><tr><td align=right>Email: </td><td><input type=text name=mail class=main_mail_input size=10></td></tr><tr><td align=right>Имя: </td><td><input type=text name=avtor value='".$avtor."' class=main_mail_input size=10></td></tr><tr><td colspan=2 align=right><input type='submit' name='ok' value='Подписаться на рассылку'></td></tr></table></form>";
+		echo "<h2>".ss("Вы указали неправильный Email.")."</h2>
+		".ss("Попробуйте еще раз")."
+		<form method=POST action=\"/--email\" class=main_mail_form><table><tr>
+		<td align=right>".ss("Email").": </td><td><input type=text name=mail class=main_mail_input size=10></td></tr><tr>
+		<td align=right>".ss("Имя").": </td><td><input type=text name=avtor value='".$avtor."' class=main_mail_input size=10></td></tr><tr><td colspan=2 align=right><input type='submit' name='ok' value='".ss("Подписаться на рассылку")."'></td></tr></table></form>";
 	} else {
 		// проверка наличия такого email в БД 
 		$numrows = $db->sql_numrows($db->sql_query("SELECT `cid` from ".$prefix."_pages_comments where `mail`='$mail' and `num`='0'"));
 		if ($numrows == 0) {
 			$db->sql_query("INSERT INTO ".$prefix."_pages_comments ( `cid` , `num` , `avtor` , `mail` , `text` , `ip` , `data`, `drevo`, `adres`, `tel`, `active` ) VALUES ('', '0', '$avtor', '$mail', '', '$ip', '$now', '', '', '', '1')");
-			echo "<h2>Вы подписались на рассылку.</h2><h2> Спасибо!</h2>";
+			echo "<h2>".ss("Вы подписались на рассылку.")."</h2><h2> Спасибо!</h2>";
 		} else {
-			echo "<h2>Вы уже подписаны на рассылку.</h2>";
+			echo "<h2>".ss("Вы уже подписаны на рассылку.")."</h2>";
 		}
 	}
-	echo "<br>Вы можете вернуться назад (нажав на клавиатуре клавишу &larr;BackSpace) или перейти <a href='/'>на Главную</a>.";
+	echo "<br>".ss("Вы можете вернуться назад (нажав на клавиатуре клавишу &larr;BackSpace) или перейти")." <a href='/'>".ss("на Главную страницу")."</a>.";
 	exit;
 } else { // Сборка дизайна с разделом и Блоки
 	###################################################### БЛОКИ
 	$block = ""; // Определение раздела
 	switch ($name) {
 	    case "-search":
-		    list($block, $stil) = include('page/search.php'); $pagetitle = $slov." — Поиск — ";
+		    list($block, $stil) = include('page/search.php'); 
+		    $pagetitle = $slov." — ".ss("Поиск")." — ";
 	    	break;
 	    case "-slovo":
-		    list($block, $stil) = include('page/tags.php');	$pagetitle = $slovo." — Тэги — ";
+		    list($block, $stil) = include('page/tags.php');	
+		    $pagetitle = $slovo." — ".ss("Тэги")." — ";
 	    	break;
 	    case "-register":
-		    list($block, $stil) = include('page/reg.php'); $pagetitle = "Регистрация — ";
+		    list($block, $stil) = include('page/reg.php'); 
+		    $pagetitle = ss("Регистрация")." — ";
 	    	break;
 	    case "-login":
-		    list($block, $stil) = include('page/login.php'); $pagetitle = "Вход — ";
+		    list($block, $stil) = include('page/login.php'); 
+		    $pagetitle = ss("Вход")." — ";
 	    	break;
 	    case "-user":
-		    list($block, $stil) = include('page/user.php');	$pagetitle = "Страница пользователя";
+		    list($block, $stil) = include('page/user.php');	
+		    $pagetitle = ss("Страница пользователя");
 	    	break;
 	    case "-users":
-		    list($block, $stil) = include('page/users.php'); $pagetitle = "Личная анкета — ";
+		    list($block, $stil) = include('page/users.php'); 
+		    $pagetitle = ss("Личная анкета")." — ";
 	    	break;
 	    case "-adduser":
-		    list($block, $stil) = include('page/adduser.php'); $pagetitle = "Добавление публикации — ";
+		    list($block, $stil) = include('page/adduser.php'); 
+		    $pagetitle = ss("Добавление публикации")." — ";
 	    	break;
 	    case "-edituser":
-		    list($block, $stil) = include('page/edituser.php'); $pagetitle = "Редактирование личной анкеты — ";
+		    list($block, $stil) = include('page/edituser.php'); 
+		    $pagetitle = ss("Редактирование личной анкеты")." — ";
 	    	break;
 	    case "-logout":
-		    list($block, $stil) = include('page/logout.php'); $pagetitle = "Вы вышли — ";
+		    list($block, $stil) = include('page/logout.php'); 
+		    $pagetitle = ss("Вы вышли")." — ";
 	    	break;
 		default:
 		global $title_razdels, $txt_razdels, $useit_razdels, $pid, $class;
@@ -130,18 +142,16 @@ if ($name=="-email") { // занесение мыла как скрытого к
 		if (file_exists("page/main.php") and $main_options != "no") {
 			require_once("page/main.php");
 
-			$soda = explode("[следующий]",$soda);
-
+			$soda = explode(aa("[следующий]"),$soda);
 			// $soda[0] - для всех
 			// $soda[1] - только для главной страницы
 			// $soda[2] - только для папок
 			// $soda[3] - только для страниц
-
 			$soda_col = count($soda);
-			if (strpos(" ".$soda[0],"[содержание]")) $soderganie = str_replace("[содержание]", $soderganie, $soda[0]);
+			if (strpos(" ".$soda[0], aa("[содержание]"))) $soderganie = str_replace(aa("[содержание]"), $soderganie, $soda[0]);
 			else {
-				$soderganie = str_replace("[название]", "<div class=cat_title><span class=cat_categorii_link>".$ModuleName."</span></div><div class=polosa></div>", $soda[0]);
-				$soderganie = str_replace("[страницы]", $soderganie2, $soderganie);
+				$soderganie = str_replace(aa("[название]"), "<div class=cat_title><span class=cat_categorii_link>".$ModuleName."</span></div><div class=polosa></div>", $soda[0]);
+				$soderganie = str_replace(aa("[страницы]"), $soderganie2, $soderganie);
 				// Добавление табов
 			    if (strpos(" ".$soderganie, "{{")) {
 			      if ($include_tabs == false) { include ('page/tabs.php'); $include_tabs = true; }
@@ -150,34 +160,27 @@ if ($name=="-email") { // занесение мыла как скрытого к
 			}
 
 			if ($cid=="" and ($pid=="" or $pid==0) and $soda_col > 1) {
-				if (strpos(" ".$soda[1],"[содержание]")) $soderganie = str_replace("[содержание]", $soderganie, $soda[1]);
+				if (strpos(" ".$soda[1],aa("[содержание]"))) $soderganie = str_replace(aa("[содержание]"), $soderganie, $soda[1]);
 				else {
-					$soderganie = str_replace("[название]", "<div class=cat_title><A class=cat_categorii_link href=-".$DBName.">".$ModuleName."</a></div><div class=polosa></div>", $soda[1]);
-					$soderganie = str_replace("[страницы]", $soderganie2, $soderganie);
+					$soderganie = str_replace(aa("[название]"), "<div class=cat_title><A class=cat_categorii_link href=-".$DBName.">".$ModuleName."</a></div><div class=polosa></div>", $soda[1]);
+					$soderganie = str_replace(aa("[страницы]"), $soderganie2, $soderganie);
 				}
 			}
-
-			//if ($cid=="" and $pid=="" and $soda_col > 1) $soderganie = str_replace("[содержание]", $soderganie, $soda[1]); 
 			// Содержание главной страницы раздела
+			if ($cid!="" and ($pid=="" or $pid==0) and $soda_col > 2) $soderganie = str_replace(aa("[содержание]"), $soderganie, $soda[2]);
+			if ($cid=="" and $pid!="" and $pid!=0 and $soda_col > 3) $soderganie = str_replace(aa("[содержание]"), $soderganie, $soda[3]); 
 
-			if ($cid!="" and ($pid=="" or $pid==0) and $soda_col > 2) $soderganie = str_replace("[содержание]", $soderganie, $soda[2]); 
-			// Содержание главной страницы раздела
-
-			if ($cid=="" and $pid!="" and $pid!=0 and $soda_col > 3) $soderganie = str_replace("[содержание]", $soderganie, $soda[3]); 
-			// Содержание главной страницы раздела
-
-			$block = str_replace("[содержание]", $soderganie, $block); 
+			$block = str_replace(aa("[содержание]"), $soderganie, $block); 
 			// Тело раздела ставится в дизайн
 
 			// Нумерация страниц ставится в дизайн
-			if (strpos(" ".$block, "[нумерация]")) {
+			if (strpos(" ".$block, aa("[нумерация]"))) {
 				global $topic_links_global;
-				$block = str_replace("[нумерация]", $topic_links_global, $block);
+				$block = str_replace(aa("[нумерация]"), $topic_links_global, $block);
 			}
-
 		// Ставим содержание модуля
 		} else {
-			$block = str_replace("[содержание]", $main_file, $block);
+			$block = str_replace(aa("[содержание]"), $main_file, $block);
 		}
 		break;
 	} // крышка определения поиска и тегов
@@ -218,22 +221,22 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 	// обнулили все опции блоков от греха подальше
 	$titleshow=$media=$folder=$datashow=$tagdelete=$ipdatauser=$design=$open_all=$catshow=$main=$daleeshow=$openshow=$number=$add=$size=$papki_numbers=$zagolovokin=$menu=$noli=$html=$show_title=$random=$showlinks=$open_new_window=$shablon=$show_new_pages=$reload_link_show=$reload_link_time=$re_menu=0;
 	$opros_type=$limkol=$pageshow=$only_question=$opros_result=$foto_gallery_type=$notitlelink=1;
-	$addtitle="Добавить статью";
-	$dal="Далее...";
+	$shablon=$class=$alternative_title_link=$cid_open=$no_show_in_razdel=$watermark=$show_in_papka="";
+	$addtitle = ss("Добавить статью");
+	$dal = ss("Далее...");
 	$first = "src=";
 	$second = ">";
 	$third = " ";
 	$col_bukv = 50;
 	$img_width = 60;
 	$img_height = 60;
-	$shablon=$class=$alternative_title_link=$cid_open=$no_show_in_razdel=$watermark=$show_in_papka="";
 	$sort = "date desc";
 	$papka_sort = "sort, title";
-	$razdel_open_name = "Открыть раздел"; //
-	$razdel_open2_name = "Открыть раздел";
+	$razdel_open_name = ss("Открыть раздел"); //
+	$razdel_open2_name = ss("Открыть раздел");
 	$calendar = ""; // Календарь - перенаправление на дату из списка.
-	$show_in_razdel = "все";
-	$reload_link_text = "Показать еще...";
+	$show_in_razdel = ss("все");
+	$reload_link_text = ss("Показать еще...");
 
 	// Для базы данных
 	$base = ""; // Указываем название таблицы БД
@@ -257,8 +260,8 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 	
 	if ($random == 1) $sort = "RAND()";
 
-	if ($alternative_title_link == "" and $useitX != "все") $alternative_title_link = "/-".$useitX."";
-	if ($cid_open=="все" or $cid_open=="") {} else {$alternative_title_link = "/-".$useitX."_cat_".$cid_open;}
+	if ($alternative_title_link == "" and $useitX != aa("все")) $alternative_title_link = "/-".$useitX."";
+	if ($cid_open==aa("все") or $cid_open=="") {} else {$alternative_title_link = "/-".$useitX."_cat_".$cid_open;}
 
 	// Определение дизайна блоков
 	$design_open=""; $design_close="";
@@ -267,14 +270,14 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 	$block_title2 = "";
 	/////////////////////////////////////
 	if ($design != 0) {
-		$row7 = $db->sql_fetchrow($db->sql_query("select `text`, `useit` from ".$prefix."_mainpage where `id`='$design' and type='0' and `tables`='pages'"));
-		$design = explode("[содержание]", $row7['text']);
+		$row7 = $db->sql_fetchrow($db->sql_query("select `text`, `useit` from ".$prefix."_mainpage where `id`='".$design."' and type='0' and `tables`='pages'"));
+		$design = explode(aa("[содержание]"), $row7['text']);
 		$stile = $row7['useit'];
 		// Добавляем стиль дизайна
 		if (trim($stile)!="" and $stile!=0) $stil .= "-".str_replace(" ","-",trim($stile));
 		/////////////////////////////////////
 		if ($nameX == 0) {
-		if ($useitX != "все" and $nameX != 2 and $useitX != "" and $razdel_open_name != "" and $razdel_open_name != "no") $block_title2 .= "<span class=open_all_small> &nbsp; &#124; &nbsp; </span> <a href=-".$useitX." title=\"".$razdel_open_name."\" class=open_all_small><u>".$razdel_open_name."</u></a>";
+		if ($useitX != aa("все") and $nameX != 2 and $useitX != "" and $razdel_open_name != "" and $razdel_open_name != "no") $block_title2 .= "<span class=open_all_small> &nbsp; &#124; &nbsp; </span> <a href=-".$useitX." title=\"".$razdel_open_name."\" class=open_all_small><u>".$razdel_open_name."</u></a>";
 		}
 	/////////////////////////////////////
 		$design_open = "<div class=".$shablonX.">".$design[0]; 
@@ -301,8 +304,8 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 	}
 
 	if ($html == 1) { $design_close = ""; $design_open = ""; $block_title = ""; $block_title2 = ""; }
-	if ($blocks == 1) { $design_close .= "</div>"; $design_open = "<div class=show_block><div class=show_block_title><a href='sys.php?op=mainpage&id=".$idX."&nastroi=1' title='Настроить блок'><img align=right width=16 src='/images/sys/cog.png'></a>
-	<a href='sys.php?op=mainpage&id=".$idX."&red=1' title='Редактировать в HTML'><img align=right width=16 src='/images/sys/edit.png'></a>".$titleX."</div>".$design_open; }
+	if ($blocks == 1) { $design_close .= "</div>"; $design_open = "<div class=show_block><div class=show_block_title><a href='sys.php?op=mainpage&id=".$idX."&nastroi=1' title='".ss("Настроить блок")."'><img align=right width=16 src='/images/sys/cog.png'></a>
+	<a href='sys.php?op=mainpage&id=".$idX."&red=1' title='".ss("Редактировать в HTML")."'><img align=right width=16 src='/images/sys/edit.png'></a>".$titleX."</div>".$design_open; }
 
 	// Определяем наличие шаблонов
 	if (trim($shablon) != "") {
@@ -317,7 +320,7 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 
 	// Работа с разными типами блоков
 	if (!isset($cid)) $cid = 0;
-	if (($show_in_razdel != $name and $show_in_razdel != "все") or $no_show_in_razdel == $name or ($show_in_papka != $cid and $show_in_papka != "")) {
+	if (($show_in_razdel != $name and $show_in_razdel != aa("все")) or $no_show_in_razdel == $name or ($show_in_papka != $cid and $show_in_papka != "")) {
 		$block = str_replace("[$titleX]", "", $block);
 		$nameX = "-1";
 	}
@@ -343,33 +346,31 @@ case "0": # Блок страниц раздела
 
 	if ($useitX=="open_razdel") { // Показывать ВСЕ разделы или выбранный
 		if ($name == "index") {
-			$block = str_replace("[$titleX]", "", $block);
+			$block = str_replace("[".$titleX."]", "", $block);
 			break 1;
 		} else {
-			$and2 = " and module='$name'"; 
-			$pages="pages";
+			$and2 = " and module='".$name."'";
 		}
-	} elseif ($useitX=="все" or $useitX=="") { // Показывать ВСЕ разделы или выбранный
+	} elseif ($useitX==aa("все") or $useitX=="") { // Показывать ВСЕ разделы или выбранный
 		$and2 = ""; 
-		$pages="pages";
 	} elseif ( strpos($useitX, ",") ) { // Показывать определенные разделы, через «,»
 		$a = array();
 		$use = explode(",",$useitX);
 		foreach ($use as $value) {
-			if ($value != "") $a[] = "module='$value'";
+			if ($value != "") $a[] = "module='".$value."'";
 		}
 		$and2 = " and (".implode(" or ",$a).")";
-	} else $and2 = " and module='$useitX'";
+	} else $and2 = " and module='".$useitX."'";
 
-	if ($cid_open=="все" or $cid_open=="") { // Показывать ВСЕ папки или выбранную
+	if ($cid_open==aa("все") or $cid_open=="") { // Показывать ВСЕ папки или выбранную
 		$and3 = "";
 		$cid_open2 = "";
 	} else {
-		$and2 = " and cid='$cid_open'";
+		$and2 = " and cid='".$cid_open."'";
 		$cid_open2 = "_cat_".$cid_open;
 	}
 	
-	if (isset($size)) $limit = " limit $number,$size"; // $lim2 = size - убрано
+	if (isset($size)) $limit = " limit ".$number.",".$size; // $lim2 = size - убрано
 	
 	if ($shablon != "") {
 	$sel = "*"; 
@@ -380,13 +381,13 @@ case "0": # Блок страниц раздела
 		global $id_razdel_and_bd;
 		$r_id = $id_razdel_and_bd[$useitX];
 		
-		$result5 = $db->sql_query("SELECT `id`, `name`, `text` FROM ".$prefix."_mainpage WHERE `tables`='pages' and (`useit` = '$r_id' or `useit` = '0') and `type`='4'");
+		$result5 = $db->sql_query("SELECT `id`, `name`, `text` FROM ".$prefix."_mainpage WHERE `tables`='pages' and (`useit` = '".$r_id."' or `useit` = '0') and `type`='4'");
 		while ($row5 = $db->sql_fetchrow($result5)) {
 			$s_id = $row5['id'];
 			$n = $row5['name'];
 			$s_names[$s_id] = $n;
 			// Найдем значение всех полей для данных страниц
-			$result6 = $db->sql_query("SELECT name, pages FROM ".$prefix."_spiski WHERE type='$n'");
+			$result6 = $db->sql_query("SELECT name, pages FROM ".$prefix."_spiski WHERE type='".$n."'");
 			while ($row6 = $db->sql_fetchrow($result6)) {
 			$n1 = $row6['name'];
 			$n2 = explode(" ", str_replace("  ", " ", trim($row6['pages'])));
@@ -405,7 +406,7 @@ case "0": # Блок страниц раздела
 		$dat = date("Y-m-d");
 		if (isset($_COOKIE['lastdate'])) {
 			$tmp = $_COOKIE['lastdate']; 
-			if (!preg_match("|^[\d-\|]+$|", $tmp)) die("Попытка взлома не удалась.");
+			if (!preg_match("|^[\d-\|]+$|", $tmp)) die(ss("Попытка взлома не удалась."));
 			$tmp = explode("|",$tmp);
 			$nowdate = $tmp[0];
 			$olddate = $tmp[1];
@@ -417,7 +418,7 @@ case "0": # Блок страниц раздела
 			setcookie ('lastdate', $dat."|0",time()+2678400,"/");
 		} elseif ($nowdate == $dat && $olddate == "0") { // Посетил сегодня (первый раз) - показываем всё
 		} elseif ($nowdate == $dat && $olddate != "0") { // Посетил сегодня (ранее посещал) - показываем только свежее
-			if (!empty($useitX)) $textX .= "Показаны последние. Показать <a href='/-".$useitX."'>все</a>.";
+			if (!empty($useitX)) $textX .= ss("Показаны последние. Показать")." <a href='/-".$useitX."'>".ss("все")."</a>.";
 			$and4 = " and DATE(`date`) >= '".$nowdate."'";
 		} else { // Посетил не сегодня - показываем только свежее
 			setcookie ('lastdate', $dat."|".$nowdate,time()+2678400,"/");
@@ -428,14 +429,11 @@ case "0": # Блок страниц раздела
 	$sql = "SELECT ".$sel." from ".$prefix."_pages where `tables`='pages' and active='1'".$and.$and2.$and3.$and4." order by ".$sort."".$limit."";
 	$result = $db->sql_query($sql);
 
-
-	if ($shablon == "") {
+	if ($shablon == "")
 		if ($openshow==0) $textX .= "<ul id=block_li_title class=\"block_li_title\">"; 
-	}
 	
 	$numlock = 0; // Счетчик кол-ва выведенных строк у блоков
 	while ($row = $db->sql_fetchrow($result)) {
-	
 		$numlock++;
 		$p_id = $row['pid'];
 		$module = $row['module'];
@@ -444,20 +442,20 @@ case "0": # Блок страниц раздела
 		$titl = str_replace("\"","",$title);
 
 		if ($openshow > 0 or $shablon != "") {
-			$open_text = filter(strip_tags(str_replace("<img ","<img title='$titl' ",$row['open_text']), '<b><br><i><ul><li><ol><dl><dt><img><table><tr><td><a><strong><em><embed><param><object><p><iframe><div>'), "", 0);
-			$main_text = filter(str_replace("<img ","<img title='$titl' ",$row['main_text']), "", 0);
+			$open_text = filter(strip_tags(str_replace("<img ", "<img title='".$titl."' ", $row['open_text']), '<b><br><i><ul><li><ol><dl><dt><img><table><tr><td><a><strong><em><embed><param><object><p><iframe><div>'), "", 0);
+			$main_text = filter(str_replace("<img ","<img title='".$titl."' ",$row['main_text']), "", 0);
 			// Вырезание авто-ссылок
-		  $open_text = preg_replace('/ссылка-.*-ссылка/Uis', '', $open_text);
-		  $open_text = str_replace('-ссылка-', '', $open_text);
+		  $open_text = preg_replace('/'.ss("ссылка").'-.*-'.ss("ссылка").'/Uis', '', $open_text);
+		  $open_text = str_replace('-'.ss("ссылка").'-', '', $open_text);
 		  $open_text = str_replace('<hr class="editor_cut">', '', $open_text);
 		  $main_text = str_replace('<!--more-->', '<hr>', $main_text);
 	  	}
 		if ($shablon != "") {
 			$active = $row['active'];
 			switch ($active) {
-				case "1": $active = "Открытая информация";	break;
-				case "2": $active = "Информация ожидает проверки";	break;
-				case "0": $active = "Доступ к странице ограничен";	break;
+				case "1": $active = ss("Открытая информация");	break;
+				case "2": $active = ss("Информация ожидает проверки");	break;
+				case "0": $active = ss("Доступ к странице ограничен");	break;
 			}
 			$counterX = $row['counter'];
 			$golos = $row['golos'];
@@ -466,15 +464,14 @@ case "0": # Блок страниц раздела
 			if (preg_match_all('/<img(?:\\s[^<>]*?)?\\bsrc\\s*=\\s*(?|"([^"]*)"|\'([^\']*)\'|([^<>\'"\\s]*))[^<>]*>/i', $open_text, $m)) $foto_adres = $m[1][0];
 			else $foto_adres = "";
 			$no_html_open_text = strip_tags($open_text,"<ul><li><ol>");
-		//print_r($foto_adres);
 			$foto = "<img src='".$foto_adres."'>";
 			$search = $row['search'];
-			$price = $row['price']." руб."; // или другая валюта!
-			$rss = $row['rss'];
-			switch ($rss) {
+			$price = ""; //$row['price']." ".ss("руб."); // или другая валюта! Добавить смену валюты
+			$rss = ""; //$row['rss'];
+			/* switch ($rss) {
 				case "1": $rss = "<a name=rss title='Информация доступна через RSS-подписку' class=green_link>RSS</a>"; break;
 				case "0": $rss = "<a name=rss title='Информация не доступна через RSS-подписку' class=red_link>RSS</a>"; break;
-			}
+			} */
 		}
 		////////////////////////////////////////////////////////////////////////////////////!!!!!!!!!!!!!!!!!!!!!!!!!
 		if (trim($class) != "") {
@@ -494,58 +491,58 @@ case "0": # Блок страниц раздела
 
 		if ($shablon != "") {
 		  $tr = array(
-			"[№]"=>$p_id,
-			"[модуль]"=>$module,
-			"[№ папки]"=>$p_cid,
-			"[название папки]"=>$titles_papka[$p_cid],
-			"[название]"=>$title,
-			"[ссылка]"=>"<a href=-".$module."_page_".$p_id.$blank." class='block_title ".$class."'>".$title."</a>",
-			"[предисловие]"=>"<span id=block_open_text class='block_open_text ".$class."'>".$open_text."</span>",
-			"[содержание]"=>$main_text,
-			"[дата]"=>$data,
-			"[число посещения]"=>$counterX,
-			"[открытость]"=>$active,
-			"[число голосование]"=>$golos,
-			"[число комментарии]"=>$comm,
-			"[адрес фото]"=>$foto_adres,
-			"[фото]"=>$foto,
-			"[предисловие_без_фото]"=>$no_foto_open_text,
-			"[предисловие_без_html]"=>$no_html_open_text,
-			"[теги]"=>$search,
-			"[цена]"=>$price,
-			"[rss доступность]"=>$rss
+			aa("[№]")=>$p_id,
+			aa("[модуль]")=>$module,
+			aa("[№ папки]")=>$p_cid,
+			aa("[название папки]")=>$titles_papka[$p_cid],
+			aa("[название]")=>$title,
+			aa("[ссылка]")=>"<a href=-".$module."_page_".$p_id.$blank." class='block_title ".$class."'>".$title."</a>",
+			aa("[предисловие]")=>"<span id=block_open_text class='block_open_text ".$class."'>".$open_text."</span>",
+			aa("[содержание]")=>$main_text,
+			aa("[дата]")=>$data,
+			aa("[число посещения]")=>$counterX,
+			aa("[открытость]")=>$active,
+			aa("[число голосование]")=>$golos,
+			aa("[число комментарии]")=>$comm,
+			aa("[адрес фото]")=>$foto_adres,
+			aa("[фото]")=>$foto,
+			aa("[предисловие_без_фото]")=>$no_foto_open_text,
+			aa("[предисловие_без_html]")=>$no_html_open_text,
+			aa("[теги]")=>$search,
+			aa("[цена]")=>$price,
+			aa("[rss доступность]")=>$rss
 		  );
 			$shablonX = $shablon;
 			foreach ($s_names as $id2 => $nam2) {
 			// Найдем значение каждого поля для данной страницы
 					if (!isset($s_opts[$nam2][$p_id])) $s_opts[$nam2][$p_id] = "";
 					$nam3 = $s_opts[$nam2][$p_id];
-					$shablonX = str_replace("[$nam2]", $nam3, $shablonX);
+					$shablonX = str_replace("[".$nam2."]", $nam3, $shablonX);
 			}
 			$textX .= strtr($shablonX,$tr);
 			
 		///////////////////////////////////////////////////////////////////////////////////
 		} else { // если без шаблона
 			 // Если показывать название папки
-			if (($catshow == 1 or $shablon != "") and $p_cid != 0) $cat = "<span class=\"block_li_cat ".$class."\">".$titles_papka[$p_cid]."</span> $strelka "; else $cat = "";
+			if (($catshow == 1 or $shablon != "") and $p_cid != 0) $cat = "<span class=\"block_li_cat ".$class."\">".$titles_papka[$p_cid]."</span> ".$strelka." "; else $cat = "";
 				if ($openshow > 0) { // Если показывать предописание
 					if (trim($main_text)!="" and $daleeshow == 1) {
 						if ($openshow == 1) {
 							$dalee = " <div id=dalee class=\"dalee ".$class."\"><a href=-".$module."_page_".$p_id.$blank.">".$dal."</a></div>";
 						} else {
-							$dalee = " <div id=dalee class=\"dalee ".$class."\">$dal</div>";
+							$dalee = " <div id=dalee class=\"dalee ".$class."\">".$dal."</div>";
 						}
 					} else $dalee = "";
 					$open_text = "<span id=block_open_text class='block_open_text ".$class."'>".$open_text.$dalee."</span>";
 					if ($zagolovokin == 0) {
 						$zagolovok = "<span class='block_title ".$class."'><span class='block_li_data ".$class."'>".$data."</span>".$cat."<a class='block_title ".$class."' href='-".$module."_page_".$p_id.$blank."'>".$title."</a></span>";
-						$open_text = str_replace("[заголовок]", "", $open_text); 
+						$open_text = str_replace(aa("[заголовок]"), "", $open_text); 
 					} else {
 						$zagolovok = "";
 						if ($openshow == 1) { 
-							$open_text = "<span class=a_block_title><a class=\"a_block_title ".$class."\" href=-".$module."_page_".$p_id.$blank.">".str_replace("[заголовок]","</span><span class=\"block_title ".$class."\"><span class=\"block_li_data ".$class."\">".$data."</span>".$cat."".$title."</span>",$open_text)."</a>"; // Вставляем Заголовок в блок!
+							$open_text = "<span class=a_block_title><a class=\"a_block_title ".$class."\" href=-".$module."_page_".$p_id.$blank.">".str_replace(aa("[заголовок]"),"</span><span class=\"block_title ".$class."\"><span class=\"block_li_data ".$class."\">".$data."</span>".$cat."".$title."</span>",$open_text)."</a>"; // Вставляем Заголовок в блок!
 						} else {
-							$open_text = "<span class=a_block_title>".str_replace("[заголовок]","</span><span class=\"block_title ".$class."\">".$data."".$cat."".$title."</span>",$open_text).""; // Вставляем Заголовок в блок!
+							$open_text = "<span class=a_block_title>".str_replace(aa("[заголовок]"),"</span><span class=\"block_title ".$class."\">".$data."".$cat."".$title."</span>",$open_text).""; // Вставляем Заголовок в блок!
 						}
 					}
 					$textX .= "<div>".$zagolovok."".$open_text."</div>\n";
@@ -555,7 +552,7 @@ case "0": # Блок страниц раздела
 		}			
 	}
 
-	if ($numlock == 0 && $and4 != "" && !empty($useitX)) $textX .= "Пока что ничего нового. См. <a href='/-".$useitX."'>Архив</a>.";
+	if ($numlock == 0 && $and4 != "" && !empty($useitX)) $textX .= ss("Пока ничего нового. См.")." <a href='/-".$useitX."'>".ss("Архив")."</a>.";
 
 	if ($shablon == "") {
 		if ($openshow==0) $textX .= "</ul>";
@@ -563,28 +560,26 @@ case "0": # Блок страниц раздела
 
 	if ($openshow==0) $textX .= "";
 
-	if ($add==1) $textX .= "<div id=add class=\"add".$class."\"><a href=-".$module."&add=true".$blank." id=add_link class=\"add_link".$class."\">$addtitle</a></div>";
+	if ($add==1) $textX .= "<div id=add class=\"add".$class."\"><a href=-".$module."&add=true".$blank." id=add_link class=\"add_link".$class."\">".$addtitle."</a></div>";
 	
 	if ($open_all==1 and $razdel_open2_name != "" and $razdel_open2_name != "no") $textX .= "<br><div id=open_all class=\"open_all".$class."\"><a href=-".$module.$cid_open2.$blank." id='open_all_link' class=\"open_all_link".$class."\">".$razdel_open2_name."</a></div><br>";
 
-	$block = str_replace("[$titleX]", $design_open.$textX.$design_close, $block);
+	$block = str_replace("[".$titleX."]", $design_open.$textX.$design_close, $block);
 break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 case "1": # Блок комментариев модуля
-	$pages = "pages";
 	// Получим список № страниц
 	if ($useitX == "") $and = "";
-	else $and = " where `tables`='pages' and module='$useitX'"; 
+	else $and = " where `tables`='pages' and module='".$useitX."'"; 
 	// Показывать ВСЕ разделы или выбранный
-
 	if ($only_question==0) $and2 = "";
 	elseif ($only_question==1) $and2 = " and drevo='0'"; 
 	elseif ($only_question==2) $and2 = " and drevo!='0'"; 
-	if (isset($size)) $limit = " limit $number,$size";
+	if (isset($size)) $limit = " limit ".$number.",".$size;
 	if ($shablon != "") $sel = "*";
 	else $sel = "cid, num, avtor, text, data"; 
 	
-	$sql = "SELECT `pid`, `title`, `module` from ".$prefix."_".$pages.$and." order by `date` desc";
+	$sql = "SELECT `pid`, `title`, `module` from ".$prefix."_pages".$and." order by `date` desc";
 
 	$result = $db->sql_query($sql);
 	$line_id = array();
@@ -597,7 +592,7 @@ case "1": # Блок комментариев модуля
 			$titles[$p_id] = $row['title'];
 		}
 	$line_id = " and (num='".implode("' or num='", $line_id)."')";
-	$sql = "SELECT ".$sel." from ".$prefix."_".$pages."_comments where `tables`='pages'".$line_id." and active='1'".$and2." order by ".$sort."".$limit."";
+	$sql = "SELECT ".$sel." from ".$prefix."_pages_comments where `tables`='pages'".$line_id." and active='1'".$and2." order by ".$sort.$limit."";
 
 	$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result)) {
@@ -608,14 +603,12 @@ case "1": # Блок комментариев модуля
 			if (strlen($row['text']) > $col_bukv) $text .= "...";
 			$data = $row['data'];
 			$data = date2normal_view(str_replace(".","-",$data), 2, 1);
-			
-	// Если показывать название страницы
-	if ($pageshow == 1) $cat = "".$titles[$num]." $strelka "; else $cat = "";
-			
+			// Если показывать название страницы
+			if ($pageshow == 1) $cat = "".$titles[$num]." $strelka "; else $cat = "";
 			$textX .= "<li class=\"block_li_title ".$class."\"><span class=\"block_li_data ".$class."\">".$data."</span> ".$strelka." <span class=\"block_li_cat ".$class."\">".$cat."</span> <a class=\"block_comment_text ".$class."\" href=-".$modules[$num]."_page_".$num."#comm_".$cid.">".$text."</a></li>";
 		}
 		$textX = "<ul id=block_li_title class=\"block_li_title\">".$textX."</ul>";
-	$block = str_replace("[$titleX]", $design_open.$textX.$design_close, $block);
+	$block = str_replace("[".$titleX."]", $design_open.$textX.$design_close, $block);
 	$type = ""; break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 case "2": # Блок текста
@@ -625,8 +618,8 @@ case "2": # Блок текста
 	  if ($include_tabs == false) { include ('page/tabs.php'); $include_tabs = true; }
 	  if (strpos(" ".$textX, "{{")) $textX = show_tabs($textX);
 	}
-	$block = str_replace("[$titleX]", $design_open.$textX.$design_close, $block);
-	if ($titleshow != 0) $block = str_replace("[заголовок]", $titleX, $block);
+	$block = str_replace("[".$titleX."]", $design_open.$textX.$design_close, $block);
+	if ($titleshow != 0) $block = str_replace(aa("[заголовок]"), $titleX, $block);
 	break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 case "3": # Блок ротатор рекламы
@@ -644,7 +637,7 @@ case "3": # Блок ротатор рекламы
 	  }
 	  $textX .= "</script>";
 	  if ($reload_link_show == "1") $textX .= $reload_link;
-	  $textX .= "<div id='show_rotator".$idX."'>Загружается...</div>";
+	  $textX .= "<div id='show_rotator".$idX."'>".ss("Загружается...")."</div>";
 	  if ($reload_link_show == "2") $textX .= $reload_link;
 	$block = str_replace("[".$titleX."]", $design_open.$textX.$design_close, $block);
 	$type = ""; break;
@@ -652,16 +645,15 @@ case "3": # Блок ротатор рекламы
 case "4": # Блок папок раздела 
 	if ($useitX == 'index') $block = str_replace("[".$titleX."]", "", $block); // если главная - ничего не выводим
 	else {
-		if ($noli == 0) $textX = "<ul id=block_ul_title_$useitX class=\"block_ul_title\">"; 
+		if ($noli == 0) $textX = "<ul id='block_ul_title_".$useitX."' class='block_ul_title'>"; 
 		// В эту переменную входит содержание блока
 
 		global $txt_razdels; // ЗАМЕНА mainpage2 №3
 		$textXX = explode("|", $txt_razdels[$useitX] );
-		$pages = $textXX[0]; // получили название файла модуля, например, pages
 		// Определяем отношение страниц к папкам
 		if ($papki_numbers==1) {
 			$num = array();
-			$sql = "SELECT `pid`, `cid` from ".$prefix."_".$pages." where `tables`='pages' and `module`='$useitX' and `active`='1'";
+			$sql = "SELECT `pid`, `cid` from ".$prefix."_pages where `tables`='pages' and `module`='".$useitX."' and `active`='1'";
 			$result = $db->sql_query($sql);
 			while ($row = $db->sql_fetchrow($result)) {
 				$cid_id = $row['cid'];		//
@@ -670,7 +662,7 @@ case "4": # Блок папок раздела
 		}
 		////// Определяем отношение подпапок к папкам
 		if ($papki_numbers==0) $and_par = " and parent_id='0'"; else $and_par = "";
-			$sql="SELECT cid, title, parent_id from ".$prefix."_".$pages."_categories where module='$useitX' and `tables`='pages'".$and_par." order by $papka_sort";
+			$sql="SELECT `cid`, `title`, `parent_id` from ".$prefix."_pages_categories where `module`='".$useitX."' and `tables`='pages'".$and_par." order by ".$papka_sort;
 			$result = $db->sql_query($sql);
 			$title = array();
 			while ($row = $db->sql_fetchrow($result)) {
@@ -690,7 +682,7 @@ case "4": # Блок папок раздела
 				if ($noli == 0) {
 					$textX .= "<li id='block_li_title_".$useitX."' class='block_li_title'><a class='papki_".$useitX."' href=-".$useitX."_cat_".$id.">".$nam."</a>".$and."";
 				} else {
-					$textX .= "<a class='papki_$useitX' href=-".$useitX."_cat_".$id.">".$nam."</a>".$and." | ";
+					$textX .= "<a class='papki_".$useitX."' href=-".$useitX."_cat_".$id.">".$nam."</a>".$and." | ";
 				}
 			}
 		}
@@ -744,22 +736,20 @@ case "6": # Фотогалерея
 		$gallery_lightbox = true;
 		if ($foto_gallery_type != 7) $textX .= "<div class='scrollbar'><div class='handle'><div class='mousearea'></div></div></div>";
 		$textX .= "<div class='frame ".$type_sly."' id='".$type_sly."'>".$image_block."</div>";
-		if ($foto_gallery_type != 7) $textX .= "<style>.frame ul li {width: ".$img_width."px;}</style><div class='controls center'><button class='prev'> ← предыдущая </button> <button class='next'> следующая → </button></div>";
+		if ($foto_gallery_type != 7) $textX .= "<style>.frame ul li {width: ".$img_width."px;}</style><div class='controls center'><button class='prev'> ← ".ss("предыдущая")." </button> <button class='next'> ".ss("следующая")." → </button></div>";
 		else $textX .= "<style>.images figure { padding-top: ".$img_height."px; width: ".$img_width."px; }</style>";
 	}
 	if ($foto_gallery_type == 2) { $gallery_css3 = true; $textX .= "<style>.lb-album li > a{width: ".$img_width."px;height: ".$img_height."px;line-height: ".$img_height."px;}.lb-album li > a span{width: ".$img_width."px;height: ".$img_height."px;line-height: ".$img_height."px;}</style><ul class='lb-album'>".$textX0."</ul>"; }	
 	if ($foto_gallery_type == 1) { $gallery_lightbox = true; }
 	if ($foto_gallery_type == 0) { $gallery_carusel = true; $textX .= "<div id='carusel-gallery' class='ad-gallery'><div class='ad-image-wrapper'></div><div class='ad-controls'></div><div class='ad-nav'><div class='ad-thumbs'><ul class='ad-thumb-list'>".$textX0."</ul></div></div></div>"; }
-	$block = str_replace("[$titleX]", $design_open.$textX.$design_close, $block);
+	$block = str_replace("[".$titleX."]", $design_open.$textX.$design_close, $block);
 	$type = ""; break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 case "7": # Блок PHP // проверить eval
-	/*
-	$textX = str_replace("<? ", "", str_replace(" ?>", "", $textX));
-	*/
+	/* $textX = str_replace("<? ", "", str_replace(" ?>", "", $textX)); */
 	eval($textX); // Все содержится в переменной $txt, а eval() - для выполнения кода
 	if (!isset($txt)) $txt = "";
-	$block = str_replace("[$titleX]", $design_open.$txt.$design_close, $block);
+	$block = str_replace("[".$titleX."]", $design_open.$txt.$design_close, $block);
 	$type = ""; break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 case "8": # Блок папок ОТКРЫТОГО раздела
@@ -771,21 +761,21 @@ case "8": # Блок папок ОТКРЫТОГО раздела
 		$shablon_main = $shablon[2];
 		$shablon_active = $shablon[3];
 	} else { // если без шаблона
-		$shablon_category = "<li class=\"[css] block_li_title\">[активность]<a href=[ссылка]>[название]</a>[число страниц]</li>";
+		$shablon_category = "<li class=\"[css] block_li_title\">".aa("[активность]")."<a href=".aa("[ссылка]").">".aa("[название]")."</a>".aa("[число страниц]")."</li>";
 		$shablon_razdelitel = "";
-		$shablon_main = "<ul class=block_li_title>[содержание]</ul>";
+		$shablon_main = "<ul class=block_li_title>".aa("[содержание]")."</ul>";
 		$shablon_active = $strelka." ";
 		$shablon_active2 = "<img align=left width=10 height=10 src=images/pixel.gif>".$strelka." ";
 	}
 	$block_title = "";
-	if ($titleshow != 2 and $titleshow != 3) $block_title .= "<h3 class=h3_block_title>".$ModuleName."</h3><div class=polosa></div>";
+	if ($titleshow != 2 and $titleshow != 3) $block_title .= "<h3 class='h3_block_title'>".$ModuleName."</h3><div class=polosa></div>";
 	$textX = "";
 		global $txt_razdels; // ЗАМЕНА mainpage2 №4
 		$textXX = explode("|", $txt_razdels[$DBName] );
-	$pages = $textXX[0]; // получили название файла модуля, например, pages
+	//$pages = $textXX[0]; // получили название файла модуля, например, pages
 	$num = array();
 	// Определяем отношение страниц к папкам
-	$sql = "SELECT cid from ".$prefix."_".$pages." where `tables`='pages' and module='$DBName' and active='1'";
+	$sql = "SELECT cid from ".$prefix."_pages where `tables`='pages' and module='".$DBName."' and active='1'";
 	$result = $db->sql_query($sql);
 	while ($row = $db->sql_fetchrow($result)) {
 		$cid_id = $row['cid'];
@@ -794,13 +784,13 @@ case "8": # Блок папок ОТКРЫТОГО раздела
 	}
 	// Определяем cid от pid, т.е. если открыта не папка, а страница
 	if ($pid>0) {
-		$sql = "SELECT cid from ".$prefix."_".$pages." where `tables`='pages' and pid='$pid'";
+		$sql = "SELECT cid from ".$prefix."_pages where `tables`='pages' and pid='".$pid."'";
 		$result = $db->sql_query($sql);
 		$row = $db->sql_fetchrow($result);
 		$cid = $row['cid'];
 	}
 	// Определяем отношение подпапок к папкам
-	$sql = "SELECT cid, title, parent_id from ".$prefix."_".$pages."_categories where module='$DBName' and `tables`='pages' order by $papka_sort";
+	$sql = "SELECT cid, title, parent_id from ".$prefix."_pages_categories where module='".$DBName."' and `tables`='pages' order by ".$papka_sort;
 	$result = $db->sql_query($sql);
 	$title = array();
 	while ($row = $db->sql_fetchrow($result)) {
@@ -815,7 +805,7 @@ case "8": # Блок папок ОТКРЫТОГО раздела
 			$and2=""; 
 			if (vhodyagie($id,$par,$num)>0) $and2 = "<div class='add'>+".vhodyagie($id,$par,$num)."</div>";
 			$and="";
-			if ($num[$id]>0) $and = " ($num[$id]".$and2.")";
+			if ($num[$id]>0) $and = " (".$num[$id].$and2.")";
 		} else $and="";
 		// Определение и выделение выбранной (текущей) папки
 		if (!isset($par[$cid])) $par[$cid] = 0;
@@ -823,7 +813,7 @@ case "8": # Блок папок ОТКРЫТОГО раздела
 			$thisis = $shablon_active;
 			$podpapki = "";
 			// Вывод подпапок выбранной категории
-			$sql="SELECT cid, title from ".$prefix."_".$pages."_categories where module='$DBName' and `tables`='pages' and parent_id='$id' order by $papka_sort";
+			$sql="SELECT cid, title from ".$prefix."_pages_categories where module='".$DBName."' and `tables`='pages' and parent_id='".$id."' order by ".$papka_sort;
 			$result = $db->sql_query($sql);
 				while ($row = $db->sql_fetchrow($result)) {
 					$p_id = $row['cid'];
@@ -832,13 +822,13 @@ case "8": # Блок папок ОТКРЫТОГО раздела
 					else $podthisis = "<img align=left width=30 height=10 src=images/pixel.gif>";
 					//$podpapki .= "<li class=\"podpapki block_li_title\">[стрелка]<a href=[ссылка]>[название]</a></li>";
 					$tr = array(
-					"[№]"=>$p_id,
-					"[название]"=>$p_title,
-					"[ссылка]"=>"/-".$DBName."_cat_".$p_id."",
-					"[полная ссылка]"=>"<a href=-".$DBName."_cat_".$p_id.">".$p_title."</a>",
-					"[число страниц]"=>"",
+					aa("[№]")=>$p_id,
+					aa("[название]")=>$p_title,
+					aa("[ссылка]")=>"/-".$DBName."_cat_".$p_id."",
+					aa("[полная ссылка]")=>"<a href=-".$DBName."_cat_".$p_id.">".$p_title."</a>",
+					aa("[число страниц]")=>"",
 					"[css]"=>"podpapki",
-					"[активность]"=>$podthisis
+					aa("[активность]")=>$podthisis
 					);
 					$podpapki .= strtr($shablon_category,$tr);
 				}
@@ -848,21 +838,21 @@ case "8": # Блок папок ОТКРЫТОГО раздела
 		}
 		if ($par[$id]==0) {
 			$tr = array(
-			"[№]"=>$id,
-			"[название]"=>$nam,
-			"[ссылка]"=>"/-".$DBName."_cat_".$id."",
-			"[полная ссылка]"=>"<a href=-".$DBName."_cat_".$id.">".$nam."</a>",
-			"[число страниц]"=>$and,
+			aa("[№]")=>$id,
+			aa("[название]")=>$nam,
+			aa("[ссылка]")=>"/-".$DBName."_cat_".$id."",
+			aa("[полная ссылка]")=>"<a href=-".$DBName."_cat_".$id.">".$nam."</a>",
+			aa("[число страниц]")=>$and,
 			"[css]"=>"papki",
-			"[активность]"=>$thisis
+			aa("[активность]")=>$thisis
 			);
 			$papki[] = strtr($shablon_category,$tr).$podpapki;
 		}
 	}
 	$textX .= implode($shablon_razdelitel,$papki);
-	$shablon_main = str_replace("[содержание]",$textX,$shablon_main);
-	if ($textX!="") $block = str_replace("[$titleX]", $design_open.$block_title.$shablon_main.$design_close, $block);
-	else $block = str_replace("[$titleX]", "", $block);
+	$shablon_main = str_replace(aa("[содержание]"),$textX,$shablon_main);
+	if ($textX!="") $block = str_replace("[".$titleX."]", $design_open.$block_title.$shablon_main.$design_close, $block);
+	else $block = str_replace("[".$titleX."]", "", $block);
 	$type = ""; break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 case "9": # Блок мини-фото - экстрактор предописания страниц
@@ -870,16 +860,16 @@ case "9": # Блок мини-фото - экстрактор предописа
 	$and = "";
 	$and2 = "";
 	if ($cid_open=="все" or $cid_open=="") { // Показывать ВСЕ папки или выбранную
-	} else $and2 = " and cid='$cid_open'";
+	} else $and2 = " and cid='".$cid_open."'";
 	$lim2 = $size * $limkol;
 	if ($showlinks > 0) $lim2 = 100000;
 	$proc = intval(100 / $limkol);
 	if ($main==1) $and = " and `mainpage` = '1'";
 	if ($main==2) $and = " and `mainpage` != '1'";
 	if ($useitX == "") $andmodule = "";
-	else $andmodule = " and `module`='$useitX'";
-	$sql = "SELECT `pid`, `module`, `title`, `open_text`, `main_text` from ".$prefix."_pages where `tables`='pages'".$andmodule.$and.$and2." and `active`='1' and ( (`open_text` like '%".$first."%' or `main_text` like '%".$first."%') and (`open_text` like '%.jpg%' or `open_text` like '%.gif%' or `main_text` like '%.jpg%' or `main_text` like '%.gif%') and `open_text` not like '%smilies%' and `open_text` not like '%addVariable%' and `open_text` not like '%embed%' and `main_text` not like '%smilies%' and `main_text` not like '%addVariable%' and `main_text` not like '%embed%') order by ".$sort." limit $number,$lim2";
-	$result = $db->sql_query($sql) or die('Ошибка');
+	else $andmodule = " and `module`='".$useitX."'";
+	$sql = "SELECT `pid`, `module`, `title`, `open_text`, `main_text` from ".$prefix."_pages where `tables`='pages'".$andmodule.$and.$and2." and `active`='1' and ( (`open_text` like '%".$first."%' or `main_text` like '%".$first."%') and (`open_text` like '%.jpg%' or `open_text` like '%.gif%' or `main_text` like '%.jpg%' or `main_text` like '%.gif%') and `open_text` not like '%smilies%' and `open_text` not like '%addVariable%' and `open_text` not like '%embed%' and `main_text` not like '%smilies%' and `main_text` not like '%addVariable%' and `main_text` not like '%embed%') order by ".$sort." limit ".$number.",".$lim2;
+	$result = $db->sql_query($sql) or die(ss("Ошибка"));
 	$numrows = $db->sql_numrows($result);
 	$opentable=0;
 	$limkol_num = 0;
@@ -901,11 +891,11 @@ case "9": # Блок мини-фото - экстрактор предописа
 		if ($img_height == 0) $height=""; else $height=" height=".$img_height."";
 		$open = "";
 
-		if ($limkol > 1 and $opentable==0) { $textX .= "<table cellspacing=0 cellpadding=0 width=100%><tr valign=top><td width=$proc%>"; $opentable=1; }
+		if ($limkol > 1 and $opentable==0) { $textX .= "<table cellspacing=0 cellpadding=0 width=100%><tr valign=top><td width=".$proc."%>"; $opentable=1; }
 		if ($openshow > 0) { // 2,1,0 - да и без ссылки,да и со ссылкой,нет
 			$open2 = explode("<br>",$open_text);
 			$open2 = str_replace($open2[0]."", "", $open_text);
-			if ($openshow == 1) $open = "<a href=-".$modul."_page_".$id.">$open2</a>";
+			if ($openshow == 1) $open = "<a href=-".$modul."_page_".$id.">".$open2."</a>";
 			if ($openshow == 2) $open = $open2;
 		}
 		if ($show_title == 2) $textX .= "<div class=\"".$class."\"><a href=-".$modul."_page_".$id." class='ex_pic ".$class."'>".$title."</a></div>";
@@ -940,7 +930,7 @@ case "9": # Блок мини-фото - экстрактор предописа
 	}
 	if ($showlinks > 0) $textX .= "</table>";
 	if ($showlinks > 0) {
-		$sql = "SELECT `pid` from ".$prefix."_pages where `tables`='pages' and `module`='$useitX'".$and.$and2." and `active`='1' and (`open_text` like '%".$first."%' or `open_text` like '%".$first2."%')";
+		$sql = "SELECT `pid` from ".$prefix."_pages where `tables`='pages' and `module`='".$useitX."'".$and.$and2." and `active`='1' and (`open_text` like '%".$first."%' or `open_text` like '%".$first2."%')";
 		$result = $db->sql_query($sql) or die('Ошибка');
 		$numrows2 = $db->sql_numrows($result);
 		$count = intval( $numrows2 / ($size * $limkol) );
@@ -963,7 +953,7 @@ case "9": # Блок мини-фото - экстрактор предописа
 			$textX .= "<script>$(function() { $('#rotate > ul').tabs({ fx: { opacity: 'toggle' } }); }); </script>".$names_block."";
 		}
 	}
-	$block = str_replace("[$titleX]", $design_open.$textX.$design_close, $block);
+	$block = str_replace("[".$titleX."]", $design_open.$textX.$design_close, $block);
 	$type = ""; break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 case "10": # Блок меню
@@ -976,17 +966,7 @@ case "10": # Блок меню
 		$url3 = str_replace("/","",$url1);
 		$url2 = explode("_",$url1);
 		$url2 = $url2[0];
-	if ($re_menu != "1" && $re_menu != "0") {
-		// Создаем меню из папок выбранного в настройках меню раздела
-		// Определяем отношение подпапок к папкам
-		$sql = "SELECT cid, title, parent_id from ".$prefix."_pages_categories where module='$re_menu' and `tables`='pages' order by cid";
-		$result = $db->sql_query($sql);
-		$papki = $title = $par = array();
-		while ($row = $db->sql_fetchrow($result)) {
-			$id = $row['cid'];
-			$title[$id] = $row['title'];
-			$par[$id] = $row['parent_id'];
-		}
+
 		$lvl_open = "<ul>";
 		$lvl_close = "</ul>";
 		$el_open = "<li>";
@@ -1003,6 +983,18 @@ case "10": # Блок меню
 		} elseif ($menu == "2") {
 			$lvl_open = '<ul class="ul_tree">';
 			$url_open = '<a class="li2menu_link" href="';
+		}
+
+	if ($re_menu != "1" && $re_menu != "0") {
+		// Создаем меню из папок выбранного в настройках меню раздела
+		// Определяем отношение подпапок к папкам
+		$sql = "SELECT cid, title, parent_id from ".$prefix."_pages_categories where module='".$re_menu."' and `tables`='pages' order by cid";
+		$result = $db->sql_query($sql);
+		$papki = $title = $par = array();
+		while ($row = $db->sql_fetchrow($result)) {
+			$id = $row['cid'];
+			$title[$id] = $row['title'];
+			$par[$id] = $row['parent_id'];
 		}
 		$textXX = "";
 		foreach ($title as $id => $nam) {
@@ -1032,9 +1024,9 @@ case "10": # Блок меню
 		}
 	} else {
 		// Добавить поиск и замену блоков в меню
-		$tr = array("[b]"=>"<b>","[B]"=>"<b>","[/b]"=>"</b>","[/B]"=>"</b>","[i]"=>"<i>","[I]"=>"<i>","[/i]"=>"</i>","[/I]"=>"</i>","http://".$siteurl=>"");
+		$tr = array("http://".$siteurl=>"");
 		$textX = strtr($textX,$tr);
-		$tr = array("[уровень открыть]"=>"<ul>","[уровень закрыть]"=>"</ul>","[элемент открыть]"=>"<li>","[элемент закрыть]"=>"</li>","[/url]"=>"</a>","[url="=>"<a class='li1menu_link' href=","[/URL]"=>"</a>","[URL="=>"<a class='li1menu_link' href=","]"=>">");
+		$tr = array(aa("[уровень открыть]")=>$lvl_open,aa("[уровень закрыть]")=>$lvl_close,aa("[элемент открыть]")=>$el_open,aa("[элемент закрыть]")=>$el_close,aa("[url=")=>$url_open,aa("[/url]")=>$url_close2,"]"=>$url_close1);
 		$textXX = strtr($textX,$tr);
 		//if ($url != "/") {
 			$textXX = str_replace("' href=".$url1.">", " mainmenu_open' href=".$url1.">", $textXX);
@@ -1048,11 +1040,8 @@ case "10": # Блок меню
 
 			$textXX = str_replace("mainmenu_open mainmenu_open", "mainmenu_open", $textXX);
 	}
-			//if ($menu == 7 or $menu == 8 or $menu == 9) $textXX = str_replace("<li class='li_mainmenu_open'><a class='li1menu_link mainmenu_open' href", "<li class='current'><a href", $textXX);
-		//} else {
 			if ($menu == 7 or $menu == 8 or $menu == 9) $textXX = str_replace("<li class='li_mainmenu_open'><a class='li1menu_link mainmenu_open' href='/'>", "<li class='current'><a href='/'>", $textXX);
 			else $textXX = str_replace("<li><a class='li1menu_link' href='/'>", "<li class='li_mainmenu_open'><a class='li1menu_link mainmenu_open' href='/'>", $textXX);
-		//}
 	switch ($menu) {
 		case "0": // гор влево 3 уровня
 			$class_menu = "menu-h-d"; break;
@@ -1066,11 +1055,7 @@ case "10": # Блок меню
 			$class_menu = "menu-h"; break;
 		case "1": // Таблица гор выравнивание по всей таблице 1 уровень
 			if ($re_menu == "1" || $re_menu == "0") {
-				$tr = array( // без 3 уровней!
-				"[элемент открыть]"=>"<td align=center>","[элемент закрыть]"=>"</td>",
-				"[/url]"=>"</div></a>","[url="=>"<a class='table1menu_link' href=\"",
-				"[/URL]"=>"</div></a>","[URL="=>"<a class='table1menu_link' href=\"","]"=>"\"><div class=li2menu_div>"
-				);
+				$tr = array(aa("[элемент открыть]")=>$el_open,aa("[элемент закрыть]")=>$el_close,aa("[/url]")=>$url_close2,aa("[url=")=>$url_open,"]"=>$url_close1); // без 3 уровней!
 				$textXX = strtr($textX,$tr);
 			}
 			$textXX = str_replace("' href=\"".$url1."\">", " mainmenu_open' href=\"".$url1."\" >", $textXX);
@@ -1081,16 +1066,14 @@ case "10": # Блок меню
 		break;
 		case "2": // вертикальное 2 уровня
 			if ($re_menu == "1" || $re_menu == "0") {
-				$tr = array( // без 3 уровней!
-				"[уровень открыть]"=>"<ul class=ul_tree>","[уровень закрыть]"=>"</ul>","[элемент открыть]"=>"<li>","[элемент закрыть]"=>"</li>", "[/url]"=>"</a>","[url="=>"<a class=li2menu_link href=\"","[/URL]"=>"</a>","[URL="=>"<a class=li2menu_link href=\"","]"=>"\">"
-				);
+				$tr = array(aa("[уровень открыть]")=>$lvl_open,aa("[уровень закрыть]")=>$lvl_close,aa("[элемент открыть]")=>$el_open,aa("[элемент закрыть]")=>$el_close, aa("[/url]")=>$url_close2,aa("[url=")=>$url_open,"]"=>$url_close1); // без 3 уровней!
 				$textXX = strtr($textX,$tr);
 			}
 			$textXX = str_replace("<li><a class=li2menu_link href=\"".$url1."\">", "<li class=li_openlink><a class=li2menu_openlink href=\"".$url1."\">", $textXX);
 			$textXX = str_replace("<li><a class=li2menu_link href=\"".$url2."\">", "<li class=li_openlink><a class=li2menu_openlink href=\"".$url2."\">", $textXX);
 			$textXX = str_replace("<li><a class=li2menu_link href=\"".$url3."\">", "<li class=li_openlink><a class=li2menu_openlink href=\"".$url3."\">", $textXX);
 			if ($class != "") $class_menu = $class; else $class_menu = "suckerdiv";
-			$textXX = "<div class='".$class_menu."'><ul id=suckertree1>".$textXX."</ul></div>";
+			$textXX = "<div class='".$class_menu."'><ul id='suckertree1'>".$textXX."</ul></div>";
 		break;
 	 	case "7": // KickStart вертикальное 3 уровня (слева)
 			$class_menu = "menu vertical"; break;
@@ -1098,12 +1081,10 @@ case "10": # Блок меню
 			$class_menu = "menu vertical right"; break;
 		case "9": // KickStart горизонтальное 3 уровня (слева)
 			$class_menu = "menu"; break;
-		///
-
 	}
 	if ($class != "") $class_menu = $class;
-	if ($menu != "1" and $menu != "2") $textXX = "<ul id=\"menu\" class=\"".$class_menu."\">".$textXX."</ul>";
-	$block = str_replace("[$titleX]", $design_open.$textXX.$design_close, $block);
+	if ($menu != "1" and $menu != "2") $textXX = "<ul id='menu' class='".$class_menu."'>".$textXX."</ul>";
+	$block = str_replace("[".$titleX."]", $design_open.$textXX.$design_close, $block);
 	$type = ""; break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 case "11": # КАЛЕНДАРЬ
@@ -1114,24 +1095,24 @@ case "11": # КАЛЕНДАРЬ
 	}
 	$calendar_dates = array();
 	if ($calendar == "") {
-		$sql = "select date from ".$prefix."_pages where `tables`='pages' and module='$useitX' and active!='0' order by date";
+		$sql = "select date from ".$prefix."_pages where `tables`='pages' and module='".$useitX."' and active!='0' order by date";
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result)) {
 			$dates = explode(" ",$row['date']);
 			$calendar_dates[] = $dates[0];
 		}
 	} else {
-		$sql = "select name from ".$prefix."_spiski where type='$calendar' and pages!='' order by name";
+		$sql = "select name from ".$prefix."_spiski where type='".$calendar."' and pages!='' order by name";
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result)) {
 			$calendar_dates[] = $row['name'];
 		}	
 	}
 	$textX .= "".my_calendar($calendar_dates, $useitX, $showdate); 
-	$block = str_replace("[$titleX]", $design_open.$textX.$design_close, $block);
+	$block = str_replace("[".$titleX."]", $design_open.$textX.$design_close, $block);
 	$type = ""; break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////
-case "12": # Форма (для анкет, опросов и т.д.)
+case "12": # Форма (для анкет, опросов и т.д.) // Доделать!!!
 	$text = explode("\n",$textX);
 	$textX = '';
 	$x = 0;
@@ -1144,70 +1125,55 @@ case "12": # Форма (для анкет, опросов и т.д.)
 		$opis = $value[1];
 		if (!empty($value[2])) $name = $value[2];
 		switch ($value[0]) {
-			case 'Строка':
+			case aa("Строка"):
 				$textX .= "<p>".$opis."<input class='form_stroka' name=".$name." placeholder='".$value[3]."'".$autofocus.">";
 				break;
-			
-			case 'Текст':
+			case aa("Текст"):
 				# code...
 				break;
-
-			case 'Список':
+			case aa("Список"):
 				# code...
 				break;
-
-			case 'Число':
+			case aa("Число"):
 				$textX .= "<p>".$opis."<input type='number' min='0' max='10' step='2' value='6' class='form_stroka' name=".$name." placeholder='".$value[3]."'".$autofocus.">";
 				break;
-
-			case 'Файл':
+			case aa("Файл"):
 				$textX .= "<p>".$opis."<input type='file' class='form_stroka' name=".$name." placeholder='".$value[3]."'".$autofocus.">";
 				break;
-
-			case 'Email':
+			case aa("Email"):
 				$textX .= "<p>".$opis."<input type='email' class='form_stroka' name=".$name." placeholder='".$value[3]."'".$autofocus.">";
 				break;
-
-			case 'Телефон':
+			case aa("Телефон"):
 				$textX .= "<p>".$opis."<input class='form_stroka' name=".$name." placeholder='".$value[3]."'".$autofocus.">";
 				break;
-
-			case 'Адрес':
+			case aa("Адрес"):
 				$textX .= "<p>".$opis."<input class='form_stroka' name=".$name." placeholder='".$value[3]."'".$autofocus.">";
 				break;
-
-			case 'Ссылка':
+			case aa("Ссылка"):
 				$textX .= "<p>".$opis."<input class='form_stroka' type='url' name=".$name." placeholder='".$value[3]."'".$autofocus.">";
 				break;
-
-			case 'Дата':
+			case aa("Дата"):
 				$textX .= "<p>".$opis."<input class='form_stroka' type='date' name=".$name." placeholder='".$value[3]."'".$autofocus.">";
 				break;
-			case 'ВремяДата':
+			case aa("ВремяДата"):
 				$textX .= "<p>".$opis."<input class='form_stroka' type='datetime' name=".$name." placeholder='".$value[3]."'".$autofocus.">";
 				break;
-
-			case 'Месяц и год':
+			case aa("Месяц и год"):
 				$textX .= "<p>".$opis."<input class='form_stroka' type='month' name=".$name." placeholder='".$value[3]."'".$autofocus.">";
 				break;
-
-			case 'Неделя':
+			case aa("Неделя"):
 				$textX .= "<p>".$opis."<input class='form_stroka' type='week' name=".$name." placeholder='".$value[3]."'".$autofocus.">";
 				break;
-
-			case 'Время':
+			case aa("Время"):
 				$textX .= "<p>".$opis."<input class='form_stroka' type='time' name=".$name." placeholder='".$value[3]."'".$autofocus.">";
 				break;
-
-			case 'Пароль':
-				# code...
+			case aa("Пароль"):
+				$textX .= "<p>".$opis."<input type='password' class='form_stroka' name=".$name." placeholder='".$value[3]."'".$autofocus.">";
 				break;
-
-			case 'Поиск':
+			case aa("Поиск"):
 				$textX .= "<p>".$opis."<input class='form_stroka' type='search' name=".$name." placeholder='".$value[3]."'".$autofocus.">";
 				break;
-
-			case 'Отправить':
+			case aa("Отправить"):
 				$textX .= "<input type='submit' class='form_submit' value='".$value[1]."'>";
 				break;
 			default:
@@ -1215,7 +1181,7 @@ case "12": # Форма (для анкет, опросов и т.д.)
 		}
 	}
 	$textX = "<form name='' action='page/form.php' method='post' enctype='multipart/form-data'>".$textX."</form>";
-	$block = str_replace("[$titleX]", $design_open.$textX.$design_close, $block);
+	$block = str_replace("[".$titleX."]", $design_open.$textX.$design_close, $block);
 	$type = ""; break;
 
 /*
@@ -1230,7 +1196,7 @@ Email|Email|email|100|1
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 case "13": # ОБЛАКО ТЕГОВ
 	$tags = array();
-	$sql = "select search from ".$prefix."_pages where `tables`='pages' and active='1'";
+	$sql = "select `search` from ".$prefix."_pages where `tables`='pages' and `active`='1'";
 	$result = $db->sql_query($sql);
 	while ($row = $db->sql_fetchrow($result)) {
 		if (trim($row['search']) != "") {
@@ -1267,7 +1233,7 @@ case "13": # ОБЛАКО ТЕГОВ
 	$tagcloud = str_replace( "&nbsp;", " ", str_replace( "+", " ", $tagcloud ) ) ; 
 	$tagcloud2 = str_replace( "&nbsp;", " ", str_replace( "+", " ", $tagcloud2 ) ) ; 
 	$textX .= str_replace( "pt","px", $tagcloud2);
-	$textX .= "<br><br><center><div id=show_oblako style='font-size: 11px; cursor:pointer;' OnClick=\"show('text_tags'); show('flash_tags'); show('show_tags'); show('all_tags');\"><span style='border-bottom:1px dotted;'>Вернуть облако тегов</span></div></center> 
+	$textX .= "<br><br><center><div id=show_oblako style='font-size: 11px; cursor:pointer;' OnClick=\"show('text_tags'); show('flash_tags'); show('show_tags'); show('all_tags');\"><span style='border-bottom:1px dotted;'>".ss("Вернуть облако тегов")."</span></div></center> 
 	</div>
 	<div id=\"all_tags\"></div>
 	<div id=flash_tags><script>
@@ -1282,7 +1248,7 @@ case "13": # ОБЛАКО ТЕГОВ
 	widget_so.addVariable(\"tagcloud\", \"<span>". $tagcloud ."<\/span>\");
 	widget_so.write(\"all_tags\");
 	</script></div> 
-	<center><div id=show_tags style='font-size: 11px; cursor:pointer;' OnClick=\"show('text_tags'); show('flash_tags'); show('show_tags'); show('all_tags');\"><span style='border-bottom:1px dotted;'>Смотреть список слов</span></div></center> 
+	<center><div id=show_tags style='font-size: 11px; cursor:pointer;' OnClick=\"show('text_tags'); show('flash_tags'); show('show_tags'); show('all_tags');\"><span style='border-bottom:1px dotted;'>".ss("Смотреть список слов")."</span></div></center> 
 	";
 	$block = str_replace("[$titleX]", $design_open.$textX.$design_close, $block);
 	$type = ""; break;
@@ -1292,55 +1258,55 @@ case "22": # База данных (количество по 2 колонкам
 	$and = "";
 	if (trim($textX) != "") $and = " and ".$textX;
 	$firsts = array();
-	$result = $db->sql_query("SELECT ".$first." FROM ".$prefix."_base_".$base." where (active='1' or active='3')$and");
+	$result = $db->sql_query("SELECT ".$first." FROM ".$prefix."_base_".$base." where (active='1' or active='3')".$and);
 	while ($row = $db->sql_fetchrow($result)) {
 		$firsts[] = $row[$first];
 	}
 	$firsts = array_unique($firsts);
 	
 	$seconds = array();
-	$result = $db->sql_query("SELECT ".$second." FROM ".$prefix."_base_".$base." where (active='1' or active='3')$and");
+	$result = $db->sql_query("SELECT ".$second." FROM ".$prefix."_base_".$base." where (active='1' or active='3')".$and);
 	while ($row = $db->sql_fetchrow($result)) {
 		$seconds[] = $row[$second];
 	}
 	$seconds = array_unique($seconds);
 
-	$textX = "<table class=base_table width=100%><tr><td class=base_first>".$text1."</td>";
+	$textX = "<table class='base_table' width='100%'><tr><td class='base_first'>".$text1."</td>";
 	foreach ($firsts as $first1) {
-		$textX .= "<td class=base_first>".$first1."</td>";
+		$textX .= "<td class='base_first'>".$first1."</td>";
 	}
 	if ($all==1) {
-	$textX .= "<td class=base_first>Всего:</td>";
+	$textX .= "<td class='base_first'>".ss("Всего").":</td>";
 	}
 	$textX .= "</tr>";
 	foreach ($seconds as $second1) {
-		$textX .= "<tr><td class=base_second>".$second1."</td>";
+		$textX .= "<tr><td class='base_second'>".$second1."</td>";
 		foreach ($firsts as $first1) {
 			$numrows = $db->sql_numrows($db->sql_query("SELECT ".$first." FROM ".$prefix."_base_".$base." 
 			WHERE ".$first."='".$first1."' and ".$second."='".$second1."' and (active='1' or active='3')$and"));
-			$textX .= "<td class=base_second_first><a href=-".$useitX."_first_".str_replace("%","|",urlencode(str_replace("-","-_-",str_replace("+","+++",$second1))))."_second_".str_replace("%","|",urlencode(str_replace("-","---",str_replace("+","+_+",$first1))))."_opt_".$idX.">".$numrows."</a></td>";
+			$textX .= "<td class='base_second_first'><a href=-".$useitX."_first_".str_replace("%","|",urlencode(str_replace("-","-_-",str_replace("+","+++",$second1))))."_second_".str_replace("%","|",urlencode(str_replace("-","---",str_replace("+","+_+",$first1))))."_opt_".$idX.">".$numrows."</a></td>";
 		}
 		if ($all==1) {
 			$numrows = $db->sql_numrows($db->sql_query("SELECT ".$first." FROM ".$prefix."_base_".$base." 
-			WHERE ".$second."='".$second1."' and (active='1' or active='3')$and"));
-			$textX .= "<td class=base_second_first><a href=-".$useitX."_first_".str_replace("%","|",urlencode(str_replace("-","---",str_replace("+","+++",$second1))))."_opt_".$idX.">".$numrows."</a></td>";
+			WHERE ".$second."='".$second1."' and (active='1' or active='3')".$and));
+			$textX .= "<td class='base_second_first'><a href=-".$useitX."_first_".str_replace("%","|",urlencode(str_replace("-","---",str_replace("+","+++",$second1))))."_opt_".$idX.">".$numrows."</a></td>";
 		}
 		$textX .= "</tr>";
 	}
 	$textX .= "</table>";
 
-	$block = str_replace("[$titleX]", $design_open.$textX.$design_close, $block);
+	$block = str_replace("[".$titleX."]", $design_open.$textX.$design_close, $block);
 	$type = ""; break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 case "23": # База данных (список по нескольким колонкам)
 	$and = "";
 	if (trim($textX) != "") $and = " and ".$textX;
 	if ($direct=="vert") {
-		$where = "where active='1' or active='3'$and ";
+		$where = "where active='1' or active='3'".$and." ";
 		$text1 = str_replace(",","</td><td>",$text1);
-		if ($textX != "") $where = "where ".stripcslashes($textX)." and (active='1' or active='3')$and ";
-		$textX = "<table class='base_table table_light' width=100%>";
-		if ($text1 != "") $textX .= "<tr class=base_first><td>".$text1."</td></tr>";
+		if ($textX != "") $where = "where ".stripcslashes($textX)." and (active='1' or active='3')".$and." ";
+		$textX = "<table class='base_table table_light' width='100%'>";
+		if ($text1 != "") $textX .= "<tr class='base_first'><td>".$text1."</td></tr>";
 		// узнать имя БД по номеру
 		global $id_razdel_and_bd;
 		$base_name = WhatArrayElement($id_razdel_and_bd, $base);
@@ -1349,7 +1315,7 @@ case "23": # База данных (список по нескольким ко�
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result)) {
 			$pass_num = count($row)/2;
-			$textX .= "<tr class=base_second>";
+			$textX .= "<tr class='base_second'>";
 			for ($x=1; $x < $pass_num; $x++) {
 				if ($x==1) $textX .= "<td><a href=-".$razdel_name."_page_".$row['id'].">".$row[$x]."</a></td>";
 				else $textX .= "<td>".$row[$x]."</td>";
@@ -1358,18 +1324,18 @@ case "23": # База данных (список по нескольким ко�
 		}
 		$textX .= "</table>";
 	} else {
-		$textX .= "Горизонтальный вывод данного блока еще не готов.";
+		$textX .= ss("Горизонтальный вывод данного блока еще не готов.");
 	}
-	$block = str_replace("[$titleX]", $design_open.$textX.$design_close, $block);
+	$block = str_replace("[".$titleX."]", $design_open.$textX.$design_close, $block);
 	$type = ""; break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 case "30": # Статистика раздела, выводит кол-во посещений
-	$textX = "ошибка";
-	$sql8 = "select counter from ".$prefix."_mainpage where `tables`='pages' and name='$useitX' and type='2'";
+	$textX = ss("Ошибка");
+	$sql8 = "select counter from ".$prefix."_mainpage where `tables`='pages' and name='".$useitX."' and type='2'";
 	$result8 = $db->sql_query($sql8);
 	$row8 = $db->sql_fetchrow($result8);
 	$textX = $row8['counter'];
-	$block = str_replace("[$titleX]", $design_open.$textX.$design_close, $block);
+	$block = str_replace("[".$titleX."]", $design_open.$textX.$design_close, $block);
 	$type = ""; break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 case "31": # Блок JS
@@ -1384,48 +1350,46 @@ case "31": # Блок JS
 		else $js = "no";
 	}
 	$type = ""; break;
-
-//case "8": 
-//$type = ""; break;
+//case "8":
 
 	} # конец определения типа блока
-} else $block = str_replace("[$titleX]", "", $block); // убираем отключенный лок
+} else $block = str_replace("[".$titleX."]", "", $block); // убираем отключенный лок
 } # ЗАКОНЧЕНО Определение блоков и их заполнение
 } # ЗАКОНЧЕНО ПОВТОРНОЕ Определение блоков и их заполнение
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	// Заголовок для раздела ставится в дизайн
-	if (strpos($block, "[заголовок")) {
-		$block = str_replace("[заголовок]", "<div class=cat_title>".$main_title."</div>", $block); 
-		$block = str_replace("[заголовок-ссылка]", "<div class=cat_title><A class=cat_categorii_link href=-".$DBName.">".$main_title."</a></div>", $block); 
+	if (strpos($block, aa("[заголовок"))) {
+		$block = str_replace(aa("[заголовок]"), "<div class='cat_title'>".$main_title."</div>", $block); 
+		$block = str_replace(aa("[заголовок-ссылка]"), "<div class='cat_title'><A class='cat_categorii_link' href=-".$DBName.">".$main_title."</a></div>", $block); 
 	}
-	if (strpos($block, "[название папки]")) {
+	if (strpos($block, aa("[название папки]"))) {
 		if (!isset($cid)) $cid = 0;
-		if ($cid > 0) $block = str_replace("[название папки]", "<div class=papka_title> &rarr; ".titles_papka($cid)."</div>", $block);
-		else $block = str_replace("[название папки]", "", $block);
+		if ($cid > 0) $block = str_replace(aa("[название папки]"), "<div class='papka_title'> &rarr; ".titles_papka($cid)."</div>", $block);
+		else $block = str_replace(aa("[название папки]"), "", $block);
 	}
 
 	// Регистрация / Вход
-	if (strpos($block, "[регистрация]")) {
+	if (strpos($block, aa("[регистрация]"))) {
 		$registr = "<div class='registration'>
 		<a class='button' onclick=\" 
 		$.ajax({ url: 'ajax.php', cache: false, dataType : 'html',
 		    data: {'func': 'registration_form'},
 		    beforeSend: function(){ $('.registr').show(); $('.registration').hide(); },
 		    success: function(data){ $('.registr').html(data); }
-		});\">Регистрация</a> 
-		<a class='button' onclick=\"$('.vhod').show(); $('.registration').hide();\">Вход</a>
+		});\">".ss("Регистрация")."</a> 
+		<a class='button' onclick=\"$('.vhod').show(); $('.registration').hide();\">".ss("Вход")."</a>
 		</div>
 		<div class='registr hide'>
-		Загрузка...
+		".ss("Загрузка...")."
 		</div>
 		<div class='vhod hide'>
 		<form class='reg_forma' action='--login' method='post'> 
-		<input class='reg_mail' type='text' name='em' value='' placeholder='Email'>
-		<br><input class='reg_pass' type='password' name='pa' value='' placeholder='Пароль'>
-		<br><input type='submit' name='submit' value='Войти'></form>
+		<input class='reg_mail' type='text' name='em' value='' placeholder='".ss("Email")."'>
+		<br><input class='reg_pass' type='password' name='pa' value='' placeholder='".ss("Пароль")."'>
+		<br><input type='submit' name='submit' value='".ss("Войти")."'></form>
 		</div>";
-		$block = str_replace("[регистрация]", $registr, $block);
+		$block = str_replace(aa("[регистрация]"), $registr, $block);
 	}
 
 	// Ставим годовой промежуток существования сайта
@@ -1433,32 +1397,32 @@ case "31": # Блок JS
 	$year = date("Y");
 	$nextyear = $year+1;
 	if ($year != $startdate) $god .= "—".$year;
-	$block = str_replace("[год]", "© ".$god, $block); // Промежуток лет ставится в дизайн
+	$block = str_replace(aa("[год]"), "© ".$god, $block); // Промежуток лет ставится в дизайн
 
 	// Ставим статистику
-	$block=str_replace("[статистика]", $counter, $block); 
+	$block=str_replace(aa("[статистика]"), $counter, $block); 
 
 	// Ставим почту
-	if (strpos($block, "[почта]")) {
-		$mailer = "<a href=\"/mail.php\">Отправить письмо</a>"; // ".str_replace("@","<nobr>@</nobr>",$adminmail)." ";
-		$soderganie = str_replace("[почта]", $mailer, $soderganie); 
-		$block = str_replace("[почта]", $mailer, $block); 
+	if (strpos($block, aa("[почта]"))) {
+		$mailer = "<a href=\"/mail.php\">".ss("Отправить письмо")."</a>"; // ".str_replace("@","<nobr>@</nobr>",$adminmail)." ";
+		$soderganie = str_replace(aa("[почта]"), $mailer, $soderganie); 
+		$block = str_replace(aa("[почта]"), $mailer, $block); 
 	}
 
 	// Ставим Новый год
-	if (strpos($block, "[новый год]")) { //February 12, 2001
-		$newyaer = time_otschet("January 01, ".$nextyear, "C Новым годом!!!", "До Нового года осталось: ");
-		$soderganie = str_replace("[новый год]", $newyaer, $soderganie); 
-		$block = str_replace("[новый год]", $newyaer, $block); 
+	if (strpos($block, aa("[новый год]"))) { //February 12, 2001
+		$newyaer = time_otschet(aa("January 01").", ".$nextyear, ss("C Новым годом!!!"), ss("До Нового года осталось: "));
+		$soderganie = str_replace(aa("[новый год]"), $newyaer, $soderganie); 
+		$block = str_replace(aa("[новый год]"), $newyaer, $block); 
 	}
-	if (strpos($block, "[1 сентября]")) {
+	if (strpos($block, aa("[1 сентября]"))) {
 		// Ставим 1 сентября 2011,1,1
 		if ( date("m") > 9 or ( date("m") == 9 and date("d") > 1 ) ) $year = $nextyear;
-		$sent = time_otschet("September 01, ".$year, "Время пришло!", "До нового учебного года осталось: ");
-		$soderganie = str_replace("[1 сентября]", $sent, $soderganie); 
-		$block = str_replace("[1 сентября]", $sent, $block); 
+		$sent = time_otschet(aa("September 01").", ".$year, ss("Время пришло!"), ss("До нового учебного года осталось: "));
+		$soderganie = str_replace(aa("[1 сентября]"), $sent, $soderganie); 
+		$block = str_replace(aa("[1 сентября]"), $sent, $block); 
 	}
-	if (strpos($block, "[список ")) {
+	if (strpos($block, aa("[список "))) {
 		// Ставим автогенерацию раскрывающегося списка из заголовков и последующих элементов
 		if ( date("m") > 9 or ( date("m") == 9 and date("d") > 1 ) ) $year = $nextyear;
 		$zagolovok = array("h2","h3");
@@ -1468,137 +1432,136 @@ case "31": # Блок JS
 				$sent = '<script>$(function() {
 						$("'.$z.'").toggleClass("button").next("'.$s.'").hide(); $("'.$z.'").click(function() { $(this).next("'.$s.'").slideToggle(); return false; });
 				});</script>';
-				$soderganie = str_replace("[список ".$z." ".$s."]", $sent, $soderganie); 
-				$block = str_replace("[список ".$z." ".$s."]", $sent, $block);
+				$soderganie = str_replace(aa("[список ").$z." ".$s."]", $sent, $soderganie); 
+				$block = str_replace(aa("[список ").$z." ".$s."]", $sent, $block);
 			}
 		}
 	}
-	if (strpos($block, "[корзина]")) {
+	if (strpos($block, aa("[корзина]"))) {
 		// Ставим ajax-блок Корзины
 		$sent = "<script>$(function() {	shop_show_card(); });</script><div id='shop_card'></div>";
-		$soderganie = str_replace("[корзина]", $sent, $soderganie);  // проверить soderganie и block
-		$block = str_replace("[корзина]", $sent, $block);
+		$soderganie = str_replace(aa("[корзина]"), $sent, $soderganie);  // проверить soderganie и block
+		$block = str_replace(aa("[корзина]"), $sent, $block);
 	}
 
 	// Ставим почту
-	if (strpos($block, "письмо]")) {
+	if (strpos($block, aa("письмо]"))) {
 		// Заявка
-		$mailer = "
-		<table width=100% border=0> 
+		$mailer = "<table width=100% border=0> 
 		<form action=send.php enctype='multipart/form-data' method=post name=formsend> 
-		<tr><td><nobr>Ф.И.О., компания:</nobr><br><input type=text name=mail_subject maxlength=32 size=40 class=all_width></td></tr> 
-		<tr><td><nobr>E-mail:</nobr><br><input type=text name=mail_to maxlength=64 size=40 class=all_width></td></tr> 
-		<tr><td><nobr>Телефон:</nobr><br><input type=text name=mail_tel maxlength=30 size=40 class=all_width></td></tr> 
-		<tr><td>Заявка:<br><textarea cols=50 rows=4 name=mail_msg class=all_width></textarea><br>
+		<tr><td><nobr>".ss("Ф.И.О., компания:")."</nobr><br><input type=text name=mail_subject maxlength=32 size=40 class=all_width></td></tr> 
+		<tr><td><nobr>".ss("Электропочта:")."</nobr><br><input type=text name=mail_to maxlength=64 size=40 class=all_width></td></tr> 
+		<tr><td><nobr>".ss("Телефон:")."</nobr><br><input type=text name=mail_tel maxlength=30 size=40 class=all_width></td></tr> 
+		<tr><td>".ss("Заявка:")."<br><textarea cols=50 rows=4 name=mail_msg class=all_width></textarea><br>
 		<input type=hidden name=mail_file></td> 
 		</tr><tr><td>
-		<span class=small>* Все поля обязательны к заполнению</span>
-		<p align=right><input class='standart_send_button' value=\"Отправить\" type=\"button\" onClick=\" al=''; if (document.formsend.mail_subject.value=='') al = al + 'Вы не заполнили поле &quot;Ф.И.О.&quot;. '; if (document.formsend.mail_to.value=='') al = al + 'Вы не заполнили поле &quot;E-mail&quot;. '; if (document.formsend.mail_msg.value=='') al = al + 'Вы не заполнили поле &quot;Заявка&quot;. '; if (al) alert(al); else submit();\"></p>
+		<span class=small>".ss("* Все поля обязательны к заполнению")."</span>
+		<p align=right><input class='standart_send_button' value=\"".ss("Отправить")."\" type=\"button\" onClick=\" al=''; if (document.formsend.mail_subject.value=='') al = al + '".ss("Вы не заполнили поле &quot;Ф.И.О.&quot;.")." '; if (document.formsend.mail_to.value=='') al = al + '".ss("Вы не заполнили поле &quot;Электропочта&quot;.")." '; if (document.formsend.mail_msg.value=='') al = al + '".ss("Вы не заполнили поле &quot;Заявка&quot;.")." '; if (al) alert(al); else submit();\"></p>
 		</td></tr> 
 		</form> 
 		</table>"; 
-		$soderganie=str_replace("[заявка-письмо]", $mailer, $soderganie); 
-		$block=str_replace("[заявка-письмо]", $mailer, $block); 
+		$soderganie=str_replace(aa("[заявка-письмо]"), $mailer, $soderganie); 
+		$block=str_replace(aa("[заявка-письмо]"), $mailer, $block); 
 
 		// Обычная почта
-		$mailer = "
-		<table width=100% border=0> 
+		$mailer = "<table width=100% border=0> 
 		<form action=send.php enctype='multipart/form-data' method=post name=formsend> 
-		<tr><td><nobr><b>Фамилия, имя*:</b></nobr></td><td width=60%><input type=text name=mail_subject maxlength=32 size=40 class=all_width></td></tr> 
-		<tr><td><nobr><b>E-mail*:</b></nobr></td><td width=60%><input type=text name=mail_to maxlength=64 size=40 class=all_width></td></tr> 
-		<tr><td><nobr><b>Телефон*:</b></nobr></td><td width=60%><input type=text name=mail_tel maxlength=30 size=40 class=all_width></td></tr> 
-		<tr><td colspan=2><b>Текст письма*:</b><br><textarea cols=50 rows=8 name=mail_msg class=all_width></textarea><br>
+		<tr><td><nobr><b>".ss("Фамилия, имя*:")."</b></nobr></td><td width=60%><input type=text name=mail_subject maxlength=32 size=40 class=all_width></td></tr> 
+		<tr><td><nobr><b>".ss("Электропочта*:")."</b></nobr></td><td width=60%><input type=text name=mail_to maxlength=64 size=40 class=all_width></td></tr> 
+		<tr><td><nobr><b>".ss("Телефон*:")."</b></nobr></td><td width=60%><input type=text name=mail_tel maxlength=30 size=40 class=all_width></td></tr> 
+		<tr><td colspan=2><b>".ss("Текст письма*:")."</b><br><textarea cols=50 rows=8 name=mail_msg class=all_width></textarea><br>
 		<input type=hidden name=mail_file></td> 
 		</tr><tr><td colspan=2>
-		<span class=small>* Все поля обязательны к заполнению</span>
-		<p align=right><input class='standart_send_button' value=\"Отправить\" type=\"button\" onClick=\" al=''; if (document.formsend.mail_subject.value=='') al = al + 'Вы не заполнили поле &quot;Фамилия и имя&quot;. '; if (document.formsend.mail_to.value=='') al = al + 'Вы не заполнили поле &quot;E-mail&quot;. '; if (document.formsend.mail_msg.value=='') al = al + 'Вы не заполнили поле &quot;Текст письма&quot;. '; if (al) alert(al); else submit();\"></p>
+		<span class=small>".ss("* Все поля обязательны к заполнению")."</span>
+		<p align=right><input class='standart_send_button' value=\"".ss("Отправить")."\" type=\"button\" onClick=\" al=''; if (document.formsend.mail_subject.value=='') al = al + '".ss("Вы не заполнили поле &quot;Фамилия, имя&quot;.")." '; if (document.formsend.mail_to.value=='') al = al + '".ss("Вы не заполнили поле &quot;Электропочта&quot;.")." '; if (document.formsend.mail_msg.value=='') al = al + '".ss("Вы не заполнили поле &quot;Текст письма&quot;.")." '; if (al) alert(al); else submit();\"></p>
 		</td></tr> 
 		</form> 
 		</table>"; 
-		$soderganie=str_replace("[письмо]", $mailer, $soderganie); 
-		$block=str_replace("[письмо]", $mailer, $block); 
+		$soderganie=str_replace(aa("[письмо]"), $mailer, $soderganie); 
+		$block=str_replace(aa("[письмо]"), $mailer, $block); 
 
 		// Ставим почту+имя
 		$mailer = "
 		<table width=400 border=0 align=center> 
 		<form action=send.php enctype='multipart/form-data' method=post name=formsend> 
-		<tr><td><nobr><b>Фамилия, имя*:</b></nobr></td><td width=60%><input type=text name=mail_subject maxlength=32 size=40 class=all_width></td></tr> 
-		<tr><td><nobr><b>E-mail:</b></nobr></td><td width=60%><input type=text name=mail_to maxlength=64 size=40 class=all_width></td></tr> 
-		<tr><td><nobr><b>Телефон*:</b></nobr></td><td width=60%><input type=text name=mail_tel maxlength=30 size=40 class=all_width></td></tr> 
-		<tr><td colspan=2>* - поля обязательны к заполнению.
-		<p align=right><input class='micro_send_button' value=\"Отправить\" type=\"button\" onClick=\" al=''; if (document.formsend.mail_subject.value=='') al = al + 'Вы не заполнили поле &quot;Ваше имя&quot;. '; if (al) alert(al); else submit();\"></p>
+		<tr><td><nobr><b>".ss("Ваше имя*:")."</b></nobr></td><td width=60%><input type=text name=mail_subject maxlength=32 size=40 class=all_width></td></tr> 
+		<tr><td><nobr><b>".ss("Электропочта:")."</b></nobr></td><td width=60%><input type=text name=mail_to maxlength=64 size=40 class=all_width></td></tr> 
+		<tr><td><nobr><b>".ss("Телефон*:")."</b></nobr></td><td width=60%><input type=text name=mail_tel maxlength=30 size=40 class=all_width></td></tr> 
+		<tr><td colspan=2>".ss("* - поля обязательны к заполнению.")."
+		<p align=right><input class='micro_send_button' value=\"".ss("Отправить")."\" type=\"button\" onClick=\" al=''; if (document.formsend.mail_subject.value=='') al = al + '".ss("Вы не заполнили поле &quot;Ваше имя&quot;.")." '; if (al) alert(al); else submit();\"></p>
 		</td></tr> 
 		</form> 
 		</table>"; 
-		$soderganie=str_replace("[микрописьмо]", $mailer, $soderganie); 
-		$block=str_replace("[микрописьмо]", $mailer, $block); 
+		$soderganie = str_replace(aa("[микрописьмо]"), $mailer, $soderganie); 
+		$block = str_replace(aa("[микрописьмо]"), $mailer, $block); 
 
 		// Ставим почту короткую
 		$mailer2 = "
 		<table width=100% border=0> 
 		<form action=send.php enctype='multipart/form-data' method=post name=formsend> 
-		<tr><td><nobr><b>Фамилия, имя*:</b></nobr></td><td width=60%><input type=text name=mail_subject maxlength=32 size=40 class=all_width></td></tr> 
-		<tr><td><nobr><b>E-mail*:</b></nobr></td><td width=60%><input type=text name=mail_to maxlength=64 size=40 class=all_width></td></tr> 
-		<tr><td><nobr><b>Телефон*:</b></nobr></td><td width=60%><input type=text name=mail_tel maxlength=30 size=40 class=all_width></td></tr> 
-		<tr><td colspan=2><b>Комментарий*:</b><br>
-		<textarea cols=50 rows=2 name=mail_msg class=all_width></textarea>
+		<tr><td><nobr><b>".ss("Фамилия, имя*:")."</b></nobr></td><td width=60%><input type=text name=mail_subject maxlength=32 size=40 class=all_width></td></tr> 
+		<tr><td><nobr><b>".ss("Электропочта*:")."</b></nobr></td><td width=60%><input type=text name=mail_to maxlength=64 size=40 class=all_width></td></tr> 
+		<tr><td><nobr><b>".ss("Телефон*:")."</b></nobr></td><td width=60%><input type=text name=mail_tel maxlength=30 size=40 class=all_width></td></tr> 
+		<tr><td colspan=2><b>".ss("Комментарий*:")."</b><br>
+		<textarea cols=50 rows=2 name=mail_msg class='all_width'></textarea>
 		<br><input type=hidden name=mail_file></td> 
 		</tr><tr><td colspan=2>
-		<span class=small>* Все поля обязательны к заполнению</span>
-		<p align=right><input class='small_send_button' value=\"Отправить\" type=\"button\" onClick=\" al=''; if (document.formsend.mail_subject.value=='') al = al + 'Вы не заполнили поле &quot;Фамилия и имя&quot;. '; if (document.formsend.mail_to.value=='') al = al + 'Вы не заполнили поле &quot;E-mail&quot;. '; if (document.formsend.mail_msg.value=='') al = al + 'Вы не заполнили поле &quot;Комментарий&quot;. '; if (al) alert(al); else submit();\"></p>
+		<span class=small>".ss("* Все поля обязательны к заполнению")."</span>
+		<p align=right><input class='small_send_button' value=\"".ss("Отправить")."\" type=\"button\" onClick=\" al=''; if (document.formsend.mail_subject.value=='') al = al + '".ss("Вы не заполнили поле &quot;Фамилия, имя&quot;.")." '; if (document.formsend.mail_to.value=='') al = al + '".ss("Вы не заполнили поле &quot;Электропочта&quot;.")." '; if (document.formsend.mail_msg.value=='') al = al + '".ss("Вы не заполнили поле &quot;Комментарий&quot;.")." '; if (al) alert(al); else submit();\"></p>
 		</td></tr> 
 		</form> 
 		</table>
 		"; 
-		$soderganie=str_replace("[миниписьмо]", $mailer2, $soderganie); 
-		$block=str_replace("[миниписьмо]", $mailer2, $block); 
+		$soderganie=str_replace(aa("[миниписьмо]"), $mailer2, $soderganie); 
+		$block=str_replace(aa("[миниписьмо]"), $mailer2, $block); 
 	}
 
 	// Ставим поиск
-	$search = "<form method=POST action=\"/--search\" class='main_search_form'><input type='search' name=slovo placeholder='Поиск'><input type='submit' name='ok' value='Найти' class='main_search_button'></form>";
-	$block=str_replace("[поиск]", $search, $block);
+	$search = "<form method=POST action=\"/--search\" class='main_search_form'><input type='search' name=slovo placeholder='Поиск'><input type='submit' name='ok' value='".ss("Найти")."' class='main_search_button'></form>";
+	$block=str_replace(aa("[поиск]"), $search, $block);
 
 	// Ставим подписку
-	if (strpos(" ".$block, "[подписка")) {
-		$search = "<form method=POST action=\"/--email\" class=main_mail_form><table width=100%><tr><td align=right>Email: </td><td><input type=text name=mail class=main_mail_input size=10 class=all_width></td></tr><tr><td align=right>Имя: </td><td><input type=text name=avtor class=main_mail_input size=10 class=all_width></td></tr><tr><td colspan=2 align=right><input type='submit' name='ok' value='Подписаться'></td></tr></table></form>";
-		$block=str_replace("[подписка]", $search, $block);
+	if (strpos(" ".$block, aa("[подписка"))) {
+		$search = "<form method=POST action=\"/--email\" class=main_mail_form><table width=100%><tr><td align=right>".ss("Электропочта:")." </td><td><input type=text name=mail class=main_mail_input size=10 class=all_width></td></tr><tr><td align=right>".ss("Имя:")." </td><td><input type=text name=avtor class=main_mail_input size=10 class=all_width></td></tr><tr><td colspan=2 align=right><input type='submit' name='ok' value='".ss("Подписаться")."'></td></tr></table></form>";
+		$block=str_replace(aa("[подписка]"), $search, $block);
 
 		// Ставим подписку в линию
-		$search = "<form method=POST action=\"/--email\" class=main_mail_form><table><tr><td><b>Рассылка: </b></td><td>&nbsp;Email:</td><td><input type=text name=mail class=main_mail_input size=10 class=all_width></td><td>&nbsp;Имя:</td><td><input type=text name=avtor class=main_mail_input size=10 class=all_width></td><td colspan=2 align=right><input type='submit' name='ok' value='Подписаться'></td></tr></table></form>";
-		$block=str_replace("[подписка_горизонт]", $search, $block);
+		$search = "<form method=POST action=\"/--email\" class=main_mail_form><table><tr><td><b>".ss("Рассылка:")." </b></td><td>&nbsp;".ss("Электропочта:")."</td><td><input type=text name=mail class=main_mail_input size=10 class=all_width></td><td>&nbsp;Имя:</td><td><input type=text name=avtor class=main_mail_input size=10 class=all_width></td><td colspan=2 align=right><input type='submit' name='ok' value='".ss("Подписаться")."'></td></tr></table></form>";
+		$block=str_replace(aa("[подписка_горизонт]"), $search, $block);
 	}
 
 	// Ставим день и время
-	if (strpos($block, "[день]") or strpos($block, "[время]")) {
+	if (strpos($block, aa("[день]")) or strpos($block, aa("[время]"))) {
 		$den = date("d m Y");
 		$den = explode(" ",$den);
 		$den = intval($den[0])." ".findMonthName($den[1])." ".$den[2];
 		$vremya = date("H:i", time() + 3600); // + 1 час - Самарское время.
-		$block=str_replace("[день]", $den, $block);
-		$block=str_replace("[время]", $vremya, $block);
+		$block=str_replace(aa("[день]"), $den, $block);
+		$block=str_replace(aa("[время]"), $vremya, $block);
 	}
 
 	global $project_logotip, $project_name;
-	if (strpos($block, "_проекта]")) {
-		$block=str_replace("[лого_проекта]", "<img src='".$project_logotip."' class='project_logotip'>", $block);
-		$block=str_replace("[название_проекта]", $project_name, $block);
-		$block=str_replace("[название_лого_проекта]", "<h1 class=project_logotip_name><a href='/'' title='Главная страница'><span>".$project_name."</span><img src='".$project_logotip."' alt=''></a></h1>", $block);
+	if (strpos($block, aa("_проекта]"))) {
+		$block=str_replace(aa("[лого_проекта]"), "<img src='".$project_logotip."' class='project_logotip'>", $block);
+		$block=str_replace(aa("[название_проекта]"), $project_name, $block);
+		$block=str_replace(aa("[название_лого_проекта]"), "<h1 class='project_logotip_name'><a href='/'' title='".ss("Главная страница")."'><span>".$project_name."</span><img src='".$project_logotip."' alt=''></a></h1>", $block);
 	}
 
 	// Ставим кнопку Твиттера
-	$block=str_replace("[твиттер]", "<div><a href=\"https://twitter.com/share\" class=\"twitter-share-button\" data-lang=\"ru\" data-size=\"large\">Твитнуть</a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=\"//platform.twitter.com/widgets.js\";fjs.parentNode.insertBefore(js,fjs);}}(document,\"script\",\"twitter-wjs\");</script></div>", $block);
+	$block=str_replace(aa("[твиттер]"), "<div><a href='https://twitter.com/share' class='twitter-share-button' data-lang='ru' data-size='large'>Твитнуть</a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=\"//platform.twitter.com/widgets.js\";fjs.parentNode.insertBefore(js,fjs);}}(document,\"script\",\"twitter-wjs\");</script></div>", $block);
 
 	// Ставим символ |
 	$block=str_replace("[-]", "|", $block); //  УБРАТЬ!!!!!!!!!!!!!!!!!!!!!!!
 
 	//Ставим RSS
 	if (strpos($block, "[rss")) {
-		$block=str_replace("[rss]", "<a href='rss.php' title='RSS-подписка позволит вам быстро узнать о всех новых статьях на этом сайте' target='_blank' class='rss'><img src='images/rss_16.png'></a>", $block);
-		$block=str_replace("[rss32]", "<a href='rss.php' target='_blank' title='Подпишись на наши новости по RSS!'><img src='images/rss_32.gif'></a>", $block);
-		$block=str_replace("[rss50]", "<a href='rss.php' target='_blank' title='Подпишись на наши новости по RSS!'><img src='images/rss_50.gif'></a>", $block);
-		$block=str_replace("[rss100]", "<a href='rss.php' target='_blank' title='Подпишись на наши новости по RSS!'><img src='images/rss_100.gif'></a>", $block);
-		$block=str_replace("[rss128]", "<a href='rss.php' target='_blank' title='Подпишись на наши новости по RSS!'><img src='images/rss_128.png'></a>", $block);
-		$block=str_replace("[rss150]", "<a href='rss.php' target='_blank' title='Подпишись на наши новости по RSS!'><img src='images/rss_150.gif'></a>", $block);
+		$rss_text = "<a href='rss.php' title='".ss("Подпишись на наши новости по RSS!")."' class='rss'><img src='images/";
+		$block=str_replace("[rss]", $rss_text."rss_16.png'></a>", $block);
+		$block=str_replace("[rss32]", $rss_text."rss_32.gif'></a>", $block);
+		$block=str_replace("[rss50]", $rss_text."rss_50.gif'></a>", $block);
+		$block=str_replace("[rss100]", $rss_text."rss_100.gif'></a>", $block);
+		$block=str_replace("[rss128]", $rss_text."rss_128.png'></a>", $block);
+		$block=str_replace("[rss150]", $rss_text."rss_150.gif'></a>", $block);
 	}
 
 	// Обработка мини-блоков (карточка компании)
@@ -1612,18 +1575,18 @@ case "31": # Блок JS
 		}
 		return $block;
 	}
-	$block = company_blocks($company_name, "компания", $block);
-	$block = company_blocks($company_fullname, "КОМПАНИЯ", $block);
-	$block = company_blocks($company_address, "адрес компании", $block);
-	$block = company_blocks($company_time, "время работы компании", $block);
-	$block = company_blocks($company_tel, "телефон компании", $block);
-	$block = company_blocks($company_sot, "сотовый компании", $block);
-	$block = company_blocks($company_fax, "факс компании", $block);
-	$block = company_blocks($company_email, "почта компании", $block);
-	$block = company_blocks($company_map, "карта компании", $block);
-	$block = company_blocks($company_people, "лицо компании", $block);
+	$block = company_blocks($company_name, aa("компания"), $block);
+	$block = company_blocks($company_fullname, aa("КОМПАНИЯ"), $block);
+	$block = company_blocks($company_address, aa("адрес компании"), $block);
+	$block = company_blocks($company_time, aa("время работы компании"), $block);
+	$block = company_blocks($company_tel, aa("телефон компании"), $block);
+	$block = company_blocks($company_sot, aa("сотовый компании"), $block);
+	$block = company_blocks($company_fax, aa("факс компании"), $block);
+	$block = company_blocks($company_email, aa("почта компании"), $block);
+	$block = company_blocks($company_map, aa("карта компании"), $block);
+	$block = company_blocks($company_people, aa("лицо компании"), $block);
 
-	// Ставим валютный информер
+	// Ставим валютный информер (только для России)
 	if (strpos($block, "[валюта]")) { // INFORMER VALUTA by 13i
 		$eur = 0;
 		$usd = 0;
@@ -1640,49 +1603,34 @@ case "31": # Блок JS
 		$block = str_replace("[валюта]", $valuta, $block);
 	}
 	
-	// Получить заголовки всех страниц и разделов
-	global $title_razdels, $show_page_links;
-	// НАЙТИ ЗАМЕНУ, к примеру функцию поиска между скобками.
-		// Определяем все разделы
-		foreach( $title_razdels as $key_name => $row_title ) {
-			$row_title = str_replace( "»","&raquo;", str_replace( "«","&laquo;", $row_title ) );
-			$row_title2 = predlogi($row_title);
-			$block = str_replace("{".$row_title."}", "<a class=auto_link href=-".$key_name.">".$row_title."</a>", $block);
-			$block = str_replace("{".$row_title2."}", "<a class=auto_link href=-".$key_name.">".$row_title."</a>", $block);
-		}
+	
+		
+		
 	if ($show_page_links == 1) {
+
+		// Добавить if {} наличие
+
+		// Получить заголовки всех страниц и разделов
+		global $title_razdels, $show_page_links;
+		// НАЙТИ ЗАМЕНУ, к примеру функцию поиска между скобками.
+		foreach( $title_razdels as $key_name => $row_title ) { // Определяем все разделы
+			$row_title = str_replace( "»","&raquo;", str_replace( "«","&laquo;", $row_title ) );
+			//$row_title2 = predlogi($row_title);
+			$block = str_replace("{".$row_title."}", "<a class='auto_link' href=-".$key_name.">".$row_title."</a>", $block);
+			//$block = str_replace("{".$row_title2."}", "<a class='auto_link' href=-".$key_name.">".$row_title."</a>", $block);
+		}
 		// Определяем все страницы
 		$sql = "SELECT `pid`, `module`, `title` FROM ".$prefix."_pages where `tables`='pages' and `active`='1'";
 		$result = $db->sql_query($sql);
 		while ($rows = $db->sql_fetchrow($result)) {
 			$row_title = str_replace( "«","&laquo;", str_replace( "»","&raquo;", $rows['title'] ) );
-			$row_title2 = predlogi($row_title);
-			$block=str_replace("{".$row_title."}", "<a class=auto_link href=-".$rows['module']."_page_".$rows['pid'].">".$row_title."</a>", $block);
-			$block=str_replace("{".$row_title2."}", "<a class=auto_link href=-".$rows['module']."_page_".$rows['pid'].">".$row_title."</a>", $block);
+			//$row_title2 = predlogi($row_title);
+			//$row_title3 = str_replace("&nbsp;", " ", $row_title);
+			$block=str_replace("{".$row_title."}", "<a class='auto_link' href=-".$rows['module']."_page_".$rows['pid'].">".$row_title."</a>", $block);
+			//$block=str_replace("{".$row_title2."}", "<a class='auto_link' href=-".$rows['module']."_page_".$rows['pid'].">".$row_title."</a>", $block);
+			//$block=str_replace("{".$row_title3."}", "<a class='auto_link' href=-".$rows['module']."_page_".$rows['pid'].">".$row_title."</a>", $block);
 		}
 	}
-
-/*
-
-Регулярное выражения для поиска и выбора значений между фигурным скобками {}. // проверить и внедрить
-$raz[0] = "{";
-$raz[1] = "}";
-$text='111 {222 222} {33 33} {f}{ \=-01 ?!%} { 44 }444}';
-preg_match_all("/\\".$raz[0]."[^\\"
-.$raz[1]."]+\\".$raz[1]."/s", $text, $matches);
-var_dump($matches);
-
-# будет выведено
-# array
-# 0 => 
-# array
-# 0 => string '{222 222}' (length=9)
-# 1 => string '{33 33}' (length=7)
-# 2 => string '{f}' (length=3)
-# 3 => string '{ \=-01 ?!%}' (length=12)
-# 4 => string '{ 44 }' (length=6)
-
-*/
 }
 
 # ФОРМИРОВАНИЕ СТРАНИЦЫ
@@ -1692,7 +1640,7 @@ if ($keywords2 == "") $keywords2 = $keywords;
 if ($description2 == "") $description2 = $description;
 
 // При открытии раздела можно убирать определенные блоки и через CSS
-global $add_css, $data_page, $lang, $kickstart, $jqueryui, $normalize, $sortable, $add_fonts, $url, $admin, $pid, $now, $nocash; //, $slider;
+global $add_css, $data_page, $lang, $kickstart, $jqueryui, $normalize, $sortable, $add_fonts, $url, $admin, $pid, $now, $nocash, $head_insert; //, $slider;
 if (trim($add_css) != "") $stil .= "_add_".str_replace (" ","-", str_replace ("  "," ", trim($add_css))); 
 
 // Кеширование: откл.
@@ -1731,73 +1679,10 @@ echo "<title>".$pagetit.$sitename."</title>
 <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js'></script>
 <script src='includes/modernizr-1.5.min.js'></script>";
 
+// Подключение других языков, если это не русский
 if ($lang != 'ru') echo "<script src=\"language/".$lang.".js\"></script>";
 
 if ($normalize != 0) echo "<link rel='stylesheet' type='text/css' href='includes/css-frameworks/normalize.css' />";
-
-/*
-<script src='includes/html5.js'></script>
-<script src='includes/jquery.min.js'></script>
-<script src='includes/modernizr-1.5.min.js'></script>
-if ($slider == 1) echo "<script src='includes/jquery.innerfade.js'></script>";
-if ($slider == 2) echo "<script src='includes/jquery.slides.min.js'></script>";
-if ($slider == 3) echo "<script src='includes/jquery.aslideshow.pack.js'></script>";
-
-Подключение
-jScroll
-http://cloud.github.com/downloads/wduffy/jScroll/jquery.jscroll.min.js
-http://www.wduffy.co.uk/jScroll/
-
-TableSorter
-includes/jquery.tablesorter.min.js
-http://tablesorter.ru/docs/
-
-includes/jquery.keyboard.js
-
-
-
-AngularJS
-snippet: <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.min.js"></script>
-site: http://angularjs.org
-stable versions: 1.0,6, 1.0.5, 1.0.4, 1.0.3, 1.0.2, 1.0.1
-unstable versions: 1.1.4, 1.1.3
-Chrome Frame
-snippet: <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
-site: https://developers.google.com/chrome/chrome-frame/
-versions: 1.0.3, 1.0.2, 1.0.1, 1.0.0
-Dojo
-snippet: <script src="//ajax.googleapis.com/ajax/libs/dojo/1.8.3/dojo/dojo.js"></script>
-site: http://dojotoolkit.org/
-versions: 1.8.3, 1.8.2, 1.8.1, 1.8.0, 1.7.4, 1.7.3, 1.7.2, 1.7.1, 1.7.0, 1.6.1, 1.6.0, 1.5.2, 1.5.1, 1.5.0, 1.4.4, 1.4.3, 1.4.1, 1.4.0, 1.3.2, 1.3.1, 1.3.0, 1.2.3, 1.2.0, 1.1.1
-Ext Core
-snippet: <script src="//ajax.googleapis.com/ajax/libs/ext-core/3.1.0/ext-core.js"></script>
-site: http://www.sencha.com/products/extjs/
-versions: 3.1.0, 3.0.0
-
-MooTools
-snippet: <script src="//ajax.googleapis.com/ajax/libs/mootools/1.4.5/mootools-yui-compressed.js"></script>
-site: http://mootools.net/
-versions: 1.4.5, 1.4.4, 1.4.3, 1.4.2, 1.4.1, 1.4.0, 1.3.2, 1.3.1, 1.3.0, 1.2.5, 1.2.4, 1.2.3, 1.2.2, 1.2.1, 1.1.2, 1.1.1
-Prototype
-snippet: <script src="//ajax.googleapis.com/ajax/libs/prototype/1.7.1.0/prototype.js"></script>
-site: http://prototypejs.org/
-versions: 1.7.1.0, 1.7.0.0, 1.6.1.0, 1.6.0.3, 1.6.0.2
-script.aculo.us
-snippet: <script src="//ajax.googleapis.com/ajax/libs/scriptaculous/1.9.0/scriptaculous.js"></script>
-site: http://script.aculo.us/
-versions: 1.9.0, 1.8.3, 1.8.2, 1.8.1
-note: This library depends on Prototype. Before loading this module, you must load Prototype.
-
-WebFont Loader
-snippet: <script src="//ajax.googleapis.com/ajax/libs/webfont/1.3.0/webfont.js"></script>
-site: https://developers.google.com/webfonts/docs/webfont_loader
-versions: 1.3.0, 1.1.2, 1.1.1, 1.1.0, 1.0.31, 1.0.30, 1.0.29, 1.0.28, 1.0.27, 1.0.26, 1.0.25, 1.0.24, 1.0.23, 1.0.22, 1.0.21, 1.0.19, 1.0.18, 1.0.17, 1.0.16, 1.0.15, 1.0.14, 1.0.13, 1.0.12, 1.0.11, 1.0.10, 1.0.9, 1.0.6, 1.0.5, 1.0.4, 1.0.3, 1.0.2, 1.0.1, 1.0.0
-
-<script src='includes/jquery-ui.min.js'></script>
-<script src='includes/jquery-ui-i18n.min.js'></script>
-<link rel='stylesheet' href='includes/jquery-ui.css' />
-
-*/
 
 if ($sortable != 0) echo "<script src='includes/jquery.tinysort.min.js'></script>";
 
@@ -1863,7 +1748,7 @@ if (strlen($add_fonts)>1) {
 	if ($kickstart == 10) $add_body .= " class='yui3-skin-sam'>";
 	if ($kickstart == 1) $add_body .= ' class="elements"';
 	# НАЧАЛО ТЕЛА
-	echo "</head>\n<body".$add_body." id='page'>";
+	echo $head_insert."</head>\n<body".$add_body." id='page'>";
 	if ($kickstart == 1) echo "<div class='grid'>"; 
 	//<a id='top-of-page'></a><div id='wrap' class='clearfix'>"; //<div class='grid'>
 	if ($kickstart == 3 or $kickstart == 8) echo "<div class='container'>";
@@ -1893,43 +1778,12 @@ if (strlen($add_fonts)>1) {
 	if (is_admin($admin)) echo page_admin($txt,$pid); // добавили функции админа к страничке
 	else echo $txt;
 	// если в config.php выбрано «показывать ошибки», помимо этого покажет запросы к БД и их количество
-	if ($display_errors == true) print("<!-- запросов: $db->num_queries \n $db->num_q -->");
+	if ($display_errors == true) print("<!-- DataBase queries: $db->num_queries \n $db->num_q -->");
 
 	// Проверка добавляемой информации
 	if ( $site_cash != false ) {
 		$numrows = 0;
 		$txt = addslashes($txt);
-		// Запрет кеширования
-		/*
-		ftp://77.222.56.238//public_html/cashe/http%253A%252F%252Fxn--80aaaabhgr4cps3ajao.xn--p1ai_-public_page_8412
-		ftp://77.222.56.238//public_html/cashe/http%253A%252F%252Fxn--80aaaabhgr4cps3ajao.xn--p1ai_-public_page_8268
-		-index
-		http%253A%252F%252Fwww.xn--80aaaabhgr4cps3ajao.xn--p1ai%252F-public_page_9299
-		_%3Fq%3Duser
-		_-public_page_10966_comm
-		http%253A%252F%252Fwww.xn--80aaaabhgr4cps3ajao.xn--p1ai%252F-public_page_10755
-		*/
-		//$nocash = explode(" ","/?name=-search /--search ".trim(str_replace("  "," ",str_replace("\n"," ",$nocash))));
-		//$url0 = str_replace("http://".$siteurl,"",$url);
-		//$url0 = str_replace("http%3A%2F%2F".$siteurl."%2F","/",$url0);
-		// если кеш на базе
-		/*
-		if (strpos($url, "/-")) {
-		    $url = explode("/-", $url); 
-		    $url = "-".$url[1]; 
-		}
-		if (strpos($url, "%252F-")) { 
-		    $url = explode("%252F-", $url); 
-		    $url = "-".$url[1];
-		}
-		if (strpos($url, "%2F")) { 
-		    $url = explode("%2F-", $url); 
-		    $url = "-".$url[1];
-		}
-		$url = str_replace("/", "", $url);
-		if ($url == '') $url = "-index";
-		*/
-
 		global $url_link;
 		if ($url_link != "") {
 			if ($site_cash == "base") {
@@ -1939,13 +1793,9 @@ if (strlen($add_fonts)>1) {
 			// если кеш на файлах
 			if ($site_cash == "file") {
 				if ($url_link == '/' || $url_link == '') $url_link = "-index";
-					//if (file_exists("cashe/".$url)) $numrows = 1;
-				//} else {
-					//$url = str_replace("/","_",$url); // «защита»
 					if (file_exists("cashe/".$url_link)) $numrows = 1;
-				//}
 			}
-		    if ($numrows == 0 && $url_link != "-search" && $url_link != "savecomm" && $url_link != "savepost") { // !mb_strpos($url,"_cat_") && 
+		    if ($numrows == 0 && $url_link != "-search" && $url_link != "savecomm" && $url_link != "savepost") {
 				// Добавление в кеш
 				if ($site_cash == "base") // если кеш в БД
 					$db->sql_query("INSERT INTO `".$prefix."_cash` (`id`, `url`, `data`, `text`) VALUES (NULL, '".$url_link."', '".$now."', '".$txt."');") or die (ss("Обновите страницу, (нажав F5)."));

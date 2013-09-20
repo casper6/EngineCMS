@@ -27,17 +27,19 @@ function delpage(id) {
   return $txt;
 }
 ///////////////////////////////////////////////////////////////
-function del_spiski($page_id) { // Стираем упоминания страницы во всех элементах списка
+
+function del_spiski($page_id, $type) { // Стираем упоминания страницы во всех элементах списка
   global $prefix, $db;
-  $sql = "SELECT id, pages FROM ".$prefix."_spiski WHERE pages like '% $page_id %'";
+  $sql = "SELECT `id`, `pages` FROM ".$prefix."_spiski WHERE `type`='".$type."' and `pages` like '% ".$page_id." %'";
   $result = $db->sql_query($sql);
   while ($row = $db->sql_fetchrow($result)) {
     $del_id = $row['id'];
-    $del_pages = " ".trim(str_replace("  "," ",str_replace(" $page_id "," ",$row['pages'])))." ";
+    $del_pages = " ".trim(str_replace("  "," ",str_replace(" ".$page_id." "," ",$row['pages'])))." ";
     if (trim($del_pages)=="") $del_pages=""; // Стираем пустые страницы
-    $db->sql_query("UPDATE ".$prefix."_spiski SET pages='$del_pages' WHERE id='$del_id'") or die('Ошибка: Не удалось стереть всю ранее введенную в списки информацию.');
+    $db->sql_query("UPDATE ".$prefix."_spiski SET pages='".$del_pages."' WHERE id='".$del_id."'") or die('Ошибка: Не удалось стереть всю ранее введенную в списки информацию.');
   }
 }
+
 ///////////////////////////////////////////////////////////////
 function admin_footer() { // проверить вызов
   if ( stristr($_SERVER['HTTP_USER_AGENT'], 'Firefox') or stristr($_SERVER['HTTP_USER_AGENT'], 'Chrome') or stristr($_SERVER['HTTP_USER_AGENT'], 'Safari') ) {} else echo "<span class='gray noprint'>Для администрирования сайта желательно использовать браузер <a href='https://www.google.com/chrome?hl=ru' target='_blank'>Google Chrome</a>, <a href='http://www.apple.com/ru/safari/' target='_blank'>Apple Safari</a> или <a href='http://www.mozilla.org/ru/firefox/' target='_blank'>Mozilla Firefox</a>. <a href='http://www.whatbrowser.org/ru/' target='_blank'>Что такое браузер?</a></span></div></body>\n</html>";
@@ -361,7 +363,7 @@ function redactor($type, $txt, $name, $name2="", $style="html", $return="echo") 
           document.getElementById('".$name."').style.fontSize='16px';</script>";
   } elseif ($type=="1") {
     // Преобразование textarea (замена на русскую букву е, только для редактора)
-    $txt = str_replace("textarea","tеxtarea",$txt); // ireplace
+    //$txt = str_replace("textarea","tеxtarea",$txt); // ireplace
     $txt = str_replace("&","&amp;",$txt);
     $echo .= "<textarea id='".$name."' class='w100 h155' name='".$name."'>".$txt."</textarea><br>";
   } elseif ($type=="3") {
@@ -373,7 +375,8 @@ function redactor($type, $txt, $name, $name2="", $style="html", $return="echo") 
     </script><textarea id='".$name."' name='".$name."' style='width: 100%; height: 220px;'>".$txt."</textarea>";
   } elseif ($type=="4") {
     global $ed2_button_html, $ed2_button_formatting, $ed2_button_bold, $ed2_button_italic, $ed2_button_deleted, $ed2_button_underline, $ed2_button_unorderedlist, $ed2_button_orderedlist, $ed2_button_outdent, $ed2_button_indent, $ed2_button_image, $ed2_button_video, $ed2_button_file, $ed2_button_table, $ed2_button_link, $ed2_button_alignment, $ed2_button_horizontalrule, $ed2_button_more, $ed2_button_link2, $ed2_button_block, $ed2_button_pre, $ed2_button_fullscreen, $ed2_button_clips, $ed2_button_fontcolor, $ed2_button_fontsize, $ed2_button_fontfamily, $ed2_minHeight, $ed2_direction;
-    $ed2_html=$ed2_formatting=$ed2_bold=$ed2_italic=$ed2_deleted=$ed2_underline=$ed2_unorderedlist=$ed2_orderedlist=$ed2_outdent=$ed2_indent=$ed2_image=$ed2_video=$ed2_file=$ed2_table=$ed2_link=$ed2_alignment=$ed2_horizontalrule="";
+
+    $ed2_html=$ed2_formatting=$ed2_bold=$ed2_italic=$ed2_deleted=$ed2_underline=$ed2_unorderedlist=$ed2_orderedlist=$ed2_outdent=$ed2_indent=$ed2_image=$ed2_video=$ed2_file=$ed2_table=$ed2_link=$ed2_alignment=$ed2_horizontalrule=$ed2_more=$ed2_link2=$ed2_block=$ed2_pre=$ed2_fullscreen=$ed2_clips=$ed2_fontcolor=$ed2_fontsize=$ed2_fontfamily="";
     if ($ed2_button_html == " checked") $ed2_html = "'html', ";
     if ($ed2_button_formatting == " checked") $ed2_formatting = "'|', 'formatting', ";
     if ($ed2_button_bold == " checked") $ed2_bold = "'|', 'bold',";
@@ -444,7 +447,7 @@ function redactor($type, $txt, $name, $name2="", $style="html", $return="echo") 
 function redactor2($type, $txt, $name, $style="html") {
   if ($type=="1") {
     // Преобразование textarea (замена на русскую букву е, только для редактора)
-    $txt = str_replace("textarea","tеxtarea",$txt); // ireplace
+    //$txt = str_replace("textarea","tеxtarea",$txt); // ireplace
     $txt = str_replace("&","&amp;",$txt);
     echo "<textarea id='".$name."' class='w100 h155' name='".$name."'>".$txt."</textarea><br>";
   } elseif ($type=="2") {

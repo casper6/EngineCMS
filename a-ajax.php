@@ -244,35 +244,43 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
 
 
   case "pole": // 4
-    $sql = "select `id`,`name`,`title`,`useit`,`text` from ".$prefix."_mainpage where `tables`='pages' and `type` = '4' order by `type`, `title`, `name`";
+    $sql = "select `id`,`name`,`title`,`text`,`useit`,`shablon` from ".$prefix."_mainpage where `tables`='pages' and `type`='4' order by `title`, `name`";
     $result = $db->sql_query($sql);
-    if ($db->sql_fetchrow($result) != null) $info .= "<a class='button small red white' href='sys.php?op=mainpage_recycle_spiski'>".icon('white small','x')." Очистить пустые поля</a>
-    <table width=100% class=table_light>";
-    while ($row = $db->sql_fetchrow($result)) {
-      //$id = $row['id']; 
-      //$nam = $row['name']; 
-      //$title = $row['title'];
-      $useit = $row['useit'];
-      //$text = $row['text'];
-      $and = "";
-      $s_tip = explode("|",$row['text']); 
-      $s_tip = explode("&",$s_tip[1]); 
-      $s_tip = explode("=",$s_tip[0]); 
-      if ($s_tip[1]==0) $and = "список фраз на выбор";
-      if ($s_tip[1]==1) $and = "текст";
-      if ($s_tip[1]==2) $and = "файл";
-      if ($s_tip[1]==3) $and = "период времени";
-      if ($s_tip[1]==4) $and = "строка";
-      $m_title = "<a href=/-".$useit.">".$title_razdels_by_id[$useit]."</a>";
-      if ($useit==0) $m_title = "все разделы";
-      $type_opisX = "Раздел: ".$m_title.".<br>Тип: ".$and.".</sup>";
-      $adres = $row['title'];
-      $redactor = "<div style='float:right;'><a href='sys.php?op=mainpage&id=".$row['id']."&red=1&type=4' title='Редактировать'>".icon('black small','7')."</a> 
-      <a class='padleft30 punkt' onclick='delblock(".$row['id'].",0)' title='Удалить'>".icon('red small','F')."</a></div>";
-      $info .= "<tr id='block_".$row['id']."'><td>".$redactor."<h2>".$row['title']." &darr;</h2><sup style=\"color:#999999;\">Используется в шаблонах: [".$row['name']."]</sup><br>
-      ".$type_opisX."</td></tr>";
+    if ($db->sql_numrows($result) > 0) {
+      //$info .= "<a class='button small red white' href='sys.php?op=mainpage_recycle_spiski'>".icon('white small','x')." Очистить пустые поля</a>
+      $info .= "<table width=100% class=table_light>";
+      while ($row = $db->sql_fetchrow($result)) {
+        $useit = $row['useit'];
+        $shablon = trim($row['shablon']);
+        $and = "";
+        $s_tip = explode("|",$row['text']); 
+        $s_tip = explode("&",$s_tip[1]); 
+        $s_tip = explode("=",$s_tip[0]);
+        if ($s_tip[1]==0) $and = "список слов (выбор одного значения)";
+        if ($s_tip[1]==1) $and = "текст";
+        //if ($s_tip[1]==2) $and = "файл";
+        if ($s_tip[1]==3) $and = "период времени (две даты, актуально для Афиши)";
+        if ($s_tip[1]==4) $and = "строка";
+        if ($s_tip[1]==5) $and = "число";
+        if ($s_tip[1]==6) $and = "регион (регионы можно выбрать в настройках)";
+        if ($s_tip[1]==7) $and = "список слов (выбор нескольких значений)";
+        if ($useit=="0") { $razdel_title = "все разделы"; $papka_title = ""; }
+        else {
+          if ($shablon=="0" or $shablon==" 0 ") $papka_title = ", все папки";
+          else { // находим кол-во папок
+            $shablon = explode(" ",$shablon);
+            $shablon = count($shablon);
+            $papka_title = ", ".$shablon." ".num_ending($shablon, Array(aa("папок"),aa("папка"),aa("папки")));
+          }
+          $razdel_title = "<a href=/-".$useit.">".$title_razdels_by_id[$useit]."</a>";
+        }
+        $redactor = "<div style='float:right;'><a href='sys.php?op=mainpage&id=".$row['id']."&red=1&type=4' title='Редактировать'>".icon('black small','7')."</a> 
+        <a class='padleft30 punkt' onclick='delblock(".$row['id'].",0)' title='Удалить'>".icon('red small','F')."</a></div>";
+        $info .= "<tr id='block_".$row['id']."' onmouseover='$(\"#hide_".$row['id']."\").show();' onmouseout='$(\"#hide_".$row['id']."\").hide();'><td>".$redactor."<h2>".$row['title']."</h2>
+        <span id='hide_".$row['id']."' class='hide'><sup style=\"color:#999999;\">Блок для использования в шаблоне: [".$row['name']."]</sup><br>Раздел: ".$razdel_title.$papka_title.".<br>Тип: ".$and.".</span></td></tr>";
+      }
+      $info .= "</table>";
     }
-    $info .= "</table>";
   break;
 
 
@@ -374,6 +382,204 @@ if ($func == "delslovo") { // Удаляем слово из статистик�
   $db->sql_query("DELETE from ".$prefix."_search WHERE `id`='$id'"); exit;
 }
 #################################################################################################
+if ($func == "show_pole") { // Ответ на комментарий из администрирования
+
+  function spisok_name($s_name,$page_id,$arr=0,$add="") { // Получаем значение поля
+    // Если arr=1 - передаем массив
+    // add - условия сортировки sql-запроса
+    global $db, $prefix;
+    $result = $db->sql_query("SELECT `name` FROM ".$prefix."_spiski WHERE `type`='".$s_name."' and `pages` like '% ".$page_id." %'".$add);
+    if ($arr==0) {
+      $row = $db->sql_fetchrow($result);
+      return $row['name'];
+    } else {
+      $s_names = array();
+      while ($row = $db->sql_fetchrow($result)) {
+        $s_names[] = $row['name'];
+      }
+      return $s_names;
+    }    
+  }
+
+  list($razdel, $page_id, $cid) = explode("*@%", $string);
+  $info = ""; //$id, $razdel, $page_id, $cid";
+
+  // Ищем все списки по разделу
+  $sql = "select `id`, `title`, `name`, `text` from ".$prefix."_mainpage 
+  where (`useit`='".$id."' or `useit`='0') and (`shablon` like '% ".$cid." %' or `shablon` = '' or `shablon` = '0' or `shablon` = ' 0 ') 
+  and `type`='4' order by `title`";
+  $result = $db->sql_query($sql);
+  while ($row = $db->sql_fetchrow($result)) {
+    $s_id = $row['id'];
+    $s_title = $row['title'];
+    $s_name = $row['name'];
+    $options = explode("|", $row['text']);
+    $options = $options[1];
+    $type=0;
+    $shablon=""; 
+    parse_str($options); // раскладка всех настроек списка
+    switch($type) {
+      ///////////////////
+      case "7": // список слов (множественный выбор)
+        if ($page_id > 0) $sp_names = spisok_name($s_name,$page_id,1);
+        $info .= "<p><b>".$s_title.":</b><br>";
+        $sql2 = "select * from ".$prefix."_spiski where type='".$s_name."' order by parent,id";
+        $result2 = $db->sql_query($sql2);
+        $info .= "<select size=10 class='f12' multiple=multiple name='add[".$s_name."][]'>";
+        $opt = $sel_ok = " selected";
+        while ($row2 = $db->sql_fetchrow($result2)) {
+          $s_id2 = $row2['id'];
+          $s_title2 = $row2['name'];
+          $s_opis = $row2['opis'];
+          $s_parent = $row2['parent'];
+          $s_title2 = getparent_spiski($s_name,$s_parent,$s_title2);
+          $sel = ""; 
+          if ( ($page_id > 0 && in_array($s_title2,$sp_names)) || $razdel == $s_id2 ) { $sel = " selected"; $sel_ok = ""; }
+          if ($s_opis != "") $s_opis = " (".$s_opis.")";
+          $opt .= "<option value=".$s_id2.$sel."> ".$s_title2.$s_opis."</option>";
+        }
+        $info .= "<option value=0".$sel_ok.">ничего не выбрано</option>".$opt."</select><br>".aa("Для выбора нескольких зажмите <nobr>клавишу <code>Ctrl</code></nobr> <nobr>или <code>⌘Cmd</code> (на МакОС).</nobr>");
+      break;
+
+      case "0": // список слов (единичный выбор)
+        if ($page_id > 0) $sp_names = spisok_name($s_name,$page_id,1);
+        $info .= "<p><b>".$s_title.":</b><br>";
+        $sql2 = "select * from ".$prefix."_spiski where type='".$s_name."' order by parent,id";
+        $result2 = $db->sql_query($sql2);
+        $info .= "<select class='f12' name='add[".$s_name."]'><option value=0>ничего не выбрано</option>";
+        while ($row2 = $db->sql_fetchrow($result2)) {
+          $s_id2 = $row2['id'];
+          $s_title2 = $row2['name'];
+          $s_opis = $row2['opis'];
+          $s_parent = $row2['parent'];
+          $s_title2 = getparent_spiski($s_name,$s_parent,$s_title2);
+          $sel = ""; 
+          if ( ($page_id > 0 && in_array($s_title2,$sp_names)) || $razdel == $s_id2 ) { $sel = " selected"; }
+          if ($s_opis != "") $s_opis = " (".$s_opis.")";
+          $info .= "<option value=".$s_id2.$sel."> ".$s_title2.$s_opis."</option>";
+        }
+        $info .= "</select>";
+      break;
+      ///////////////////
+      case "1": // текст
+        if ($page_id > 0) $shablon = spisok_name($s_name,$page_id);
+        $info .= "<p><b>".$s_title.":</b><br><textarea name='add[".$s_name."]' rows='4' cols='60' class='w100'>".$shablon."</textarea>";
+      break;
+      ///////////////////
+      case "2": // файл (НЕ_ГОТОВО!!!)
+      /*
+        if ($page_id > 0) $sp_names = spisok_name($s_name,$page_id);
+        // Пример настройки: file=pic&papka=/img=verh&resizepic=x&file=&picsize=600&minipic=1&resizeminipic=x&minipicsize=100
+        switch($fil) {
+          case "pic": $type_fil = "картинка"; break;
+          case "doc": $type_fil = "документ/архив"; break;
+          case "flash": $type_fil = "flash-анимация"; break;
+          case "avi": $type_fil = "видео-ролик"; break;
+        }
+        $type_mini="";
+        if ($minipic==1) $type_mini = "Также будет создана миниатюра.";
+
+        $info .= "<p><b>".$s_title.":</b><br><input type=file name='add[".$s_name."]' size=30> 
+        <b>или ссылка:</b> <input type=text name='add[".$s_name."]_link' value='".$papka."' size=30><br>
+        Файл (".$type_fil.") сохранится в ".$papka.", на странице будет ".$type_mesto.". ".$type_mini;
+        */
+      break;
+      ///////////////////
+      case "3": // период времени
+        if ($page_id > 0) {
+          $date1 = date2normal_view( spisok_name($s_name,$page_id," order by name") );
+          $date2 = date2normal_view( spisok_name($s_name,$page_id," order by name desc") );
+          $data3 = $date1."|".$date2;
+        } else {
+          $date1 = $date2 = "";
+          $data3 = "дата";
+        }
+        $info .= "<p><b>".$s_title.":</b> (выберите даты из меню, кликнув по значкам)<br>
+        <TABLE cellspacing=0 cellpadding=0 style='border-collapse: collapse'><TBODY><TR> 
+        <TD><INPUT type=text name='text[".$s_name."]' id='f_date_c[".$s_name."]' value='".$date1."' onchange=\"document.getElementById('add[".$s_name."]').value=document.getElementById('f_date_c[".$s_name."]').value+'|'+document.getElementById('f_date_c2[".$s_name."]').value\" readonly=1 size=15></TD>
+        <TD><IMG src=/images/calendar.gif id='f_trigger_c[".$s_name."]' title='Выбор даты'></TD>
+        <TD width=20 align=center> - </TD>
+        <TD><INPUT type=text name='text[".$s_name."]' id='f_date_c2[".$s_name."]' value='".$date2."' onchange=\"document.getElementById('add[".$s_name."]').value=document.getElementById('f_date_c[".$s_name."]').value+'|'+document.getElementById('f_date_c2[".$s_name."]').value\" readonly=1 size=15></TD> 
+        <TD><IMG src=/images/calendar.gif id='f_trigger_c2[".$s_name."]' title='Выбор даты'></TD>
+        </TR></TBODY></TABLE>
+        <SCRIPT type='text/javascript'> 
+            Calendar.setup({
+                inputField     :    \"f_date_c[".$s_name."]\",     // id of the input field
+                ifFormat       :    \"%e %B %Y\",      // format of the input field
+                button         :    \"f_trigger_c[".$s_name."]\",  // trigger for the calendar (button ID)
+                align          :    \"Tl\",           // alignment (defaults to \"Bl\")
+                singleClick    :    true
+            });
+        </SCRIPT>
+        <SCRIPT type='text/javascript'> 
+            Calendar.setup({
+                inputField     :    \"f_date_c2[".$s_name."]\",     // id of the input field
+                ifFormat       :    \"%e %B %Y\",      // format of the input field
+                button         :    \"f_trigger_c2[".$s_name."]\",  // trigger for the calendar (button ID)
+                align          :    \"Tl\",           // alignment (defaults to \"Bl\")
+                singleClick    :    true
+            });
+        </SCRIPT>
+        <input type=hidden name='add[".$s_name."]' id='add[".$s_name."]' value='".$date3."'>"; //
+      break;
+      ///////////////////
+      case "4": // строка
+        if ($page_id > 0) $shablon = spisok_name($s_name,$page_id);
+        $info .= "<p><b>".$s_title.":</b><br><INPUT name='add[".$s_name."]' id='".$s_name."' type=text value='".$shablon."' class='w45'>";
+        
+        $result1 = $db->sql_query("select `name` from ".$prefix."_spiski where type='".$s_name."' order by id desc limit 100");
+        $opt = "";
+        while ($row1 = $db->sql_fetchrow($result1)) {
+          if ($row1['name'] != $shablon) $opt .= "<option value=\"".$row1['name']."\">".$row1['name']."</option>";
+        }
+        if ($opt != "") $info .= "<select onchange=\"$('#".$s_name."').val(this.value);\" class='w45'><option value=\"\" style=\"background:#dddddd;\">".aa("варианты...")."</option>".$opt."</select>";
+      break;
+      ///////////////////
+      case "5": // число
+        if ($page_id > 0) $shablon = spisok_name($s_name,$page_id);
+        $info .= "<p><b>".$s_title.":</b><br><INPUT name='add[".$s_name."]' type='number' value='".$shablon."' class='w45'>";
+      break;
+      ///////////////////
+      case "6": // регион
+        if ($page_id > 0) {
+          $sp_name = spisok_name($s_name,$page_id);
+          $namereg = $db->sql_fetchrow($db->sql_query("SELECT `id` FROM ".$prefix."_regions WHERE `name`='".$sp_name."'"));
+          $namereg = $namereg['id'];
+        } else {
+          $namereg = "";
+          $sp_name = "Выберите область...";
+        }
+        $info .= "<p><b>".$s_title.":</b><br><script type='text/javascript' src='includes/regions/jquery.livequery.js'></script>
+        <script type='text/javascript'>
+        $(document).ready(function() {
+            //$('#loader').hide();
+            $('.parent').livequery('change', function() {
+              $(this).nextAll('.parent').remove();
+              $(this).nextAll('label').remove();
+              $('#show_sub_categories').append('<img src=\"includes/regions/loader.gif\" class=\"left3\" id=\"loader\" />');
+              $.post(\"get_chid_categories.php\", {
+                parent_id: $(this).val(),
+              }, function(response){
+                setTimeout(\"finishAjax('show_sub_categories', '\"+escape(response)+\"')\", 400);
+              });
+              return false;
+            });
+          });
+          function finishAjax(id, response){
+            $('#loader').remove();
+            $('#'+id).append(unescape(response));
+          }</script><br clear='all' /><br clear='all' />
+          <div id='show_sub_categories'>
+          <select name='add[".$s_name."]' class='parent'>
+          <option value='".$namereg."' selected='selected'>".$sp_name."</option>";
+        include("includes/regions/list.html");
+        $info .= '</select></div><br clear="all" /><br clear="all" />';
+      break;
+    }
+  }
+  echo $info; exit;
+}
+#################################################################################################
 if ($func == "comm_otvet") { // Ответ на комментарий из администрирования
   $comm_cid     = $id;
   $comm_type    = $type;
@@ -405,36 +611,61 @@ if ($func == "comm_otvet") { // Ответ на комментарий из ад
 }
 ######################################################################################
 if ($func == "izmenapapka") { // Отображение списка папок для раздела
-  list($select, $papka, $razdel) = explode("*@%", $string);
+  list($select, $papka, $this_cid) = explode("*@%", $string);
   $info = "";
+  $main_papka = "Основная папка («корень»)";
+  switch ($type) {
+    case "addpage": 
+      $info .= "<select name='cid' onchange='
+    ra_val = $(\"#to_razdel\").val();
+    show_pole(ra[ra_val],page_id,ra_val,this.value);
+    ' id='to_papka' size='2' class='w100' style='height:200px;'>"; break;
+    case "editdir": 
+      $info .= "<select name='parent_id' id='to_papka' size='2' onchange='if(this.value==\"".$this_cid."\") this.value=\"".$papka."\"' style='width:248px; height:400px;'>"; break;
+    case "izmenapage": 
+      $info .= "<select class='w100' name='to_papka' id='to_papka".$id."' size='10'>"; break;
+    case "papka_in_pole": 
+      global $name_razdels;
+      if (isset($name_razdels[$select])) $select = $name_razdels[$select];
+      $main_papka = "Все папки (по-умолчанию)";
+      $info .= "<select class='w100' multiple='multiple' name='shablon[]' id='papki' size='20'>"; break;
+  }
   $sql = "select cid, module, title, parent_id from ".$prefix."_pages_categories where module='".$select."' and `tables`='pages' order by parent_id, title";
   $result = $db->sql_query($sql) or $info = "Ошибка. Попробуйте обновить страницу. Не поможет — обращайтесь к разработчику.";
-  switch ($type) {
-    case "addpage": $info .= "<select name=cid id='to_papka' size=2 style='font-size:11px; width:248px; height:200px;'>"; break;
-    case "editdir": $info .= "<select name=parent_id id='to_papka' size=2 style='font-size:11px; width:248px; height:200px;'>"; break;
-    case "izmenapage": $info .= "<select style='width:100%' name=to_papka id='to_papka".$id."' size=10>"; break;
+
+  $info .= "<option value=0 selected>".$main_papka."</option>";
+  $last_cid = 0;
+  $title = $par = $module = array();
+  while ($row = $db->sql_fetchrow($result)) {
+    $id = $row['cid'];
+    $title[$id] = strip_tags($row['title'], '<b><i>');
+    $par[$id] = $row['parent_id'];
+    //$module[$id] = $row['module'];
   }
-  $info .= "<option value=0 selected>Основная папка («корень»)</option>";
-      while ($row = $db->sql_fetchrow($result)) {
-               $cid3 = $row['cid'];
-               $title3 = strip_tags($row['title'], '<b><i>');
-               $module3 = $row['module'];
-               $parentid = $row['parent_id'];
-               if ($parentid != 0) $title3 = "&bull; ".getparent($razdel,$parentid,$title3);
-               if ($papka == $cid3 and $razdel == $module3) $sel = "selected"; else $sel = "";
-               if ($parentid == 0) { // занести в переменную
-                   $first_opt[$cid3] = "<option value=".$cid3." ".$sel." style='background:#fdf;'>".$title3."</option>";
-               }
-               if ($parentid != 0) { // вывести и очистить переменную
-                   $info .= $first_opt[$parentid];
-                   $first_opt[$parentid] = "";
-                   $info .= "<option value=".$cid3." ".$sel.">".$title3."</option>";
-               }
-      }
-      if (isset($first_opt)) if (count($first_opt) > 0) 
-        foreach( $first_opt as $key => $value ) {
-          if ($first_opt[$key] != "") $info .= $first_opt[$key];
+  if (count($title)>0) {
+    foreach ($title as $id => $nam) {
+      if ($par[$id]==0) { // папка, содержащая подпапки
+        if ($papka == $id) $sel = "selected"; else $sel = "";
+        $info .= "<option value=".$id." ".$sel." style='background:#fdf;'>".$nam."</option>";
+        if (in_array($id, $par)) {
+          foreach ($title as $id2 => $nam2) {
+            if ($par[$id2]==$id) { // папка, содержащая подпапки
+              if ($papka == $id2) $sel = "selected"; else $sel = "";
+              $info .= "<option value=".$id2." ".$sel.">&bull; ".$nam2."</option>";
+              if (in_array($id2, $par)) {
+                foreach ($title as $id3 => $nam3) {
+                  if ($par[$id3]==$id2) { // подпапка
+                    if ($papka == $id3) $sel = "selected"; else $sel = "";
+                    $info .= "<option value=".$id3." ".$sel.">&bull;&bull; ".$nam3."</option>";
+                  }
+                }
+              }
+            }
+          }
         }
+      }
+    }
+  }
   $info .= "</select>";
   echo $info; exit;
 }
@@ -976,9 +1207,14 @@ if ($func == "replace") { // Перемещение страницы
      $list .= "<option style='background:".$color.";' value=".$name2."$sel>".$title2."</option>";
   }
   $list .= "</select><p><b>В какую папку?</b> (у раздела может и не быть папок — значит в «корень»)";
-  $sql = "select cid, title, parent_id from ".$prefix."_pages_categories where module='$name_raz' and `tables`='pages' order by parent_id, title";
-  $result = $db->sql_query($sql);
+  
+  //$sql = "select cid, title, parent_id from ".$prefix."_pages_categories where module='$name_raz' and `tables`='pages' order by parent_id, title";
+  //$result = $db->sql_query($sql);
   $list .= "<div id='izmenapapka".$id."'>
+<script>
+izmenapapka(document.getElementById('to_razdel".$id."').value, $name_pap, '$name_raz',$id,'izmenapage');
+</script>";
+/*
   <select style='width:100%;' name=to_papka id='to_papka".$id."' size=10>
   <option value=0 selected>Основная папка («корень»)</option>";
   while ($row = $db->sql_fetchrow($result)) {
@@ -991,11 +1227,12 @@ if ($func == "replace") { // Перемещение страницы
         $first_opt[$cid3] = "<option value=".$cid3." ".$sel." style='background:#fdf;'>".$title3."</option>"; 
     }
     // вывести и очистить переменную
-    if ($parentid != 0) $list .= $first_opt[$parentid];
+    if (isset($first_opt[$parentid]) && $parentid != 0) $list .= $first_opt[$parentid];
     $first_opt[$parentid] = "";
     $list .= "<option value=".$cid3." ".$sel.">".$title3."</option>";
-  }
-  $list .= "</select></div><input type=button value=\"OK\" style='width:55%; height:35px;' onclick=\"rep($id,document.getElementById('what".$id."').value,document.getElementById('to_razdel".$id."').value,document.getElementById('to_papka".$id."').value); if ($('#what".$id."').val()==3) clo($id);\"><br>Жмём 1 раз, т.к. копирование и ярлыки при каждом нажатии создают новую страницу.
+  }</select>
+  */
+  $list .= "</div><input type=button value=\"OK\" style='width:55%; height:35px;' onclick=\"rep($id,document.getElementById('what".$id."').value,document.getElementById('to_razdel".$id."').value,document.getElementById('to_papka".$id."').value); if ($('#what".$id."').val()==3) clo($id);\"><br>Жмём 1 раз, т.к. копирование и ярлыки при каждом нажатии создают новую страницу.
   </form>";
   $list = "<div class='block radius' style='width:95%;'>".$list."
   <p><strong>Справка:</strong> <a class=punkt onclick=\"show('yarlyk_help');\">Что такое Ярлык?</a> 
@@ -1031,9 +1268,9 @@ if ($func == "papka") { // Папка
         if (trim($name_cid) == "") $name_cid = "<span class=red>Эта страница без Названия. Отредактируйте!</span>";
         $cid_papki = $db->sql_numrows($db->sql_query("select cid from ".$prefix."_pages_categories where `tables`='pages' and module='$name_raz' and parent_id='$с_cid'"));
         if ($cid_pages == 0 and $cid_papki == 0) $pusto = "<span class='small red'>пустая папка</span>";
-        if ($cid_pages > 0) $pusto = "<span class='small'>содержит $cid_pages ".num_ending($cid_pages, Array('страниц','страницу','страницы'))."</span>";
-        if ($cid_papki > 0) $pusto = "<span class='small'>содержит $cid_papki ".num_ending($cid_papki, Array('папок','папку','папки'))."</span>";
-        if ($cid_pages > 0 and $cid_papki > 0) $pusto = "<span class='small'>содержит $cid_papki ".num_ending($cid_papki, Array('папок','папку','папки'))." и ".$cid_pages." ".num_ending($cid_pages, Array('страниц','страницу','страницы'))."</span>";
+        if ($cid_pages > 0) $pusto = "<span class='small'>содержит ".$cid_pages." ".num_ending($cid_pages, Array(aa("страниц"),aa("страницу"),aa("страницы")))."</span>";
+        if ($cid_papki > 0) $pusto = "<span class='small'>содержит ".$cid_papki." ".num_ending($cid_papki, Array(aa("папок"),aa("папку"),aa("папки")))."</span>";
+        if ($cid_pages > 0 and $cid_papki > 0) $pusto = "<span class='small'>содержит ".$cid_papki." ".num_ending($cid_papki, Array('папок','папку','папки'))." и ".$cid_pages." ".num_ending($cid_pages, Array(aa("страниц"),aa("страницу"),aa("страницы")))."</span>";
         $list .= "<div id=\"cid".$с_cid."\"><a name=\"open_pages_".$с_cid."\"></a><a class=\"no green punkt\" onclick='papka_show($с_cid, \"$name_raz\", \"$sort\", \"$id\",(Math.floor( Math.random() * (10000 - 10 + 1) ) + 10));'>".icon('orange small',',')." ".$name_cid."</a> ".$pusto." <div id=\"papka".$с_cid."\" style='display:inline; margin-left:5px;'></div><div id=\"podpapka".$с_cid."\" style='display:none;'></div><br></div>";
       }
     }
@@ -1060,8 +1297,10 @@ if ($func == "papka") { // Папка
         $rss = intval($rows['rss']);
         $description = trim($rows['description']);
         $keywords = trim($rows['keywords']);
-        $copy = trim($rows['copy']);
-        if ($copy == $pid) $copy = " <span class=green>(оригинал)</span>"; else $copy = "";
+        $copy = $rows['copy'];
+        if ($copy == $pid) $copy = " <span class='green'>(оригинал)</span>"; 
+          elseif ($copy != '0') $copy = " <span class='red'>(копия)</span>";
+          else $copy = "";
         $keydes = "";
         if ($keywords == "") $keydes = "<span class=red title='Нет ключевых слов'>*</span>"; 
         if ($description == "") $keydes = "<span class=red title='Нет описания'>*</span>"; 
@@ -1119,9 +1358,9 @@ if ($func == "razdel") { // Папка
       if (trim($name_cid) == "") $name_cid = "<span class=red>Папка без Названия. Отредактируйте!</span>";
       $cid_papki = $db->sql_numrows($db->sql_query("select cid from ".$prefix."_pages_categories where `tables`='pages' and module='$name_raz' and parent_id='$с_cid'"));
       if ($cid_pages == 0 and $cid_papki == 0) $pusto = "<span class='small red'>пустая папка</span>";
-      if ($cid_pages > 0) $pusto = "<span class='small'>содержит $cid_pages ".num_ending($cid_pages, Array('страниц','страницу','страницы'))."</span>";
-      if ($cid_papki > 0) $pusto = "<span class='small'>содержит $cid_papki ".num_ending($cid_papki, Array('папок','папку','папки'))."</span>";
-      if ($cid_pages > 0 and $cid_papki > 0) $pusto = "<span class='small'>содержит ".$cid_papki." ".num_ending($cid_papki, Array('папок','папку','папки'))." и ".$cid_pages." ".num_ending($cid_pages, Array('страниц','страницу','страницы'))."</span>";
+      if ($cid_pages > 0) $pusto = "<span class='small'>содержит ".$cid_pages." ".num_ending($cid_pages, Array(aa("страниц"),aa("страницу"),aa("страницы")))."</span>";
+      if ($cid_papki > 0) $pusto = "<span class='small'>содержит ".$cid_papki." ".num_ending($cid_papki, Array(aa("папок"),aa("папку"),aa("папки")))."</span>";
+      if ($cid_pages > 0 and $cid_papki > 0) $pusto = "<span class='small'>содержит ".$cid_papki." ".num_ending($cid_papki, Array('папок','папку','папки'))." и ".$cid_pages." ".num_ending($cid_pages, Array(aa("страниц"),aa("страницу"),aa("страницы")))."</span>";
       $list .= "<div id=\"cid".$с_cid."\"><a name=\"open_pages_".$с_cid."\"></a><a class=\"no green punkt\" onclick='papka_show(".$с_cid.", \"".$name_raz."\", \"".$sort."\", \"".$id."\",(Math.floor( Math.random() * (10000 - 10 + 1) ) + 10));'>".icon('orange small',',')." ".$name_cid."</a> ".$pusto." <div id=\"papka".$с_cid."\" style='display:inline; margin-left:5px;'></div><div id=\"podpapka".$с_cid."\" style='display:none;'></div><br></div>";
     }
   } else {
@@ -1152,8 +1391,10 @@ if ($func == "razdel") { // Папка
       $rss = intval($rows['rss']);
       $description = trim($rows['description']);
       $keywords = trim($rows['keywords']);
-      $copy = trim($rows['copy']);
-      if ($copy == $pid) $copy = " <span class=green>(оригинал)</span>"; else $copy = "";
+      $copy = $rows['copy'];
+      if ($copy == $pid) $copy = " <span class='green'>(оригинал)</span>"; 
+        elseif ($copy != '0') $copy = " <span class='red'>(копия)</span>";
+        else $copy = "";
       $keydes = "";
       if ($keywords == "") $keydes = "<span class=red title='Нет ключевых слов'>*</span>"; 
       if ($description == "") $keydes = "<span class=red title='Нет описания'>*</span>"; 

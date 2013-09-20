@@ -34,8 +34,7 @@ class zip
 
  function Add($files,$compact) {
   if(!is_array($files[0])) $files=Array($files);
-
-  for($i=0;$files[$i];$i++){
+  for($i=0;$files[$i];$i++){ // заменить на foreach
     $fn = $files[$i];
     if(!in_Array(dirname($fn[0]),$this->dirs))
      $this->add_Dir(dirname($fn[0]));

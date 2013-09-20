@@ -14,8 +14,6 @@ function shablon_show($shablon_type, $shablon_id) {
 			}
 		break;
 ############################################################################################################
-############################################################################################################
-############################################################################################################
 		case "razdel":
 			switch ($shablon_id) {
 			// [page_id] [page_num] [page_link] [page_open_text] [page_title] [page_text] [page_data] 
@@ -26,7 +24,7 @@ function shablon_show($shablon_type, $shablon_id) {
 				// Форум
 				case "1": return "<tr><td class=cat_page_title><a href=[page_link]>[page_title]</a></td>
 				<td class=cat_page_date><nobr>[page_data]</nobr></td>
-				<td class=cat_page_date>читали:&nbsp;[page_counter]</td>
+				<td class=cat_page_date>".ss("читали:")."&nbsp;[page_counter]</td>
 				<td class=cat_page_commnum>[page_comments]</td></tr>"; break;
 				############################################################################################
 				case "2": return ""; break;
@@ -55,8 +53,6 @@ function shablon_show($shablon_type, $shablon_id) {
 			}
 		break;
 ############################################################################################################
-############################################################################################################
-############################################################################################################
 		case "catalog":
 			switch ($shablon_id) {
 				case "1": return ""; break;
@@ -64,8 +60,6 @@ function shablon_show($shablon_type, $shablon_id) {
 				default: return ""; break;
 			}
 		break;
-############################################################################################################
-############################################################################################################
 ############################################################################################################
 		case "page":
 			switch ($shablon_id) {
@@ -110,8 +104,6 @@ function shablon_show($shablon_type, $shablon_id) {
 		break;
 		
 ############################################################################################################
-############################################################################################################
-############################################################################################################
 		case "comments":
 			switch ($shablon_id) {
 			// [comment_id] [comment_num] [comment_text] [comment_avtor_type] [comment_avtor] [comment_data] [comment_time] [comment_admin]
@@ -125,7 +117,7 @@ case "1": return "<DIV id=comments_1_commentbubble>
 <TD colspan=2 background=/images/shablon_comments/top_center2.gif> 
 <DIV id=comments_1_commentheader><DIV> 
 <SPAN class=comments_1_commentnumber><A id=comment_[comment_id] name=comment_[comment_id]></A>
-[comment_num]. </SPAN>[comment_data] в [comment_time]
+[comment_num]. </SPAN>[comment_data] ".ss("в")." [comment_time]
 </DIV></DIV></TD> 
 <TD width=24><IMG src=/images/shablon_comments/ang_h_d2.gif width=24 height=28></TD> 
 </TR> 
@@ -151,12 +143,12 @@ case "1": return "<DIV id=comments_1_commentbubble>
 </DIV>"; break;
 // Диалоговые комментарии ArtistStyle
 case "2": return "<DIV id=comments_1_commentbubble><div class='comm_polosa'></div>
-<A name=comment_[comment_id]></A><SPAN class=comment_avtor>[comment_ipbox] [comment_avtor]</SPAN> <SPAN class=comments_1_data>[comment_data] в [comment_time]</SPAN> [comment_admin]
+<A name=comment_[comment_id]></A><SPAN class=comment_avtor>[comment_ipbox] [comment_avtor]</SPAN> <SPAN class=comments_1_data>[comment_data] ".ss("в")." [comment_time]</SPAN> [comment_admin]
 <DIV id=comments_1_comment class='comment_text'>[comment_text]</DIV>
 <DIV class='comment_otvet'>[comment_otvet] [comment_otvet_show]</DIV>
 </DIV>"; break;
 // Стандартные комментарии
-default: return "<A name=comment_[comment_id]></A><SPAN class=comments_1_commentnumber>[comment_num]. </SPAN> <img src=/images/user.png align=bottom class=comments_1_commentavatar> <SPAN class=comment_avtor>[comment_avtor]</SPAN><SPAN style='margin-left:15px;' class=comment_data>[comment_data] в [comment_time]</SPAN><br>
+default: return "<A name=comment_[comment_id]></A><SPAN class=comments_1_commentnumber>[comment_num]. </SPAN> <img src=/images/user.png align=bottom class=comments_1_commentavatar> <SPAN class=comment_avtor>[comment_avtor]</SPAN><SPAN style='margin-left:15px;' class=comment_data>[comment_data] ".ss("в")." [comment_time]</SPAN><br>
 				<div class=comment_mail>[comment_mail]</div>
 				<div class=comment_adres>[comment_adres]</div>
 				<div class=comment_tel>[comment_tel]</div>
@@ -166,8 +158,6 @@ break;
 				############################################################################################
 			}
 		break;
-############################################################################################################
-############################################################################################################
 ############################################################################################################
 	}
 	

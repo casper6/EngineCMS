@@ -43,25 +43,19 @@ switch($op) {
     include("ad/ad-page.php");
     break;
 
-    case "Configure":
-    case "ConfigSave":
-    case "mod_authors":
-    case "modifyadmin":
-    case "UpdateAuthor":
-    case "AddAuthor":
-    case "deladmin2":
-    case "deladmin":
-    case "deladminconf":
+    case "options":
+    case "options_save":
+    case "update_author":
     case "save_banned":
     case "ipban_delete":
     case "ipban_edit":
     case "ipban_save":
     case "subscribe":
-    case "AdminsList":
-    case "AdminsAdd":
-    case "AdminsEdit":
-    case "AdminsEditSave":
-    case "AdminsDelete":
+    case "admins_list":
+    case "admins_add":
+    case "admins_edit":
+    case "admins_edit_save":
+    case "admins_delete":
     include("ad/ad-options.php");
     break;
 

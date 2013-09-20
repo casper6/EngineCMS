@@ -46,7 +46,7 @@ if ($row['realadmin'] == 1) {
 		global $prefix, $db, $admin_file;
 		$id = intval($id);
 		$db->sql_query("DELETE FROM ".$prefix."_banned_ip WHERE id=".$id);
-		Header("Location: ".$admin_file.".php?op=Configure");
+		Header("Location: ".$admin_file.".php?op=options");
 	}
 
 	function ipban_edit($id) {
@@ -96,14 +96,14 @@ if ($row['realadmin'] == 1) {
 		$date = date("Y-m-d");
 		if ($id==0) $db->sql_query("INSERT INTO ".$prefix."_banned_ip VALUES (NULL, '".$ip."', '".$reason."', '".$date."')");
 		else $db->sql_query("UPDATE ".$prefix."_banned_ip SET ip_address='".$ip."', reason='".$reason."' WHERE id='".$id."'");
-		Header("Location: ".$admin_file.".php?op=Configure");
+		Header("Location: ".$admin_file.".php?op=options");
 	}
 	///////////////////////////////////////////////////////////////////////////////////////
 	function updateadmin($chng_aid, $chng_name, $chng_pwd, $chng_pwd2, $adm_aid) {
 		global $siteurl, $admin, $prefix, $db, $admin_file;
 			$chng_aid = trim($chng_aid);
 			if (!($chng_aid && $chng_name)) {
-				Header("Location: ".$admin_file.".php?op=Configure");
+				Header("Location: ".$admin_file.".php?op=options");
 			}
 			if (!empty($chng_pwd2)) {
 				if($chng_pwd != $chng_pwd2) {
@@ -115,19 +115,19 @@ if ($row['realadmin'] == 1) {
 				$chng_pwd = md5($chng_pwd);
 				$chng_aid = strtolower(substr($chng_aid, 0,25));
 				$db->sql_query("update ".$prefix."_authors set aid='".$chng_aid."', pwd='".$chng_pwd."' where name='".$chng_name."' AND aid='".$adm_aid."'");
-				Header("Location: ".$admin_file.".php?op=Configure");
+				Header("Location: ".$admin_file.".php?op=options");
 			} else {
 				$db->sql_query("update ".$prefix."_authors set aid='".$chng_aid."' where name='".$chng_name."' AND aid='".$adm_aid."'");
-				Header("Location: ".$admin_file.".php?op=Configure");
+				Header("Location: ".$admin_file.".php?op=options");
 			}
 	}
 ////////////////////////////////////////////////
-	function Configure($ok=0) {
+	function options($ok=0) {
 		global $prefix, $db, $admin_file, $siteurl, $admin, $ipban;
 		include ("ad-header.php");
 		$ok = intval($ok);
 		// Получаем настройки из mainfile
-		global $sitename, $startdate, $adminmail, $keywords, $description, $counter, $statlink, $postlink, $stopcopy, $registr, $pogoda, $flash, $sgatie, $ht_backup, $captcha_ok, $xnocashe, $jqueryui, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $comment_send, $company_name, $company_fullname, $company_address, $company_time, $company_tel, $company_sot, $company_fax, $company_email, $company_map, $company_people, $search_design, $tag_design, $add_fonts, $site_cash, $normalize, $project_logotip, $project_name, $geo, $kolkey, $add_clips, $sortable, $color_tema_html, $color_tema_css, $color_tema_js, $color_tema_php, $tab_obzor, $tab_show, $shop_text_val1, $shop_text_val2, $shop_text_itogo, $shop_text_oformit, $shop_text_korzina, $shop_text_delete, $shop_pole, $shop_admin_mail, $shop_text_after_mail,$shop_spisok_pole, $shop_shablon_form_order, $shop_shablon_mail_client, $shop_shablon_mail_admin;
+		global $sitename, $startdate, $adminmail, $keywords, $description, $counter, $statlink, $postlink, $stopcopy, $registr, $pogoda, $flash, $sgatie, $ht_backup, $captcha_ok, $xnocashe, $jqueryui, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $comment_send, $company_name, $company_fullname, $company_address, $company_time, $company_tel, $company_sot, $company_fax, $company_email, $company_map, $company_people, $search_design, $tag_design, $add_fonts, $site_cash, $normalize, $project_logotip, $project_name, $geo, $kolkey, $add_clips, $sortable, $color_tema_html, $color_tema_css, $color_tema_js, $color_tema_php, $tab_obzor, $tab_show, $shop_text_val1, $shop_text_val2, $shop_text_itogo, $shop_text_oformit, $shop_text_korzina, $shop_text_delete, $shop_pole, $shop_admin_mail, $shop_text_after_mail,$shop_spisok_pole, $shop_shablon_form_order, $shop_shablon_mail_client, $shop_shablon_mail_admin, $head_insert;
 		
 		$ad_fon_option = ""; // Выбор фоновок для админки
 		for ($i=1; $i < 28; $i++) { // всего 27 фоновок + 1 по-умолчанию в папке images/ad-fon
@@ -185,6 +185,8 @@ if (!extension_loaded('imagick') || !class_exists("Imagick"))
 	echo "<p style='color:red;'>Библиотека Imagick не установлена – вам придется самостоятельно уменьшать размер больших фотографий (полученных фотоаппаратом) перед вставкой в редактор. Советуем перейти на другой хостинг с поддержкой этой библиотеки или договориться с текущим хостингом о её подключении.";
 
 echo "<p><a href='http://hotel-s.ru' target='_blank'>Официальный сайт CMS «ДвижОк»</a>
+<p><a href='http://translate.google.com/manager/website/add' target='_blank'>Переводчик сайтов</a>
+
 	</div>	
 
 <div id='show_first' class='show_pole'>
@@ -296,7 +298,7 @@ body {}
 
 </table>
 <div style='text-align:center;'><input type='submit' value=' Сохранить настройки ' style='width:300px; height:40px;'></div>
-<input type='hidden' name='op' value='ConfigSave'>
+<input type='hidden' name='op' value='options_save'>
 </div>
 
 
@@ -362,7 +364,7 @@ body {}
 
 	</table>
 	<div style='text-align:center;'><input type='submit' value=' Сохранить настройки ' style='width:300px; height:40px;'></div>
-	<input type='hidden' name='op' value='ConfigSave'>
+	<input type='hidden' name='op' value='options_save'>
 	</div>
 
 
@@ -381,7 +383,10 @@ body {}
 	Название проекта/компании:</td><td class=small>
 	".input("options[project_name]", $project_name, "100%")."
 	<br>Можно вывести в дизайн через блок [название_проекта]. Обобщенный вариант через замену картинкой тега H1 — через блок [название_лого_проекта]. А настраивается всё через CSS за счет стилей, которые можно посомтреть в коде страницы.
-
+	</td></tr><tr valign=top><td>
+	Вставка в HEAD:</td><td class=small>
+	".input("options[head_insert]", $head_insert, 30, "txt")."
+	<br>Например, код верификации сайта (meta) в поисковых системах или в других интернет-сервисах.
 	</td></tr><tr valign=top><td>
 	Описание сайта:</td><td class=small>
 	".input("options[description]", $description, 60, "txt")."
@@ -460,7 +465,7 @@ body {}
 
 	</table>
 	<div style='text-align:center;'><input type='submit' value=' Сохранить настройки ' style='width:300px; height:40px;'></div>
-	<input type='hidden' name='op' value='ConfigSave'>
+	<input type='hidden' name='op' value='options_save'>
 	</div>
 
 
@@ -806,7 +811,7 @@ echo "
 	<div id='clip_preview' style='margin:10px; padding:10px; clear: both; background:white;'>Здесь будет показана выбранная заготовка.</div>
 
 	<div style='text-align:center;'><input type='submit' value=' Сохранить настройки ' style='width:300px; height:40px;'></div>
-	<input type='hidden' name='op' value='ConfigSave'>
+	<input type='hidden' name='op' value='options_save'>
 	</div>
 	</form>";
 
@@ -843,9 +848,9 @@ echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>
 		<tr><td colspan=2><input type=submit value=' Сохранить '></td></tr></table>
 		<input type=hidden name=chng_name value='".$chng_name."'>
 		<input type=hidden name=adm_aid value='".$adm_aid."'>
-		<input type=hidden name=op value='UpdateAuthor'>
+		<input type=hidden name=op value='update_author'>
 		</form>
-		<br><br><div class=\"notice warning hide\"><a href='sys.php?op=AdminsList'>Список администраторов</a></div>
+		<br><br><div class=\"notice warning hide\"><a href='sys.php?op=admins_list'>Список администраторов</a></div>
 		</div>";
 
  echo "<div class='show_pole' id='show_options_oldfotos' style='display:none;'>Загружаю...</div>
@@ -857,7 +862,7 @@ echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>
 </html>";
 	}
 ///////////////////////////////////////////////////////////////////
-	function AdminsList() {
+	function admins_list() {
 		global $admin, $prefix, $db, $admin_file, $bgcolor2, $modules_info;
 		include ("ad-header.php");
 
@@ -887,13 +892,13 @@ echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>
 			else $editor="Нет";
 			echo "<td align=\"center\">&nbsp;".$editor."</td>
 					<td align=\"center\">
-						<a href=\"".$admin_file.".php?op=AdminsEdit&amp;chng_aid=".$a_aid."\"><img src=\"images/edit.png\" alt=\"Редактировать\" title=\"Редактировать\" border=\"0\" width=\"17\" height=\"17\"></a>
+						<a href=\"".$admin_file.".php?op=admins_edit&amp;chng_aid=".$a_aid."\"><img src=\"images/edit.png\" alt=\"Редактировать\" title=\"Редактировать\" border=\"0\" width=\"17\" height=\"17\"></a>
 			";
 			if($name == "God") {
 				echo "		<img src=\"images/delete_x.png\" alt=\"Главный аккаунт\" title=\"Главный аккаунт\" border=\"0\" width=\"17\" height=\"17\"></a></td>";
 			} 
 			else {
-				echo "		<a href=\"".$admin_file.".php?op=AdminsDelete&amp;aid=".$a_aid."\"><img src=\"images/delete.gif\" alt=\"Удалить\" title=\"Удалить\" border=\"0\" width=\"17\" height=\"17\"></a></td>";
+				echo "		<a href=\"".$admin_file.".php?op=admins_delete&amp;aid=".$a_aid."\"><img src=\"images/delete.gif\" alt=\"Удалить\" title=\"Удалить\" border=\"0\" width=\"17\" height=\"17\"></a></td>";
 			}
 			echo "	</tr>";
 		}
@@ -931,7 +936,7 @@ echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>
 				</tr>
 				<tr>
 					<td colspan=\"3\">
-						<input type=\"hidden\" name=\"op\" value=\"AdminsAdd\">
+						<input type=\"hidden\" name=\"op\" value=\"admins_add\">
 						<input type=\"submit\" value=\"Добавить администратора\">
 					</td>
 				</tr>
@@ -941,7 +946,7 @@ echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>
 		admin_footer();
 	}
 
-	function AdminsAdd() { // доработать
+	function admins_add() { // доработать
 		global $db, $prefix, $admin_file, $modules_info;
 		$ok=intval($_POST['ok']);
 		$add_aid=$_POST['add_aid'];
@@ -989,14 +994,14 @@ echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>
 				require_once(INCLUDE_PATH."includes/core/modules2cache.php");
 				Modules2Cache();			
 			}
-			Header("Location: ".$admin_file.".php?op=AdminsList");
+			Header("Location: ".$admin_file.".php?op=admins_list");
 		}
 		else {
 			include ("ad-header.php");
 			echo "<center><b>"._AREYOUSURETOADDADMIN."</b><BR><BR>";
 			$auth_modules=base64_encode(serialize($auth_modules));
 			echo "	<form action=\"".$admin_file.".php\" method=\"post\">
-					<input type=\"hidden\" name=\"op\" value=\"AdminsAdd\">
+					<input type=\"hidden\" name=\"op\" value=\"admins_add\">
 					<input type=\"hidden\" name=\"add_aid\" value=\"".$add_aid."\">
 					<input type=\"hidden\" name=\"add_name\" value=\"".$add_name."\">
 					<input type=\"hidden\" name=\"add_email\" value=\"".$add_email."\">
@@ -1007,7 +1012,7 @@ echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>
 					<input type=\"hidden\" name=\"add_editor\" value=\"".$add_editor."\">
 					<input type=\"hidden\" name=\"auth_modules\" value=\"".$auth_modules."\">
 					<input type=\"hidden\" name=\"ok\" value=\"1\">
-					<input type=\"submit\" value=\""._ADD."\"> | <a href=\"".$admin_file.".php?op=AdminsList\">"._NO."</a> 
+					<input type=\"submit\" value=\""._ADD."\"> | <a href=\"".$admin_file.".php?op=admins_list\">"._NO."</a> 
 				</form>";
 			echo "</center>";
 			admin_footer();
@@ -1015,7 +1020,7 @@ echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>
 	}
 
 
-	function AdminsEdit() { // доработать
+	function admins_edit() { // доработать
 		global $admin, $prefix, $db, $admin_file, $modules_info;
 		$chng_aid=$_GET['chng_aid'];
 		include ("ad-header.php");
@@ -1082,7 +1087,7 @@ echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>
 				<tr>
 					<td colspan=\"2\">
 						<input type=\"hidden\" name=\"adm_aid\" value=\"".$adm_aid."\">
-						<input type=\"hidden\" name=\"op\" value=\"AdminsEditSave\">
+						<input type=\"hidden\" name=\"op\" value=\"admins_edit_save\">
 						<input type=\"submit\" value=\"Сохранить\"> Назад
 					</td>
 				</tr>
@@ -1092,7 +1097,7 @@ echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>
 		admin_footer();
 	}
 
-	function AdminsEditSave() { // доработать
+	function admins_edit_save() { // доработать
 		global $admin, $prefix, $db, $admin_file, $modules_info;
 		$chng_aid=filter($_POST['chng_aid'],"nohtml");
 		$chng_name=filter($_POST['chng_name'],"nohtml");
@@ -1107,7 +1112,7 @@ echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>
 		$auth_modules=$_POST['auth_modules'];
 		$chng_aid = trim($chng_aid);
 		if (!($chng_aid AND $chng_name AND $chng_email AND $chng_editor)) {
-			Header("Location: ".$admin_file.".php?op=AdminsList");
+			Header("Location: ".$admin_file.".php?op=admins_list");
 		}
 		$is_god=0;
 		if ($chng_name=='God') {
@@ -1145,10 +1150,10 @@ echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>
 			$sql="UPDATE ".$prefix."_authors SET pwd='".$chng_pwd."' WHERE name='".$chng_name."'";
 			$db->sql_query($sql);
 		}
-		Header("Location: ".$admin_file.".php?op=AdminsList");
+		Header("Location: ".$admin_file.".php?op=admins_list");
 	}
 
-	function AdminsDelete() { // доработать
+	function admins_delete() { // доработать
 		global $db, $prefix, $admin_file, $modules_info;
 		$ok=intval($_POST['ok']);
 		if ($ok==1) {
@@ -1161,7 +1166,7 @@ echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>
 				require_once(INCLUDE_PATH."includes/core/modules2cache.php");
 				Modules2Cache();
 			}
-			Header("Location: ".$admin_file.".php?op=AdminsList");
+			Header("Location: ".$admin_file.".php?op=admins_list");
 		}
 		else {
 			$aid = trim(filter($_GET['aid'],"nohtml"));
@@ -1170,9 +1175,9 @@ echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>
 			._AUTHORDELSURE." <i>".$aid."</i>?<br><br>";
 			echo "	<form action=\"".$admin_file.".php\" method=\"post\">
 					<input type=\"hidden\" name=\"aid\" value=\"".$aid."\">
-					<input type=\"hidden\" name=\"op\" value=\"AdminsDelete\">
+					<input type=\"hidden\" name=\"op\" value=\"admins_delete\">
 					<input type=\"hidden\" name=\"ok\" value=\"1\">
-					<input type=\"submit\" value=\""._DELETE."\"> | <a href=\"".$admin_file.".php?op=AdminsList\">"._NO."</a> 
+					<input type=\"submit\" value=\""._DELETE."\"> | <a href=\"".$admin_file.".php?op=admins_list\">"._NO."</a> 
 				</form>";
 			admin_footer();
 		}
@@ -1215,87 +1220,72 @@ echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>
 	}
 /////////////////////////////////////////////////////////////////////////////////////////////
 	switch($op) {
-		case "subscribe":
-		subscribe();
-		break;
-
-		case "Configure":
+		case "options":
 		if (!isset($save)) $save = "";
-		Configure($save);
+		options($save);
 		break;
 
-		case "ConfigSave":
-		global $prefix, $db, $options;
-		$mini_blocks = $options['company_name']."|||||".$options['company_fullname']."|||||".$options['company_address']."|||||".$options['company_time']."|||||".$options['company_tel']."|||||".$options['company_sot']."|||||".$options['company_fax']."|||||".$options['company_email']."|||||".$options['company_map']."|||||".$options['company_people'];
+		case "options_save":
+			global $prefix, $db, $options;
+			$mini_blocks = $options['company_name']."|||||".$options['company_fullname']."|||||".$options['company_address']."|||||".$options['company_time']."|||||".$options['company_tel']."|||||".$options['company_sot']."|||||".$options['company_fax']."|||||".$options['company_email']."|||||".$options['company_map']."|||||".$options['company_people'];
 
-//if ($options['ed2_button_html'] != 1) $options['ed2_button_html'] = 0;
-//if ($options['ed2_button_bold'] != 1) $options['ed2_button_bold'] = 0;
+			$ed2_buttons = $options['ed2_button_html']."|".$options['ed2_button_formatting']."|".$options['ed2_button_bold']."|".$options['ed2_button_italic']."|".$options['ed2_button_deleted']."|".$options['ed2_button_underline']."|".$options['ed2_button_unorderedlist']."|".$options['ed2_button_orderedlist']."|".$options['ed2_button_outdent']."|".$options['ed2_button_indent']."|".$options['ed2_button_image']."|".$options['ed2_button_video']."|".$options['ed2_button_file']."|".$options['ed2_button_table']."|".$options['ed2_button_link']."|".$options['ed2_button_alignment']."|".$options['ed2_button_horizontalrule']."|".$options['ed2_button_more']."|".$options['ed2_button_link2']."|".$options['ed2_button_block']."|".$options['ed2_button_pre']."|".$options['ed2_button_fullscreen']."|".$options['ed2_button_clips']."|".$options['ed2_button_fontcolor']."|".$options['ed2_button_fontsize']."|".$options['ed2_button_fontfamily']."|".$options['ed2_minHeight']."|".$options['ed2_direction'];
 
-		$ed2_buttons = $options['ed2_button_html']."|".$options['ed2_button_formatting']."|".$options['ed2_button_bold']."|".$options['ed2_button_italic']."|".$options['ed2_button_deleted']."|".$options['ed2_button_underline']."|".$options['ed2_button_unorderedlist']."|".$options['ed2_button_orderedlist']."|".$options['ed2_button_outdent']."|".$options['ed2_button_indent']."|".$options['ed2_button_image']."|".$options['ed2_button_video']."|".$options['ed2_button_file']."|".$options['ed2_button_table']."|".$options['ed2_button_link']."|".$options['ed2_button_alignment']."|".$options['ed2_button_horizontalrule']."|".$options['ed2_button_more']."|".$options['ed2_button_link2']."|".$options['ed2_button_block']."|".$options['ed2_button_pre']."|".$options['ed2_button_fullscreen']."|".$options['ed2_button_clips']."|".$options['ed2_button_fontcolor']."|".$options['ed2_button_fontsize']."|".$options['ed2_button_fontfamily']."|".$options['ed2_minHeight']."|".$options['ed2_direction'];
-
-		$advanced = $options['jqueryui']."|".$options['show_comments']."|".$options['show_userposts']."|".$options['show_page']."|".$options['show_reserv']."|".$options['uskorenie_blokov']."|".$options['kickstart']."|".$options['show_page_links']."|".$options['ad_fon']."|".$options['search_design']."|".$options['tag_design']."|".$options['add_fonts']."|".$options['normalize']."|".$options['project_logotip']."|".$options['project_name']."|".$options['geo']."|".$options['kolkey']."|".$options['add_clips']."|".$options['sortable']."|".$options['color_tema_html']."|".$options['color_tema_css']."|".$options['color_tema_js']."|".$options['color_tema_php']."|".$options['tab_obzor']."|".$options['tab_show']."|".$options['shop_text_val1']."|".$options['shop_text_val2']."|".$options['shop_text_itogo']."|".$options['shop_text_oformit']."|".$options['shop_text_korzina']."|".$options['shop_text_delete']."|".$options['shop_pole']."|".$options['shop_admin_mail']."|".$options['shop_text_after_mail']."|".$options['shop_spisok_pole']."|".$options['shop_shablon_form_order']."|".$options['shop_shablon_mail_client']."|".$options['shop_shablon_mail_admin']."|".$ed2_buttons;
-		// sitename	startdate	adminmail	keywords	description	counter	statlink	postlink	registr	pogoda	flash	sgatie	stopcopy	nocashe	adminmes	red	comment	captcha_ok	ht_backup
-		$db->sql_query("UPDATE `".$prefix."_config` SET 
-			`sitename` = '".mysql_real_escape_string($options['sitename'])."',
-			`startdate` = '".mysql_real_escape_string($options['startdate'])."',
-			`adminmail` = '".mysql_real_escape_string($options['adminmail'])."',
-			`keywords` = '".mysql_real_escape_string($options['keywords'])."',
-			`description` = '".mysql_real_escape_string($options['description'])."',
-			`counter` = '".mysql_real_escape_string($options['counter'])."',
-			`statlink` = '".mysql_real_escape_string($options['statlink'])."',
-			`postlink` = '".mysql_real_escape_string($options['postlink'])."',
-			`registr` = '".mysql_real_escape_string($options['registr'])."',
-			`pogoda` = '".mysql_real_escape_string($options['pogoda'])."',
-			`flash` = '".mysql_real_escape_string($options['flash'])."',
-			`sgatie` = '".mysql_real_escape_string($mini_blocks)."',
-			`stopcopy` = '".mysql_real_escape_string($options['stopcopy'])."',
-			`nocashe` = '".mysql_real_escape_string($advanced)."',
-			`comment` = '".mysql_real_escape_string($options['comment_send'])."',
-			`captcha_ok` = '".mysql_real_escape_string($options['captcha_ok'])."',
-			`ht_backup` = '".mysql_real_escape_string($options['ht_backup'])."' LIMIT 1 ;") or die ('Настройки не сохранилось. Видимо забыли обновить базу данных или файл настройки администрирования.');
-		Header("Location: sys.php?op=Configure&save=1");
-		break;
-		///////////////////////////////
-		//case "modifyadmin":
-		//if (!isset($chng_aid)) $chng_aid = "";
-		//modifyadmin($chng_aid);
-		//break;
-
-		case "UpdateAuthor":
-		if ($_POST['op'] != 'UpdateAuthor') exit;
-		updateadmin($chng_aid, $chng_name, $chng_pwd, $chng_pwd2, $adm_aid);
-		break;
-		
+			$advanced = $options['jqueryui']."|".$options['show_comments']."|".$options['show_userposts']."|".$options['show_page']."|".$options['show_reserv']."|".$options['uskorenie_blokov']."|".$options['kickstart']."|".$options['show_page_links']."|".$options['ad_fon']."|".$options['search_design']."|".$options['tag_design']."|".$options['add_fonts']."|".$options['normalize']."|".$options['project_logotip']."|".$options['project_name']."|".$options['geo']."|".$options['kolkey']."|".$options['add_clips']."|".$options['sortable']."|".$options['color_tema_html']."|".$options['color_tema_css']."|".$options['color_tema_js']."|".$options['color_tema_php']."|".$options['tab_obzor']."|".$options['tab_show']."|".$options['shop_text_val1']."|".$options['shop_text_val2']."|".$options['shop_text_itogo']."|".$options['shop_text_oformit']."|".$options['shop_text_korzina']."|".$options['shop_text_delete']."|".$options['shop_pole']."|".$options['shop_admin_mail']."|".$options['shop_text_after_mail']."|".$options['shop_spisok_pole']."|".$options['shop_shablon_form_order']."|".$options['shop_shablon_mail_client']."|".$options['shop_shablon_mail_admin']."|".$ed2_buttons."|".$options['head_insert'];
+			// sitename	startdate	adminmail	keywords	description	counter	statlink	postlink	registr	pogoda	flash	sgatie	stopcopy	nocashe	adminmes	red	comment	captcha_ok	ht_backup
+			$db->sql_query("UPDATE `".$prefix."_config` SET 
+				`sitename` = '".mysql_real_escape_string($options['sitename'])."',
+				`startdate` = '".mysql_real_escape_string($options['startdate'])."',
+				`adminmail` = '".mysql_real_escape_string($options['adminmail'])."',
+				`keywords` = '".mysql_real_escape_string($options['keywords'])."',
+				`description` = '".mysql_real_escape_string($options['description'])."',
+				`counter` = '".mysql_real_escape_string($options['counter'])."',
+				`statlink` = '".mysql_real_escape_string($options['statlink'])."',
+				`postlink` = '".mysql_real_escape_string($options['postlink'])."',
+				`registr` = '".mysql_real_escape_string($options['registr'])."',
+				`pogoda` = '".mysql_real_escape_string($options['pogoda'])."',
+				`flash` = '".mysql_real_escape_string($options['flash'])."',
+				`sgatie` = '".mysql_real_escape_string($mini_blocks)."',
+				`stopcopy` = '".mysql_real_escape_string($options['stopcopy'])."',
+				`nocashe` = '".mysql_real_escape_string($advanced)."',
+				`comment` = '".mysql_real_escape_string($options['comment_send'])."',
+				`captcha_ok` = '".mysql_real_escape_string($options['captcha_ok'])."',
+				`ht_backup` = '".mysql_real_escape_string($options['ht_backup'])."' LIMIT 1 ;") or die ('Настройки не сохранилось. Видимо забыли обновить базу данных или файл настройки администрирования.');
+			Header("Location: sys.php?op=options&save=1");
+			break;
+		case "subscribe":
+			subscribe();
+			break;
+		case "update_author":
+			if ($_POST['op'] != 'update_author') exit;
+			updateadmin($chng_aid, $chng_name, $chng_pwd, $chng_pwd2, $adm_aid);
+			break;
 		case "save_banned":
-		ipban_save(0, $ip1, $ip5, $ip3, $ip4, $reason);
-		break;
-
+			ipban_save(0, $ip1, $ip5, $ip3, $ip4, $reason);
+			break;
 		case "ipban_delete":
-		ipban_delete($id);
-		break;
-
+			ipban_delete($id);
+			break;
 		case "ipban_edit":
-		ipban_edit($id);
-		break;
-
+			ipban_edit($id);
+			break;
 		case "ipban_save":
-		ipban_save($id, $ip1, $ip5, $ip3, $ip4, $reason);
-		break;
-		/////////////////////////////
-		case "AdminsList":
-			AdminsList();
+			ipban_save($id, $ip1, $ip5, $ip3, $ip4, $reason);
 			break;
-		case "AdminsEdit":
-			AdminsEdit();
+		case "admins_list":
+			admins_list();
 			break;
-		case "AdminsEditSave":
-			AdminsEditSave();
+		case "admins_edit":
+			admins_edit();
 			break;
-		case "AdminsAdd":
-			AdminsAdd();
+		case "admins_edit_save":
+			admins_edit_save();
 			break;
-		case "AdminsDelete":
-			AdminsDelete();
+		case "admins_add":
+			admins_add();
+			break;
+		case "admins_delete":
+			admins_delete();
 			break;
 	}
 } else die('Доступ закрыт!<br>Возможно, вы только что сменили имя и/или пароль администратора — тогда перейдите ко <a href="/sys.php?op=login">входу в администрирование</a>.');

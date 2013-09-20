@@ -439,7 +439,7 @@ function red_vybor() { // Выбор редактора
 function adminMain() {
 	include("ad-header.php");
 	GraphicAdmin();
-	admin_footer();
+	//admin_footer();
 }
 
 if($admintest) {

@@ -1466,7 +1466,7 @@ function page($pid, $all) {
     if (trim($nam3)=="") { // Дополнение для скрытия заголовков в случае наличия пустых строк
       // Заголовки в шаблоне должны обрамляться знаками ! (первый слева, последний справа)
       preg_match('|!'.$nam2.'(.*)'.$nam2.'!|Uis', $sha2, $matches);
-      $sha2 = str_replace($matches[1], "", $sha2) ;
+      if (isset($matches[1])) $sha2 = str_replace($matches[1], "", $sha2) ;
     }
     $sha2 = str_replace("!".$nam2, "", $sha2);
     $sha2 = str_replace($nam2."!", "", $sha2);
