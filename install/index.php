@@ -316,6 +316,7 @@ $languages = array("Albanian"=>"sq",
 "Czech"=>"cs",
 "Danish"=>"da",
 "Dutch"=>"nl",
+"English"=>"en",
 "Esperanto"=>"eo",
 "Finnish"=>"fi",
 "French"=>"fr",
@@ -332,7 +333,7 @@ $languages = array("Albanian"=>"sq",
 "Macedonian"=>"mk",
 "Norwegian (Bokmål)"=>"no_NB",
 "Persian"=>"fa",
-"Polish"=>"pl",
+"Polski"=>"pl",
 "Portuguese"=>"pt_pt",
 "Romanian"=>"ro",
 "Русский"=>"ru",
@@ -344,7 +345,7 @@ $languages = array("Albanian"=>"sq",
 "Swedish"=>"sv",
 "Thai"=>"th",
 "Turkish"=>"tr",
-"Ukrainian"=>"ua",
+"Український"=>"ua",
 "Vietnamese"=>"vi");
 ?>
 <!DOCTYPE html>
@@ -414,11 +415,15 @@ $languages = array("Albanian"=>"sq",
 				<li><strong>Адрес сайта</strong>:<br><input name="siteurl" value="<? echo $siteurl; ?>"></li>
 				<li><strong>Язык сайта</strong>:<br><select name="lang">
 					<option value="ru" selected>Русский</option>
-					<option value="en" disabled>English (in development)</option>
+					<option value="en">English (in development)</option>
+					<option value="pl">Polski (w opracowaniu)</option>
+					<option value="ua">Український (у розробці)</option>
 				</select></li>
 				<li><strong>Язык администрирования</strong>:<br><select name="lang_admin">
 					<option value="ru" selected>Русский</option>
-					<option value="en" disabled>English (in development)</option>
+					<option value="en">English (in development)</option>
+					<option value="pl">Polski (w opracowaniu)</option>
+					<option value="ua">Український (у розробці)</option>
 				</select></li>
 				<li><strong>Псевдоним администратора</strong>:<br><input name="a" value="admin"></li>
 				<li><strong>Email администратора сайта</strong>:<br><input name="email" id="mail" value=""><span id="valid"></span></li>

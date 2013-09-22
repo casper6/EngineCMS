@@ -1026,7 +1026,7 @@ case "10": # Блок меню
 		// Добавить поиск и замену блоков в меню
 		$tr = array("http://".$siteurl=>"");
 		$textX = strtr($textX,$tr);
-		$tr = array(aa("[уровень открыть]")=>$lvl_open,aa("[уровень закрыть]")=>$lvl_close,aa("[элемент открыть]")=>$el_open,aa("[элемент закрыть]")=>$el_close,aa("[url=")=>$url_open,aa("[/url]")=>$url_close2,"]"=>$url_close1);
+		$tr = array(aa("[уровень открыть]")=>$lvl_open,aa("[уровень закрыть]")=>$lvl_close,aa("[элемент открыть]")=>$el_open,aa("[элемент закрыть]")=>$el_close,"[url="=>$url_open,"[/url]"=>$url_close2,"]"=>$url_close1);
 		$textXX = strtr($textX,$tr);
 		//if ($url != "/") {
 			$textXX = str_replace("' href=".$url1.">", " mainmenu_open' href=".$url1.">", $textXX);
@@ -1055,7 +1055,7 @@ case "10": # Блок меню
 			$class_menu = "menu-h"; break;
 		case "1": // Таблица гор выравнивание по всей таблице 1 уровень
 			if ($re_menu == "1" || $re_menu == "0") {
-				$tr = array(aa("[элемент открыть]")=>$el_open,aa("[элемент закрыть]")=>$el_close,aa("[/url]")=>$url_close2,aa("[url=")=>$url_open,"]"=>$url_close1); // без 3 уровней!
+				$tr = array(aa("[элемент открыть]")=>$el_open,aa("[элемент закрыть]")=>$el_close,"[/url]"=>$url_close2,"[url="=>$url_open,"]"=>$url_close1); // без 3 уровней!
 				$textXX = strtr($textX,$tr);
 			}
 			$textXX = str_replace("' href=\"".$url1."\">", " mainmenu_open' href=\"".$url1."\" >", $textXX);
@@ -1066,7 +1066,7 @@ case "10": # Блок меню
 		break;
 		case "2": // вертикальное 2 уровня
 			if ($re_menu == "1" || $re_menu == "0") {
-				$tr = array(aa("[уровень открыть]")=>$lvl_open,aa("[уровень закрыть]")=>$lvl_close,aa("[элемент открыть]")=>$el_open,aa("[элемент закрыть]")=>$el_close, aa("[/url]")=>$url_close2,aa("[url=")=>$url_open,"]"=>$url_close1); // без 3 уровней!
+				$tr = array(aa("[уровень открыть]")=>$lvl_open,aa("[уровень закрыть]")=>$lvl_close,aa("[элемент открыть]")=>$el_open,aa("[элемент закрыть]")=>$el_close, "[/url]"=>$url_close2,"[url="=>$url_open,"]"=>$url_close1); // без 3 уровней!
 				$textXX = strtr($textX,$tr);
 			}
 			$textXX = str_replace("<li><a class=li2menu_link href=\"".$url1."\">", "<li class=li_openlink><a class=li2menu_openlink href=\"".$url1."\">", $textXX);

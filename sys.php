@@ -439,7 +439,6 @@ function red_vybor() { // Выбор редактора
 function adminMain() {
 	include("ad-header.php");
 	GraphicAdmin();
-	//admin_footer();
 }
 
 if($admintest) {
@@ -457,7 +456,7 @@ if($admintest) {
 		case "logout":
 			setcookie("admin", false);
 			$admin = "";
-			die(aa("Вы вышли из администрирования!"));
+			Header("Location: sys.php");
 			break;
 		case "login";
 			unset($op);

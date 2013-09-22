@@ -1954,6 +1954,11 @@ function mainpage_save($id=0, $type, $namo, $title, $text, $useit, $shablon, $de
 	$mod_name = $row['name'];
 	recash("/-".$mod_name); // Удаление кеша раздела
 
+	// Обратное преобразование textarea (замена русской буквы е)
+	$text = str_replace("tеxtarea","textarea",$text); // ireplace
+	$useit = str_replace("tеxtarea","textarea",$useit); // ireplace
+	$shablon = str_replace("tеxtarea","textarea",$shablon); // ireplace
+
 	if ($type == 2 || $type == 5) {
 		if (trim($namo) == "") $namo = strtolow(translit_name(trim($title)));
 		else $namo = strtolow(translit_name(trim($namo)));
@@ -2003,7 +2008,7 @@ function mainpage_save($id=0, $type, $namo, $title, $text, $useit, $shablon, $de
 	//$text = str_replace("tеxtarea","textarea",$text); // ireplace
 	//$useit = str_replace("tеxtarea","textarea",$useit); // ireplace
 
-	$sql = "select text from ".$prefix."_mainpage where `tables`='pages' and id='".$id."'";
+	$sql = "select `text` from ".$prefix."_mainpage where `tables`='pages' and id='".$id."'";
 	$result = $db->sql_query($sql);
 
 	if ($numrows = $db->sql_numrows($result) > 0) {
@@ -2121,6 +2126,10 @@ function mainpage_save($id=0, $type, $namo, $title, $text, $useit, $shablon, $de
 			$text = "base|type=".$s_tip.$add."&options=".$text2;
 			$useit = "[содержание]";
 		}
+		// Обратное преобразование textarea (замена русской буквы е)
+  		$text = str_replace("tеxtarea","textarea",$text); // ireplace
+  		$useit = str_replace("tеxtarea","textarea",$useit); // ireplace
+  		$shablon = str_replace("tеxtarea","textarea",$shablon); // ireplace
 		$db->sql_query("INSERT INTO ".$prefix."_mainpage (`id`, `type`, `name`, `title`, `text`, `useit`, `shablon`, `counter`, `tables`, `color`, `description`, `keywords`) VALUES (NULL, '".$type."', '".$namo."', '".$title."', '".$text."', '".$useit."', '".$shablon."', '0', 'pages', '0', '', '');") or die('Не удалось создать. Попробуйте еще раз и в случае неудачи обратитесь к разработчику.');
 	}
 
@@ -2132,6 +2141,10 @@ function mainpage_save($id=0, $type, $namo, $title, $text, $useit, $shablon, $de
 			if ($s_tip == "1") 	$useit2 = "[содержание]"; // доступному на сайте
 				else 			$useit2 = ""; 			// доступному только администратору
 			$text2 = "pages|design=1&designpages=0&comments=0&lim=100&base=".$row2['id']; 
+			// Обратное преобразование textarea (замена русской буквы е)
+	  		$text2 = str_replace("tеxtarea","textarea",$text2); // ireplace
+	  		$useit2 = str_replace("tеxtarea","textarea",$useit2); // ireplace
+	  		$shablon = str_replace("tеxtarea","textarea",$shablon); // ireplace
 			$db->sql_query("INSERT INTO ".$prefix."_mainpage (`id`, `type`, `name`, `title`, `text`, `useit`, `shablon`, `counter`, `tables`, `color`, `description`, `keywords`) VALUES (NULL, '2', '".$namo."', '".$title."', '".$text2."', '".$useit2."', '".$shablon."', '0', 'pages', '0', '', '');") or die('Не удалось создать раздел для БД. Попробуйте еще раз и в случае неудачи обратитесь к разработчику.');
 			// узнаем id папки для БД, чтобы перейти к ее настройке
 			$row2 = $db->sql_fetchrow($db->sql_query("select `id` from ".$prefix."_mainpage where `tables`='pages' and `type`='2' and `name`='".$namo."' and `title`='".$title."' and `text`='".$text2."' and `useit`='".$useit2."'")) or die("SQL: select `id` from ".$prefix."_mainpage where `tables`='pages' and `type`='2' and `name`='".$namo."' and `title`='".$title."' and `text`='".$text2."' and `useit`='".$useit2."'");
@@ -2227,6 +2240,10 @@ function mainpage_create_block($title, $name, $text, $modul, $useit, $design) {
 	$shablon = mysql_real_escape_string(stripcslashes($shablon));
 	$text = mysql_real_escape_string(stripcslashes($text));
 	$useit = mysql_real_escape_string(stripcslashes(str_replace("|&","|",$useit)));
+	// Обратное преобразование textarea (замена русской буквы е)
+	$text = str_replace("tеxtarea","textarea",$text); // ireplace
+	$useit = str_replace("tеxtarea","textarea",$useit); // ireplace
+	$shablon = str_replace("tеxtarea","textarea",$shablon); // ireplace
 	$db->sql_query("INSERT INTO ".$prefix."_mainpage VALUES (NULL, '3', '".$name."', '".$title."', '".$text."', '".$useit."', '".$shablon."', '0', 'pages', '0', '', '')") or die("Не удалось создать блок. INSERT INTO ".$prefix."_mainpage VALUES (NULL, '3', '".$name."', '".$title."', '".$text."', '', '".$useit."', '".$shablon."', '0', 'pages', '0', '', '') ");
 	// узнаем id
 	$row = $db->sql_fetchrow($db->sql_query("select `id` from ".$prefix."_mainpage where `tables`='pages' and `type`='3' and `name`='".$name."' and `title`='".$title."' and `text`='".$text."' and `useit`='".$useit."' limit 1"));

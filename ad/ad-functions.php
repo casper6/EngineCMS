@@ -344,6 +344,9 @@ function redactor($type, $txt, $name, $name2="", $style="html", $return="echo") 
   $echo = "";
   if ($type=="0") {
   } elseif ($type=="2") {
+    // Преобразование textarea (замена на русскую букву е, только для редактора)
+    $txt = str_replace("textarea","tеxtarea",$txt); // ireplace
+    //$txt = str_replace("&","&amp;",$txt);
     global $color_tema_html, $color_tema_css, $color_tema_js, $color_tema_php; // цветовые стили для редактора кода
     if ($style == "html") $theme=$color_tema_html;
     if ($style == "css") $theme=$color_tema_css;
@@ -363,7 +366,8 @@ function redactor($type, $txt, $name, $name2="", $style="html", $return="echo") 
           document.getElementById('".$name."').style.fontSize='16px';</script>";
   } elseif ($type=="1") {
     // Преобразование textarea (замена на русскую букву е, только для редактора)
-    //$txt = str_replace("textarea","tеxtarea",$txt); // ireplace
+    $txt = str_replace("textarea","tеxtarea",$txt); // ireplace
+
     $txt = str_replace("&","&amp;",$txt);
     $echo .= "<textarea id='".$name."' class='w100 h155' name='".$name."'>".$txt."</textarea><br>";
   } elseif ($type=="3") {
@@ -447,7 +451,7 @@ function redactor($type, $txt, $name, $name2="", $style="html", $return="echo") 
 function redactor2($type, $txt, $name, $style="html") {
   if ($type=="1") {
     // Преобразование textarea (замена на русскую букву е, только для редактора)
-    //$txt = str_replace("textarea","tеxtarea",$txt); // ireplace
+    $txt = str_replace("textarea","tеxtarea",$txt); // ireplace
     $txt = str_replace("&","&amp;",$txt);
     echo "<textarea id='".$name."' class='w100 h155' name='".$name."'>".$txt."</textarea><br>";
   } elseif ($type=="2") {
@@ -457,7 +461,7 @@ function redactor2($type, $txt, $name, $style="html") {
     if ($style == "php") $theme=$color_tema_php;
     if ($style == "javascript") $theme=$color_tema_js;
     // Преобразование textarea (замена на русскую букву е, только для редактора)
-    //$txt = str_replace("textarea","tеxtarea",$txt); // ireplace
+    $txt = str_replace("textarea","tеxtarea",$txt); // ireplace
     //$txt = str_replace("&","&amp;",$txt);
     echo "<textarea id='".$name."X' class='hide' name='".$name."'>".$txt."</textarea>
     <pre id='".$name."' class='w100 h700'></pre><br>
