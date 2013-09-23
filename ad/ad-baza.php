@@ -10,7 +10,7 @@ function base_base($name) {
     global $prefix, $db, $p, $sortir, $data_sort, $data_sort2, $men_sort, $firm_sort, $interval_sort, $search_sort, $doc;
     if ($p == "") $p=0;
     if ($doc == "") {
-        include("ad-header.php");
+        include("ad/ad-header.php");
     } else {
         ob_start();
         header("Content-Disposition: attachment; Content-type: application/msword; filename=База_данных.htm"); 
@@ -406,7 +406,7 @@ function base_base($name) {
 #############################################################################################
 function base_base_edit_base($id, $base, $name, $red=0) {
     global $prefix, $db;
-    include("ad-header.php");
+    include("ad/ad-header.php");
     echo "<br><a href=/sys.php?op=base_base&name=".$name." style='padding-left:5px;padding-right:5px;' class='punkt radius'> &larr; Вернуться к базе данных </a></b><br>";
     echo "<h1>Редактирование строки №$id в базе данных</h1>";
 
@@ -598,7 +598,7 @@ function base_base_edit_base($id, $base, $name, $red=0) {
 function base_base_create_base($base, $name, $red=0) {
     global $prefix, $db, $title_razdel_and_bd, $ok;
     $alerts  = "";
-    include("ad-header.php");
+    include("ad/ad-header.php");
     echo "<br><a href=/sys.php?op=base_base&name=".$name." style='padding-left:5px;padding-right:5px;' class='punkt radius'> &larr; Вернуться к базе данных </a></b><br>";
     if (intval($ok) == 1) echo "<h2 class=green>Строка успешно добавлена. Добавим еще одну?</h2>";
     echo "<h1>Добавление строки к базе данных «".trim($title_razdel_and_bd[$name])."»</h1>";
@@ -863,7 +863,7 @@ function base_base_delit_base($base, $name, $id, $ok) {
         $db->sql_query("DELETE FROM ".$prefix."_base_".$base." WHERE id='$id'");
         Header("Location: sys.php?op=base_base&name=$name#1");
     } else {
-        include("ad-header.php");
+        include("ad/ad-header.php");
         echo "<br><center><b>Удаление строки из таблицы</b><br><br>";
         echo "Внимание! Вы хотите удалить строку <b>№ $id</b>.<br><br>";
         echo "Это правда?<br><br>[ <a href=\"sys.php?op=base_base&name=$name#1\"><b>НЕТ</b></a> | <a href=\"sys.php?op=base_base_delit_base&name=$name&base=$base&id=$id&ok=1\"><b>ДА</b></a> ]</center><br><br>";

@@ -53,7 +53,7 @@ if ($row['realadmin'] == 1) {
 		global $prefix, $db, $bgcolor2, $admin_file;
 		$id = intval($id);
 		$row = $db->sql_fetchrow($db->sql_query("SELECT * from ".$prefix."_banned_ip WHERE id='".$id."'"));
-		include ("ad-header.php");
+		include ("ad/ad-header.php");
 		echo "<h3>Блокировка пользователей (запрет использования сайта)</h3><b>Измените IP-адрес пользователя:</b><br>";
 		echo "<form action='".$admin_file.".php' method='post'>";
 		$ip = explode(".", $row['ip_address']);
@@ -68,7 +68,7 @@ if ($row['realadmin'] == 1) {
 
 	function ipban_save($id=0, $ip1, $ip5, $ip3, $ip4, $reason) {
 		global $prefix, $db, $admin_file;
-		include ("ad-header.php");
+		include ("ad/ad-header.php");
 		$id = intval($id);
 		$ip = $ip1.'.'.$ip5.'.'.$ip3.'.'.$ip4;
 		if (($ip1 == "" OR $ip5 == "" OR $ip3 == "" OR $ip4 == "") or ($ip1 > 255 OR $ip5 > 255 OR $ip3 > 255 OR $ip4 > 255 && $ip4 != "*") ) {
@@ -107,7 +107,7 @@ if ($row['realadmin'] == 1) {
 			}
 			if (!empty($chng_pwd2)) {
 				if($chng_pwd != $chng_pwd2) {
-					include("ad-header.php");
+					include("ad/ad-header.php");
 					echo "Первый пароль не соответствует второму. Вернитесь назад.<br>";
 					admin_footer();
 					exit;
@@ -124,7 +124,7 @@ if ($row['realadmin'] == 1) {
 ////////////////////////////////////////////////
 	function options($ok=0) {
 		global $prefix, $db, $admin_file, $siteurl, $admin, $ipban;
-		include ("ad-header.php");
+		include ("ad/ad-header.php");
 		$ok = intval($ok);
 		// Получаем настройки из mainfile
 		global $sitename, $startdate, $adminmail, $keywords, $description, $counter, $statlink, $postlink, $stopcopy, $registr, $pogoda, $flash, $sgatie, $ht_backup, $captcha_ok, $xnocashe, $jqueryui, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $comment_send, $company_name, $company_fullname, $company_address, $company_time, $company_tel, $company_sot, $company_fax, $company_email, $company_map, $company_people, $search_design, $tag_design, $add_fonts, $site_cash, $normalize, $project_logotip, $project_name, $geo, $kolkey, $add_clips, $sortable, $color_tema_html, $color_tema_css, $color_tema_js, $color_tema_php, $tab_obzor, $tab_show, $shop_text_val1, $shop_text_val2, $shop_text_itogo, $shop_text_oformit, $shop_text_korzina, $shop_text_delete, $shop_pole, $shop_admin_mail, $shop_text_after_mail,$shop_spisok_pole, $shop_shablon_form_order, $shop_shablon_mail_client, $shop_shablon_mail_admin, $head_insert;
@@ -749,7 +749,7 @@ echo "
 ".input('options[ed2_button_pre]','1','','checkbox',$ed2_button_pre)." Предварительно форматированный текст (PRE)<br>
 ".input('options[ed2_button_fullscreen]','1','','checkbox',$ed2_button_fullscreen)." Во весь экран (кнопка справа)<br>
 ".input('options[ed2_button_clips]','1','','checkbox',$ed2_button_clips)." <b>Заготовки</b> (шаблоны, можно добавить ниже ↓)<br>
-".input('options[ed2_button_fontcolor]','1','','checkbox',$ed2_button_fontcolor)." Цвет текста<br>
+".input('options[ed2_button_fontcolor]','1','','checkbox',$ed2_button_fontcolor)." Цвет текста и заливки (фона) текста<br>
 ".input('options[ed2_button_fontsize]','1','','checkbox',$ed2_button_fontsize)." Размер текста (нежелательно!)<br>
 ".input('options[ed2_button_fontfamily]','1','','checkbox',$ed2_button_fontfamily)." Шрифт текста (нежелательно!)<br>
 Высота поля редактора: ".input('options[ed2_minHeight]',$ed2_minHeight, "10")."<br>
@@ -864,7 +864,7 @@ echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>
 ///////////////////////////////////////////////////////////////////
 	function admins_list() {
 		global $admin, $prefix, $db, $admin_file, $bgcolor2, $modules_info;
-		include ("ad-header.php");
+		include ("ad/ad-header.php");
 
 		echo "<center><font class=\"option\"><b>Редактирование админов</b></font></center><br>";
 		echo "	<table border=\"1\" align=\"center\">
@@ -961,7 +961,7 @@ echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>
 		$add_aid = strtolower(substr($add_aid, 0,25));
 		$add_name = substr($add_name, 0,25);
 		if (!($add_aid && $add_name && $add_email && $add_pwd)) {
-			include("ad-header.php");
+			include("ad/ad-header.php");
 			echo "<center><b>Ошибка создания</b><br>Заполните поля, вернувшись назад</center>";
 		}
 		if ($ok==1) {
@@ -997,7 +997,7 @@ echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>
 			Header("Location: ".$admin_file.".php?op=admins_list");
 		}
 		else {
-			include ("ad-header.php");
+			include ("ad/ad-header.php");
 			echo "<center><b>"._AREYOUSURETOADDADMIN."</b><BR><BR>";
 			$auth_modules=base64_encode(serialize($auth_modules));
 			echo "	<form action=\"".$admin_file.".php\" method=\"post\">
@@ -1023,7 +1023,7 @@ echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>
 	function admins_edit() { // доработать
 		global $admin, $prefix, $db, $admin_file, $modules_info;
 		$chng_aid=$_GET['chng_aid'];
-		include ("ad-header.php");
+		include ("ad/ad-header.php");
 		echo "<center><font class=\"option\"><b>"._MODIFYINFO."</b></font></center><br><br>";
 		$adm_aid = filter($chng_aid, "nohtml");
 		$adm_aid = trim(substr($adm_aid,0,25));
@@ -1140,7 +1140,7 @@ echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>
 		Modules2Cache();
 		if (!empty($chng_pwd2)) {
 			if($chng_pwd != $chng_pwd2) {
-				include ("ad-header.php");
+				include ("ad/ad-header.php");
 				echo _PASSWDNOMATCH . "<br><br>"
 				."<center>" . _GOBACK . "</center>";
 				admin_footer();
@@ -1170,7 +1170,7 @@ echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>
 		}
 		else {
 			$aid = trim(filter($_GET['aid'],"nohtml"));
-			include ("ad-header.php");
+			include ("ad/ad-header.php");
 			echo "<center><font class=\"option\"><b>"._AUTHORDEL."</b></font><br><br>"
 			._AUTHORDELSURE." <i>".$aid."</i>?<br><br>";
 			echo "	<form action=\"".$admin_file.".php\" method=\"post\">
@@ -1185,7 +1185,7 @@ echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>
 /////////////////////////////////////////////////
 	function subscribe() {
 		global $admin, $prefix, $db;
-		include ("ad-header.php");
+		include ("ad/ad-header.php");
 		$sql5 = "SELECT num, avtor, mail from ".$prefix."_pages_comments where `mail`!='' order by num";
 		$result5 = $db->sql_query($sql5);
 		$numrows = $db->sql_numrows($result5);

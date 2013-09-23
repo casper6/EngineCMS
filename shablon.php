@@ -41,7 +41,7 @@ function shablon_show($shablon_type, $shablon_id) {
 				<td class=reiting_golos align=center style='background: rgb(252, 192, 198);'>[minus_golos]"; break;
 				############################################################################################
 				default: return "<div class=page_link_title>[page_link_title]</div>
-				<div class=page_open_text>[page_open_text][page_tags]</div>
+				<div class=page_open_text>[page_open_text][all_page_link][page_tags]</div>
 				<div class=page_nums>
 				<div class=cat_page_counter>[all_cat_link] [all_page_counter]</div>
 				<div class=all_page_data>[all_page_data]</div>

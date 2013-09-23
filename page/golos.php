@@ -26,7 +26,7 @@ function golos_show($pid, $golostype, $gol) {
 	    </span>
 	    <script>$('.star-rating".$pid." :radio').click( function(){ page_golos(".$pid.",'".$DBName."',this.value,".$golostype.") } )</script>";
 	    if ($golos_user > 0) 
-	    	$echo .= "<span class='golos' title='".ss("Оценка:")."' />".$stars." из 5</span><span class='golos_user' title='".ss("Голосовали:")."' />".$golos_user."</span>";
+	    	$echo .= "<span class='golos' title='".ss("Оценка:")."' />".$stars." ".ss("из 5")."</span><span class='golos_user' title='".ss("Голосовали:")."' />".$golos_user."</span>";
 		else 
 			$echo .= "<span class='golos_user' title='".ss("Голосовали:")."' />".ss("Никто не голосовал")."</span>";
 		break;

@@ -15,7 +15,7 @@ if ($ModuleName=="") $ModuleName = ss("Содержание");
 // передается из любой страницы по ссылке
 global $strelka, $go, $cid, $pid, $all, $avtor, $to, $info, $num, $ip, $golos, $getparent_cash;
 
-###########################################
+########################################### проверить и возможно убрать кусок
 // настройки раздела из БД
 global $post, $comments, $datashow, $sort, $lim, $foto, $view, $search, $search_papka, $tema, $tema_name, $tema_title, $tema_opis, $menushow, $design; 
 
@@ -368,7 +368,7 @@ function showdate($showdate) {
 ######################################################################################
 function showcat($cid=0, $pag=0, $slovo="") {
   global $strelka, $soderganie, $soderganie2, $DBName, $db, $prefix, $module_name, $admin, $name, $pagetitle, $keywords2, $description2;
-  global $golos, $golosrazdel, $golostype, $post, $comments, $datashow, $sort, $lim, $folder, $media, $view, $col, $search, $search_papka, $tema, $tema_name, $tema_title, $tema_opis, $menushow, $base, $where, $order, $peopleshow, $show_add_post_on_first_page, $razdel_shablon, $comments_1, $comments_main, $limkol, $tags, $tag_text_show, $tags_type, $tags_show, $pagenumbers, $div_or_table; // настройки из БД
+  global $golos, $golosrazdel, $golostype, $post, $comments, $datashow, $sort, $lim, $folder, $media, $view, $col, $search, $search_papka, $tema, $tema_name, $tema_title, $tema_opis, $menushow, $base, $where, $order, $peopleshow, $show_add_post_on_first_page, $razdel_shablon, $comments_1, $comments_main, $limkol, $tags, $tag_text_show, $tags_type, $tags_show, $pagenumbers, $div_or_table, $show_read_all, $read_all; // настройки из БД
   $DBName = mysql_real_escape_string($DBName);
   $sort = mysql_real_escape_string($sort);
   $cid = intval($cid);
@@ -698,6 +698,9 @@ function showcat($cid=0, $pag=0, $slovo="") {
     $page_tags .= "<br>".$tag_text_show." ".implode(" | ", $searches)."";
     }
 
+    $all_page_link = "";
+    if ($show_read_all == "1") $all_page_link = " <A href='/-".$DBName."_page_".$p_pid."'>".$read_all."</a>";
+
     // Дополнение - преобразователь ссылок. //////////////////////
     /*
     $links_zamena = array(
@@ -718,6 +721,7 @@ function showcat($cid=0, $pag=0, $slovo="") {
     "[page_razdel]"=>$DBName,
     "[page_link_title]"=>$pagelinktitle,
     "[page_link]"=>"/-".$DBName."_page_".$p_pid,
+    "[all_page_link]"=>$all_page_link,
     "[page_open_text]"=>$open_text,
     "[page_title]"=>$title,
     "[page_text]"=>$text,
@@ -905,9 +909,9 @@ function showcat($cid=0, $pag=0, $slovo="") {
     }
 
     foreach( $rus_names as $key => $value ) {
-      if ($s == $key and $desc == "") $link = "<a href='set.php?name=sort_data_base&fill=".$key."_desc' title='".ss("Нажмите для сортировки")."' style='color:red;'>&darr;</a>";
-      elseif ($s == $key and $desc == "desc") $link = "<a href='set.php?name=sort_data_base&fill=".$key."_' title='".ss("Нажмите для сортировки")."' style='color:green;'>&uarr;</a>";
-     else $link = "<a href='set.php?name=sort_data_base&fill=".$key."_' title='".ss("Нажмите для сортировки")."'>&darr;</a>";
+      if ($s == $key and $desc == "") $link = "<a href='page/set.php?name=sort_data_base&fill=".$key."_desc' title='".ss("Нажмите для сортировки")."' style='color:red;'>&darr;</a>";
+      elseif ($s == $key and $desc == "desc") $link = "<a href='page/set.php?name=sort_data_base&fill=".$key."_' title='".ss("Нажмите для сортировки")."' style='color:green;'>&uarr;</a>";
+     else $link = "<a href='page/set.php?name=sort_data_base&fill=".$key."_' title='".ss("Нажмите для сортировки")."'>&darr;</a>";
      $rus_names_ok .= "<td><b>".$value."</b> ".$link."</td>";
     }
 

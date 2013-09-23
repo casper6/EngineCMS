@@ -25,7 +25,7 @@ global $admin_file;
 $the_first = $db->sql_numrows($db->sql_query("SELECT * FROM ".$prefix."_authors"));
 if ($the_first == 0) {
 	if (!$name) {
-		include("ad-header.php");
+		include("ad/ad-header.php");
 		echo "<center>".aa("Подождите, возникли проблемы с подключением к базе данных... Если через полчаса-час не наладится - свяжитесь с разработчиком или хостинг-провайдером.")."</center><br>";
 		admin_footer();
 	}
@@ -113,7 +113,7 @@ echo "<title>".aa("Вход в Администрирование")."</title>
 <meta name='viewport' content='width=device-width, initial-scale=1.0'>
 <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
 <!--[if lt IE 9]><script src='includes/html5.js'></script><![endif]-->
-<meta http-equiv='pragma' content='no-cache' /><meta http-equiv='no-cache' /><meta http-equiv='cache-control' content='no-cache' /><link rel='stylesheet' href='ad-style.css' type='text/css'>
+<meta http-equiv='pragma' content='no-cache' /><meta http-equiv='no-cache' /><meta http-equiv='cache-control' content='no-cache' /><link rel='stylesheet' href='ad/ad-style.css' type='text/css'>
 <link REL='shortcut icon' href='images/favicon_cms.png' type='image/x-icon'><script src='includes/jquery183.min.js'></script>
 <script type='text/javascript' src='includes/css-frameworks/kickstart/js/kickstart.js'></script><link rel='stylesheet' type='text/css' href='includes/css-frameworks/kickstart/css/kickstart.css' media='all' /><link rel='stylesheet' type='text/css' href='includes/css-frameworks/kickstart/style.css' media='all' />
 </head>
@@ -437,7 +437,7 @@ function red_vybor() { // Выбор редактора
 }
 
 function adminMain() {
-	include("ad-header.php");
+	include("ad/ad-header.php");
 	GraphicAdmin();
 }
 

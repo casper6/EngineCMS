@@ -10,7 +10,7 @@
 ######################################################################################################
 function regions_main() {
 	global $prefix, $db, $soderganie;
-	include("ad-header.php");
+	include("ad/ad-header.php");
 	$result = $db->sql_query("SELECT count(*) as cnt FROM ".$prefix."_regions") or die('<center>База регионов не установленна, <a href="sys.php?op=regions_install">приступить к установке</a></center>');
 	while ($row = mysql_fetch_assoc($result)) { 
 		if ($row['cnt'] == 0) echo '<center>cуществует мнение что база регионов не установленна, <a href="sys.php?op=regions_install">приступить к установке</a></center>';
@@ -28,7 +28,7 @@ function regions_main() {
 
 function regions_install() {
 	global $prefix, $db;
-	include("ad-header.php");
+	include("ad/ad-header.php");
 	echo '<div style="background: #e2e5ea;"><div class="black_grad"><span class="h1">Шаг Первый</span></div>
 	<center><div class=block style="width:800px; text-align:left;">
 	<p><span class=h3>Выберите структуру для установки регионов.</span>
@@ -51,7 +51,7 @@ function regions_install() {
 function regions_vibor() {
 	global $prefix, $db;
 	$stryktyra=$_POST['stryktyra'];
-	include("ad-header.php");
+	include("ad/ad-header.php");
 	// кладем выбранную структуру в конфиг
 	$text = "<?php \$stryktyra = ".$stryktyra.";?>";
 	$fp = fopen("includes/regions/config.php", "w"); // Открываем файл в режиме записи 
@@ -87,7 +87,7 @@ function regions_addbase() {
 	foreach ($regions as $key => $re) {
 		if ($_POST[$re] != '0') include("includes/regions/".$key.".php");
 	}
-	include("ad-header.php");
+	include("ad/ad-header.php");
 	echo '<div style="background: #e2e5ea;"><div class="black_grad" style="height:45px;"><span class="h1">Шаг Третий</span></div><center><a href="sys.php?op=regions_menu" class=h1>Закончить установку</a></center>';
 }
 

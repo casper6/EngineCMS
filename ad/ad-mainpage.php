@@ -151,7 +151,7 @@ function menu() {
 ######################################################################################################
 function mainpage($name="") {
 	global $tip, $admintip, $prefix, $db, $name, $id, $display_delete, $display_addmenu;
-	include("ad-header.php");
+	include("ad/ad-header.php");
 	menu();
 	if ($name=="design" or $name=="css" or $name=="module" or $name=="block" or $name=="spisok" or $name=="base" or $name=="shablon") { create_main($name); }
 	elseif (intval($id)>0) { edit_main($id); }
@@ -838,16 +838,13 @@ function edit_main($id) {
 	$module_name = $options[0];
 	$options = str_replace($module_name."|","",$text);
 
-	// обнулили все опции от греха подальше
-	$media=$folder=$col=$view=$golos=$golosrazdel=$post=$comments=$datashow=$favorites=$socialnetwork=$search=$search_papka=$put_in_blog=$base=$vetki=$citata=$media_comment=$no_html_in_opentext=$no_html_in_text=$show_add_post_on_first_page=$media_post=$razdel_shablon=$page_shablon=$comments_all=$comments_num=$comments_mail=$comments_adres=$comments_tel=$comments_desc=$golostype=$pagenumbers=$comments_main=$tags_type=$pagekol=$table_light=$designpages=$comments_add=$div_or_table=0;
-
-	$menushow=$titleshow=$razdel_link=$peopleshow=$design=$tags=$podrobno=$podrazdel_active_show=$podrazdel_show=$tipograf=$limkol=$tags_show=$tema_zapret=$tema_zapret_comm=1;
-
-	$comment_shablon=2;
-
-	$where=$order=$calendar=$reclama="";
-
-	$sort="date desc";
+	// обнулили все опции
+	$media = $folder = $col = $view = $golos = $golosrazdel = $post = $comments = $datashow = $favorites = $socialnetwork = $search = $search_papka = $put_in_blog = $base = $vetki = $citata = $media_comment = $no_html_in_opentext = $no_html_in_text = $show_add_post_on_first_page = $media_post = $razdel_shablon = $page_shablon = $comments_all = $comments_num = $comments_mail = $comments_adres = $comments_tel = $comments_desc = $golostype = $pagenumbers = $comments_main = $tags_type = $pagekol = $table_light = $designpages = $comments_add = $div_or_table = 0;
+	$menushow = $titleshow = $razdel_link = $peopleshow = $design = $tags = $podrobno = $podrazdel_active_show = $podrazdel_show = $tipograf = $limkol = $tags_show = $tema_zapret = $tema_zapret_comm = $show_read_all = 1;
+	$comment_shablon = 2;
+	$lim = 20;
+	$where = $order = $calendar = $reclama = "";
+	$sort = "date desc";
 	$tema = "Открыть новую тему";
 	$tema_name = "Ваше имя";
 	$tema_title = "Название темы";
@@ -861,7 +858,7 @@ function edit_main($id) {
 	$comments_7 = "Ваш вопрос или комментарий:";
 	$comments_8 = "Раскрыть все комментарии";
 	$tag_text_show = "Ключевые слова";
-	$lim=20;
+	$read_all = "Читать далее...";
 
 	parse_str($options); // раскладка всех настроек раздела
 
@@ -1014,6 +1011,11 @@ function edit_main($id) {
 	<tr>
 	<td>Показывать Название страницы?</td>
 	<td>".select("options[titleshow]", "1,0", "ДА,НЕТ", $titleshow)."</td>
+	</tr>
+	<tr>
+	<tr>
+	<td>Показывать в предисловии ссылку ".input("options[read_all]", $read_all)." ?</td>
+	<td>".select("options[show_read_all]", "1,0", "ДА,НЕТ", $show_read_all)."</td>
 	</tr>
 	<tr>
 	<td><strong>Показывать Дату создания?</strong></td>
@@ -1236,27 +1238,25 @@ function edit_main($id) {
 	$module_name = $options[0];
 	$options = str_replace($module_name."|","",$useit);
 
-	// обнулили все опции от греха подальше
-	$titleshow=$media=$folder=$datashow=$tagdelete=$ipdatauser=$design=$open_all=$catshow=$main=$daleeshow=$openshow=$number=$add=$size=$papki_numbers=$zagolovokin=$menu=$noli=$html=$show_title=$random=$showlinks=$open_new_window=$shablon=$show_new_pages=$reload_link_show=$reload_link_time=0;
-	$opros_type=$limkol=$pageshow=$only_question=$opros_result=$foto_gallery_type=$re_menu=$notitlelink=1;
-	$addtitle="Добавить статью";
-	$dal="Далее...";
-	$first = "src=";
-	$second = ">";
-	$third = " ";
+	// обнулили все опции
+	$titleshow = $media = $folder = $datashow = $tagdelete = $ipdatauser = $design = $open_all = $catshow = $main = $daleeshow = $openshow = $number = $add = $size = $papki_numbers = $zagolovokin = $menu = $noli = $html = $show_title = $random = $showlinks = $open_new_window = $shablon = $show_new_pages = $reload_link_show = $reload_link_time = 0;
+	$opros_type = $limkol = $pageshow = $only_question = $opros_result = $foto_gallery_type = $re_menu = $notitlelink = 1;
 	$col_bukv = 50;
 	$img_width = 0;
 	$img_height = 200;
-	$size=10;
-	$class=$alternative_title_link=$cid_open=$no_show_in_razdel=$watermark=$show_in_papka="";
+	$size = 10;
+	$class = $alternative_title_link = $cid_open = $no_show_in_razdel = $watermark = $show_in_papka = "";
+	$calendar = ""; // Календарь - перенаправление на дату из поля.
+	$addtitle = "Добавить статью";
+	$dal = "Далее...";
+	$first = "src=";
+	$second = ">";
+	$third = " ";
 	$sort = "date desc";
 	$papka_sort = "sort, title";
-	$razdel_open_name = "Открыть раздел";
-	$razdel_open2_name = "Открыть раздел";
-	$calendar = ""; // Календарь - перенаправление на дату из поля.
+	$razdel_open_name = $razdel_open2_name = "Открыть раздел";
 	$show_in_razdel = "все";
 	$reload_link_text = "Показать еще...";
-
 	// Для базы данных
 	$base = ""; // Указываем название таблицы БД
 	$first = ""; // первая колонка
@@ -1267,8 +1267,6 @@ function edit_main($id) {
 	$col = ""; // какие поля будут использоваться для вывода информации
 
 	parse_str($options); // раскладка всех настроек блока
-
-
 
 	if (intval($nastroi) == 1) { // начало редактирования настроек блока
 	echo "Настройка блока «".$title."»</span>";

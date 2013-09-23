@@ -10,7 +10,7 @@
 ////////////////////////////////////////////////////////
 function users() {
 	global $prefix, $db, $title_razdels_by_id;
-	include("ad-header.php");
+	include("ad/ad-header.php");
 
 	echo "<table style='width:100%; margin-top:5px; padding:0; background: #e2e5ea;' cellspacing=0 cellpadding=0><tr valign=top><td id='razdel_td' class='radius nothing' width=340>
 			<div id='razdels' style='background:#e7e9ec;'>
@@ -162,7 +162,7 @@ function del_group() {
 ////////////////////////////////////////////////////////
 function del_group2() {
 	global $prefix, $db;
-	include("ad-header.php");
+	include("ad/ad-header.php");
 	$result = $db->sql_query("select count(*) as cnt from ".$prefix."_mainpage where `type`='10' and `name`!='config'");
 	while ($row = $db->sql_fetchrow($result)) {
 		$a = $row['cnt'];
@@ -187,7 +187,7 @@ function del_group2() {
 ////////////////////////////////////////////////////////
 function edit_group() {
 	global $prefix, $db;
-	include("ad-header.php");
+	include("ad/ad-header.php");
 	echo '<form action="sys.php?op=s_group&amp;id='.$id.'"  method="post"><br/><p>'; 
 	$result = $db->sql_query("select * from ".$prefix."_mainpage where `id`='".$id."'");
 	while ($row = $db->sql_fetchrow($result)) {
@@ -229,7 +229,7 @@ function s_group() {
 ////////////////////////////////////////////////////////
 function html_group() {
 	global $prefix, $db;
-	include("ad-header.php");
+	include("ad/ad-header.php");
 	echo 'Здесь вы можете создать страницу пользователя с различными данными, которые он сможет в дальнейшем редактировать<Br>
 	Для оформления страницы используйте заранее созданные поля [pole] <a class="help" href="sys.php?op=mainpage&name=spisok&type=4#1">создать поле</a><Br>Они же будут выполнять роль информационных блоков.<Br>
     <h2>Список доступных полей:<h2>';
@@ -256,7 +256,7 @@ function s_html_group() {
 }
 ////////////////////////////////////////////////////////
 function adduser() {
-	include("ad-header.php");
+	include("ad/ad-header.php");
 	$regions = 0;
 	global $prefix, $db, $sitename, $adminmail, $siteurl;
 	require_once('page/functions_users.php');

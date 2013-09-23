@@ -10,7 +10,7 @@
 ////////////////////////////////////////////////////////
 function parser_main() {
 	global $prefix, $db;
-	include("ad-header.php");
+	include("ad/ad-header.php");
 	parser_js();
 	echo "<table style='width:100%; margin-top:5px; padding:0; background: #e2e5ea;' cellspacing=0 cellpadding=0><tr valign=top><td id='razdel_td' class='radius nothing' width=340><div id='razdels' style='background:#e7e9ec;'><div class='black_grad'><button id=new_razdel_button title='Назад в настройки сайта' class='small black' onclick='location.href=\"/sys.php?op=Configure#1\"' style='float:left; margin:3px;'><span style='margin-right: -2px;' class=\"icon darkgrey small\" data-icon=\"{\"></span></button><span class='h1'>Парсер</span></div>";
 	echo "<div class='right3 '><button id=mainrazdel3 style='float:right;' title='Новый поток...' class='dark_pole2' onclick=\"options_show('3','add_rss');\"><span class='mr-2 icon darkgrey small' data-icon='+'></span><span class='plus20'>Добавить RSS</span></button></div>
@@ -89,7 +89,7 @@ echo '</div></div></td></tr></table>';
 }
 function parser_temp() {
 global $prefix, $db;
-	include("ad-header.php");
+	include("ad/ad-header.php");
 	parser_js();
 	$id = $_GET['id'];
 	$res = $db->sql_fetchrow($db->sql_query("SELECT url FROM ".$prefix."_parser where id='".$id."'"));
@@ -175,7 +175,7 @@ Header("Location: sys.php?op=parser_main");
 function parser_prev() {
 global $prefix, $db;
 $id = $_GET['id'];
-include("ad-header.php");
+include("ad/ad-header.php");
 parser_js();
 $site = $db->sql_fetchrow($db->sql_query("SELECT url FROM ".$prefix."_parser where id='".$id."'"));
 echo "<div style='background: #e2e5ea;'><div class='black_grad' style='height:45px;'>

@@ -22,7 +22,7 @@ function generate_simvols($kolichestvo) {
 function user_set_tokens($em_in) {
 	global $hash_padding, $prefix, $db; 
 	if (!$em_in) { 
-		$feedback = 'ОШИБКА - Не указано имя пользователя.'; 
+		$feedback = ss("ОШИБКА - Не указано имя пользователя."); 
 		return false;
 	} 
 	$id_hash = md5($em_in.$hash_padding); 

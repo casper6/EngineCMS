@@ -36,7 +36,7 @@ echo "<!doctype html>
 <meta name='viewport' content='width=device-width'>
 <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
 <!--[if lt IE 9]><script src='includes/html5.js'></script><![endif]-->
-<link rel='stylesheet' href='ad-style.css' type='text/css'>
+<link rel='stylesheet' href='ad/ad-style.css' type='text/css'>
 <link rel='shortcut icon' href='images/favicon_cms.png' type='image/x-icon'>
 <script src='includes/jad.js'></script>
 <script src='includes/j.js'></script>

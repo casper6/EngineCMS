@@ -1,15 +1,15 @@
-<?php
+<?php // доделать
 require_once('page/functions_users.php'); 
 global $soderganie, $prefix, $db, $design;
 if ($_POST["submit"] == "Добавить") { 
 	if (!$_POST["user_name"] || !$_FILES["file"]["size"]) {
-		$soderganie .= "<p class='errormes'>Вы не ввели своё имя или не выбрали фотографию.</p>";
+		$soderganie .= "<p class='errormes'>".ss("Вы не ввели своё имя или не выбрали фотографию.")."</p>";
 	} else {
 		// новое имя файла
 		$cn_foto = md5(date("Y-M-D-h-m-s"));
 		// проверяем размер файла
 		if ($_FILES["file"]["size"] > 5242880) { // 1024*5*1024
-			$soderganie .= "<p class='errormes'>Размер файла превышает 5Мб.</p>"; 
+			$soderganie .= "<p class='errormes'>".ss("Размер файла превышает 5Мб.")."</p>"; 
 		} else {
 			// Проверяем загружен ли файл
 			if (is_uploaded_file($_FILES["file"]["tmp_name"])) {
@@ -24,29 +24,29 @@ if ($_POST["submit"] == "Добавить") {
 					$photo = "img/user/".$cn_foto.$imgname;
 					$db->sql_query("UPDATE ".$prefix."_users SET `name`='".$user_name."', `photo`='".$photo."' WHERE `user_id`='".$_COOKIE['user_id']."' ;"); 
 					user_set_tokens($_COOKIE['email']);
-					$soderganie .= "Данные обновлены, дождитесь обновления страницы.";
+					$soderganie .= ss("Данные обновлены, дождитесь обновления страницы.");
 					$soderganie .= "<meta http-equiv='Refresh' content='6'/>";
 				} else {
-					$soderganie .= "<p class='errormes'>Можно загружать только изображения в форматах jpg/jpeg, gif или png.";
+					$soderganie .= "<p class='errormes'>".ss("Можно загружать только изображения в форматах jpg/jpeg, gif или png.");
 				}
 			} else {
-				$soderganie .= "<p class='errormes'>Ошибка загрузки файла.</p>";
+				$soderganie .= "<p class='errormes'>".ss("Ошибка загрузки файла.")."</p>";
 			} 
 		}
 	}
 } else {
 	if (!$_COOKIE['user_name']) {
-		$soderganie .= "<p class='errormes'>Для начала работы введите ваше имя и загрузите фотогфию.</p><br>
-        <form class=regforma' action='--users_".$_COOKIE['user_id']."' method='post' enctype='multipart/form-data'>
-	    <br><input class='regname' type='name' name='user_name' value='' placeholder='Ваше имя'>
-		<br><input class='regfile' type='file' name='file' placeholder='Выберите фотографию'>
-		<br><input type='submit' name='submit' value='Добавить'></form>";
+		$soderganie .= "<p class='errormes'>".ss("Для начала работы введите ваше имя и загрузите фотогфию.")."</p><br>
+        <form class='regforma' action='--users_".$_COOKIE['user_id']."' method='post' enctype='multipart/form-data'>
+	    <br><input class='regname' type='name' name='user_name' value='' placeholder='".ss("Ваше имя")."'>
+		<br><input class='regfile' type='file' name='file' placeholder='".ss("Выберите фотографию")."'>
+		<br><input type='submit' name='submit' value='".ss("Добавить")."'></form>";
 	} else {
 		// блок пользователя фото и ссылки
 		$soderganie .= '<div id="user_blok"><img src="/includes/phpThumb/phpThumb.php?src=/'.$_COOKIE['user_pfoto'].'&amp;w=150&amp;h=0&amp;q=0" title="'.$_COOKIE['user_name'].'"><br>
-		<a href="--users_'.$_COOKIE['user_id'].'">Моя страница</a><br>
-		<a href="--adduser_'.$_COOKIE['user_group'].'_0">Добавить материал</a><br>  
-		<a href="--edituser_'.$_COOKIE['user_id'].'">Редактировать профиль</a><br> 
+		<a href="--users_'.$_COOKIE['user_id'].'">'.ss('Моя страница').'</a><br>
+		<a href="--adduser_'.$_COOKIE['user_group'].'_0">'.ss('Добавить материал').'</a><br>  
+		<a href="--edituser_'.$_COOKIE['user_id'].'">'.ss('Редактировать профиль').'</a><br> 
 		<a href="--logout">Выход</a></div>';
 		// выводим шаблон страницы пользователя
 		$result = $db->sql_query("select useit from ".$prefix."_mainpage where `id`='".$_COOKIE['user_group']."'");
@@ -73,7 +73,7 @@ if ($_POST["submit"] == "Добавить") {
 	}
 }
 list($design_for_reg, $stil) = design_and_style($design);
-if ($design_for_reg == "0") die("Ошибка: «Адрес раздела» (".$name.") введен неправильно. Перейдите на <a href=/>Главную страницу</a>."); 
-$block = str_replace("[содержание]",$soderganie,$design_for_reg);
+if ($design_for_reg == "0") die(ss("Ошибка: «Адрес раздела»")." (".$name.") ")."введен неправильно. Перейдите на")." <a href=/>")."Главную страницу")."</a>."); 
+$block = str_replace(aa("[содержание]"), $soderganie, $design_for_reg);
 return array($block, $stil);
 ?>

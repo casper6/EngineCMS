@@ -57,7 +57,7 @@ function seo($edit=false){
 
 function edit_base_pages_category($cid, $red=0) {
   global $module, $name, $prefix, $db, $title_razdel_and_bd; //, $toolbars;
-  include("ad-header.php");
+  include("ad/ad-header.php");
   $cid = intval($cid);
   $red = intval($red);
   $sql = "SELECT * FROM ".$prefix."_pages_categories WHERE cid='$cid'";
@@ -178,7 +178,7 @@ function delete_all($del="del") {
 # СТРАНИЦЫ =================
 function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pid=0) {
   global $module, $prefix, $db, $red, $new, $pid, $redaktor, $toolbars, $geo, $kolkey, $title_razdel_and_bd, $siteurl;
-  include("ad-header.php");
+  include("ad/ad-header.php");
   $id = intval ($id);
   $cid = 0;
   if ( $page_id > 0 ) { // Если это редактирование

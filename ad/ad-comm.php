@@ -8,7 +8,7 @@ if ($realadmin==1) {
     ##################################################################################################
     function base_comments($name=0, $cid=0, $pid=0) {
         global $prefix, $db, $bgcolor1, $bgcolor2, $spisoknum, $bgcolor3, $bgcolor4, $p;
-        include("ad-header.php");
+        include("ad/ad-header.php");
         $lim = 50; // Настройка кол-ва выводимых комментариев.
         $offset = $p * $lim;
         // Определяем все разделы // --- Доработать - взять всё из mainfile !!!
@@ -145,7 +145,7 @@ if ($realadmin==1) {
         $comm_act = $row['active'];
         $comm_drevo = $row['drevo'];
         $comm_ip = $row['ip'];
-        include("ad-header.php");
+        include("ad/ad-header.php");
         echo "<h1>Редактирование комментария № $cid</h1>";
         echo "<form method=\"POST\" action=\"sys.php\" enctype=\"multipart/form-data\">
         <table width=100%><tr valign=top><td>

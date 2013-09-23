@@ -42,14 +42,14 @@ function papka_show(cid, name, sort, id, xxx) {
 	}
 }
 function papka(cid, sort, id, xxx) {
-	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'papka', 'id': id, 'string': cid+'*@%'+sort},
 	    beforeSend: function(){ $('#podpapka'+cid).html('<br><img src=images/loading.gif> Загрузка страниц и подпапок...'); },
 	    success: function(data){ $('#podpapka'+cid).html(data); }
 	});
 }
 function show_pole(id, page_id, razdel, cid) {
-	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'show_pole', 'id': id, 'string': razdel+'*@%'+page_id+'*@%'+cid},
 	    beforeSend: function(){ $('#pole').html('<br><img src=images/loading.gif> Загрузка...'); },
 	    success: function(data){ $('#pole').html(data); }
@@ -66,21 +66,21 @@ function show_otvet_comm(cid, name, mail, mod) {
 	}
 }
 function new_otvet(type, id, sender, info, mail, mod) {
-	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'comm_otvet', 'id': id, 'type': type, 'string': sender+'*@%'+info+'*@%'+mail+'*@%'+mod},
 	    beforeSend: function(){ $('#otvet_send'+id).html('<img src=images/loading.gif> Отправляю ответ...'); },
 	    success: function(data){ $('#otvet_send'+id).html('<span class=h1>'+icon('green medium','c')+data+'</span>'); }
 	});
 }
 function trash_pics() {
-	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'trash_pics'},
 	    beforeSend: function(){ $('#show_options_oldfotos').html('<br><img src=images/loading.gif> Загружаю список фотографий...'); },
 	    success: function(data){ $('#show_options_oldfotos').html(data); }
 	});
 }
 function replace(id) {
-	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'replace', 'id': id},
 	    beforeSend: function(){ $('#pid'+id).html('<br><img src=images/loading.gif> Загрузка функций копирования/перемещения и создания ярлыков...'); },
 	    success: function(data){ $('#pid'+id).html(data); }
@@ -100,7 +100,7 @@ function oformlenie_show(title,id,type,link) {
 	select_button(id);
 	if (id!=2) txt = '<a class="button green" style="margin-top:4px;margin-bottom:10px;" target="_blank" href='+link+'#1> '+icon('white small','+')+' Добавить '+title+'</a> ';
 	else txt = '<span class=h2>Удаленное оформление</span><p>При удалении объекта оформления, он попадает в «Удаленное оформление» для окончательного удаления или восстановления.<p>'+icon('red small','F')+' <a href=sys.php?op=delete_all&del=design>Очистить Удаленное</a>';
-	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'oformlenie_show', 'type': type },
 	    beforeSend: function(){ $('#podrazdel').html( txt + '<br><img src=images/loading.gif> Загрузка...' ); },
 	    success: function(data){ $('#podrazdel').html( txt + data ); }
@@ -128,7 +128,7 @@ function icon(classes,data) {
 	return '<span class="icon '+classes+'" data-icon="'+data+'" style="display: inline-block; "><span aria-hidden="true">'+data+'</span></span>';
 }
 function razdel(id, sort, re, txt) {
-	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'razdel', 'id': id, 'string': re+'*@%'+sort},
 	    beforeSend: function(){ $('#podrazdel').html('<br><img src=images/loading.gif> Загрузка страниц и папок раздела...'); },
 	    success: function(data){ $('#podrazdel').html(txt + data + '<hr>'); }
@@ -136,7 +136,7 @@ function razdel(id, sort, re, txt) {
 }
 function add_papka(id,pages) {
 	if (pages==0) pages = 'add_papka'; else pages = 'add_pages';
-	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': pages, 'id': id},
 	    beforeSend: function(){ $('#add_papka').toggle(); $('#add_papka').html('<br><img src=images/loading.gif> Загрузка списка папок раздела...'); },
 	    success: function(data){ $('#add_papka').html(data); }
@@ -144,13 +144,13 @@ function add_papka(id,pages) {
 }
 function save_papka(id,title,parent,name,pages) {
 	if (pages==0) pages = 'addpapka'; else pages = 'addpages';
-	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': pages, 'id': id, 'string': title+'*@%'+parent },
 	    success: function(data){ razdel_show(data,id,name,'pages',(Math.floor( Math.random() * (100000 - 9) ) + 10)); }
 	});
 }
 function offpage(id,on) {
-	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'offpage', 'id': id },
 	    success: function(data){
 	    	if (on == 1) $('#1page'+id).html('<td colspan=4 class="notice success"><h2 class=center>Страница включена</h2></td>');
@@ -169,78 +169,78 @@ function openbox(id,name) {
 	if (name == 'Резервные копии') add = 'При редактировании страниц создаются их копии для восстановления при необходимости. Внимание: восстанавливая предыдущий вариант страницы, вы заменяете новый!<br><a href="sys.php?op=delete_all&del=backup" style="margin-left: 20px;" class="gray nothing">'+icon('red small','F')+'Удалить все копии</a><br><br>';
 	if (name == 'Добавленное посетителями') add = 'Эти страницы нуждаются в проверке и включении.<br><br>';
 	if (name == 'Новое и отредактированное') add = 'История последних изменений<br><br>';
-	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'opengarbage', 'id': id},
 	    beforeSend: function(){ $('#podrazdel').html('<h1><img src=images/loading.gif> Загружаю...</h1>'); },
 	    success: function(data){ $('#podrazdel').html('<h1>'+name+'</h1>'+add+data); $('#podrazdel').show(); }
 	});
 }
 function delslovo(id) {
-	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'delslovo', 'id': id},
 	    beforeSend: function(){ $('#s_'+id).html(' <img src=images/loading.gif> Удаляю...'); },
 	    success: function(data){ $('#s_'+id).html(' <b class=green>Удалено</b>'); }
 	});
 }
 function delpage(id) {
-	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'delpage', 'id': id}
 	});
 	$('#page'+id).hide();
 	$('#1page'+id).hide();
 }
 function deletepage(id) {
-	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'deletepage', 'id': id}
 	});
 	$('#delpage'+id).hide();
 	$('#backuppage'+id).hide();
 }
 function resetpage(id) {
-	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'resetpage', 'id': id }
 	});
 	$('#delpage'+id).html('<td colspan=3 class="notice success"><h2 class=center>Страница успешно восстановлена</h2></td>');
 	$('#backuppage'+id).html('<td colspan=3 class="notice success"><h2 class=center>Оригинал страницы заменен на резервную копию</h2></td>');
 }
 function delcomm(id) {
-	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'delcomm', 'id': id },
 	    beforeSend: function(){ $('#1comm'+id).hide(); $('#comm'+id).hide(); },
 	});
 }
 function del_file(file, id) {
-	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'delfile', 'type': file },
 	    beforeSend: function(){ $('#file'+id).html('<img src=images/loading.gif> Удаляю...'); },
 	    success: function(data){ $('#file'+id).hide(); }
 	});
 }
 function delblock(id,type) {
-	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'delblock', 'id': id, 'type': type },
 	    beforeSend: function(){ $('#block_'+id).hide(); },
 	});
 }
 function offblock(id) {
-	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'offblock', 'id': id },
 	    success: function(data){ $('#block_'+id).html(data); }
 	});
 }
 function offcomm(id) {
-	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'offcomm', 'id': id },
 	    success: function(data){ $('#1comm'+id).html(data); $('#comm'+id).hide(); }
 	});
 }
 function delrazdel(id) {
-	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'delrazdel', 'id': id }
 	});
 }
 function rep(id,type,razdel,papka) {
-	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'rep', 'type': type, 'id': id, 'string': papka+'*@%'+razdel },
 	    beforeSend: function(){ $('#rep'+id).html('<img src=images/loading.gif> Секундочку...'); },
 	    success: function(data){ $('#rep'+id).html(data); if (type == 3) $('#page'+id).hide('slow'); }
@@ -250,14 +250,14 @@ function clo(pid) {
 	document.getElementById('pid'+pid).innerHTML = '';
 }
 function izmenapapka(select,papka,this_cid,id,type) {
-	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'izmenapapka', 'id': id, 'type': type, 'string': select+'*@%'+papka+'*@%'+this_cid },
 	    beforeSend: function(){ $('#izmenapapka'+id).html('<img src=images/loading.gif> Загружаю...'); },
 	    success: function(data){ $('#izmenapapka'+id).html(data); }
 	});
 }
 function delpapka(id) {
-	$.ajax({ url: 'a-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'delpapka', 'id': id },
 	    beforeSend: function(){ $('#cid'+id).hide(); }
 	});

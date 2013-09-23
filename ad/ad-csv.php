@@ -11,7 +11,7 @@ if ($realadmin==1) {
 
 function txt_and_csv_main() {
 	global $prefix, $db;
-	include("ad-header.php");
+	include("ad/ad-header.php");
 	$result = $db->sql_query("SELECT * FROM ".$prefix."_txt_and_csv where file_id = '0'") or die('<center>База импорта не установлена. <a href="sys.php?op=txt_and_csv_install">Установить</a>.</center>');
 	echo "<script>
 	$(document).ready(function(){ 
@@ -118,7 +118,7 @@ function start_txt_and_csv() {
 	$id= $_GET["id"];
 	$znak = $_POST["znak"];
 	$cat = $_POST["modul"];
-	include("ad-header.php");
+	include("ad/ad-header.php");
 	echo tools_menu().'<br>';
 	$result = $db->sql_query("SELECT file FROM ".$prefix."_txt_and_csv where id = '$id'") or die('<center>Ошибка</center>');
 	$row = $db->sql_fetchrow($result);
@@ -163,7 +163,7 @@ function step2_txt_and_csv() {
 	$znak = $_GET["znak"];
 	$cat = $_GET["cat"];
 	$stroka = $_POST["stroka"];
-	include("ad-header.php");
+	include("ad/ad-header.php");
 	echo tools_menu().'<br>';
 	$active = '1'; // все страницы будут включенны
 	$rss = '1'; // доступно по RSS

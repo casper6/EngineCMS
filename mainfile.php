@@ -166,7 +166,7 @@
   $project_name = filter($project_name);
 
 // Настройки второго редактора
-if ($ed2_button_html == "" && $ed2_button_bold == "" && $ed2_button_link == "") $ed2_button_html=$ed2_button_formatting=$ed2_button_bold=$ed2_button_italic=$ed2_button_deleted=$ed2_button_underline=$ed2_button_unorderedlist=$ed2_button_orderedlist=$ed2_button_outdent=$ed2_button_indent=$ed2_button_image=$ed2_button_video=$ed2_button_file=$ed2_button_table=$ed2_button_link=$ed2_button_alignment=$ed2_button_horizontalrule=$ed2_button_more=$ed2_button_fullscreen=$ed2_button_clips = " checked";
+if ($ed2_button_html == "" && $ed2_button_bold == "" && $ed2_button_link == "") $ed2_button_html = $ed2_button_formatting = $ed2_button_bold = $ed2_button_italic = $ed2_button_deleted = $ed2_button_unorderedlist = $ed2_button_orderedlist = $ed2_button_image = $ed2_button_video = $ed2_button_file = $ed2_button_table = $ed2_button_link = $ed2_button_alignment = $ed2_button_horizontalrule = $ed2_button_fullscreen = $ed2_button_clips = " checked";
   if ($ed2_direction == "") $ed2_direction = "ltl";
   if ($ed2_minHeight == "") $ed2_minHeight = "300";
   if ($ed2_button_html == "1") $ed2_button_html = " checked";

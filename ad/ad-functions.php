@@ -5,7 +5,7 @@ function page_admin($txt, $pid) { // добавление функций адм�
   if ( $pid > 0 ) $red = "
 <script>
 function delpage(id) {
-  $.ajax({ url: 'a-ajax.php', cache: false, dataType : 'html',
+  $.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : 'html',
       data: {'func': 'delpage', 'id': id}
   });
   $('#redact').html('Страница удалена в Корзину.');
@@ -420,9 +420,17 @@ function redactor($type, $txt, $name, $name2="", $style="html", $return="echo") 
           }, 
           mobile: true, 
           observeImages: true, 
+          observeLinks: true,
+          tabSpaces: 4, 
+          boldTag: 'b',
+          italicTag: 'i',
+          linkEmail: true,
+          linkAnchor: true,
+          deniedTags: ['html', 'head', 'body', 'meta', 'applet'],
           ".$red4_div_convert." 
           imageUpload: 'ed2/image_upload.php', 
           fileUpload: 'ed2/file_upload.php', 
+          convertVideoLinks: true, 
           clipboardUploadUrl: 'ed2/clipboard_upload.php', 
           lang: '".$lang_admin."', 
           minHeight: ".$ed2_minHeight.",
