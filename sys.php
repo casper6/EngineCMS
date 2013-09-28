@@ -298,7 +298,8 @@ function GraphicAdmin() {
 			$right = $type_opisX;
 			$ico = "D";
 			$reaction = "razdel_show(\"\", ".$id.", \"".$nam."\", \"database\");";
-		} elseif (strpos(" ".$useit, aa("[содержание]")) || strpos(" ".$useit, aa("[страницы]"))) {
+		} elseif (strpos(" ".$useit, aa("[содержание]")) || strpos(" ".$useit, aa("[страницы]")) 
+			|| strpos(" ".$useit, "[содержание]") || strpos(" ".$useit, "[страницы]")) { // эту строчку можно будет убрать
 			$right = $type_opisX;
 			$ico = ",";
 			$reaction = "razdel_show(\"\", ".$id.", \"".$nam."\", \"".$text."\");";

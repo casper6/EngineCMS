@@ -382,186 +382,180 @@ function showcat($cid=0, $pag=0, $slovo="") {
 
   $slovo = str_replace(" ","%",str_replace("  "," ",trim(trim(strip_tags(urldecode(str_replace( "-","%", $slovo)))))));
   $ANDDATA="";
-  //$soderganieOPEN = "<table class=all_page width=100%><tr><td>";
-  ###################
 
-  if (!is_admin($admin)) { // Счетчик
-  $db->sql_query("UPDATE ".$prefix."_mainpage SET counter=counter+1 WHERE `tables`='pages' and name='".$DBName."' and type='2'");
-  }
+  if (!is_admin($admin)) // Счетчик
+    $db->sql_query("UPDATE ".$prefix."_mainpage SET `counter`=`counter`+1 WHERE `tables`='pages' and `name`='".$DBName."' and `type`='2'");
 
   if ($base=="") { // Если это не база данных
-  $offset = $pag * $lim * $limkol;
-  $lim2 = $lim * $limkol;
-  ###############################################################################################
-  ################### Главная страница НЕМЕДИЙНОГО содержания
-  $cid = mysql_real_escape_string($cid);
-  // Генерация облака тегов
-  $tagcloud = "";
-  if ($tags_type != 0) {
-  // Откуда будем добывать теги...
-    if ($tags_type == 1) { $and = ""; $link_tag = "/--slovo_"; } // ИЗ всех разделов портала
-    if ($tags_type == 2) { $and = " and `module`='".$DBName."'"; $link_tag = "/-".$DBName."_slovo_"; } // ИЗ текущего раздела
-    if ($tags_type == 3) { $and = " and `cid`='".$cid."' and `module`='".$DBName."'"; $link_tag = "/-".$DBName."_cat_".$cid."_slovo_"; } // ИЗ текущей папки раздела
-      $tagss = array();
-      $sql = "select `search` from ".$prefix."_pages where `tables`='pages' and (`copy`='0' or `copy`=pid) and `active`='1'".$and;
-      $result = $db->sql_query($sql);
-      while ($row = $db->sql_fetchrow($result)) {
-        if (trim($row['search']) != "") {
-        $tag = array();
-        $tag = explode(" ",trim(str_replace("  "," ",$row['search'])));
-          foreach ($tag as $tag1) {
-            if (trim($tag1) != "" and strlen($tag1)>2 ) {
-              $tagss[] = trim($tag1);
+    $offset = $pag * $lim * $limkol;
+    $lim2 = $lim * $limkol;
+    ################### Главная страница НЕМЕДИЙНОГО содержания
+    $cid = mysql_real_escape_string($cid);
+    // Генерация облака тегов
+    $tagcloud = "";
+    if ($tags_type != 0) {
+    // Откуда будем добывать теги...
+      if ($tags_type == 1) { $and = ""; $link_tag = "/--slovo_"; } // ИЗ всех разделов портала
+      if ($tags_type == 2) { $and = " and `module`='".$DBName."'"; $link_tag = "/-".$DBName."_slovo_"; } // ИЗ текущего раздела
+      if ($tags_type == 3) { $and = " and `cid`='".$cid."' and `module`='".$DBName."'"; $link_tag = "/-".$DBName."_cat_".$cid."_slovo_"; } // ИЗ текущей папки раздела
+        $tagss = array();
+        $sql = "select `search` from ".$prefix."_pages where `tables`='pages' and (`copy`='0' or `copy`=pid) and `active`='1'".$and;
+        $result = $db->sql_query($sql);
+        while ($row = $db->sql_fetchrow($result)) {
+          if (trim($row['search']) != "") {
+          $tag = array();
+          $tag = explode(" ",trim(str_replace("  "," ",$row['search'])));
+            foreach ($tag as $tag1) {
+              if (trim($tag1) != "" and strlen($tag1)>2 ) {
+                $tagss[] = trim($tag1);
+              }
             }
           }
         }
-      }
-    $tagss = array_count_values($tagss);
-    $tags2 = array_unique($tagss);
-    rsort($tags2);
-    $razmer = 0;
-    $tags3 = array();
-    $tags4 = array();
-      foreach ($tags2 as $tag1) {
-        if ($razmer == 0) { $tags3[$tag1] = "14"; $tags4[$tag1] = "#000000"; }
-        if ($razmer == 1) { $tags3[$tag1] = "13"; $tags4[$tag1] = "#363636"; }
-        if ($razmer == 2) { $tags3[$tag1] = "12"; $tags4[$tag1] = "#555555"; }
-        if ($razmer == 3) { $tags3[$tag1] = "11"; $tags4[$tag1] = "#707070"; }
-        if ($razmer > 3) { $tags3[$tag1] = "10"; $tags4[$tag1] = "#898989"; }
-        if ($razmer > 4) { $tags3[$tag1] = "9"; $tags4[$tag1] = "#a1a1a1"; }
-        $razmer++;
-      }
-      
-          if ($tags_show == 1) $tagcloud = $tag_text_show."<br>";
-          else $tagcloud = "<a onclick=\"show('tags')\" style=\"cursor:pointer;\"><u>".$tag_text_show."</u></a><br><div id='tags' style='display:none;'>";
-          $tag_kol = 0;
-          foreach ($tagss as $tag_name => $tag_col) {
-            if ($tags3[$tag_col] != "1") {
-              $tagcloud .= "<a class='slovo' href='".$link_tag.str_replace( "%","-", urlencode( $tag_name ) )."' style='color:".$tags4[$tag_col]."; font-size: ".$tags3[$tag_col]."pt;'>".str_replace("+","&nbsp;",$tag_name)."</a> "; //  class='slovo' title='$tag_col темы' rel=\"tag nofollow\"
-              $tag_kol++;
+      $tagss = array_count_values($tagss);
+      $tags2 = array_unique($tagss);
+      rsort($tags2);
+      $razmer = 0;
+      $tags3 = array();
+      $tags4 = array();
+        foreach ($tags2 as $tag1) {
+          if ($razmer == 0) { $tags3[$tag1] = "14"; $tags4[$tag1] = "#000000"; }
+          if ($razmer == 1) { $tags3[$tag1] = "13"; $tags4[$tag1] = "#363636"; }
+          if ($razmer == 2) { $tags3[$tag1] = "12"; $tags4[$tag1] = "#555555"; }
+          if ($razmer == 3) { $tags3[$tag1] = "11"; $tags4[$tag1] = "#707070"; }
+          if ($razmer > 3) { $tags3[$tag1] = "10"; $tags4[$tag1] = "#898989"; }
+          if ($razmer > 4) { $tags3[$tag1] = "9"; $tags4[$tag1] = "#a1a1a1"; }
+          $razmer++;
+        }
+        
+            if ($tags_show == 1) $tagcloud = $tag_text_show."<br>";
+            else $tagcloud = "<a onclick=\"show('tags')\" style=\"cursor:pointer;\"><u>".$tag_text_show."</u></a><br><div id='tags' style='display:none;'>";
+            $tag_kol = 0;
+            foreach ($tagss as $tag_name => $tag_col) {
+              if ($tags3[$tag_col] != "1") {
+                $tagcloud .= "<a class='slovo' href='".$link_tag.str_replace( "%","-", urlencode( $tag_name ) )."' style='color:".$tags4[$tag_col]."; font-size: ".$tags3[$tag_col]."pt;'>".str_replace("+","&nbsp;",$tag_name)."</a> "; //  class='slovo' title='$tag_col темы' rel=\"tag nofollow\"
+                $tag_kol++;
+              }
             }
-          }
-          if ($tags_show == 1) $tagcloud .= "<br>";
-          else $tagcloud .= "<br></div>";
-      if ($tag_kol == 0) $tagcloud = "";
-  }
-  //////////////////////////////////////////////////////
-  $slovo = strtolow($slovo);
-  if (trim($slovo) != "") {
+            if ($tags_show == 1) $tagcloud .= "<br>";
+            else $tagcloud .= "<br></div>";
+        if ($tag_kol == 0) $tagcloud = "";
+    }
+
+    $slovo = strtolow($slovo);
+    if (trim($slovo) != "") {
       $tag_slovo = ss("<b>Выбрано</b> ключевое слово:")." <b>".str_replace("+","&nbsp;",$slovo)."</b>.<br>".ss("Показаны только страницы, содержащие это слово.")."<br>"; 
       $and_1_3 = " and `search` LIKE '% ".mysql_real_escape_string($slovo)." %'";
       $offset = 0;
       $lim2 = 1000;
-      } else {
+    } else {
       $tag_slovo = "";
       $and_1_3 = "";
+    }
+    $soderganieALL = "";
+    //////////////////////////////////////////////////////
+    if ($cid == 0 and $view!=2) {
+      if ($menushow != 0) $soderganieMENU = top_menu($cid, 0);
+      if (!isset($soderganieALL)) $soderganieALL = "";
+      $soderganieALL .= $tagcloud.$tag_slovo;
+      # Если не выбран ни один каталог
+
+      if ($div_or_table == 0) {
+        if ($view==1) $soderganieALL .= "<table cellspacing=0 cellpadding=3 width=100%>";
+        else $soderganieALL .= "<table cellspacing=0 cellpadding=3 width=100%>";
       }
-  $soderganieALL = "";
-  //////////////////////////////////////////////////////
-  if ($cid == 0 and $view!=2) {
-    if ($menushow != 0) $soderganieMENU = top_menu($cid, 0);
-    if (!isset($soderganieALL)) $soderganieALL = "";
-    $soderganieALL .= $tagcloud.$tag_slovo;
-    # Если не выбран ни один каталог
-
-    if ($div_or_table == 0) {
-      if ($view==1) $soderganieALL .= "<table cellspacing=0 cellpadding=3 width=100%>";
-      else $soderganieALL .= "<table cellspacing=0 cellpadding=3 width=100%>";
+      $and_1_1 = "";
+      $and_1_2 = "";
+    } else {
+      $and_1_1 = " and `cid`='".$cid."'";
+      $and_1_2 = $ANDDATA;
+      if ($menushow != 0) $soderganieMENU = top_menu($cid, 1);
+      $soderganieALL .= $tagcloud;
     }
-    $and_1_1 = "";
-    $and_1_2 = "";
-  } else {
-    $and_1_1 = " and `cid`='".$cid."'";
-    $and_1_2 = $ANDDATA;
-    if ($menushow != 0) $soderganieMENU = top_menu($cid, 1);
-    $soderganieALL .= $tagcloud;
-  }
 
-  // Список всех каталогов (массив)
-  $c_name = array();
-  //$c_pic = array();
-  $sql = "SELECT `cid`, `title` FROM ".$prefix."_pages_categories where `module`='".$DBName."' and `tables`='pages' and `cid`!='0' order by `sort`, `title`";
-  $result = $db->sql_query($sql);
-  while ($row = $db->sql_fetchrow($result)) {
-    $x_cid = $row['cid'];
-    $c_name[$x_cid] = $row['title'];
-    if ($cid == $x_cid) { // ? может убрать?
-      $cid_title = $row['title'];
+    // Список всех каталогов (массив)
+    $c_name = array();
+    //$c_pic = array();
+    $sql = "SELECT `cid`, `title` FROM ".$prefix."_pages_categories where `module`='".$DBName."' and `tables`='pages' and `cid`!='0' order by `sort`, `title`";
+    $result = $db->sql_query($sql);
+    while ($row = $db->sql_fetchrow($result)) {
+      $x_cid = $row['cid'];
+      $c_name[$x_cid] = $row['title'];
+      if ($cid == $x_cid) { // ? может убрать?
+        $cid_title = $row['title'];
+      }
     }
-  }
 
-  $and_1_4 = "";
-  if ($view==6 and $cid == 0) $and_1_4 = " and `cid`='0'";
+    $and_1_4 = "";
+    if ($view==6 and $cid == 0) $and_1_4 = " and `cid`='0'";
 
-  #####################
-  $sql2 = "SELECT `pid` FROM ".$prefix."_pages where `tables`='pages' and `module`='".$DBName."'".$and_1_1." AND (`active`='1' or `active`='2')".$and_1_2.$and_1_3.$and_1_4;
-  $result2 = $db->sql_query($sql2);
-  $nu = $db->sql_numrows($result2);
+    $sql2 = "SELECT `pid` FROM ".$prefix."_pages where `tables`='pages' and `module`='".$DBName."'".$and_1_1." AND (`active`='1' or `active`='2')".$and_1_2.$and_1_3.$and_1_4;
+    $result2 = $db->sql_query($sql2);
+    $nu = $db->sql_numrows($result2);
 
-  $sql2 = "SELECT * FROM ".$prefix."_pages where `tables`='pages' and `module`='".$DBName."'".$and_1_1." AND (`active`='1' or `active`='2')".$and_1_2.$and_1_3.$and_1_4." ORDER BY ".$sort." limit ".mysql_real_escape_string($offset).",".mysql_real_escape_string($lim2);
-  $result2 = $db->sql_query($sql2);
+    $sql2 = "SELECT * FROM ".$prefix."_pages where `tables`='pages' and `module`='".$DBName."'".$and_1_1." AND (`active`='1' or `active`='2')".$and_1_2.$and_1_3.$and_1_4." ORDER BY ".$sort." limit ".mysql_real_escape_string($offset).",".mysql_real_escape_string($lim2);
+    $result2 = $db->sql_query($sql2);
 
-  $proc = intval(100 / $limkol);
-  $soderganieALL2 = "";
-  if ($limkol > 1) $soderganieALL2 = "<tr valign='top'><td width='".$proc."%'>";
-  $limkol_num = 0;
-  $kol_num = 0;
+    $proc = intval(100 / $limkol);
+    $soderganieALL2 = "";
+    if ($limkol > 1) $soderganieALL2 = "<tr valign='top'><td width='".$proc."%'>";
+    $limkol_num = 0;
+    $kol_num = 0;
 
     global $tema_name, $tema_title;
     $p_pid_last = 0; // последняя категория (для форума)
     if ($comments == 1) $colspan = 4; else $colspan = 3; // количество ячеек таблицы (для форума)
 
-  if ($nu >0 and $view==4 and $cid != 0) {
-    $soderganieALL = "<div class='venzel'></div>
-    <table cellspacing='0' cellpadding='0' width='100%'><tr valign='top'><td>".$tema_title."</td>";
-    if ( $tema_name != "no" ) $soderganieALL .= "<td class='reiting_text'>".$tema_name."</td>"; else $soderganieALL .= "<td></td>";
-    $soderganieALL .= "<td align='center'>".ss("Средний балл")."</td><td align='center'>".ss("Всего голосов")."</td><td align='center'>+</td><td align='center'>?</td><td align='center'>-</td></tr>";
-  }
-  $numm = 0;
+    if ($nu >0 and $view==4 and $cid != 0) {
+      $soderganieALL = "<div class='venzel'></div>
+      <table cellspacing='0' cellpadding='0' width='100%'><tr valign='top'><td>".$tema_title."</td>";
+      if ( $tema_name != "no" ) $soderganieALL .= "<td class='reiting_text'>".$tema_name."</td>"; else $soderganieALL .= "<td></td>";
+      $soderganieALL .= "<td align='center'>".ss("Средний балл")."</td><td align='center'>".ss("Всего голосов")."</td><td align='center'>+</td><td align='center'>?</td><td align='center'>-</td></tr>";
+    }
+    $numm = 0;
 
   if ($nu > 0) { //  and $view != 4
-
-  if ($razdel_shablon == 0) { // Если используются внутренние шаблоны
-    // Получаем шаблон
-    $sha = shablon_show("razdel", $view);
-    $add_css = " razdel_".$view;
-  } else {
-    // Доступ к шаблону
-    $sql = "select `text` from ".$prefix."_mainpage where `tables`='pages' and `id`='".mysql_real_escape_string($razdel_shablon)."' and `type`='6'";
-    $result = $db->sql_query($sql);
-    $row = $db->sql_fetchrow($result);
-    $sha_first = "";
-    $sha = explode(aa("[следующий]"),$row['text']);
-    if (isset($sha[1])) $sha_first = $sha[1];
-    else $sha_first = "";
-    $sha = $sha[0];
-    //$add_css .= " razdel_".$row['text'];
-    
-      // Ищем списки (доп. поля), относящиеся к нашим страницам по модулю
-      $s_names = array();
-      $s_opts = array();
-      // Определим № раздела
-      $sql = "select `id` from ".$prefix."_mainpage where `tables`='pages' and name='".$DBName."' and type='2'";
-      $result7 = $db->sql_query($sql);
-      $row7 = $db->sql_fetchrow($result7);
-      $r_id = mysql_real_escape_string($row7['id']);
-      $result5 = $db->sql_query("SELECT `id`, `name`, `text` FROM ".$prefix."_mainpage WHERE `tables`='pages' and (`useit` = '".$r_id."' or `useit` = '0') and `type`='4'");
-      while ($row5 = $db->sql_fetchrow($result5)) {
-        $s_id = $row5['id'];
-        $n = $row5['name'];
-        $s_names[$s_id] = $n;
-        // Найдем значение всех полей для данных страниц
-        $result6 = $db->sql_query("SELECT `name`, `pages` FROM ".$prefix."_spiski WHERE type='".mysql_real_escape_string($n)."'");
-        while ($row6 = $db->sql_fetchrow($result6)) {
-          $n1 = $row6['name'];
-          $n2 = explode(" ", str_replace("  ", " ", trim($row6['pages'])));
-          foreach ($n2 as $n2_1 => $n2_2) {
-            $s_opts[$n][$n2_2] = $n1;
+    if ($razdel_shablon == 0) { // Если используются внутренние шаблоны
+      // Получаем шаблон
+      $sha = shablon_show("razdel", $view);
+      $add_css = " razdel_".$view;
+    } else {
+      // Доступ к шаблону
+      $sql = "select `text` from ".$prefix."_mainpage where `tables`='pages' and `id`='".mysql_real_escape_string($razdel_shablon)."' and `type`='6'";
+      $result = $db->sql_query($sql);
+      $row = $db->sql_fetchrow($result);
+      $sha_first = "";
+      $sha = explode(aa("[следующий]"),$row['text']);
+      if (isset($sha[1])) $sha_first = $sha[1];
+      else $sha_first = "";
+      $sha = $sha[0];
+      //$add_css .= " razdel_".$row['text'];
+      
+        // Ищем списки (доп. поля), относящиеся к нашим страницам по модулю
+        $s_names = array();
+        $s_opts = array();
+        // Определим № раздела
+        $sql = "select `id` from ".$prefix."_mainpage where `tables`='pages' and name='".$DBName."' and type='2'";
+        $result7 = $db->sql_query($sql);
+        $row7 = $db->sql_fetchrow($result7);
+        $r_id = mysql_real_escape_string($row7['id']);
+        $result5 = $db->sql_query("SELECT `id`, `name`, `text` FROM ".$prefix."_mainpage WHERE `tables`='pages' and (`useit` = '".$r_id."' or `useit` = '0') and `type`='4'");
+        while ($row5 = $db->sql_fetchrow($result5)) {
+          $s_id = $row5['id'];
+          $n = $row5['name'];
+          $s_names[$s_id] = $n;
+          // Найдем значение всех полей для данных страниц // переделать
+          $result6 = $db->sql_query("SELECT `name`, `pages` FROM ".$prefix."_spiski WHERE type='".mysql_real_escape_string($n)."'");
+          while ($row6 = $db->sql_fetchrow($result6)) {
+            $n1 = $row6['name'];
+            $n2 = explode(" ", trim($row6['pages']));
+            foreach ($n2 as $n2_1 => $n2_2) {
+              $s_opts[$n][$n2_2] = $n1; // раздел страница поле
+            }
           }
         }
-      }
-  }
-  $color = 1;
+    }
+    $color = 1;
     
     // Получаем список всех индексов страниц для исключения копий
     $pid_s = array();
@@ -571,216 +565,216 @@ function showcat($cid=0, $pag=0, $slovo="") {
     }
     $result2 = $db->sql_query($sql2);
 
-    $copy_s = array();
-    while ($row2 = $db->sql_fetchrow($result2)) {
-    if ( ( $row2['copy'] == 0 or $row2['copy'] == $row2['pid'] or !in_array($row2['copy'], $pid_s) ) and !in_array($row2['copy'], $copy_s) ) {
-    if ($row2['copy'] != 0) $copy_s[] = $row2['copy'];
-    $numm++;
-      $p_pid = $row2['pid'];
-      $pсid = $row2['cid'];
-      if ($pсid!=0 and $cid == 0) $p_name="<div class='cat_page_cattitle'><a href='/-".$DBName."_cat_".$pсid."' class='cat_page_cattitle'>".$c_name[$pсid]."</a></div>"; else $p_name = "";
-      $title = stripcslashes($row2['title']);
-      $open_text = stripcslashes($row2['open_text']);
-      if (trim($open_text) == "<br><br>") $open_text = "";
-      $text = $row2['main_text'];
-      if (trim($text) == "<br><br>") $text = "";
-      $open_text = str_replace(aa("[заголовок]"),"",$open_text); // Убираем Заголовок, использованный в блоке!
-      // Добавление табов
-      if (strpos(" ".$open_text, "{{")) {
-        global $include_tabs;
-        if ($include_tabs == false) { include ('page/tabs.php'); $include_tabs = true; }
-        if (strpos(" ".$open_text, "{{")) $open_text = show_tabs($open_text);
-      }
-      $p_comm = $row2['comm'];
-      $p_active = $row2['active'];
-      $p_counter = $row2['counter'];
-      $dat = explode(" ",$row2['date']);
-      $dat = explode("-",$dat[0]);
-      $p_date = intval($dat[2])." ".findMonthName($dat[1])." ".$dat[0];
-      $p_date_1 = $dat[2]." ".$dat[1]." ".$dat[0];
-      $date_now = date("d m Y");
-      $date_now2 = date("d m Y",time()-86400);
-      $date_now3 = date("d m Y",time()-172800);
-      if ($date_now == $p_date_1) $p_date = ss("Сегодня");
-      if ($date_now2 == $p_date_1) $p_date = ss("Вчера");
-      if ($date_now3 == $p_date_1) $p_date = ss("Позавчера");
-      $active = ss("Открытая информация");
-      $search = $row2['search'];
-      
-    $golos = $foto_adres = $foto = $price = $rss = ""; // обнуление
-    if ($golostype != 0) $golos = $row2['golos'];
-    if ($razdel_shablon > 0) {
-      switch ($p_active) {
-        case "1": $active = ss("Открытая информация");	break;
-        case "2": $active = ss("Информация ожидает проверки");	break;
-        case "3": $active = ss("Информация ожидает проверки администратора");	break;
-        case "0": $active = ss("Доступ к странице ограничен");	break;
-      }
-      //$foto_adres = $row2['foto'];
-      //$foto = "<img src='".$foto_adres."'>";
-      //$price = $row2['price']." ".ss("руб."); // или другая валюта!
-      $rss = $row2['rss'];
-      switch ($rss) {
-        case "1": $rss = "<a name='rss' title='".ss("Информация доступна через RSS-подписку")."' class='green_link'>RSS</a>"; break;
-        case "0": $rss = "<a name='rss' title='".ss("Информация не доступна через RSS-подписку")."' class='red_link'>RSS</a>"; break;
-      }
-    }
+      $copy_s = array();
+      while ($row2 = $db->sql_fetchrow($result2)) {
+        if ( ( $row2['copy'] == 0 or $row2['copy'] == $row2['pid'] or !in_array($row2['copy'], $pid_s) ) and !in_array($row2['copy'], $copy_s) ) {
 
-    //if ($razdel_shablon == 0) { // Если используются внутренние шаблоны
-
-    $sred_golos = $all_golos = $sred_golos = $plus_golos = $neo_golos = $minus_golos = $active_color = "";
-    
-    if ($nu > 0 and $view==4 and $cid != 0) {
-      if ($color == 1) {
-        $active_color = " style='background-color: #f1f1f1;"; $color = 0; 
-      } else {
-        $active_color = " style='background-color: white;'"; $color = 1;
-      }
-      if ($p_active == 2) $active_color .= " color:gray;";
-      $active_color .= "'";
-      $p_pid = mysql_real_escape_string($p_pid);
-      $row3 = $db->sql_fetchrow($db->sql_query("select SUM(`golos`) i from ".$prefix."_pages_comments where `num`='".$p_pid."' and `active`='1'"));
-      $sred_golos = $row3['i'];
-      $all_golos = $db->sql_numrows($db->sql_query("SELECT `cid` FROM ".$prefix."_pages_comments WHERE `num`='".$p_pid."' and `active`='1'"));
-      $sred_golos = round($sred_golos/$all_golos, 2);
-      $plus_golos = $db->sql_numrows($db->sql_query("SELECT `cid` FROM ".$prefix."_pages_comments WHERE `num`='".$p_pid."' and `golos`='5' and `active`='1'"));
-      $neo_golos = $db->sql_numrows($db->sql_query("SELECT `cid` FROM ".$prefix."_pages_comments WHERE `num`='".$p_pid."' and `golos`='3' and `active`='1'"));
-      $minus_golos = $db->sql_numrows($db->sql_query("SELECT `cid` FROM ".$prefix."_pages_comments WHERE `num`='".$p_pid."' and `golos`='1' and `active`='1'"));
-    }
-
-      if ($view==1) { // ФОРУМ //////////////////////////////////////////////////////
-          if ($p_pid_last != $pсid and $pсid != 0) { 
-            $sha_first = "<tr valign='top'><td colspan='".$colspan."' class='cat_page_forum'>".$p_name."</td></tr><tr valign='top'>"; 
-            $p_pid_last = $pсid; 
+          if ($row2['copy'] != 0) $copy_s[] = $row2['copy'];
+          $numm++;
+          $p_pid = $row2['pid'];
+          $pсid = $row2['cid'];
+          $p_name = "";
+          if ($pсid!=0 and $cid == 0) 
+            $p_name="<div class='cat_page_cattitle'><a href='/-".$DBName."_cat_".$pсid."' class='cat_page_cattitle'>".$c_name[$pсid]."</a></div>";
+          $title = stripcslashes($row2['title']);
+          $open_text = stripcslashes($row2['open_text']);
+          if (trim($open_text) == "<br><br>") $open_text = "";
+          $text = $row2['main_text'];
+          if (trim($text) == "<br><br>") $text = "";
+          $open_text = str_replace(aa("[заголовок]"),"",$open_text); // Убираем Заголовок, использованный в блоке!
+          // Добавление табов
+          if (strpos(" ".$open_text, "{{")) {
+            global $include_tabs;
+            if ($include_tabs == false) { 
+              include ('page/tabs.php'); 
+              $include_tabs = true;
+            }
+            if (strpos(" ".$open_text, "{{")) $open_text = show_tabs($open_text);
           }
+          $p_comm = $row2['comm'];
+          $p_active = $row2['active'];
+          $p_counter = $row2['counter'];
+          $dat = explode(" ",$row2['date']);
+          $dat = explode("-",$dat[0]);
+          $p_date = intval($dat[2])." ".findMonthName($dat[1])." ".$dat[0];
+          $p_date_1 = $dat[2]." ".$dat[1]." ".$dat[0];
+          $date_now = date("d m Y");
+          $date_now2 = date("d m Y",time()-86400);
+          $date_now3 = date("d m Y",time()-172800);
+          if ($date_now == $p_date_1) $p_date = ss("Сегодня");
+          if ($date_now2 == $p_date_1) $p_date = ss("Вчера");
+          if ($date_now3 == $p_date_1) $p_date = ss("Позавчера");
+          $active = ss("Открытая информация");
+          $search = $row2['search'];
+            
+          $golos = $foto_adres = $foto = $price = $rss = ""; // обнуление
+          if ($golostype != 0) $golos = $row2['golos'];
+          if ($razdel_shablon > 0) {
+            switch ($p_active) {
+              case "1": $active = ss("Открытая информация");	break;
+              case "2": $active = ss("Информация ожидает проверки");	break;
+              case "3": $active = ss("Информация ожидает проверки администратора");	break;
+              case "0": $active = ss("Доступ к странице ограничен");	break;
+            }
+            //$foto_adres = $row2['foto'];
+            //$foto = "<img src='".$foto_adres."'>";
+            //$price = $row2['price']." ".ss("руб."); // или другая валюта!
+            $rss = $row2['rss'];
+            switch ($rss) {
+              case "1": $rss = "<a name='rss' title='".ss("Информация доступна через RSS-подписку")."' class='green_link'>RSS</a>"; break;
+              case "0": $rss = "<a name='rss' title='".ss("Информация не доступна через RSS-подписку")."' class='red_link'>RSS</a>"; break;
+            }
+          }
+          $sred_golos = $all_golos = $sred_golos = $plus_golos = $neo_golos = $minus_golos = $active_color = "";
           
+          if ($nu > 0 and $view==4 and $cid != 0) {
+            if ($color == 1) {
+              $active_color = " style='background-color: #f1f1f1;"; $color = 0; 
+            } else {
+              $active_color = " style='background-color: white;'"; $color = 1;
+            }
+            if ($p_active == 2) $active_color .= " color:gray;";
+            $active_color .= "'";
+            $p_pid = mysql_real_escape_string($p_pid);
+            $row3 = $db->sql_fetchrow($db->sql_query("select SUM(`golos`) i from ".$prefix."_pages_comments where `num`='".$p_pid."' and `active`='1'"));
+            $sred_golos = $row3['i'];
+            $all_golos = $db->sql_numrows($db->sql_query("SELECT `cid` FROM ".$prefix."_pages_comments WHERE `num`='".$p_pid."' and `active`='1'"));
+            $sred_golos = round($sred_golos/$all_golos, 2);
+            $plus_golos = $db->sql_numrows($db->sql_query("SELECT `cid` FROM ".$prefix."_pages_comments WHERE `num`='".$p_pid."' and `golos`='5' and `active`='1'"));
+            $neo_golos = $db->sql_numrows($db->sql_query("SELECT `cid` FROM ".$prefix."_pages_comments WHERE `num`='".$p_pid."' and `golos`='3' and `active`='1'"));
+            $minus_golos = $db->sql_numrows($db->sql_query("SELECT `cid` FROM ".$prefix."_pages_comments WHERE `num`='".$p_pid."' and `golos`='1' and `active`='1'"));
+          }
+
+          if ($view==1) { // ФОРУМ //////////////
+            if ($p_pid_last != $pсid and $pсid != 0) { 
+              $sha_first = "<tr valign='top'><td colspan='".$colspan."' class='cat_page_forum'>".$p_name."</td></tr><tr valign='top'>";
+              $p_pid_last = $pсid; 
+            }
             if ($comments==1) {
               if ($p_comm>0) $p_comm = "".$p_comm." ".ss("комм.");
               else $p_comm = "<a href='/-".$DBName."_page_".$p_pid."#comm'>".ss("Добавить комментарий")."</a>";
             } else $p_comm = "";
+          } elseif ($view!=4) { /////////////////////////////////	<div class=cat_page></div>
+            if (trim($open_text)!="" and $tema_title != "no") $open_text = "<div class='cat_page_text'>".$open_text."</div>"; else $open_text = "";
+            if ($pсid>0 and $c_name[$pсid]!="") $all_cat_link = "<nobr><img width='16' src='/images/sys/papka.png' align='bottom' title='".ss("Раздел:")."' style='padding-right:5px;'><A href='/-".$DBName."_cat_".$pсid."'><b>".$c_name[$pсid]."</b></a></nobr> "; else $all_cat_link = "";
+            if ($peopleshow==1) $all_page_counter = " <nobr><img width='16' src='/images/sys/magnify.png' align='bottom' title='".ss("Просмотры:")."' style='padding-right:5px; padding-left:15px;'><b>".$p_counter."</b></nobr>";
+            else $all_page_counter = "";
+            if ($datashow==1) $all_page_data = " <div class='cat_page_date'><nobr><img width='16' src='/images/sys/026.png' align='bottom' title='".ss("Дата:")."' style='padding-right:5px;'>".$p_date."</nobr></div>";
+            else $all_page_data = "";
+            if ($p_comm>0) $all_page_comments = " <div class='cat_page_comments'><nobr><a title='".ss("раскрыть")." ".$comments_1."' href='/-".$DBName."_page_".$p_pid."_comm#comm'><img width='16' src='/images/sys/028.png' align='bottom' title='".$comments_1.":' style='padding-right:5px;'><b>".$p_comm."</b></a></nobr></div>";
+            else $all_page_comments = "";
+          }
 
-        } elseif ($view!=4) { /////////////////////////////////	<div class=cat_page></div>
-          if (trim($open_text)!="" and $tema_title != "no") $open_text = "<div class='cat_page_text'>".$open_text."</div>"; else $open_text = "";
-          if ($pсid>0 and $c_name[$pсid]!="") $all_cat_link = "<nobr><img width='16' src='/images/sys/papka.png' align='bottom' title='".ss("Раздел:")."' style='padding-right:5px;'><A href='/-".$DBName."_cat_".$pсid."'><b>".$c_name[$pсid]."</b></a></nobr> "; else $all_cat_link = "";
-          if ($peopleshow==1) $all_page_counter = " <nobr><img width='16' src='/images/sys/magnify.png' align='bottom' title='".ss("Просмотры:")."' style='padding-right:5px; padding-left:15px;'><b>".$p_counter."</b></nobr>";
-          else $all_page_counter = "";
-          if ($datashow==1) $all_page_data = " <div class='cat_page_date'><nobr><img width='16' src='/images/sys/026.png' align='bottom' title='".ss("Дата:")."' style='padding-right:5px;'>".$p_date."</nobr></div>";
-          else $all_page_data = "";
-          if ($p_comm>0) $all_page_comments = " <div class='cat_page_comments'><nobr><a title='".ss("раскрыть")." ".$comments_1."' href='/-".$DBName."_page_".$p_pid."_comm#comm'><img width='16' src='/images/sys/028.png' align='bottom' title='".$comments_1.":' style='padding-right:5px;'><b>".$p_comm."</b></a></nobr></div>";
-          else $all_page_comments = "";
-        } ////////////////////////////////////////////////////////
-  
-      $pagelink = "/-".$DBName."_page_".$p_pid;
-      $pagelinktitle = "<A href='".$pagelink."'><h1 class='cat_page_title'>".$title."</h1></A>";
-      if (strlen($text) < 10 and $comments != 1) {
-        $pagelink = "#";
-        $pagelinktitle = "<h1 class='cat_page_title'>".$title."</h1>";
-      }
+          $pagelink = "/-".$DBName."_page_".$p_pid;
+          $pagelinktitle = "<A href='".$pagelink."'><h1 class='cat_page_title'>".$title."</h1></A>";
+          if (strlen($text) < 10 and $comments != 1) {
+            $pagelink = "#";
+            $pagelinktitle = "<h1 class='cat_page_title'>".$title."</h1>";
+          }
 
-    $golosraz = "";
-    if ($golosrazdel != 0) {
-      require_once ("golos.php");
-      $golosraz = golos_show($p_pid, $golostype, $golos); // (страница, тип рейтинга, кол-во рейтинга для типов 1, 2 и 3)
-    }
-    
-    $page_tags = "";
-    
-    // ВЕЗДЕ - 3, в разделе и папках - 2, в разделе - 5, в разделе и на страницах - 6, 
-    // в папках - 4, в папках и на страницах - 7, на страницах - 1,НИГДЕ - 0
-    
-    if ((($tags == 2 or $tags == 3) or $razdel_shablon != 0) and trim($search) != "") {
-    $searches = array();
-    $search2 = explode(" ",trim(strtolow($search)));
-    $search_num = count($search2);
-        for ($x=0; $x < $search_num; $x++) {
-            $searches[] = "<a class='slovo' href='/--slovo_".str_replace( "%","-", urlencode( $search2[$x] ) )."'>".str_replace("+","&nbsp;",$search2[$x])."</a>";
-        }
-    $page_tags .= "<br>".$tag_text_show." ".implode(" | ", $searches)."";
-    }
-
-    $all_page_link = "";
-    if ($show_read_all == "1") $all_page_link = " <A href='/-".$DBName."_page_".$p_pid."'>".$read_all."</a>";
-
-    // Дополнение - преобразователь ссылок. //////////////////////
-    /*
-    $links_zamena = array(
-      aa("[ссылка]")=>"<a href=/-".$DBName."_page_".$p_pid." class=open_page_link>".ss("Читать дальше")."</a> &rarr;",
-      "<hr class=\"editor_cut\">"=>"<a href=/-".$DBName."_page_".$p_pid." class=open_page_link>".ss("Читать дальше")."</a> &rarr;",
-      aa("-ссылка]")=>"</a>",
-      aa("[ссылка-")=>"<a href=/-".$DBName."_page_".$p_pid." class=open_page_link>",
-      );
-    $open_text = strtr($open_text, $links_zamena);
-    */
-    //////////////////////////////////////////////////////////////
-
-  if ($pсid==0) $c_name[$pсid] = "";
-
-    $sha_zamena = array(
-    "[page_id]"=>$p_pid,
-    "[page_num]"=>$numm,
-    "[page_razdel]"=>$DBName,
-    "[page_link_title]"=>$pagelinktitle,
-    "[page_link]"=>"/-".$DBName."_page_".$p_pid,
-    "[all_page_link]"=>$all_page_link,
-    "[page_open_text]"=>$open_text,
-    "[page_title]"=>$title,
-    "[page_text]"=>$text,
-    "[page_data]"=>$p_date,
-    "[all_page_data]"=>$all_page_data,
-    "[page_counter]"=>$p_counter,
-    "[all_page_counter]"=>$all_page_counter,
-    "[page_comments]"=>$p_comm,
-    "[all_page_comments]"=>$all_page_comments,
-    "[cat_id]"=>$pсid,
-    "[cat_name]"=>$c_name[$pсid],
-    "[cat_link]"=>"/-".$DBName."_cat_".$pсid,
-    "[all_cat_link]"=>$all_cat_link,
-    "[sred_golos]"=>$sred_golos,
-    "[all_golos]"=>$all_golos,
-    "[plus_golos]"=>$plus_golos,
-    "[neo_golos]"=>$neo_golos,
-    "[minus_golos]"=>$minus_golos,
-    "[active_color]"=>$active_color,
-    "[page_active]"=>$active,
-    "[page_golos]"=>$golos,
-    "[cat_golos]"=>$golosraz,
-    "[page_foto_adres]"=>$foto_adres,
-    "[page_foto]"=>$foto,
-    "[page_search]"=>$search,
-    "[page_price]"=>$price,
-    "[page_rss]"=>$rss,
-    "[page_tags]"=>$page_tags,
-    );
-    if (($nu >0 and $view==4 and $cid != 0) or $view!=4) {
-      $limkol_num++;
-      $kol_num++;
+          $golosraz = "";
+          if ($golosrazdel != 0) {
+            require_once ("golos.php");
+            $golosraz = golos_show($p_pid, $golostype, $golos); // (страница, тип рейтинга, кол-во рейтинга для типов 1, 2 и 3)
+          }
       
-      if ($limkol > 1) {
-        if ($limkol_num == $limkol) {
-          $limkol_num = 0;
-          if ($kol_num != $lim*$limkol) $shaX = $sha."</td></tr><tr valign=top><td width=".$proc."%>";
-          else $shaX = $sha."</td></tr></table>";
-        } else $shaX = $sha."</td><td width=".$proc."%>";
-      } elseif ($div_or_table == 0) {
-        if ($view != 1) $shaX = "<tr valign=top><td>".$sha."</td></tr>";
-      } else $shaX = $sha;
-      ////////////////////////////////
-    
-      if ($view==1) $shaX = $sha;
-      $sha2 = strtr($shaX, $sha_zamena);
-      if (!isset($s_names)) $s_names = array();
-      foreach ($s_names as $id2 => $nam2) {
-      // Найдем значение каждого поля для данной страницы
-          if (!isset($s_opts[$nam2][$p_pid])) $s_opts[$nam2][$p_pid] = "";
-          $nam3 = $s_opts[$nam2][$p_pid]; // WhatArrayElement();
-          $sha2 = str_replace("[".$nam2."]", $nam3, $sha2);
-      }
-    }
-    if (!isset($sha_first)) $sha_first = "";
-    $soderganieALL2 .= $sha_first.$sha2;
-          } // end if
-       } // end if main
-    } // end while
+          $page_tags = "";
+          
+          // ВЕЗДЕ - 3, в разделе и папках - 2, в разделе - 5, в разделе и на страницах - 6, 
+          // в папках - 4, в папках и на страницах - 7, на страницах - 1,НИГДЕ - 0
+          
+          if ((($tags == 2 or $tags == 3) or $razdel_shablon != 0) and trim($search) != "") {
+            $searches = array();
+            $search2 = explode(" ",trim(strtolow($search)));
+            $search_num = count($search2);
+            for ($x=0; $x < $search_num; $x++) {
+              $searches[] = "<a class='slovo' href='/--slovo_".str_replace( "%","-", urlencode( $search2[$x] ) )."'>".str_replace("+","&nbsp;",$search2[$x])."</a>";
+            }
+            $page_tags .= "<br>".$tag_text_show." ".implode(" | ", $searches)."";
+          }
+
+          $all_page_link = "";
+          if ($show_read_all == "1") $all_page_link = " <A href='/-".$DBName."_page_".$p_pid."'>".$read_all."</a>";
+
+          // Дополнение - преобразователь ссылок. //////////////////////
+          /*
+          $links_zamena = array(
+            aa("[ссылка]")=>"<a href=/-".$DBName."_page_".$p_pid." class=open_page_link>".ss("Читать дальше")."</a> &rarr;",
+            "<hr class=\"editor_cut\">"=>"<a href=/-".$DBName."_page_".$p_pid." class=open_page_link>".ss("Читать дальше")."</a> &rarr;",
+            aa("-ссылка]")=>"</a>",
+            aa("[ссылка-")=>"<a href=/-".$DBName."_page_".$p_pid." class=open_page_link>",
+            );
+          $open_text = strtr($open_text, $links_zamena);
+          */
+          //////////////////////////////////////////////////////////////
+
+          if ($pсid==0) $c_name[$pсid] = "";
+
+          $sha_zamena = array(
+          "[page_id]"=>$p_pid,
+          "[page_num]"=>$numm,
+          "[page_razdel]"=>$DBName,
+          "[page_link_title]"=>$pagelinktitle,
+          "[page_link]"=>"/-".$DBName."_page_".$p_pid,
+          "[all_page_link]"=>$all_page_link,
+          "[page_open_text]"=>$open_text,
+          "[page_title]"=>$title,
+          "[page_text]"=>$text,
+          "[page_data]"=>$p_date,
+          "[all_page_data]"=>$all_page_data,
+          "[page_counter]"=>$p_counter,
+          "[all_page_counter]"=>$all_page_counter,
+          "[page_comments]"=>$p_comm,
+          "[all_page_comments]"=>$all_page_comments,
+          "[cat_id]"=>$pсid,
+          "[cat_name]"=>$c_name[$pсid],
+          "[cat_link]"=>"/-".$DBName."_cat_".$pсid,
+          "[all_cat_link]"=>$all_cat_link,
+          "[sred_golos]"=>$sred_golos,
+          "[all_golos]"=>$all_golos,
+          "[plus_golos]"=>$plus_golos,
+          "[neo_golos]"=>$neo_golos,
+          "[minus_golos]"=>$minus_golos,
+          "[active_color]"=>$active_color,
+          "[page_active]"=>$active,
+          "[page_golos]"=>$golos,
+          "[cat_golos]"=>$golosraz,
+          "[page_foto_adres]"=>$foto_adres,
+          "[page_foto]"=>$foto,
+          "[page_search]"=>$search,
+          "[page_price]"=>$price,
+          "[page_rss]"=>$rss,
+          "[page_tags]"=>$page_tags,
+          );
+          if (($nu >0 and $view==4 and $cid != 0) or $view!=4) {
+            $limkol_num++;
+            $kol_num++;
+            if ($limkol > 1) {
+              if ($limkol_num == $limkol) {
+                $limkol_num = 0;
+                if ($kol_num != $lim*$limkol) $shaX = $sha."</td></tr><tr valign=top><td width=".$proc."%>";
+                else $shaX = $sha."</td></tr></table>";
+              } else $shaX = $sha."</td><td width=".$proc."%>";
+            } elseif ($div_or_table == 0) {
+              if ($view != 1) $shaX = "<tr valign=top><td>".$sha."</td></tr>";
+            } else $shaX = $sha;
+
+            if ($view==1) $shaX = $sha;
+            $sha2 = strtr($shaX, $sha_zamena);
+            if (!isset($s_names)) $s_names = array();
+            foreach ($s_names as $id2 => $nam2) {
+              // Найдем значение каждого поля для данной страницы
+              if (!isset($s_opts[$nam2][$p_pid])) $s_opts[$nam2][$p_pid] = "";
+              $nam3 = $s_opts[$nam2][$p_pid]; // WhatArrayElement();
+              $sha2 = str_replace("[".$nam2."]", $nam3, $sha2);
+            }
+          }
+          if (!isset($sha_first)) $sha_first = "";
+          $soderganieALL2 .= $sha_first.$sha2;
+        } // end if
+    } // end if main
+  } // end while
+
   if ($div_or_table == 0) {
     if ($cid == 0) $soderganieALL .= $soderganieALL2."</table>"; // </table>
     elseif ($view != 4) $soderganieALL .= "<table cellspacing=0 cellpadding=3 width=100%>".$soderganieALL2."</table>";

@@ -74,7 +74,10 @@ $url = str_replace("http://".$siteurl,"",$url);
 $url2 = explode("_",$url);
 $url2 = explode("?",$url2[0]);
 $url2 = $url2[0];
-echo "<table class='mw800 w100 m0'><tr><td align=center width=170 class=mp0><a title='".aa("Перейти в Содержание")."' href='sys.php' class='nothing'><img src='images/logo_admin.png'></a></td><td class=mp0><div class='nothing noprint'><div style='margin: 0 5px 5px 0;'>";
+
+$lang_logo = "";
+if ($lang_admin != "ru" && $lang_admin != "ua") $lang_logo = "_en";
+echo "<table class='mw800 w100 m0'><tr><td align=center width=170 class=mp0><a title='".aa("Перейти в Содержание")."' href='sys.php' class='nothing'><img src='images/logo_admin".$lang_logo.".png'></a></td><td class=mp0><div class='nothing noprint'><div style='margin: 0 5px 5px 0;'>";
 //if($detect->isiOS())
 //if($detect->isAndroidOS())
 global $buttons;

@@ -1,5 +1,5 @@
 <?php
-$ver = '1.15'; // Версия EngineCMS
+$ver = '1.17'; // Версия EngineCMS
 header ("Content-Type: text/html; charset=utf-8");
 // Получение списка БД
 if (isset($_REQUEST['db'])) {
@@ -28,7 +28,7 @@ if (file_exists("config.php")) die("<h3>Найдена установленна�
 	// <li>Если данный сайт создан ранее — вы можете <a href=#>обновить базу данных</a> до новой версии.
 
 // Запуск установки ====================
-if (isset($_REQUEST['lang'])) {
+if (isset($_REQUEST['ipban'])) {
 	$lang = $_REQUEST['lang'];
 	$lang_admin = $_REQUEST['lang_admin'];
 	$ipban = $_REQUEST['ipban'];
@@ -45,6 +45,7 @@ if (isset($_REQUEST['lang'])) {
 	$pass = md5($_REQUEST['pass']);
 	$email = $_REQUEST['email'];
 	$siteurl = $_REQUEST['siteurl'];
+	$table_delete = $_REQUEST['table_delete'];
 
 	// Доп. настройки для разных типов сайтов
 	if ($type == 'company') {}
@@ -52,8 +53,11 @@ if (isset($_REQUEST['lang'])) {
 	if ($type == 'blog') {}
 	if ($type == 'group') {}
 
+	echo "Началась установка.<br>";
 	// Проверка БД
-	$db = mysql_connect ($dbhost, $dbuname, $dbpass) or die("не выбрана база! ".mysql_error());
+	$db = mysql_connect ($dbhost, $dbuname, $dbpass) or die("Не выбрана база данных! ".mysql_error());
+	echo "Подключение к базе данных успешно.<br>";
+
 	// Создание config.php
 	$conf = '<?php
 ##############################################
@@ -328,7 +332,7 @@ $languages = array("Albanian"=>"sq",
 "Italian"=>"it",
 "Japanese"=>"ja",
 "Korean"=>"ko",
-"Latvian"=>"lv",
+"Latvijas"=>"lv",
 "Lithuanian"=>"lt",
 "Macedonian"=>"mk",
 "Norwegian (Bokmål)"=>"no_NB",
@@ -349,10 +353,12 @@ $languages = array("Albanian"=>"sq",
 "Vietnamese"=>"vi");
 ?>
 <!DOCTYPE html>
-<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
-<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
-<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
-<!--[if (gte IE 9)|!(IE)]><!--><html lang="ru"> <!--<![endif]-->
+<? $lang_install = "en"; 
+if (isset($_REQUEST['lang_admin'])) $lang_install = $_REQUEST['lang_admin']; ?>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="<? echo $lang_install; ?>"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="<? echo $lang_install; ?>"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="<? echo $lang_install; ?>"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="<? echo $lang_install; ?>"> <!--<![endif]-->
 <head>
 	<meta charset="utf-8">
 	<title>Установка EngineCMS</title>
@@ -370,7 +376,44 @@ $languages = array("Albanian"=>"sq",
 	</style>
 </head>
 <body style="background:url('images/adfon/21.png')">
+<? if (!isset($_REQUEST['lang'])) { ?>
 <form>
+	<div class="container" style="background:url('images/fon.png'); z-index:10; margin: auto; top:0;">
+		<div class="sixteen columns" style="background:url('install/world.png') no-repeat 360px 50px; min-height:155px;">
+			<h1 class="remove-bottom" style="margin-top: 40px">EngineCMS Install</h1>
+			<h5 style="margin-bottom:30px;"><? echo $ver; ?></h5>
+
+			<img src="install/users.png" style="float:left; margin-right:10px;"> 
+			<strong>Select site language</strong>:<br><select name="lang">
+				<option value="ru" selected>Русский</option>
+				<option value="en">English (in development)</option>
+				<option value="pl">Polski (stanie developerskim)</option>
+				<option value="ua">Український (в розробці)</option>
+				<option value="lv">Latvijas (ir izstrādes procesā)</option>
+			</select>
+			<img src="install/admin.png" style="float:left; margin-right:10px;"> 
+			<strong>Select administration language</strong>:<br><select name="lang_admin">
+				<option value="ru" selected>Русский</option>
+				<option value="en">English (in development)</option>
+				<option value="pl">Polski (stanie developerskim)</option>
+				<option value="ua">Український (в розробці)</option>
+				<option value="lv">Latvijas (ir izstrādes procesā)</option>
+			</select>
+			<button type="submit" id="submit" style="margin-left: 30px"><h3>Next →</h3></button>
+		</div>
+		
+	</div>
+</form>
+<? } else { 
+	$lang = $_REQUEST['lang'];
+	$lang_admin = $_REQUEST['lang_admin'];
+	// Подключение перевода
+	
+
+	?>
+<form>
+	<input type="hidden" name="lang" value="<? echo $lang; ?>">
+	<input type="hidden" name="lang_admin" value="<? echo $lang_admin; ?>">
 	<div class="container" style="background:url('images/fon.png');">
 		<div class="sixteen columns" style="background:url('install/logo.png') no-repeat right 5px; min-height:155px;">
 			<h1 class="remove-bottom" style="margin-top: 40px">Установка EngineCMS</h1>
@@ -383,7 +426,8 @@ $languages = array("Albanian"=>"sq",
 				<li><strong>Имя пользователя базы данных</strong>:<br><input id="dbuname" name="dbuname" value="root"></li>
 				<li><strong>Пароль пользователя базы данных</strong>:<br><input id="dbpass" name="dbpass" value="<? echo $pass_bd; ?>"></li>
 				<li><strong>Имя базы данных</strong>: <strong><a onclick='x=$("#dbhost").val(); b=$("#dbuname").val(); c=$("#dbpass").val(); $.ajax({ url: "index.php?db=" + x + "&dbuname=" + b + "&dbpass=" + c, cache: false, dataType: "html", beforeSend: function(){ $("#db").html("Загрузка..."); }, success: function(data) { $("#db").html(data); } });' style='color:darkgreen; cursor:pointer; text-decoration:none; border-bottom:1px dashed green;'>! Получить имя !</a></strong><br><div id='db'></div></li>
-				<li><a onclick='$("#prefix_show").toggle();' style='color:darkgreen; cursor:pointer; text-decoration:none; border-bottom:1px dashed green;'>Префикс таблиц</a>:<div id='prefix_show' style='display:none'><input name="prefix" value="dvizhok"><br>Если один сайт или на каждый – своя база данных, префикс необязателен.</div></li>
+				<li><a onclick='$("#prefix_show").toggle();' style='color:darkgreen; cursor:pointer; text-decoration:none; border-bottom:1px dashed green;'>Префикс таблиц</a>:<div id='prefix_show' style='display:none'><input name="prefix" value="dvizhok"><br>Если на хостинге один сайт или на каждый сайт есть своя база данных, префикс менять необязательно.</div></li>
+				<li><strong>Если таблицы уже существуют</strong>:<br><select name="table_delete"><option value="true">Удалять</option><option value="false" selected>Не удалять, сообщить об этом</option></select></li>
 			</ul>
 		</div>
 		<div class="one-third column">
@@ -413,18 +457,7 @@ $languages = array("Albanian"=>"sq",
 			});	
 		</script>
 				<li><strong>Адрес сайта</strong>:<br><input name="siteurl" value="<? echo $siteurl; ?>"></li>
-				<li><strong>Язык сайта</strong>:<br><select name="lang">
-					<option value="ru" selected>Русский</option>
-					<option value="en">English (in development)</option>
-					<option value="pl">Polski (w opracowaniu)</option>
-					<option value="ua">Український (у розробці)</option>
-				</select></li>
-				<li><strong>Язык администрирования</strong>:<br><select name="lang_admin">
-					<option value="ru" selected>Русский</option>
-					<option value="en">English (in development)</option>
-					<option value="pl">Polski (w opracowaniu)</option>
-					<option value="ua">Український (у розробці)</option>
-				</select></li>
+			
 				<li><strong>Псевдоним администратора</strong>:<br><input name="a" value="admin"></li>
 				<li><strong>Email администратора сайта</strong>:<br><input name="email" id="mail" value=""><span id="valid"></span></li>
 				<li><strong>Пароль администратора сайта</strong>:<br><input name="pass" value="<? echo $pass; ?>"><br>
@@ -484,5 +517,6 @@ $languages = array("Albanian"=>"sq",
 		</div>
 	</div>
 </form>
+<? } ?>
 </body>
 </html>

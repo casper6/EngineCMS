@@ -2,11 +2,11 @@
 // Пустая база данных
 if (file_exists("mainfile.php")) require_once("mainfile.php");
 else echo "<li>mainfile.php не найден!";
-global $dbname;
+global $dbname, $table_delete;
 
-$db->sql_query("ALTER DATABASE ".$dbname." DEFAULT CHARACTER SET utf8;") or die('<li>Ошибка изменения кодировки БД '.$dbname);
+$db->sql_query("ALTER DATABASE ".$dbname." DEFAULT CHARACTER SET utf8;") or die('<li>Ошибка изменения кодировки БД '.$dbname.'. Измените кодировку БД на utf8 самостоятельно, например через PHPMyAdmin.');
 
-$db->sql_query("DROP TABLE IF EXISTS `".$prefix."_authors`;");
+if ($table_delete == "true") $db->sql_query("DROP TABLE IF EXISTS `".$prefix."_authors`;");
 $db->sql_query("CREATE TABLE `".$prefix."_authors` (
  `aid` varchar(25) NOT NULL,
  `name` varchar(50),
@@ -15,7 +15,7 @@ $db->sql_query("CREATE TABLE `".$prefix."_authors` (
  `link` varchar(250) NOT NULL,
  `all` enum('0','1') NOT NULL,
  PRIMARY KEY (`aid`)
-);") or die('<li>Ошибка записи в БД! Возможно база не создана или при настройке её параметров допущены ошибки.');
+);") or die('<li>Ошибка записи в БД! Возможно база не создана или при настройке её параметров допущены ошибки. Или создаваемая при установке таблица уже существует, т.е. установка производится повторно, а вы не выбрали при установке в поле «Если таблицы уже существуют:» — Удалять. Не забудьте удалить файл config.php перед повторением установки.');
 $db->sql_query("DROP TABLE IF EXISTS `".$prefix."_banned_ip`;");
 $db->sql_query("CREATE TABLE `".$prefix."_banned_ip` (
  `id` int(11) NOT NULL auto_increment,

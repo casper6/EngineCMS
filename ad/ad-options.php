@@ -7,7 +7,6 @@ $aid = substr($aid, 0,25);
 $row = $db->sql_fetchrow($db->sql_query("SELECT realadmin FROM " . $prefix . "_authors WHERE aid='".$aid."'"));
 if ($row['realadmin'] == 1) {
 
-
 	function main_ban($ip=0) {
 		global $prefix, $db, $bgcolor2, $admin_file;
 		echo "<h2>Блокировка посетителей (запрет использования сайта)</h2>";
@@ -26,7 +25,7 @@ if ($row['realadmin'] == 1) {
 				echo "<tr><td bgcolor='".$bgcolor2."' align='left'>".$row['ip_address']."</td>"
 				."<td bgcolor='".$bgcolor2."'>".$row['reason']."&nbsp;</td>"
 				."<td bgcolor='".$bgcolor2."' align='center' nowrap>".date2normal_view($row['date'])."&nbsp;</td>"
-				."<td bgcolor='".$bgcolor2."' align='center'><a href=\"".$admin_file.".php?op=ipban_edit&amp;id=".intval($row['id'])."\"><img class=\"icon2 i34\" src=/images/1.gif title=\"Редактировать\"></a>&nbsp;<a href=\"".$admin_file.".php?op=ipban_delete&amp;id=".intval($row['id'])."\"><img class=\"icon2 i21\" src=/images/1.gif title=\"Снять запрет\"></a>&nbsp;</td></tr>";
+				."<td bgcolor='".$bgcolor2."' align='center'><a href='".$admin_file.".php?op=ipban_edit&amp;id=".intval($row['id'])."'><img class='icon2 i34' src=/images/1.gif title='Редактировать'></a>&nbsp;<a href='".$admin_file.".php?op=ipban_delete&amp;id=".intval($row['id'])."'><img class='icon2 i21' src=/images/1.gif title='Снять запрет'></a>&nbsp;</td></tr>";
 			}
 			echo "</table></div>";
 		}
@@ -152,22 +151,22 @@ echo "<table class='w100 mw800 pm0 block_back' cellspacing=0 cellpadding=0><tr v
 
 	<div id='razdels' style='background:#e7e9ec; width:340px;'>
 			<div class='black_grad'><span class='h1'>Настройки".$opt_save."</span></div>";
-	echo "<div id='mainrazdel8' class='dark_pole2sel'><a class='base_page' onclick=\"options_show('8','show_first')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\".\"></span><span class='plus20'>Начальные настройки и Шрифты</span></div></a></div>";
-	echo "<div id='mainrazdel0' class='dark_pole2'><a class='base_page' onclick=\"options_show('0','show_options')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"Z\"></span><span class='plus20'>Основные настройки Сайта</span></div></a></div>";
-	echo "<div id='mainrazdel1' class='dark_pole2'><a class='base_page' onclick=\"options_show('1','show_options_company')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"Y\"></span><span class='plus20'>Карточка компании (мини блоки)</span></div></a></div>";
+	echo "<div id='mainrazdel8' class='dark_pole2sel'><a class='base_page' onclick=\"options_show('8','show_first')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='.'></span><span class='plus20'>Начальные настройки и Шрифты</span></div></a></div>";
+	echo "<div id='mainrazdel0' class='dark_pole2'><a class='base_page' onclick=\"options_show('0','show_options')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='Z'></span><span class='plus20'>Основные настройки Сайта</span></div></a></div>";
+	echo "<div id='mainrazdel1' class='dark_pole2'><a class='base_page' onclick=\"options_show('1','show_options_company')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='Y'></span><span class='plus20'>Карточка компании (мини блоки)</span></div></a></div>";
 	
-	echo "<div id='mainrazdel5' class='dark_pole2'><a class='base_page' onclick=\"options_show('5','show_options_zagotovka')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"7\"></span><span class='plus20'>Настройки редактора</span></div></a></div>";
-	echo "<div id='mainrazdel3' class='dark_pole2'><a class='base_page' onclick=\"options_show('3','show_options_adspeed')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"z\"></span><span class='plus20'>Настройки Администрирования</span></div></a></div>";
-	echo "<div id='mainrazdel4' class='dark_pole2'><a class='base_page' onclick=\"options_show('4','show_options_pass_block')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"O\"></span><span class='plus20'>Смена пароля и Блокировка по IP</span></div></a></div>";
-	echo "<div id='mainrazdel7' class='dark_pole2'><a class='base_page' onclick=\"options_show('7','show_options_oldfotos'); trash_pics();\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"1\"></span><span class='plus20'>Удаление старых фото</span></div></a></div>";
-	echo "<div id='mainrazdel5' class='dark_pole2'><a class='base_page' href='sys.php?op=subscribe'><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"@\"></span><span class='plus20'>Cписок адресатов для рассылки</span></div></a></div>";
-	echo "<div id='mainrazdel6' class='dark_pole2'><a class='base_page' href='sys.php?op=users'><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"U\"></span><span class='plus20'>Пользователи (в разработке!)</span></div></a></div>";
-    echo "<div id='mainrazdel11' class='dark_pole2'><a class='base_page' href='sys.php?op=txt_and_csv_main'><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"(\"></span><span class='plus20'>Импорт из txt и csv (в разработке)</span></div></a></div>";
-	echo "<div id='mainrazdel10' class='dark_pole2'><a class='base_page' onclick=\"options_show('10','show_options_razrab');\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"b\"></span><span class='plus20'>Информация для разработчиков</span></div></a></div>";
+	echo "<div id='mainrazdel5' class='dark_pole2'><a class='base_page' onclick=\"options_show('5','show_options_zagotovka')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='7'></span><span class='plus20'>Настройки редактора</span></div></a></div>";
+	echo "<div id='mainrazdel3' class='dark_pole2'><a class='base_page' onclick=\"options_show('3','show_options_adspeed')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='z'></span><span class='plus20'>Настройки Администрирования</span></div></a></div>";
+	echo "<div id='mainrazdel4' class='dark_pole2'><a class='base_page' onclick=\"options_show('4','show_options_pass_block')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='O'></span><span class='plus20'>Смена пароля и Блокировка по IP</span></div></a></div>";
+	echo "<div id='mainrazdel7' class='dark_pole2'><a class='base_page' onclick=\"options_show('7','show_options_oldfotos'); trash_pics();\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='1'></span><span class='plus20'>Удаление старых фото</span></div></a></div>";
+	echo "<div id='mainrazdel5' class='dark_pole2'><a class='base_page' href='sys.php?op=subscribe'><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='@'></span><span class='plus20'>Cписок адресатов для рассылки</span></div></a></div>";
+	echo "<div id='mainrazdel6' class='dark_pole2'><a class='base_page' href='sys.php?op=users'><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='U'></span><span class='plus20'>Пользователи (в разработке!)</span></div></a></div>";
+    echo "<div id='mainrazdel11' class='dark_pole2'><a class='base_page' href='sys.php?op=txt_and_csv_main'><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='('></span><span class='plus20'>Импорт из txt и csv (в разработке)</span></div></a></div>";
+	echo "<div id='mainrazdel10' class='dark_pole2'><a class='base_page' onclick=\"options_show('10','show_options_razrab');\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='b'></span><span class='plus20'>Информация для разработчиков</span></div></a></div>";
 
 	echo "</div></td>
 	<td style='padding:0;'><a class='punkt' title='Свернуть/развернуть левую колонку' onclick='$(\"#razdels\").toggle(\"slow\");'><div class='polosa_razdelitel'>||</div></a></td>
-	<td style='width:100%;'><form action='".$admin_file.".php' method='post' name=\"form\">";
+	<td style='width:100%;'><form action='".$admin_file.".php' method='post' name='form'>";
 
 echo "
 <div id='show_options_razrab' class='show_pole' style='display:none;'>";
@@ -190,9 +189,9 @@ echo "<p><a href='http://hotel-s.ru' target='_blank'>Официальный са
 	</div>	
 
 <div id='show_first' class='show_pole'>
-	<a class='button' onclick=\"options_show('8','show_options_fonts')\"><span class=\"icon gray medium\" data-icon=\"i\"></span> Шрифты</a>
-	<a class='button' onclick=\"options_show('8','show_shop')\"><span class=\"icon gray medium\" data-icon=\"$\"></span> Магазин</a> ";
-	if (is_dir("includes/regions")) echo "<a class='button' href='sys.php?op=regions_main'><span class=\"icon gray medium\" data-icon=\"&\"></span> Регионы</a>";
+	<a class='button' onclick=\"options_show('8','show_options_fonts')\"><span class='icon gray medium' data-icon='i'></span> Шрифты</a>
+	<a class='button' onclick=\"options_show('8','show_shop')\"><span class='icon gray medium' data-icon='$'></span> Магазин</a> ";
+	if (is_dir("includes/regions")) echo "<a class='button' href='sys.php?op=regions_main'><span class='icon gray medium' data-icon='&'></span> Регионы</a>";
 
 	echo "<hr><table class=table_light>
 
@@ -241,7 +240,7 @@ switch($kickstart) {
 	$kick_link = "http://960.gs";
 	$kick_name = "960gs(24)"; break;
 }
-if ($kickstart != 0) echo " <a target='_blank' class='button small' href='".$kick_link."' title='Открыть сайт CSS-фреймворка «".$kick_name."»'><span class=\"icon small black\" data-icon=\"S\"></span> ".$kick_name."</a>";
+if ($kickstart != 0) echo " <a target='_blank' class='button small' href='".$kick_link."' title='Открыть сайт CSS-фреймворка «".$kick_name."»'><span class='icon small black' data-icon='S'></span> ".$kick_name."</a>";
 
 echo "</td><td class=small>
 ".select("options[kickstart]", "0,1,2,3,4,5,6,7,8,9,10,11", "-- НЕТ --,KickStart,CSSframework,Skeleton,Kube,Bootstrap,1140 Grid,Toast,Blueprint,YUI CSS Grids,960gs (12 и/или 16 колонок),960gs (24 колонки)", $kickstart, ' id=kickstart onchange="if ( $(\'#kickstart\').val() == 1) $(\'#frame1\').show(); else $(\'#frame1\').hide(); if ( $(\'#kickstart\').val() == 6) $(\'#frame6\').show(); else $(\'#frame6\').hide(); "')."
@@ -287,8 +286,8 @@ body {}
 <div id=sortable style='display:none;'>".close_button('sortable')."
 <pre>
 &lt;div id=sorter style='display:none;'&gt;Сортировка:
-&lt;a style=\"cursor:pointer;\" onclick=\"$('div#tovars>div#tovar').tsort('h3',{attr:'title'});\"&gt;по цене&lt;/a&gt;, 
-&lt;a style=\"cursor:pointer;\" onclick=\"$('div#tovars>div#tovar').tsort('h1',{charOrder:'абвгдђежзијклљмнњопрстћуфхцчџш'});\"&gt;по названию&lt;/a&gt;
+&lt;a style='cursor:pointer;' onclick=\"$('div#tovars>div#tovar').tsort('h3',{attr:'title'});\"&gt;по цене&lt;/a&gt;, 
+&lt;a style='cursor:pointer;' onclick=\"$('div#tovars>div#tovar').tsort('h1',{charOrder:'абвгдђежзијклљмнњопрстћуфхцчџш'});\"&gt;по названию&lt;/a&gt;
 &lt;/div&gt;
 Можно показывать сортировку только при наличии сортируемых элементов:
 &lt;script&gt;$(document).ready(function() { if ( document.getElementById('tovar') != null ) $('#sorter').show('slow'); });&lt;/script&gt;
@@ -503,7 +502,7 @@ body {}
 	if (strlen($add_fonts) > 1) {
 		$add_fonts2 = explode(".",$add_fonts);
 		foreach ($add_fonts2 as $font) {
-			$options3 .= "<option value=\"".$font."\">".$font."</option>";
+			$options3 .= "<option value='".$font."'>".$font."</option>";
 		}
 	}
 	echo "<script>
@@ -562,7 +561,7 @@ body {}
 
 
 	<p><b>Справка:</b> <a style='cursor:pointer;' class=punkt onclick=\"show('sgladit_shrift')\">Как сгладить шрифт через CSS</a> (подходит для больших заголовков)<br>
-	<div id='sgladit_shrift' style=\"display:none;\"><pre>
+	<div id='sgladit_shrift' style='display:none;'><pre>
 	.title {
 	   text-shadow:-1px -1px 1px rgba(255,255,255,0.2), /* наверх и влево */
 	   1px 1px 1px rgba(255,255,255,0.2), /* вниз и вправо */
@@ -638,8 +637,8 @@ body {}
 			}
 			$cash_size = "страниц в файлах: ".$num.", размер: ".round( $file_size / 1048576, 3)." Мбайт";
 		}
-		echo "<a class='button' target='_blank' href='?cash=del' style='margin-bottom:5px;'><span class=\"icon medium gray\" data-icon=\"T\"></span>Очистить кеш (".$cash_size.")</a>";
-	} else echo "<div class=\"notice warning\">Кеширование страниц отключено. Включить можно в файле config.php — \$site_cash</div>";
+		echo "<a class='button' target='_blank' href='?cash=del' style='margin-bottom:5px;'><span class='icon medium gray' data-icon='T'></span>Очистить кеш (".$cash_size.")</a>";
+	} else echo "<div class='notice warning'>Кеширование страниц отключено. Включить можно в файле config.php — \$site_cash</div>";
 
 	// Цветовые схемы невизуального редактора
 	$color_themes = "chrome,clouds,crimson_editor,dawn,dreamweaver,eclipse,github,solarized_light,textmate,tomorrow,xcode,ambiance,chaos,clouds_midnight,cobalt,idle_fingers,kr_theme,merbivore,merbivore_soft,mono_industrial,monokai,pastel_on_dark,solarized_dark,terminal,tomorrow_night,tomorrow_night_blue,tomorrow_night_bright,tomorrow_night_eighties,twilight,vibrant_ink";
@@ -765,7 +764,7 @@ echo "
 		$add_clips2 = explode("?%?",$add_clips);
 		foreach ($add_clips2 as $cli) {
 			$cli2 = explode("*?*",$cli);
-			$add_clips1 .= "<option value=\"".$cli."\">".$cli2[0]."</option>";
+			$add_clips1 .= "<option value='".$cli."'>".$cli2[0]."</option>";
 		}
 	}
 	echo "<script>
@@ -804,7 +803,7 @@ echo "
 
 	<h2><a id='button_add_clip' title='Добавить заготовку...' class='mr10 button small green' onclick=\"$('#add_clip').show('slow'); $('#button_add_clip').hide('slow');\"><span class='mr-2 icon darkgrey small' data-icon='+'></span><span class='plus20'>Добавить</span></a>
 	Используемые заготовки:</h2>
-	<select style='margin-top:5px;' name='options[add_clips]' id=\"add_clips\" onchange=\"clip()\" size=10 class='w100'>".$add_clips1."</select>
+	<select style='margin-top:5px;' name='options[add_clips]' id='add_clips' onchange='clip()' size=10 class='w100'>".$add_clips1."</select>
 	<a class='button white red' onclick='del_clip(); save_clips();'>Удалить</a>
 	<input id='clips_spisok' type=hidden name='options[add_clips]' value='".$add_clips."'>
 
@@ -827,7 +826,7 @@ echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>
 			echo "<a class='nothing punkt dark_pole' onclick=\"show_animate('show_options3');\"><img class='icon2 i43' src='/images/1.gif' align=bottom>Блокировка посетителей</a><div id='show_options3' style='display:none;'>";
 			main_ban($ip);
 			echo "<br><br></div>";
-		} else echo "<div class=\"notice warning\">Блокировка посетителей отключена. Включить можно через config.php</div>";
+		} else echo "<div class='notice warning'>Блокировка посетителей отключена. Включить можно через config.php</div>";
 		echo "
 
 		<h2>Смена пароля администратора:</h2>";
@@ -850,7 +849,7 @@ echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>
 		<input type=hidden name=adm_aid value='".$adm_aid."'>
 		<input type=hidden name=op value='update_author'>
 		</form>
-		<br><br><div class=\"notice warning hide\"><a href='sys.php?op=admins_list'>Список администраторов</a></div>
+		<br><br><div class='notice warning hide'><a href='sys.php?op=admins_list'>Список администраторов</a></div>
 		</div>";
 
  echo "<div class='show_pole' id='show_options_oldfotos' style='display:none;'>Загружаю...</div>
@@ -866,8 +865,8 @@ echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>
 		global $admin, $prefix, $db, $admin_file, $bgcolor2, $modules_info;
 		include ("ad/ad-header.php");
 
-		echo "<center><font class=\"option\"><b>Редактирование админов</b></font></center><br>";
-		echo "	<table border=\"1\" align=\"center\">
+		echo "<center><font class='option'><b>Редактирование админов</b></font></center><br>";
+		echo "	<table border='1' align='center'>
 				<tr>
 					<td>&nbsp;<b>Псевдоним</b>&nbsp;</td>
 					<td>&nbsp;<b>Окружение</b>&nbsp;</td>
@@ -890,54 +889,54 @@ echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>
 			}
 			if ($editor==='0') $editor="Да";
 			else $editor="Нет";
-			echo "<td align=\"center\">&nbsp;".$editor."</td>
-					<td align=\"center\">
-						<a href=\"".$admin_file.".php?op=admins_edit&amp;chng_aid=".$a_aid."\"><img src=\"images/edit.png\" alt=\"Редактировать\" title=\"Редактировать\" border=\"0\" width=\"17\" height=\"17\"></a>
+			echo "<td align='center'>&nbsp;".$editor."</td>
+					<td align='center'>
+						<a href='".$admin_file.".php?op=admins_edit&amp;chng_aid=".$a_aid."'><img src='images/edit.png' alt='Редактировать' title='Редактировать' border='0' width='17' height='17'></a>
 			";
 			if($name == "God") {
-				echo "		<img src=\"images/delete_x.png\" alt=\"Главный аккаунт\" title=\"Главный аккаунт\" border=\"0\" width=\"17\" height=\"17\"></a></td>";
+				echo "		<img src='images/delete_x.png' alt='Главный аккаунт' title='Главный аккаунт' border='0' width='17' height='17'></a></td>";
 			} 
 			else {
-				echo "		<a href=\"".$admin_file.".php?op=admins_delete&amp;aid=".$a_aid."\"><img src=\"images/delete.gif\" alt=\"Удалить\" title=\"Удалить\" border=\"0\" width=\"17\" height=\"17\"></a></td>";
+				echo "		<a href='".$admin_file.".php?op=admins_delete&amp;aid=".$a_aid."'><img src='images/delete.gif' alt='Удалить' title='Удалить' border='0' width='17' height='17'></a></td>";
 			}
 			echo "	</tr>";
 		}
 		echo "	</table><br><br>";
 
-		echo "<center><font class=\"option\"><b>Добавить админа</b></font></center>
-			<form action=\"".$admin_file.".php\" method=\"post\">
-			<table border=\"0\">
+		echo "<center><font class='option'><b>Добавить админа</b></font></center>
+			<form action='".$admin_file.".php' method='post'>
+			<table border='0'>
 				<tr>
 					<td>Имя (необязательно):</td>
-					<td colspan=\"3\"><input type=\"text\" name=\"add_name\" size=\"30\" maxlength=\"50\"> </td>
+					<td colspan='3'><input type='text' name='add_name' size='30' maxlength='50'> </td>
 				</tr>
 				<tr>
 					<td>Псевдоним/ник, до 25 символов:</td>
-					<td colspan=\"3\"><input type=\"text\" name=\"add_aid\" size=\"30\" maxlength=\"25\"></td>
+					<td colspan='3'><input type='text' name='add_aid' size='30' maxlength='25'></td>
 				</tr>
 				<tr>
 					<td>Какую страницу открывать (ссылка, необязательно):</td>
-					<td colspan=\"3\"><input type=\"text\" name=\"add_email\" size=\"30\"></td>
+					<td colspan='3'><input type='text' name='add_email' size='30'></td>
 				</tr>
 		";
 		echo "	<tr>
 					<td>Скрыть Настройки и Оформление (режим редактора)?</td>
-					<td colspan=\"3\">
-						<select name=\"add_editor\">
-							<option name=\"add_editor\" value=\"0\">Да</option>
-							<option name=\"add_editor\" value=\"1\">Нет</option>
+					<td colspan='3'>
+						<select name='add_editor'>
+							<option name='add_editor' value='0'>Да</option>
+							<option name='add_editor' value='1'>Нет</option>
 						</select>
 					</td>
 				</tr>
 		";
 		echo "	<tr>
 					<td>Пароль</td>
-					<td colspan=\"3\"><input type=\"text\" name=\"add_pwd\" size=\"12\" maxlength=\"40\"></td>
+					<td colspan='3'><input type='text' name='add_pwd' size='12' maxlength='40'></td>
 				</tr>
 				<tr>
-					<td colspan=\"3\">
-						<input type=\"hidden\" name=\"op\" value=\"admins_add\">
-						<input type=\"submit\" value=\"Добавить администратора\">
+					<td colspan='3'>
+						<input type='hidden' name='op' value='admins_add'>
+						<input type='submit' value='Добавить администратора'>
 					</td>
 				</tr>
 			</table>
@@ -1000,19 +999,19 @@ echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>
 			include ("ad/ad-header.php");
 			echo "<center><b>"._AREYOUSURETOADDADMIN."</b><BR><BR>";
 			$auth_modules=base64_encode(serialize($auth_modules));
-			echo "	<form action=\"".$admin_file.".php\" method=\"post\">
-					<input type=\"hidden\" name=\"op\" value=\"admins_add\">
-					<input type=\"hidden\" name=\"add_aid\" value=\"".$add_aid."\">
-					<input type=\"hidden\" name=\"add_name\" value=\"".$add_name."\">
-					<input type=\"hidden\" name=\"add_email\" value=\"".$add_email."\">
-					<input type=\"hidden\" name=\"add_pwd\" value=\"".$add_pwd."\">
-					<input type=\"hidden\" name=\"add_url\" value=\"".$add_url."\">
-					<input type=\"hidden\" name=\"add_radminsuper\" value=\"".$add_radminsuper."\">
-					<input type=\"hidden\" name=\"add_admlanguage\" value=\"".$add_admlanguage."\">
-					<input type=\"hidden\" name=\"add_editor\" value=\"".$add_editor."\">
-					<input type=\"hidden\" name=\"auth_modules\" value=\"".$auth_modules."\">
-					<input type=\"hidden\" name=\"ok\" value=\"1\">
-					<input type=\"submit\" value=\""._ADD."\"> | <a href=\"".$admin_file.".php?op=admins_list\">"._NO."</a> 
+			echo "	<form action='".$admin_file.".php' method='post'>
+					<input type='hidden' name='op' value='admins_add'>
+					<input type='hidden' name='add_aid' value='".$add_aid."'>
+					<input type='hidden' name='add_name' value='".$add_name."'>
+					<input type='hidden' name='add_email' value='".$add_email."'>
+					<input type='hidden' name='add_pwd' value='".$add_pwd."'>
+					<input type='hidden' name='add_url' value='".$add_url."'>
+					<input type='hidden' name='add_radminsuper' value='".$add_radminsuper."'>
+					<input type='hidden' name='add_admlanguage' value='".$add_admlanguage."'>
+					<input type='hidden' name='add_editor' value='".$add_editor."'>
+					<input type='hidden' name='auth_modules' value='".$auth_modules."'>
+					<input type='hidden' name='ok' value='1'>
+					<input type='submit' value='"._ADD."'> | <a href='".$admin_file.".php?op=admins_list'>"._NO."</a> 
 				</form>";
 			echo "</center>";
 			admin_footer();
@@ -1024,7 +1023,7 @@ echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>
 		global $admin, $prefix, $db, $admin_file, $modules_info;
 		$chng_aid=$_GET['chng_aid'];
 		include ("ad/ad-header.php");
-		echo "<center><font class=\"option\"><b>"._MODIFYINFO."</b></font></center><br><br>";
+		echo "<center><font class='option'><b>"._MODIFYINFO."</b></font></center><br><br>";
 		$adm_aid = filter($chng_aid, "nohtml");
 		$adm_aid = trim(substr($adm_aid,0,25));
 		$row = $db->sql_fetchrow($db->sql_query("SELECT aid, name, url, email, pwd, radminsuper, admlanguage, editor FROM ".$prefix."_authors WHERE aid='".$adm_aid."'"));
@@ -1037,26 +1036,26 @@ echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>
 		$chng_editor=filter($row['editor']);
 		$chng_aid = strtolower(substr($chng_aid, 0,25));
 		$aid = $chng_aid;
-		echo "<form action=\"".$admin_file.".php\" method=\"post\">
-			<table border=\"0\">
+		echo "<form action='".$admin_file.".php' method='post'>
+			<table border='0'>
 				<tr>
 					<td>"._NAME.":</td>
-					<td colspan=\"3\"><b>".$chng_name."</b><input type=\"hidden\" name=\"chng_name\" value=\"".$chng_name."\"></td>
+					<td colspan='3'><b>".$chng_name."</b><input type='hidden' name='chng_name' value='".$chng_name."'></td>
 				</tr>
 				<tr>
 					<td>"._NICKNAME.":</td>
-					<td colspan=\"3\"><input type=\"text\" name=\"chng_aid\" value=\"".$chng_aid."\" size=\"30\" maxlength=\"25\"> <font class=\"tiny\">"._REQUIRED."</font></td>
+					<td colspan='3'><input type='text' name='chng_aid' value='".$chng_aid."' size='30' maxlength='25'> <font class='tiny'>"._REQUIRED."</font></td>
 				</tr>
 				<tr>
 					<td>"._EMAIL.":</td>
-					<td colspan=\"3\"><input type=\"text\" name=\"chng_email\" value=\"".$chng_email."\" size=\"30\" maxlength=\"60\"> <font class=\"tiny\">"._REQUIRED."</font></td>
+					<td colspan='3'><input type='text' name='chng_email' value='".$chng_email."' size='30' maxlength='60'> <font class='tiny'>"._REQUIRED."</font></td>
 				</tr>
 		";
 
 		$s_edit1=$s_edit2=$s_edit3=$s_edit0="";
 		$s_edit0="selected";
 
-		echo "<input type=\"hidden\" name=\"chng_admlanguage\" value=\"\">";
+		echo "<input type='hidden' name='chng_admlanguage' value=''>";
 		if ($row['name'] != "God") {
 			echo "	<tr>
 					<td>Права:</td>";
@@ -1067,28 +1066,28 @@ echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>
 			echo "	</tr>
 				<tr>
 					<td>&nbsp;</td>
-					<td><input type=\"checkbox\" name=\"chng_radminsuper\" value=\"1\" ".$sel1."> <b>СуперПользователь</b></td>
+					<td><input type='checkbox' name='chng_radminsuper' value='1' ".$sel1."> <b>СуперПользователь</b></td>
 				</tr>
 				<tr>
 					<td>&nbsp;</td>
-					<td colspan=\"3\"><font class=\"tiny\"><i>Предупреждение</i></font></td>
+					<td colspan='3'><font class='tiny'><i>Предупреждение</i></font></td>
 				</tr>
 				
 			";
 		}
 		echo "		<tr>
 					<td>Пароль:</td>
-					<td colspan=\"3\"><input type=\"password\" name=\"chng_pwd\" size=\"12\" maxlength=\"40\"></td>
+					<td colspan='3'><input type='password' name='chng_pwd' size='12' maxlength='40'></td>
 				</tr>
 				<tr>
 					<td>Пароль еще раз:</td>
-					<td colspan=\"3\"><input type=\"password\" name=\"chng_pwd2\" size=\"12\" maxlength=\"40\"> <font class=\"tiny\">(только при изменении)</font></td>
+					<td colspan='3'><input type='password' name='chng_pwd2' size='12' maxlength='40'> <font class='tiny'>(только при изменении)</font></td>
 				</tr>
 				<tr>
-					<td colspan=\"2\">
-						<input type=\"hidden\" name=\"adm_aid\" value=\"".$adm_aid."\">
-						<input type=\"hidden\" name=\"op\" value=\"admins_edit_save\">
-						<input type=\"submit\" value=\"Сохранить\"> Назад
+					<td colspan='2'>
+						<input type='hidden' name='adm_aid' value='".$adm_aid."'>
+						<input type='hidden' name='op' value='admins_edit_save'>
+						<input type='submit' value='Сохранить'> Назад
 					</td>
 				</tr>
 			</table>
@@ -1171,13 +1170,13 @@ echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>
 		else {
 			$aid = trim(filter($_GET['aid'],"nohtml"));
 			include ("ad/ad-header.php");
-			echo "<center><font class=\"option\"><b>"._AUTHORDEL."</b></font><br><br>"
+			echo "<center><font class='option'><b>"._AUTHORDEL."</b></font><br><br>"
 			._AUTHORDELSURE." <i>".$aid."</i>?<br><br>";
-			echo "	<form action=\"".$admin_file.".php\" method=\"post\">
-					<input type=\"hidden\" name=\"aid\" value=\"".$aid."\">
-					<input type=\"hidden\" name=\"op\" value=\"admins_delete\">
-					<input type=\"hidden\" name=\"ok\" value=\"1\">
-					<input type=\"submit\" value=\""._DELETE."\"> | <a href=\"".$admin_file.".php?op=admins_list\">"._NO."</a> 
+			echo "	<form action='".$admin_file.".php' method='post'>
+					<input type='hidden' name='aid' value='".$aid."'>
+					<input type='hidden' name='op' value='admins_delete'>
+					<input type='hidden' name='ok' value='1'>
+					<input type='submit' value='"._DELETE."'> | <a href='".$admin_file.".php?op=admins_list'>"._NO."</a> 
 				</form>";
 			admin_footer();
 		}

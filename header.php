@@ -150,7 +150,7 @@ if ($name=="-email") { // занесение мыла как скрытого к
 			$soda_col = count($soda);
 			if (strpos(" ".$soda[0], aa("[содержание]"))) $soderganie = str_replace(aa("[содержание]"), $soderganie, $soda[0]);
 			else {
-				$soderganie = str_replace(aa("[название]"), "<div class=cat_title><span class=cat_categorii_link>".$ModuleName."</span></div><div class=polosa></div>", $soda[0]);
+				$soderganie = str_replace(aa("[название]"), "<div class='cat_title'><span class='cat_categorii_link'>".$ModuleName."</span></div><div class='polosa'></div>", $soda[0]);
 				$soderganie = str_replace(aa("[страницы]"), $soderganie2, $soderganie);
 				// Добавление табов
 			    if (strpos(" ".$soderganie, "{{")) {
@@ -162,7 +162,7 @@ if ($name=="-email") { // занесение мыла как скрытого к
 			if ($cid=="" and ($pid=="" or $pid==0) and $soda_col > 1) {
 				if (strpos(" ".$soda[1],aa("[содержание]"))) $soderganie = str_replace(aa("[содержание]"), $soderganie, $soda[1]);
 				else {
-					$soderganie = str_replace(aa("[название]"), "<div class=cat_title><A class=cat_categorii_link href=-".$DBName.">".$ModuleName."</a></div><div class=polosa></div>", $soda[1]);
+					$soderganie = str_replace(aa("[название]"), "<div class='cat_title'><A class='cat_categorii_link' href=-".$DBName.">".$ModuleName."</a></div><div class='polosa'></div>", $soda[1]);
 					$soderganie = str_replace(aa("[страницы]"), $soderganie2, $soderganie);
 				}
 			}
@@ -277,35 +277,35 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 		if (trim($stile)!="" and $stile!=0) $stil .= "-".str_replace(" ","-",trim($stile));
 		/////////////////////////////////////
 		if ($nameX == 0) {
-		if ($useitX != aa("все") and $nameX != 2 and $useitX != "" and $razdel_open_name != "" and $razdel_open_name != "no") $block_title2 .= "<span class=open_all_small> &nbsp; &#124; &nbsp; </span> <a href=-".$useitX." title=\"".$razdel_open_name."\" class=open_all_small><u>".$razdel_open_name."</u></a>";
+		if ($useitX != aa("все") and $nameX != 2 and $useitX != "" and $razdel_open_name != "" and $razdel_open_name != "no") $block_title2 .= "<span class='open_all_small'> &nbsp; &#124; &nbsp; </span> <a href=-".$useitX." title=\"".$razdel_open_name."\" class='open_all_small'><u>".$razdel_open_name."</u></a>";
 		}
 	/////////////////////////////////////
-		$design_open = "<div class=".$shablonX.">".$design[0]; 
+		$design_open = "<div class='".$shablonX."'>".$design[0]; 
 		if ($titleshow != 0 and $titleshow != 3) {
 			if (($nameX==0 or $nameX==1 or $nameX==4 or $nameX==6 or $nameX==8 or $nameX==9) and $notitlelink==0) {
 				$design_open .= "<h3 class=\"h3_block_title class_".$class."\"><a href=".$alternative_title_link." title=\"".$block_title."\" class=\"h3_block_title class_".$class."\">".$block_title."</a>".$block_title2."</h3><div class=polosa></div>"; 
 			} else {
-				if ($titleshow != 2) $design_open .= "<h3 class=\"h3_block_title class_".$class."\">".$block_title."</h3><div class=polosa></div>";
+				if ($titleshow != 2) $design_open .= "<h3 class=\"h3_block_title class_".$class."\">".$block_title."</h3><div class='polosa'></div>";
 			}
 		} 
 		if (!isset($design[1])) $design[1] = "";
 		$design_close = $design[1]."</div>";
 	/////////////////////////////////////
 	} else {
-		$design_open = "<div class=".$shablonX.">"; 
+		$design_open = "<div class='".$shablonX."'>"; 
 		if ($titleshow != 0 and $titleshow != 3) {
 			if (($nameX==0 or $nameX==1 or $nameX==4 or $nameX==6 or $nameX==8 or $nameX==9) and $notitlelink==0) {
 				$design_open .= "<h3 class=\"".$shablonX." h3_block_title class_".$class."\"><a href=".$alternative_title_link." title=\"".$block_title."\" class=\"h3_block_title class_".$class."\">".$block_title."</a>".$block_title2."</h3><div class=polosa></div>";
 			} else {
-				if ($titleshow != 2) $design_open .= "<h3 class=\"".$shablonX." h3_block_title class_".$class."\">".$block_title."</h3><div class=polosa></div>";
+				if ($titleshow != 2) $design_open .= "<h3 class=\"".$shablonX." h3_block_title class_".$class."\">".$block_title."</h3><div class='polosa'></div>";
 			}
 		}
 	$design_close = "</div>";
 	}
 
 	if ($html == 1) { $design_close = ""; $design_open = ""; $block_title = ""; $block_title2 = ""; }
-	if ($blocks == 1) { $design_close .= "</div>"; $design_open = "<div class=show_block><div class=show_block_title><a href='sys.php?op=mainpage&id=".$idX."&nastroi=1' title='".ss("Настроить блок")."'><img align=right width=16 src='/images/sys/cog.png'></a>
-	<a href='sys.php?op=mainpage&id=".$idX."&red=1' title='".ss("Редактировать в HTML")."'><img align=right width=16 src='/images/sys/edit.png'></a>".$titleX."</div>".$design_open; }
+	if ($blocks == 1) { $design_close .= "</div>"; $design_open = "<div class='show_block'><div class='show_block_title'><a href='sys.php?op=mainpage&id=".$idX."&nastroi=1' title='".ss("Настроить блок")."'><img align='right' width='16' src='/images/sys/cog.png'></a>
+	<a href='sys.php?op=mainpage&id=".$idX."&red=1' title='".ss("Редактировать в HTML")."'><img align='right' width='16' src='/images/sys/edit.png'></a>".$titleX."</div>".$design_open; }
 
 	// Определяем наличие шаблонов
 	if (trim($shablon) != "") {
@@ -321,7 +321,7 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 	// Работа с разными типами блоков
 	if (!isset($cid)) $cid = 0;
 	if (($show_in_razdel != $name and $show_in_razdel != aa("все")) or $no_show_in_razdel == $name or ($show_in_papka != $cid and $show_in_papka != "")) {
-		$block = str_replace("[$titleX]", "", $block);
+		$block = str_replace("[".$titleX."]", "", $block);
 		$nameX = "-1";
 	}
 
@@ -1553,7 +1553,89 @@ case "31": # Блок JS
 	// Ставим символ |
 	$block=str_replace("[-]", "|", $block); //  УБРАТЬ!!!!!!!!!!!!!!!!!!!!!!!
 
-	//Ставим RSS
+	// Ставим фильтр для магазина
+	if (strpos($block, aa("[фильтр]"))) {
+		$filtr = "";
+		if ($pid == 0) {
+			global $id_razdel_and_bd;
+			$id = $id_razdel_and_bd[$DBName];
+			// получаем список id страниц выбранного раздела и папки
+			$sql2 = "select `pid` from ".$prefix."_pages where `cid`='".$cid."' and `module`='".$DBName."' and `tables`='pages' order by `pid`";
+			$result2 = $db->sql_query($sql2);
+			$numrows = $db->sql_numrows($result2);
+			if ($numrows > 0) {
+			  $and = array();
+			  while ($row2 = $db->sql_fetchrow($result2)) {
+			  	$and[] = "`pages` like '% ".$row2['pid']." %'";
+			  }
+			  $and = " and (".implode(" or ", $and).")";
+			  // получаем все поля
+			  $sql = "select `id`, `title`, `name`, `text` from ".$prefix."_mainpage 
+			  where (`useit`='".$id."' or `useit`='0') and (`shablon` like '% ".$cid." %' or `shablon` = '' or `shablon` = '0' or `shablon` = ' 0 ') 
+			  and `type`='4' and `tables`='pages' order by `title`";
+			  $result = $db->sql_query($sql);
+			  $filtr .= "<form method='post'>";
+			  while ($row = $db->sql_fetchrow($result)) {
+			   $s_id = $row['id'];
+			   $s_title = $row['title'];
+			   $s_name = $row['name'];
+			   $options = explode("|", $row['text']);
+			   $options = $options[1];
+			   $type=0;
+			   $shablon=""; 
+			   parse_str($options);
+			   switch($type) {
+			    case "5": // число
+			    // получаем максимум и минимум для панели
+			    $sql2 = "select max(`name` + 0) max, min(`name` + 0) min from ".$prefix."_spiski where type='".$s_name."'".$and;
+			    $result2 = $db->sql_query($sql2);
+			    $row2 = $db->sql_fetchrow($result2);
+			    $max = $max2 = $row2['max'];
+			    $min = $min2 = $row2['min'];
+			    if ($max != 0 && $min != 0 && $max != $min) {
+			    	global $filter;
+			    	if (isset($filter)) {
+				    	$min2 = explode(" - ", $filter[$s_name]);
+				    	$max2 = intval($min2[1]);
+				    	$min2 = intval($min2[0]);
+				    }
+				    $filtr .= "<script>
+				    $(function() {
+					    $( '#slider-range".$s_name."' ).slider({
+						    range: true,
+						    min: ".$min.",
+						    max: ".$max.",
+						    values: [ ".$min2.", ".$max2." ],
+						    slide: function( event, ui ) {
+							    interval = ui.values[ 0 ] + ' - ' + ui.values[ 1 ];
+							    $('#amount".$s_name."').val( interval );
+							    $('#text_amount".$s_name."').html( interval );
+							    $('.change_filter').hide();
+							    $('#change".$s_name."').show();
+						    }
+					    });
+						interval = $( '#slider-range".$s_name."' ).slider( 'values', 0 ) +
+					    ' - ' + $( '#slider-range".$s_name."' ).slider( 'values', 1 )
+					    $( '#amount".$s_name."' ).val( interval );
+					    $( '#text_amount".$s_name."' ).html( interval );
+				    });
+				    </script>
+				    <p><span class='filter_title filter_title_".$s_name."'>".$s_title.":</span> 
+				    <span class='filter_interval filter_interval_".$s_name."' id='text_amount".$s_name."'></span>
+				    <input type='hidden' name='filter[".$s_name."]' id='amount".$s_name."'></p>
+				    <div id='slider-range".$s_name."'></div>
+				    <div id='change".$s_name."' class='hide center change_filter'><button class='small'>".ss("Показать")."</button></div>";
+			    }
+			    break;
+			   }
+			  } // end while
+			  $filtr .= "</form>";
+			}
+		}
+		$block=str_replace(aa("[фильтр]"), $filtr, $block);
+	}
+
+	// Ставим RSS
 	if (strpos($block, "[rss")) {
 		$rss_text = "<a href='rss.php' title='".ss("Подпишись на наши новости по RSS!")."' class='rss'><img src='images/";
 		$block=str_replace("[rss]", $rss_text."rss_16.png'></a>", $block);

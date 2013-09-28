@@ -925,7 +925,7 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
       <input type=hidden name=op value=mainpage_save>
       </form>";
   } elseif ($id == 8) { // ПОМОЩЬ на Главной
-    require_once ('ad/help.php');
+    require_once ('help.php');
 
   } elseif ($id == 5) { // НОВОЕ
     $pageslistdel .= "<table width=100% class=table_light><thead><tr><th>Дата последнего изменения</th><th>Раздел </th><th class='gray'>Включение</th><th>Страница</th></tr></thead><tbody>";
