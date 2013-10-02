@@ -12,7 +12,7 @@ if ($row['realadmin'] == 1) {
 		echo "<h2>Блокировка посетителей (запрет использования сайта)</h2>";
 		$numrows = $db->sql_numrows($db->sql_query("SELECT * from ".$prefix."_banned_ip"));
 		if ($numrows != 0) {
-			echo "<a class='punkt dark_pole' onclick=\"show_animate('show_stop_users');\"><img class='icon2 i3' src='/images/1.gif' align='bottom'>Заблокированные по IP-адресу посетители: $numrows</a><div id='show_stop_users' style='display:none;'>
+			echo "<a class='punkt dark_pole' onclick=\"show_animate('show_stop_users');\"><img class='icon2 i3' src='/images/1.gif' align='bottom'>Заблокированные по IP-адресу посетители: ".$numrows."</a><div id='show_stop_users' style='display:none;'>
 			"
 			."<table class=table_light>"
 			."<tr><td bgcolor='".$bgcolor2."' align='left'><b>IP-адрес</b>&nbsp;</td>"
@@ -126,7 +126,7 @@ if ($row['realadmin'] == 1) {
 		include ("ad/ad-header.php");
 		$ok = intval($ok);
 		// Получаем настройки из mainfile
-		global $sitename, $startdate, $adminmail, $keywords, $description, $counter, $statlink, $postlink, $stopcopy, $registr, $pogoda, $flash, $sgatie, $ht_backup, $captcha_ok, $xnocashe, $jqueryui, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $comment_send, $company_name, $company_fullname, $company_address, $company_time, $company_tel, $company_sot, $company_fax, $company_email, $company_map, $company_people, $search_design, $tag_design, $add_fonts, $site_cash, $normalize, $project_logotip, $project_name, $geo, $kolkey, $add_clips, $sortable, $color_tema_html, $color_tema_css, $color_tema_js, $color_tema_php, $tab_obzor, $tab_show, $shop_text_val1, $shop_text_val2, $shop_text_itogo, $shop_text_oformit, $shop_text_korzina, $shop_text_delete, $shop_pole, $shop_admin_mail, $shop_text_after_mail,$shop_spisok_pole, $shop_shablon_form_order, $shop_shablon_mail_client, $shop_shablon_mail_admin, $head_insert;
+		global $sitename, $startdate, $adminmail, $keywords, $description, $counter, $statlink, $postlink, $stopcopy, $registr, $pogoda, $flash, $sgatie, $ht_backup, $captcha_ok, $xnocashe, $jqueryui, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $comment_send, $company_name, $company_fullname, $company_address, $company_time, $company_tel, $company_sot, $company_fax, $company_email, $company_map, $company_people, $search_design, $tag_design, $add_fonts, $site_cash, $normalize, $project_logotip, $project_name, $geo, $kolkey, $add_clips, $sortable, $color_tema_html, $color_tema_css, $color_tema_js, $color_tema_php, $tab_obzor, $tab_show, $shop_text_val1, $shop_text_val2, $shop_text_itogo, $shop_text_oformit, $shop_text_korzina, $shop_text_delete, $shop_pole, $shop_admin_mail, $shop_text_after_mail,$shop_spisok_pole, $shop_shablon_form_order, $shop_shablon_mail_client, $shop_shablon_mail_admin, $head_insert, $filter_name, $filter_show_all, $gravatar;
 		
 		$ad_fon_option = ""; // Выбор фоновок для админки
 		for ($i=1; $i < 28; $i++) { // всего 27 фоновок + 1 по-умолчанию в папке images/ad-fon
@@ -312,8 +312,17 @@ body {}
 	<pre>&lt;a onclick=\"shop_add_tovar(2,590)\"&gt;Купить&lt;/a&gt;</pre>
 	<p>Использование в шаблоне блоков [Купить_ссылка] и [Купить_кнопка] возможно только при подключении поля, которое содержит цену товара. В РАЗРАБОТКЕ!
 	<table class='table_light'>
-
 	<tr valign=top><td colspan=2>
+
+	<h1>Настройка Фильтра (блок [фильтр])</h1>
+	</td></tr><tr valign=top><td width=40%>
+	Заголовок «Фильтр товаров» (чтобы убрать, замените на пробел)</td><td class=small>
+	".input("options[filter_name]", $filter_name, "100%")."
+	</td></tr><tr valign=top><td>
+	Кнопка «Показать все» (или «убрать все фильтры»):</td><td class=small>
+	".input("options[filter_show_all]", $filter_show_all, "100%")."
+	</td></tr><tr valign=top><td colspan=2>
+
 	<h1>Настройка Корзины</h1>
 	</td></tr><tr valign=top><td width=40%>
 	Денежный знак слева или справа от суммы:</td><td class=small>
@@ -407,6 +416,10 @@ body {}
 	".input("options[counter]", $counter, 60, "txt")."
 	<br>Код счетчика внешней статистики Сайта: LiveInternet, Google Analytics, Яндекс.Метрика и другие. Счетчик можно поставить в дизайн как автоматический блок, написав [статистика]. Если вы хотите скрыть счетчик от посетителей - используйте счетчик без цифр (и с закрытой от просмотра статистикой) и/или поставьте счетчик в скрытый слой DIV (тогда ссылка на статистику будет доступна только из Администрирования — ссылка сверху). Если использовать <a href=http://www.liveinternet.ru/add>LiveInternet</a> для получения счетчика — выбрать при получении: «код счетчика в одну строчку» и «учитывать заголовки».
 	</td></tr>
+
+	<tr valign=top><td>
+	Использование аватаров <a href='http://ru.gravatar.com' target='_blank'>Gravatar</a> в комментариях:</td><td class=small>
+	".select("options[gravatar]", "0,1", "НЕТ,ЕСТЬ", $gravatar)."</td></tr>
 
 	<tr valign=top class=hide><td>
 	Регистрация:</td><td class=small>
@@ -814,53 +827,50 @@ echo "
 	</div>
 	</form>";
 
-///////////////////////////////////////////////////////////////////////////////////////////
-$result = $db->sql_query("SELECT aid, name from " . $prefix . "_authors where name='BOG'");
-$row = $db->sql_fetchrow($result);
-$adm_aid = filter($row['aid'], "nohtml");
-$adm_aid = trim(strtolower(substr($adm_aid, 0,25)));
+	///////////////////////////////////////////////////////////////////////////////////////////
+	$result = $db->sql_query("SELECT aid, name from " . $prefix . "_authors where name='BOG'");
+	$row = $db->sql_fetchrow($result);
+	$adm_aid = filter($row['aid'], "nohtml");
+	$adm_aid = trim(strtolower(substr($adm_aid, 0,25)));
 
-echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>";
-		if (!isset($ip)) $ip="";
-		if ($ipban != false) {
-			echo "<a class='nothing punkt dark_pole' onclick=\"show_animate('show_options3');\"><img class='icon2 i43' src='/images/1.gif' align=bottom>Блокировка посетителей</a><div id='show_options3' style='display:none;'>";
-			main_ban($ip);
-			echo "<br><br></div>";
-		} else echo "<div class='notice warning'>Блокировка посетителей отключена. Включить можно через config.php</div>";
-		echo "
+	echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>";
+	if (!isset($ip)) $ip="";
+	if ($ipban != false) {
+		echo "<a class='nothing punkt dark_pole' onclick=\"show_animate('show_options3');\"><img class='icon2 i43' src='/images/1.gif' align=bottom>Блокировка посетителей</a><div id='show_options3' style='display:none;'>";
+		main_ban($ip);
+		echo "<br><br></div>";
+	} else echo "<div class='notice warning'>Блокировка посетителей отключена. Включить можно через config.php</div>";
+	echo "<h2>Смена пароля администратора:</h2>";
+	$row = $db->sql_fetchrow($db->sql_query("SELECT aid, name, pwd from " . $prefix . "_authors where name='BOG'"));
+	$chng_aid = filter($row['aid'], "nohtml");
+	$chng_name = filter($row['name'], "nohtml");
+	$chng_pwd = filter($row['pwd'], "nohtml");
+	$chng_aid = strtolower(substr($chng_aid, 0,25));
+	$aid = $chng_aid;
+	echo "<form action=".$admin_file.".php method=post>
+	<table class=tight>
+	<tr><td align=right>Псевдоним:</td>
+	<td><input type=text name=chng_aid value='".$chng_aid."' size=20 maxlength=25></td></tr>
+	<tr><td align=right>Пароль:</td>
+	<td><input type=password name=chng_pwd size=20 maxlength=40></td></tr>
+	<tr><td align=right>Пароль еще раз:</td>
+	<td><input type=password name=chng_pwd2 size=20 maxlength=40></td></tr>
+	<tr><td colspan=2><input type=submit value=' Сохранить '></td></tr></table>
+	<input type=hidden name=chng_name value='".$chng_name."'>
+	<input type=hidden name=adm_aid value='".$adm_aid."'>
+	<input type=hidden name=op value='update_author'>
+	</form>
+	<br><br><div class='notice warning hide'><a href='sys.php?op=admins_list'>Список администраторов</a></div>
+	</div>
 
-		<h2>Смена пароля администратора:</h2>";
-		$row = $db->sql_fetchrow($db->sql_query("SELECT aid, name, pwd from " . $prefix . "_authors where name='BOG'"));
-		$chng_aid = filter($row['aid'], "nohtml");
-		$chng_name = filter($row['name'], "nohtml");
-		$chng_pwd = filter($row['pwd'], "nohtml");
-		$chng_aid = strtolower(substr($chng_aid, 0,25));
-		$aid = $chng_aid;
-		echo "<form action=".$admin_file.".php method=post>
-		<table class=tight>
-		<tr><td align=right>Псевдоним:</td>
-		<td><input type=text name=chng_aid value='".$chng_aid."' size=20 maxlength=25></td></tr>
-		<tr><td align=right>Пароль:</td>
-	    <td><input type=password name=chng_pwd size=20 maxlength=40></td></tr>
-		<tr><td align=right>Пароль еще раз:</td>
-		<td><input type=password name=chng_pwd2 size=20 maxlength=40></td></tr>
-		<tr><td colspan=2><input type=submit value=' Сохранить '></td></tr></table>
-		<input type=hidden name=chng_name value='".$chng_name."'>
-		<input type=hidden name=adm_aid value='".$adm_aid."'>
-		<input type=hidden name=op value='update_author'>
-		</form>
-		<br><br><div class='notice warning hide'><a href='sys.php?op=admins_list'>Список администраторов</a></div>
-		</div>";
+	<div class='show_pole' id='show_options_oldfotos' style='display:none;'>Загружаю...</div>
+	</div>
 
- echo "<div class='show_pole' id='show_options_oldfotos' style='display:none;'>Загружаю...</div>
-
-</div>
-
-</td></tr></table>
-</body>
-</html>";
+	</td></tr></table>
+	</body>
+	</html>";
 	}
-///////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////
 	function admins_list() {
 		global $admin, $prefix, $db, $admin_file, $bgcolor2, $modules_info;
 		include ("ad/ad-header.php");
@@ -1230,7 +1240,7 @@ echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>
 
 			$ed2_buttons = $options['ed2_button_html']."|".$options['ed2_button_formatting']."|".$options['ed2_button_bold']."|".$options['ed2_button_italic']."|".$options['ed2_button_deleted']."|".$options['ed2_button_underline']."|".$options['ed2_button_unorderedlist']."|".$options['ed2_button_orderedlist']."|".$options['ed2_button_outdent']."|".$options['ed2_button_indent']."|".$options['ed2_button_image']."|".$options['ed2_button_video']."|".$options['ed2_button_file']."|".$options['ed2_button_table']."|".$options['ed2_button_link']."|".$options['ed2_button_alignment']."|".$options['ed2_button_horizontalrule']."|".$options['ed2_button_more']."|".$options['ed2_button_link2']."|".$options['ed2_button_block']."|".$options['ed2_button_pre']."|".$options['ed2_button_fullscreen']."|".$options['ed2_button_clips']."|".$options['ed2_button_fontcolor']."|".$options['ed2_button_fontsize']."|".$options['ed2_button_fontfamily']."|".$options['ed2_minHeight']."|".$options['ed2_direction'];
 
-			$advanced = $options['jqueryui']."|".$options['show_comments']."|".$options['show_userposts']."|".$options['show_page']."|".$options['show_reserv']."|".$options['uskorenie_blokov']."|".$options['kickstart']."|".$options['show_page_links']."|".$options['ad_fon']."|".$options['search_design']."|".$options['tag_design']."|".$options['add_fonts']."|".$options['normalize']."|".$options['project_logotip']."|".$options['project_name']."|".$options['geo']."|".$options['kolkey']."|".$options['add_clips']."|".$options['sortable']."|".$options['color_tema_html']."|".$options['color_tema_css']."|".$options['color_tema_js']."|".$options['color_tema_php']."|".$options['tab_obzor']."|".$options['tab_show']."|".$options['shop_text_val1']."|".$options['shop_text_val2']."|".$options['shop_text_itogo']."|".$options['shop_text_oformit']."|".$options['shop_text_korzina']."|".$options['shop_text_delete']."|".$options['shop_pole']."|".$options['shop_admin_mail']."|".$options['shop_text_after_mail']."|".$options['shop_spisok_pole']."|".$options['shop_shablon_form_order']."|".$options['shop_shablon_mail_client']."|".$options['shop_shablon_mail_admin']."|".$ed2_buttons."|".$options['head_insert'];
+			$advanced = $options['jqueryui']."|".$options['show_comments']."|".$options['show_userposts']."|".$options['show_page']."|".$options['show_reserv']."|".$options['uskorenie_blokov']."|".$options['kickstart']."|".$options['show_page_links']."|".$options['ad_fon']."|".$options['search_design']."|".$options['tag_design']."|".$options['add_fonts']."|".$options['normalize']."|".$options['project_logotip']."|".$options['project_name']."|".$options['geo']."|".$options['kolkey']."|".$options['add_clips']."|".$options['sortable']."|".$options['color_tema_html']."|".$options['color_tema_css']."|".$options['color_tema_js']."|".$options['color_tema_php']."|".$options['tab_obzor']."|".$options['tab_show']."|".$options['shop_text_val1']."|".$options['shop_text_val2']."|".$options['shop_text_itogo']."|".$options['shop_text_oformit']."|".$options['shop_text_korzina']."|".$options['shop_text_delete']."|".$options['shop_pole']."|".$options['shop_admin_mail']."|".$options['shop_text_after_mail']."|".$options['shop_spisok_pole']."|".$options['shop_shablon_form_order']."|".$options['shop_shablon_mail_client']."|".$options['shop_shablon_mail_admin']."|".$ed2_buttons."|".$options['head_insert']."|".$options['filter_name']."|".$options['filter_show_all']."|".$options['gravatar'];
 			// sitename	startdate	adminmail	keywords	description	counter	statlink	postlink	registr	pogoda	flash	sgatie	stopcopy	nocashe	adminmes	red	comment	captcha_ok	ht_backup
 			$db->sql_query("UPDATE `".$prefix."_config` SET 
 				`sitename` = '".mysql_real_escape_string($options['sitename'])."',

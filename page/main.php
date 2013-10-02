@@ -19,7 +19,7 @@ global $strelka, $go, $cid, $pid, $all, $avtor, $to, $info, $num, $ip, $golos, $
 // настройки раздела из БД
 global $post, $comments, $datashow, $sort, $lim, $foto, $view, $search, $search_papka, $tema, $tema_name, $tema_title, $tema_opis, $menushow, $design; 
 
-$media=$folder=$col=$view=$golos=$golosrazdel=$post=$comments=$datashow=$favorites=$socialnetwork=$search=$search_papka=$put_in_blog=$base=$vetki=$citata=$media_comment=$no_html_in_opentext=$no_html_in_text=$show_add_post_on_first_page=$media_post=$razdel_shablon=$page_shablon=$comments_all=$comments_num=$comments_mail=$comments_adres=$comments_tel=$comments_desc=$golostype=$pagenumbers=$comments_main=$tags_type=$tema_zapret_comm=$pagekol=$table_light=$designpages=$comments_add=$div_or_table=0;
+$media=$folder=$col=$view=$golos=$golosrazdel=$post=$comments=$datashow=$favorites=$socialnetwork=$search=$search_papka=$put_in_blog=$base=$vetki=$citata=$media_comment=$no_html_in_opentext=$no_html_in_text=$show_add_post_on_first_page=$media_post=$razdel_shablon=$page_shablon=$comments_all=$comments_num=$comments_mail=$comments_adres=$comments_tel=$comments_desc=$golostype=$pagenumbers=$comments_main=$tags_type=$tema_zapret_comm=$pagekol=$table_light=$designpages=$comments_add=$div_or_table=$papka_show=0;
 
 $menushow=$titleshow=$razdel_link=$peopleshow=$design=$tags=$podrobno=$podrazdel_active_show=$podrazdel_show=$tipograf=$limkol=$tags_show=$tema_zapret=1;
 $comment_shablon=2;
@@ -105,7 +105,8 @@ function top_menu($cid, $page) {
     if ($razdel_link==1) $ret .= "<h1 class='cat_categorii_link'><A href='/-".$DBName."'>".$ModuleName."</a></h1>";
     else $ret .= "<h1 class='cat_categorii_link'>".$ModuleName."</h1>";
     
-  if (trim($reclama) == "" and ($cid > 0)) $reclama = $c_description[$cid];
+  //if (trim($reclama) == "" and ($cid > 0)) 
+    $reclama = $reclama.$c_description[$cid];
   if (trim($reclama) != "" and $view!=4) $ret .= "<div class='cat_description'>".$reclama."</div>";
 
     $ret .= "<br>".$searchline1." ".$title." </div><div class='venzel'></div>";
@@ -151,7 +152,8 @@ function top_menu($cid, $page) {
   if (!isset($c_title[$cid])) $c_title[$cid] = "";
   if (!isset($c_parent[$cid])) $c_parent[$cid] = 0;
 
-  if (trim($reclama) == "") $reclama = $c_description[$cid];
+  //if (trim($reclama) == "") 
+    $reclama = $reclama.$c_description[$cid];
   $title = trim($c_title[$cid]);
   $parent_id = $c_parent[$cid];
   $and = "";
@@ -173,12 +175,15 @@ function top_menu($cid, $page) {
 
   if ($razdel_link==2) $ret = "";
   // Добавление табов
-    global $include_tabs;
-    if (strpos(" ".$reclama, "{{")) {
-      if ($include_tabs == false) { include ('page/tabs.php'); $include_tabs = true; }
-      if (strpos(" ".$reclama, "{{")) $reclama = show_tabs($reclama);
+  global $include_tabs, $papka_show;
+  if (strpos(" ".$reclama, "{{")) {
+    if ($include_tabs == false) { 
+      include ('page/tabs.php'); 
+      $include_tabs = true; 
     }
-  if (trim($reclama) != "" and $view!=4) $ret .= "<div class='cat_description'>".$reclama."</div>";
+    $reclama = show_tabs($reclama);
+  }
+  if ( trim($reclama) != "" && $view!=4) $ret .= "<div class='cat_description'>".$reclama."</div>";
 
   if ( (count($c_title) > 0) and ($podrazdel_show==3 or $podrazdel_show==1) and ( $page == 1 or $podrazdel_active_show > 0) ) {
   $links = $links2 = "";
@@ -368,7 +373,7 @@ function showdate($showdate) {
 ######################################################################################
 function showcat($cid=0, $pag=0, $slovo="") {
   global $strelka, $soderganie, $soderganie2, $DBName, $db, $prefix, $module_name, $admin, $name, $pagetitle, $keywords2, $description2;
-  global $golos, $golosrazdel, $golostype, $post, $comments, $datashow, $sort, $lim, $folder, $media, $view, $col, $search, $search_papka, $tema, $tema_name, $tema_title, $tema_opis, $menushow, $base, $where, $order, $peopleshow, $show_add_post_on_first_page, $razdel_shablon, $comments_1, $comments_main, $limkol, $tags, $tag_text_show, $tags_type, $tags_show, $pagenumbers, $div_or_table, $show_read_all, $read_all; // настройки из БД
+  global $golos, $golosrazdel, $golostype, $post, $comments, $datashow, $sort, $lim, $folder, $media, $view, $col, $search, $search_papka, $tema, $tema_name, $tema_title, $tema_opis, $menushow, $base, $where, $order, $peopleshow, $show_add_post_on_first_page, $razdel_shablon, $comments_1, $comments_main, $limkol, $tags, $tag_text_show, $tags_type, $tags_show, $pagenumbers, $div_or_table, $show_read_all, $read_all, $reclama, $papka_show; // настройки из БД
   $DBName = mysql_real_escape_string($DBName);
   $sort = mysql_real_escape_string($sort);
   $cid = intval($cid);
@@ -452,14 +457,13 @@ function showcat($cid=0, $pag=0, $slovo="") {
       $tag_slovo = "";
       $and_1_3 = "";
     }
-    $soderganieALL = "";
+
     //////////////////////////////////////////////////////
     if ($cid == 0 and $view!=2) {
       if ($menushow != 0) $soderganieMENU = top_menu($cid, 0);
       if (!isset($soderganieALL)) $soderganieALL = "";
       $soderganieALL .= $tagcloud.$tag_slovo;
       # Если не выбран ни один каталог
-
       if ($div_or_table == 0) {
         if ($view==1) $soderganieALL .= "<table cellspacing=0 cellpadding=3 width=100%>";
         else $soderganieALL .= "<table cellspacing=0 cellpadding=3 width=100%>";
@@ -469,7 +473,22 @@ function showcat($cid=0, $pag=0, $slovo="") {
     } else {
       $and_1_1 = " and `cid`='".$cid."'";
       $and_1_2 = $ANDDATA;
-      if ($menushow != 0) $soderganieMENU = top_menu($cid, 1);
+      if ($menushow != 0) {
+        $soderganieMENU = top_menu($cid, 1);
+        if ($papka_show == "1") {
+          $soderganieALL2 = "";
+          $soderganieMENU = explode("<div class='cat_description'>", $soderganieMENU);
+          if (isset($soderganieMENU[1])) 
+            if ($soderganieMENU[1] != "") {
+              $soderganieALL = "<div class='cat_description'>".$soderganieMENU[1];
+              $soderganieALL = explode("<div class='main_cat_links'>", $soderganieALL);
+              $soderganieALL2 = "<div class='main_cat_links'>".$soderganieALL[1];
+              $soderganieALL = $soderganieALL[0];
+            }
+            
+          $soderganieMENU = $soderganieMENU[0].$soderganieALL2;
+        }
+      }
       $soderganieALL .= $tagcloud;
     }
 
@@ -514,6 +533,9 @@ function showcat($cid=0, $pag=0, $slovo="") {
     }
     $numm = 0;
 
+  $pid_s = $pid_ok = $pid_del = array();
+  $pid_del_ok = false;
+
   if ($nu > 0) { //  and $view != 4
     if ($razdel_shablon == 0) { // Если используются внутренние шаблоны
       // Получаем шаблон
@@ -531,43 +553,67 @@ function showcat($cid=0, $pag=0, $slovo="") {
       $sha = $sha[0];
       //$add_css .= " razdel_".$row['text'];
       
-        // Ищем списки (доп. поля), относящиеся к нашим страницам по модулю
-        $s_names = array();
-        $s_opts = array();
-        // Определим № раздела
-        $sql = "select `id` from ".$prefix."_mainpage where `tables`='pages' and name='".$DBName."' and type='2'";
-        $result7 = $db->sql_query($sql);
-        $row7 = $db->sql_fetchrow($result7);
-        $r_id = mysql_real_escape_string($row7['id']);
-        $result5 = $db->sql_query("SELECT `id`, `name`, `text` FROM ".$prefix."_mainpage WHERE `tables`='pages' and (`useit` = '".$r_id."' or `useit` = '0') and `type`='4'");
-        while ($row5 = $db->sql_fetchrow($result5)) {
-          $s_id = $row5['id'];
-          $n = $row5['name'];
-          $s_names[$s_id] = $n;
-          // Найдем значение всех полей для данных страниц // переделать
-          $result6 = $db->sql_query("SELECT `name`, `pages` FROM ".$prefix."_spiski WHERE type='".mysql_real_escape_string($n)."'");
-          while ($row6 = $db->sql_fetchrow($result6)) {
-            $n1 = $row6['name'];
-            $n2 = explode(" ", trim($row6['pages']));
-            foreach ($n2 as $n2_1 => $n2_2) {
-              $s_opts[$n][$n2_2] = $n1; // раздел страница поле
-            }
+      
+      // Ищем списки (доп. поля), относящиеся к нашим страницам по модулю
+      $s_names = array();
+      $s_opts = array();
+      // Определим № раздела
+      $sql = "select `id` from ".$prefix."_mainpage where `tables`='pages' and name='".$DBName."' and type='2'";
+      $result7 = $db->sql_query($sql);
+      $row7 = $db->sql_fetchrow($result7);
+      $r_id = mysql_real_escape_string($row7['id']);
+      $result5 = $db->sql_query("SELECT `id`, `name`, `text` FROM ".$prefix."_mainpage WHERE `tables`='pages' and (`useit` = '".$r_id."' or `useit` = '0') and `type`='4'");
+      global $filter;
+      while ($row5 = $db->sql_fetchrow($result5)) {
+        $s_id = $row5['id'];
+        $n = $row5['name'];
+        $s_names[$s_id] = $n;
+
+        if (isset($filter)) { // фильтр
+          if (isset($filter[$n])) {
+            $min = explode(" - ", $filter[$n]);
+            $max = intval($min[1]);
+            $min = intval($min[0]);
           }
         }
+
+        // Найдем значение всех полей для данных страниц // переделать
+        $result6 = $db->sql_query("SELECT `name`, `pages` FROM ".$prefix."_spiski WHERE type='".mysql_real_escape_string($n)."'");
+        while ($row6 = $db->sql_fetchrow($result6)) {
+          $n1 = intval($row6['name']);
+          $n2 = explode(" ", trim($row6['pages']));
+          foreach ($n2 as $n2_1 => $n2_2) {
+            if (isset($max))
+              if ($n1 <= $max && $n1 >= $min) // отбираем страницы, подходящие фильтру
+                { 
+                  if ($pid_del_ok == false) $pid_ok[] = $n2_2;
+                  elseif (in_array($n2_2, $pid_del)) $pid_ok[] = $n2_2;
+                }
+            $s_opts[$n][$n2_2] = $n1; // имя поля, страница = значение поля
+          }
+        }
+        if (isset($filter[$n])) {
+          $pid_del = $pid_ok;
+          $pid_ok = array();
+          $pid_del_ok = true; // включение второго уровня обработки
+        }
+      }
     }
+
     $color = 1;
-    
     // Получаем список всех индексов страниц для исключения копий
-    $pid_s = array();
     while ($row3 = $db->sql_fetchrow($result2)) {
       // Добавляем только оригиналы, без копий
-      if ( $row3['copy'] == $row3['pid'] or $row3['copy'] == 0 ) $pid_s[] = $row3['pid'];
+      if ( ( $row3['copy'] == $row3['pid'] || $row3['copy'] == 0 ) )
+        $pid_s[] = $row3['pid'];
     }
     $result2 = $db->sql_query($sql2);
 
       $copy_s = array();
       while ($row2 = $db->sql_fetchrow($result2)) {
-        if ( ( $row2['copy'] == 0 or $row2['copy'] == $row2['pid'] or !in_array($row2['copy'], $pid_s) ) and !in_array($row2['copy'], $copy_s) ) {
+        if ( ( $row2['copy'] == 0 || $row2['copy'] == $row2['pid'] || !in_array($row2['copy'], $pid_s) ) 
+          && !in_array($row2['copy'], $copy_s) 
+          && ($pid_del_ok == false || in_array($row2['pid'], $pid_del) ) ) {
 
           if ($row2['copy'] != 0) $copy_s[] = $row2['copy'];
           $numm++;
@@ -575,7 +621,7 @@ function showcat($cid=0, $pag=0, $slovo="") {
           $pсid = $row2['cid'];
           $p_name = "";
           if ($pсid!=0 and $cid == 0) 
-            $p_name="<div class='cat_page_cattitle'><a href='/-".$DBName."_cat_".$pсid."' class='cat_page_cattitle'>".$c_name[$pсid]."</a></div>";
+            $p_name = "<div class='cat_page_cattitle'><a href='/-".$DBName."_cat_".$pсid."' class='cat_page_cattitle'>".$c_name[$pсid]."</a></div>";
           $title = stripcslashes($row2['title']);
           $open_text = stripcslashes($row2['open_text']);
           if (trim($open_text) == "<br><br>") $open_text = "";
@@ -775,10 +821,17 @@ function showcat($cid=0, $pag=0, $slovo="") {
     } // end if main
   } // end while
 
+  $filter_number = "";
+  if ($pid_del_ok == true) {
+    if ($numm > 0) $filter_number = ss("Найдено:")." ".$numm;
+    else $filter_number = ss("Ничего не найдено");
+    $filter_number = "<div class='filter_number_pages'>".$filter_number.".</div>";
+  }
+
   if ($div_or_table == 0) {
     if ($cid == 0) $soderganieALL .= $soderganieALL2."</table>"; // </table>
-    elseif ($view != 4) $soderganieALL .= "<table cellspacing=0 cellpadding=3 width=100%>".$soderganieALL2."</table>";
-  } else $soderganieALL .= $soderganieALL2."<div style='clear:both;'></div>";
+    elseif ($view != 4) $soderganieALL .= $filter_number."<table cellspacing=0 cellpadding=3 width=100%>".$soderganieALL2."</table>";
+  } else $soderganieALL .= $filter_number.$soderganieALL2."<div style='clear:both;'></div>";
 
   if ($view!=4) {
     // Нумерация страниц

@@ -10,7 +10,8 @@ global $prefix, $db, $admin; // , $ad, $id, $desc, $sha, $vetki, $comments_num, 
 
 if (is_admin($admin)) $admin_ok = 1; else $admin_ok = 0;
 
-if (isset($_GET['p_id'])) $pid = intval($_GET['p_id']); else die('Комментариев нет.');
+if (isset($_GET['p_id'])) $pid = intval($_GET['p_id']); 
+else die(ss("Комментариев нет."));
 $comments_desc = intval($_GET['desc']);
 $comment_shablon = intval($_GET['sha']);
 $vetki = intval($_GET['vetki']);
@@ -24,7 +25,7 @@ $url = getenv("REQUEST_URI");
 $lim = ""; // доделать на аяксе
 if ($comments_desc == 1) $dat = " desc"; else $dat = "";
 
-  $sql_comm = "SELECT `cid`,`avtor`,`ava`,`mail`,`text`,`ip`,`data`,`drevo`,`adres`,`tel` FROM ".$prefix."_pages_comments WHERE `num`='$pid' and `active`='1' order by drevo, data".$dat.$lim;
+  $sql_comm = "SELECT `cid`,`avtor`,`ava`,`mail`,`text`,`ip`,`data`,`drevo`,`adres`,`tel` FROM ".$prefix."_pages_comments WHERE `num`='".$pid."' and `active`='1' order by drevo, data".$dat.$lim;
   $result = $db->sql_query($sql_comm);
   $numrows = $db->sql_numrows($result);
   $nu = 0;
@@ -36,7 +37,7 @@ if ($comments_desc == 1) $dat = " desc"; else $dat = "";
   $date_now2 = date("d m Y",time()-86400);
   $date_now3 = date("d m Y",time()-172800);
   $c_id = 0;
-  $comm = "В ожидании вашего комментария...";
+  $comm = ss("В ожидании вашего комментария...");
   while ($row = $db->sql_fetchrow($result)) {
     $c_id = $row['cid'];
     $p_id[$c_id] = $pid;
@@ -47,9 +48,9 @@ if ($comments_desc == 1) $dat = " desc"; else $dat = "";
     $datax1 = intval($datax[2])." ".findMonthName($datax[1])." ".$datax[0];
     $datax1_1 = $datax[2]." ".$datax[1]." ".$datax[0];
     $datax2 = $datax[3].":".$datax[4]."";
-    if ($date_now == $datax1_1) $datax1 = "Сегодня";
-    elseif ($date_now2 == $datax1_1) $datax1 = "Вчера";
-    elseif ($date_now3 == $datax1_1) $datax1 = "Позавчера";
+    if ($date_now == $datax1_1) $datax1 = ss("Сегодня");
+    elseif ($date_now2 == $datax1_1) $datax1 = ss("Вчера");
+    elseif ($date_now3 == $datax1_1) $datax1 = ss("Позавчера");
     $date1[$c_id] = $datax1;
     $date2[$c_id] = $datax2;
     $ip[$c_id] = $row['ip'];
@@ -67,7 +68,7 @@ if ($comments_desc == 1) $dat = " desc"; else $dat = "";
 /////////////////////////////////////////////////////
 function generate_comm($admin_ok, $p_id, $avtor, $text, $mail, $adres, $tel, $date1, $date2, $ip, $drevo, $sha, $position, $numb="", $vetki, $comments_num, $comments_all, $comments_mail, $comments_adres, $comments_tel, $ava) {
   $sha3 = "";
-  global $db, $prefix;
+  global $db, $prefix, $gravatar;
   $ok = false;
   $all_show = ""; $all_hide = ""; // список для "раскрыть все ответы"
   $comments_nu = $comments_num + 1;
@@ -83,64 +84,61 @@ function generate_comm($admin_ok, $p_id, $avtor, $text, $mail, $adres, $tel, $da
       } else $ok = false;
     if ($ok == true) {
     $nu++;
-
-// Кавычки в имени (исправление ошибки в IE)
-//$avtor[$comm_cid] = preg_replace('/(^|\s)"(\S)/', '$1&laquo;$2', $avtor[$comm_cid]);
-//$avtor[$comm_cid] = preg_replace('/(\S)"([ .,?!])/', '$1&raquo;$2', $avtor[$comm_cid]);
-$avtor[$comm_cid] = str_replace('"', ' ', str_replace('\'', ' ', $avtor[$comm_cid])); // &raquo;
-$avtor2 = $avtor[$comm_cid];
-//$avtor2 = "<a href=\"#addcomm\" title='Вставить имя в ваш комментарий' onclick=\"clc_name(' ".$avtor[$comm_cid].", ')\">".$avtor[$comm_cid]."</a>";
-$text2 = str_replace(',', ', ', $text[$comm_cid]);
-//$text2 = str_replace(' ,', ',', $text2);
-//$text2 = str_replace(' ...', '...', $text2);
-//$text2 = str_replace(' руб ', ' руб. ', $text2); $text2 = str_replace(' руб,', ' руб.,', $text2); $text2 = str_replace(' руб!', ' руб.!', $text2);
-  $text2 = "<div id='comm_".$comm_cid."' class='comm_text'>".$text2."</div>";
+    // Кавычки в имени (исправление ошибки в IE)
+    //$avtor[$comm_cid] = preg_replace('/(^|\s)"(\S)/', '$1&laquo;$2', $avtor[$comm_cid]);
+    //$avtor[$comm_cid] = preg_replace('/(\S)"([ .,?!])/', '$1&raquo;$2', $avtor[$comm_cid]);
+    $avtor[$comm_cid] = str_replace('"', ' ', str_replace('\'', ' ', $avtor[$comm_cid])); // &raquo;
+    $avtor2 = $avtor[$comm_cid];
+    //$avtor2 = "<a href=\"#addcomm\" title='Вставить имя в ваш комментарий' onclick=\"clc_name(' ".$avtor[$comm_cid].", ')\">".$avtor[$comm_cid]."</a>";
+    $text2 = str_replace(',', ', ', $text[$comm_cid]);
+    //$text2 = str_replace(' ,', ',', $text2);
+    //$text2 = str_replace(' ...', '...', $text2);
+    //$text2 = str_replace(' руб ', ' руб. ', $text2); $text2 = str_replace(' руб,', ' руб.,', $text2); $text2 = str_replace(' руб!', ' руб.!', $text2);
+    $text2 = "<div id='comm_".$comm_cid."' class='comm_text'>".$text2."</div>";
 
     $ver = mt_rand(10000, 99999); // получили случайное число
     $nus = $numb.$nu;
-    if ($vetki > 0) $comm_otvet = " <a class='no comm_write' href=#comm_otvet_show onclick='otvet(".$comm_cid.", \"".$nus."\", \" ".$avtor[$comm_cid].", \");'>Ответить</a>";
+    if ($vetki > 0) $comm_otvet = " <a class='no comm_write' href='#comm_otvet_show' onclick='otvet(".$comm_cid.", \"".$nus."\", \" ".$avtor[$comm_cid].", \");'>".ss("Ответить")."</a>";
     else $comm_otvet = "";
 
     $otvets = generate_comm_num($p_id, $drevo, $comm_cid);
     if ($position==0 and $otvets > 0 and $vetki == 1) {
-      $comment_otvet_show = " <div style=\"display:inline;\" id=\"show_otvet".$nus."\"><a class=\"no\" title=\"Показать ответы на это сообщение\" href=\"#big_otvet".$ver."\" onclick='show(\"big_otvet".$nus."\"); show(\"show_otvet".$nus."\"); show(\"hide_otvet".$nus."\");'>+</a> <a class=\"no showotvet\" title=\"Показать ответы на это сообщение\" href=\"#big_otvet".$ver."\" onclick='show(\"big_otvet".$nus."\"); show(\"show_otvet".$nus."\"); show(\"hide_otvet".$nus."\");'>Раскрыть ответ</a></div><div style=\"display:none;\" id=\"hide_otvet".$nus."\"><a class=\"no showotvet\" title=\"Убрать ответы на это сообщение\" href=\"#big_otvet".$ver."\" onclick='show(\"big_otvet".$nus."\"); show(\"show_otvet".$nus."\"); show(\"hide_otvet".$nus."\");'>-</a> <a class=\"no\" title=\"Убрать ответы на это сообщение\" href=\"#big_otvet".$ver."\" onclick='show(\"big_otvet".$nus."\"); show(\"show_otvet".$nus."\"); show(\"hide_otvet".$nus."\");'>Скрыть ответ</a></div>"; 
+      $comment_otvet_show = " <div style=\"display:inline;\" id=\"show_otvet".$nus."\"><a class=\"no\" title=\"".ss("Показать ответы на это сообщение")."\" href=\"#big_otvet".$ver."\" onclick='show(\"big_otvet".$nus."\"); show(\"show_otvet".$nus."\"); show(\"hide_otvet".$nus."\");'>+</a> <a class=\"no showotvet\" title=\"".ss("Показать ответы на это сообщение")."\" href=\"#big_otvet".$ver."\" onclick='show(\"big_otvet".$nus."\"); show(\"show_otvet".$nus."\"); show(\"hide_otvet".$nus."\");'>".ss("Раскрыть ответ")."</a></div><div style=\"display:none;\" id=\"hide_otvet".$nus."\"><a class=\"no showotvet\" title=\"".ss("Убрать ответы на это сообщение")."\" href=\"#big_otvet".$ver."\" onclick='show(\"big_otvet".$nus."\"); show(\"show_otvet".$nus."\"); show(\"hide_otvet".$nus."\");'>-</a> <a class=\"no\" title=\"".ss("Убрать ответы на это сообщение")."\" href=\"#big_otvet".$ver."\" onclick='show(\"big_otvet".$nus."\"); show(\"show_otvet".$nus."\"); show(\"hide_otvet".$nus."\");'>".ss("Скрыть ответ")."</a></div>"; 
       $all_show .= "show(\"big_otvet".$nus."\"); show(\"show_otvet".$nus."\"); show(\"hide_otvet".$nus."\"); ";
       $all_hide .= "show(\"big_otvet".$nus."\"); show(\"show_otvet".$nus."\"); show(\"hide_otvet".$nus."\"); ";
     } else $comment_otvet_show = "";
 
     //$comm_citata = " <a href=\"#addcomm\" title='Вставить как цитату в комментарий №$comm_cid' onclick=\"var s=document.getElementById('comm_".$comm_cid."').innerHTML; clc_name(' [quote] ".$avtor[$comm_cid]." писал(а): ' + citata_shock(s) + '[/quote] ')\" class='no citata'>Цитата</a>";
 
-    $avtor_type = "Гость";
+    $avtor_type = ss("Гость");
 
-    if ($admin_ok==1) $comment_admin = "<a href=/sys.php?op=base_comments_edit_comments&cid=".$comm_cid."&red=1 title='Изменить в HTML'><img src='/images/sys/edit_0.png' align=bottom width=16></a> <a href=/sys.php?op=base_pages_delit_comm&cid=".$comm_cid."&ok=ok&pid=".$pid." title='Удалить'><img align=bottom src=/images/sys/del.png width=16></a> "; else $comment_admin = "";
+    if ($admin_ok==1) $comment_admin = "<a href=/sys.php?op=base_comments_edit_comments&cid=".$comm_cid."&red=1 title='".aa("Изменить в HTML")."'><img src='/images/sys/edit_0.png' align=bottom width=16></a> <a href=/sys.php?op=base_pages_delit_comm&cid=".$comm_cid."&ok=ok&pid=".$pid." title='".aa("Удалить")."'><img align=bottom src=/images/sys/del.png width=16></a> "; else $comment_admin = "";
 
 if (strpos($sha,"[comment_ipbox]")) {
-  if ($avtor[$comm_cid] == "Администратор" or $avtor[$comm_cid] == "Админ" or $avtor[$comm_cid] == "админ") { 
+  if ($avtor[$comm_cid] == aa("Администратор") or $avtor[$comm_cid] == aa("Админ") or $avtor[$comm_cid] == aa("админ")) { 
     $ipbox[0]=255; $ipbox[1]=0; $ipbox[2]=0; 
-  } elseif ($avtor[$comm_cid] == "Редактор" or $avtor[$comm_cid] == "редактор" or $avtor[$comm_cid] == "Директор" or $avtor[$comm_cid] == "директор") { 
+  } elseif ($avtor[$comm_cid] == aa("Редактор") or $avtor[$comm_cid] == aa("редактор") or $avtor[$comm_cid] == aa("Директор") or $avtor[$comm_cid] == aa("директор")) { 
     $ipbox[0]=205; $ipbox[1]=35; $ipbox[2]=189; 
   } else { 
     if ($ip[$comm_cid] != "unknown") $ipbox = explode(".",$ip[$comm_cid]);
     else { $ipbox[0]=0; $ipbox[1]=0; $ipbox[2]=0; }
   }
-  /*
-  if ($mail[$comm_cid] != "") {
-        $avatar = $ava[$comm_cid];
-        if ($avatar == "") $avatar = validate_gravatar($mail[$comm_cid], $comm_cid);
-        if ($avatar == "no") $avatar = "";
-  } else 
-  */
-  $avatar = ""; // сделать настройку граватара!
-  /*
-  if ($avatar != "") $comm_ipbox = "<a title='Вы всегда можете поменять свой аватар' href='http://ru.gravatar.com/site/login/' target='_blank' rel='nofollow'><img src='".$avatar."?s=35' style='margin-right:10px; float:left; border:0; width:35px; height:35px;'></a>";
-  else 
-  */
-  $comm_ipbox = "<div style='margin-right:10px; float:left; border:0; background: rgb(".$ipbox[0].", ".$ipbox[1].", ".$ipbox[2]."); width:35px; height:35px;'><a title='Чтобы изменить аватар, нажмите здесь и зарегистрируйтесь, введя адрес email' href='http://ru.gravatar.com/site/signup/' target='_blank' rel='nofollow'><img title='#".$comm_cid." ip:".$ip[$comm_cid]."' src=/images/avatar_new.png></a></div>";
+  
+  if ($gravatar == "1") {
+    if ($mail[$comm_cid] != "") {
+          $avatar = $ava[$comm_cid];
+          if ($avatar == "") $avatar = validate_gravatar($mail[$comm_cid], $comm_cid);
+          if ($avatar == "no") $avatar = "";
+    } else $avatar = "";
+    if ($avatar != "") $comm_ipbox = "<a title='".ss("Вы всегда можете поменять свой аватар")."' href='http://ru.gravatar.com/site/login/' target='_blank' rel='nofollow'><img src='".$avatar."?s=35' style='margin-right:10px; float:left; border:0; width:35px; height:35px;'></a>";
+    else $comm_ipbox = "<div style='margin-right:10px; float:left; border:0; background: rgb(".$ipbox[0].", ".$ipbox[1].", ".$ipbox[2]."); width:35px; height:35px;'><a title='".ss("Чтобы изменить аватар, нажмите здесь и зарегистрируйтесь, введя адрес email")."' href='http://ru.gravatar.com/site/signup/' target='_blank' rel='nofollow'><img title='#".$comm_cid." ip:".$ip[$comm_cid]."' src=/images/avatar_new.png></a></div>";
+  } else $comm_ipbox = "<div style='margin-right:10px; float:left; border:0; background: rgb(".$ipbox[0].", ".$ipbox[1].", ".$ipbox[2]."); width:35px; height:35px;'><img title='#".$comm_cid." ip:".$ip[$comm_cid]."' src=/images/avatar_new.png></div>";
+
 } else $comm_ipbox = "";
 
-if ($comments_mail > 1 and trim($mail[$comm_cid]) != "") $comm_mail = "<b>E-mail:</b> ".$mail[$comm_cid]; else $comm_mail = "";
-if ($comments_tel > 1 and trim($tel[$comm_cid]) != "") $comm_tel = "<b>Телефон:</b> ".$tel[$comm_cid]; else $comm_tel = "";
-if ($comments_adres > 1 and trim($adres[$comm_cid]) != "") $comm_adres = "<b>Адрес:</b> ".$adres[$comm_cid]; else $comm_adres = "";
+if ($comments_mail > 1 and trim($mail[$comm_cid]) != "") $comm_mail = "<b>".ss("Email:")."</b> ".$mail[$comm_cid]; else $comm_mail = "";
+if ($comments_tel > 1 and trim($tel[$comm_cid]) != "") $comm_tel = "<b>".ss("Телефон:")."</b> ".$tel[$comm_cid]; else $comm_tel = "";
+if ($comments_adres > 1 and trim($adres[$comm_cid]) != "") $comm_adres = "<b>".ss("Адрес:")."</b> ".$adres[$comm_cid]; else $comm_adres = "";
 
 // "[comment_citata]"=>$comm_citata,
 
@@ -172,7 +170,7 @@ if ($comments_adres > 1 and trim($adres[$comm_cid]) != "") $comm_adres = "<b>А�
       }
 
 $sha2 = "";
-if ($comments_num>0 and $comments_all==1 and $numb.$nu == $comments_nu) $sha2 .= "<div id=allcomm style='display:none;'>";
+if ($comments_num>0 and $comments_all==1 and $numb.$nu == $comments_nu) $sha2 .= "<div id='allcomm' style='display:none;'>";
 
 $sha2 .= "<div class='comm_razdel'".$width.">".strtr($sha,$sha_zamena);
 
@@ -188,7 +186,7 @@ $sha2 = "";
     }
 }
 $and = "";
- if ( $position==0 and $vetki == 1) $and .= "<br><a class=\"no\" id=\"all_show\" title=\"Показать все ответы\" href=\"#comm\" onclick='".$all_show." show(\"all_hide\"); show(\"all_show\");'>+ Показать все ответы</a><a class=\"no\" id=\"all_hide\" style='display:none;' title=\"Показать все ответы\" href=#comm onclick='".$all_hide." show(\"all_hide\"); show(\"all_show\");'>- Скрыть все ответы</a>";
+ if ( $position==0 and $vetki == 1) $and .= "<br><a class=\"no\" id=\"all_show\" title=\"".ss("Показать все ответы")."\" href=\"#comm\" onclick='".$all_show." show(\"all_hide\"); show(\"all_show\");'>+ ".ss("Показать все ответы")."</a><a class=\"no\" id=\"all_hide\" style='display:none;' title=\"".ss("Показать все ответы")."\" href=#comm onclick='".$all_hide." show(\"all_hide\"); show(\"all_show\");'>- ".ss("Скрыть все ответы")."</a>";
 return $and.$sha3;
 
 }
@@ -216,7 +214,7 @@ function validate_gravatar($email, $cid) { // Проверка аватара
   if (preg_match("|200|", $headers[0]) == 1) $result = $uri;
   else $result = "no";
   // Сохраним полученный результат, чтобы потом не получать его повторно (ДОПИСАТЬ функцию ежемесячной перепроверки)
-  $db->sql_query("UPDATE ".$prefix."_pages_comments SET ava='".$result."' WHERE `cid`='".$cid."'");
+  $db->sql_query("UPDATE ".$prefix."_pages_comments SET `ava`='".$result."' WHERE `cid`='".$cid."'");
   return $result;
 }
 ?>

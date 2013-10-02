@@ -422,9 +422,7 @@ function redactor($type, $txt, $name, $name2="", $style="html", $return="echo") 
           observeImages: true, 
           observeLinks: true, 
           convertVideoLinks: true, 
-          convertImageLinks: true, 
-          linkEmail: true,
-          linkAnchor: true,
+          convertImageLinks: true,
           tabSpaces: 4, 
           boldTag: 'b',
           italicTag: 'i',
@@ -474,7 +472,7 @@ function redactor2($type, $txt, $name, $style="html") {
     //$txt = str_replace("&","&amp;",$txt);
     echo "<textarea id='".$name."X' class='hide' name='".$name."'>".$txt."</textarea>
     <pre id='".$name."' class='w100 h700'></pre><br>
-    <script src='http://rawgithub.com/ajaxorg/ace-builds/master/src-noconflict/ace.js' charset='utf-8'></script><script>var ".$name." = ace.edit('".$name."');
+    <script src='/includes/ace-redactor/ace.js'></script><script>var ".$name." = ace.edit('".$name."');
           ".$name.".getSession().setValue( $('#".$name."X').val() );
           ".$name.".setTheme('ace/theme/".$theme."');
           ".$name.".getSession().setMode('ace/mode/".$style."');

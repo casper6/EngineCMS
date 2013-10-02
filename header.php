@@ -1555,9 +1555,9 @@ case "31": # Блок JS
 
 	// Ставим фильтр для магазина
 	if (strpos($block, aa("[фильтр]"))) {
+		global $filter, $filter_show_all, $filter_name, $id_razdel_and_bd;
 		$filtr = "";
 		if ($pid == 0) {
-			global $id_razdel_and_bd;
 			$id = $id_razdel_and_bd[$DBName];
 			// получаем список id страниц выбранного раздела и папки
 			$sql2 = "select `pid` from ".$prefix."_pages where `cid`='".$cid."' and `module`='".$DBName."' and `tables`='pages' order by `pid`";
@@ -1593,7 +1593,6 @@ case "31": # Блок JS
 			    $max = $max2 = $row2['max'];
 			    $min = $min2 = $row2['min'];
 			    if ($max != 0 && $min != 0 && $max != $min) {
-			    	global $filter;
 			    	if (isset($filter)) {
 				    	$min2 = explode(" - ", $filter[$s_name]);
 				    	$max2 = intval($min2[1]);
@@ -1621,7 +1620,7 @@ case "31": # Блок JS
 				    });
 				    </script>
 				    <p><span class='filter_title filter_title_".$s_name."'>".$s_title.":</span> 
-				    <span class='filter_interval filter_interval_".$s_name."' id='text_amount".$s_name."'></span>
+				    <nobr><span class='filter_interval filter_interval_".$s_name."' id='text_amount".$s_name."'></span></nobr>
 				    <input type='hidden' name='filter[".$s_name."]' id='amount".$s_name."'></p>
 				    <div id='slider-range".$s_name."'></div>
 				    <div id='change".$s_name."' class='hide center change_filter'><button class='small'>".ss("Показать")."</button></div>";
@@ -1630,9 +1629,13 @@ case "31": # Блок JS
 			   }
 			  } // end while
 			  $filtr .= "</form>";
+			  if (isset($filter)) $filtr .= "<div class='center'><p><a href='-".$DBName."_cat_".$cid."' class='button small'>".$filter_show_all."</a></div>";
+			  if (trim($filter_name) != "" && $filtr != "<form method='post'></form>") 
+			  	$filtr = "<div class='filter_form'><div class='filter_name'>".$filter_name."</div>".$filtr."</div>";
+			  else $filtr = "";
 			}
 		}
-		$block=str_replace(aa("[фильтр]"), $filtr, $block);
+		$block = str_replace(aa("[фильтр]"), $filtr, $block);
 	}
 
 	// Ставим RSS

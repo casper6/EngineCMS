@@ -17,6 +17,8 @@ if ($add != "") {
 
 // это будет добавлено к любому CSS
 $contents = "
+.filter_name {font-size: 20px;}
+
 .editor_file_link {
 	padding-left: 20px;
 }

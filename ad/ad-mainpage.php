@@ -839,7 +839,7 @@ function edit_main($id) {
 	$options = str_replace($module_name."|","",$text);
 
 	// обнулили все опции
-	$media = $folder = $col = $view = $golos = $golosrazdel = $post = $comments = $datashow = $favorites = $socialnetwork = $search = $search_papka = $put_in_blog = $base = $vetki = $citata = $media_comment = $no_html_in_opentext = $no_html_in_text = $show_add_post_on_first_page = $media_post = $razdel_shablon = $page_shablon = $comments_all = $comments_num = $comments_mail = $comments_adres = $comments_tel = $comments_desc = $golostype = $pagenumbers = $comments_main = $tags_type = $pagekol = $table_light = $designpages = $comments_add = $div_or_table = 0;
+	$media = $folder = $col = $view = $golos = $golosrazdel = $post = $comments = $datashow = $favorites = $socialnetwork = $search = $search_papka = $put_in_blog = $base = $vetki = $citata = $media_comment = $no_html_in_opentext = $no_html_in_text = $show_add_post_on_first_page = $media_post = $razdel_shablon = $page_shablon = $comments_all = $comments_num = $comments_mail = $comments_adres = $comments_tel = $comments_desc = $golostype = $pagenumbers = $comments_main = $tags_type = $pagekol = $table_light = $designpages = $comments_add = $div_or_table = $papka_show = 0;
 	$menushow = $titleshow = $razdel_link = $peopleshow = $design = $tags = $podrobno = $podrazdel_active_show = $podrazdel_show = $tipograf = $limkol = $tags_show = $tema_zapret = $tema_zapret_comm = $show_read_all = 1;
 	$comment_shablon = 2;
 	$lim = 20;
@@ -937,6 +937,10 @@ function edit_main($id) {
 	<tr>
 	<td>Вставка между Названием раздела и списком страниц. Можно написать HTML-код или вставить любой [блок]. Не использовать символ &</td>
 	<td>".input("options[reclama]", $reclama, 60, "txt")."</td>
+	</tr>
+	<tr>
+	<td>Выводить описание папки:</td>
+	<td>".select("options[papka_show]", "1,0", "снизу,сверху", $papka_show)."</td>
 	</tr>
 	<tr>
 	<td>Добавление строки поиска в раздел (поиск по этому разделу)</td>
