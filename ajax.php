@@ -71,6 +71,20 @@ if ($func == "shop_add_tovar") {
 ///////////////////////////////////////////////////////////
 if ($func == "shop_send_order") {
 	global $now, $shop_pole, $shop_text_mail, $shop_text_after_mail, $shop_admin_mail, $shop_spisok_pole, $shop_text_val1, $shop_text_val2, $siteurl; // ;
+	// Настройки магазина
+	if ($shop_text_val2 == "") $shop_text_val2 = ss(" руб.");
+	if ($shop_text_itogo == "") $shop_text_itogo = ss("Итого:");
+	if ($shop_text_oformit == "") $shop_text_oformit = ss("Оформить покупку");
+	if ($shop_text_korzina == "") $shop_text_korzina = ss("Ваша Корзина пуста.");
+	if ($shop_text_delete == "") $shop_text_delete = "×";
+	if ($shop_pole == "") $shop_pole = "";
+	if ($shop_admin_mail == "") $shop_admin_mail = $adminmail;
+	if ($shop_text_after_mail == "") $shop_text_after_mail = ss("<h1>Спасибо!</h1><h3>Ваш заказ успешно отправлен. В ближайшее время мы вам позвоним.</h3>");
+	if ($shop_spisok_pole == "") $shop_spisok_pole = ss("Ф.И.О.:*\nТелефон:*\nEmail:\nАдрес:\nДополнительная информация:");
+	//if ($shop_shablon_form_order == "") $shop_shablon_form_order = "";
+	//if ($shop_shablon_mail_client == "") $shop_shablon_mail_client = "";
+	//if ($shop_shablon_mail_admin == "") $shop_shablon_mail_admin = "";
+
 	$subject = aa("Новый заказ");
 	$order = aa("Время приема заказа:")." ".$now."<br>";
 	// Список контактных данных

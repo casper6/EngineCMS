@@ -582,7 +582,7 @@ function showcat($cid=0, $pag=0, $slovo="") {
         while ($row6 = $db->sql_fetchrow($result6)) {
           $n1 = intval($row6['name']);
           $n2 = explode(" ", trim($row6['pages']));
-          foreach ($n2 as $n2_1 => $n2_2) {
+          foreach ($n2 as $n2_2) {
             if (isset($max))
               if ($n1 <= $max && $n1 >= $min) // отбираем страницы, подходящие фильтру
                 { 
@@ -1475,8 +1475,10 @@ function page($pid, $all) {
       while ($row6 = $db->sql_fetchrow($result6)) {
         $n1 = $row6['name'];
         $n2 = explode(" ", str_replace("  ", " ", trim($row6['pages'])));
-        foreach ($n2 as $n2_1 => $n2_2) {
-          $s_opts[$n][$n2_2] = $n1;
+        foreach ($n2 as $n2_2) {
+          if (!isset($s_opts[$n][$n2_2])) $s_opts[$n][$n2_2] = $n1; // имя поля, страница = значение поля
+          else $s_opts[$n][$n2_2] .= "<br>".$n1; 
+          // возможно стоит сделать настройку разделения полей с множественным выбором чем-то другим, нежели BR
         }
       }
     }

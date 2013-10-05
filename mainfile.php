@@ -13,31 +13,29 @@
   global $deviceType, $ipban, $display_errors, $pid, $site_cash;
   $deviceType = ($detect->isMobile() ? ($detect->isTablet() ? 'tablet' : 'phone') : 'computer');
   //global $lang;
-  // Переходная рудиментарная опция - убрать после переделки установщика
-  if (!isset($lang)) $lang = "ru";
-  if ($lang == "ru-RU") $lang = "ru";
-  if (!isset($lang_admin)) $lang_admin = "ru";
 
-    if ( isset($admin) ) {
+  // Переходная рудиментарная опция - убрано после переделки установщика
+  //if (!isset($lang)) $lang = "ru";
+  //if ($lang == "ru-RU") $lang = "ru";
+  //if (!isset($lang_admin)) $lang_admin = "ru";
+
+  if ( isset($admin) ) {
     if (is_admin($admin)) {
       require_once ('ad/ad-functions.php'); // Функции для администрирования
       if (isset($cash)) if ($cash == "del") { // Удаление всего кеша админом
-	  if ( $site_cash == "base"){
-        $db->sql_query("TRUNCATE TABLE `".$prefix."_cash`") or die(aa("Не удалось стереть кеш...")); 
-		}
-		if ( $site_cash == "file"){
-		$files = glob("cashe/*");
-    $c = count($files);
-    if (count($files) > 0) {
-        foreach ($files as $file) {      
-            if (file_exists($file)) {
-            unlink($file);
-            }   
+    	  if ( $site_cash == "base"){
+          $db->sql_query("TRUNCATE TABLE `".$prefix."_cash`") or die(aa("Не удалось стереть кеш...")); 
+    		}
+    		if ($site_cash == "file") {
+      		$files = glob("cashe/*");
+          $c = count($files);
+          if (count($files) > 0)
+            foreach ($files as $file)  
+              if (file_exists($file)) unlink($file);
         }
-    }}
         die(aa("Кеш удален. Можно <a href=\"javascript:self.close()\">закрыть</a> эту вкладку.")); 
       }
-    }
+    } else $admin = "";
   } else $admin = "";
   
   if ($ipban == true) require_once("includes/ipban.php"); // Бан
@@ -163,60 +161,7 @@
   //if ($add_fonts != "") $add_fonts = explode(".",$add_fonts);
   $project_name = filter($project_name);
 
-// Настройки второго редактора
-if ($ed2_button_html == "" && $ed2_button_bold == "" && $ed2_button_link == "") $ed2_button_html = $ed2_button_formatting = $ed2_button_bold = $ed2_button_italic = $ed2_button_deleted = $ed2_button_unorderedlist = $ed2_button_orderedlist = $ed2_button_image = $ed2_button_video = $ed2_button_file = $ed2_button_table = $ed2_button_link = $ed2_button_alignment = $ed2_button_horizontalrule = $ed2_button_fullscreen = $ed2_button_clips = " checked";
-  if ($ed2_direction == "") $ed2_direction = "ltl";
-  if ($ed2_minHeight == "") $ed2_minHeight = "300";
-  if ($ed2_button_html == "1") $ed2_button_html = " checked";
-  if ($ed2_button_formatting == "1") $ed2_button_formatting = " checked";
-  if ($ed2_button_bold == "1") $ed2_button_bold = " checked";
-  if ($ed2_button_italic == "1") $ed2_button_italic = " checked";
-  if ($ed2_button_deleted == "1") $ed2_button_deleted = " checked";
-  if ($ed2_button_underline == "1") $ed2_button_underline = " checked";
-  if ($ed2_button_unorderedlist == "1") $ed2_button_unorderedlist = " checked";
-  if ($ed2_button_orderedlist == "1") $ed2_button_orderedlist = " checked";
-  if ($ed2_button_outdent == "1") $ed2_button_outdent = " checked";
-  if ($ed2_button_indent == "1") $ed2_button_indent = " checked";
-  if ($ed2_button_image == "1") $ed2_button_image = " checked";
-  if ($ed2_button_video == "1") $ed2_button_video = " checked";
-  if ($ed2_button_file == "1") $ed2_button_file = " checked";
-  if ($ed2_button_table == "1") $ed2_button_table = " checked";
-  if ($ed2_button_link == "1") $ed2_button_link = " checked";
-  if ($ed2_button_alignment == "1") $ed2_button_alignment = " checked";
-  if ($ed2_button_horizontalrule == "1") $ed2_button_horizontalrule = " checked";
-  if ($ed2_button_more == "1") $ed2_button_more = " checked";
-  if ($ed2_button_link2 == "1") $ed2_button_link2 = " checked";
-  if ($ed2_button_block == "1") $ed2_button_block = " checked";
-  if ($ed2_button_pre == "1") $ed2_button_pre = " checked";
-  if ($ed2_button_fullscreen == "1") $ed2_button_fullscreen = " checked";
-  if ($ed2_button_clips == "1") $ed2_button_clips = " checked";
-  if ($ed2_button_fontcolor == "1") $ed2_button_fontcolor = " checked";
-  if ($ed2_button_fontsize == "1") $ed2_button_fontsize = " checked";
-  if ($ed2_button_fontfamily == "1") $ed2_button_fontfamily = " checked";
-
-// Настройки магазина
-  if ($filter_name == "") $filter_name = "Фильтр товаров";
-  if ($filter_show_all == "") $filter_show_all = "Показать все";
-  if ($shop_text_val2 == "") $shop_text_val2 = ss(" руб.");
-  if ($shop_text_itogo == "") $shop_text_itogo = ss("Итого:");
-  if ($shop_text_oformit == "") $shop_text_oformit = ss("Оформить покупку");
-  if ($shop_text_korzina == "") $shop_text_korzina = ss("Ваша Корзина пуста.");
-  if ($shop_text_delete == "") $shop_text_delete = "×";
-  if ($shop_pole == "") $shop_pole = "";
-  if ($shop_admin_mail == "") $shop_admin_mail = $adminmail;
-  if ($shop_text_after_mail == "") $shop_text_after_mail = ss("<h1>Спасибо!</h1><h3>Ваш заказ успешно отправлен. В ближайшее время мы вам позвоним.</h3>");
-  if ($shop_spisok_pole == "") $shop_spisok_pole = ss("Ф.И.О.:*\nТелефон:*\nEmail:\nАдрес:\nДополнительная информация:");
-  if ($shop_shablon_form_order == "") $shop_shablon_form_order = "";
-  if ($shop_shablon_mail_client == "") $shop_shablon_mail_client = "";
-  if ($shop_shablon_mail_admin == "") $shop_shablon_mail_admin = "";
-
-// Настройки невизуального редактора с подсветкой кода
-  if ($color_tema_html == "") $color_tema_html = "monokai";
-  if ($color_tema_css == "") $color_tema_css = "monokai";
-  if ($color_tema_js == "") $color_tema_js = "monokai";
-  if ($color_tema_php == "") $color_tema_php = "monokai";
-
-// Остальные настройки
+// Основные настройки
   if ($gravatar == "") $gravatar = "0";
   if ($project_logotip == "") $project_logotip = "img/logotip.png";  
   if ($tab_obzor == "") $tab_obzor = ss("Обзор");
@@ -328,7 +273,7 @@ function ss($t) { // Функция перевода сайта / Translate func
     else return " [ No translate: ".$t." ] ";
 }
 #############################
-function getFromPOST($name, $value) {
+function getFromPOST($name, $value) { // перевести все запросы на функцию!
   return isset($_REQUEST[$name]) ? $_REQUEST[$name] : $value;
 }
 #############################

@@ -348,6 +348,11 @@ function redactor($type, $txt, $name, $name2="", $style="html", $return="echo") 
     $txt = str_replace("textarea","tеxtarea",$txt); // ireplace
     //$txt = str_replace("&","&amp;",$txt);
     global $color_tema_html, $color_tema_css, $color_tema_js, $color_tema_php; // цветовые стили для редактора кода
+    // Настройки невизуального редактора с подсветкой кода
+    if ($color_tema_html == "") $color_tema_html = "monokai";
+    if ($color_tema_css == "") $color_tema_css = "monokai";
+    if ($color_tema_js == "") $color_tema_js = "monokai";
+    if ($color_tema_php == "") $color_tema_php = "monokai";
     if ($style == "html") $theme=$color_tema_html;
     if ($style == "css") $theme=$color_tema_css;
     if ($style == "php") $theme=$color_tema_php;
@@ -378,35 +383,38 @@ function redactor($type, $txt, $name, $name2="", $style="html", $return="echo") 
   $echo .= "});
     </script><textarea id='".$name."' name='".$name."' style='width: 100%; height: 220px;'>".$txt."</textarea>";
   } elseif ($type=="4") {
+    // Настройки второго редактора
     global $ed2_button_html, $ed2_button_formatting, $ed2_button_bold, $ed2_button_italic, $ed2_button_deleted, $ed2_button_underline, $ed2_button_unorderedlist, $ed2_button_orderedlist, $ed2_button_outdent, $ed2_button_indent, $ed2_button_image, $ed2_button_video, $ed2_button_file, $ed2_button_table, $ed2_button_link, $ed2_button_alignment, $ed2_button_horizontalrule, $ed2_button_more, $ed2_button_link2, $ed2_button_block, $ed2_button_pre, $ed2_button_fullscreen, $ed2_button_clips, $ed2_button_fontcolor, $ed2_button_fontsize, $ed2_button_fontfamily, $ed2_minHeight, $ed2_direction;
-
+    if ($ed2_button_html == "" && $ed2_button_bold == "" && $ed2_button_link == "") $ed2_button_html = $ed2_button_formatting = $ed2_button_bold = $ed2_button_italic = $ed2_button_deleted = $ed2_button_unorderedlist = $ed2_button_orderedlist = $ed2_button_image = $ed2_button_video = $ed2_button_file = $ed2_button_table = $ed2_button_link = $ed2_button_alignment = $ed2_button_horizontalrule = $ed2_button_fullscreen = $ed2_button_clips = " checked";
+    if ($ed2_direction == "") $ed2_direction = "ltl";
+    if ($ed2_minHeight == "") $ed2_minHeight = "300";
     $ed2_html=$ed2_formatting=$ed2_bold=$ed2_italic=$ed2_deleted=$ed2_underline=$ed2_unorderedlist=$ed2_orderedlist=$ed2_outdent=$ed2_indent=$ed2_image=$ed2_video=$ed2_file=$ed2_table=$ed2_link=$ed2_alignment=$ed2_horizontalrule=$ed2_more=$ed2_link2=$ed2_block=$ed2_pre=$ed2_fullscreen=$ed2_clips=$ed2_fontcolor=$ed2_fontsize=$ed2_fontfamily="";
-    if ($ed2_button_html == " checked") $ed2_html = "'html', ";
-    if ($ed2_button_formatting == " checked") $ed2_formatting = "'|', 'formatting', ";
-    if ($ed2_button_bold == " checked") $ed2_bold = "'|', 'bold',";
-    if ($ed2_button_italic == " checked") $ed2_italic = "'italic',";
-    if ($ed2_button_deleted == " checked") $ed2_deleted = "'deleted',";
-    if ($ed2_button_underline == " checked") $ed2_underline = "'underline',";
-    if ($ed2_button_unorderedlist == " checked") $ed2_unorderedlist = "'|', 'unorderedlist',";
-    if ($ed2_button_orderedlist == " checked") $ed2_orderedlist = "'orderedlist',";
-    if ($ed2_button_outdent == " checked") $ed2_outdent = "'outdent',";
-    if ($ed2_button_indent == " checked") $ed2_indent = "'indent',";
-    if ($ed2_button_image == " checked") $ed2_image = "'|', 'image',";
-    if ($ed2_button_video == " checked") $ed2_video = "'video',";
-    if ($ed2_button_file == " checked") $ed2_file = "'file', ";
-    if ($ed2_button_table == " checked") $ed2_table = "'table',";
-    if ($ed2_button_link == " checked") $ed2_link = "'link',";
-    if ($ed2_button_alignment == " checked") $ed2_alignment = "'|', 'alignment',";
-    if ($ed2_button_horizontalrule == " checked") $ed2_horizontalrule = "'|', 'horizontalrule',";
-    if ($ed2_button_more == " checked") $ed2_more = "'|', 'button_more',";
-    if ($ed2_button_link2 == " checked") $ed2_link2 = "'button_link',";
-    if ($ed2_button_block == " checked") $ed2_block = "'button_block',";
-    if ($ed2_button_pre == " checked") $ed2_pre = "'pre'";
-    if ($ed2_button_fullscreen == " checked") $ed2_fullscreen = "'fullscreen',";
-    if ($ed2_button_clips == " checked") $ed2_clips = "'clips',";
-    if ($ed2_button_fontcolor == " checked") $ed2_fontcolor = "'fontcolor',";
-    if ($ed2_button_fontsize == " checked") $ed2_fontsize = "'fontsize',";
-    if ($ed2_button_fontfamily == " checked") $ed2_fontfamily = "'fontfamily'";
+    if ($ed2_button_html == "1") $ed2_html = "'html', ";
+    if ($ed2_button_formatting == "1") $ed2_formatting = "'|', 'formatting', ";
+    if ($ed2_button_bold == "1") $ed2_bold = "'|', 'bold',";
+    if ($ed2_button_italic == "1") $ed2_italic = "'italic',";
+    if ($ed2_button_deleted == "1") $ed2_deleted = "'deleted',";
+    if ($ed2_button_underline == "1") $ed2_underline = "'underline',";
+    if ($ed2_button_unorderedlist == "1") $ed2_unorderedlist = "'|', 'unorderedlist',";
+    if ($ed2_button_orderedlist == "1") $ed2_orderedlist = "'orderedlist',";
+    if ($ed2_button_outdent == "1") $ed2_outdent = "'outdent',";
+    if ($ed2_button_indent == "1") $ed2_indent = "'indent',";
+    if ($ed2_button_image == "1") $ed2_image = "'|', 'image',";
+    if ($ed2_button_video == "1") $ed2_video = "'video',";
+    if ($ed2_button_file == "1") $ed2_file = "'file', ";
+    if ($ed2_button_table == "1") $ed2_table = "'table',";
+    if ($ed2_button_link == "1") $ed2_link = "'link',";
+    if ($ed2_button_alignment == "1") $ed2_alignment = "'|', 'alignment',";
+    if ($ed2_button_horizontalrule == "1") $ed2_horizontalrule = "'|', 'horizontalrule',";
+    if ($ed2_button_more == "1") $ed2_more = "'|', 'button_more',";
+    if ($ed2_button_link2 == "1") $ed2_link2 = "'button_link',";
+    if ($ed2_button_block == "1") $ed2_block = "'button_block',";
+    if ($ed2_button_pre == "1") $ed2_pre = "'pre'";
+    if ($ed2_button_fullscreen == "1") $ed2_fullscreen = "'fullscreen',";
+    if ($ed2_button_clips == "1") $ed2_clips = "'clips',";
+    if ($ed2_button_fontcolor == "1") $ed2_fontcolor = "'fontcolor',";
+    if ($ed2_button_fontsize == "1") $ed2_fontsize = "'fontsize',";
+    if ($ed2_button_fontfamily == "1") $ed2_fontfamily = "'fontfamily'";
     // iframe: true, css: 'css_20.css',
     $echo .= "<script>
     $(document).ready(function() { 
@@ -463,6 +471,11 @@ function redactor2($type, $txt, $name, $style="html") {
     echo "<textarea id='".$name."' class='w100 h155' name='".$name."'>".$txt."</textarea><br>";
   } elseif ($type=="2") {
     global $color_tema_html, $color_tema_css, $color_tema_js, $color_tema_php; // цветовые стили для редактора кода
+    // Настройки невизуального редактора с подсветкой кода
+    if ($color_tema_html == "") $color_tema_html = "monokai";
+    if ($color_tema_css == "") $color_tema_css = "monokai";
+    if ($color_tema_js == "") $color_tema_js = "monokai";
+    if ($color_tema_php == "") $color_tema_php = "monokai";
     if ($style == "html") $theme=$color_tema_html;
     if ($style == "css") $theme=$color_tema_css;
     if ($style == "php") $theme=$color_tema_php;

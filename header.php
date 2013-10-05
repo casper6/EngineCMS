@@ -1629,6 +1629,9 @@ case "31": # Блок JS
 			   }
 			  } // end while
 			  $filtr .= "</form>";
+			  // Настройки фильтра
+			  if ($filter_name == "") $filter_name = ss("Фильтр товаров");
+  			  if ($filter_show_all == "") $filter_show_all = ss("Показать все");
 			  if (isset($filter)) $filtr .= "<div class='center'><p><a href='-".$DBName."_cat_".$cid."' class='button small'>".$filter_show_all."</a></div>";
 			  if (trim($filter_name) != "" && $filtr != "<form method='post'></form>") 
 			  	$filtr = "<div class='filter_form'><div class='filter_name'>".$filter_name."</div>".$filtr."</div>";

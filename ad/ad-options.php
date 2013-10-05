@@ -128,6 +128,24 @@ if ($row['realadmin'] == 1) {
 		// Получаем настройки из mainfile
 		global $sitename, $startdate, $adminmail, $keywords, $description, $counter, $statlink, $postlink, $stopcopy, $registr, $pogoda, $flash, $sgatie, $ht_backup, $captcha_ok, $xnocashe, $jqueryui, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $comment_send, $company_name, $company_fullname, $company_address, $company_time, $company_tel, $company_sot, $company_fax, $company_email, $company_map, $company_people, $search_design, $tag_design, $add_fonts, $site_cash, $normalize, $project_logotip, $project_name, $geo, $kolkey, $add_clips, $sortable, $color_tema_html, $color_tema_css, $color_tema_js, $color_tema_php, $tab_obzor, $tab_show, $shop_text_val1, $shop_text_val2, $shop_text_itogo, $shop_text_oformit, $shop_text_korzina, $shop_text_delete, $shop_pole, $shop_admin_mail, $shop_text_after_mail,$shop_spisok_pole, $shop_shablon_form_order, $shop_shablon_mail_client, $shop_shablon_mail_admin, $head_insert, $filter_name, $filter_show_all, $gravatar;
 		
+		// Настройки фильтра
+		if ($filter_name == "") $filter_name = ss("Фильтр товаров");
+  		if ($filter_show_all == "") $filter_show_all = ss("Показать все");
+
+  		// Настройки магазина
+		if ($shop_text_val2 == "") $shop_text_val2 = ss(" руб.");
+		if ($shop_text_itogo == "") $shop_text_itogo = ss("Итого:");
+		if ($shop_text_oformit == "") $shop_text_oformit = ss("Оформить покупку");
+		if ($shop_text_korzina == "") $shop_text_korzina = ss("Ваша Корзина пуста.");
+		if ($shop_text_delete == "") $shop_text_delete = "×";
+		if ($shop_pole == "") $shop_pole = "";
+		if ($shop_admin_mail == "") $shop_admin_mail = $adminmail;
+		if ($shop_text_after_mail == "") $shop_text_after_mail = ss("<h1>Спасибо!</h1><h3>Ваш заказ успешно отправлен. В ближайшее время мы вам позвоним.</h3>");
+		if ($shop_spisok_pole == "") $shop_spisok_pole = ss("Ф.И.О.:*\nТелефон:*\nEmail:\nАдрес:\nДополнительная информация:");
+		//if ($shop_shablon_form_order == "") $shop_shablon_form_order = "";
+		//if ($shop_shablon_mail_client == "") $shop_shablon_mail_client = "";
+		//if ($shop
+
 		$ad_fon_option = ""; // Выбор фоновок для админки
 		for ($i=1; $i < 28; $i++) { // всего 27 фоновок + 1 по-умолчанию в папке images/ad-fon
 			if ($ad_fon == $i) $sel = " selected"; else $sel = "";
@@ -718,8 +736,12 @@ body {}
 	<div style='text-align:center;'><input type='submit' value=' Сохранить настройки ' style='width:300px; height:40px;'></div>
 	</div>";
 
+  // Настройки невизуального редактора с подсветкой кода
+  if ($color_tema_html == "") $color_tema_html = "monokai";
+  if ($color_tema_css == "") $color_tema_css = "monokai";
+  if ($color_tema_js == "") $color_tema_js = "monokai";
+  if ($color_tema_php == "") $color_tema_php = "monokai";
 echo "<div id='show_options_zagotovka' class='show_pole' style='display:none;'>
-	
 	<table class='table_light' width='100%'>
 
 	<tr><td colspan=3><h1>Невизуальный редактор с подсветкой кода</h1><img src='images/2.png'></td></tr>
@@ -736,6 +758,36 @@ echo "<div id='show_options_zagotovka' class='show_pole' style='display:none;'>
 	Выберите кнопки редактора:</td><td class=small>";
 
 global $ed2_button_html, $ed2_button_formatting, $ed2_button_bold, $ed2_button_italic, $ed2_button_deleted, $ed2_button_underline, $ed2_button_unorderedlist, $ed2_button_orderedlist, $ed2_button_outdent, $ed2_button_indent, $ed2_button_image, $ed2_button_video, $ed2_button_file, $ed2_button_table, $ed2_button_link, $ed2_button_alignment, $ed2_button_horizontalrule, $ed2_button_more, $ed2_button_link2, $ed2_button_block, $ed2_button_pre, $ed2_button_fullscreen, $ed2_button_clips, $ed2_button_fontcolor, $ed2_button_fontsize, $ed2_button_fontfamily, $ed2_minHeight, $ed2_direction;
+if ($ed2_button_html == "" && $ed2_button_bold == "" && $ed2_button_link == "") $ed2_button_html = $ed2_button_formatting = $ed2_button_bold = $ed2_button_italic = $ed2_button_deleted = $ed2_button_unorderedlist = $ed2_button_orderedlist = $ed2_button_image = $ed2_button_video = $ed2_button_file = $ed2_button_table = $ed2_button_link = $ed2_button_alignment = $ed2_button_horizontalrule = $ed2_button_fullscreen = $ed2_button_clips = " checked";
+if ($ed2_direction == "") $ed2_direction = "ltl";
+if ($ed2_minHeight == "") $ed2_minHeight = "300";
+if ($ed2_button_html == "1") $ed2_button_html = " checked";
+if ($ed2_button_formatting == "1") $ed2_button_formatting = " checked";
+if ($ed2_button_bold == "1") $ed2_button_bold = " checked";
+if ($ed2_button_italic == "1") $ed2_button_italic = " checked";
+if ($ed2_button_deleted == "1") $ed2_button_deleted = " checked";
+if ($ed2_button_underline == "1") $ed2_button_underline = " checked";
+if ($ed2_button_unorderedlist == "1") $ed2_button_unorderedlist = " checked";
+if ($ed2_button_orderedlist == "1") $ed2_button_orderedlist = " checked";
+if ($ed2_button_outdent == "1") $ed2_button_outdent = " checked";
+if ($ed2_button_indent == "1") $ed2_button_indent = " checked";
+if ($ed2_button_image == "1") $ed2_button_image = " checked";
+if ($ed2_button_video == "1") $ed2_button_video = " checked";
+if ($ed2_button_file == "1") $ed2_button_file = " checked";
+if ($ed2_button_table == "1") $ed2_button_table = " checked";
+if ($ed2_button_link == "1") $ed2_button_link = " checked";
+if ($ed2_button_alignment == "1") $ed2_button_alignment = " checked";
+if ($ed2_button_horizontalrule == "1") $ed2_button_horizontalrule = " checked";
+if ($ed2_button_more == "1") $ed2_button_more = " checked";
+if ($ed2_button_link2 == "1") $ed2_button_link2 = " checked";
+if ($ed2_button_block == "1") $ed2_button_block = " checked";
+if ($ed2_button_pre == "1") $ed2_button_pre = " checked";
+if ($ed2_button_fullscreen == "1") $ed2_button_fullscreen = " checked";
+if ($ed2_button_clips == "1") $ed2_button_clips = " checked";
+if ($ed2_button_fontcolor == "1") $ed2_button_fontcolor = " checked";
+if ($ed2_button_fontsize == "1") $ed2_button_fontsize = " checked";
+if ($ed2_button_fontfamily == "1") $ed2_button_fontfamily = " checked";
+
 echo "
 ".input('options[ed2_button_html]','1','','checkbox',$ed2_button_html)." Код (режим просмотра HTML)<br>
 ".input('options[ed2_button_formatting]','1','','checkbox',$ed2_button_formatting)." Форматирование текста<br>
