@@ -2,6 +2,12 @@
 // Все «правила хорошего кода» написаны кровью, вытекшей из глаз программистов, читавших чужой код.
 $display_delete = true; # показ кнопок удаления основного содержания = true, для скрытия = false
 $display_addmenu = true; # показ кнопок создания основного содержания = true, для скрытия = false
+
+if ($_REQUEST['op'] == "mainpage_save_ayax") {
+	require_once("../mainfile.php");
+	global $prefix, $db, $red, $admin;
+	if (is_admin($admin)) $realadmin = 1; else $realadmin = 0;
+} else {
 	if (strpos($_SERVER['PHP_SELF'], 'sys.php') === false) { die ("Доступ закрыт!"); }
 	$aid = trim($aid);
 	global $prefix, $db, $red;
@@ -9,9 +15,10 @@ $display_addmenu = true; # показ кнопок создания основн
 	$result = $db->sql_query($sql);
 	$row = $db->sql_fetchrow($result);
 	$realadmin = $row['realadmin'];
-	if ($realadmin==1) {
-		$tip = "mainpage";
-		$admintip = "mainpage";
+}
+if ($realadmin==1) {
+	$tip = "mainpage";
+	$admintip = "mainpage";
 ##########################################################################################
 function menu() {
 	global $admintip, $siteurl, $type, $prefix, $db, $statlink;
@@ -234,20 +241,18 @@ function create_main($type) {
 
 	break;
 	case "css": $type_opis = "стиля (CSS, настройка внешнего вида)";
-	$create.="
-	<div id=about class=block style='display:none;'>Стили - это CSS (каскадные таблицы стилей), описание оформления элементов сайта. Стили подключаются к дизайну (при его редактировании). В дизайне может быть использовано сразу несколько стилей. При подключении стилей они объединяются в один стиль и сжимаются.<br></div>
-	<table class='w100 mw800'><tr><td>
-	<h2>Название:</h2>По-русски, можно с пробелами<br>
-	<input type=text name=title value='' size=40 class='w100 h40 f16' autofocus>
-	<h2>Содержание стиля:</h2>";
-	$create.=redactor('2', '', 'text', '', 'css','return');
-	$create.="<input type=hidden name=id value=0>
-	<input type=hidden name=type value='1'>
-	<input type=hidden name=namo value=''>
-	<input type=hidden name=useit value=''>
-	<input type=hidden name=shablon value=''>
-	<input type=hidden name=op value='".$admintip."_save'>
-	</td></tr></table>";
+	$create.="<div id=about class=block style='display:none;'>Стили - это CSS (каскадные таблицы стилей), описание оформления элементов сайта. Стили подключаются к дизайну (при его редактировании). В дизайне может быть использовано сразу несколько стилей. При подключении стилей они объединяются в один стиль и сжимаются.<br></div>
+	<div class='w95 mw800'>
+	<h2>Название: <span class='f12'>По-русски, можно с пробелами</span><br><input type='text' name='title' value='' size='40' class='w100 h40 f16' autofocus></h2>
+	<h2>Содержание стиля:</h2>
+	".redactor('2', '', 'text', '', 'css','return')."
+	<input type='hidden' name='id' value=0>
+	<input type='hidden' name='type' value='1'>
+	<input type='hidden' name='namo' value=''>
+	<input type='hidden' name='useit' value=''>
+	<input type='hidden' name='shablon' value=''>
+	<input type='hidden' name='op' value='".$admintip."_save'>
+	</div>";
 	########################################################
 	break;
 
@@ -673,7 +678,7 @@ function create_main($type) {
 		<input type=hidden name=op value=".$admintip."_save>";
 	break;
 	}
-	echo "<form method='POST' action='sys.php' style='display:inline;' enctype='multipart/form-data'>
+	echo "<form method='POST' action='sys.php' id='main_save' style='display:inline;' enctype='multipart/form-data'>
 	<div class='fon w100 mw800'>
 	<div class='black_grad h40'>
 	<button type='button' style='float:right;margin:3px;' class='medium orange' onClick=\"show_animate('about')\">?</button>
@@ -713,7 +718,8 @@ function edit_main($id) {
 	$color = "#ffffff"; // убрать
 	$type_opis = "";
 
-	echo "<form method='POST' action=sys.php>
+	echo "
+	<form method='POST' action=sys.php>
 	<input type=hidden name=type value='".$type."'><input type=hidden name=id value='".$id."'><input type=hidden name=op value='".$admintip."_save'>";
 
 	// Определение дизайнов // проверить - возможно заменить на функции из mainfile
@@ -779,7 +785,25 @@ function edit_main($id) {
 
 	echo "<div class='fon w100 mw800'>
 	<div class='black_grad h40'>
-	<button type=submit id=new_razdel_button class='medium green' style='float:left; margin:3px;'><span class='mr-2 icon white small' data-icon='c'></span>Сохранить</button>
+	<button type='submit' id='new_razdel_button' class='small green' style='float:left; margin:3px;'><span class='mr-2 icon white medium' data-icon='c'></span>Сохранить</button>
+	<a class='button small green' onclick='save_main()' style='float:left; margin:3px;'>Обновить</a>
+
+
+<script type='text/javascript'>
+jQuery(function(){
+ $(\".scroll_on_top\").hide();
+ if ($(window).scrollTop()>=\"250\") $(\".scroll_on_top\").fadeIn(\"slow\")
+ $(window).scroll(function(){
+  if ($(window).scrollTop()<=\"250\") $(\".scroll_on_top\").fadeOut(\"slow\")
+  else $(\".scroll_on_top\").fadeIn(\"slow\")
+ });
+});
+</script>
+
+	<a class='scroll_on_top button small green' onclick='save_main()' style='position:fixed; top:80%; right:0%; left:90%; width:100px; z-index:1000;'>Обновить</a>
+	<a class='scroll_on_top button small blue' href='#1' style='position:fixed; top:90%; right:0%; left:90%; width:100px; z-index:1000;'>&uarr;<br>Наверх</a>
+
+	<div id='save_main' style='float:left; margin:3px;'></div>
 	<span class='h1' style='padding-top:10px;'>";
 
 	if ($type == "0") { ############################### ОТКРЫТИЕ ДИЗАЙН
@@ -821,11 +845,12 @@ function edit_main($id) {
 
 	if ($type == "1") { ############################### ОТКРЫТИЕ СТИЛЬ
 		echo "Редактирование стиля (CSS)</span></div>
+		<div class='w95 mw800'>
 		<h2>Название стиля <span class=f12>Видит только администратор</span><br>
 		<textarea class='big w100 h40 f16' name='title' rows='1' cols='10'>".$title."</textarea></h2>
 		<span class=h2>Содержание стиля</span>";
 		redactor('2', $text, 'text', '', 'css');
-		echo "<input type='hidden' name='namo' value='".$name."'><br>";
+		echo "<input type='hidden' name='namo' value='".$name."'></div>";
 	} ############################### ЗАКРЫТИЕ СТИЛЬ
 
 	if ($type == "2") { ############################### ОТКРЫТИЕ РАЗДЕЛА
@@ -1221,10 +1246,9 @@ function edit_main($id) {
 
 		echo "<input type='hidden' name='text' value='".$text."'>";
 		if ($id != 24) {
-			echo "<tr><td colspan='2'><span class=h2>Шаблон Предисловия и Содержания страниц</span>
-			<br>Если у большинства страниц раздела особенный дизайн или какое-то первоначальное содержание для всех страниц раздела одинаково — его можно прописать ниже как Шаблон для страниц. Сначала идет шаблон для Предисловия страниц, затем — для Содержания, разделяются они служебным словом [следующий]. Если нужен только шаблон для Предисловия - слово [следующий] можно не писать, а если нужен только шаблон для Содержания - слово [следующий] надо написать перед ним.<br>";
+			echo "<tr><td colspan='2'><a class='dark_pole h2' onClick='$(\"#shablon_show\").toggle(\"slow\")'><img class='icon2 i26' src='/images/1.gif'> Шаблон Предисловия и Содержания страниц</a><div id='shablon_show' class='hide'>".close_button("shablon_show")."Если у большинства страниц раздела особенный дизайн или какое-то первоначальное содержание для всех страниц раздела одинаково — его можно прописать ниже как Шаблон для страниц. Сначала идет шаблон для Предисловия страниц, затем — для Содержания, разделяются они служебным словом [следующий]. Если нужен только шаблон для Предисловия - слово [следующий] можно не писать, а если нужен только шаблон для Содержания - слово [следующий] надо написать перед ним.";
 			redactor2($red, $sha, 'shablon');
-
+			echo "</div>";
 		} else {
 			echo "<input type='hidden' name='shablon' value='".$sha."'>";
 		}
@@ -1964,6 +1988,7 @@ function edit_main($id) {
 ###################################################################################################
 function mainpage_save($id=0, $type, $namo, $title, $text, $useit, $shablon, $descriptionX, $keywordsX, $s_tip) {
 	global $sgatie, $tip, $admintip, $prefix, $db, $nastroi;
+	$op = $_REQUEST['op'];
 	$sql = "select name from ".$prefix."_mainpage where `id`='".$id."'";
 	$result = $db->sql_query($sql);
 	$row = $db->sql_fetchrow($result);
@@ -1996,7 +2021,8 @@ function mainpage_save($id=0, $type, $namo, $title, $text, $useit, $shablon, $de
 		} else {
 			$db->sql_query("UPDATE ".$prefix."_mainpage SET `text`='".$text."', `tables`='pages' WHERE `id`='".$id."';") or die('Не удалось обновить содержание.');
 		}
-		if ($type == 3) Header("Location: sys.php?op=mainpage&type=element");
+		if ($op == "mainpage_save_ayax") { echo "Сохранил"; exit; }
+		elseif ($type == 3) Header("Location: sys.php?op=mainpage&type=element");
 		else Header("Location: sys.php");
 		die();
 	}
@@ -2032,11 +2058,11 @@ function mainpage_save($id=0, $type, $namo, $title, $text, $useit, $shablon, $de
 		if ($type==3 && $namo == 7) $text = str_replace("<? ", "", str_replace(" ?>", "", $text));
 		$db->sql_query("UPDATE ".$prefix."_mainpage SET `name`='".$namo."', `title`='".$title."', `text`='".$text."', `useit`='".$useit."', `shablon`='".$shablon."', `tables`='pages', `description`='".$descriptionX."', `keywords`='".$keywordsX."' WHERE `id`='".$id."';") or die('Не удалось обновить содержание. Попробуйте нажать в Редакторе на кнопку "Чистка HTML"');
 
-		if ($type == 2) Header("Location: sys.php");
+		if ($op == "mainpage_save_ayax") { echo "Сохранил"; exit; }
+		elseif ($type == 2) Header("Location: sys.php");
 		else Header("Location: sys.php?op=mainpage&type=element");
 		die();
 	} else {
-
 		// Создание
 		if ($type==2) {
 			if ($text == "[название]") {
@@ -2169,6 +2195,7 @@ function mainpage_save($id=0, $type, $namo, $title, $text, $useit, $shablon, $de
 		Header("Location: sys.php?op=mainpage&id=".$row2['id']."&nastroi=1");
 		die;
 	}
+
 	Header("Location: sys.php?op=mainpage&type=element");
 	die;
 }
@@ -2428,6 +2455,8 @@ function block_help() { // проверить вызов
 		    if (isset($id)) mainpage($id); else mainpage();
 	    	break;
 	    case "mainpage_save":
+	    case "mainpage_save_ayax":
+	    	if ($op == "mainpage_save_ayax") parse_str($_REQUEST['string']);
 		    if (!isset($descriptionX)) $descriptionX = "";
 		    if (!isset($keywordsX)) $keywordsX = "";
 		    if (!isset($s_tip)) $s_tip = "";
@@ -2451,5 +2480,5 @@ function block_help() { // проверить вызов
 			mainpage_razdel_color($id, $color);
 			break;
 	}
-}
+} else echo "Доступ закрыт!";
 ?>

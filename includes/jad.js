@@ -55,6 +55,17 @@ function show_pole(id, page_id, razdel, cid) {
 	    success: function(data){ $('#pole').html(data); }
 	});
 }
+function save_main() {
+	var msg = $('form').serialize();
+    $.ajax({
+      type: 'POST',
+      url: 'ad/ad-mainpage.php',
+      data: {'op': 'mainpage_save_ayax', 'string': msg },
+	  beforeSend: function(){ $('#save_main').html('<img src=images/loading.gif> Сохраняю...'); },
+      success: function(data) { $('#save_main').html(data); },
+      /* error: function(xhr, str) { alert('Возникла ошибка: ' + xhr.responseCode ); } */
+    });
+}
 function show_otvet_comm(cid, name, mail, mod) {
 	if ($('#otvet_comm'+cid).html() == '') {
 		$('#show_otvet_link'+cid).hide();

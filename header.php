@@ -1691,12 +1691,8 @@ case "31": # Блок JS
 		'width=400,height=260'); return true;\">Валюта</a>: USD: ".$usd." EUR: ".$eur."";
 		$block = str_replace("[валюта]", $valuta, $block);
 	}
-	
-	
-		
 		
 	if ($show_page_links == 1) {
-
 		// Добавить if {} наличие
 
 		// Получить заголовки всех страниц и разделов

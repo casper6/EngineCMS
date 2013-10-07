@@ -12,7 +12,7 @@ if (is_admin($admin)) {
   if (isset($_REQUEST['type']))   $type = $_REQUEST['type']; else $type = 0;
   if (isset($_REQUEST['id']))     $id = intval($_REQUEST['id']); else $id = 0;
   if (isset($_REQUEST['string'])) $string = $_REQUEST['string']; else $string = "";
-/* ============================================================================= */
+######################################################################################
 if ($func == "oformlenie_show") { // Выводим содержание различных оформлений
   $info = "";
   $admintip = "mainpage";
