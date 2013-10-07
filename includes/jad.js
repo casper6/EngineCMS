@@ -55,12 +55,12 @@ function show_pole(id, page_id, razdel, cid) {
 	    success: function(data){ $('#pole').html(data); }
 	});
 }
-function save_main() {
+function save_main(url, op) {
 	var msg = $('form').serialize();
     $.ajax({
       type: 'POST',
-      url: 'ad/ad-mainpage.php',
-      data: {'op': 'mainpage_save_ayax', 'string': msg },
+      url: url,
+      data: {'op': op, 'string': msg },
 	  beforeSend: function(){ $('#save_main').html('<img src=images/loading.gif> Сохраняю...'); },
       success: function(data) { $('#save_main').html(data); },
       /* error: function(xhr, str) { alert('Возникла ошибка: ' + xhr.responseCode ); } */

@@ -786,21 +786,20 @@ function edit_main($id) {
 	echo "<div class='fon w100 mw800'>
 	<div class='black_grad h40'>
 	<button type='submit' id='new_razdel_button' class='small green' style='float:left; margin:3px;'><span class='mr-2 icon white medium' data-icon='c'></span>Сохранить</button>
-	<a class='button small green' onclick='save_main()' style='float:left; margin:3px;'>Обновить</a>
+	<a class='button small green' onclick='save_main(\"ad/ad-mainpage.php\", \"mainpage_save_ayax\")' style='float:left; margin:3px;'>Обновить</a>
 
 
-<script type='text/javascript'>
-jQuery(function(){
- $(\".scroll_on_top\").hide();
- if ($(window).scrollTop()>=\"250\") $(\".scroll_on_top\").fadeIn(\"slow\")
- $(window).scroll(function(){
-  if ($(window).scrollTop()<=\"250\") $(\".scroll_on_top\").fadeOut(\"slow\")
-  else $(\".scroll_on_top\").fadeIn(\"slow\")
- });
-});
-</script>
-
-	<a class='scroll_on_top button small green' onclick='save_main()' style='position:fixed; top:80%; right:0%; left:90%; width:100px; z-index:1000;'>Обновить</a>
+	<script type='text/javascript'>
+	jQuery(function(){
+	 $(\".scroll_on_top\").hide();
+	 if ($(window).scrollTop()>=\"250\") $(\".scroll_on_top\").fadeIn(\"slow\")
+	 $(window).scroll(function(){
+	  if ($(window).scrollTop()<=\"250\") $(\".scroll_on_top\").fadeOut(\"slow\")
+	  else $(\".scroll_on_top\").fadeIn(\"slow\")
+	 });
+	});
+	</script>
+	<a class='scroll_on_top button small green' onclick='save_main(\"ad/ad-mainpage.php\", \"mainpage_save_ayax\")' style='position:fixed; top:80%; right:0%; left:90%; width:100px; z-index:1000;'>Обновить</a>
 	<a class='scroll_on_top button small blue' href='#1' style='position:fixed; top:90%; right:0%; left:90%; width:100px; z-index:1000;'>&uarr;<br>Наверх</a>
 
 	<div id='save_main' style='float:left; margin:3px;'></div>
@@ -1237,8 +1236,8 @@ jQuery(function(){
 		<textarea class='big w100 h40 f16' name='title' rows='2' cols='10'>".$title."</textarea>
 		</td><td>
 		<span class=h2>Адрес раздела на сайте</span><br>
-		<textarea class='big w100 h40 f16' name='namo' rows='1' cols='10' disabled>".$name."</textarea>
-		<span class=f12>Ссылка: <a href='/-".$name."' target='_blank'>/-".$name."</a></span>
+		<textarea class='big w100 h40 f16' name='namo' rows='1' cols='10'>".$name."</textarea>
+		<span class=f12>Ссылка на раздел: <a href='/-".$name."' target='_blank'>-".$name."</a>. Не изменять, если созданы папки/страницы!</span>
 		</td></tr>
 		<tr><td colspan='2'>
 		<span class=h2>Содержание раздела:</span><br>";
@@ -2004,7 +2003,6 @@ function mainpage_save($id=0, $type, $namo, $title, $text, $useit, $shablon, $de
 		if (trim($namo) == "") $namo = strtolow(translit_name(trim($title)));
 		else $namo = strtolow(translit_name(trim($namo)));
 	}
-
 	if ($nastroi == 1) { // Настройка раздела или блока
 		global $options, $module_name;
 		$text = array();
@@ -2457,14 +2455,16 @@ function block_help() { // проверить вызов
 	    case "mainpage_save":
 	    case "mainpage_save_ayax":
 	    	if ($op == "mainpage_save_ayax") parse_str($_REQUEST['string']);
-		    if (!isset($descriptionX)) $descriptionX = "";
-		    if (!isset($keywordsX)) $keywordsX = "";
-		    if (!isset($s_tip)) $s_tip = "";
-		    if (!isset($namo)) $namo = "";
-		    if (!isset($title)) $title = "";
-		    if (!isset($text)) $text = "";
-		    if (!isset($useit)) $useit = "";
-		    if (!isset($shablon)) $shablon = "";
+	    	else {
+			    if (!isset($descriptionX)) $descriptionX = "";
+			    if (!isset($keywordsX)) $keywordsX = "";
+			    if (!isset($s_tip)) $s_tip = "";
+			    if (!isset($namo)) $namo = "";
+			    if (!isset($title)) $title = "";
+			    if (!isset($text)) $text = "";
+			    if (!isset($useit)) $useit = "";
+			    if (!isset($shablon)) $shablon = "";
+			}
 		    mainpage_save($id, $type, $namo, $title, $text, $useit, $shablon, $descriptionX, $keywordsX, $s_tip);
 	    	break;
 	    case "mainpage_del":

@@ -412,7 +412,7 @@ function red_vybor() { // Выбор редактора
   global $url;
   $link = str_replace("&red=0","",str_replace("&red=1","",str_replace("&red=2","",str_replace("&red=3","",str_replace("&red=4","",$url)))));
   echo "
-  <button id='rerurn' class='medium orange' type=button onclick=\"show('red_vybor');\" style='float:right;margin:3px;'><span style='margin-right: -2px;' class=\"icon white small\" data-icon=\"7\"></span> ".aa("Редактор")."</button>
+  <button id='rerurn' class='small orange' type=button onclick=\"show('red_vybor');\" style='float:right;margin:3px;'><span style='margin-right: -2px;' class=\"icon white medium\" data-icon=\"7\"></span> ".aa("Редактор")."</button>
 
   <div id='red_vybor' style='position: absolute; z-index:666; right:5px; top:5px; padding:5px; width:647px; background:white; display:none; border:solid 10px gray;' class=radius>
   <a onclick=show('red_vybor') style='cursor:pointer; float:right;' title='Закрыть'><img class='icon2 i33' src='/images/1.gif'></a>
