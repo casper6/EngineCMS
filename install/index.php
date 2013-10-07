@@ -62,14 +62,11 @@ if (isset($_REQUEST['ipban'])) {
 	$conf = '<?php
 ##############################################
 ## EngineCMS (Content Management System)    ##
-## Распространяется по GNU GPL 3 версии.	##
+## Распространяется по лицензии.	        ##
 ## 2006-2013 © Влад Мерк, г. Самара         ##
 ## 13i@list.ru | http://hotel-s.ru          ##
 ##############################################
 
-// date_default_timezone_set(\'Europe/Moscow\'); # Может не работать на вашем сервере
-################### АДРЕС САЙТА
-$siteurl 			= "'.$siteurl.'"; # Пример: ilost.ru или it.ilost.ru (домены третьего уровня использовать можно, папки — нельзя)
 ################### БАЗА ДАННЫХ
 $dbhost 			= "'.$dbhost.'"; 	# Хост базы данных
 $dbuname 			= "'.$dbuname.'"; 	# Имя пользователя базы данных
@@ -77,20 +74,17 @@ $dbpass 			= "'.$dbpass.'"; 	# Пароль пользователя базы д
 $dbname 			= "'.$dbname.'"; # Имя базы данных
 $prefix 			= "'.$prefix.'"; # Префикс базы данных
 $dbtype 			= "MySQL"; 	# Тип базы данных - MySQL, остальные (mysql4, postgres, mssql, oracle, msaccess, db2, mssql-odbc) недоступны
-################### НАСТРОЙКИ ОТОБРАЖЕНИЯ
-$display_errors 	= false; # Отладочная опция - для показа ошибок (и запросов к БД и их количества) написать = true, для отмены = false
-$ipban 				= '.$ipban.'; # Админ-опция - для включения блокировки по IP = true, для отключения = false
-$site_cash    		= '.$site_cash.'; # Система кеширования: false - отключена, file - кеширование в файлы, base - кеширование в БД
-################### НАСТРОЙКИ САЙТА
-$lang 				= "'.$lang.'"; // Язык сайта
+################### НАСТРОЙКИ
+$siteurl 			= "'.$siteurl.'"; # Пример: ilost.ru или it.ilost.ru (домены третьего уровня использовать можно, папки — нельзя!)
+// Для русскоязычных адресов использовать пуни-код (конвертер — http://r01.ru/domain/whois/instruments/converter.php)
 $lang_admin			= "'.$lang_admin.'"; // Язык администрирования
-$red4_div_convert 	= "convertDivs: true,"; // Поставьте false для отмены конвертации <DIV> в <P> в 2-м визуал. редакторе
-$more_smile			= false; // Дополнительные смайлики в комментариях, если true - включится
-$strelka			= "&rarr;";
-$razdel_open_name	= "Открыть раздел";
-$reiting_data 		= "Дата написания отзыва"; // Дата написания отзыва (пример: для отзывов о роддомах - дата родов, Дата посещения и т.д.)*
-###################
-if (stristr(htmlentities($_SERVER[\'PHP_SELF\']), "config.php")) { Header("Location: index.php"); die(); } // Проверка безопасности
+$lang 				= "'.$lang.'"; // Язык сайта
+$display_errors 	= false; # Отладочная опция - показ ошибок (и запросов к БД и их количества) = true
+$ipban 				= '.$ipban.'; # Админ-опция - включение блокировки по IP = true, отключение = false
+$site_cash    		= '.$site_cash.'; # Система кеширования: false - отключена, file - кеширование в файлы, base - кеширование в БД
+// date_default_timezone_set(\'Europe/Moscow\'); # Может не работать на вашем сервере, позволяет настроить сайт на нужную временную зону
+################### Проверка безопасности
+if (stristr(htmlentities($_SERVER[\'PHP_SELF\']), "config.php")) { Header("Location: index.php"); die(); }
 ?>';
 	if (!function_exists('file_put_contents')) {
 	    function file_put_contents($filename, $data) {
@@ -248,7 +242,7 @@ if (stristr(htmlentities($_SERVER[\'PHP_SELF\']), "config.php")) { Header("Locat
 			$namo = mysql_real_escape_string(stripcslashes($r));
 			$title = mysql_real_escape_string(stripcslashes($r2));
 			$text = mysql_real_escape_string($text);
-			$db->sql_query("INSERT INTO ".$prefix."_mainpage (`id`, `type`, `name`, `title`, `text`, `useit`, `shablon`, `counter`, `tables`, `color`, `description`, `keywords`) VALUES (NULL, '2', '".$namo."', '".$title."', 'pages|design=".$useit."&designpages=0&".$text."', '".$soderganie."', '', '0', 'pages', '0', '', '".$title."');") or die('Не удалось создать. Попробуйте еще раз и в случае неудачи обратитесь к разработчику.');
+			if ($title != "") $db->sql_query("INSERT INTO ".$prefix."_mainpage (`id`, `type`, `name`, `title`, `text`, `useit`, `shablon`, `counter`, `tables`, `color`, `description`, `keywords`) VALUES (NULL, '2', '".$namo."', '".$title."', 'pages|design=".$useit."&designpages=0&".$text."', '".$soderganie."', '', '0', 'pages', '0', '', '".$title."');") or die('Не удалось создать. Попробуйте еще раз и в случае неудачи обратитесь к разработчику.');
 
 			$r = "-".$r;
 		} else $r = "/";

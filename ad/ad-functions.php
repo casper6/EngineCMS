@@ -340,7 +340,7 @@ $(function () {
 }
 ##########################################################################################
 function redactor($type, $txt, $name, $name2="", $style="html", $return="echo") {
-  global $red4_div_convert, $add_clips, $lang_admin;
+  global $add_clips, $lang_admin;
   $echo = "";
   if ($type=="0") {
   } elseif ($type=="2") {
@@ -374,7 +374,7 @@ function redactor($type, $txt, $name, $name2="", $style="html", $return="echo") 
     $txt = str_replace("textarea","tеxtarea",$txt); // ireplace
 
     $txt = str_replace("&","&amp;",$txt);
-    $echo .= "<textarea id='".$name."' class='w100 h155' name='".$name."'>".$txt."</textarea><br>";
+    $echo .= "<textarea id='".$name."' class='w100 h400' name='".$name."'>".$txt."</textarea><br>";
   } elseif ($type=="3") {
     $echo .= "<script> 
     $(document).ready(function()
@@ -384,9 +384,10 @@ function redactor($type, $txt, $name, $name2="", $style="html", $return="echo") 
     </script><textarea id='".$name."' name='".$name."' style='width: 100%; height: 220px;'>".$txt."</textarea>";
   } elseif ($type=="4") {
     // Настройки второго редактора
-    global $ed2_button_html, $ed2_button_formatting, $ed2_button_bold, $ed2_button_italic, $ed2_button_deleted, $ed2_button_underline, $ed2_button_unorderedlist, $ed2_button_orderedlist, $ed2_button_outdent, $ed2_button_indent, $ed2_button_image, $ed2_button_video, $ed2_button_file, $ed2_button_table, $ed2_button_link, $ed2_button_alignment, $ed2_button_horizontalrule, $ed2_button_more, $ed2_button_link2, $ed2_button_block, $ed2_button_pre, $ed2_button_fullscreen, $ed2_button_clips, $ed2_button_fontcolor, $ed2_button_fontsize, $ed2_button_fontfamily, $ed2_minHeight, $ed2_direction;
+    global $ed2_button_html, $ed2_button_formatting, $ed2_button_bold, $ed2_button_italic, $ed2_button_deleted, $ed2_button_underline, $ed2_button_unorderedlist, $ed2_button_orderedlist, $ed2_button_outdent, $ed2_button_indent, $ed2_button_image, $ed2_button_video, $ed2_button_file, $ed2_button_table, $ed2_button_link, $ed2_button_alignment, $ed2_button_horizontalrule, $ed2_button_more, $ed2_button_link2, $ed2_button_block, $ed2_button_pre, $ed2_button_fullscreen, $ed2_button_clips, $ed2_button_fontcolor, $ed2_button_fontsize, $ed2_button_fontfamily, $ed2_minHeight, $ed2_direction, $ed2_div_convert;
     if ($ed2_button_html == "" && $ed2_button_bold == "" && $ed2_button_link == "") $ed2_button_html = $ed2_button_formatting = $ed2_button_bold = $ed2_button_italic = $ed2_button_deleted = $ed2_button_unorderedlist = $ed2_button_orderedlist = $ed2_button_image = $ed2_button_video = $ed2_button_file = $ed2_button_table = $ed2_button_link = $ed2_button_alignment = $ed2_button_horizontalrule = $ed2_button_fullscreen = $ed2_button_clips = " checked";
     if ($ed2_direction == "") $ed2_direction = "ltl";
+    if ($ed2_div_convert == "1") $ed2_div_convert = "true"; else $ed2_div_convert = "false";
     if ($ed2_minHeight == "") $ed2_minHeight = "300";
     $ed2_html=$ed2_formatting=$ed2_bold=$ed2_italic=$ed2_deleted=$ed2_underline=$ed2_unorderedlist=$ed2_orderedlist=$ed2_outdent=$ed2_indent=$ed2_image=$ed2_video=$ed2_file=$ed2_table=$ed2_link=$ed2_alignment=$ed2_horizontalrule=$ed2_more=$ed2_link2=$ed2_block=$ed2_pre=$ed2_fullscreen=$ed2_clips=$ed2_fontcolor=$ed2_fontsize=$ed2_fontfamily="";
     if ($ed2_button_html == "1") $ed2_html = "'html', ";
@@ -435,7 +436,7 @@ function redactor($type, $txt, $name, $name2="", $style="html", $return="echo") 
           boldTag: 'b',
           italicTag: 'i',
           deniedTags: ['html', 'head', 'body', 'meta', 'applet'],
-          ".$red4_div_convert." 
+          convertDivs: ".$ed2_div_convert.",
           imageUpload: 'ed2/image_upload.php', 
           fileUpload: 'ed2/file_upload.php', 
           clipboardUploadUrl: 'ed2/clipboard_upload.php', 

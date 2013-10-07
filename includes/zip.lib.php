@@ -17,8 +17,7 @@ class zip
     @rewind($zip);
     @fseek($zip, $centd['offset']);
 
-   for ($i=0; $i<$centd['entries']; $i++)
-   {
+   for ($i=0; $i<$centd['entries']; $i++) {
     $header = $this->ReadCentralFileHeaders($zip);
     $header['index'] = $i;$info['filename'] = $header['filename'];
     $info['stored_filename'] = $header['stored_filename'];
@@ -34,13 +33,21 @@ class zip
 
  function Add($files,$compact) {
   if(!is_array($files[0])) $files=Array($files);
-  for($i=0;$files[$i];$i++){ // заменить на foreach
-    $fn = $files[$i];
-    if(!in_Array(dirname($fn[0]),$this->dirs))
-     $this->add_Dir(dirname($fn[0]));
-    if(basename($fn[0]))
-     $ret[basename($fn[0])]=$this->add_File($fn[1],$fn[0],$compact);
-  }
+    foreach ($files as $fn) {
+      if(!in_Array(dirname($fn[0]),$this->dirs))
+        $this->add_Dir(dirname($fn[0]));
+      if(basename($fn[0]))
+        $ret[basename($fn[0])]=$this->add_File($fn[1],$fn[0],$compact);
+    }
+    /*
+    for($i=0; $files[$i]; $i++){ // заменить на foreach
+      $fn = $files[$i];
+      if(!in_Array(dirname($fn[0]),$this->dirs))
+       $this->add_Dir(dirname($fn[0]));
+      if(basename($fn[0]))
+       $ret[basename($fn[0])]=$this->add_File($fn[1],$fn[0],$compact);
+    }
+  */
   return $ret;
  }
 

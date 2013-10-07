@@ -19,12 +19,12 @@ global $strelka, $go, $cid, $pid, $all, $avtor, $to, $info, $num, $ip, $golos, $
 // настройки раздела из БД
 global $post, $comments, $datashow, $sort, $lim, $foto, $view, $search, $search_papka, $tema, $tema_name, $tema_title, $tema_opis, $menushow, $design; 
 
-$media=$folder=$col=$view=$golos=$golosrazdel=$post=$comments=$datashow=$favorites=$socialnetwork=$search=$search_papka=$put_in_blog=$base=$vetki=$citata=$media_comment=$no_html_in_opentext=$no_html_in_text=$show_add_post_on_first_page=$media_post=$razdel_shablon=$page_shablon=$comments_all=$comments_num=$comments_mail=$comments_adres=$comments_tel=$comments_desc=$golostype=$pagenumbers=$comments_main=$tags_type=$tema_zapret_comm=$pagekol=$table_light=$designpages=$comments_add=$div_or_table=$papka_show=0;
-
-$menushow=$titleshow=$razdel_link=$peopleshow=$design=$tags=$podrobno=$podrazdel_active_show=$podrazdel_show=$tipograf=$limkol=$tags_show=$tema_zapret=1;
-$comment_shablon=2;
-
-$sort="date desc";
+$media = $folder = $col = $view = $golos = $golosrazdel = $post = $comments = $datashow = $favorites = $socialnetwork = $search = $search_papka = $put_in_blog = $base = $vetki = $citata = $media_comment = $no_html_in_opentext = $no_html_in_text = $show_add_post_on_first_page = $media_post = $razdel_shablon = $page_shablon = $comments_all = $comments_num = $comments_mail = $comments_adres = $comments_tel = $comments_desc = $golostype = $pagenumbers = $comments_main = $tags_type = $tema_zapret_comm = $pagekol = $table_light = $designpages = $comments_add = $div_or_table = $papka_show = $more_smile = 0;
+$menushow = $titleshow = $razdel_link = $peopleshow = $design = $tags = $podrobno = $podrazdel_active_show = $podrazdel_show = $tipograf = $limkol = $tags_show = $tema_zapret = 1;
+$comment_shablon = 2;
+$lim = 20;
+$where = $order = $calendar = $reclama = "";
+$sort = "date desc";
 $tema = ss("Открыть новую тему");
 $tema_name = ss("Ваше имя");
 $tema_title = ss("Название темы");
@@ -38,9 +38,7 @@ $comments_6 = ss("Ваш телефон:");
 $comments_7 = ss("Ваш вопрос или комментарий:");
 $comments_8 = ss("Раскрыть все комментарии");
 $tag_text_show = ss("Ключевые слова");
-
-$where=$order=$calendar=$reclama="";
-$lim=20;
+$reiting_data = "Дата написания отзыва";
 
 parse_str($options); // раскладка всех настроек модуля
 ###########################################
@@ -236,7 +234,7 @@ function top_menu($cid, $page) {
   /////////////////////////////////////
     if ($podrazdel_active_show == 3) {
       if ($cid == "0") $sel = " selected"; else $sel = "";
-      $links2 = "<select id='c_id' onchange=\"if (document.getElementById('c_id').value != '') location.href = '/-".$DBName."_cat_' + document.getElementById('c_id').value;\"><option value=''>".ss("Выберите раздел")."</option>".$links2."</select><p>";
+      $links2 = "<select id='c_id' onchange=\"if (document.getElementById('c_id').value != '') location.href = '/-".$DBName."_cat_' + document.getElementById('c_id').value;\"><option value=''>".ss("Выберите раздел")."</option>".$links2."</select>";
     }
     
   	if (trim($links2) != "" and trim($links2) != "<div class='main_cat_links'>   </div>") {
@@ -1230,9 +1228,9 @@ function page($pid, $all) {
   if ($put_in_blog>0) {
   $page_blog = "<div id=\"put_in_blog\" class=\"put_in_blog\" OnClick=\"$('#onoffputinblog').toggle();\" style=\"cursor: pointer;\"><b style=\"border-bottom:1px dotted #999999;\">".ss("Разместите в своем блоге")."</b></div><div id=\"onoffputinblog\" class=\"editor\" style=\"display:none;\"><br>".ss("Код для вставки в блог:")."<br><div style=\"height:150px;overflow:scroll;background-color:#F5F5F5; padding-top:10px;\">";
   if ($put_in_blog==2) {
-  $page_blog .= "&lt;table width=75% border=0 cellspacing=0 cellpadding=0 style=&quot;border: 1px solid #dfdfdf; background-color:#f1edd3; color: #333333;&quot;&gt;&lt;tr&gt; &lt;td valign=bottom&gt; &lt;div style=&quot;width: 95%;font-size:16px; font-weight:bold;padding: 5px 10px 5px 5px;&quot;&gt;&lt;img src=&quot;".$logo_link."&quot; width=&quot;102&quot; height=&quot;41&quot; align=&quot;left&quot; /&gt; &lt;a href=".$link." target=_blank style=&quot;text-decoration:none; color: #2e64c8;&quot;&gt; &nbsp;".$title_blog." &lt;/a&gt; &lt;/div&gt;&lt;/td&gt;&lt;/tr&gt; &lt;tr&gt; &lt;td align=left valign=top style=&quot;padding: 0 10px 0 10px; font-size:11px;&quot;&gt; ".$opentext_blog." &lt;/td&gt; &lt;/tr&gt; &lt;tr align=right&gt; &lt;td style=&quot;padding:5px 10px 0 10px&quot;&gt;&lt;div style=&quot;border-top: 1px solid #dfdfdf; padding-top: 10px; padding:5px 0 5px 0; font-size: 11px;&quot;&gt;&lt;a href=".$link." target=_blank style=&quot;color: #2e64c8;&quot;&gt;".ss("читать полностью")."&lt;/a&gt;&lt;/div&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;";
+  $page_blog .= "&lt;table width='75%' border='' cellspacing='0' cellpadding='0' style=&quot;border: 1px solid #dfdfdf; background-color:#f1edd3; color: #333333;&quot;&gt;&lt;tr&gt; &lt;td valign=bottom&gt; &lt;div style=&quot;width: 95%;font-size:16px; font-weight:bold;padding: 5px 10px 5px 5px;&quot;&gt;&lt;img src=&quot;".$logo_link."&quot; width=&quot;102&quot; height=&quot;41&quot; align=&quot;left&quot; /&gt; &lt;a href=".$link." target=_blank style=&quot;text-decoration:none; color: #2e64c8;&quot;&gt; &nbsp;".$title_blog." &lt;/a&gt; &lt;/div&gt;&lt;/td&gt;&lt;/tr&gt; &lt;tr&gt; &lt;td align=left valign=top style=&quot;padding: 0 10px 0 10px; font-size:11px;&quot;&gt; ".$opentext_blog." &lt;/td&gt; &lt;/tr&gt; &lt;tr align=right&gt; &lt;td style=&quot;padding:5px 10px 0 10px&quot;&gt;&lt;div style=&quot;border-top: 1px solid #dfdfdf; padding-top: 10px; padding:5px 0 5px 0; font-size: 11px;&quot;&gt;&lt;a href=".$link." target=_blank style=&quot;color: #2e64c8;&quot;&gt;".ss("читать полностью")."&lt;/a&gt;&lt;/div&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;";
   } elseif ($put_in_blog==1) {
-  $page_blog .= "&lt;table width=100% border=0 cellspacing=0 cellpadding=0 style=&quot;border: 1px solid #dfdfdf; background-color:#FFFFFF; color: #333333;&quot;&gt;&lt;tr&gt; &lt;td valign=bottom&gt; &lt;div style=&quot;width: 95%;font-size:16px; font-weight:bold;padding: 5px 10px 5px 5px;&quot;&gt; &lt;a href=".$link." target=_blank style=&quot;text-decoration:none; color: #2e64c8;&quot;&gt; ".$title_blog." &lt;/a&gt; &lt;/div&gt;&lt;/td&gt;&lt;/tr&gt; &lt;tr&gt; &lt;td align=left valign=top style=&quot;padding: 0 10px 0 10px; font-size:11px;&quot;&gt; ".$opentext_blog." &lt;/td&gt; &lt;/tr&gt; &lt;tr align=right&gt; &lt;td style=&quot;padding:5px 10px 0 10px&quot;&gt;&lt;div style=&quot;border-top: 1px solid #dfdfdf; padding-top: 10px; padding:5px 0 5px 0; font-size: 11px;&quot;&gt;&lt;a href=".$link." target=_blank style=&quot;color: #2e64c8;&quot;&gt;".ss("читать полностью")."&lt;/a&gt;&lt;/div&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;";
+  $page_blog .= "&lt;table width='100%' border='' cellspacing='0' cellpadding='0' style=&quot;border: 1px solid #dfdfdf; background-color:#FFFFFF; color: #333333;&quot;&gt;&lt;tr&gt; &lt;td valign=bottom&gt; &lt;div style=&quot;width: 95%;font-size:16px; font-weight:bold;padding: 5px 10px 5px 5px;&quot;&gt; &lt;a href=".$link." target=_blank style=&quot;text-decoration:none; color: #2e64c8;&quot;&gt; ".$title_blog." &lt;/a&gt; &lt;/div&gt;&lt;/td&gt;&lt;/tr&gt; &lt;tr&gt; &lt;td align=left valign=top style=&quot;padding: 0 10px 0 10px; font-size:11px;&quot;&gt; ".$opentext_blog." &lt;/td&gt; &lt;/tr&gt; &lt;tr align=right&gt; &lt;td style=&quot;padding:5px 10px 0 10px&quot;&gt;&lt;div style=&quot;border-top: 1px solid #dfdfdf; padding-top: 10px; padding:5px 0 5px 0; font-size: 11px;&quot;&gt;&lt;a href=".$link." target=_blank style=&quot;color: #2e64c8;&quot;&gt;".ss("читать полностью")."&lt;/a&gt;&lt;/div&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;";
   }
   $page_blog .= "</div></div><br>";
   } else $page_blog = "";
@@ -1299,7 +1297,7 @@ function page($pid, $all) {
       $row = $db->sql_fetchrow($result);
       $avtor = $row['avtor'];
       $text = explode("|&|",$row['text']);
-      $page_comments .= "<table width=100% border=0 cellpadding=5>
+      $page_comments .= "<table width='100%' border='' cellpadding='5'>
       <tr width=50% valign=top><td align=right><u><b>".ss("Автор:")."</b></u></td><td width=50%><u>".$avtor."</u></td></tr></table>".$text[1];
     } else { //////////////////////////////////// Вывод всех комментов
        // (".$comm.")
@@ -1309,7 +1307,7 @@ function page($pid, $all) {
         $result = $db->sql_query($sql);
         $numrows = $db->sql_numrows($result);
         if ($numrows > 0) {
-          $page_comments .= "<table width=100% border=0 cellpadding=5><tr valign=top><td align=center><b>".ss("Оценка")."</b></td><td align=center><b>".ss("Дата")."</b></td><td><b>".ss("Комментарий")."</b></td></tr>";
+          $page_comments .= "<table width='100%' border='' cellpadding='5'><tr valign=top><td align=center><b>".ss("Оценка")."</b></td><td align=center><b>".ss("Дата")."</b></td><td><b>".ss("Комментарий")."</b></td></tr>";
           $color = 1;
           while($row = $db->sql_fetchrow($result)) {
             $comm_cid = $row['cid'];
@@ -1598,20 +1596,24 @@ function addcomm($pid) {
     <DIV class='editor' style='margin-top:10px; width:100%;'> 
     <DIV class='editorbutton' onclick=\"clc_bbcode('".ss("жирный',1)")."\"><IMG title='".ss("Жирный текст")."' src='images/bold.gif'></DIV>
     <DIV class='editorbutton' onclick=\"clc_bbcode('".ss("цитата',1)")."\"><IMG title='".ss("Вставить цитату")."' src='images/quote.gif'></DIV>";
-    global $more_smile;
-    if ($more_smile == true or $more_smile == false) $ret .= "<div id=\"cont\" class=\"editorbutton\" OnClick=\"show('onoffsmilies0');\" style=\"cursor: pointer;\"><img title=\"".ss("Показать смайлы: эмоции")."\" src=\"images/smilies/07.gif\"></div>";
-    if ($more_smile == true) $ret .= "<div id=\"cont\" class=\"editorbutton\" OnClick=\"show('onoffsmilies1');\" style=\"cursor: pointer;\"><img title=\"".ss("Смайлы: альтернативная коллекция :)")."\" src=\"images/smilies/75.gif\"></div>
+    //global $more_smile;
+    //if ($more_smile == "1" or $more_smile == "0") 
+    $ret .= "<div id=\"cont\" class=\"editorbutton\" OnClick=\"show('onoffsmilies0');\" style=\"cursor: pointer;\"><img title=\"".ss("Показать смайлы: эмоции")."\" src=\"images/smilies/07.gif\"></div>";
+    /*
+    if ($more_smile == "1") $ret .= "<div id=\"cont\" class=\"editorbutton\" OnClick=\"show('onoffsmilies1');\" style=\"cursor: pointer;\"><img title=\"".ss("Смайлы: альтернативная коллекция :)")."\" src=\"images/smilies/75.gif\"></div>
     <div id=\"cont\" class=\"editorbutton\" OnClick=\"show('onoffsmilies2');\" style=\"cursor: pointer;\"><img title=\"".ss("Смайлы: если эмоций маловато :)")."\" src=\"images/smilies/17.gif\"></div>
     <div id=\"cont\" class=\"editorbutton\" OnClick=\"show('onoffsmilies3');\" style=\"cursor: pointer;\"><img title=\"".ss("Смайлы: аниме-эмоции o_O")."\" src=\"images/smilies/18.gif\"></div>";
+    */
     $ret .= "</td></tr></table>
     <TEXTAREA id=area rows=7 style='font-size:18px;' name=info></TEXTAREA>
     ".$kcaptcha."
     <div id=\"onoffsmilies0\" class=\"editor\" style=\"display:none;\"><br><div class=\"editorbutton\">
-    ".smile_generate(array("01","02","03","04","05","06","07","08","09",10,11,12,13,14,15,16,17,18))." <div OnClick=\"show('onoffsmilies0');\" style=\"cursor: pointer;\">".ss("Закрыть")."</div></div><br></div>"; // убран лишний div
-    if ($more_smile == true) $ret .= "
+    ".smile_generate(array("01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18"))." <div OnClick=\"show('onoffsmilies0');\" style=\"cursor: pointer;\">".ss("Закрыть")."</div></div><br></div>"; // убран лишний div
+    /*if ($more_smile == "1") $ret .= "
     <div id=\"onoffsmilies1\" style=\"display:none;\"><br><br><div class=\"editorbutton\">".smile_generate(array(75,76,77,78,79,80,81,82,83,84,85,86,87,88))."</div></div>
     <div id=\"onoffsmilies2\" style=\"display:none;\"><br><br><div class=\"editorbutton\">".smile_generate(array(20,21,22,23,24,25,26,27,28,29,30,31,33,34,36,37,38,39,40,42,43,44,45,46,47,48,49,50,51,53,54,55,56,57,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74))."</div></div>
     <div id=\"onoffsmilies3\" style=\"display:none;\"><br><br><div class=\"editorbutton\">".smile_generate(array(90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162))."</div></div>"; // </DIV>
+    */
   }
   $ret .= "</div></form>";
   // Для добавления аватара (мини-фото) к комментарию, введите свой email в комментарий и зарегистрируйтесь на <a href='http://ru.gravatar.com/site/signup/' target='_blank' rel='nofollow'>сайте «Gravatar»</a>, если вы не сделали этого ранее.
@@ -2546,7 +2548,7 @@ function savegolos ($gol, $num){
 // BBCODE - преобразование --- ТИПОГРАФИКОЙ_ДОПОЛНИТЬ!!
 function bbcode($text, $nolink=1) {
   $text = str_replace(ss("жирный]"),"b]", str_replace("QUOTE","quote", str_replace(ss("цитата]"),"quote]", str_replace("IMG","img", str_replace(">",")", str_replace("<","(", trim($text)))))));
-  $quote1 = "<table border=0 align=center width=98% cellpadding=3 cellspacing=1><tr valign=top><td><b><span style=\"font-size: 10px\">".ss("Цитата")."</span></b></td></tr><tr valign=top><td bgcolor=#F5F5F5 style=\"border:1px solid #c0c0c0; padding:5px; margin:5px;\">";
+  $quote1 = "<table border='' align='center' width='98%' cellpadding='3' cellspacing='1'><tr valign=top><td><b><span style=\"font-size: 10px\">".ss("Цитата")."</span></b></td></tr><tr valign=top><td bgcolor='#F5F5F5' style=\"border:1px solid #c0c0c0; padding:5px; margin:5px;\">";
   $quote2 = "</td></tr></table>";
   $q1 = substr_count($text, '[quote]');
   $q2 = substr_count($text, '[/quote]');

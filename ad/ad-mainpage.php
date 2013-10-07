@@ -491,7 +491,7 @@ function create_main($type) {
 	<span class='icon large white' data-icon='C'></span>В этом блоке можно написать любой текст, использовать HTML, а также другие созданные блоки.<br>
 После создания блока, необходимо его настроить — настройка откроется автоматически.
 	</div>
-	<br> <div class='notice warning black w100 mw800'>Если выбран дизайн, в нём обязательно должен быть блок [содержание], сам дизайн его обрамляет.</div></td></tr></table>";
+	<br> <div class='notice warning black w100 mw800'>Если выбран дизайн, в нём обязательно должен быть блок [содержание], а дизайн его обрамляет.</div></td></tr></table>";
 	break;
 	########################################################
 	case "spisok": $type_opis = "поля (дополнительное поле для страниц)";
@@ -859,6 +859,7 @@ function edit_main($id) {
 	$comments_8 = "Раскрыть все комментарии";
 	$tag_text_show = "Ключевые слова";
 	$read_all = "Читать далее...";
+	$reiting_data = "Дата написания отзыва";
 
 	parse_str($options); // раскладка всех настроек раздела
 
@@ -1126,6 +1127,10 @@ function edit_main($id) {
 	<td><b>Запретить добавление ссылок</b> в комментариях?</td>
 	<td>".select("options[tema_zapret_comm]", "1,0", "НЕТ,ЕСТЬ", $tema_zapret_comm)."</td>
 	</tr>
+	<tr>
+	<td>Если выбран тип раздела «Анкеты-рейтинги» Дата написания отзыва (пример: для отзывов о роддомах - дата родов, дата посещения и т.д.):</td>
+	<td>".input("options[reiting_data]", $reiting_data)."</td>
+	</tr>
 	</table>
 	</div>
 
@@ -1134,7 +1139,7 @@ function edit_main($id) {
 	</a><div id=block10 style='display: none;'>
 	<table  class='w100 mw800 table_light'>
 	<tr>
-	<td><b>Разрешить пользователям добавлять страницы</b> в раздел.<br>Выделение серым цветом позволяет сразу писать комментарии к добавленной странице, что особенно актуально для рейтингов.</td>
+	<td><b>Разрешить пользователям добавлять страницы</b> в раздел.<br>Выделение серым цветом позволяет сразу писать комментарии к добавленной странице, что особенно актуально, если выбран тип раздела «Анкеты-рейтинги».</td>
 	<td>".select("options[post]", "3,2,1,0", "с выделением серым цветом,с проверкой администратора,без проверки,ЗАПРЕТИТЬ", $post)."</td>
 	</tr>
 	<tr>
@@ -1207,30 +1212,30 @@ function edit_main($id) {
 		<textarea class='big w100 h40 f16' name='title' rows='2' cols='10'>".$title."</textarea>
 		</td><td>
 		<span class=h2>Адрес раздела на сайте</span><br>
-		<textarea class='big w100 h40 f16' name='namo' rows='1' cols='10'>".$name."</textarea>
-		<span class='red f12'>НЕ изменять!</span> <span class=f12>Ссылка: <a href=/-".$name." target=_blank>/-".$name."</a></span>
-		</td></tr></table>
-		<table width='100%' border='0'><tr valign='top'><td width='50%'>
-		<span class=h2>Ключевые слова:</span> <span class=f12><a onclick=\"show('help5')\" class=help>?</a></span><br><textarea name='keywordsX' class='big w100 h40' rows='2' cols='10'>".$keywordsX."</textarea>
-		<div id='help5' style='display:none;' class=f12>Это поле — для поисковых систем. Максимум 250 символов. Разделять запятой. Если пусто - используются ключевые словосочетания из <a href=/sys.php?op=Configure target=_blank>Настроек портала</a>).<br></div>
-		</td><td>
-		<span class=h2>Описание:</span> <span class=f12><a onclick=\"show('help6')\" class=help>?</a></span><br><textarea name='descriptionX' class='big w100 h40' rows='2' cols='10'>".$descriptionX."</textarea>
-		<div id='help6' style='display:none;' class=f12>Это поле — для поисковых систем. Максимум 250 символов. Если пусто - используется основное описание из <a href=/sys.php?op=Configure target=_blank>Настроек портала</a>.</div>
-		</td></tr></table>
-
+		<textarea class='big w100 h40 f16' name='namo' rows='1' cols='10' disabled>".$name."</textarea>
+		<span class=f12>Ссылка: <a href='/-".$name."' target='_blank'>/-".$name."</a></span>
+		</td></tr>
+		<tr><td colspan='2'>
 		<span class=h2>Содержание раздела:</span><br>";
 	  	redactor($red, $useit, 'useit', 'shablon'); // редактор: типа редактора, редактируемое поле
 
-		echo "<br><input type=hidden name=text value='".$text."'>";
+		echo "<input type='hidden' name='text' value='".$text."'>";
 		if ($id != 24) {
-			echo "<span class=h2>Шаблон Предисловия и Содержания страниц</span>
+			echo "<tr><td colspan='2'><span class=h2>Шаблон Предисловия и Содержания страниц</span>
 			<br>Если у большинства страниц раздела особенный дизайн или какое-то первоначальное содержание для всех страниц раздела одинаково — его можно прописать ниже как Шаблон для страниц. Сначала идет шаблон для Предисловия страниц, затем — для Содержания, разделяются они служебным словом [следующий]. Если нужен только шаблон для Предисловия - слово [следующий] можно не писать, а если нужен только шаблон для Содержания - слово [следующий] надо написать перед ним.<br>";
 			redactor2($red, $sha, 'shablon');
+
 		} else {
-			echo "<input type=hidden name=shablon value='".$sha."'>";
+			echo "<input type='hidden' name='shablon' value='".$sha."'>";
 		}
+		echo "</td></tr><tr valign='top'><td width='50%'>
+		<span class=h2>Ключевые слова:</span> <span class=f12><a onclick=\"show('help5')\" class=help>?</a></span><br><textarea name='keywordsX' class='big w100 h40' rows='2' cols='10'>".$keywordsX."</textarea>
+		<div id='help5' style='display:none;' class=f12>Это поле keywords для поисковых систем. Максимум 250 символов. Разделять запятой. Если пусто - используются ключевые словосочетания из <a href=/sys.php?op=Configure target=_blank>Настроек портала</a>).<br></div>
+		</td><td>
+		<span class=h2>Описание:</span> <span class=f12><a onclick=\"show('help6')\" class=help>?</a></span><br><textarea name='descriptionX' class='big w100 h40' rows='2' cols='10'>".$descriptionX."</textarea>
+		<div id='help6' style='display:none;' class=f12>Это поле description для поисковых систем. Максимум 250 символов. Если пусто - используется основное описание из <a href=/sys.php?op=Configure target=_blank>Настроек портала</a>.</div>
+		</td></tr></table>";
 	} // конец редактирования раздела
-		echo "<br><br><br>";
 } ############################### ЗАКРЫТИЕ РАЗДЕЛА
 
 	if ($type == "3") { ############################### ОТКРЫТИЕ БЛОК

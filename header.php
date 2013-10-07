@@ -327,6 +327,8 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 
 $js = '';
 
+if (strpos(" ".$block, "[".$titleX."]")) { // определение наличия блока на странице
+
 if ($block_color != "1") {
 
 switch ($nameX) {
@@ -430,7 +432,7 @@ case "0": # Блок страниц раздела
 	$result = $db->sql_query($sql);
 
 	if ($shablon == "")
-		if ($openshow==0) $textX .= "<ul id=block_li_title class=\"block_li_title\">"; 
+		if ($openshow==0) $textX .= "<ul class=\"block_li_title\">"; 
 	
 	$numlock = 0; // Счетчик кол-ва выведенных строк у блоков
 	while ($row = $db->sql_fetchrow($result)) {
@@ -607,7 +609,7 @@ case "1": # Блок комментариев модуля
 			if ($pageshow == 1) $cat = "".$titles[$num]." $strelka "; else $cat = "";
 			$textX .= "<li class=\"block_li_title ".$class."\"><span class=\"block_li_data ".$class."\">".$data."</span> ".$strelka." <span class=\"block_li_cat ".$class."\">".$cat."</span> <a class=\"block_comment_text ".$class."\" href=-".$modules[$num]."_page_".$num."#comm_".$cid.">".$text."</a></li>";
 		}
-		$textX = "<ul id=block_li_title class=\"block_li_title\">".$textX."</ul>";
+		$textX = "<ul class=\"block_li_title\">".$textX."</ul>";
 	$block = str_replace("[".$titleX."]", $design_open.$textX.$design_close, $block);
 	$type = ""; break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -624,7 +626,7 @@ case "2": # Блок текста
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 case "3": # Блок ротатор рекламы
 	$reload_link = "<a style='cursor:pointer;' onclick='$(showrotator".$idX."())'>".$reload_link_text."</a>";
-	$textX = "<script language='javascript'>
+	$textX = "<script>
 	  function showrotator".$idX."() {
           $.get('rotator.php', { num: '".$idX."' }, function(data) { 
 			  $('#show_rotator".$idX."').html( data );
@@ -1352,25 +1354,26 @@ case "31": # Блок JS
 	$type = ""; break;
 //case "8":
 
-	} # конец определения типа блока
-} else $block = str_replace("[".$titleX."]", "", $block); // убираем отключенный лок
+	} # конец switch - определения типа блока
+} else $block = str_replace("[".$titleX."]", "", $block); // убираем отключенный блок
+} // закрытие if наличие блока на странице
 } # ЗАКОНЧЕНО Определение блоков и их заполнение
 } # ЗАКОНЧЕНО ПОВТОРНОЕ Определение блоков и их заполнение
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	// Заголовок для раздела ставится в дизайн
-	if (strpos($block, aa("[заголовок"))) {
+	if (strpos(" ".$block, aa("[заголовок"))) {
 		$block = str_replace(aa("[заголовок]"), "<div class='cat_title'>".$main_title."</div>", $block); 
 		$block = str_replace(aa("[заголовок-ссылка]"), "<div class='cat_title'><A class='cat_categorii_link' href=-".$DBName.">".$main_title."</a></div>", $block); 
 	}
-	if (strpos($block, aa("[название папки]"))) {
+	if (strpos(" ".$block, aa("[название папки]"))) {
 		if (!isset($cid)) $cid = 0;
 		if ($cid > 0) $block = str_replace(aa("[название папки]"), "<div class='papka_title'> &rarr; ".titles_papka($cid)."</div>", $block);
 		else $block = str_replace(aa("[название папки]"), "", $block);
 	}
 
 	// Регистрация / Вход
-	if (strpos($block, aa("[регистрация]"))) {
+	if (strpos(" ".$block, aa("[регистрация]"))) {
 		$registr = "<div class='registration'>
 		<a class='button' onclick=\" 
 		$.ajax({ url: 'ajax.php', cache: false, dataType : 'html',
@@ -1403,26 +1406,26 @@ case "31": # Блок JS
 	$block=str_replace(aa("[статистика]"), $counter, $block); 
 
 	// Ставим почту
-	if (strpos($block, aa("[почта]"))) {
+	if (strpos(" ".$block, aa("[почта]"))) {
 		$mailer = "<a href=\"/mail.php\">".ss("Отправить письмо")."</a>"; // ".str_replace("@","<nobr>@</nobr>",$adminmail)." ";
 		$soderganie = str_replace(aa("[почта]"), $mailer, $soderganie); 
 		$block = str_replace(aa("[почта]"), $mailer, $block); 
 	}
 
 	// Ставим Новый год
-	if (strpos($block, aa("[новый год]"))) { //February 12, 2001
+	if (strpos(" ".$block, aa("[новый год]"))) { //February 12, 2001
 		$newyaer = time_otschet(aa("January 01").", ".$nextyear, ss("C Новым годом!!!"), ss("До Нового года осталось: "));
 		$soderganie = str_replace(aa("[новый год]"), $newyaer, $soderganie); 
 		$block = str_replace(aa("[новый год]"), $newyaer, $block); 
 	}
-	if (strpos($block, aa("[1 сентября]"))) {
+	if (strpos(" ".$block, aa("[1 сентября]"))) {
 		// Ставим 1 сентября 2011,1,1
 		if ( date("m") > 9 or ( date("m") == 9 and date("d") > 1 ) ) $year = $nextyear;
 		$sent = time_otschet(aa("September 01").", ".$year, ss("Время пришло!"), ss("До нового учебного года осталось: "));
 		$soderganie = str_replace(aa("[1 сентября]"), $sent, $soderganie); 
 		$block = str_replace(aa("[1 сентября]"), $sent, $block); 
 	}
-	if (strpos($block, aa("[список "))) {
+	if (strpos(" ".$block, aa("[список "))) {
 		// Ставим автогенерацию раскрывающегося списка из заголовков и последующих элементов
 		if ( date("m") > 9 or ( date("m") == 9 and date("d") > 1 ) ) $year = $nextyear;
 		$zagolovok = array("h2","h3");
@@ -1437,7 +1440,7 @@ case "31": # Блок JS
 			}
 		}
 	}
-	if (strpos($block, aa("[корзина]"))) {
+	if (strpos(" ".$block, aa("[корзина]"))) {
 		// Ставим ajax-блок Корзины
 		$sent = "<script>$(function() {	shop_show_card(); });</script><div id='shop_card'></div>";
 		$soderganie = str_replace(aa("[корзина]"), $sent, $soderganie);  // проверить soderganie и block
@@ -1445,9 +1448,9 @@ case "31": # Блок JS
 	}
 
 	// Ставим почту
-	if (strpos($block, aa("письмо]"))) {
+	if (strpos(" ".$block, aa("письмо]"))) {
 		// Заявка
-		$mailer = "<table width=100% border=0> 
+		$mailer = "<table width='100%' border='' class='mail_form mail_form_1'> 
 		<form action=send.php enctype='multipart/form-data' method=post name=formsend> 
 		<tr><td><nobr>".ss("Ф.И.О., компания:")."</nobr><br><input type=text name=mail_subject maxlength=32 size=40 class=all_width></td></tr> 
 		<tr><td><nobr>".ss("Электропочта:")."</nobr><br><input type=text name=mail_to maxlength=64 size=40 class=all_width></td></tr> 
@@ -1464,7 +1467,7 @@ case "31": # Блок JS
 		$block=str_replace(aa("[заявка-письмо]"), $mailer, $block); 
 
 		// Обычная почта
-		$mailer = "<table width=100% border=0> 
+		$mailer = "<table width='100%' border='' class='mail_form mail_form_2'> 
 		<form action=send.php enctype='multipart/form-data' method=post name=formsend> 
 		<tr><td><nobr><b>".ss("Фамилия, имя*:")."</b></nobr></td><td width=60%><input type=text name=mail_subject maxlength=32 size=40 class=all_width></td></tr> 
 		<tr><td><nobr><b>".ss("Электропочта*:")."</b></nobr></td><td width=60%><input type=text name=mail_to maxlength=64 size=40 class=all_width></td></tr> 
@@ -1481,8 +1484,7 @@ case "31": # Блок JS
 		$block=str_replace(aa("[письмо]"), $mailer, $block); 
 
 		// Ставим почту+имя
-		$mailer = "
-		<table width=400 border=0 align=center> 
+		$mailer = "<table width='400' border='0' align='center' class='mail_form mail_form_3'>
 		<form action=send.php enctype='multipart/form-data' method=post name=formsend> 
 		<tr><td><nobr><b>".ss("Ваше имя*:")."</b></nobr></td><td width=60%><input type=text name=mail_subject maxlength=32 size=40 class=all_width></td></tr> 
 		<tr><td><nobr><b>".ss("Электропочта:")."</b></nobr></td><td width=60%><input type=text name=mail_to maxlength=64 size=40 class=all_width></td></tr> 
@@ -1496,8 +1498,7 @@ case "31": # Блок JS
 		$block = str_replace(aa("[микрописьмо]"), $mailer, $block); 
 
 		// Ставим почту короткую
-		$mailer2 = "
-		<table width=100% border=0> 
+		$mailer2 = "<table width='100%' border='' class='mail_form mail_form_4'> 
 		<form action=send.php enctype='multipart/form-data' method=post name=formsend> 
 		<tr><td><nobr><b>".ss("Фамилия, имя*:")."</b></nobr></td><td width=60%><input type=text name=mail_subject maxlength=32 size=40 class=all_width></td></tr> 
 		<tr><td><nobr><b>".ss("Электропочта*:")."</b></nobr></td><td width=60%><input type=text name=mail_to maxlength=64 size=40 class=all_width></td></tr> 
@@ -1531,7 +1532,7 @@ case "31": # Блок JS
 	}
 
 	// Ставим день и время
-	if (strpos($block, aa("[день]")) or strpos($block, aa("[время]"))) {
+	if (strpos(" ".$block, aa("[день]")) or strpos($block, aa("[время]"))) {
 		$den = date("d m Y");
 		$den = explode(" ",$den);
 		$den = intval($den[0])." ".findMonthName($den[1])." ".$den[2];
@@ -1541,7 +1542,7 @@ case "31": # Блок JS
 	}
 
 	global $project_logotip, $project_name;
-	if (strpos($block, aa("_проекта]"))) {
+	if (strpos(" ".$block, aa("_проекта]"))) {
 		$block=str_replace(aa("[лого_проекта]"), "<img src='".$project_logotip."' class='project_logotip'>", $block);
 		$block=str_replace(aa("[название_проекта]"), $project_name, $block);
 		$block=str_replace(aa("[название_лого_проекта]"), "<h1 class='project_logotip_name'><a href='/'' title='".ss("Главная страница")."'><span>".$project_name."</span><img src='".$project_logotip."' alt=''></a></h1>", $block);
@@ -1554,7 +1555,7 @@ case "31": # Блок JS
 	$block=str_replace("[-]", "|", $block); //  УБРАТЬ!!!!!!!!!!!!!!!!!!!!!!!
 
 	// Ставим фильтр для магазина
-	if (strpos($block, aa("[фильтр]"))) {
+	if (strpos(" ".$block, aa("[фильтр]"))) {
 		global $filter, $filter_show_all, $filter_name, $id_razdel_and_bd;
 		$filtr = "";
 		if ($pid == 0) {
@@ -1642,7 +1643,7 @@ case "31": # Блок JS
 	}
 
 	// Ставим RSS
-	if (strpos($block, "[rss")) {
+	if (strpos(" ".$block, "[rss")) {
 		$rss_text = "<a href='rss.php' title='".ss("Подпишись на наши новости по RSS!")."' class='rss'><img src='images/";
 		$block=str_replace("[rss]", $rss_text."rss_16.png'></a>", $block);
 		$block=str_replace("[rss32]", $rss_text."rss_32.gif'></a>", $block);
@@ -1675,7 +1676,7 @@ case "31": # Блок JS
 	$block = company_blocks($company_people, aa("лицо компании"), $block);
 
 	// Ставим валютный информер (только для России)
-	if (strpos($block, "[валюта]")) { // INFORMER VALUTA by 13i
+	if (strpos(" ".$block, "[валюта]")) { // INFORMER VALUTA by 13i
 		$eur = 0;
 		$usd = 0;
 		$dat = date("d.m.Y",time()); // за вчера: date("d.m.Y",time()-86400);
@@ -1751,13 +1752,13 @@ echo "<!doctype html>\n
 \n<head>";
 if (file_exists("favicon.png"))  echo "<link rel='shortcut icon' href='favicon.png' />";
 else echo "<link rel='shortcut icon' href='favicon.ico' />";
+// <meta http-equiv='Content-language' content='".$lang."'> 
+// <meta name='copyright' content='".str_replace("'","",$sitename)."'>
 echo "<title>".$pagetit.$sitename."</title>
 <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
 <meta name='keywords' content='".str_replace("'","",$keywords2)."'>
 <meta name='description' content='".str_replace("'","",$description2)."'>
 <meta name='robots' content='index, follow'>
-<meta http-equiv='Content-language' content='".$lang."'> 
-<meta name='copyright' content='".str_replace("'","",$sitename)."'>
 <meta name='author' content=''>
 <meta name='viewport' content='width=device-width, initial-scale=1.0'>
 <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->

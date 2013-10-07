@@ -1,6 +1,7 @@
 <?php 
   require_once("mainfile.php");
   global $adminmail, $siteurl;
+  if (trim($adminmail) == "") die("Email администратора не указан. Зайдите в администрирование &rarr; Настройки &rarr; Основные настройки Сайта &rarr; Почта администратора");
   $mail_to = $_POST['mail_to'];
   if(empty($mail_to)) die("Введите свой почтовый адрес");
   $fio = filter($_POST['mail_subject'], "nohtml");

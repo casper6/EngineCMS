@@ -157,11 +157,12 @@
   $captcha_ok = intval($row['captcha_ok']); // отключение проверки комментариев
   $jqueryui = $show_comments = $show_userposts = $normalize = "";
   // Получаем настройки
-  list($jqueryui, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $search_design, $tag_design, $add_fonts, $normalize, $project_logotip, $project_name, $geo, $kolkey, $add_clips, $sortable, $color_tema_html, $color_tema_css, $color_tema_js, $color_tema_php, $tab_obzor, $tab_show, $shop_text_val1, $shop_text_val2, $shop_text_itogo, $shop_text_oformit, $shop_text_korzina, $shop_text_delete, $shop_pole, $shop_admin_mail, $shop_text_after_mail,$shop_spisok_pole, $shop_shablon_form_order, $shop_shablon_mail_client, $shop_shablon_mail_admin,$ed2_button_html,$ed2_button_formatting, $ed2_button_bold, $ed2_button_italic, $ed2_button_deleted, $ed2_button_underline, $ed2_button_unorderedlist, $ed2_button_orderedlist, $ed2_button_outdent, $ed2_button_indent, $ed2_button_image, $ed2_button_video, $ed2_button_file, $ed2_button_table, $ed2_button_link, $ed2_button_alignment, $ed2_button_horizontalrule, $ed2_button_more, $ed2_button_link2, $ed2_button_block, $ed2_button_pre, $ed2_button_fullscreen, $ed2_button_clips, $ed2_button_fontcolor, $ed2_button_fontsize, $ed2_button_fontfamily, $ed2_minHeight, $ed2_direction, $head_insert, $filter_name, $filter_show_all, $gravatar) = explode("|",trim($row['nocashe']));
+  list($jqueryui, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $search_design, $tag_design, $add_fonts, $normalize, $project_logotip, $project_name, $geo, $kolkey, $add_clips, $sortable, $color_tema_html, $color_tema_css, $color_tema_js, $color_tema_php, $tab_obzor, $tab_show, $shop_text_val1, $shop_text_val2, $shop_text_itogo, $shop_text_oformit, $shop_text_korzina, $shop_text_delete, $shop_pole, $shop_admin_mail, $shop_text_after_mail,$shop_spisok_pole, $shop_shablon_form_order, $shop_shablon_mail_client, $shop_shablon_mail_admin,$ed2_button_html,$ed2_button_formatting, $ed2_button_bold, $ed2_button_italic, $ed2_button_deleted, $ed2_button_underline, $ed2_button_unorderedlist, $ed2_button_orderedlist, $ed2_button_outdent, $ed2_button_indent, $ed2_button_image, $ed2_button_video, $ed2_button_file, $ed2_button_table, $ed2_button_link, $ed2_button_alignment, $ed2_button_horizontalrule, $ed2_button_more, $ed2_button_link2, $ed2_button_block, $ed2_button_pre, $ed2_button_fullscreen, $ed2_button_clips, $ed2_button_fontcolor, $ed2_button_fontsize, $ed2_button_fontfamily, $ed2_minHeight, $ed2_direction, $head_insert, $filter_name, $filter_show_all, $gravatar, $ed2_div_convert, $strelka) = explode("|",trim($row['nocashe']));
   //if ($add_fonts != "") $add_fonts = explode(".",$add_fonts);
   $project_name = filter($project_name);
 
 // Основные настройки
+  if ($strelka == "") $strelka = "&rarr;";
   if ($gravatar == "") $gravatar = "0";
   if ($project_logotip == "") $project_logotip = "img/logotip.png";  
   if ($tab_obzor == "") $tab_obzor = ss("Обзор");
@@ -183,7 +184,7 @@
   $red_type = intval($row['red']); // редактор
   if (!isset($red) or $red=="") $red = $red_type;
   else {
-      if ($red != "1" && $red != "2") $db->sql_query("UPDATE ".$prefix."_config SET `red`='".mysql_real_escape_string($red)."' WHERE `red`='".mysql_real_escape_string($red_type)."'");
+    if ($red != "1" && $red != "2") $db->sql_query("UPDATE ".$prefix."_config SET `red`='".mysql_real_escape_string($red)."' WHERE `red`='".mysql_real_escape_string($red_type)."'");
   }
   $comment_send = intval($row['comment']); // отправка комментариев админу
   $ip = getip(); //getenv("REMOTE_ADDR"); // IP

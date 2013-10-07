@@ -23,6 +23,55 @@ font-weight:normal;
     background: green;
 }
 
+#razdels { min-width:300px; padding-bottom:20px; overflow:auto;}
+.razdels {background:#e7e9ec;}
+.block_back {width:100%; margin-top:5px; padding:0; background: url('/images/fon.png');}
+.right3 {float:right; margin:3px;}
+.left3 {float:left; margin:3px;}
+.mr-2 {margin-right: -2px;}
+.add_oformlenie {width: 530px; height:500px; margin-bottom:20px; background: #dddddd;}
+.close_button {font-size:12pt; width:20px; height: 20px; color: white; text-align:center; float:right; margin:5px; margin-bottom:0; background: #bbbbbb;}
+.m5 {margin:5px;}
+.m0 {margin:0;}
+.p0 {padding:0;}
+.mp0, .pm0 {margin:0;padding:0;}
+.w100 {width:100%;}
+.w45 {width:45%;}
+.pr10 {padding-right:10px;}
+.pl10 {padding-left:10px;}
+.pt10 {padding-top:10px;}
+.mi50ma80 {min-width:50%; max-width:80%;}
+.h5 {height:5px;}
+.h15 {height:15px;}
+.h40 {height: 50px;}
+.h70 {height: 70px;}
+.h155 {height: 155px;}
+.h200 {height: 200px;}
+.h300 {height: 300px;}
+.h400 {height: 400px;}
+.h500 {height: 500px;}
+.h600 {height: 600px;}
+.h700 {height: 700px;}
+.f12 {font-size:12px;}
+.f14 {font-size:14px;}
+.f16 {font-size:16pt !important;}
+.mr10 {margin-right:10px !important;}
+.ml20 {margin-left:20px;}
+.ml50 {margin-left:50px;}
+.mt5 {margin-top: 5px;}
+.mb20 {margin-bottom: 20px;}
+.mb10 {margin-bottom: 10px;}
+.black {color:black;}
+.eee {background-color:#eee;}
+.fff {background-color:#fff;}
+.darkgreen {color:darkgreen;}
+.in_r {display:inline; float:right;}
+.in_b {display:inline-block;}
+.mw800 {min-width:780px;}
+.mw700 {min-width:700px;}
+.bb1 {border-bottom: 1px solid #aaaaaa;}
+.parent{ padding:3px; width:150px; float:left; margin-right:12px;}
+.both{ float:left; margin:0 0px 0 0; padding:0px;}
 .pic {float: left; margin:2px; clear: right; width:160px; height:160px; overflow:auto; border-radius: 5px; -moz-border-radius: 5; -webkit-border-radius: 5; border:1px solid #bbbbbb; padding:2px; }
 .pic a.red {position: relative; right:2px; top:2px; float:right;}
 .pic span { background: white;}
@@ -212,52 +261,6 @@ img.bigicon {margin-bottom: 5px; width:128px; height:128px; border:0; float:left
 
 .white {color: #222;} 
 .white:hover {color: #111;} 
-
-#razdels { min-width:300px; padding-bottom:20px; overflow:auto;}
-.razdels {background:#e7e9ec;}
-.block_back {width:100%; margin-top:5px; padding:0; background: url('/images/fon.png');}
-.right3 {float:right; margin:3px;}
-.left3 {float:left; margin:3px;}
-.mr-2 {margin-right: -2px;}
-.add_oformlenie {width: 530px; height:500px; margin-bottom:20px; background: #dddddd;}
-.close_button {font-size:12pt; width:20px; height: 20px; color: white; text-align:center; float:right; margin:5px; margin-bottom:0; background: #bbbbbb;}
-.m5 {margin:5px;}
-.m0 {margin:0;}
-.p0 {padding:0;}
-.mp0, .pm0 {margin:0;padding:0;}
-.w100 {width:100%;}
-.w45 {width:45%;}
-.pr10 {padding-right:10px;}
-.pl10 {padding-left:10px;}
-.pt10 {padding-top:10px;}
-.mi50ma80 {min-width:50%; max-width:80%;}
-.h5 {height:5px;}
-.h15 {height:15px;}
-.h40 {height: 50px;}
-.h70 {height: 70px;}
-.h155 {height: 155px;}
-.h200 {height: 200px;}
-.h700 {height: 700px;}
-.f12 {font-size:12px;}
-.f14 {font-size:14px;}
-.f16 {font-size:16pt !important;}
-.mr10 {margin-right:10px !important;}
-.ml20 {margin-left:20px;}
-.ml50 {margin-left:50px;}
-.mt5 {margin-top: 5px;}
-.mb20 {margin-bottom: 20px;}
-.mb10 {margin-bottom: 10px;}
-.black {color:black;}
-.eee {background-color:#eee;}
-.fff {background-color:#fff;}
-.darkgreen {color:darkgreen;}
-.in_r {display:inline; float:right;}
-.in_b {display:inline-block;}
-.mw800 {min-width:780px;}
-.mw700 {min-width:700px;}
-.bb1 {border-bottom: 1px solid #aaaaaa;}
-.parent{ padding:3px; width:150px; float:left; margin-right:12px;}
-.both{ float:left; margin:0 0px 0 0; padding:0px;}
 
 div.b4f3b4 {background: #b4f3b4; border:1px solid gray;}
 .b4f3b4 {color: green;}

@@ -1,6 +1,6 @@
 <?php
 # ДвижОк CMS: Резервная копия
-# (c) 2006-2012 by Merkushev Vladimir
+# (c) 2006-2013 by Merkushev Vladimir
 # Основано на Database Backup System (c) 2001 by Thomas Rudant (thomas.rudant@grunk.net) http://www.grunk.net http://www.securite-internet.org
 ini_set('memory_limit', '64M');
 if (!defined('ADMIN_FILE')) {
@@ -11,8 +11,8 @@ if ($cash != 1) $cash = 0;
 $aid = substr("$aid", 0,25);
 $row = $db->sql_fetchrow($db->sql_query("SELECT realadmin FROM " . $prefix . "_authors WHERE aid='$aid'"));
 if ($row['realadmin'] == 1) {
-$url = str_replace(".","_",str_replace("/","",str_replace(".ru","",str_replace("www.","",str_replace("http://","",$siteurl)))));
-switch($op) {
+	$url = str_replace(".","_",str_replace("/","",str_replace(".ru","",str_replace("www.","",str_replace("http://","",$siteurl)))));
+	switch($op) {
 		case "backup":
 		@set_time_limit(600);
 			$crlf = PHP_EOL; // "\n";
@@ -25,12 +25,10 @@ switch($op) {
 			$strSQLQuery = "SQL-запрос";
 			$strMySQLSaid = "MySQL говорит: ";
 			$strBack = "Назад";
-			$strFileName = "BackUp";
 			$strName = "База данных";
 			$strDone = "Дата:";
 			$strat = "Время:";
 			$date_jour = str_replace(" ", "_", date2normal_view(date ("Y-m-d"),0,0,1));
-
 			header( 'Content-Type: text/html; charset=utf-8' ); 
 			$gzip_contents = "";
 		// мы делаем особенную DOS-CRLF магию...
@@ -41,7 +39,7 @@ switch($op) {
 		//}
 		function my_handler($sql_insert) {
 			global $crlf, $gzip_contents;
-			$gzip_contents .= "$sql_insert;\");$crlf";
+			$gzip_contents .= $sql_insert.";\");".$crlf;
 		}
 		function get_table_content($db, $table, $handler) {
 		global $prefix;
@@ -56,8 +54,8 @@ switch($op) {
 				$table_list = substr($table_list,0,-2);
 				$table_list .= ")";
 				
-			if(isset($GLOBALS["showcolumns"])) $schema_insert = "\$db->sql_query(\"INSERT INTO `$table_name` $table_list VALUES (";
-			else $schema_insert = "\$db->sql_query(\"INSERT INTO `$table_name` VALUES (";
+			if(isset($GLOBALS["showcolumns"])) $schema_insert = "\$db->sql_query(\"INSERT INTO `".$table_name."` ".$table_list." VALUES (";
+			else $schema_insert = "\$db->sql_query(\"INSERT INTO `".$table_name."` VALUES (";
 				for($j=0; $j<mysql_num_fields($result);$j++) {
 					if(!isset($row[$j]))
 					$schema_insert .= " NULL,";
@@ -80,52 +78,52 @@ switch($op) {
 		$table_name = str_replace($prefix,"\".\$".'prefix."',$table);
 		
 			$schema_create = "";
-			$schema_create .= "\$db->sql_query(\"DROP TABLE IF EXISTS `$table_name`;\");$crlf";
-			$schema_create .= "\$db->sql_query(\"CREATE TABLE `$table_name` ($crlf";
-			$result = mysql_db_query($db, "SHOW FIELDS FROM `$table`") or mysql_die();
+			$schema_create .= "\$db->sql_query(\"DROP TABLE IF EXISTS `".$table_name."`;\");".$crlf;
+			$schema_create .= "\$db->sql_query(\"CREATE TABLE `".$table_name."` (".$crlf;
+			$result = mysql_db_query($db, "SHOW FIELDS FROM `".$table."`") or mysql_die();
 			while($row = mysql_fetch_array($result)) {
-				$schema_create .= "   `$row[Field]` $row[Type]";
+				$schema_create .= "   `".$row["Field"]."` ".$row["Type"];
 				if(isset($row["Default"]) && (!empty($row["Default"]) || $row["Default"] == "0"))
-				$schema_create .= " DEFAULT '$row[Default]'";
+				$schema_create .= " DEFAULT '".$row["Default"]."'";
 				if($row["Null"] != "YES")
 				$schema_create .= " NOT NULL";
 				if($row["Extra"] != "")
-				$schema_create .= " $row[Extra]";
-				$schema_create .= ",$crlf";
+				$schema_create .= " ".$row["Extra"];
+				$schema_create .= ",".$crlf;
 			}
 			$schema_create = ereg_replace(",".$crlf."$", "", $schema_create);
 			$result = mysql_db_query($db, "SHOW KEYS FROM $table") or mysql_die();
 			while($row = mysql_fetch_array($result)) {
 				$kname=$row['Key_name'];
 				if(($kname != "PRIMARY") && ($row['Non_unique'] == 0))
-				$kname="UNIQUE|$kname";
+				$kname="UNIQUE|".$kname;
 				if(!isset($index[$kname]))
 				$index[$kname] = array();
 				$index[$kname][] = $row['Column_name'];
 			}
 			while(list($x, $columns) = @each($index)) {
-				$schema_create .= ",$crlf";
+				$schema_create .= ",".$crlf;
 				if($x == "PRIMARY")
 				$schema_create .= "   PRIMARY KEY (`" . implode($columns, "`, `") . "`)";
 				elseif (substr($x,0,6) == "UNIQUE")
 				$schema_create .= "   UNIQUE ".substr($x,7)." (" . implode($columns, ", ") . ")";
 				else
-				$schema_create .= "   KEY $x (`" . implode($columns, "`, `") . "`)";
+				$schema_create .= "   KEY ".$x." (`" . implode($columns, "`, `") . "`)";
 			}
-			$schema_create .= "$crlf)";
+			$schema_create .= $crlf.")";
 			return (stripslashes($schema_create));
 		}
 		function mysql_die($error = "") {
 			global $gzip_contents;
 			$gzip_contents .= "<b> $strError </b><p>";
 			if(isset($sql_query) && !empty($sql_query)) {
-				$gzip_contents .= "$strSQLQuery: <pre>$sql_query</pre><p>";
+				$gzip_contents .= $strSQLQuery.": <pre>".$sql_query."</pre><p>";
 			}
 			if(empty($error))
 			$gzip_contents .= $strMySQLSaid.mysql_error();
 			else
 			$gzip_contents .= $strMySQLSaid.$error;
-			$gzip_contents .= "<br><a href=\"javascript:history.go(-1)\">$strBack</a>";
+			$gzip_contents .= "<br><a href=\"javascript:history.go(-1)\">".$strBack."</a>";
 			exit;
 		}
 		global $dbhost, $dbuname, $dbpass, $dbname;
@@ -139,7 +137,7 @@ switch($op) {
 		//$tables = mysql_list_tables($dbname);
 		
 		// замена функции
-		$sql = "SHOW TABLES FROM $dbname";
+		$sql = "SHOW TABLES FROM ".$dbname;
 		$tables = mysql_query($sql) or die ("Ошибка: Не могу получить базу данных");
 
 		$num_tables = @mysql_numrows($tables);
@@ -148,20 +146,19 @@ switch($op) {
 		} else {
 			$i = 0;
 			$heure_jour = date ("H:i");
-
-$gzip_contents .= "<?php
-$crlf
-require_once(\"mainfile.php\");$crlf
-global \$prefix;$crlf
-";
+			$gzip_contents .= "<?php
+			$crlf
+			require_once(\"mainfile.php\");$crlf
+			global \$prefix;$crlf
+			";
 			while($i < $num_tables) {
 				$table = mysql_tablename($tables, $i);
 				if (strpos(" ".$table,$prefix)) {
 				$gzip_contents .= $crlf;
 					if ($cash==0) {
-						$gzip_contents .= get_table_def($dbname, $table, $crlf).";\");$crlf$crlf";
+						$gzip_contents .= get_table_def($dbname, $table, $crlf).";\");".$crlf.$crlf;
 					} else {
-						if (strpos(" ".$table,"cash")) $gzip_contents .= get_table_def($dbname, $table, $crlf).";\");$crlf$crlf";
+						if (strpos(" ".$table,"cash")) $gzip_contents .= get_table_def($dbname, $table, $crlf).";\");".$crlf.$crlf;
 					}
 				$gzip_contents .= $crlf;
 					if ($cash==0) {
@@ -172,51 +169,24 @@ global \$prefix;$crlf
 				}
 				$i++;
 			}
-$gzip_contents .= "print (\"<center><h2>Обновление базы данных окончено!</h2><br>\");$crlf?>";
+			$gzip_contents .= "print (\"<center><h2>Обновление базы данных окончено!</h2><br>\");".$crlf."?>";
 		}
-
-$gzip_contents = str_replace("   "," ",$gzip_contents);
-$gzip_contents = str_replace("  "," ",$gzip_contents);
-$gzip_contents = str_replace("</td> <td","</td><td>",$gzip_contents);
-$gzip_contents = str_replace("</td> </tr>","</td></tr>",$gzip_contents);
-$gzip_contents = str_replace("</tr> <tr","</tr><tr",$gzip_contents);
-$gzip_contents = str_replace("<tr> <td","<tr><td",$gzip_contents);
-$gzip_contents = str_replace("<br />","<br>",$gzip_contents);
-$gzip_contents = str_replace("</p> <p","</p><p",$gzip_contents);
-$gzip_contents = str_replace('width=\"100%\"',"width=100%",$gzip_contents);
-$gzip_contents = str_replace('border=\"0\"',"border=0",$gzip_contents);
-$gzip_contents = str_replace('cellspacing=\"0\"',"cellspacing=0",$gzip_contents);
-$gzip_contents = str_replace('cellpadding=\"0\"',"cellpadding=0",$gzip_contents);
-$gzip_contents = str_replace('align=\"center\"',"align=center",$gzip_contents);
-$gzip_contents = str_replace('align=\"left\"',"align=left",$gzip_contents);
-$gzip_contents = str_replace('align=\"right\"',"align=right",$gzip_contents);
-$gzip_contents = str_replace('align=\"justify\"',"align=justify",$gzip_contents);
-$gzip_contents = str_replace('valign=\"top\"',"valign=top",$gzip_contents);
-$gzip_contents = str_replace('rowspan=\"2\"',"rowspan=2",$gzip_contents);
-$gzip_contents = str_replace('<br> <br>',"<br><br>",$gzip_contents);
-$gzip_contents = str_replace('</tr> </table>',"</tr></table>",$gzip_contents);
-
-fputs(fopen("backup/".$strFileName."_".$url."_".$date_jour.".txt","wb"), $gzip_contents );
-echo "файл создан<br>";
-
-include("includes/zip.lib.php");
-echo "библиотека подключена<br>";
-$zip = new Zip;
-echo "архив создается... (если дальше ничего нет - архив не создался)<br>";
-
-$zip->Add(Array(Array("install.php",$gzip_contents)),1);
-echo "архив наполнен<br>";
-
-fputs(fopen("backup/".$strFileName."_".$url."_".$date_jour.".zip","wb"), $zip->get_file() );
-unlink("backup/".$strFileName."_".$url."_".$date_jour.".txt");
-
-
-print ("Готово");
+		$backup_file = str_replace(":", "_", "backup/".$url."_".$date_jour);
+		echo "Создаю файл... (если далее ничего нет - файл не создан, ошибка при записи файла)<br>";
+		fputs(fopen($backup_file.".txt","wb"), $gzip_contents );
+		echo "<b>Файл создан</b><br>
+		".$backup_file.".txt - скачать неупакованный файл можно через FTP, если архив не будет создан.<br>
+		Подключаю ZIP-библиотеку...<br>";
+		include("includes/zip.lib.php");
+		echo "Библиотека подключена<br>";
+		$zip = new Zip;
+		echo "Архив создается... (если далее ничего нет - архив не создан, используйте неупакованный файл)<br>";
+		$zip->Add(Array(Array("install.php",$gzip_contents)),1);
+		echo "<b>Архив создан</b><br>";
+		fputs(fopen($backup_file.".zip","wb"), $zip->get_file() );
+		unlink($backup_file.".txt");
+		echo $backup_file.".zip — Скачать архив можно через FTP (прямой доступ к файлу закрыт в целях безопасности).";
 		break;
-	}
-
-} else {
-	echo "Доступ закрыт!";
-}
-
+	} // end switch
+} else echo "Доступ закрыт!";
 ?>

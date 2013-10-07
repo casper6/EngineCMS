@@ -126,7 +126,7 @@ if ($row['realadmin'] == 1) {
 		include ("ad/ad-header.php");
 		$ok = intval($ok);
 		// Получаем настройки из mainfile
-		global $sitename, $startdate, $adminmail, $keywords, $description, $counter, $statlink, $postlink, $stopcopy, $registr, $pogoda, $flash, $sgatie, $ht_backup, $captcha_ok, $xnocashe, $jqueryui, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $comment_send, $company_name, $company_fullname, $company_address, $company_time, $company_tel, $company_sot, $company_fax, $company_email, $company_map, $company_people, $search_design, $tag_design, $add_fonts, $site_cash, $normalize, $project_logotip, $project_name, $geo, $kolkey, $add_clips, $sortable, $color_tema_html, $color_tema_css, $color_tema_js, $color_tema_php, $tab_obzor, $tab_show, $shop_text_val1, $shop_text_val2, $shop_text_itogo, $shop_text_oformit, $shop_text_korzina, $shop_text_delete, $shop_pole, $shop_admin_mail, $shop_text_after_mail,$shop_spisok_pole, $shop_shablon_form_order, $shop_shablon_mail_client, $shop_shablon_mail_admin, $head_insert, $filter_name, $filter_show_all, $gravatar;
+		global $sitename, $startdate, $adminmail, $keywords, $description, $counter, $statlink, $postlink, $stopcopy, $registr, $pogoda, $flash, $sgatie, $ht_backup, $captcha_ok, $xnocashe, $jqueryui, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $comment_send, $company_name, $company_fullname, $company_address, $company_time, $company_tel, $company_sot, $company_fax, $company_email, $company_map, $company_people, $search_design, $tag_design, $add_fonts, $site_cash, $normalize, $project_logotip, $project_name, $geo, $kolkey, $add_clips, $sortable, $color_tema_html, $color_tema_css, $color_tema_js, $color_tema_php, $tab_obzor, $tab_show, $shop_text_val1, $shop_text_val2, $shop_text_itogo, $shop_text_oformit, $shop_text_korzina, $shop_text_delete, $shop_pole, $shop_admin_mail, $shop_text_after_mail,$shop_spisok_pole, $shop_shablon_form_order, $shop_shablon_mail_client, $shop_shablon_mail_admin, $head_insert, $filter_name, $filter_show_all, $gravatar, $strelka;
 		
 		// Настройки фильтра
 		if ($filter_name == "") $filter_name = ss("Фильтр товаров");
@@ -140,7 +140,7 @@ if ($row['realadmin'] == 1) {
 		if ($shop_text_delete == "") $shop_text_delete = "×";
 		if ($shop_pole == "") $shop_pole = "";
 		if ($shop_admin_mail == "") $shop_admin_mail = $adminmail;
-		if ($shop_text_after_mail == "") $shop_text_after_mail = ss("<h1>Спасибо!</h1><h3>Ваш заказ успешно отправлен. В ближайшее время мы вам позвоним.</h3>");
+		if ($shop_text_after_mail == "") $shop_text_after_mail = "<h1>".ss("Спасибо!")."</h1><h3>".ss("Ваш заказ успешно отправлен. В ближайшее время мы вам позвоним.")."</h3>";
 		if ($shop_spisok_pole == "") $shop_spisok_pole = ss("Ф.И.О.:*\nТелефон:*\nEmail:\nАдрес:\nДополнительная информация:");
 		//if ($shop_shablon_form_order == "") $shop_shablon_form_order = "";
 		//if ($shop_shablon_mail_client == "") $shop_shablon_mail_client = "";
@@ -493,6 +493,12 @@ body {}
 	".select("options[tag_design]", $id_designs, $title_designs, $tag_design)." В дизайне должен быть блок [содержание]
 	</td></tr>
 
+	<tr valign=top class=p4><td>
+	Разделитель между датой и названием страницы, а также между названием раздела и названием папки:</td><td class=small>
+	".input("options[strelka]", $strelka, "50%")."
+	<br>По-умолчанию, стрелка &rarr;
+	</td></tr>
+
 	</table>
 	<div style='text-align:center;'><input type='submit' value=' Сохранить настройки ' style='width:300px; height:40px;'></div>
 	<input type='hidden' name='op' value='options_save'>
@@ -683,7 +689,8 @@ body {}
 	</td></tr>
 
 	<tr valign=top><td>
-	Создание резервной копии:</td><td class=small>
+	<b>Создание резервной копии:</b><br>
+	<a class='button' href='sys.php?op=backup' target='_blank'>Создать сейчас</a></td><td class=small>
 	".select("options[show_reserv]", "0,1", "НЕТ,ДА", $show_reserv)."
 	<br>Каждый день, при посещении администратором главной страницы администрирования, создается резервная копия всего содержания сайта, кроме файлов (документы, архивы, фотографии), закачанных на сервер. Если это большой портал на скромном хостинге, создание копии можно отключить для экономии файлового места.
 	</td></tr>
@@ -757,9 +764,10 @@ echo "<div id='show_options_zagotovka' class='show_pole' style='display:none;'>
 	<tr valign=top><td style='max-width:150px;'>
 	Выберите кнопки редактора:</td><td class=small>";
 
-global $ed2_button_html, $ed2_button_formatting, $ed2_button_bold, $ed2_button_italic, $ed2_button_deleted, $ed2_button_underline, $ed2_button_unorderedlist, $ed2_button_orderedlist, $ed2_button_outdent, $ed2_button_indent, $ed2_button_image, $ed2_button_video, $ed2_button_file, $ed2_button_table, $ed2_button_link, $ed2_button_alignment, $ed2_button_horizontalrule, $ed2_button_more, $ed2_button_link2, $ed2_button_block, $ed2_button_pre, $ed2_button_fullscreen, $ed2_button_clips, $ed2_button_fontcolor, $ed2_button_fontsize, $ed2_button_fontfamily, $ed2_minHeight, $ed2_direction;
+global $ed2_button_html, $ed2_button_formatting, $ed2_button_bold, $ed2_button_italic, $ed2_button_deleted, $ed2_button_underline, $ed2_button_unorderedlist, $ed2_button_orderedlist, $ed2_button_outdent, $ed2_button_indent, $ed2_button_image, $ed2_button_video, $ed2_button_file, $ed2_button_table, $ed2_button_link, $ed2_button_alignment, $ed2_button_horizontalrule, $ed2_button_more, $ed2_button_link2, $ed2_button_block, $ed2_button_pre, $ed2_button_fullscreen, $ed2_button_clips, $ed2_button_fontcolor, $ed2_button_fontsize, $ed2_button_fontfamily, $ed2_minHeight, $ed2_direction, $ed2_div_convert;
 if ($ed2_button_html == "" && $ed2_button_bold == "" && $ed2_button_link == "") $ed2_button_html = $ed2_button_formatting = $ed2_button_bold = $ed2_button_italic = $ed2_button_deleted = $ed2_button_unorderedlist = $ed2_button_orderedlist = $ed2_button_image = $ed2_button_video = $ed2_button_file = $ed2_button_table = $ed2_button_link = $ed2_button_alignment = $ed2_button_horizontalrule = $ed2_button_fullscreen = $ed2_button_clips = " checked";
 if ($ed2_direction == "") $ed2_direction = "ltl";
+if ($ed2_div_convert != "1") $ed2_div_convert = "0";
 if ($ed2_minHeight == "") $ed2_minHeight = "300";
 if ($ed2_button_html == "1") $ed2_button_html = " checked";
 if ($ed2_button_formatting == "1") $ed2_button_formatting = " checked";
@@ -804,8 +812,8 @@ echo "
 ".input('options[ed2_button_file]','1','','checkbox',$ed2_button_file)." Файл<br>
 ".input('options[ed2_button_table]','1','','checkbox',$ed2_button_table)." Таблица<br>
 ".input('options[ed2_button_link]','1','','checkbox',$ed2_button_link)." Ссылка<br>
-</td><td class=small>
 ".input('options[ed2_button_alignment]','1','','checkbox',$ed2_button_alignment)." Выравнивание текста<br>
+</td><td class=small>
 ".input('options[ed2_button_horizontalrule]','1','','checkbox',$ed2_button_horizontalrule)." Горизонтальная линия<br>
 ".input('options[ed2_button_more]','1','','checkbox',$ed2_button_more)." Ссылка на полное содержание (для предисловия)<br>
 ".input('options[ed2_button_link2]','1','','checkbox',$ed2_button_link2)." [] Вставка блока<br>
@@ -818,8 +826,8 @@ echo "
 ".input('options[ed2_button_fontfamily]','1','','checkbox',$ed2_button_fontfamily)." Шрифт текста (нежелательно!)<br>
 Высота поля редактора: ".input('options[ed2_minHeight]',$ed2_minHeight, "10")."<br>
 Направление текста: ".select('options[ed2_direction]','ltl,rtl','слева направо,справа налево (по-арабски)',$ed2_direction)."<br>
+Конвертировать DIV в P: ".select('options[ed2_div_convert]','0,1','НЕТ,ДА',$ed2_div_convert)."<br>
 	</td></tr>
-
 	</table>
 
 	<p>Вы можете добавить шаблонные <b>заготовки</b> для использования во втором редакторе. Это позволит быстро вставлять в предисловие или содержание страницы заранее заготовленные куски текста или HTML-кода, и, в отличии от обычной вставки блоков, также сразу их редактировать. Если на всех страницах раздела используется один и тот же шаблон - его можно задать при редактировании самого раздела (внизу). Заготовки же для редактора используются в случае вставки многочисленных (чаще всего небольших) элементов на странице, т.е. позволяют решить немного другие задачи. Пример: красивая рамочка, DIV с css-классом для цветного выделения текста, заготовка определенной таблицы и т.д.</p>";
@@ -1292,7 +1300,7 @@ echo "
 
 			$ed2_buttons = $options['ed2_button_html']."|".$options['ed2_button_formatting']."|".$options['ed2_button_bold']."|".$options['ed2_button_italic']."|".$options['ed2_button_deleted']."|".$options['ed2_button_underline']."|".$options['ed2_button_unorderedlist']."|".$options['ed2_button_orderedlist']."|".$options['ed2_button_outdent']."|".$options['ed2_button_indent']."|".$options['ed2_button_image']."|".$options['ed2_button_video']."|".$options['ed2_button_file']."|".$options['ed2_button_table']."|".$options['ed2_button_link']."|".$options['ed2_button_alignment']."|".$options['ed2_button_horizontalrule']."|".$options['ed2_button_more']."|".$options['ed2_button_link2']."|".$options['ed2_button_block']."|".$options['ed2_button_pre']."|".$options['ed2_button_fullscreen']."|".$options['ed2_button_clips']."|".$options['ed2_button_fontcolor']."|".$options['ed2_button_fontsize']."|".$options['ed2_button_fontfamily']."|".$options['ed2_minHeight']."|".$options['ed2_direction'];
 
-			$advanced = $options['jqueryui']."|".$options['show_comments']."|".$options['show_userposts']."|".$options['show_page']."|".$options['show_reserv']."|".$options['uskorenie_blokov']."|".$options['kickstart']."|".$options['show_page_links']."|".$options['ad_fon']."|".$options['search_design']."|".$options['tag_design']."|".$options['add_fonts']."|".$options['normalize']."|".$options['project_logotip']."|".$options['project_name']."|".$options['geo']."|".$options['kolkey']."|".$options['add_clips']."|".$options['sortable']."|".$options['color_tema_html']."|".$options['color_tema_css']."|".$options['color_tema_js']."|".$options['color_tema_php']."|".$options['tab_obzor']."|".$options['tab_show']."|".$options['shop_text_val1']."|".$options['shop_text_val2']."|".$options['shop_text_itogo']."|".$options['shop_text_oformit']."|".$options['shop_text_korzina']."|".$options['shop_text_delete']."|".$options['shop_pole']."|".$options['shop_admin_mail']."|".$options['shop_text_after_mail']."|".$options['shop_spisok_pole']."|".$options['shop_shablon_form_order']."|".$options['shop_shablon_mail_client']."|".$options['shop_shablon_mail_admin']."|".$ed2_buttons."|".$options['head_insert']."|".$options['filter_name']."|".$options['filter_show_all']."|".$options['gravatar'];
+			$advanced = $options['jqueryui']."|".$options['show_comments']."|".$options['show_userposts']."|".$options['show_page']."|".$options['show_reserv']."|".$options['uskorenie_blokov']."|".$options['kickstart']."|".$options['show_page_links']."|".$options['ad_fon']."|".$options['search_design']."|".$options['tag_design']."|".$options['add_fonts']."|".$options['normalize']."|".$options['project_logotip']."|".$options['project_name']."|".$options['geo']."|".$options['kolkey']."|".$options['add_clips']."|".$options['sortable']."|".$options['color_tema_html']."|".$options['color_tema_css']."|".$options['color_tema_js']."|".$options['color_tema_php']."|".$options['tab_obzor']."|".$options['tab_show']."|".$options['shop_text_val1']."|".$options['shop_text_val2']."|".$options['shop_text_itogo']."|".$options['shop_text_oformit']."|".$options['shop_text_korzina']."|".$options['shop_text_delete']."|".$options['shop_pole']."|".$options['shop_admin_mail']."|".$options['shop_text_after_mail']."|".$options['shop_spisok_pole']."|".$options['shop_shablon_form_order']."|".$options['shop_shablon_mail_client']."|".$options['shop_shablon_mail_admin']."|".$ed2_buttons."|".$options['head_insert']."|".$options['filter_name']."|".$options['filter_show_all']."|".$options['gravatar']."|".$options['ed2_div_convert']."|".$options['strelka'];
 			// sitename	startdate	adminmail	keywords	description	counter	statlink	postlink	registr	pogoda	flash	sgatie	stopcopy	nocashe	adminmes	red	comment	captcha_ok	ht_backup
 			$db->sql_query("UPDATE `".$prefix."_config` SET 
 				`sitename` = '".mysql_real_escape_string($options['sitename'])."',

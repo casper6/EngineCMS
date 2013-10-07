@@ -4,7 +4,7 @@ if (file_exists("mainfile.php")) require_once("mainfile.php");
 else echo "<li>mainfile.php не найден!";
 global $dbname, $table_delete;
 
-$db->sql_query("ALTER DATABASE ".$dbname." DEFAULT CHARACTER SET utf8;") or die('<li>Ошибка изменения кодировки БД '.$dbname.'. Измените кодировку БД на utf8 самостоятельно, например через PHPMyAdmin.');
+//$db->sql_query("ALTER DATABASE ".$dbname." DEFAULT CHARACTER SET utf8;") or die('<li>Ошибка изменения кодировки БД '.$dbname.'. Измените кодировку БД на utf8 самостоятельно, например через PHPMyAdmin.');
 
 if ($table_delete == "true") $db->sql_query("DROP TABLE IF EXISTS `".$prefix."_authors`;");
 $db->sql_query("CREATE TABLE `".$prefix."_authors` (
@@ -14,16 +14,14 @@ $db->sql_query("CREATE TABLE `".$prefix."_authors` (
  `realadmin` tinyint(1) DEFAULT '1',
  `link` varchar(250) NOT NULL,
  `all` enum('0','1') NOT NULL,
- PRIMARY KEY (`aid`)
-);") or die('<li>Ошибка записи в БД! Возможно база не создана или при настройке её параметров допущены ошибки. Или создаваемая при установке таблица уже существует, т.е. установка производится повторно, а вы не выбрали при установке в поле «Если таблицы уже существуют:» — Удалять. Не забудьте удалить файл config.php перед повторением установки.');
+ PRIMARY KEY (`aid`) ) DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;") or die('<li>Ошибка записи в БД! Возможно база не создана или при настройке её параметров допущены ошибки. Или создаваемая при установке таблица уже существует, т.е. установка производится повторно, а вы не выбрали при установке в поле «Если таблицы уже существуют:» — Удалять. Не забудьте удалить файл config.php перед повторением установки.');
 $db->sql_query("DROP TABLE IF EXISTS `".$prefix."_banned_ip`;");
 $db->sql_query("CREATE TABLE `".$prefix."_banned_ip` (
  `id` int(11) NOT NULL auto_increment,
  `ip_address` varchar(15) NOT NULL,
  `reason` varchar(255) NOT NULL,
  `date` date DEFAULT '0000-00-00' NOT NULL,
- PRIMARY KEY (`id`)
-);");
+ PRIMARY KEY (`id`) ) DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;");
 $db->sql_query("DROP TABLE IF EXISTS `".$prefix."_bases`;");
 $db->sql_query("CREATE TABLE `".$prefix."_bases` (
  `id` int(10) NOT NULL auto_increment,
@@ -33,16 +31,14 @@ $db->sql_query("CREATE TABLE `".$prefix."_bases` (
  `pass` varchar(255) NOT NULL,
  `pause` varchar(1) DEFAULT '0' NOT NULL,
  `info` mediumtext NOT NULL,
- PRIMARY KEY (`id`)
-);");
+ PRIMARY KEY (`id`) ) DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;");
 $db->sql_query("DROP TABLE IF EXISTS `".$prefix."_cash`;");
 $db->sql_query("CREATE TABLE `".$prefix."_cash` (
  `id` int(10) NOT NULL auto_increment,
  `url` varchar(300) NOT NULL,
  `data` datetime NOT NULL,
  `text` longtext,
- PRIMARY KEY (`id`)
-);");
+ PRIMARY KEY (`id`) ) DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;");
 $db->sql_query("DROP TABLE IF EXISTS `".$prefix."_config`;");
 $db->sql_query("CREATE TABLE `".$prefix."_config` (
  `sitename` varchar(255) NOT NULL,
@@ -64,8 +60,7 @@ $db->sql_query("CREATE TABLE `".$prefix."_config` (
  `comment` tinyint(1) NOT NULL,
  `captcha_ok` tinyint(1) NOT NULL,
  `ht_backup` varchar(255) NOT NULL,
- PRIMARY KEY (`sitename`)
-);");
+ PRIMARY KEY (`sitename`) ) DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;");
 $db->sql_query("DROP TABLE IF EXISTS `".$prefix."_golos`;");
 $db->sql_query("CREATE TABLE `".$prefix."_golos` (
  `gid` int(10) NOT NULL auto_increment,
@@ -73,8 +68,7 @@ $db->sql_query("CREATE TABLE `".$prefix."_golos` (
  `golos` mediumtext NOT NULL,
  `num` int(10) NOT NULL,
  `data` varchar(19) NOT NULL,
- PRIMARY KEY (`gid`)
-);");
+ PRIMARY KEY (`gid`) ) DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;");
 $db->sql_query("DROP TABLE IF EXISTS `".$prefix."_mainpage`;");
 $db->sql_query("CREATE TABLE `".$prefix."_mainpage` (
  `id` int(10) NOT NULL auto_increment,
@@ -89,8 +83,7 @@ $db->sql_query("CREATE TABLE `".$prefix."_mainpage` (
  `color` tinyint(1) DEFAULT '0' NOT NULL,
  `description` varchar(255) NOT NULL,
  `keywords` varchar(255) NOT NULL,
- PRIMARY KEY (`id`)
-);");
+ PRIMARY KEY (`id`) ) DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;");
 $db->sql_query("DROP TABLE IF EXISTS `".$prefix."_pages`;");
 $db->sql_query("CREATE TABLE `".$prefix."_pages` (
  `pid` int(10) NOT NULL auto_increment,
@@ -117,8 +110,7 @@ $db->sql_query("CREATE TABLE `".$prefix."_pages` (
  `sort` smallint(5) NOT NULL,
  `nocomm` int(1) DEFAULT '0' NOT NULL,
  PRIMARY KEY (`pid`),
- KEY cid (`cid`)
-);");
+ KEY cid (`cid`) ) DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;");
 $db->sql_query("DROP TABLE IF EXISTS `".$prefix."_pages_categories`;");
 $db->sql_query("CREATE TABLE `".$prefix."_pages_categories` (
  `cid` mediumint(6) NOT NULL auto_increment,
@@ -130,8 +122,7 @@ $db->sql_query("CREATE TABLE `".$prefix."_pages_categories` (
  `counter` mediumint(6) NOT NULL,
  `parent_id` mediumint(6) NOT NULL,
  `tables` enum('pages','del','backup') DEFAULT 'pages' NOT NULL,
- PRIMARY KEY (`cid`)
-);");
+ PRIMARY KEY (`cid`) ) DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;");
 $db->sql_query("DROP TABLE IF EXISTS `".$prefix."_pages_comments`;");
 $db->sql_query("CREATE TABLE `".$prefix."_pages_comments` (
  `cid` int(10) NOT NULL auto_increment,
@@ -148,8 +139,7 @@ $db->sql_query("CREATE TABLE `".$prefix."_pages_comments` (
  `adres` varchar(2000) NOT NULL,
  `tel` varchar(255) NOT NULL,
  `active` tinyint(1) DEFAULT '1' NOT NULL,
- PRIMARY KEY (`cid`)
-);");
+ PRIMARY KEY (`cid`) ) DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;");
 $db->sql_query("DROP TABLE IF EXISTS `".$prefix."_pages_golos`;");
 $db->sql_query("CREATE TABLE `".$prefix."_pages_golos` (
  `gid` int(10) NOT NULL auto_increment,
@@ -158,8 +148,7 @@ $db->sql_query("CREATE TABLE `".$prefix."_pages_golos` (
  `num` int(10) DEFAULT '0' NOT NULL,
  `data` varchar(19) NOT NULL,
  `tables` enum('pages','del','backup') DEFAULT 'pages' NOT NULL,
- PRIMARY KEY (`gid`)
-);");
+ PRIMARY KEY (`gid`) ) DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;");
 $db->sql_query("DROP TABLE IF EXISTS `".$prefix."_search`;");
 $db->sql_query("CREATE TABLE `".$prefix."_search` (
  `id` int(10) NOT NULL auto_increment,
@@ -167,8 +156,7 @@ $db->sql_query("CREATE TABLE `".$prefix."_search` (
  `slovo` varchar(255) NOT NULL,
  `data` datetime NOT NULL,
  `pages` varchar(20) NOT NULL,
- PRIMARY KEY (`id`)
-);");
+ PRIMARY KEY (`id`) ) DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;");
 $db->sql_query("DROP TABLE IF EXISTS `".$prefix."_spiski`;");
 $db->sql_query("CREATE TABLE `".$prefix."_spiski` (
  `id` int(10) NOT NULL auto_increment,
@@ -178,6 +166,5 @@ $db->sql_query("CREATE TABLE `".$prefix."_spiski` (
  `sort` int(10) DEFAULT '0',
  `pages` mediumtext NOT NULL,
  `parent` int(10) DEFAULT '0' NOT NULL,
- PRIMARY KEY (`id`)
-);");
+ PRIMARY KEY (`id`) ) DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;");
 ?>

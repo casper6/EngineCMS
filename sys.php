@@ -209,7 +209,7 @@ function GraphicAdmin() {
 	$num_razdel = $db->sql_numrows($db->sql_query("select `id` from ".$prefix."_mainpage where `type`='2' and `name`!='index' and `tables`!='del'"));
 
 	$razdel_txt = "";
-	if ($num_razdel == 0) $razdel_txt = "<div style='padding-left:5px; color: red;'>".aa("Разделов пока нет. Добавьте.")."</div>";
+	if ($num_razdel == 0) $razdel_txt = "<div style='padding-left:5px; color: red;'>".aa("Разделов пока нет. Добавьте, нажав на кнопку +. Если вам нужен одностраничный сайт — нажмите по кнопке «Главная страница» для её редактирования.")."</div>";
 
 	if ($registr=='1') echo "&nbsp;&nbsp;&nbsp;<a href=".$admin_file.".php?op=MainUser>".aa("Пользователи")."</a> <a href=".$admin_file.".php?op=sortuser>".aa("Список")."</a>";
 
