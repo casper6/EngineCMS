@@ -81,15 +81,15 @@ function edit_base_pages_category($cid, $red=0) {
 
   # cid module title description pic sort counter parent_id
   echo "<table width=100%><tr valign=top><td bgcolor=#eeeeee>
-    <h2>Раздел:</h2>";
-               $sql = "select name, title, color from ".$prefix."_mainpage where type='2' and `tables`='pages' and name != 'index' order by color desc, title";
-               $result = $db->sql_query($sql);
-               $numrows = $db->sql_numrows($result);
-               echo "<select name=module id=to_razdel class='w100' size=1 onChange=\"izmenapapka(document.getElementById('to_razdel').value, '', '','','editdir');\">";
-               while ($row = $db->sql_fetchrow($result)) {
-               $name2 = $row['name'];
-               $title2 = $row['title'];
-               $color = $row['color'];
+  <h2>Раздел:</h2>";
+  $sql = "select `name`, `title`, `color` from ".$prefix."_mainpage where `type`='2' and useit not like '%".aa("[название]")."%' and `tables`='pages' and `name` != 'index' order by `color` desc, `title`";
+  $result = $db->sql_query($sql);
+  $numrows = $db->sql_numrows($result);
+  echo "<select name='module' id='to_razdel' class='w100' size='1' onChange=\"izmenapapka(document.getElementById('to_razdel').value, '', '','','editdir');\">";
+  while ($row = $db->sql_fetchrow($result)) {
+    $name2 = $row['name'];
+    $title2 = $row['title'];
+    $color = $row['color'];
     switch ($color) {
       case "1": // Частоупотребляемый зеленый
       $color = "b4f3b4"; break;
@@ -110,13 +110,13 @@ function edit_base_pages_category($cid, $red=0) {
     $sql = "select * from ".$prefix."_pages_categories where module='$name' and `tables`='pages' and cid != '$cid' order by parent_id,cid";
     $result = $db->sql_query($sql);
     echo "<div id='izmenapapka'><script>izmenapapka(document.getElementById('to_razdel').value, '$parent_id', '$cid','','editdir')</script></div><br><br>";
-    $sql3 = "select `text` from `".$prefix."_mainpage` where `name`='$name' and `type`='2'";
+    $sql3 = "select `text` from `".$prefix."_mainpage` where `name`='".$name."' and `type`='2'";
     $result3 = $db->sql_query($sql3);
     $row3 = $db->sql_fetchrow($result3);
     if (trim($row3['text'])!="") {
-    $main_file = explode("|",$row3['text']);
-    $main_options = $main_file[1];
-    parse_str($main_options);
+      $main_file = explode("|",$row3['text']);
+      $main_options = $main_file[1];
+      parse_str($main_options);
     }
     if ($view == 4) $blok = "<b>Шаблон для анкет рейтинга (только для этой папки!)</b><br>
     Пример написания шаблона:<br>
@@ -287,9 +287,7 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
   echo "</div>
   <table width=100%><tr valign=top><td width=250 id='razdels' style='background:#e7e9ec;'>
   <label class='darkgreen b'><input type=checkbox name=active value=1".$check."> Включить страницу</label> <a onclick=\"show('help3')\" class=help>?</a><br><div id='help3' style='display:none;'><br>Если поставить эту галочку — ссылка на эту страницу будет видна в автоматическом списке страниц данного раздела, а также в блоках, которые выводят страницы данного раздела (если они созданы). Если галочку убрать — на эту страницу все равно можно поставить ссылку из любого места на сайте или с другого сайта и страница будет видна тем, кто перейдет по этой вручную созданной ссылке. Если вы хотите, чтобы в общем списке страниц данная страница не отображалась, а раскрывала более подробную информацию при переходе с другой страницы — отключите ее и сделайте на нее ссылку вручную.<br></div><br>
-
   <span class='h2 darkgreen'>Раздел:</span><br>";
-  
 
   global $id_razdel_and_bd;
   $ra = array();
@@ -297,14 +295,14 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
     $ra[] = "'$key': $value";
   }
   echo "<script>var ra = {".implode(",", $ra)."}; var page_id = ".$page_id.";</script>
-  <select name=module id=to_razdel class='w100 mb20' size=10 onChange=\"
+  <select name='module' id='to_razdel' class='w100 mb20' size='10' onChange=\"
   ra_val = $('#to_razdel').val();
   izmenapapka(ra_val,'','','','addpage'); 
   show_pole(ra[ra_val],".$page_id.",ra_val,0);\">";
 
   $colors = array("ffffff","b4f3b4","f3f3a3","ffa4ac","b8f4f2");
 
-  $sql = "select `name`, `title`, `color` from ".$prefix."_mainpage where `type`='2' and `tables`='pages' and `name` != 'index' order by `color` desc, `title`";
+  $sql = "select `name`, `title`, `color` from ".$prefix."_mainpage where `type`='2' and useit not like '%".aa("[название]")."%' and `tables`='pages' and `name` != 'index' order by `color` desc, `title`";
   $result = $db->sql_query($sql);
   while ($row = $db->sql_fetchrow($result)) {
     $name2 = $row['name'];
@@ -313,7 +311,6 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
     $color = $colors[$color];
     if ($name == $name2) $sel = "selected"; else $sel = "";
     
-
     echo "<option style='background:".$color.";' value='".$name2."' ".$sel.">".$title2."</option>";
   }
 

@@ -19,8 +19,9 @@ global $strelka, $go, $cid, $pid, $all, $avtor, $to, $info, $num, $ip, $golos, $
 // настройки раздела из БД
 global $post, $comments, $datashow, $sort, $lim, $foto, $view, $search, $search_papka, $tema, $tema_name, $tema_title, $tema_opis, $menushow, $design; 
 
-$media = $folder = $col = $view = $golos = $golosrazdel = $post = $comments = $datashow = $favorites = $socialnetwork = $search = $search_papka = $put_in_blog = $base = $vetki = $citata = $media_comment = $no_html_in_opentext = $no_html_in_text = $show_add_post_on_first_page = $media_post = $razdel_shablon = $page_shablon = $comments_all = $comments_num = $comments_mail = $comments_adres = $comments_tel = $comments_desc = $golostype = $pagenumbers = $comments_main = $tags_type = $tema_zapret_comm = $pagekol = $table_light = $designpages = $comments_add = $div_or_table = $papka_show = $more_smile = 0;
-$menushow = $titleshow = $razdel_link = $peopleshow = $design = $tags = $podrobno = $podrazdel_active_show = $podrazdel_show = $tipograf = $limkol = $tags_show = $tema_zapret = 1;
+$media = $folder = $col = $view = $golos = $golosrazdel = $post = $comments = $datashow = $favorites = $socialnetwork = $search = $search_papka = $put_in_blog = $base = $vetki = $citata = $media_comment = $no_html_in_opentext = $no_html_in_text = $show_add_post_on_first_page = $media_post = $razdel_shablon = $page_shablon = $comments_all = $comments_num = $comments_mail = $comments_adres = $comments_tel = $comments_desc = $golostype = $pagenumbers = $comments_main = $tags_type = $tema_zapret_comm = $pagekol = $table_light = $designpages = $comments_add = $div_or_table = $papka_show = $more_smile = $add_post_to_mainpage = 0;
+$menushow = $titleshow = $razdel_link = $peopleshow = $design = $tags = $podrobno = $podrazdel_active_show = $podrazdel_show = $tipograf = $limkol = $tags_show = $tema_zapret = $opentextshow = $maintextshow = 1;
+
 $comment_shablon = 2;
 $lim = 20;
 $where = $order = $calendar = $reclama = "";
@@ -562,41 +563,66 @@ function showcat($cid=0, $pag=0, $slovo="") {
       $r_id = mysql_real_escape_string($row7['id']);
       $result5 = $db->sql_query("SELECT `id`, `name`, `text` FROM ".$prefix."_mainpage WHERE `tables`='pages' and (`useit` = '".$r_id."' or `useit` = '0') and `type`='4'");
       global $filter;
+      //print_r($filter);
       while ($row5 = $db->sql_fetchrow($result5)) {
         $s_id = $row5['id'];
         $n = $row5['name'];
         $s_names[$s_id] = $n;
-
+        $search_pole = false;
         if (isset($filter)) { // фильтр
-          if (isset($filter[$n])) {
+          if (isset($filter[$n])) { // фильтр для цифр
             $min = explode(" - ", $filter[$n]);
             $max = intval($min[1]);
             $min = intval($min[0]);
+            $search_pole = true;
+          } else {
+            unset($max);
+            // проверяем наличие имени поля в названии фильтра
+            $min = array();
+            foreach ($filter as $key => $value) {
+              if (strpos(" ".$key, $n)) { // нашли фильтр для текста
+                $search_pole = true;
+                $min[] = str_replace($n."_", "",$key);
+              }
+            }
           }
         }
-
-        // Найдем значение всех полей для данных страниц // переделать
-        $result6 = $db->sql_query("SELECT `name`, `pages` FROM ".$prefix."_spiski WHERE type='".mysql_real_escape_string($n)."'");
-        while ($row6 = $db->sql_fetchrow($result6)) {
-          $n1 = intval($row6['name']);
-          $n2 = explode(" ", trim($row6['pages']));
-          foreach ($n2 as $n2_2) {
-            if (isset($max))
-              if ($n1 <= $max && $n1 >= $min) // отбираем страницы, подходящие фильтру
-                { 
+        if ($search_pole == true) {
+          // Найдем значение всех полей для данных страниц // переделать
+          $result6 = $db->sql_query("SELECT `name`, `pages` FROM ".$prefix."_spiski WHERE type='".mysql_real_escape_string($n)."'");
+          while ($row6 = $db->sql_fetchrow($result6)) {
+            $n1 = $row6['name'];
+            $n2 = explode(" ", trim($row6['pages']));
+            if (isset($max)) {
+              $n1 = intval($n1);
+              if ($n1 <= $max && $n1 >= $min) { // отбираем страницы, подходящие фильтру
+                foreach ($n2 as $n2_2) {
+                  if ($pid_del_ok == false) $pid_ok[] = $n2_2; // если добавляем впервые
+                  elseif (in_array($n2_2, $pid_del)) $pid_ok[] = $n2_2; // или уже есть в предыдущем списке утвержденных
+                }
+              }
+            } elseif (isset($min)) {
+              //echo "$n1 == $min, ";
+              if (in_array($n1, $min)) { // отбираем страницы, подходящие фильтру
+                foreach ($n2 as $n2_2) {
                   if ($pid_del_ok == false) $pid_ok[] = $n2_2;
                   elseif (in_array($n2_2, $pid_del)) $pid_ok[] = $n2_2;
                 }
+              }
+            }
             $s_opts[$n][$n2_2] = $n1; // имя поля, страница = значение поля
+
+          }
+
+          if ($search_pole == true) {
+            $pid_del = $pid_ok;
+            //print_r($pid_ok);
+            $pid_ok = array();
+            $pid_del_ok = true; // включение второго уровня обработки (для последующих фильтров)
           }
         }
-        if (isset($filter[$n])) {
-          $pid_del = $pid_ok;
-          $pid_ok = array();
-          $pid_del_ok = true; // включение второго уровня обработки
-        }
-      }
-    }
+      } // end while
+    } // end else
 
     $color = 1;
     // Получаем список всех индексов страниц для исключения копий
@@ -1029,7 +1055,7 @@ function showcat($cid=0, $pag=0, $slovo="") {
 function page($pid, $all) {
   global $strelka, $soderganie, $soderganie2, $DBName, $db, $prefix, $module_name, $admin, $pagetitle, $pagetitle2, $ModuleName, $print, $siteurl, $keywords2, $description2, $data_page;
   // настройки модуля из БД
-  global $golos, $golostype, $post, $comments, $datashow, $sort, $tags, $lim, $folder, $view, $col, $menushow, $favorites, $socialnetwork, $name, $put_in_blog, $base, $titleshow, $comments_add, $add_css, $comment_shablon, $page_shablon, $comments_all, $comments_num, $comments_mail, $comments_adres, $comments_tel, $vetki, $comments_all, $comments_num, $comments_desc, $comments_1, $comments_2, $comments_3, $comments_4, $comments_5, $comments_6, $comments_7, $comments_8, $tag_text_show;
+  global $golos, $golostype, $post, $comments, $datashow, $sort, $tags, $lim, $folder, $view, $col, $menushow, $favorites, $socialnetwork, $name, $put_in_blog, $base, $titleshow, $comments_add, $add_css, $comment_shablon, $page_shablon, $comments_all, $comments_num, $comments_mail, $comments_adres, $comments_tel, $vetki, $comments_all, $comments_num, $comments_desc, $comments_1, $comments_2, $comments_3, $comments_4, $comments_5, $comments_6, $comments_7, $comments_8, $tag_text_show, $opentextshow, $maintextshow;
   $pid = mysql_real_escape_string(intval($pid));
 
   if ($base=="") { // Если это не база данных
@@ -1172,22 +1198,26 @@ function page($pid, $all) {
 
   $page_title = "";
   if ($titleshow == 1) {
-  if ($page_shablon == 0) $page_title .= "<h1 class=page_title>".$title."</h1>";
-  else $page_title .= $title;
+    if ($page_shablon == 0) $page_title .= "<h1 class=page_title>".$title."</h1>";
+    else $page_title .= $title;
   }
 
   $page_opentext = "";
-  if ($page_shablon == 0) {
-    if ($view == 1) $page_opentext = "<div class=page_forum_avtor>".$opentext."</div>";
-    else $page_opentext = "<div class=page_opentext>".$opentext."</div>";
-  } else $page_opentext = $opentext;
+  if ($opentextshow == 1) {
+    if ($page_shablon == 0) {
+      if ($view == 1) $page_opentext = "<div class=page_forum_avtor>".$opentext."</div>";
+      else $page_opentext = "<div class=page_opentext>".$opentext."</div>";
+    } else $page_opentext = $opentext;
+  }
 
   if (!isset($no_opentext)) $no_opentext = "";
   if ($no_opentext == 1) $page_opentaxt = "";
 
   if (!isset($page_text)) $page_text = "";
-  if ($page_shablon == 0) $page_text .= "<div class=page_text>".$bodytext."</div>";
-  else $page_text .= $bodytext;
+  if ($maintextshow == 1) {
+    if ($page_shablon == 0) $page_text .= "<div class=page_text>".$bodytext."</div>";
+    else $page_text .= $bodytext;
+  }
 
   if (!isset($page_data)) $page_data = "";
   $page_date = "";
@@ -1755,7 +1785,7 @@ function addpost($cid) {
   # Настройка-----------------
   $usercomm = 1; # писать неюзерам нельзя РЕАЛИЗОВАТЬ!!!
   # Настройка-----------------
-  global $soderganie, $media_post, $DBName, $db, $prefix, $cookie, $module_name, $admin, $tema, $tema_name, $tema_title, $tema_opis, $post, $tema_zapret;
+  global $soderganie, $media_post, $DBName, $db, $prefix, $cookie, $module_name, $admin, $tema, $tema_name, $tema_title, $tema_opis, $post, $tema_zapret, $add_post_to_mainpage;
   $cid = intval($cid);
   $DBName = mysql_real_escape_string($DBName);
   $sql = "select `id`, `shablon` from ".$prefix."_mainpage where `tables`='pages' and `name`='".$DBName."' and `type`='2'";
@@ -1779,7 +1809,7 @@ function addpost($cid) {
 
   $ret .= "<form method='post' action='/-".$DBName."?go=savepost' name='addpost' class='addpost'><input name='go' value='savepost' type='hidden'>";
 
-  if ($cid==0) $main="<option value='0'>".ss("Главная страница раздела")."</option>"; else $main="";
+  if ($add_post_to_mainpage == "1") $main = "<option value='0'>".ss("Главная страница раздела")."</option>"; else $main="";
 
   $result = $db->sql_query("select `cid`, `title`, `parent_id` from ".$prefix."_pages_categories where `module`='".$DBName."' and `tables`='pages' order by `parent_id`, `title`");
   $num = $db->sql_numrows($result);
@@ -2370,7 +2400,7 @@ function savereiting ($avtor, $info, $num, $cid, $gol, $date1, $minus, $plus){
 // Сохранение комментария
 function savecomm($avtor, $avtory, $info, $num, $comm_otvet, $maily, $mail, $adres, $tel){
   $link = getenv("HTTP_REFERER");
-  $active = 1;
+  $active = 0;
   $commentagain = 0; # 1 = Запрет комментариев повторно - перевести в функции!!!
   //echo $avtory;
   global $admin, $_SESSION, $_POST, $soderganie, $lang, $media_comment, $DBName, $db, $prefix, $module_name, $comments_add, $captcha_ok, $tema_zapret_comm, $now, $ip, $adminmail, $comment_send, $siteurl;

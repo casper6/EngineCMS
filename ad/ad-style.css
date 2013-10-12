@@ -38,6 +38,7 @@ font-weight:normal;
 .w100 {width:100%;}
 .w95 {width:95%;}
 .w45 {width:45%;}
+.w10 {width:10%;}
 .pr10 {padding-right:10px;}
 .pl10 {padding-left:10px;}
 .pt10 {padding-top:10px;}
@@ -616,3 +617,31 @@ table.table_light tbody tr:hover th, table.table_light tbody tr.odd:hover th { b
 .icon.lightyellow{color:#f3f373;}
 
 input[type="search"] { -webkit-appearance: textfield; }
+
+/* Блок с двумя вертикальными изгибами */
+.curved-vt-2 {
+	position:absolute;
+	left:50%; 
+    padding:1em;
+    background:#fff;
+    -webkit-box-shadow:0 10px 40px rgba(0, 0, 0, 0.4), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+       -moz-box-shadow:0 10px 40px rgba(0, 0, 0, 0.4), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+            box-shadow:0 10px 40px rgba(0, 0, 0, 0.4), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+}
+.curved-vt-2:before,
+.curved-vt-2:after {
+    content:"";
+    position:absolute;
+    z-index:-2;
+}
+.curved-vt-2:before {
+    top:10px;
+    bottom:10px;
+    left:0;
+    right:0;
+    -webkit-box-shadow:0 0 15px rgba(0,0,0,0.6);
+       -moz-box-shadow:0 0 15px rgba(0,0,0,0.6);
+            box-shadow:0 0 15px rgba(0,0,0,0.6);
+    -moz-border-radius:10px / 100px;
+         border-radius:10px / 100px;
+}

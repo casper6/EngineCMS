@@ -167,7 +167,7 @@ function mainpage($name="") {
 		echo "<table class='block_back w100 mw800 pm0' cellspacing=0 cellpadding=0><tr valign=top><td id='razdel_td' class='radius'>
 
 			<div id='razdels' class='razdels' style='width:340px;'>
-			<div class='black_grad h40'><button id=new_razdel_button title='Добавить оформление...' class='small black right3' onclick=\"show_animate('addmain');\"><span class='mr-2 icon darkgrey small' data-icon='+'></button>
+			<div class='black_grad h40'><button title='Добавить оформление...' class='small black right3' onclick=\"show_animate('addmain');\"><span class='mr-2 icon darkgrey small' data-icon='+'></button>
 			<span class='h1'>Оформление:</span>
 			</div>";
 	     ////////////////////// ДИЗАЙН 0
@@ -203,8 +203,8 @@ function mainpage($name="") {
 			<a href='sys.php?op=mainpage&amp;name=base&amp;type=5#1' class='bigicon'><img class='bigicon bi5' src='/images/1.gif'><b>Базу данных</b><br>
 			Удобная таблица с поиском для внутреннего или открытого использования</a>
 			<br><br></div></div>
-			<div class='m5'><button id='new_razdel_button' class='small' onclick='location.href=\"/sys.php?op=mainpage&amp;type=0&amp;id=1&amp;red=1\"' title='Редактировать главный дизайн'><span class='icon gray medium' data-icon='7'></span>Главный дизайн</button> 
-			<button id='new_razdel_button' class='small' onclick='location.href=\"/sys.php?op=mainpage&amp;type=1&amp;id=20\"' title='Редактировать главный стиль'><span class='icon gray medium' data-icon='7'></span>Главный стиль</button>";
+			<div class='m5'><button class='small' onclick='location.href=\"/sys.php?op=mainpage&amp;type=0&amp;id=1&amp;red=1\"' title='Редактировать главный дизайн'><span class='icon gray medium' data-icon='7'></span>Главный дизайн</button> 
+			<button class='small' onclick='location.href=\"/sys.php?op=mainpage&amp;type=1&amp;id=20\"' title='Редактировать главный стиль'><span class='icon gray medium' data-icon='7'></span>Главный стиль</button>";
  
 		echo " <a class='button small' onclick=\"oformlenie_show('','2','trash','')\"><span class='icon gray medium' data-icon='T'></span>Удаленное оформление</a>";
 
@@ -244,7 +244,10 @@ function create_main($type) {
 	$create.="<div id=about class=block style='display:none;'>Стили - это CSS (каскадные таблицы стилей), описание оформления элементов сайта. Стили подключаются к дизайну (при его редактировании). В дизайне может быть использовано сразу несколько стилей. При подключении стилей они объединяются в один стиль и сжимаются.<br></div>
 	<div class='w95 mw800'>
 	<h2>Название: <span class='f12'>По-русски, можно с пробелами</span><br><input type='text' name='title' value='' size='40' class='w100 h40 f16' autofocus></h2>
-	<h2>Содержание стиля:</h2>
+
+	<h2>Содержание стиля: <a class='button small blue' onclick='if ($(\"#color_scheme\").html() == \"\") $(\"#color_scheme\").html(\"<iframe src=http://colorscheme.ru width=985 height=660 scrolling=no frameborder=0></iframe>\"); $(\"#color_scheme\").toggle();'>Подбор цвета</a></h2>
+	<div class='hide' style='position:absolute; margin: 0 auto; width: 985px; height:660px; z-index:1000;' id='color_scheme'></div>
+
 	".redactor('2', '', 'text', '', 'css','return')."
 	<input type='hidden' name='id' value=0>
 	<input type='hidden' name='type' value='1'>
@@ -682,7 +685,7 @@ function create_main($type) {
 	<div class='fon w100 mw800'>
 	<div class='black_grad h40'>
 	<button type='button' style='float:right;margin:3px;' class='medium orange' onClick=\"show_animate('about')\">?</button>
-	<button type=submit id=new_razdel_button class='small green' style='float:left; margin:3px;'><span class='mr-2 icon white medium' data-icon='c'></span>Сохранить</button>
+	<button type='submit' class='small green' style='float:left; margin:3px;'><span class='mr-2 icon white medium' data-icon='c'></span>Сохранить</button>
 	<span class='h1'>Добавление ".$type_opis."</span></div>".$create."
 	</div>
 	</form>";
@@ -785,8 +788,7 @@ function edit_main($id) {
 
 	echo "<div class='fon w100 mw800'>
 	<div class='black_grad h40'>
-	<button type='submit' id='new_razdel_button' class='small green' style='float:left; margin:3px;'><span class='mr-2 icon white medium' data-icon='c'></span>Сохранить</button>
-	<a class='button small green' onclick='save_main(\"ad/ad-mainpage.php\", \"mainpage_save_ayax\")' style='float:left; margin:3px;'>Обновить</a>
+	<a class='button small green' onclick='save_main(\"ad/ad-mainpage.php\", \"mainpage_save_ayax\")' style='float:left; margin:3px;'><span class='mr-2 icon white medium' data-icon='c'></span> Сохранить</a>
 
 
 	<script type='text/javascript'>
@@ -799,7 +801,7 @@ function edit_main($id) {
 	 });
 	});
 	</script>
-	<a class='scroll_on_top button small green' onclick='save_main(\"ad/ad-mainpage.php\", \"mainpage_save_ayax\")' style='position:fixed; top:80%; right:0%; left:90%; width:100px; z-index:1000;'>Обновить</a>
+	<a class='scroll_on_top button small green' onclick='save_main(\"ad/ad-mainpage.php\", \"mainpage_save_ayax\")' style='position:fixed; top:80%; right:0%; left:90%; width:100px; z-index:1000;'>Сохранить</a>
 	<a class='scroll_on_top button small blue' href='#1' style='position:fixed; top:90%; right:0%; left:90%; width:100px; z-index:1000;'>&uarr;<br>Наверх</a>
 
 	<div id='save_main' style='float:left; margin:3px;'></div>
@@ -847,7 +849,8 @@ function edit_main($id) {
 		<div class='w95 mw800'>
 		<h2>Название стиля <span class=f12>Видит только администратор</span><br>
 		<textarea class='big w100 h40 f16' name='title' rows='1' cols='10'>".$title."</textarea></h2>
-		<span class=h2>Содержание стиля</span>";
+		<h2>Содержание стиля: <a class='button small blue' onclick='if ($(\"#color_scheme\").html() == \"\") $(\"#color_scheme\").html(\"<iframe src=http://colorscheme.ru width=985 height=660 scrolling=no frameborder=0></iframe>\"); $(\"#color_scheme\").toggle();'>Подбор цвета</a></h2>
+	<div class='hide' style='position:absolute; margin: 0 auto; width: 985px; height:660px; z-index:1000;' id='color_scheme'></div>";
 		redactor('2', $text, 'text', '', 'css');
 		echo "<input type='hidden' name='namo' value='".$name."'></div>";
 	} ############################### ЗАКРЫТИЕ СТИЛЬ
@@ -863,8 +866,8 @@ function edit_main($id) {
 	$options = str_replace($module_name."|","",$text);
 
 	// обнулили все опции
-	$media = $folder = $col = $view = $golos = $golosrazdel = $post = $comments = $datashow = $favorites = $socialnetwork = $search = $search_papka = $put_in_blog = $base = $vetki = $citata = $media_comment = $no_html_in_opentext = $no_html_in_text = $show_add_post_on_first_page = $media_post = $razdel_shablon = $page_shablon = $comments_all = $comments_num = $comments_mail = $comments_adres = $comments_tel = $comments_desc = $golostype = $pagenumbers = $comments_main = $tags_type = $pagekol = $table_light = $designpages = $comments_add = $div_or_table = $papka_show = 0;
-	$menushow = $titleshow = $razdel_link = $peopleshow = $design = $tags = $podrobno = $podrazdel_active_show = $podrazdel_show = $tipograf = $limkol = $tags_show = $tema_zapret = $tema_zapret_comm = $show_read_all = 1;
+	$media = $folder = $col = $view = $golos = $golosrazdel = $post = $comments = $datashow = $favorites = $socialnetwork = $search = $search_papka = $put_in_blog = $base = $vetki = $citata = $media_comment = $no_html_in_opentext = $no_html_in_text = $show_add_post_on_first_page = $media_post = $razdel_shablon = $page_shablon = $comments_all = $comments_num = $comments_mail = $comments_adres = $comments_tel = $comments_desc = $golostype = $pagenumbers = $comments_main = $tags_type = $pagekol = $table_light = $designpages = $comments_add = $div_or_table = $papka_show = $add_post_to_mainpage = 0;
+	$menushow = $titleshow = $razdel_link = $peopleshow = $design = $tags = $podrobno = $podrazdel_active_show = $podrazdel_show = $tipograf = $limkol = $tags_show = $tema_zapret = $tema_zapret_comm = $show_read_all = $opentextshow = $maintextshow = 1;
 	$comment_shablon = 2;
 	$lim = 20;
 	$where = $order = $calendar = $reclama = "";
@@ -1042,6 +1045,14 @@ function edit_main($id) {
 	<td>".select("options[titleshow]", "1,0", "ДА,НЕТ", $titleshow)."</td>
 	</tr>
 	<tr>
+	<td>Показывать Предисловие страницы?</td>
+	<td>".select("options[opentextshow]", "1,0", "ДА,НЕТ", $opentextshow)."</td>
+	</tr>
+	<tr>
+	<td>Показывать Содержание страницы?</td>
+	<td>".select("options[maintextshow]", "1,0", "ДА,НЕТ", $maintextshow)."</td>
+	</tr>
+	<tr>
 	<tr>
 	<td>Показывать в предисловии ссылку ".input("options[read_all]", $read_all)." ?</td>
 	<td>".select("options[show_read_all]", "1,0", "ДА,НЕТ", $show_read_all)."</td>
@@ -1169,6 +1180,10 @@ function edit_main($id) {
 	<tr>
 	<td><b>Показывать на главной</b> странице раздела Добавление страницы.</td>
 	<td>".select("options[show_add_post_on_first_page]", "1,0", "ДА,НЕТ", $show_add_post_on_first_page)."</td>
+	</tr>
+	<tr>
+	<td><b>Показывать добавление страницы в корень раздела.</td>
+	<td>".select("options[add_post_to_mainpage]", "1,0", "ДА,НЕТ", $add_post_to_mainpage)."</td>
 	</tr>
 	<tr>
 	<td><b>Включить визуальный редактор</b> в форме добавления страницы.

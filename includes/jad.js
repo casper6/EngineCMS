@@ -1,5 +1,5 @@
 ﻿/* JS для админ-панели — подписать все функции! */
-
+var global_spisok_name = global_spisok_title = "";
 function aa(t,lang_admin,lang_admin_text) { // Функция перевода сайта / Translate function
   if (lang_admin == 'ru') return t; // Русский — по-умолчанию.
   else {
@@ -7,7 +7,6 @@ function aa(t,lang_admin,lang_admin_text) { // Функция перевода �
       else return " [ Error: no translate for: "+t+" ] ";
   } 
 }
-
 function pics_refresh(txt){
 	$('.pics').html('');
 	text = $(txt).val();
@@ -106,6 +105,33 @@ function options_show(id,type) {
 	$('.show_pole').hide();
 	$('#'+type).show();
 }
+function save_spisok() {
+	var msg = $('form#save_spisok').serialize();
+    $.ajax({
+      type: 'POST',
+      url: 'ad/ad-ajax.php',
+      data: {'func': 'save_spisok', 'string': msg },
+	  beforeSend: function(){ $('#add_spisok').html('<img src=images/loading.gif> Сохраняю...'); },
+      success: function(data) { $('#add_spisok').hide('slow'); spiski_show(global_spisok_name, global_spisok_title); }
+    });
+}
+function add_spisok(id, type, name, pages, opis, sort, parent) {
+	if (id == 0) { title = 'Добавление значения поля'; name_text = 'Вы можете ввести несколько названий (разделять Enter)'; }
+	else { title = 'Редактирование значения поля'; name_text = 'Название'; }
+	var data = '<span class=h2>' + title + '</span><form id="save_spisok"><input name="id" type="hidden" value="'+id+'"><input name="type" type="hidden" value="'+type+'"><p><b>'+name_text+':</b><textarea class="w100 h40" name="name" autofocus>'+name+'</textarea><p class="right"><a id="button_hide" class="button small" onmousemove="$(\'#another_options\').show(\'slow\'); $(\'#button_hide\').hide();"> Дополнительные настройки </a></p><div class="hide" id="another_options"><p>Страницы (№ страниц через пробел):<textarea class="w100 h40" name="pages">'+pages+'</textarea><p>Описание:<textarea class="w100 h40" name="opis">'+opis+'</textarea><p>Сортировка: <input class="w10" name="sort" type="text" value="'+sort+'"> Вложенность: <input class="w10" name="parent" type="text" value="'+parent+'"></div><p class="center"><a class="button middle green white" onclick="save_spisok()"> Сохранить </a> <a class="button middle" onclick="$(\'#add_spisok\').hide();"> Отмена </a></form>';
+	$('#add_spisok').html( data ).show();
+}
+function spiski_show(name, title) {
+	global_spisok_name = name;
+	global_spisok_title = title;
+	var txt;
+	txt = '<span class=h2>Редактирование значений поля «'+title+'»</span><p>При удалении значения также удаляется информация из связанных с ним страниц.<br>Пример: Создав поле «Цена» (prise, число) и выставив для страницы его значение, например 1000, мы создали значение prise = 1000. Здесь мы можем его удалить также, как если бы отредактировали страницу и стерли 1000 в поле Цена.</p><a class="button green" style="margin-top:4px;margin-bottom:10px;" target="_blank" onclick="add_spisok(\'0\', \''+name+'\', \'\', \'\', \'\', \'0\', \'0\')"> '+icon('white small','+')+' Добавить значение поля</a>';
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
+	    data: {'func': 'spiski_show', 'type': name },
+	    beforeSend: function(){ $('#podrazdel').html( txt + '<p><img src=images/loading.gif> Загрузка...' ); },
+	    success: function(data){ $('#podrazdel').html( txt + data ); }
+	});
+}
 function oformlenie_show(title,id,type,link) {
 	var txt;
 	select_button(id);
@@ -113,7 +139,7 @@ function oformlenie_show(title,id,type,link) {
 	else txt = '<span class=h2>Удаленное оформление</span><p>При удалении объекта оформления, он попадает в «Удаленное оформление» для окончательного удаления или восстановления.<p>'+icon('red small','F')+' <a href=sys.php?op=delete_all&del=design>Очистить Удаленное</a>';
 	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'oformlenie_show', 'type': type },
-	    beforeSend: function(){ $('#podrazdel').html( txt + '<br><img src=images/loading.gif> Загрузка...' ); },
+	    beforeSend: function(){ $('#podrazdel').html( txt + '<p><img src=images/loading.gif> Загрузка...' ); },
 	    success: function(data){ $('#podrazdel').html( txt + data ); }
 	});
 }
@@ -141,7 +167,7 @@ function icon(classes,data) {
 function razdel(id, sort, re, txt) {
 	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'razdel', 'id': id, 'string': re+'*@%'+sort},
-	    beforeSend: function(){ $('#podrazdel').html('<br><img src=images/loading.gif> Загрузка страниц и папок раздела...'); },
+	    beforeSend: function(){ $('#podrazdel').html('<p><img src=images/loading.gif> Загрузка страниц и папок раздела...'); },
 	    success: function(data){ $('#podrazdel').html(txt + data + '<hr>'); }
 	});
 }
@@ -149,7 +175,7 @@ function add_papka(id,pages) {
 	if (pages==0) pages = 'add_papka'; else pages = 'add_pages';
 	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': pages, 'id': id},
-	    beforeSend: function(){ $('#add_papka').toggle(); $('#add_papka').html('<br><img src=images/loading.gif> Загрузка списка папок раздела...'); },
+	    beforeSend: function(){ $('#add_papka').toggle(); $('#add_papka').html('<p><img src=images/loading.gif> Загрузка списка папок раздела...'); },
 	    success: function(data){ $('#add_papka').html(data); }
 	});
 }
@@ -223,13 +249,19 @@ function delcomm(id) {
 function del_file(file, id) {
 	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'delfile', 'type': file },
-	    beforeSend: function(){ $('#file'+id).html('<img src=images/loading.gif> Удаляю...'); },
+	    beforeSend: function(){ $('#file'+id).html(' <img src=images/loading.gif> Удаляю...'); },
 	    success: function(data){ $('#file'+id).hide(); }
 	});
 }
 function delblock(id,type) {
 	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'delblock', 'id': id, 'type': type },
+	    beforeSend: function(){ $('#block_'+id).hide(); },
+	});
+}
+function delspisok(id) {
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
+	    data: {'func': 'delspisok', 'id': id },
 	    beforeSend: function(){ $('#block_'+id).hide(); },
 	});
 }
@@ -253,7 +285,7 @@ function delrazdel(id) {
 function rep(id,type,razdel,papka) {
 	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'rep', 'type': type, 'id': id, 'string': papka+'*@%'+razdel },
-	    beforeSend: function(){ $('#rep'+id).html('<img src=images/loading.gif> Секундочку...'); },
+	    beforeSend: function(){ $('#rep'+id).html(' <img src=images/loading.gif> Секундочку...'); },
 	    success: function(data){ $('#rep'+id).html(data); if (type == 3) $('#page'+id).hide('slow'); }
 	});
 }
@@ -263,7 +295,7 @@ function clo(pid) {
 function izmenapapka(select,papka,this_cid,id,type) {
 	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'izmenapapka', 'id': id, 'type': type, 'string': select+'*@%'+papka+'*@%'+this_cid },
-	    beforeSend: function(){ $('#izmenapapka'+id).html('<img src=images/loading.gif> Загружаю...'); },
+	    beforeSend: function(){ $('#izmenapapka'+id).html(' <img src=images/loading.gif> Загружаю...'); },
 	    success: function(data){ $('#izmenapapka'+id).html(data); }
 	});
 }

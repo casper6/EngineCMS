@@ -6,16 +6,55 @@ header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache"); // HTTP/1.0
 require_once("../mainfile.php");
-global $prefix, $db, $admin, $now, $adminmail, $ip, $siteurl, $title_razdels_by_id, $deviceType;
+global $prefix, $db, $admin, $now, $adminmail, $ip, $siteurl, $title_razdels_by_id, $name_razdels, $deviceType;
 if (is_admin($admin)) {
   if (isset($_REQUEST['func']))   $func = $_REQUEST['func']; else die(); // Выбор функции
   if (isset($_REQUEST['type']))   $type = $_REQUEST['type']; else $type = 0;
   if (isset($_REQUEST['id']))     $id = intval($_REQUEST['id']); else $id = 0;
   if (isset($_REQUEST['string'])) $string = $_REQUEST['string']; else $string = "";
+  ######################################################################################
+if ($func == "save_spisok") { // Сохраняем новое или отредактированное значение списка
+  // id=0&type=grill&name=1212&pages=&opis=&sort=0&parent=0
+  parse_str($string);
+  $id = intval($id);
+  $sort = intval($sort);
+  $parent = intval($parent);
+  $pages = " ".trim(str_replace("  ", " ", $pages))." ";
+  if ($id == 0) { // создаем новый
+    $names = explode("\n", $name);
+    foreach ($names as $name)
+      if (trim($name) != "") $db->sql_query("INSERT INTO ".$prefix."_spiski ( `id` , `type` , `name` , `pages` , `opis` , `sort` , `parent` ) VALUES ('', '".$type."', '".$name."', '".$pages."', '".$opis."', '".$sort."', '".$parent."')");
+  } else { // обновляем отредактированный 
+    $db->sql_query("UPDATE ".$prefix."_spiski SET `type`='".$type."', `name`='".$name."',`pages`='".$pages."',`opis`='".$opis."',`sort`='".$sort."',`parent`='".$parent."' WHERE id='".$id."'");
+  }
+  exit;
+}
+######################################################################################
+if ($func == "spiski_show") { // Выводим списки полей
+  $info = "";
+  $sql = "select `id`,`name`,`opis`,`sort`,`pages`,`parent` from ".$prefix."_spiski where `type`='".$type."' order by `parent`,`sort`,`name`";
+  $result = $db->sql_query($sql);
+  $info = "<table width=100% class=table_light>";
+  while ($row = $db->sql_fetchrow($result)) {
+    if (trim($row['pages']) == "") $col = 0;
+    else $col = count(explode(" ", trim($row['pages'])));
+    if ($col != 0) $col = "Используется в ".$col." ".num_ending($col, Array(aa("страницах"),aa("странице"),aa("страницах")))."."; 
+    else $col = "Не используется";
+    if (trim($row['opis']) != "") $opis = "<br>Описание: ".$row['opis']."."; else $opis = "";
+    if ($row['sort'] != 0) $sort = "<br>Сортировка: ".$row['sort']."."; else $sort = "";
+    if ($row['parent'] != 0) $parent = "<br>Вложенность: ".$row['parent']."."; else $parent = "";
+    $info .= "<tr id='block_".$row['id']."' onmouseover='$(\"#hide_".$row['id']."\").show();' onmouseout='$(\"#hide_".$row['id']."\").hide();'><td><div style='float:right; display: inline;'>
+    <a class='padleft30 punkt' onclick='add_spisok(".$row['id'].", \"".$type."\", \"".$row['name']."\", \"".$row['pages']."\", \"".$row['opis']."\", \"".$row['sort']."\", \"".$row['parent']."\")' title='Редактировать'>".icon('black small','7')."</a> 
+    <a class='padleft30 punkt' onclick='delspisok(".$row['id'].")' title='Удалить'>".icon('red small','F')."</a></div><h2><a class='punkt' onclick='add_spisok(".$row['id'].", \"".$type."\", \"".$row['name']."\", \"".$row['pages']."\", \"".$row['opis']."\", \"".$row['sort']."\", \"".$row['parent']."\")' title='Редактировать'>".$row['name']."</a></h2>
+    <span id='hide_".$row['id']."' class='hide'><sup style=\"color:#999999;\">".$col."</sup>".$opis.$sort.$parent."</span>
+   </td></tr>";
+  }
+  $info .= "</table><div class='curved-vt-2 hide' style='margin-left:-250px; width: 500px; top: 80px;' id='add_spisok'></div>";
+  echo $info; exit; 
+}
 ######################################################################################
 if ($func == "oformlenie_show") { // Выводим содержание различных оформлений
   $info = "";
-  $admintip = "mainpage";
   switch($type) {
 
   case "trash":
@@ -272,11 +311,13 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
             $shablon = count($shablon);
             $papka_title = ", ".$shablon." ".num_ending($shablon, Array(aa("папок"),aa("папка"),aa("папки")));
           }
-          $razdel_title = "<a href=/-".$useit.">".$title_razdels_by_id[$useit]."</a>";
+          $razdel_title = aa("«").$title_razdels_by_id[$useit].aa("»");
         }
-        $redactor = "<div style='float:right;'><a href='sys.php?op=mainpage&id=".$row['id']."&red=1&type=4' title='Редактировать'>".icon('black small','7')."</a> 
+        $redactor = "<div style='float:right;'>
+        <a href='sys.php?op=mainpage&id=".$row['id']."&red=1&type=4' title='Редактировать'>".icon('black small','7')."</a> 
+        <a class='padleft30 punkt' onclick='spiski_show(\"".$row['name']."\", \"".$row['title']."\")' title='Список значений'>".icon('blue small','w')."</a>
         <a class='padleft30 punkt' onclick='delblock(".$row['id'].",0)' title='Удалить'>".icon('red small','F')."</a></div>";
-        $info .= "<tr id='block_".$row['id']."' onmouseover='$(\"#hide_".$row['id']."\").show();' onmouseout='$(\"#hide_".$row['id']."\").hide();'><td>".$redactor."<h2>".$row['title']."</h2>
+        $info .= "<tr id='block_".$row['id']."' onmouseover='$(\"#hide_".$row['id']."\").show();' onmouseout='$(\"#hide_".$row['id']."\").hide();'><td>".$redactor."<h2><a class='punkt' onclick='spiski_show(\"".$row['name']."\", \"".$row['title']."\")'>".$row['title']."</a></h2>
         <span id='hide_".$row['id']."' class='hide'><sup style=\"color:#999999;\">Блок для использования в шаблоне: [".$row['name']."]</sup><br>Раздел: ".$razdel_title.$papka_title.".<br>Тип: ".$and.".</span></td></tr>";
       }
       $info .= "</table>";
@@ -625,7 +666,6 @@ if ($func == "izmenapapka") { // Отображение списка папок 
     case "izmenapage": 
       $info .= "<select class='w100' name='to_papka' id='to_papka".$id."' size='10'>"; break;
     case "papka_in_pole": 
-      global $name_razdels;
       if (isset($name_razdels[$select])) $select = $name_razdels[$select];
       $main_papka = "Все папки (по-умолчанию)";
       $info .= "<select class='w100' multiple='multiple' name='shablon[]' id='papki' size='20'>"; break;
@@ -672,7 +712,7 @@ if ($func == "izmenapapka") { // Отображение списка папок 
 ######################################################################################
 if ($func == "addpapka") { // Добавляем папку(и)
   list($title, $parent) = explode("*@%", $string);
-  global $name_razdels, $title_razdel_and_bd;
+  global $title_razdel_and_bd;
   $name_raz = $name_razdels[$id];
   if (strpos($title, "&&&")) $title = explode("&&&",$title);
   else $title = explode("\n",$title);
@@ -688,7 +728,7 @@ if ($func == "addpapka") { // Добавляем папку(и)
 ######################################################################################
 if ($func == "addpages") { // Добавляем страницы
   list($title, $cid) = explode("*@%", $string);
-  global $name_razdels, $title_razdel_and_bd, $now;
+  global $title_razdel_and_bd, $now;
   $name_raz = $name_razdels[$id];
   if (strpos($title, "&&&")) $title = explode("&&&",$title);
   else $title = explode("\n",$title);
@@ -715,7 +755,6 @@ if ($func == "offpage") { // вкл./выкл. страницы
 ######################################################################################
 if ($func == "delrazdel") { // Удаление раздела
   // ДОПИСАТЬ! не хватает рекурсии для удаления комментариев и голосований!
-  global $name_razdels;
   $name_raz = $name_razdels[$id];
   $db->sql_query("UPDATE ".$prefix."_pages SET `tables`='del' WHERE module='$name_raz'"); 
   $db->sql_query("UPDATE ".$prefix."_pages_categories SET `tables`='del' WHERE module='$name_raz'"); 
@@ -730,6 +769,11 @@ if ($func == "delblock") {
   if ($type==0) $db->sql_query("UPDATE ".$prefix."_mainpage SET `tables`='del' WHERE `id`='".$id."'"); 
   if ($type==1) $db->sql_query("DELETE from ".$prefix."_mainpage WHERE `id`='".$id."'");
   if ($type==2) $db->sql_query("UPDATE ".$prefix."_mainpage SET `tables`='pages' WHERE `id`='".$id."'");
+  exit;
+}
+######################################################################################
+if ($func == "delspisok") { 
+  $db->sql_query("DELETE from ".$prefix."_spiski WHERE `id`='".$id."'");
   exit;
 }
 ######################################################################################
@@ -800,7 +844,6 @@ if ($func == "offblock") { // Вкл./Выкл. блока
 ######################################################################################
 if ($func == "add_pages") { // Создание страниц
   // Узнаем название раздела
-  global $name_razdels;
   $name_raz = $name_razdels[$id];
   $list = "<form method=post style=\"display:inline;\" onsubmit='return false'>
   <h1>Добавим сразу несколько страниц</h1>
@@ -831,7 +874,6 @@ if ($func == "add_pages") { // Создание страниц
 ######################################################################################
 if ($func == "add_papka") { // Создание папки
   // Узнаем название раздела
-  global $name_razdels;
   $name_raz = $name_razdels[$id];
   $list = "<form method=post style=\"display:inline;\" onsubmit='return false'>
   <h1>Создадим папку (или папки) в этом разделе</h1>
@@ -1184,9 +1226,9 @@ if ($func == "replace") { // Перемещение страницы
   <option value=3>переместим</option>
   </select> <div id='rep".$id."'></div>
   <p><b>В какой раздел?</b> ";
-  $sql = "select name, title, color from ".$prefix."_mainpage where type='2' and name != 'index' and `tables`='pages' order by color desc, title";
+  $sql = "select `name`, `title`, `color` from ".$prefix."_mainpage where `type`='2' and `useit` not like '%".aa("[название]")."%' and `name` != 'index' and `tables`='pages' order by `color` desc, `title`";
   $result = $db->sql_query($sql);
-  $list .= "<select name=to_razdel id='to_razdel".$id."' style='width:100%;' onChange=\"izmenapapka(document.getElementById('to_razdel".$id."').value, $name_pap, '$name_raz',$id,'izmenapage');\">";
+  $list .= "<select name='to_razdel' id='to_razdel".$id."' style='width:100%;' onChange=\"izmenapapka(document.getElementById('to_razdel".$id."').value, $name_pap, '$name_raz',$id,'izmenapage');\">";
   while ($row = $db->sql_fetchrow($result)) {
      $name2 = $row['name'];
      $title2 = strip_tags($row['title'], '<b><i>');
@@ -1254,7 +1296,6 @@ if ($func == "papka") { // Папка
     case "1":
     default: $order = "title, date desc"; break;
   }
-  global $name_razdels;
   $name_raz = $name_razdels[$id];
     // Подпапки этой папки
     $sql = "SELECT cid, title, parent_id FROM ".$prefix."_pages_categories where module='$name_raz' and `tables`='pages' and parent_id='$cid' order by title";
@@ -1339,7 +1380,6 @@ if ($func == "razdel") { // Папка
     case "1":
     default: $order = "title, date desc"; break;
   }
-  global $name_razdels;
   $list = "";
   $name_raz = $name_razdels[$id];
   // Если раздел

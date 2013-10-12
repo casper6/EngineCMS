@@ -93,8 +93,6 @@ a img {border:0;}
 .green_link {color: #0f0;}
 .red_link {color: #f00;}
 
-.block {border: 1px solid gray; background: #deffde; padding: 5px; }
-
 .small {font-size: 0.9em;}
 .red, .red a {color:red;}
 .black, .black a {color:black;}

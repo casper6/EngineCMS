@@ -32,7 +32,7 @@ if ($name=="-email") { // занесение мыла как скрытого к
 } else { // Сборка дизайна с разделом и Блоки
 	###################################################### БЛОКИ
 	$block = ""; // Определение раздела
-	switch ($name) {
+	switch ($name) { // упростить
 	    case "-search":
 		    list($block, $stil) = include('page/search.php'); 
 		    $pagetitle = $slov." — ".ss("Поиск")." — ";
@@ -535,7 +535,7 @@ case "0": # Блок страниц раздела
 							$dalee = " <div id=dalee class=\"dalee ".$class."\">".$dal."</div>";
 						}
 					} else $dalee = "";
-					$open_text = "<span id=block_open_text class='block_open_text ".$class."'>".$open_text.$dalee."</span>";
+					$open_text = "<span id='block_open_text' class='block_open_text ".$class."'>".$open_text.$dalee."</span>";
 					if ($zagolovokin == 0) {
 						$zagolovok = "<span class='block_title ".$class."'><span class='block_li_data ".$class."'>".$data."</span>".$cat."<a class='block_title ".$class."' href='-".$module."_page_".$p_id.$blank."'>".$title."</a></span>";
 						$open_text = str_replace(aa("[заголовок]"), "", $open_text); 
@@ -765,12 +765,12 @@ case "8": # Блок папок ОТКРЫТОГО раздела
 	} else { // если без шаблона
 		$shablon_category = "<li class=\"[css] block_li_title\">".aa("[активность]")."<a href=".aa("[ссылка]").">".aa("[название]")."</a>".aa("[число страниц]")."</li>";
 		$shablon_razdelitel = "";
-		$shablon_main = "<ul class=block_li_title>".aa("[содержание]")."</ul>";
+		$shablon_main = "<ul class='block_li_title'>".aa("[содержание]")."</ul>";
 		$shablon_active = $strelka." ";
-		$shablon_active2 = "<img align=left width=10 height=10 src=images/pixel.gif>".$strelka." ";
+		$shablon_active2 = "<img align='left' width='10' height='10' src='images/pixel.gif'>".$strelka." ";
 	}
 	$block_title = "";
-	if ($titleshow != 2 and $titleshow != 3) $block_title .= "<h3 class='h3_block_title'>".$ModuleName."</h3><div class=polosa></div>";
+	if ($titleshow != 2 and $titleshow != 3) $block_title .= "<h3 class='h3_block_title'>".$ModuleName."</h3><div class='polosa'></div>";
 	$textX = "";
 		global $txt_razdels; // ЗАМЕНА mainpage2 №4
 		$textXX = explode("|", $txt_razdels[$DBName] );
@@ -1565,78 +1565,122 @@ case "31": # Блок JS
 			$result2 = $db->sql_query($sql2);
 			$numrows = $db->sql_numrows($result2);
 			if ($numrows > 0) {
-			  $and = array();
-			  while ($row2 = $db->sql_fetchrow($result2)) {
-			  	$and[] = "`pages` like '% ".$row2['pid']." %'";
-			  }
-			  $and = " and (".implode(" or ", $and).")";
-			  // получаем все поля
-			  $sql = "select `id`, `title`, `name`, `text` from ".$prefix."_mainpage 
-			  where (`useit`='".$id."' or `useit`='0') and (`shablon` like '% ".$cid." %' or `shablon` = '' or `shablon` = '0' or `shablon` = ' 0 ') 
-			  and `type`='4' and `tables`='pages' order by `title`";
-			  $result = $db->sql_query($sql);
-			  $filtr .= "<form method='post'>";
-			  while ($row = $db->sql_fetchrow($result)) {
-			   $s_id = $row['id'];
-			   $s_title = $row['title'];
-			   $s_name = $row['name'];
-			   $options = explode("|", $row['text']);
-			   $options = $options[1];
-			   $type=0;
-			   $shablon=""; 
-			   parse_str($options);
-			   switch($type) {
-			    case "5": // число
-			    // получаем максимум и минимум для панели
-			    $sql2 = "select max(`name` + 0) max, min(`name` + 0) min from ".$prefix."_spiski where type='".$s_name."'".$and;
-			    $result2 = $db->sql_query($sql2);
-			    $row2 = $db->sql_fetchrow($result2);
-			    $max = $max2 = $row2['max'];
-			    $min = $min2 = $row2['min'];
-			    if ($max != 0 && $min != 0 && $max != $min) {
-			    	if (isset($filter)) {
-				    	$min2 = explode(" - ", $filter[$s_name]);
-				    	$max2 = intval($min2[1]);
-				    	$min2 = intval($min2[0]);
-				    }
-				    $filtr .= "<script>
-				    $(function() {
-					    $( '#slider-range".$s_name."' ).slider({
-						    range: true,
-						    min: ".$min.",
-						    max: ".$max.",
-						    values: [ ".$min2.", ".$max2." ],
-						    slide: function( event, ui ) {
-							    interval = ui.values[ 0 ] + ' - ' + ui.values[ 1 ];
-							    $('#amount".$s_name."').val( interval );
-							    $('#text_amount".$s_name."').html( interval );
-							    $('.change_filter').hide();
-							    $('#change".$s_name."').show();
+				$and = array();
+				while ($row2 = $db->sql_fetchrow($result2)) {
+					$and[] = "`pages` like '% ".$row2['pid']." %'";
+				}
+				$and = " and (".implode(" or ", $and).")";
+				// получаем все поля
+				$sql = "select `id`, `title`, `name`, `text` from ".$prefix."_mainpage 
+				where (`useit`='".$id."' or `useit`='0') and (`shablon` like '% ".$cid." %' or `shablon` = '' or `shablon` = '0' or `shablon` = ' 0 ') 
+				and `type`='4' and `tables`='pages' order by `title`";
+				$result = $db->sql_query($sql);
+				$filtr .= "<form method='post'>";
+				while ($row = $db->sql_fetchrow($result)) {
+					$s_id = $row['id'];
+					$s_title = $row['title'];
+					$s_name = $row['name'];
+					$options = explode("|", $row['text']);
+					$options = $options[1];
+					$type=0;
+					$shablon=""; 
+					parse_str($options);
+					switch($type) {
+						case "5": // число
+						// получаем максимум и минимум для панели
+						$sql2 = "select max(`name` + 0) max, min(`name` + 0) min from ".$prefix."_spiski where `type`='".$s_name."'".$and;
+						$result2 = $db->sql_query($sql2);
+						$row2 = $db->sql_fetchrow($result2);
+						$max = $max2 = $row2['max'];
+						$min = $min2 = $row2['min'];
+						if ($max != 0 && $min != 0 && $max != $min) {
+							if (isset($filter)) {
+						    	$min2 = explode(" - ", $filter[$s_name]);
+						    	$max2 = intval($min2[1]);
+						    	$min2 = intval($min2[0]);
 						    }
-					    });
-						interval = $( '#slider-range".$s_name."' ).slider( 'values', 0 ) +
-					    ' - ' + $( '#slider-range".$s_name."' ).slider( 'values', 1 )
-					    $( '#amount".$s_name."' ).val( interval );
-					    $( '#text_amount".$s_name."' ).html( interval );
-				    });
-				    </script>
-				    <p><span class='filter_title filter_title_".$s_name."'>".$s_title.":</span> 
-				    <nobr><span class='filter_interval filter_interval_".$s_name."' id='text_amount".$s_name."'></span></nobr>
-				    <input type='hidden' name='filter[".$s_name."]' id='amount".$s_name."'></p>
-				    <div id='slider-range".$s_name."'></div>
-				    <div id='change".$s_name."' class='hide center change_filter'><button class='small'>".ss("Показать")."</button></div>";
-			    }
-			    break;
-			   }
-			  } // end while
-			  $filtr .= "</form>";
-			  // Настройки фильтра
-			  if ($filter_name == "") $filter_name = ss("Фильтр товаров");
-  			  if ($filter_show_all == "") $filter_show_all = ss("Показать все");
-			  if (isset($filter)) $filtr .= "<div class='center'><p><a href='-".$DBName."_cat_".$cid."' class='button small'>".$filter_show_all."</a></div>";
-			  if (trim($filter_name) != "" && $filtr != "<form method='post'></form>") 
-			  	$filtr = "<div class='filter_form'><div class='filter_name'>".$filter_name."</div>".$filtr."</div>";
-			  else $filtr = "";
+						    $filtr .= "<script>
+						    $(function() {
+							    $( '#slider-range".$s_name."' ).slider({
+								    range: true,
+								    min: ".$min.",
+								    max: ".$max.",
+								    values: [ ".$min2.", ".$max2." ],
+								    slide: function( event, ui ) {
+									    interval = ui.values[ 0 ] + ' - ' + ui.values[ 1 ];
+									    $('#amount".$s_name."').val( interval );
+									    $('#text_amount".$s_name."').html( interval );
+									    $('.change_filter').hide();
+									    $('#change".$s_name."').show();
+								    }
+							    });
+								interval = $( '#slider-range".$s_name."' ).slider( 'values', 0 ) +
+							    ' - ' + $( '#slider-range".$s_name."' ).slider( 'values', 1 )
+							    $( '#amount".$s_name."' ).val( interval );
+							    $( '#text_amount".$s_name."' ).html( interval );
+						    });
+						    </script>
+						    <p><span class='filter_title filter_title_".$s_name."'>".$s_title.":</span> 
+						    <nobr><span class='filter_interval filter_interval_".$s_name."' id='text_amount".$s_name."'></span></nobr>
+						    <input type='hidden' name='filter[".$s_name."]' id='amount".$s_name."'></p>
+						    <div id='slider-range".$s_name."'></div>
+						    <div id='change".$s_name."' class='hide center change_filter'><button class='small' style='margin-top:10px;'>".ss("Показать")."</button></div>";
+				    	}
+				    	break;
+
+				    	case "0": // список слов (выбор одного значения)
+				    	case "4": // строка (можно написать шаблон)
+						case "7": // список слов (выбор нескольких значений)
+						// получаем максимум и минимум для панели
+						$sql2 = "select `name` from ".$prefix."_spiski where `type`='".$s_name."'".$and;
+						$result2 = $db->sql_query($sql2);
+						$names = array();
+						while ($row2 = $db->sql_fetchrow($result2)) {
+							$names[] = $row2['name'];
+						}
+						$names = array_unique($names);
+						if (count($names) > 0) {
+							$filtr .= "<script>
+						    $(function() {
+							    $( '.text".$s_name."' ).click(function(){
+									    $('.change_filter').hide();
+									    $('#change".$s_name."').show();
+							    });
+						    });
+						    </script>
+						    <p><span class='filter_title filter_title_".$s_name."'>".$s_title.":</span><br>";
+						    $filtr_values = "";
+						    $smaller_then_4 = false;
+						    $smaller_then_7 = false;
+							foreach ($names as $key => $value) {
+								$checked = "";
+								if (isset($filter))
+							    	if ($filter[$s_name."_".$value] == "on") $checked = " checked";
+							    $filtr_values .= "<label for='text".$s_name."_".$key."'><input class='text".$s_name."' type='checkbox' name='filter[".$s_name."_".$value."]' id='text".$s_name."_".$key."'".$checked."> ".$value."</label><br>";
+
+							    $strlen = mb_strlen($value);
+							    if ($strlen > 4) $smaller_then_4 = true;
+							    if ($strlen > 7) $smaller_then_7 = true;
+							} 
+							// Обработка внешнего вида
+							// Если меньше трех символом в каждом слове - скоращенный вывод без перехода на следующую строку
+
+							if ($smaller_then_4 == false || (count($names) < 4 && $smaller_then_7 == false)) 
+								$filtr_values = str_replace("<br>", " ", $filtr_values);
+
+							$filtr .= $filtr_values."<div id='change".$s_name."' class='hide center change_filter'><button class='small'>".ss("Показать")."</button></div>";
+						}
+				    	break;
+			   		}
+				} // end while
+				$filtr .= "</form>";
+				// Настройки фильтра
+				if ($filter_name == "") $filter_name = ss("Фильтр товаров");
+				if ($filter_show_all == "") $filter_show_all = ss("Показать все");
+				if (isset($filter)) $filtr .= "<div class='center'><p><a href='-".$DBName."_cat_".$cid."' class='button small'>".$filter_show_all."</a></div>";
+				if (trim($filter_name) != "" && $filtr != "<form method='post'></form>") 
+					$filtr = "<div class='filter_form'><div class='filter_name'>".$filter_name."</div>".$filtr."</div>";
+				else $filtr = "";
 			}
 		}
 		$block = str_replace(aa("[фильтр]"), $filtr, $block);
