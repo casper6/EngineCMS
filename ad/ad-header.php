@@ -35,17 +35,17 @@ echo "<!doctype html>
 <meta http-equiv='cache-control' content='no-cache' />
 <meta name='viewport' content='width=device-width'>
 <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
-<!--[if lt IE 9]><script src='includes/html5.js'></script><![endif]-->
 <link rel='stylesheet' href='ad/ad-style.css' type='text/css'>
 <link rel='shortcut icon' href='images/favicon_cms.png' type='image/x-icon'>
+<script src='includes/jquery183.min.js'></script>
+<script src='includes/css-frameworks/kickstart/js/ad-kickstart.js'></script>
 <script src='includes/jad.js'></script>
 <script src='includes/j.js'></script>
-<script src='includes/jquery183.min.js'></script>
 <script src='includes/jquery-ui.min.js'></script>
 <script src='includes/jquery-ui-i18n.min.js'></script> 
 <script src='includes/jquery.innerfade.js'></script>
 <link rel='stylesheet' href='includes/jquery-ui.css' media='all' />
-<script src='includes/css-frameworks/kickstart/js/ad-kickstart.js'></script>
+<!--[if lt IE 9]><script src='includes/html5.js'></script><![endif]-->
 <link rel='stylesheet' type='text/css' href='includes/css-frameworks/kickstart/css/ad-kickstart.css' media='all' />
 <link rel='stylesheet' type='text/css' href='includes/css-frameworks/kickstart/css/kickstart-forms.css' media='all' />
 <link rel='stylesheet' type='text/css' href='includes/css-frameworks/kickstart/css/kickstart-icons.css' media='all' />
@@ -94,6 +94,6 @@ echo "<button class='small' onclick=\"openbox('8','".aa("Помощь")."'); $('
 <li class='first last'><a title='".aa("Выход из администрирования\n(мера безопасности)")."' href='sys.php?op=logout' class='button small'><span class='icon red small' data-icon='Q'></span></a></li>
 </ul>
 </div></td></tr>
-<tr><td colspan=2 class='black_grad2 h5 mp0'><a name='1'></a>
-</td></tr></table>";
+<tr><td colspan=2 class='black_grad2 h5 mp0'>
+</td></tr></table><a name='top'></a>";
 ?>

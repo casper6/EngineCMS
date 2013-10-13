@@ -21,11 +21,12 @@ if ($func == "save_spisok") { // Сохраняем новое или отред
   $parent = intval($parent);
   $pages = " ".trim(str_replace("  ", " ", $pages))." ";
   if ($id == 0) { // создаем новый
-    $names = explode("\n", $name);
+    $names = explode("\r", $name);
     foreach ($names as $name)
-      if (trim($name) != "") $db->sql_query("INSERT INTO ".$prefix."_spiski ( `id` , `type` , `name` , `pages` , `opis` , `sort` , `parent` ) VALUES ('', '".$type."', '".$name."', '".$pages."', '".$opis."', '".$sort."', '".$parent."')");
+      if (trim($name) != "") $db->sql_query("INSERT INTO ".$prefix."_spiski ( `id` , `type` , `name` , `pages` , `opis` , `sort` , `parent` ) VALUES ('', '".$type."', '".trim($name)."', '".$pages."', '".$opis."', '".$sort."', '".$parent."')");
   } else { // обновляем отредактированный 
-    $db->sql_query("UPDATE ".$prefix."_spiski SET `type`='".$type."', `name`='".$name."',`pages`='".$pages."',`opis`='".$opis."',`sort`='".$sort."',`parent`='".$parent."' WHERE id='".$id."'");
+    $name = trim(str_replace("  ", " ", str_replace("\n", " ", str_replace("\r", " ", $name))));
+    if ($name != "") $db->sql_query("UPDATE ".$prefix."_spiski SET `type`='".$type."', `name`='".$name."',`pages`='".$pages."',`opis`='".$opis."',`sort`='".$sort."',`parent`='".$parent."' WHERE id='".$id."'");
   }
   exit;
 }
@@ -95,28 +96,28 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
        $useit = explode(" ", trim($row['useit']));
        $css = "";
        foreach( $useit as $value ) {
-        if ($value) $css .= " <a href='/sys.php?op=mainpage&id=".$value."' title='Редактировать' class='gray'><i>".$title_razdels_by_id[$value]."</i>".icon('black small','7')."</a> ";
+        if ($value) $css .= " ".$title_razdels_by_id[$value]." <a href='/sys.php?op=mainpage&id=".$value."' title='Редактировать' class='gray'>".icon('black small','7')."</a> ";
        }
        if ($css == "") $css = "<i class='red'>стиль не выбран</i><br>";
        else $css = "Подключенные стили (css): ".$css."<br>";
        if ($row['title'] != "Главный дизайн") $delx = "<a class='padleft30 punkt' onclick='delblock(".$row['id'].",0)' title='Удалить'>".icon('red small','F')."</a>";
         else $delx = "<span class='padleft30'>".icon('gray small','X');
-        
-       $info .= "<tr valign='top' id='block_".$row['id']."'><td><h2>".$row['title']." &darr;</h2>
-       <div style='float:right; display: inline;'>
-       <a href='sys.php?op=mainpage&id=".$row['id']."&red=1' title='Редактировать в HTML'>".icon('orange small','7')."</a> ".$delx."</div>";
+       
+
+
+       $info .= "<tr valign='top' id='block_".$row['id']."' onmouseover='$(\"#hide_".$row['id']."\").show();' onmouseout='$(\"#hide_".$row['id']."\").hide();'><td><div style='float:right;'><a href='sys.php?op=mainpage&id=".$row['id']."&red=2' title='Редактировать'>".icon('black small','7')."</a> ".$delx."</div><h2><a href='sys.php?op=mainpage&id=".$row['id']."&red=2' title='Редактировать'>".$row['title']."</a></h2>
+       <span id='hide_".$row['id']."' class='hide'>";
       ///////
-       $sql2 = "select id,name,title from ".$prefix."_mainpage where `tables`='pages' and type='2' and text like '%design=".$row['id']."&%' order by title, name";
+       $sql2 = "select title from ".$prefix."_mainpage where `tables`='pages' and type='2' and text like '%design=".$row['id']."&%' order by title, name";
        $result2 = $db->sql_query($sql2);
        $numrows2 = $db->sql_numrows($result2);
-       if ($numrows2 == 0) $razr = "";
-       else {
-        $razr = "<div style='overflow:auto; width:90%; height:70px;'>Используется в разделах: <br>";
+       $razr = "";
+       if ($numrows2 != 0) {
+        $razr2 = array();
         while ($row2 = $db->sql_fetchrow($result2)) {
-          $id = $row2['id'];
-          $razr .= "<a href='/-".$row2['name']."' target='_blank' class='gray'>".$row2['title']."</a> ";
+          $razr2[] = $row2['title'];
         }
-        $razr .= "</div>";
+        $razr = "<div style='width:90%;'>Используется в разделах: ".implode(", ", $razr2)."</div>";
        }
       ///////
        $sql2 = "select id,name,title from ".$prefix."_mainpage where `tables`='pages' and type='3' and useit like '%design=".$row['id']."&%' order by title, name";
@@ -131,7 +132,7 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
           $bloc .= "[".$row2['title']."] ";
         }
        }
-       $info .= "".$css."".$razr.$bloc."</td></tr>";
+       $info .= "".$css."".$razr.$bloc."</span></td></tr>";
     }
     $info .= "</table>";
   break;
@@ -144,7 +145,7 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
     while ($row = $db->sql_fetchrow($result)) {
      if ($row['title'] != "Главный стиль") $delx = "<a class='padleft30 punkt' onclick='delblock(".$row['id'].",0)' title='Удалить'>".icon('red small','F')."</a>";
      else $delx = "<span class='padleft30'>".icon('gray small','X');
-     $info .= "<tr id='block_".$row['id']."'><td><h2>".$row['title']."<div style='float:right; display: inline;'><a href='sys.php?op=mainpage&type=1&id=".$row['id']."' title='Редактировать'>".icon('black small','7')."</a> ".$delx."</h2></div></td></tr>";
+     $info .= "<tr id='block_".$row['id']."'><td><div style='float:right;'><a href='sys.php?op=mainpage&type=1&id=".$row['id']."' title='Редактировать'>".icon('black small','7')."</a> ".$delx."</div><h2><a href='sys.php?op=mainpage&type=1&id=".$row['id']."' title='Редактировать'>".$row['title']."</a></h2></td></tr>";
     }
     $info .= "</table>";
   break;
@@ -265,7 +266,7 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
   case "shablon": // 6
     $sql = "select `id`, `title` from ".$prefix."_mainpage where `tables`='pages' and `type`='6' order by `type`, `title`, `name`";
     $result = $db->sql_query($sql);
-    $info .= "<table width=60% class=table_light>";
+    $info .= "<table class='w100 table_light'>";
     while ($row = $db->sql_fetchrow($result)) {
       //$id = $row['id'];
       //$type = $row['type'];
@@ -274,9 +275,7 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
       //$useit = $row['useit'];
       //$useit_module = "";
       //$text = $row['text'];
-      $redactor = "<div style='float:right;'><a href='sys.php?op=mainpage&id=".$row['id']."&red=1&type=6' title='Редактировать'>".icon('black small','7')."</a> ";
-      $redactor .= "<a class='padleft30 punkt' onclick='delblock(".$row['id'].",0)' title='Удалить'>".icon('red small','F')."</a></div>";
-      $info .= "<tr id='block_".$row['id']."'><td>".$redactor."<h2>".$row['title']."</h2></td></tr>";
+      $info .= "<tr id='block_".$row['id']."'><td><div style='float:right;'><a href='sys.php?op=mainpage&id=".$row['id']."&red=1&type=6' title='Редактировать'>".icon('black small','7')."</a><a class='padleft30 punkt' onclick='delblock(".$row['id'].",0)' title='Удалить'>".icon('red small','F')."</a></div><h2><a href='sys.php?op=mainpage&id=".$row['id']."&red=1&type=6' title='Редактировать'>".$row['title']."</a></h2></td></tr>";
     }
     $info .= "</table>";
   break;

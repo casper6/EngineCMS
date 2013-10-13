@@ -802,7 +802,7 @@ function edit_main($id) {
 	});
 	</script>
 	<a class='scroll_on_top button small green' onclick='save_main(\"ad/ad-mainpage.php\", \"mainpage_save_ayax\")' style='position:fixed; top:80%; right:0%; left:90%; width:100px; z-index:1000;'>Сохранить</a>
-	<a class='scroll_on_top button small blue' href='#1' style='position:fixed; top:90%; right:0%; left:90%; width:100px; z-index:1000;'>&uarr;<br>Наверх</a>
+	<a class='scroll_on_top button small blue' href='#top' style='position:fixed; top:90%; right:0%; left:90%; width:100px; z-index:1000;'>&uarr;<br>Наверх</a>
 
 	<div id='save_main' style='float:left; margin:3px;'></div>
 	<span class='h1' style='padding-top:10px;'>";
@@ -1113,8 +1113,12 @@ function edit_main($id) {
 	<td>".select("options[comments_add]", "0,2,1", "НЕТ,с проверкой администратора,без проверки", $comments_add)."</td>
 	</tr>
 	<tr>
-	<td>Включить ветки (возможность отвечать на комментарии на страницах со смещением ответа на комментарий вправо)</td>
-	<td>".select("options[vetki]", "2,1,0", "ветки раскрыты,ветки закрыты и есть кнопка «Раскрыть все»,НЕТ", $vetki)."</td>
+	<td><b>Система комментариев:</b><br>
+	<li>Линейная система — на первый взгляд помогает комментаторам держаться темы, мешает вести одновременно несколько бесед, хорошо воспринимается зрительно, но при попытке людей создать дискуссию - сильно усложняет её понимание.
+	<li>Древовидная система — помогает комментаторам развивать в ветках разные темы, провоцирует комментаторов на ведение споров, затрудняет последовательное чтение комментариев, но облегчает понимание дискуссий, повышает количество комментариев и время на сайте.
+	<li>Гибридная система — Линейная система, раскрывающаяся в Древовидную за счет кнопки «Раскрыть все». Также под каждым комментарием с ответом есть кнопка «Показать ответ».
+	</td>
+	<td>".select("options[vetki]", "2,1,0", "Древовидная система,Гибриная система,Линейная система", $vetki)."</td>
 	</tr>
 	<tr>
 	<td>Направление комментариев по дате:</td>
@@ -1704,298 +1708,298 @@ function edit_main($id) {
 	echo "</table>";
 
 	/////////////////////////////////////////////////////////
-	} else { // редактирование содержания блока
-		
-	echo input("namo", $name, "1", "hidden")."
-	Редактирование содержания блока</span>";
-	if (intval($nastroi) != 1 or $name == 10) red_vybor();
-	echo "</div>
+	} else { // Редактирование содержания блока
+		echo input("namo", $name, "1", "hidden")."
+		Редактирование содержания блока</span>";
+		if (intval($nastroi) != 1 && $name != 10 && $name != 6) red_vybor();
+		echo "</div>
 
-	<table class='w100 mw800'><tr valign='top'><td width='50%'>
-	<span class=h2>Название блока</span><br>
-	<textarea class='big w100 h40 f16' name='title' rows='1' cols='10'>".$title."</textarea>
-	</td><td>
-	<span class=h3>Название класса CSS</span><br>
-	<textarea class='big w100 h40 f16' name='shablon' rows='1' cols='10'>".$sha."</textarea>
-	</td></tr>
-	<tr><td colspan=2>";
-
-	if ($name == 6) $text .= "\n";
-
-	if ($name == 3) echo "<b>Разделение кусков рекламы или текста — с помощью символа | </b>";
-	if ($name == 7) echo "<b>Вывод на экран из блока с PHP-кодом осуществляется через переменную $"."txt</b><br>
-		&lt;? и ?&gt; ставятся <b>только</b> в начале и конце кода, лишь для визуального редактора и наглядности.<br>";
-
-	if ($name == 10 or $name == 5 or $name == 0) $red = 1; // дополнить список при необходимости
-	
-
-
-	echo "<span class=h2>Содержание блока:</span>";
-	if ($name != 31 && $name != 7 && $name != 10 && $name != 6) redactor($red, $text, 'text'); // редактор: тип редактора, редактируемое поле
-	if ($name == 6) echo "<div class='pics w100'></div>
-	<textarea name=text rows=3 cols=86 class='w100 h155' id=textarea onchange=\"pics_refresh('#textarea');\">".str_replace("\n\n", "\n", $text)."</textarea>
-	<script>$(function(){pics_refresh('#textarea');$('#textarea').hide();})</script>";
-	if ($name == 31) redactor($red, $text, 'text', '', 'javascript');
-	if ($name == 7) {
-		$text = str_replace("<? ", "", str_replace(" ?>", "", $text));
-		redactor('2', "<? \n".$text."\n ?>", 'text', '', 'php');
-	}
-	if ($name == 10 && $re_menu == 1) echo "<div style='display:none'>";
-	if ($name == 10 && $re_menu == 1) redactor($red, '', 'text', '');
-	elseif ($name == 10 && $re_menu != 1) redactor($red, $text, 'text', '');
-	if ($name == 10 && $re_menu == 1) echo "</div>";
-	echo "</td></tr>";
-	
-	if ($name == 10 && $re_menu == 1) {
-		$menu_element = explode("\n", $text);
-		$menu_elements = "";
-		$uroven = 0; // Уровень смещения меню
-		foreach ($menu_element as $value) {
-			$value = trim($value);
-			if ($value == "[уровень открыть]") $uroven++;
-			elseif ($value == "[уровень закрыть]") $uroven--;
-			elseif ($value == '[элемент закрыть]') {} 
-			else {
-				$value = str_replace("[элемент открыть][url=", "", str_replace("[/url]", "", str_replace("[элемент закрыть]", "", $value)));
-				$value = explode("]", $value);
-				$ur = "";
-				for ($i=0; $i < $uroven ; $i++) $ur .= "→";
-				$menu_elements .= "<option value='".$value[0]."'>".$ur.$value[1]."</option>";
-			}
-		}
-		echo '<script>
-		function bottom_menu(top) {
-			x = $("#menu_element :selected");
-			if (top == 1) x.insertBefore(x.prev());
-			else x.insertAfter(x.next());
-			save_menu();
-		}
-		function min_menu() {
-			$("#menu_element :selected").text( $("#menu_element :selected").text().replace("→","") );
-			save_menu();
-			select_menu();
-		}
-		function max_menu() {
-			x = $("#menu_element :selected");
-			z = x.text().replace("→→","");
-			if (x.text() == z) { x.text( "→" + x.text() ); save_menu(); }
-			select_menu();
-		}
-		function del_menu() {
-			$("#menu_element :selected").remove();
-			save_menu();
-			$("#izmena").hide();
-		}
-		function delete_menu() {
-			$("#menu_element").empty();
-			save_menu();
-			$("#izmena").hide();
-		}
-		function add_menu(top) {
-			var link = $("#link").val();
-			var link_title = $("#link_title").val();
-			x = "<option value=\'" + link + "\'>" + link_title + "</option>";
-			if (top == 2) { 
-				$("#menu_element option:selected").after( x ); 
-				//$("#menu_element :first").attr("selected", "selected");
-			} else if (top == 1) { 
-				$("#menu_element").prepend( x ); 
-				$("#menu_element :first").attr("selected", "selected");
-			} else {
-				$("#menu_element").append( x );
-				$("#menu_element :last").attr("selected", "selected");
-			}
-			save_menu();
-		}
-		function save_menu() {
-			var all=\'\';
-			var pod = pod2 = podrazdel = podrazdel2 = false;
-			$.each($(\'#menu_element option\'), function(i,val) {
-				x = this.text;
-				y = x.replace("→","");
-				z = x.replace("→→","");
-				if (podrazdel == false && y != x) { all = all + \'\n[уровень открыть]\n\'; pod = true; }
-				if (podrazdel == false && y == x && i != 0 && z == x) all = all + \'[элемент закрыть]\n\';
-				if (podrazdel == true && y != x && z == x) all = all + \'[элемент закрыть]\n\';
-				if (podrazdel == true && y == x) { all = all + \'[элемент закрыть]\n[уровень закрыть]\n[элемент закрыть]\n\'; pod = false; }
-				if (podrazdel2 == false && z != x) { all = all + \'\n[уровень открыть]\n\'; pod2 = true; pod = true; }
-				if (podrazdel2 == true && z != x) all = all + \'[элемент закрыть]\n\';
-				if (podrazdel2 == true && z == x) { all = all + \'[уровень закрыть]\n[элемент закрыть]\n\'; pod2 = false; }
-				x = x.replace("→","").replace("→","");
-				all = all + \'[элемент открыть][url=\' + this.value + \']\' + x + \'[/url]\';
-				if (i == $(\'#menu_element option\').length-1) all = all + \'[элемент закрыть]\n\';
-				podrazdel = pod;
-				podrazdel2 = pod2;
-			});
-			$(\'#text\').val(all);
-		}
-		function select_razdels() {
-			$("#razdel").hide();
-			$("#link").val( $("#razdels :selected").val() ); 
-			$("#link_title").val( $("#razdels :selected").text() );
-		}
-		function select_menu() {
-			$("#izmena").show();
-			$("#link").val( $("#menu_element :selected").val() ); 
-			$("#link_title").val( $("#menu_element :selected").text() );
-		}
-		function red_menu() {
-			$("#izmena").hide();
-			$("#menu_element :selected").val( $("#link").val() ); 
-			$("#menu_element :selected").text( $("#link_title").val() );
-			save_menu();
-		}
-		$(document).ready( function() { save_menu(); $("#menu_element").children().draggable(); } );
-		</script>';
-		// multiple пока не работает.
-		global $title_razdels;
-		$title_razdelsX = "";
-		foreach ($title_razdels as $key => $value) {
-			if ($key != "index") $title_razdelsX .= "<option value='-".$key."'>".$value."</option>";
-		}
-		echo "<tr valign=top><td width=50%>
-		<a class='button small punkt' onclick='min_menu()'>← Вложенность -</a> 
-		<a class='button small punkt' onclick='max_menu()'>→ Вложенность +</a> 
-		<a class='button small punkt' onclick='bottom_menu(1)'>↑ Поднять</a> 
-		<a class='button small punkt' onclick='bottom_menu(0)'>↓ Опустить</a> 
-		<select size=13 class='w100' id='menu_element' onclick='select_menu()'>".$menu_elements."</select><br>
-		<a class='button small punkt red white' onclick='del_menu()'>× Удалить</a>
-		<a class='button small punkt red white ml20' onclick='delete_menu()'>Очистить всё</a>
+		<table class='w100 mw800'><tr valign='top'><td width='50%'>
+		<span class=h2>Название блока</span><br>
+		<textarea class='big w100 h40 f16' name='title' rows='1' cols='10'>".$title."</textarea>
 		</td><td>
-		<span class=h3>Адрес ссылки (URL):</span><br>
-		<input id=link class=w100><br>
-		<span class=h3>Название ссылки:</span><br>
-		<input id=link_title class='w100 mb10'>
-		<div id='izmena' style='display:none' class='mb20'><a class='button blue' onclick='red_menu()'>Изменить</a><br></div>
-		<a class='button green' onclick='add_menu(0)'>+ Добавить в конец меню</a>
-		<a class='button green small punkt' onclick='add_menu(1)'>в начало</a>
-		<a class='button green small punkt' onclick='add_menu(2)'>после выбранного</a><br><br>
+		<span class=h3>Название класса CSS</span><br>
+		<textarea class='big w100 h40 f16' name='shablon' rows='1' cols='10'>".$sha."</textarea>
+		</td></tr>
+		<tr><td colspan=2>";
 
-		Выбрать для добавления в меню:<br><a class='button' onclick='$(\"#link\").val(\"/\");$(\"#link_title\").val(\"Главная\");'>Главная</a> 
-		<a class='button black' onclick='$(\"#razdel\").toggle();'>Раздел</a> 
-		<!-- <a class='button small punkt black' onclick='void(0)'>Папку</a> 
-		<a class='button small punkt black' onclick='void(0)'>Страницу</a> -->
-		<div id='razdel' style='display:none'>
-		<select class='w100' id='razdels' onchange='select_razdels()'><option value=''>Выберите раздел</option>".$title_razdelsX."</select>
-		</div>
-		</td></tr>";
-	}
+		if ($name == 6) $text .= "\n";
 
-	echo "</table>
-	<div class='dark_pole' onclick=\"show('nastroi')\"><img class='icon2 i26' src='/images/1.gif'>Настройки (для импорта/экспорта)</div>
-	<div id='nastroi' style='display: none;'>
-	<br><span class=f12><a target='_blank' href=sys.php?op=mainpage&amp;type=3&amp;id=".$id."&nastroi=1>Перейти к визуальной настройке</a> &rarr;</span><br>
-	<textarea class='f12 w100' name='useit' rows='2' cols='10'>".str_replace("&","&amp;",$useit)."</textarea></div>";
+		if ($name == 3) echo "<b>Разделение кусков рекламы или текста — с помощью символа | </b>";
+		if ($name == 7) echo "<b>Вывод на экран из блока с PHP-кодом осуществляется через переменную $"."txt</b><br>
+			&lt;? и ?&gt; ставятся <b>только</b> в начале и конце кода, лишь для визуального редактора и наглядности.<br>";
+
+		if ($name == 10 or $name == 5 or $name == 0) $red = 1; // дополнить список при необходимости
+		
 
 
-	if ($name == 10 && $re_menu == 0) echo "<div class='dark_pole' style='float:right;' onclick=\"show('primer')\">
-	    <img class='icon2 i26' src='/images/1.gif'>Пример построения меню сайта (справка)</div>
-	    <div id='primer' style='display: none;'><pre>
-	# - это ссылки на страницы.
+		echo "<span class=h2>Содержание блока:</span>";
+		if ($name != 31 && $name != 7 && $name != 10 && $name != 6) redactor($red, $text, 'text'); // редактор: тип редактора, редактируемое поле
+		if ($name == 6) echo "<div class='pics w100'></div>
+		<textarea name=text rows=3 cols=86 class='w100 h155' id=textarea onchange=\"pics_refresh('#textarea');\">".str_replace("\n\n", "\n", $text)."</textarea>
+		<script>$(function(){pics_refresh('#textarea');$('#textarea').hide();})</script>";
+		if ($name == 31) redactor($red, $text, 'text', '', 'javascript');
+		if ($name == 7) {
+			$text = str_replace("<? ", "", str_replace(" ?>", "", $text));
+			redactor('2', "<? \n".$text."\n ?>", 'text', '', 'php');
+		}
+		if ($name == 10 && $re_menu == 1) echo "<div style='display:none'>";
+		if ($name == 10 && $re_menu == 1) redactor($red, '', 'text', '');
+		elseif ($name == 10 && $re_menu != 1) redactor($red, $text, 'text', '');
+		if ($name == 10 && $re_menu == 1) echo "</div>";
+		echo "</td></tr>";
+		
+		if ($name == 10 && $re_menu == 1) {
+			$menu_element = explode("\n", $text);
+			$menu_elements = "";
+			$uroven = 0; // Уровень смещения меню
+			foreach ($menu_element as $value) {
+				$value = trim($value);
+				if ($value == "[уровень открыть]") $uroven++;
+				elseif ($value == "[уровень закрыть]") $uroven--;
+				elseif ($value == '[элемент закрыть]') {} 
+				else {
+					$value = str_replace("[элемент открыть][url=", "", str_replace("[/url]", "", str_replace("[элемент закрыть]", "", $value)));
+					$value = explode("]", $value);
+					$ur = "";
+					for ($i=0; $i < $uroven ; $i++) $ur .= "→";
+					$menu_elements .= "<option value='".$value[0]."'>".$ur.$value[1]."</option>";
+				}
+			}
+			echo '<script>
+			function bottom_menu(top) {
+				x = $("#menu_element :selected");
+				if (top == 1) x.insertBefore(x.prev());
+				else x.insertAfter(x.next());
+				save_menu();
+			}
+			function min_menu() {
+				$("#menu_element :selected").text( $("#menu_element :selected").text().replace("→","") );
+				save_menu();
+				select_menu();
+			}
+			function max_menu() {
+				x = $("#menu_element :selected");
+				z = x.text().replace("→→","");
+				if (x.text() == z) { x.text( "→" + x.text() ); save_menu(); }
+				select_menu();
+			}
+			function del_menu() {
+				$("#menu_element :selected").remove();
+				save_menu();
+				$("#izmena").hide();
+			}
+			function delete_menu() {
+				$("#menu_element").empty();
+				save_menu();
+				$("#izmena").hide();
+			}
+			function add_menu(top) {
+				var link = $("#link").val();
+				var link_title = $("#link_title").val();
+				x = "<option value=\'" + link + "\'>" + link_title + "</option>";
+				if (top == 2) { 
+					$("#menu_element option:selected").after( x ); 
+					//$("#menu_element :first").attr("selected", "selected");
+				} else if (top == 1) { 
+					$("#menu_element").prepend( x ); 
+					$("#menu_element :first").attr("selected", "selected");
+				} else {
+					$("#menu_element").append( x );
+					$("#menu_element :last").attr("selected", "selected");
+				}
+				save_menu();
+			}
+			function save_menu() {
+				var all=\'\';
+				var pod = pod2 = podrazdel = podrazdel2 = false;
+				$.each($(\'#menu_element option\'), function(i,val) {
+					x = this.text;
+					y = x.replace("→","");
+					z = x.replace("→→","");
+					if (podrazdel == false && y != x) { all = all + \'\n[уровень открыть]\n\'; pod = true; }
+					if (podrazdel == false && y == x && i != 0 && z == x) all = all + \'[элемент закрыть]\n\';
+					if (podrazdel == true && y != x && z == x) all = all + \'[элемент закрыть]\n\';
+					if (podrazdel == true && y == x) { all = all + \'[элемент закрыть]\n[уровень закрыть]\n[элемент закрыть]\n\'; pod = false; }
+					if (podrazdel2 == false && z != x) { all = all + \'\n[уровень открыть]\n\'; pod2 = true; pod = true; }
+					if (podrazdel2 == true && z != x) all = all + \'[элемент закрыть]\n\';
+					if (podrazdel2 == true && z == x) { all = all + \'[уровень закрыть]\n[элемент закрыть]\n\'; pod2 = false; }
+					x = x.replace("→","").replace("→","");
+					all = all + \'[элемент открыть][url=\' + this.value + \']\' + x + \'[/url]\';
+					if (i == $(\'#menu_element option\').length-1) all = all + \'[элемент закрыть]\n\';
+					podrazdel = pod;
+					podrazdel2 = pod2;
+				});
+				$(\'#text\').val(all);
+			}
+			function select_razdels() {
+				$("#razdel").hide();
+				$("#link").val( $("#razdels :selected").val() ); 
+				$("#link_title").val( $("#razdels :selected").text() );
+			}
+			function select_menu() {
+				$("#izmena").show();
+				$("#link").val( $("#menu_element :selected").val() ); 
+				$("#link_title").val( $("#menu_element :selected").text() );
+			}
+			function red_menu() {
+				$("#izmena").hide();
+				$("#menu_element :selected").val( $("#link").val() ); 
+				$("#menu_element :selected").text( $("#link_title").val() );
+				save_menu();
+			}
+			$(document).ready( function() { save_menu(); $("#menu_element").children().draggable(); } );
+			</script>';
+			// multiple пока не работает.
+			global $title_razdels;
+			$title_razdelsX = "";
+			foreach ($title_razdels as $key => $value) {
+				if ($key != "index") $title_razdelsX .= "<option value='-".$key."'>".$value."</option>";
+			}
+			echo "<tr valign=top><td width=50%>
+			<a class='button small punkt' onclick='min_menu()'>← Вложенность -</a> 
+			<a class='button small punkt' onclick='max_menu()'>→ Вложенность +</a> 
+			<a class='button small punkt' onclick='bottom_menu(1)'>↑ Поднять</a> 
+			<a class='button small punkt' onclick='bottom_menu(0)'>↓ Опустить</a> 
+			<select size=13 class='w100' id='menu_element' onclick='select_menu()'>".$menu_elements."</select><br>
+			<a class='button small punkt red white' onclick='del_menu()'>× Удалить</a>
+			<a class='button small punkt red white ml20' onclick='delete_menu()'>Очистить всё</a>
+			</td><td>
+			<span class=h3>Адрес ссылки (URL):</span><br>
+			<input id=link class=w100><br>
+			<span class=h3>Название ссылки:</span><br>
+			<input id=link_title class='w100 mb10'>
+			<div id='izmena' style='display:none' class='mb20'><a class='button blue' onclick='red_menu()'>Изменить</a><br></div>
+			<a class='button green' onclick='add_menu(0)'>+ Добавить в конец меню</a>
+			<a class='button green small punkt' onclick='add_menu(1)'>в начало</a>
+			<a class='button green small punkt' onclick='add_menu(2)'>после выбранного</a><br><br>
 
-	[элемент открыть][url=/]Главная[/url][элемент закрыть]
-	[элемент открыть][url=#]Справочная[/url] 
-	  [уровень открыть] 
-	  [элемент открыть][url=#] 1[/url][элемент закрыть]
-	  [элемент открыть][url=#] 2[/url][элемент закрыть]
-	  [уровень закрыть] 
-	[элемент закрыть]
-	[элемент открыть][url=#]Афиша[/url][элемент закрыть]
-	</pre></div>";
+			Выбрать для добавления в меню:<br><a class='button' onclick='$(\"#link\").val(\"/\");$(\"#link_title\").val(\"Главная\");'>Главная</a> 
+			<a class='button black' onclick='$(\"#razdel\").toggle();'>Раздел</a> 
+			<!-- <a class='button small punkt black' onclick='void(0)'>Папку</a> 
+			<a class='button small punkt black' onclick='void(0)'>Страницу</a> -->
+			<div id='razdel' style='display:none'>
+			<select class='w100' id='razdels' onchange='select_razdels()'><option value=''>Выберите раздел</option>".$title_razdelsX."</select>
+			</div>
+			</td></tr>";
+		}
 
-	echo "</form>";
-	if ($name == 6) echo "<hr>".add_file_upload_form("textarea");
-	}
+		echo "</table>
+		<div class='dark_pole' onclick=\"show('nastroi')\"><img class='icon2 i26' src='/images/1.gif'>Настройки (для импорта/экспорта)</div>
+		<div id='nastroi' style='display: none;'>
+		<br><span class=f12><a target='_blank' href='sys.php?op=mainpage&amp;type=3&amp;id=".$id."&nastroi=1'>Перейти к визуальной настройке</a> &rarr;</span><br>
+		<textarea class='f12 w100' name='useit' rows='2' cols='10'>".str_replace("&","&amp;",$useit)."</textarea></div>";
+
+
+		if ($name == 10 && $re_menu == 0) echo "<div class='dark_pole' style='float:right;' onclick=\"show('primer')\">
+		    <img class='icon2 i26' src='/images/1.gif'>Пример построения меню сайта (справка)</div>
+		    <div id='primer' style='display: none;'><pre>
+		# - это ссылки на страницы.
+
+		[элемент открыть][url=/]Главная[/url][элемент закрыть]
+		[элемент открыть][url=#]Справочная[/url] 
+		  [уровень открыть] 
+		  [элемент открыть][url=#] 1[/url][элемент закрыть]
+		  [элемент открыть][url=#] 2[/url][элемент закрыть]
+		  [уровень закрыть] 
+		[элемент закрыть]
+		[элемент открыть][url=#]Афиша[/url][элемент закрыть]
+		</pre></div>";
+
+		echo "</form>";
+		if ($name == 6) echo "<hr>".add_file_upload_form("textarea");
+		}
 	} ############################### ЗАКРЫТИЕ БЛОК
 
 
-
 	if ($type == "4") { ############################### ОТКРЫТИЕ ПОЛЕ
-	// определение названия использованного раздела
-	$sql = "select title from ".$prefix."_mainpage where `tables`='pages' and id='".$useit."'";
-	$result = $db->sql_query($sql);
-	$row = $db->sql_fetchrow($result);
-	$main_design_title = trim($row['title']);
-	if ($main_design_title!="") $main_design_title = $main_design_title." (выбрано)";
-	else $main_design_title = "все разделы";
-	// Определение списка названий разделов
-	$modules = "";
-	$sql = "select id, title from ".$prefix."_mainpage where `tables`='pages' and type='2' and name!='index'";
-	$result = $db->sql_query($sql);
-	while ($row = $db->sql_fetchrow($result)) {
-	$id_modul = trim($row['id']);
-	$title_modul = trim($row['title']);
-	$modules .= "<option value='".$id_modul."'>".$title_modul."</option>";
-	}
-	// Добавлены пользователи USERAD
-	$sql3 = "select * from ".$prefix."_users_group where `group`!='rigion' and `group`!='config' and `group`!='obl'";
-	$result3 = $db->sql_query($sql3);
-	while ($row3 = $db->sql_fetchrow($result3)) {
-		$id = "1,".$row3['id'];
-		$title_group = $row3['group'];
-		$modules .= "<option value='".$id."'>Группа пользователей: $title_group</option>";
-	}
-	// Добавлены пользователи USERAD
-	
-	echo "Редактирование поля</span></div>
-	<table class='w100 mw800'><tr><td width=50%>
-	<h2>Название поля<br>
-	<textarea class='big w100 h40 f16' name='title' rows='1' cols='10'>".$title."</textarea></h2>
-	</td><td>
-	<h2>Обращение (англ., без пробелов)<br>
-	<textarea class='big w100 h40 f16' name='namo' rows='1' cols='10'>".$name."</textarea></h2>
-	Используется в шаблонах для подключения вывода этого поля, пример: pole &rarr; [pole]
-	</td></tr><tr><td>
-	<h2>Принадлежит разделу:<br>
-	<select name='useit' class='w100'><option value='0'>все разделы</option><option value='".$useit."' selected>".$main_design_title."</option>".$modules."</select></h2>
-	</td><td>
-	<h2>Параметры поля:<br>
-	<textarea name='text' rows='1' cols='100' class='w100'>".$text."</textarea></h2>
-	</td></tr></table>";
+		// определение названия использованного раздела
+		$sql = "select title from ".$prefix."_mainpage where `tables`='pages' and id='".$useit."'";
+		$result = $db->sql_query($sql);
+		$row = $db->sql_fetchrow($result);
+		$main_design_title = trim($row['title']);
+		if ($main_design_title!="") $main_design_title = $main_design_title." (выбрано)";
+		else $main_design_title = "все разделы";
+		// Определение списка названий разделов
+		$modules = "";
+		$sql = "select id, title from ".$prefix."_mainpage where `tables`='pages' and type='2' and name!='index'";
+		$result = $db->sql_query($sql);
+		while ($row = $db->sql_fetchrow($result)) {
+			$id_modul = trim($row['id']);
+			$title_modul = trim($row['title']);
+			$modules .= "<option value='".$id_modul."'>".$title_modul."</option>";
+		}
+		// Добавлены пользователи USERAD
+		$sql3 = "select * from ".$prefix."_users_group where `group`!='rigion' and `group`!='config' and `group`!='obl'";
+		$result3 = $db->sql_query($sql3);
+		while ($row3 = $db->sql_fetchrow($result3)) {
+			$id = "1,".$row3['id'];
+			$title_group = $row3['group'];
+			$modules .= "<option value='".$id."'>Группа пользователей: ".$title_group."</option>";
+		}
+		// Добавлены пользователи USERAD
+		
+		echo "Редактирование поля</span></div>
+		<table class='w100 mw800'><tr valign='top'><td width='50%'>
+		<h2>Название поля<br>
+		<textarea class='big w100 h40 f16' name='title' rows='1' cols='10'>".$title."</textarea></h2>
+		</td><td>
+		<h2>Обращение (англ., без пробелов)<br>
+		<textarea class='big w100 h40 f16' name='namo' rows='1' cols='10'>".$name."</textarea></h2>
+		Используется в шаблонах для подключения вывода этого поля, пример: pole &rarr; [pole]
+		</td></tr><tr><td>
+		<h2>Принадлежит разделу:<br>
+		<select name='useit' class='w100'><option value='0'>все разделы</option><option value='".$useit."' selected>".$main_design_title."</option>".$modules."</select></h2>
+		<h2>№ папок:<br><input type='text' name='shablon' value='".$sha."'></h2>
+		</td><td>
+		<h2>Параметры поля:<br>
+		<textarea name='text' rows='1' cols='100' class='w100'>".$text."</textarea></h2>
+		</td></tr></table>";
 
 	} ############################### ЗАКРЫТИЕ ПОЛЕ
 
+
 	if ($type == "5") { ############################### ОТКРЫТИЕ БАЗА ДАННЫХ
-	echo "Редактирование базы данных (таблицы)</span>";
-	echo "</div>
-	<h2>Название:</h2><input type='text' name='title' value='".$title."' class='w100'>
-	<input type='hidden' name='namo' value='".$name."'>
-	<h2>Содержание базы данных</h2>
-	<textarea name=text rows=15 cols=40 class='w45 h200'>".$text."</textarea><br>
-	<p>Параметры разделяются знаком &, который нельзя использовать в параметрах.
+		echo "Редактирование базы данных (таблицы)</span>";
+		echo "</div>
+		<h2>Название:</h2><input type='text' name='title' value='".$title."' class='w100'>
+		<input type='hidden' name='namo' value='".$name."'>
+		<h2>Содержание базы данных</h2>
+		<textarea name=text rows=15 cols=40 class='w45 h200'>".$text."</textarea><br>
+		<p>Параметры разделяются знаком &, который нельзя использовать в параметрах.
 
-	<h2>Параметр type=</h2> Доступность на сайте (1 — доступен для вывода на сайте, 2 — доступен только администратору).
+		<h2>Параметр type=</h2> Доступность на сайте (1 — доступен для вывода на сайте, 2 — доступен только администратору).
 
-	<h2>Параметр message=</h2> Сообщение справа при добавлении информации в базу данных, можно использовать HTML.
+		<h2>Параметр message=</h2> Сообщение справа при добавлении информации в базу данных, можно использовать HTML.
 
-	<h2>Параметр del_stroka=</h2> Показывать кнопку удаления строки: 0 - показывать, 1 - не показывать. 
-	<h2>Параметр edit_stroka=</h2> Показывать кнопку редактирования строки: 0 - показывать, 1 - не показывать.
-	<h2>Параметр num_day_stroka=</h2> Максимальное количество строк, добавляемых за 1 день, 0 - без ограничений.
+		<h2>Параметр del_stroka=</h2> Показывать кнопку удаления строки: 0 - показывать, 1 - не показывать. 
+		<h2>Параметр edit_stroka=</h2> Показывать кнопку редактирования строки: 0 - показывать, 1 - не показывать.
+		<h2>Параметр num_day_stroka=</h2> Максимальное количество строк, добавляемых за 1 день, 0 - без ограничений.
 
-	<h2>Параметр options=</h2> Содержит поля и их настройки<br>
-	Разделитель полей: /!/ <br>
-	Разделитель настроек полей: #!# <br>
-	Формат полей: Англ название#!#Рус название#!#Тип данных#!#Важно#!#Видимость#!#Замена <br>
-	Тип данных: строка, строкабезвариантов, число, список, текст, дата, датавремя, фото, минифото, файл, ссылка<br>
-	Важно: 0 (не важно), 1 (основная категория), 2 (вторичная категория), 3 (обязательно заполнять), 4 (не важно и не печатать), 5 (пустая для печати), 6 (не важно, не печатать и не показывать), 7 (обязательно, не печатать и не показывать)<br>
-	Видимость: 0 (видно везде), 1 (не видно нигде), 2 (видно только на странице), 3 (видно только по паролю)<br>";
+		<h2>Параметр options=</h2> Содержит поля и их настройки<br>
+		Разделитель полей: /!/ <br>
+		Разделитель настроек полей: #!# <br>
+		Формат полей: Англ название#!#Рус название#!#Тип данных#!#Важно#!#Видимость#!#Замена <br>
+		Тип данных: строка, строкабезвариантов, число, список, текст, дата, датавремя, фото, минифото, файл, ссылка<br>
+		Важно: 0 (не важно), 1 (основная категория), 2 (вторичная категория), 3 (обязательно заполнять), 4 (не важно и не печатать), 5 (пустая для печати), 6 (не важно, не печатать и не показывать), 7 (обязательно, не печатать и не показывать)<br>
+		Видимость: 0 (видно везде), 1 (не видно нигде), 2 (видно только на странице), 3 (видно только по паролю)<br>";
 	} ############################### ЗАКРЫТИЕ БАЗА ДАННЫХ
 
 	if ($type == "6") { ############################### ОТКРЫТИЕ ШАБЛОН
-	echo "Редактирование шаблона</span>";
-	if (intval($nastroi) != 1) red_vybor();
-	echo "</div>
-	<table class='w100 mw800'><tr><td width=50%>
-	<h2>Название:</h2>
-	<textarea class='big w100 h40 f16' name='title' rows='1' cols='10'>".$title."</textarea>
-	</td><td>
-	<h2>Обращение (англ, без пробелов)</h2>
-	<textarea class='big w100 h40 f16' name='namo' rows='1' cols='10'>".$name."</textarea>
-	</td></tr><tr><td colspan=2>
-	".help_shablon()."
-	<h2>Содержание шаблона:</h2>";
-	redactor($red, $text, 'text'); // редактор: типа редактора, редактируемое поле
-	echo "</td></tr></table>";
+		echo "Редактирование шаблона</span>";
+		if (intval($nastroi) != 1) red_vybor();
+		echo "</div>
+		<table class='w100 mw800'><tr><td width=50%>
+		<h2>Название:</h2>
+		<textarea class='big w100 h40 f16' name='title' rows='1' cols='10'>".$title."</textarea>
+		</td><td>
+		<h2>Обращение (англ, без пробелов)</h2>
+		<textarea class='big w100 h40 f16' name='namo' rows='1' cols='10'>".$name."</textarea>
+		</td></tr><tr><td colspan=2>
+		".help_shablon()."
+		<h2>Содержание шаблона:</h2>";
+		redactor($red, $text, 'text'); // редактор: типа редактора, редактируемое поле
+		echo "</td></tr></table>";
 	} ############################### ЗАКРЫТИЕ ШАБЛОН
 	echo "</div></form>";
 }

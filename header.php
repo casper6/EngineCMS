@@ -1,11 +1,11 @@
 <?php
-	define('MODULE_FILE', true);
-  	session_start(); // Для капчи (проверочный код-картинка от спама) // проверить вызов
-	require_once("mainfile.php");
-	global $strelka, $siteurl, $prefix, $name, $db, $admin, $sitename, $pagetitle, $pagetitle2, $registr, $pogoda, $flash, $keywords, $description, $counter, $startdate, $adminmail, $keywords2, $description2, $stopcopy, $nocash, $blocks, $http_siteurl, $display_errors, $gallery_css3, $gallery_lightbox, $gallery_carusel, $gallery_sly;
-	$nocash = false;
-	$gallery_css3 = $gallery_lightbox = $gallery_carusel = $gallery_sly = $gallery_sly_full = false;
-	if ($name == "") $name = "index";
+// Всё, что вы накодите, может быть использовано против вас в багтрекере.
+define('MODULE_FILE', true);
+session_start(); // Для капчи (проверочный код-картинка от спама) // проверить вызов
+require_once("mainfile.php");
+global $strelka, $siteurl, $prefix, $name, $db, $admin, $sitename, $pagetitle, $pagetitle2, $registr, $pogoda, $flash, $keywords, $description, $counter, $startdate, $adminmail, $keywords2, $description2, $stopcopy, $nocash, $blocks, $http_siteurl, $display_errors, $gallery_css3, $gallery_lightbox, $gallery_carusel, $gallery_sly;
+$nocash = $gallery_css3 = $gallery_lightbox = $gallery_carusel = $gallery_sly = $gallery_sly_full = false;
+if ($name == "") $name = "index";
 
 if ($name=="-email") { // занесение мыла как скрытого комментария Убрать !!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	global $DBName, $prefix, $db, $now, $ip;
@@ -960,6 +960,7 @@ case "9": # Блок мини-фото - экстрактор предописа
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 case "10": # Блок меню
 	global $siteurl, $url, $re_menu, $class;
+
 		$url1 = $url;
 		if ($url1 == "") $url1 = "/";
 		$url1 = str_replace("http://".$siteurl,"",$url1);
@@ -968,23 +969,24 @@ case "10": # Блок меню
 		$url3 = str_replace("/","",$url1);
 		$url2 = explode("_",$url1);
 		$url2 = $url2[0];
+		$url4 = str_replace("/","",$url2);
 
 		$lvl_open = "<ul>";
 		$lvl_close = "</ul>";
 		$el_open = "<li>";
 		$el_close = "</li>";
-		$url_open = '<a class="li1menu_link" href="';
-		$url_close1 = '">';
+		$url_open = "<a class='li1menu_link' href='";
+		$url_close1 = "'>";
 		$url_close2 = "</a>";
 		if ($menu == "1") {
-			$el_open = "<td align=center>";
+			$el_open = "<td align='center'>";
 			$el_close = "</td>";
-			$url_open = '<a class="table1menu_link" href="';
-			$url_close1 = '"><div class="li2menu_div">';
+			$url_open = "<a class='table1menu_link' href='";
+			$url_close1 = "'><div class='li2menu_div'>";
 			$url_close2 = "</div></a>";
 		} elseif ($menu == "2") {
-			$lvl_open = '<ul class="ul_tree">';
-			$url_open = '<a class="li2menu_link" href="';
+			$lvl_open = "<ul class='ul_tree'>";
+			$url_open = "<a class='li2menu_link' href='";
 		}
 
 	if ($re_menu != "1" && $re_menu != "0") {
@@ -1031,19 +1033,38 @@ case "10": # Блок меню
 		$tr = array(aa("[уровень открыть]")=>$lvl_open,aa("[уровень закрыть]")=>$lvl_close,aa("[элемент открыть]")=>$el_open,aa("[элемент закрыть]")=>$el_close,"[url="=>$url_open,"[/url]"=>$url_close2,"]"=>$url_close1);
 		$textXX = strtr($textX,$tr);
 		//if ($url != "/") {
-			$textXX = str_replace("' href=".$url1.">", " mainmenu_open' href=".$url1.">", $textXX);
-			$textXX = str_replace("<li><a class='li1menu_link mainmenu_open' href=".$url1.">", "<li class='li_mainmenu_open'><a class='li1menu_link mainmenu_open' href=".$url1.">", $textXX);
+			$textXX = str_replace("' href='".$url1."'>", " mainmenu_open' href='".$url1."'>", $textXX);
+			$textXX = str_replace("<li><a class='li1menu_link mainmenu_open' href='".$url1."'>", "<li class='li_mainmenu_open'><a class='li1menu_link mainmenu_open' href='".$url1."'>", $textXX);
+			$textXX = str_replace("' href='".$url2."'>", " mainmenu_open' href='".$url2."'>", $textXX);
+			$textXX = str_replace("<li><a class='li1menu_link mainmenu_open' href='".$url2."'>", "<li class='li_mainmenu_open'><a class='li1menu_link mainmenu_open' href='".$url2."'>", $textXX);
+			$textXX = str_replace("' href='".$url4."'>", " mainmenu_open' href='".$url4."'>", $textXX);
+			$textXX = str_replace("<li><a class='li1menu_link mainmenu_open' href='".$url4."'>", "<li class='li_mainmenu_open'><a class='li1menu_link mainmenu_open' href='".$url4."'>", $textXX);
+			// основной вариант -имя_cat_№
+			$textXX = str_replace("' href='".$url3."'>", " mainmenu_open' href='".$url3."'>", $textXX);
+			$textXX = str_replace("<li><a class='li1menu_link mainmenu_open' href='".$url3."'>", "<li class='li_mainmenu_open'><a class='li1menu_link mainmenu_open' href='".$url3."'>", $textXX);
 
-			$textXX = str_replace("' href=".$url2.">", " mainmenu_open' href=".$url2.">", $textXX);
-			$textXX = str_replace("<li><a class='li1menu_link mainmenu_open' href=".$url2.">", "<li class='li_mainmenu_open'><a class='li1menu_link mainmenu_open' href=".$url2.">", $textXX);
-
-			$textXX = str_replace("' href=".$url3.">", " mainmenu_open' href=".$url3.">", $textXX);
-			$textXX = str_replace("<li><a class='li1menu_link mainmenu_open' href=".$url3.">", "<li class='li_mainmenu_open'><a class='li1menu_link mainmenu_open' href=".$url3.">", $textXX);
+			if (strpos($url3, "_page_")) // если открыта страница
+				if (strpos($textXX, "' href='".$url3."'>")) { // если в меню есть на нее ссылка
+					// узнаем номер страницы
+					$url3_pid = explode("_page_", $url3);
+					$url3_pid = $url3_pid[1];
+					// узнаем номер папки этой страницы
+					$sql = "SELECT `cid` from ".$prefix."_pages where `pid`='".$url3_pid."' limit 1";
+					$result = $db->sql_query($sql);
+					$papki = $title = $par = array();
+					$row = $db->sql_fetchrow($result);
+					$num_cat = $row['cid'];
+					// выделим пункт меню папки этой страницы
+					$textXX = str_replace("' href='".$url2."_cat_".$num_cat."'>", " mainmenu_open' href='".$url2."_cat_".$num_cat."'>", $textXX);
+					$textXX = str_replace("<li><a class='li1menu_link mainmenu_open' href='".$url2."_cat_".$num_cat."'>", "<li class='li_mainmenu_open'><a class='li1menu_link mainmenu_open' href='".$url2."_cat_".$num_cat."'>", $textXX);
+					$textXX = str_replace("' href='".$url4."_cat_".$num_cat."'>", " mainmenu_open' href='".$url4."_cat_".$num_cat."'>", $textXX);
+					$textXX = str_replace("<li><a class='li1menu_link mainmenu_open' href='".$url4."_cat_".$num_cat."'>", "<li class='li_mainmenu_open'><a class='li1menu_link mainmenu_open' href='".$url4."_cat_".$num_cat."'>", $textXX);
+				}
 
 			$textXX = str_replace("mainmenu_open mainmenu_open", "mainmenu_open", $textXX);
 	}
 			if ($menu == 7 or $menu == 8 or $menu == 9) $textXX = str_replace("<li class='li_mainmenu_open'><a class='li1menu_link mainmenu_open' href='/'>", "<li class='current'><a href='/'>", $textXX);
-			else $textXX = str_replace("<li><a class='li1menu_link' href='/'>", "<li class='li_mainmenu_open'><a class='li1menu_link mainmenu_open' href='/'>", $textXX);
+			elseif ($url == "-index") $textXX = str_replace("<li><a class='li1menu_link' href='/'>", "<li class='li_mainmenu_open'><a class='li1menu_link mainmenu_open' href='/'>", $textXX);
 	switch ($menu) {
 		case "0": // гор влево 3 уровня
 			$class_menu = "menu-h-d"; break;
@@ -1060,9 +1081,9 @@ case "10": # Блок меню
 				$tr = array(aa("[элемент открыть]")=>$el_open,aa("[элемент закрыть]")=>$el_close,"[/url]"=>$url_close2,"[url="=>$url_open,"]"=>$url_close1); // без 3 уровней!
 				$textXX = strtr($textX,$tr);
 			}
-			$textXX = str_replace("' href=\"".$url1."\">", " mainmenu_open' href=\"".$url1."\" >", $textXX);
-			$textXX = str_replace("' href=\"".$url2."\">", " mainmenu_open' href=\"".$url2."\" >", $textXX);
-			$textXX = str_replace("' href=\"".$url3."\">", " mainmenu_open' href=\"".$url3."\" >", $textXX);
+			$textXX = str_replace("' href='".$url1."'>", " mainmenu_open' href='".$url1."'>", $textXX);
+			$textXX = str_replace("' href='".$url2."'>", " mainmenu_open' href='".$url2."'>", $textXX);
+			$textXX = str_replace("' href='".$url3."'>", " mainmenu_open' href='".$url3."'>", $textXX);
 			if ($class != "") $class_menu = $class; else $class_menu = "table1menu";
 			$textXX = "<table class='".$class_menu."' width=100% cellspacing=0 cellpadding=0><tr valign=bottom>".$textXX."</tr></table>";
 		break;
@@ -1071,9 +1092,9 @@ case "10": # Блок меню
 				$tr = array(aa("[уровень открыть]")=>$lvl_open,aa("[уровень закрыть]")=>$lvl_close,aa("[элемент открыть]")=>$el_open,aa("[элемент закрыть]")=>$el_close, "[/url]"=>$url_close2,"[url="=>$url_open,"]"=>$url_close1); // без 3 уровней!
 				$textXX = strtr($textX,$tr);
 			}
-			$textXX = str_replace("<li><a class=li2menu_link href=\"".$url1."\">", "<li class=li_openlink><a class=li2menu_openlink href=\"".$url1."\">", $textXX);
-			$textXX = str_replace("<li><a class=li2menu_link href=\"".$url2."\">", "<li class=li_openlink><a class=li2menu_openlink href=\"".$url2."\">", $textXX);
-			$textXX = str_replace("<li><a class=li2menu_link href=\"".$url3."\">", "<li class=li_openlink><a class=li2menu_openlink href=\"".$url3."\">", $textXX);
+			$textXX = str_replace("<li><a class='li2menu_link' href='".$url1."'>", "<li class='li_openlink'><a class='li2menu_openlink' href='".$url1."'>", $textXX);
+			$textXX = str_replace("<li><a class='li2menu_link' href='".$url2."'>", "<li class='li_openlink'><a class='li2menu_openlink' href='".$url2."'>", $textXX);
+			$textXX = str_replace("<li><a class='li2menu_link' href='".$url3."'>", "<li class='li_openlink'><a class='li2menu_openlink' href='".$url3."'>", $textXX);
 			if ($class != "") $class_menu = $class; else $class_menu = "suckerdiv";
 			$textXX = "<div class='".$class_menu."'><ul id='suckertree1'>".$textXX."</ul></div>";
 		break;
@@ -1084,7 +1105,7 @@ case "10": # Блок меню
 		case "9": // KickStart горизонтальное 3 уровня (слева)
 			$class_menu = "menu"; break;
 	}
-	if ($class != "") $class_menu = $class;
+	if ($class != "") $class_menu = $class; 
 	if ($menu != "1" and $menu != "2") $textXX = "<ul id='menu' class='".$class_menu."'>".$textXX."</ul>";
 	$block = str_replace("[".$titleX."]", $design_open.$textXX.$design_close, $block);
 	$type = ""; break;
