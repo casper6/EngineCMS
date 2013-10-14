@@ -1,5 +1,5 @@
 <?php
-$ver = '1.17'; // Версия EngineCMS
+$ver = '1.17'; // Версия CMS «ДвижОк»
 header ("Content-Type: text/html; charset=utf-8");
 // Получение списка БД
 if (isset($_REQUEST['db'])) {
@@ -7,11 +7,11 @@ if (isset($_REQUEST['db'])) {
 	$dbuname = $_REQUEST['dbuname'];
 	$dbpass = $_REQUEST['dbpass'];
 	if (!mysql_connect($dbhost, $dbuname, $dbpass)) {
-		echo "Ошибка доступа к БД. Неправильно введены хост, пользователь или пароль."; exit;
+		echo "Ошибка доступа. Неправильно введены сервер, пользователь или пароль."; exit;
 	} else {
 		$q = mysql_query("SHOW DATABASES;");
 		// Добавить проверку кол-ва таблиц в БД для вывода подходящей БД
-		echo "<select name='dbname'>";
+		echo "<li><strong>Имя базы данных</strong><br><select name='dbname' style='width:100%;'>";
 		while ($row = mysql_fetch_assoc($q)) {
 		    if ($row['Database'] != 'information_schema' &&
 		    	$row['Database'] != 'mysql' &&
@@ -24,7 +24,7 @@ if (isset($_REQUEST['db'])) {
 }
 
 // Проверка наличия файла config.php
-if (file_exists("config.php")) die("<h3>Найдена установленная EngineCMS</h3><li>Если вы только что её установили – удалите каталог install в корне сайта на сервере – после этого сайт заработает.<li>Если по какой-то другой причине в корне сайта оказался файл config.php, CMS еще не установлена и вы запустили её установку (или вы решили переустановить CMS) — удалите файл config.php в корне сайта и обновите эту страницу (нажав F5).");
+if (file_exists("config.php")) die("<h3>Найдена установленная CMS «ДвижОк»</h3><li>Если вы только что её установили – удалите каталог install в корне сайта на сервере – после этого сайт заработает.<li>Если по какой-то другой причине в корне сайта оказался файл config.php, CMS еще не установлена и вы запустили её установку (или вы решили переустановить CMS) — удалите файл config.php в корне сайта и обновите эту страницу (нажав F5).");
 	// <li>Если данный сайт создан ранее — вы можете <a href=#>обновить базу данных</a> до новой версии.
 
 // Запуск установки ====================
@@ -44,15 +44,43 @@ if (isset($_REQUEST['ipban'])) {
 	$a = $_REQUEST['a'];
 	$pass = md5($_REQUEST['pass']);
 	$email = $_REQUEST['email'];
-	$siteurl = $_REQUEST['siteurl'];
 	$table_delete = $_REQUEST['table_delete'];
+
+	$siteurl = str_replace("www.", "", $_SERVER["HTTP_HOST"]);
+	if ($siteurl == "") $siteurl = "localhost";
+
+	// пуниконвертер
+	require_once('idna_convert.class.php');
+	$idn = new idna_convert(array('idn_version'=>2008));
+	$punycode = $idn->decode(stripslashes($siteurl));
+	//$punycode = (stripos($punycode, 'xn--')!==false) ? $idn->decode($punycode) : $idn->encode($punycode);
 
 	// Доп. настройки для разных типов сайтов
 	if ($type == 'company') {}
 	if ($type == 'shop') {}
 	if ($type == 'blog') {}
 	if ($type == 'group') {}
-
+?>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Установка CMS «ДвижОк»</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<link rel="stylesheet" href="../includes/css-frameworks/skeleton/base.css">
+	<link rel="stylesheet" href="../includes/css-frameworks/skeleton/skeleton.css">
+	<link rel="stylesheet" href="../includes/css-frameworks/skeleton/layout.css">
+	<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js'></script>
+	<!--[if lt IE 9]>
+		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link rel="shortcut icon" href="../images/favicon_cms.png">
+	<style>
+	input {width:100%;}
+	</style>
+</head>
+<body style="background:url('images/adfon/21.png')">
+	<div class="del">
+<?
 	echo "Началась установка.<br>";
 	// Проверка БД
 	$db = mysql_connect ($dbhost, $dbuname, $dbpass) or die("Не выбрана база данных! ".mysql_error());
@@ -61,7 +89,7 @@ if (isset($_REQUEST['ipban'])) {
 	// Создание config.php
 	$conf = '<?php
 ##############################################
-## EngineCMS (Content Management System)    ##
+## CMS «ДвижОк» (Content Management System)    ##
 ## Распространяется по лицензии.	        ##
 ## 2006-2013 © Влад Мерк, г. Самара         ##
 ## 13i@list.ru | http://hotel-s.ru          ##
@@ -75,8 +103,9 @@ $dbname 			= "'.$dbname.'"; # Имя базы данных
 $prefix 			= "'.$prefix.'"; # Префикс базы данных
 $dbtype 			= "MySQL"; 	# Тип базы данных - MySQL, остальные (mysql4, postgres, mssql, oracle, msaccess, db2, mssql-odbc) недоступны
 ################### НАСТРОЙКИ
-$siteurl 			= "'.$siteurl.'"; # Пример: ilost.ru или it.ilost.ru (домены третьего уровня использовать можно, папки — нельзя!)
-// Для русскоязычных адресов использовать пуни-код (конвертер — http://r01.ru/domain/whois/instruments/converter.php)
+$siteurl			= "'.$punycode.'"; # Пример: xn--h1alffa9f.xn--p1ai или it.ilost.ru
+$realurl			= "'.$siteurl.'"; # Пример: россия.рф или it.ilost.ru
+// Для русскоязычных адресов использован пуни-конвертер — http://r01.ru/domain/whois/instruments/converter.php
 $lang_admin			= "'.$lang_admin.'"; // Язык администрирования
 $lang 				= "'.$lang.'"; // Язык сайта
 $display_errors 	= false; # Отладочная опция - показ ошибок (и запросов к БД и их количества) = true
@@ -158,6 +187,7 @@ if (stristr(htmlentities($_SERVER[\'PHP_SELF\']), "config.php")) { Header("Locat
 	    return $ok; 
 	} //function copy_safe
 
+	unlink('config.php');
 	if (!file_put_contents('config.php', $conf, LOCK_EX)) die('<li>Файл config.php в корне сайта не перезаписан! Попробуйте его удалить и перезапустить установку CMS.');
 	echo "<li>Файл config.php настроен";
 
@@ -270,11 +300,28 @@ if (stristr(htmlentities($_SERVER[\'PHP_SELF\']), "config.php")) { Header("Locat
 	echo "<li>Права администратора установлены";
 
 	// Отправка email админу
+	$siteurl = str_replace("www.", "", $_SERVER["HTTP_HOST"]);
+	if ($siteurl == "") $siteurl = "localhost";
+
 	if ($email != "") mail($email, '=?koi8-r?B?'.base64_encode(convert_cyr_string($a.", пароль для сайта ".$siteurl, "w","k")).'?=', "<h3>Здравствуйте, ".$a."!</h3><b>Вы создали сайт ".$siteurl."</b><br>Ваш псевдоним для входа в администрирование: ".$a."<br>Пароль: ".$pass."<br>Для входа в администрирование, перейдите на сайт по <a href='http://".$siteurl."/red'>ссылке</a>, введите псевдоним и пароль и нажмите «Войти».<br><br><br><br>Отвечать на это письмо не нужно - оно было создано сайтом автоматически.", "Content-Type: text/html; charset=utf-8\r\nFrom: ".$email."\r\n");
 
 	// Переход в админку
-	echo "<h1>Установка успешно завершилась. Удалите папку install</h1>
-	<a href=sys.php>Перейти в Администрирование сайта</a>";
+	removeDirectory('install');
+	rmdir('install');
+	echo "</div>
+	<style>.del {display:none;}</style>
+	<div class=\"container\" style=\"background:url('images/fon.png');\">
+	<h1>Установка успешно завершилась.</h1>
+	<p>Папка «install» удалена.</p>
+	<h4><ul>
+	<li><a target='_blank' href='/'>Перейти на сайт</a><br>
+	<li>Перед началом работ над сайтом <strong>обязательно</strong> откройте и сохраните <a target='_blank' href='sys.php?op=options'>Настройки</a>!
+	<li><a target='_blank' href='red'>Перейти в Администрирование сайта</a> — http://".$_SERVER["HTTP_HOST"]."/red
+	</ul></h4>
+	<p>Минимальная документация встроена в CMS (кнопка «Помощь» в Администрировании и подсказки).<br>Если её недостаточно — пишите на <a href='mailto:13i@list.ru'><strong>13i@list.ru</strong></a> или стучитесь в skype <a href='skype:angel13i?add'><strong>angel13i</strong></a> — вы получите ответы на все вопросы, после чего встроенная помощь будет расширена и дополнена. Также принимаются предложения и пожелания.
+	</div>
+	</body>
+	</html>";
 	die;
 }
 
@@ -283,8 +330,15 @@ if (stristr(htmlentities($_SERVER[\'PHP_SELF\']), "config.php")) { Header("Locat
 $phpversion = preg_replace('/[a-z-]/', '', phpversion());
 if ($phpversion{0}<4) die ('Версия PHP ниже плинтуса. Где же ты нарыл такое старьё?! 0_о');
 if ($phpversion{0}==4) die ('Версия PHP — 4. Попросите хостинг-компанию установить PHP как минимум версии 5.2.1');
-$siteurl = str_replace("www.", "", $_SERVER["HTTP_HOST"]);
-if ($siteurl == "") $siteurl = "localhost";
+
+function removeDirectory($dir) { // Удаляем папку с файлами (install)
+    if ($objs = glob($dir."/*")) {
+       foreach($objs as $obj) {
+         is_dir($obj) ? removeDirectory($obj) : unlink($obj);
+       }
+    }
+    rmdir($dir);
+  }
 
 function generate_password($number) {  // Генерируем пароль
     $arr = array('a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','r','s','t','u','v','x','y','z','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','R','S','T','U','V','X','Y','Z','1','2','3','4','5','6','7','8','9','0');
@@ -347,7 +401,7 @@ $languages = array("Albanian"=>"sq",
 "Vietnamese"=>"vi");
 ?>
 <!DOCTYPE html>
-<? $lang_install = "en"; 
+<? $lang_install = "en";
 if (isset($_REQUEST['lang_admin'])) $lang_install = $_REQUEST['lang_admin']; ?>
 <!--[if lt IE 7 ]><html class="ie ie6" lang="<? echo $lang_install; ?>"> <![endif]-->
 <!--[if IE 7 ]><html class="ie ie7" lang="<? echo $lang_install; ?>"> <![endif]-->
@@ -355,7 +409,7 @@ if (isset($_REQUEST['lang_admin'])) $lang_install = $_REQUEST['lang_admin']; ?>
 <!--[if (gte IE 9)|!(IE)]><!--><html lang="<? echo $lang_install; ?>"> <!--<![endif]-->
 <head>
 	<meta charset="utf-8">
-	<title>Установка EngineCMS</title>
+	<title>Установка CMS «ДвижОк»</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 	<link rel="stylesheet" href="../includes/css-frameworks/skeleton/base.css">
 	<link rel="stylesheet" href="../includes/css-frameworks/skeleton/skeleton.css">
@@ -370,11 +424,20 @@ if (isset($_REQUEST['lang_admin'])) $lang_install = $_REQUEST['lang_admin']; ?>
 	</style>
 </head>
 <body style="background:url('images/adfon/21.png')">
-<? if (!isset($_REQUEST['lang'])) { ?>
+<? 
+if (!isset($_REQUEST['lang'])) {
+	$siteurl = str_replace("www.", "", $_SERVER["HTTP_HOST"]);
+	if ($siteurl == "") $siteurl = "localhost";
+	if ($_SERVER["REQUEST_URI"] == "/install/") { echo '<meta http-equiv="refresh" content="0; url=http://'.$siteurl.'">'; exit; }
+	if ($_SERVER["REQUEST_URI"] != "/") { 
+		echo '<div class="container" style="background:url(\'images/fon.png\'); z-index:10; margin: auto; top:0;"><h1>Устанавливать в некорневую папку нельзя.</h1><h3>Вы можете установить CMS «ДвижОк» в корневую папку домена второго/третьего уровня на хостинге или локальном сервере.</h3></div>'; 
+		die(); 
+	}
+?>
 <form>
 	<div class="container" style="background:url('images/fon.png'); z-index:10; margin: auto; top:0;">
 		<div class="sixteen columns" style="background:url('install/world.png') no-repeat 360px 50px; min-height:155px;">
-			<h1 class="remove-bottom" style="margin-top: 40px">EngineCMS Install</h1>
+			<h1 class="remove-bottom" style="margin-top: 40px">CMS «ДвижОк» Install</h1>
 			<h5 style="margin-bottom:30px;"><? echo $ver; ?></h5>
 
 			<img src="install/users.png" style="float:left; margin-right:10px;"> 
@@ -402,30 +465,31 @@ if (isset($_REQUEST['lang_admin'])) $lang_install = $_REQUEST['lang_admin']; ?>
 	$lang = $_REQUEST['lang'];
 	$lang_admin = $_REQUEST['lang_admin'];
 	// Подключение перевода
-	
 
+	
 	?>
 <form>
 	<input type="hidden" name="lang" value="<? echo $lang; ?>">
 	<input type="hidden" name="lang_admin" value="<? echo $lang_admin; ?>">
 	<div class="container" style="background:url('images/fon.png');">
 		<div class="sixteen columns" style="background:url('install/logo.png') no-repeat right 5px; min-height:155px;">
-			<h1 class="remove-bottom" style="margin-top: 40px">Установка EngineCMS</h1>
+			<h1 class="remove-bottom" style="margin-top: 40px">Установка CMS «ДвижОк»</h1>
 			<h5>Версия <? echo $ver; ?></h5>
 		</div>
 		<div class="one-third column">
 			<h3>1. База данных</h3>
 			<ul class="square">
-				<li><strong>Хост базы данных MySQL</strong> (сервер):<br><input id="dbhost" name="dbhost" value="localhost"></li>
-				<li><strong>Имя пользователя базы данных</strong>:<br><input id="dbuname" name="dbuname" value="root"></li>
-				<li><strong>Пароль пользователя базы данных</strong>:<br><input id="dbpass" name="dbpass" value="<? echo $pass_bd; ?>"></li>
-				<li><strong>Имя базы данных</strong>: <strong><a onclick='x=$("#dbhost").val(); b=$("#dbuname").val(); c=$("#dbpass").val(); $.ajax({ url: "index.php?db=" + x + "&dbuname=" + b + "&dbpass=" + c, cache: false, dataType: "html", beforeSend: function(){ $("#db").html("Загрузка..."); }, success: function(data) { $("#db").html(data); } });' style='color:darkgreen; cursor:pointer; text-decoration:none; border-bottom:1px dashed green;'>! Получить имя !</a></strong><br><div id='db'></div></li>
-				<li><a onclick='$("#prefix_show").toggle();' style='color:darkgreen; cursor:pointer; text-decoration:none; border-bottom:1px dashed green;'>Префикс таблиц</a>:<div id='prefix_show' style='display:none'><input name="prefix" value="dvizhok"><br>Если на хостинге один сайт или на каждый сайт есть своя база данных, префикс менять необязательно.</div></li>
-				<li><strong>Если таблицы уже существуют</strong>:<br><select name="table_delete"><option value="true">Удалять</option><option value="false" selected>Не удалять, сообщить об этом</option></select></li>
+				<li><strong>Сервер MySQL</strong> (host)<br><input id="dbhost" name="dbhost" value="localhost"></li>
+				<li><strong>Имя пользователя</strong><br><input id="dbuname" name="dbuname" value="root"></li>
+				<li><strong>Пароль пользователя</strong><br><input id="dbpass" name="dbpass" value="<? echo $pass_bd; ?>"></li>
+				<a id='dbname_show' onclick='x=$("#dbhost").val(); b=$("#dbuname").val(); c=$("#dbpass").val(); $.ajax({ url: "index.php?db=" + x + "&dbuname=" + b + "&dbpass=" + c, cache: false, dataType: "html", beforeSend: function(){ $("#db").html("Загрузка..."); }, success: function(data) { $("#db").html(data); if (data != "Ошибка доступа. Неправильно введены сервер, пользователь или пароль.") { $("#column2").show(); $("#column3").show(); $("#li1").show(); $("#li2").show(); $("#dbname_show").hide(); } } });' class='button'><h4>Определить имя базы данных</h4></a><div id='db'></div></li>
+				
+				<li id="li1" style="display:none;"><a onclick='$("#prefix_show").toggle();' style='color:darkgreen; cursor:pointer; text-decoration:none; border-bottom:1px dashed green;'>Префикс таблиц</a> (необязательно)<div id='prefix_show' style='display:none'><input name="prefix" value="dvizhok"><br>Если на хостинге один сайт или на каждый сайт есть своя база данных, префикс менять необязательно.</div></li>
+				<li id="li2" style="display:none;"><select name="table_delete" style="width:100%;"><option value="true">Удалить существующие таблицы</option><option value="false" selected>Не удалять, если таблицы созданы</option></select></li>
 			</ul>
 		</div>
-		<div class="one-third column">
-			<h3>2. Настройки</h3>
+		<div class="one-third column" id="column2" style="display:none;">
+			<h3>2. Администратор</h3>
 			<ul class="square">
 		<script>
 			$(document).ready(function(){
@@ -450,63 +514,62 @@ if (isset($_REQUEST['lang_admin'])) $lang_install = $_REQUEST['lang_admin']; ?>
 				});
 			});	
 		</script>
-				<li><strong>Адрес сайта</strong>:<br><input name="siteurl" value="<? echo $siteurl; ?>"></li>
-			
-				<li><strong>Псевдоним администратора</strong>:<br><input name="a" value="admin"></li>
-				<li><strong>Email администратора сайта</strong>:<br><input name="email" id="mail" value=""><span id="valid"></span></li>
-				<li><strong>Пароль администратора сайта</strong>:<br><input name="pass" value="<? echo $pass; ?>"><br>
+				<li><strong>Электронная почта</strong><br><input name="email" id="mail" value=""><span id="valid"></span></li>
+				<li><strong>Псевдоним (логин)</strong><br><input name="a" value="admin"></li>
+				<li><strong>Пароль</strong><br><input name="pass" value="<? echo $pass; ?>"><br>
 					Будет отправлен на указанный email</li>
 				<li id='all_show'><a onclick='$("#blo_show").show();$("#cash_show").show();$("#all_show").hide();' style='color:darkgreen; cursor:pointer; text-decoration:none; border-bottom:1px dashed green;'>IP-блокировка и кеш отключены</a></li>
-				<li id='blo_show' style='display:none'><strong>Блокировка по IP-адресу</strong>:<br><select name="ipban"><option value="true">Включить</option><option value="false" selected>Отключить</option></select></li>
-				<li id='cash_show' style='display:none'><strong>Кеширование страниц сайта</strong>:<br><select name="site_cash"><option value="false">Отключено</option><option value="file">в файлы</option><option value="base">в базу данных</option></select></li>
+				<li id='blo_show' style='display:none'><strong>Блокировка по IP-адресу</strong>:<br><select style="width:100%;" name="ipban"><option value="true">Включить</option><option value="false" selected>Отключить</option></select></li>
+				<li id='cash_show' style='display:none'><strong>Кеширование страниц сайта</strong>:<br><select style="width:100%;" name="site_cash"><option value="false">Отключено</option><option value="file">в файлы</option><option value="base">в базу данных</option></select></li>
 			</ul>
 			
 		</div>
-		<div class="one-third column">
+		<div class="one-third column" id="column3" style="display:none;">
 			<h3>3. Дизайн</h3>
 			<p>Готовый дизайн служит для освоения «Движка» или быстрой разработки сайтов.
-			<select id=design_skin name="design" onchange="x='1';
+			<select size="2" id="design_skin" name="design" style="width:100%;" onchange="x='1';
 			if ( $('#design_skin :selected').val() != 0 ) 
 				$('#design').html('<a target=\'_blank\' title=\'Увеличить (откроется в новом окне)\' href=\'install/themes/' + $('#design_skin :selected').val() + '.jpg\'><img src=\'install/themes/' + $('#design_skin :selected').val() + '.jpg\' height=250></a>');
 			else 
 				$('#design').html('');">
-				<option value="0">Выбирать необязательно ↓</option>
-				<option value="1">Дизайн №1: Универсальный</option>
+				<option value="0">без дизайна (для вставки верстки)</option>
+				<option value="1" selected>Дизайн «Тестовый»</option>
 			</select>
 			<!-- стрелки выбора дизайна < > <a target='_blank' href='design_1.jpg'><img src='design_1.jpg' height=190></a> -->
 			<div id='design'></div>
 
 			<h3>4. Разделы</h3>
-			<select id='type' name="type" onchange="x='';
+			<select id='type' name="type" style="width:100%;" onchange="x='';
 			if ( $('#type :selected').val() == 'company') x='Главная\nУслуги\nО компании\nПроизводство\nПродукты\nНовости\nАкции\nСкидки\nМагазины\nПрайс-лист\nКаталог\nФраншиза\nДилерство\nГалерея\nСотрудничество\nВакансии\nОставить заявку\nНапишите нам\nСтатьи\nСоветы\nОтзывы\nКонтакты';
 			if ($('#type :selected').val() == 'shop') x='О магазине\nТовары\nПрайс-лист\nБренды\nНовости\nАкции\nСкидки\nСпецпредложения\nГарантия\nОплата\nДоставка\nПартнеры\nСотрудничество\nВакансии\nОтзывы клиентов\nКонтакты';
 			if ($('#type :selected').val() == 'blog') x='О сайте\nОбо мне\nИнтересно\nЯ читаю\nЯ пишу\nЯ смотрю\nЯ слушаю\nБлог\nСтатьи\nЗаметки\nПортфолио\nДрузья\nФото\nВидео\nМузыка\nБиблиотека\nСвязаться со мной\nОт автора';
 			if ($('#type :selected').val() == 'group') x='О нас\nСообщество\nРаботы участников\nКурсы\nСобытия\nОбщение\nТворчество\nСотрудничество\nНаш блог\nКонтакты';
 			$('#razdel').val(x);
-			if ( $('#type :selected').val() == '') $('#razdel_show').hide(); else $('#razdel_show').show(); ">
-				<option value="">Добавлю разделы позже</option>
-				<option value="company">Тип сайта: Компания / Организация</option>
-				<option value="shop">Тип сайта: Магазин / Каталог</option>
-				<option value="blog">Тип сайта: Личный сайт / Блог</option>
-				<option value="group">Тип сайта: Сообщество / Группа</option>
+			if ( $('#type :selected').val() == '') $('#razdel_show').hide();
+			else { $('#razdel_show').show(); $('#submit').show(); $('#type option:first').attr('disabled', 'disabled'); } ">
+				<option value="">Выберите тип сайта ↓</option>
+				<option value="company">Компания / Организация</option>
+				<option value="shop">Магазин / Каталог</option>
+				<option value="blog">Личный сайт / Блог</option>
+				<option value="group">Сообщество / Группа</option>
 			</select>
 			<div id='razdel_show' style='display:none'>
 				<strong style='color:darkred'>Удалите/дополните разделы</strong> ниже.
-				<br>Или напишите имена разделов в столбик, разделяя их нажатием Enter.<br>
-				<em>Адреса разделов будут созданы автоматически или их можно написать сразу после названия раздела, отделив символом «|», например: О нас|about</em><textarea id='razdel' name='razdel' rows=9 style='width:100%;'></textarea>
+				<br>Их адреса будут созданы <a onclick='$("#auto_show").toggle();' style='color:darkgreen; cursor:pointer; text-decoration:none; border-bottom:1px dashed green;'>автоматически</a><br>
+				<span id='auto_show' style='display:none'>
+				или их можно написать сразу после названия раздела, отделив символом «|», например: О нас|about</span>
+				<textarea id='razdel' name='razdel' rows='9' style='width:100%;'></textarea>
 			</div>
 		</div>
 
 		<div class="column">
-			<button type="submit" id="submit" style="float:right; margin-left: 30px"><h3>Установить →</h3></button>
-
-			<p>Документация встроена в CMS. Если её недостаточно — пишите на <a href="mailto:13i@list.ru"><strong>13i@list.ru</strong></a> или стучитесь в skype <a href="skype:angel13i?add"><strong>angel13i</strong></a> — вы получите ответы на все вопросы, после чего встроенная помощь будет расширена и дополнена. Также принимаются предложения и пожелания.<hr>
-				
+			<button type="submit" id="submit" style="float:right; margin-left: 30px; display:none;"><h3>Установить →</h3></button>
+			<hr>
 			<?
 			if ($phpversion{0}==5 && $phpversion{2}<2) echo "<p><b style='color:red;'>Версия PHP — 5.".$phpversion{2}.". Рекомендуется использовать PHP как минимум версии 5.2.1";
-			if ( ( $phpversion{0}==5 && $phpversion{2}>3 ) || $phpversion{0}>5) echo "<p style='color:red;'>Версия PHP — 5.".$phpversion{2}.".<br>На 5.4 (и выше) CMS полноценно не тестировалась — вы можете попробовать и передать разработчику все возникшие ошибки или замечания.";
+			if ( ( $phpversion{0}==5 && $phpversion{2}>3 ) || $phpversion{0}>5) echo "<p style='color:red;'>На версии PHP 5.4 (и выше) CMS не тестировалась — вы можете сообщить разработчику обо всех ошибках на почту 13i@list.ru";
 			if (!function_exists('curl_init')) echo "<p style='color:red;'>Желательно включить поддержку cURL на вашем хостинге.";
-			if (!extension_loaded('imagick') || !class_exists("Imagick")) echo "<p style='color:red;'>Библиотека Imagick не установлена – вам придется самостоятельно уменьшать размер больших фотографий (полученных фотоаппаратом) перед вставкой в редактор. Советуем перейти на другой хостинг с поддержкой этой библиотеки или договориться с текущим хостингом о её подключении.";
+			if (!extension_loaded('imagick') || !class_exists("Imagick")) echo "<p style='color:red;'>Библиотека Imagick не установлена – придется  уменьшать размер больших фотографий (более 1000 пикселей по ширине) перед вставкой в редактор. Советуем перейти на другой хостинг с поддержкой этой библиотеки или договориться с текущим хостингом о её подключении. На виртуальном локальном сервере чаще всего эта библиотека не работает.";
 			?>
 		</div>
 	</div>

@@ -203,7 +203,7 @@ function mainpage($name="") {
 			<a href='sys.php?op=mainpage&amp;name=base&amp;type=5#1' class='bigicon'><img class='bigicon bi5' src='/images/1.gif'><b>Базу данных</b><br>
 			Удобная таблица с поиском для внутреннего или открытого использования</a>
 			<br><br></div></div>
-			<div class='m5'><button class='small' onclick='location.href=\"/sys.php?op=mainpage&amp;type=0&amp;id=1&amp;red=1\"' title='Редактировать главный дизайн'><span class='icon gray medium' data-icon='7'></span>Главный дизайн</button> 
+			<div class='m5'><button class='small' onclick='location.href=\"/sys.php?op=mainpage&amp;type=0&amp;id=1&amp;red=2\"' title='Редактировать главный дизайн'><span class='icon gray medium' data-icon='7'></span>Главный дизайн</button> 
 			<button class='small' onclick='location.href=\"/sys.php?op=mainpage&amp;type=1&amp;id=20\"' title='Редактировать главный стиль'><span class='icon gray medium' data-icon='7'></span>Главный стиль</button>";
  
 		echo " <a class='button small' onclick=\"oformlenie_show('','2','trash','')\"><span class='icon gray medium' data-icon='T'></span>Удаленное оформление</a>";

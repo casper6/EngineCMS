@@ -748,7 +748,8 @@ case "6": # Фотогалерея
 	$type = ""; break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 case "7": # Блок PHP // проверить eval
-	/* $textX = str_replace("<? ", "", str_replace(" ?>", "", $textX)); */
+	$textX = str_replace("<? ", "", str_replace(" ?>", "", $textX));
+	global $txt;
 	eval($textX); // Все содержится в переменной $txt, а eval() - для выполнения кода
 	if (!isset($txt)) $txt = "";
 	$block = str_replace("[".$titleX."]", $design_open.$txt.$design_close, $block);
