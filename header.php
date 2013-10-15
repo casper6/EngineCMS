@@ -4,7 +4,7 @@ define('MODULE_FILE', true);
 session_start(); // Для капчи (проверочный код-картинка от спама) // проверить вызов
 require_once("mainfile.php");
 global $strelka, $siteurl, $prefix, $name, $db, $admin, $sitename, $pagetitle, $pagetitle2, $registr, $pogoda, $flash, $keywords, $description, $counter, $startdate, $adminmail, $keywords2, $description2, $stopcopy, $nocash, $blocks, $http_siteurl, $display_errors, $gallery_css3, $gallery_lightbox, $gallery_carusel, $gallery_sly;
-$nocash = $gallery_css3 = $gallery_lightbox = $gallery_carusel = $gallery_sly = $gallery_sly_full = false;
+$nocash = $gallery_css3 = $gallery_lightbox = $gallery_carusel = $gallery_sly = $gallery_sly_full = $mp3_player = false;
 if ($name == "") $name = "index";
 
 if ($name=="-email") { // занесение мыла как скрытого комментария Убрать !!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1719,6 +1719,12 @@ case "31": # Блок JS
 		$block=str_replace("[rss150]", $rss_text."rss_150.gif'></a>", $block);
 	}
 
+	// MP3-плеер
+	if (strpos(" ".$block, ".mp3\"")) {
+		$mp3_player = true;
+		$block=str_replace(".mp3\"", ".mp3\" class=\"jouele\"", $block);
+	}
+
 	// Обработка мини-блоков (карточка компании)
 	function company_blocks($company, $name, $block) {
 		if (strpos(" ".$block, "[".$name)) { // проверить
@@ -1867,6 +1873,12 @@ switch($kickstart) { // Выбор CSS-фреймворка
 	default:
 	break;
 }
+
+// Подключение mp3-плеера
+if ($mp3_player == true)
+	echo "<script src='includes/jquery.jplayer.min.js'></script><script src='includes/jouele/jouele.js'></script><link rel='stylesheet' type='text/css' href='includes/jouele/jouele.css' />";
+
+
 
 // Подключение фото-галерей
 if ($gallery_css3 == true) echo "<link rel='stylesheet' href='includes/lightbox-css3.css' media='screen' />";

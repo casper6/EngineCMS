@@ -26,7 +26,7 @@ RewriteRule ^admin sys.php
 RewriteRule ^administrator sys.php
 RewriteRule ^administration sys.php
 RewriteRule ^constructor sys.php
-RewriteRule ^system sys.php
+RewriteRule ^control sys.php
 RewriteRule ^red sys.php
 
 RewriteRule ^rss rss.php

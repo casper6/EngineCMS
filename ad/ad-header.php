@@ -77,7 +77,7 @@ $url2 = $url2[0];
 
 $lang_logo = "";
 if ($lang_admin != "ru" && $lang_admin != "ua") $lang_logo = "_en";
-echo "<table class='mw800 w100 m0'><tr><td align=center width=170 class=mp0><a title='".aa("Перейти в Содержание")."' href='sys.php' class='nothing'><img src='images/logo_admin".$lang_logo.".png'></a></td><td class=mp0><div class='nothing noprint'><div style='margin: 0 5px 5px 0;'>";
+echo "<table class='mw800 w100 m0'><tr><td class=center width=170><a title='".aa("Перейти в Содержание")."' href='sys.php' class='nothing'><img src='images/logo_admin".$lang_logo.".png'></a></td><td class=mp0><div class='nothing noprint'><div style='margin: 0 5px 5px 0;'>";
 //if($detect->isiOS())
 //if($detect->isAndroidOS())
 global $buttons;
@@ -94,6 +94,6 @@ echo "<button class='small' onclick=\"openbox('8','".aa("Помощь")."'); $('
 <li class='first last'><a title='".aa("Выход из администрирования\n(мера безопасности)")."' href='sys.php?op=logout' class='button small'><span class='icon red small' data-icon='Q'></span></a></li>
 </ul>
 </div></td></tr>
-<tr><td colspan=2 class='black_grad2 h5 mp0'>
+<tr><td colspan=2 class='black_grad2 h2 mp0'>
 </td></tr></table><a name='top'></a>";
 ?>
