@@ -14,9 +14,7 @@ Disallow: /install/*
 # Файлы
 Disallow: /sys.php*
 Disallow: /mail.php*
-Disallow: /ad-ajax.php*
 Disallow: /ajax.php*
-Disallow: /resize.php*
 Disallow: /rss.php*
 Disallow: /send.php*
 Disallow: /header.php*

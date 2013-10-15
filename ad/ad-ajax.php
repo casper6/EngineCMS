@@ -597,7 +597,7 @@ if ($func == "show_pole") { // Ответ на комментарий из ад�
               $(this).nextAll('.parent').remove();
               $(this).nextAll('label').remove();
               $('#show_sub_categories').append('<img src=\"includes/regions/loader.gif\" class=\"left3\" id=\"loader\" />');
-              $.post(\"get_chid_categories.php\", {
+              $.post(\"get_child_categories.php\", {
                 parent_id: $(this).val(),
               }, function(response){
                 setTimeout(\"finishAjax('show_sub_categories', '\"+escape(response)+\"')\", 400);

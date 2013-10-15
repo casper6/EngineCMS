@@ -21,7 +21,7 @@ if ($name=="-email") { // занесение мыла как скрытого к
 		// проверка наличия такого email в БД 
 		$numrows = $db->sql_numrows($db->sql_query("SELECT `cid` from ".$prefix."_pages_comments where `mail`='$mail' and `num`='0'"));
 		if ($numrows == 0) {
-			$db->sql_query("INSERT INTO ".$prefix."_pages_comments ( `cid` , `num` , `avtor` , `mail` , `text` , `ip` , `data`, `drevo`, `adres`, `tel`, `active` ) VALUES ('', '0', '$avtor', '$mail', '', '$ip', '$now', '', '', '', '1')");
+			$db->sql_query("INSERT INTO ".$prefix."_pages_comments ( `cid` , `num` , `avtor` , `mail` , `text` , `ip` , `data`, `drevo`, `adres`, `tel`, `active` ) VALUES ('', '0', '".mysql_real_escape_string($avtor)."', '".mysql_real_escape_string($mail)."', '', '$ip', '$now', '', '', '', '1')");
 			echo "<h2>".ss("Вы подписались на рассылку.")."</h2><h2> Спасибо!</h2>";
 		} else {
 			echo "<h2>".ss("Вы уже подписаны на рассылку.")."</h2>";
@@ -628,7 +628,7 @@ case "3": # Блок ротатор рекламы
 	$reload_link = "<a style='cursor:pointer;' onclick='$(showrotator".$idX."())'>".$reload_link_text."</a>";
 	$textX = "<script>
 	  function showrotator".$idX."() {
-          $.get('rotator.php', { num: '".$idX."' }, function(data) { 
+          $.get('page/rotator.php', { num: '".$idX."' }, function(data) { 
 			  $('#show_rotator".$idX."').html( data );
 		  });  
 	  }

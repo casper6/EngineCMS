@@ -15,7 +15,7 @@ function CheckForm(opros_num){
 
 /* Отображение голосования */
 function showopros(id, res, golos) { 
-	$.get('opros.php', { num: id, res: res, golos: golos }, function(data) { $('#show_opros'+id).html( data ); }); 
+	$.get('page/opros.php', { num: id, res: res, golos: golos }, function(data) { $('#show_opros'+id).html( data ); }); 
 }
 
 /* Изменение размеров ПРОВЕРИТЬ! */

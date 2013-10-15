@@ -11,7 +11,7 @@ $type = $_GET['type'];
 // Добавочный шаблон стиля
 if ($add != "") {
   $add = explode("_",$add); // ввести дополнительную проверку
-  require_once("shablon_style.php");
+  require_once("page/shablon_style.php");
   $sha = shablon_style_show ($add[0], $add[1]);
 } else $sha = "";
 

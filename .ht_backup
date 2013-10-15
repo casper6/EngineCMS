@@ -23,7 +23,12 @@ RewriteBase /
 RewriteRule ^admin/ /
 RewriteRule ^red/ /
 RewriteRule ^admin sys.php
+RewriteRule ^administrator sys.php
+RewriteRule ^administration sys.php
+RewriteRule ^constructor sys.php
+RewriteRule ^control sys.php
 RewriteRule ^red sys.php
+
 RewriteRule ^rss rss.php
 
 RewriteRule ^--login header.php?name=-login

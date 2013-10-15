@@ -587,12 +587,13 @@ function showcat($cid=0, $pag=0, $slovo="") {
             }
           }
         }
-        if ($search_pole == true) {
-          // Найдем значение всех полей для данных страниц // переделать
-          $result6 = $db->sql_query("SELECT `name`, `pages` FROM ".$prefix."_spiski WHERE type='".mysql_real_escape_string($n)."'");
-          while ($row6 = $db->sql_fetchrow($result6)) {
-            $n1 = $row6['name'];
-            $n2 = explode(" ", trim($row6['pages']));
+        
+        // Найдем значение всех полей для данных страниц // переделать
+        $result6 = $db->sql_query("SELECT `name`, `pages` FROM ".$prefix."_spiski WHERE type='".mysql_real_escape_string($n)."'");
+        while ($row6 = $db->sql_fetchrow($result6)) {
+          $n1 = $row6['name'];
+          $n2 = explode(" ", trim($row6['pages']));
+          if ($search_pole == true) {
             if (isset($max)) {
               $n1 = intval($n1);
               if ($n1 <= $max && $n1 >= $min) { // отбираем страницы, подходящие фильтру
@@ -610,17 +611,20 @@ function showcat($cid=0, $pag=0, $slovo="") {
                 }
               }
             }
+          }
+          foreach ($n2 as $n2_2)
             $s_opts[$n][$n2_2] = $n1; // имя поля, страница = значение поля
 
-          }
+          
+        }
 
-          if ($search_pole == true) {
+        if ($search_pole == true) {
             $pid_del = $pid_ok;
             //print_r($pid_ok);
             $pid_ok = array();
             $pid_del_ok = true; // включение второго уровня обработки (для последующих фильтров)
-          }
         }
+
       } // end while
     } // end else
 

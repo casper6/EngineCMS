@@ -81,6 +81,15 @@ font-weight:normal;
 
 .fon {background: url(/images/fon.png);}
 
+.polosa_razdelitel {width:16px; padding-top: 340px; height:200px; background: #aaa; cursor: w-resize;}
+#rotateText {
+    -moz-transform: rotate(-90deg);
+    -webkit-transform: rotate(-90deg);
+    -o-transform: rotate(-90deg);
+    color: white;
+}
+
+
 hr{clear:both;border-bottom:0;border-top:1px dotted #ccc;border-right:0;border-left:0;margin:30px 0;min-height: 0px;height:1px;}
 
 .align_center {	position: relative;	width: 99%;}
@@ -259,7 +268,6 @@ img.bigicon {margin-bottom: 5px; width:128px; height:128px; border:0; float:left
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FFFFCC', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
 }
 
-.polosa_razdelitel {width:16px; padding-top: 240px; height:260px; background: #aaa; cursor: w-resize;}
 
 .white {color: #222;} 
 .white:hover {color: #111;} 
@@ -338,7 +346,7 @@ b, .b {font-size: 1em; font-weight:bold; } /* color: #715d9d; */
 a {color:black; font-weight: normal;}
 a:hover {color:darkred;}
 
-.sho_page {padding: 0; border:1px dashed #aaaaaa; border-bottom: 0;
+.sho_page {padding: 0; border-bottom: 0;
 border-bottom-left-radius: 10;
 	border-bottom-right-radius: 10;
 	-moz-border-radius-bottomleft: 10;

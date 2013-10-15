@@ -33,7 +33,7 @@ function sho(pid,name,admintip,act) {
 function papka_show(cid, name, sort, id, xxx) {
 	show('podpapka'+cid);
 	if (document.getElementById('papka'+cid).innerHTML=='') { 
-		document.getElementById('papka'+cid).innerHTML = '&nbsp; <a target=_blank href=-'+name+'_cat_'+cid+' title="Посмотреть (открыть эту папку на сайте)">'+icon('blue small','s')+'</a> <a target=_blank href="sys.php?op=edit_base_pages_category&cid='+cid+'#1" title="Изменить папку в Редакторе">'+icon('orange small','7')+'</a> <a target=_blank href="sys.php?op=edit_base_pages_category&cid='+cid+'&red=1#1" title="Изменить папку в HTML">'+icon('black small','7')+'</a>&nbsp;&nbsp;&nbsp;<a onclick=delpapka("'+cid+'") style="cursor:pointer;" title="Удалить папку">'+icon('red small','F')+'</a>';
+		document.getElementById('papka'+cid).innerHTML = '&nbsp; <a target=_blank href=-'+name+'_cat_'+cid+' title="Посмотреть (открыть эту папку на сайте)">'+icon('blue small','s')+'</a> <a target=_blank href="sys.php?op=edit_base_pages_category&cid='+cid+'#1" title="Редактировать папку">'+icon('orange small','7')+'</a>&nbsp;&nbsp;&nbsp;<a onclick=delpapka("'+cid+'") style="cursor:pointer;" title="Удалить папку">'+icon('red small','F')+'</a>';
 		papka(cid, sort, id,xxx);
 	} else {
 		document.getElementById('papka'+cid).innerHTML = '';
