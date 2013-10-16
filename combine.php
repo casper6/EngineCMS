@@ -39,6 +39,7 @@ $contents = "
 .editor_file_ico_xls 	{ background: url(ed/js/editor/i/fileicons/xls.png) no-repeat; }
 .editor_file_ico_zip 	{ background: url(ed/js/editor/i/fileicons/zip.png) no-repeat; }
 
+.redactor_toolbar {height: 30px;}
 .redactor_toolbar li {padding-left:5px !important;}
 
 .comm_form #avtory, .comm_form #maily, .comm_form #adres, .comm_form #tel, .comm_form #area {width: 99%;}

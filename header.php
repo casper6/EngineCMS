@@ -399,7 +399,7 @@ case "0": # Блок страниц раздела
 			}
 		}
 
-	} else $sel = "pid, module, cid, title, open_text, main_text, `date`"; 
+	} else $sel = "`pid`, `module`, `cid`, `title`, `open_text`, `main_text`, `date`, `mainpage`"; 
 	
 	$and4 = '';
 	// Если в настройках блока указано отображать только последние страницы
@@ -428,7 +428,7 @@ case "0": # Блок страниц раздела
 		}
 	}
 
-	$sql = "SELECT ".$sel." from ".$prefix."_pages where `tables`='pages' and active='1'".$and.$and2.$and3.$and4." order by ".$sort."".$limit."";
+	$sql = "SELECT ".$sel." from ".$prefix."_pages where `tables`='pages' and `active`='1'".$and.$and2.$and3.$and4." order by ".$sort."".$limit."";
 	$result = $db->sql_query($sql);
 
 	if ($shablon == "")
@@ -442,6 +442,8 @@ case "0": # Блок страниц раздела
 		$p_cid = $row['cid'];
 		$title = filter($row['title']);
 		$titl = str_replace("\"","",$title);
+		$page_on_mainpage = "";
+    	if ($row['mainpage'] == "1") $page_on_mainpage = " page_favourite";
 
 		if ($openshow > 0 or $shablon != "") {
 			$open_text = filter(strip_tags(str_replace("<img ", "<img title='".$titl."' ", $row['open_text']), '<b><br><i><ul><li><ol><dl><dt><img><table><tr><td><a><strong><em><embed><param><object><p><iframe><div>'), "", 0);
@@ -489,30 +491,55 @@ case "0": # Блок страниц раздела
 			$data = date2normal_view($row['date'])." ".$strelka." ";
 		} else $data = "";
 
-		// Начало замены
+		$page_comments_word = ss("Пока без комментариев");
+		if ($comm > 0) $page_comments_word = $comm." ".num_ending($comm, Array(ss("комментариев"),ss("комментарий"),ss("комментария")));
 
+		// Начало замены
 		if ($shablon != "") {
 		  $tr = array(
-			aa("[№]")=>$p_id,
-			aa("[модуль]")=>$module,
-			aa("[№ папки]")=>$p_cid,
-			aa("[название папки]")=>$titles_papka[$p_cid],
-			aa("[название]")=>$title,
-			aa("[ссылка]")=>"<a href=-".$module."_page_".$p_id.$blank." class='block_title ".$class."'>".$title."</a>",
-			aa("[предисловие]")=>"<span id=block_open_text class='block_open_text ".$class."'>".$open_text."</span>",
-			aa("[содержание]")=>$main_text,
-			aa("[дата]")=>$data,
-			aa("[число посещения]")=>$counterX,
-			aa("[открытость]")=>$active,
-			aa("[число голосование]")=>$golos,
-			aa("[число комментарии]")=>$comm,
-			aa("[адрес фото]")=>$foto_adres,
-			aa("[фото]")=>$foto,
-			aa("[предисловие_без_фото]")=>$no_foto_open_text,
-			aa("[предисловие_без_html]")=>$no_html_open_text,
-			aa("[теги]")=>$search,
-			aa("[цена]")=>$price,
-			aa("[rss доступность]")=>$rss
+		  	"[page_id]"=>$p_id,
+		  	"[page_razdel]"=>$module,
+			"[cat_id]"=>$p_cid,
+			"[cat_name]"=>$titles_papka[$p_cid],
+			"[page_title]"=>$title,
+			"[page_link]"=>"-".$module."_page_".$p_id,
+			"[page_link_title]"=>"<a href=-".$module."_page_".$p_id.$blank." class='block_title ".$class."'>".$title."</a>",
+			"[page_opentext]"=>"<span id=block_open_text class='block_open_text ".$class."'>".$open_text."</span>",
+			"[page_text]"=>$main_text,
+			"[page_data]"=>$data,
+			"[page_counter]"=>$counterX,
+			"[page_active]"=>$active,
+			"[page_reiting]"=>$golos,
+			"[page_comments]"=>$comm,
+			"[page_comments_word]"=>$page_comments_word,
+			"[photo_address]"=>$foto_adres,
+			"[photo]"=>$foto,
+			"[opentext_no_photo]"=>$no_foto_open_text,
+			"[opentext_no_html]"=>$no_html_open_text,
+			"[page_tags]"=>$search,
+			"[page_rss]"=>$rss,
+			"[page_on_mainpage]"=>$page_on_mainpage,
+			// старый вариант с русскими названиями (впоследствии будет удален)
+			"[№]"=>$p_id,
+			"[модуль]"=>$module,
+			"[№ папки]"=>$p_cid,
+			"[название папки]"=>$titles_papka[$p_cid],
+			"[название]"=>$title,
+			"[ссылка]"=>"<a href=-".$module."_page_".$p_id.$blank." class='block_title ".$class."'>".$title."</a>",
+			"[предисловие]"=>"<span id=block_open_text class='block_open_text ".$class."'>".$open_text."</span>",
+			"[содержание]"=>$main_text,
+			"[дата]"=>$data,
+			"[число посещения]"=>$counterX,
+			"[открытость]"=>$active,
+			"[число голосование]"=>$golos,
+			"[число комментарии]"=>$comm,
+			"[адрес фото]"=>$foto_adres,
+			"[фото]"=>$foto,
+			"[предисловие_без_фото]"=>$no_foto_open_text,
+			"[предисловие_без_html]"=>$no_html_open_text,
+			"[теги]"=>$search,
+			"[цена]"=>$price,
+			"[rss доступность]"=>$rss
 		  );
 			$shablonX = $shablon;
 			foreach ($s_names as $id2 => $nam2) {
@@ -825,13 +852,20 @@ case "8": # Блок папок ОТКРЫТОГО раздела
 					else $podthisis = "<img align=left width=30 height=10 src=images/pixel.gif>";
 					//$podpapki .= "<li class=\"podpapki block_li_title\">[стрелка]<a href=[ссылка]>[название]</a></li>";
 					$tr = array(
-					aa("[№]")=>$p_id,
-					aa("[название]")=>$p_title,
-					aa("[ссылка]")=>"/-".$DBName."_cat_".$p_id."",
-					aa("[полная ссылка]")=>"<a href=-".$DBName."_cat_".$p_id.">".$p_title."</a>",
-					aa("[число страниц]")=>"",
+					"[cat_id]"=>$p_id,
+					"[cat_name]"=>$p_title,
+					"[cat_link]"=>"/-".$DBName."_cat_".$p_id."",
+					"[cat_link_title]"=>"<a href=-".$DBName."_cat_".$p_id.">".$p_title."</a>",
+					"[cat_page_num]"=>"",
 					"[css]"=>"podpapki",
-					aa("[активность]")=>$podthisis
+					"[cat_parent]"=>$podthisis,
+					// старый вариант с русскими названиями (впоследствии будет удален)
+					"[№]"=>$p_id,
+					"[название]"=>$p_title,
+					"[ссылка]"=>"/-".$DBName."_cat_".$p_id."",
+					"[полная ссылка]"=>"<a href=-".$DBName."_cat_".$p_id.">".$p_title."</a>",
+					"[число страниц]"=>"",
+					"[активность]"=>$podthisis
 					);
 					$podpapki .= strtr($shablon_category,$tr);
 				}
@@ -841,13 +875,20 @@ case "8": # Блок папок ОТКРЫТОГО раздела
 		}
 		if ($par[$id]==0) {
 			$tr = array(
-			aa("[№]")=>$id,
-			aa("[название]")=>$nam,
-			aa("[ссылка]")=>"/-".$DBName."_cat_".$id."",
-			aa("[полная ссылка]")=>"<a href=-".$DBName."_cat_".$id.">".$nam."</a>",
-			aa("[число страниц]")=>$and,
+			"[cat_id]"=>$id,
+			"[cat_name]"=>$nam,
+			"[cat_link]"=>"/-".$DBName."_cat_".$id."",
+			"[cat_link_title]"=>"<a href=-".$DBName."_cat_".$id.">".$nam."</a>",
+			"[cat_page_num]"=>$and,
 			"[css]"=>"papki",
-			aa("[активность]")=>$thisis
+			"[cat_parent]"=>$thisis,
+			// старый вариант с русскими названиями (впоследствии будет удален)
+			"[№]"=>$id,
+			"[название]"=>$nam,
+			"[ссылка]"=>"/-".$DBName."_cat_".$id."",
+			"[полная ссылка]"=>"<a href=-".$DBName."_cat_".$id.">".$nam."</a>",
+			"[число страниц]"=>$and,
+			"[активность]"=>$thisis
 			);
 			$papki[] = strtr($shablon_category,$tr).$podpapki;
 		}
@@ -1246,34 +1287,13 @@ case "13": # ОБЛАКО ТЕГОВ
 		if ($razmer > 10) $tags3[$tag1] = "1";
 		$razmer++;
 	}
-	$textX .= "<div id=text_tags style=\"display:none\"><br>"; 
 	$tagcloud = "";
 	foreach ($tags as $tag_name => $tag_col) {
 		if ($tags3[$tag_col] != "1") {
-			$tagcloud .= "<a href='--slovo_".str_replace( "%","-",  $tag_name ) ."' style='font-size: ".$tags3[$tag_col]."px;'>".$tag_name."</a> ";
-			$tagcloud2 .= "<noindex><a class='slovo' href='--slovo_".str_replace( "%","-",  $tag_name ) ."' style='color:".$tags4[$tag_col]."; font-size: ".$tags3[$tag_col]."pt;' rel='nofollow'>".$tag_name."</a></noindex> ";
+			$tagcloud .= "<noindex><a class='slovo' href='--slovo_".$tag_name."' style='color:".$tags4[$tag_col]."; font-size: ".$tags3[$tag_col]."pх;' rel='nofollow'>".$tag_name."</a></noindex> ";
 		}
 	}
-	$tagcloud = str_replace( "&nbsp;", " ", str_replace( "+", " ", $tagcloud ) ) ; 
-	$tagcloud2 = str_replace( "&nbsp;", " ", str_replace( "+", " ", $tagcloud2 ) ) ; 
-	$textX .= str_replace( "pt","px", $tagcloud2);
-	$textX .= "<br><br><center><div id=show_oblako style='font-size: 11px; cursor:pointer;' OnClick=\"show('text_tags'); show('flash_tags'); show('show_tags'); show('all_tags');\"><span style='border-bottom:1px dotted;'>".ss("Вернуть облако тегов")."</span></div></center> 
-	</div>
-	<div id=\"all_tags\"></div>
-	<div id=flash_tags><script>
-	var rnumber = Math.floor(Math.random()*9999999);
-	var widget_so = new SWFObject(\"/includes/tagcloud.swf?r=\"+rnumber, \"tagcloudflash\", \"100%\", \"250\", \"9\", \"#ffffff\");
-	widget_so.addParam(\"wmode\", \"transparent\");
-	widget_so.addParam(\"allowScriptAccess\", \"always\");
-	widget_so.addVariable(\"tcolor\", \"0x000000\");
-	widget_so.addVariable(\"tspeed\", \"113\");
-	widget_so.addVariable(\"distr\", \"true\");
-	widget_so.addVariable(\"mode\", \"tags\");
-	widget_so.addVariable(\"tagcloud\", \"<span>". $tagcloud ."<\/span>\");
-	widget_so.write(\"all_tags\");
-	</script></div> 
-	<center><div id=show_tags style='font-size: 11px; cursor:pointer;' OnClick=\"show('text_tags'); show('flash_tags'); show('show_tags'); show('all_tags');\"><span style='border-bottom:1px dotted;'>".ss("Смотреть список слов")."</span></div></center> 
-	";
+	$textX .= $tagcloud;
 	$block = str_replace("[$titleX]", $design_open.$textX.$design_close, $block);
 	$type = ""; break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1563,9 +1583,11 @@ case "31": # Блок JS
 		$block=str_replace(aa("[время]"), $vremya, $block);
 	}
 
-	global $project_logotip, $project_name;
+	global $project_logotip, $project_name, $sitename, $description;
 	if (strpos(" ".$block, aa("_проекта]"))) {
 		$block=str_replace(aa("[лого_проекта]"), "<img src='".$project_logotip."' class='project_logotip'>", $block);
+		$block=str_replace(aa("[заголовок_проекта]"), $sitename, $block);
+		$block=str_replace(aa("[описание_проекта]"), $description, $block);
 		$block=str_replace(aa("[название_проекта]"), $project_name, $block);
 		$block=str_replace(aa("[название_лого_проекта]"), "<h1 class='project_logotip_name'><a href='/'' title='".ss("Главная страница")."'><span>".$project_name."</span><img src='".$project_logotip."' alt=''></a></h1>", $block);
 	}
@@ -1877,8 +1899,6 @@ switch($kickstart) { // Выбор CSS-фреймворка
 // Подключение mp3-плеера
 if ($mp3_player == true)
 	echo "<script src='includes/jquery.jplayer.min.js'></script><script src='includes/jouele/jouele.js'></script><link rel='stylesheet' type='text/css' href='includes/jouele/jouele.css' />";
-
-
 
 // Подключение фото-галерей
 if ($gallery_css3 == true) echo "<link rel='stylesheet' href='includes/lightbox-css3.css' media='screen' />";

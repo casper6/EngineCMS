@@ -1,7 +1,4 @@
 <?php
-//if (file_exists("mainfile.php")) require_once("mainfile.php");
-//else echo "<li>mainfile.php не найден!";
-
 
 $db->sql_query("INSERT INTO `".$prefix."_config` VALUES ( 'Мыльные пузыри России', '2013', '', '', '', '', '', 'http://gmail.com', '0', '0', '0', 'Рассвет|||||ООО «Рассвет+»|||||443106, г. Москва, ул. Преображенская, 24, офис 13|||||с 10 до 20|||||(945) 000-00-00|||||||||||||||mail@mail.ru|||||<img src=theme/map.jpg>|||||', '0', '1|1|1|1|1|1|0|1|20|1|1||0|theme/logotip.png|Мыльные пузыри оптом|51|8||0|monokai|monokai|monokai|monokai', 'Здесь можно оставлять записки, касающиеся работ над сайтом', '4', '0', '0', '.ht_backup');");
 

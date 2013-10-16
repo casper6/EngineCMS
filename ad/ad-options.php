@@ -401,6 +401,7 @@ body {}
 	<tr valign=top><td style='min-width:250px;'>
 	Название сайта (для title):</td><td class=small>
 	".input("options[sitename]", $sitename, "100%")."
+	<br>Можно вывести в дизайн через блок [заголовок_проекта]
 	</td></tr><tr valign=top><td>
 	Логотип сайта/компании:</td><td class=small>
 	".input("options[project_logotip]", $project_logotip, "100%")."
@@ -408,7 +409,7 @@ body {}
 	</td></tr><tr valign=top><td>
 	Название проекта/компании:</td><td class=small>
 	".input("options[project_name]", $project_name, "100%")."
-	<br>Можно вывести в дизайн через блок [название_проекта]. Обобщенный вариант через замену картинкой тега H1 — через блок [название_лого_проекта]. А настраивается всё через CSS за счет стилей, которые можно посомтреть в коде страницы.
+	<br>Можно вывести в дизайн через блок [название_проекта]. Обобщенный вариант через замену картинкой тега H1 — через блок [название_лого_проекта]. А настраивается всё через CSS за счет стилей, которые можно посмотреть в коде страницы.
 	</td></tr><tr valign=top><td>
 	Вставка в HEAD:</td><td class=small>
 	".input("options[head_insert]", $head_insert, 30, "txt")."
@@ -416,7 +417,7 @@ body {}
 	</td></tr><tr valign=top><td>
 	Описание сайта:</td><td class=small>
 	".input("options[description]", $description, 60, "txt")."
-	<br>Максимум 500 символов. Для поисковых систем (Description)
+	<br>Максимум 500 символов. Для поисковых систем (Description). Можно вывести в дизайн через блок [описание_проекта]
 	</td></tr><tr valign=top><td>
 	Ключевые словосочетания:</td><td class=small>
 	".input("options[keywords]", $keywords, 60, "txt")."
