@@ -26,7 +26,8 @@
   // Запрет использования других серверов
   if ($_SERVER['REQUEST_METHOD'] == "POST") {
     if (isset($_SERVER['HTTP_REFERER'])) {
-      if (stripos($_SERVER['HTTP_REFERER'], $_SERVER['HTTP_HOST']) === false) {
+      //if (stripos($_SERVER['HTTP_REFERER'], $_SERVER['HTTP_HOST']) === false) {
+      if (strcasecmp(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST), $_SERVER['HTTP_HOST']) != 0) {
        die(ss("Запрещено размещение информации с другого сервера"));
       }
     } else die(ss("Ошибка: браузер не смог послать заголовок HTTP_REFERER для этого сайта.<br>Проблема может быть в браузере, использовании прокси-сервера или фаервола.<br>

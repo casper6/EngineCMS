@@ -517,7 +517,7 @@ if (!isset($_REQUEST['lang'])) {
 			});	
 		</script>
 				<li><strong>Электронная почта</strong><br><input name="email" id="mail" value=""><span id="valid"></span></li>
-				<li><strong>Псевдоним (логин)</strong><br><input name="a" value="admin"></li>
+				<li><strong>Псевдоним (логин)</strong><br><input name="a" value="admin"><br><b>Желательно поменять!</li>b></li>
 				<li><strong>Пароль</strong><br><input name="pass" value="<? echo $pass; ?>"><br>
 					Будет отправлен на указанный email</li>
 				<li id='all_show'><a onclick='$("#blo_show").show();$("#cash_show").show();$("#all_show").hide();' style='color:darkgreen; cursor:pointer; text-decoration:none; border-bottom:1px dashed green;'>IP-блокировка и кеш отключены</a></li>

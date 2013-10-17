@@ -655,7 +655,7 @@ case "3": # Блок ротатор рекламы
 	$reload_link = "<a style='cursor:pointer;' onclick='$(showrotator".$idX."())'>".$reload_link_text."</a>";
 	$textX = "<script>
 	  function showrotator".$idX."() {
-          $.get('page/rotator.php', { num: '".$idX."' }, function(data) { 
+          $.get('rotator.php', { num: '".$idX."' }, function(data) { 
 			  $('#show_rotator".$idX."').html( data );
 		  });  
 	  }
