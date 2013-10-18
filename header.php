@@ -1,6 +1,9 @@
 <?php
 // Всё, что вы накодите, может быть использовано против вас в багтрекере.
 define('MODULE_FILE', true);
+define ( 'ROOT_DIR', dirname ( __FILE__ ) ); // доработать!
+define ( 'CMS_DIR', ROOT_DIR . '/engine' );
+
 session_start(); // Для капчи (проверочный код-картинка от спама) // проверить вызов
 require_once("mainfile.php");
 global $strelka, $siteurl, $prefix, $name, $db, $admin, $sitename, $pagetitle, $pagetitle2, $registr, $pogoda, $flash, $keywords, $description, $counter, $startdate, $adminmail, $keywords2, $description2, $stopcopy, $nocash, $blocks, $http_siteurl, $display_errors, $gallery_css3, $gallery_lightbox, $gallery_carusel, $gallery_sly;
@@ -150,7 +153,7 @@ if ($name=="-email") { // занесение мыла как скрытого к
 			$soda_col = count($soda);
 			if (strpos(" ".$soda[0], aa("[содержание]"))) $soderganie = str_replace(aa("[содержание]"), $soderganie, $soda[0]);
 			else {
-				$soderganie = str_replace(aa("[название]"), "<div class='cat_title'><span class='cat_categorii_link'>".$ModuleName."</span></div><div class='polosa'></div>", $soda[0]);
+				$soderganie = str_replace(aa("[название]"), "<div class='cat_title'><h1 class='cat_categorii_link'>".$ModuleName."</h1></div>", $soda[0]);
 				$soderganie = str_replace(aa("[страницы]"), $soderganie2, $soderganie);
 				// Добавление табов
 			    if (strpos(" ".$soderganie, "{{")) {
@@ -219,9 +222,9 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 		$block_color = $block_colorYYY[$idX];
 
 	// обнулили все опции блоков от греха подальше
-	$titleshow=$media=$folder=$datashow=$tagdelete=$ipdatauser=$design=$open_all=$catshow=$main=$daleeshow=$openshow=$number=$add=$size=$papki_numbers=$zagolovokin=$menu=$noli=$html=$show_title=$random=$showlinks=$open_new_window=$shablon=$show_new_pages=$reload_link_show=$reload_link_time=$re_menu=0;
-	$opros_type=$limkol=$pageshow=$only_question=$opros_result=$foto_gallery_type=$notitlelink=1;
-	$shablon=$class=$alternative_title_link=$cid_open=$no_show_in_razdel=$watermark=$show_in_papka="";
+	$titleshow = $media = $folder = $datashow = $tagdelete = $ipdatauser = $design = $open_all = $catshow = $main = $daleeshow = $openshow = $number = $add = $size = $papki_numbers = $zagolovokin = $menu = $noli = $html = $show_title = $random = $showlinks = $open_new_window = $shablon = $show_new_pages = $reload_link_show = $reload_link_time = $re_menu = 0;
+	$opros_type = $limkol = $pageshow = $only_question = $opros_result = $foto_gallery_type = $notitlelink = $foto_num = 1;
+	$shablon = $class = $alternative_title_link = $cid_open = $no_show_in_razdel = $watermark = $show_in_papka = "";
 	$addtitle = ss("Добавить статью");
 	$dal = ss("Далее...");
 	$first = "src=";
@@ -728,9 +731,10 @@ case "5": # Блок голосования
 	$type = ""; break; 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 case "6": # Фотогалерея
+	global $siteurl;
 	$links = explode("\n", str_replace("\n\n", "\n", $textX) );
 	$textX = $textX0 = "";
-	global $siteurl;
+	if ($foto_gallery_type == 8) $textX0 = array();
 	if ($foto_gallery_type >= 2 && $foto_gallery_type <= 7) {
 		if ($img_width == "0") $img_width = $img_height;
 		if ($img_height == "0") $img_height = $img_width;
@@ -750,8 +754,15 @@ case "6": # Фотогалерея
 		if ($foto_gallery_type == 2) $textX0 .= "<li><a href='#image-".$i."'><img src='includes/phpThumb/phpThumb.php?src=".$link."&amp;fltr[]=crop|0|0|0|0.05&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0' alt='".$title."'><span>".$title."</span></a><div class='lb-overlay' id='image-".$i."'><img src='".$water."' alt='".$title." / ".$alt." / ".$alt2."' /><div><h3>".$title."<span>".$alt."</h3><p>".$alt2."</p></div><a href='#page' class='lb-close'>x Закрыть</a></div></li>";
 		if ($foto_gallery_type >= 3 && $foto_gallery_type <= 6) $textX0 .= "<li><a title='".$title."' href='".$water."' class='lightbox' rel='group'><img src='includes/phpThumb/phpThumb.php?src=".$link."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0' alt='".$alt."' class='img_gallery'></a></li>";
 		if ($foto_gallery_type == 7) $textX0 .= "<a title='".$title."' href='".$water."' class='lightbox' rel='group'><figure style=\"background-image: url('includes/phpThumb/phpThumb.php?src=".$link."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0')\"><figcaption><h4>".$title."</h4><p>".$alt."</p></figcaption></figure></a>";
+		if ($foto_gallery_type == 8) $textX0[] = "<a title='".$title."' href='".$water."' class='lightbox' rel='group'><img src='includes/phpThumb/phpThumb.php?src=".$link."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0' alt='".$alt."' class='img_gallery'></a>";
 	}
-	if ($foto_gallery_type >= 3 && $foto_gallery_type <= 7) { 
+	if ($foto_gallery_type == 8) {
+		$rand = array_rand($textX0, $foto_num);
+		foreach ($rand as $key) {
+			$textX .= $textX0[$key];
+		}
+	}
+	if ($foto_gallery_type >= 3 && $foto_gallery_type <= 7) {
 		// effects 3, basic 4, cycleitems 5, oneperframe 6, fullscreen 7
 		$type_sly = array('','','','effects', 'basic', 'cycleitems', 'oneperframe', 'fullscreen');
 		if ($foto_gallery_type == 7) {
@@ -769,7 +780,7 @@ case "6": # Фотогалерея
 		else $textX .= "<style>.images figure { padding-top: ".$img_height."px; width: ".$img_width."px; }</style>";
 	}
 	if ($foto_gallery_type == 2) { $gallery_css3 = true; $textX .= "<style>.lb-album li > a{width: ".$img_width."px;height: ".$img_height."px;line-height: ".$img_height."px;}.lb-album li > a span{width: ".$img_width."px;height: ".$img_height."px;line-height: ".$img_height."px;}</style><ul class='lb-album'>".$textX0."</ul>"; }	
-	if ($foto_gallery_type == 1) { $gallery_lightbox = true; }
+	if ($foto_gallery_type == 1 || $foto_gallery_type == 8) { $gallery_lightbox = true; }
 	if ($foto_gallery_type == 0) { $gallery_carusel = true; $textX .= "<div id='carusel-gallery' class='ad-gallery'><div class='ad-image-wrapper'></div><div class='ad-controls'></div><div class='ad-nav'><div class='ad-thumbs'><ul class='ad-thumb-list'>".$textX0."</ul></div></div></div>"; }
 	$block = str_replace("[".$titleX."]", $design_open.$textX.$design_close, $block);
 	$type = ""; break;
@@ -1861,7 +1872,7 @@ echo "<title>".$pagetit.$sitename."</title>
 // Подключение других языков, если это не русский
 if ($lang != 'ru') echo "<script src=\"language/".$lang.".js\"></script>";
 
-if ($normalize != 0) echo "<link rel='stylesheet' type='text/css' href='includes/css-frameworks/normalize.css' />";
+if ($normalize != 0) echo "<link rel='stylesheet' href='includes/css-frameworks/normalize.css' />";
 
 if ($sortable != 0) echo "<script src='includes/jquery.tinysort.min.js'></script>";
 
@@ -1871,21 +1882,21 @@ if ($jqueryui != 0) echo "<script src='http://ajax.googleapis.com/ajax/libs/jque
 
 switch($kickstart) { // Выбор CSS-фреймворка
 	case 1: // KickStart
-	echo "<script src='includes/css-frameworks/kickstart/js/kickstart.js'></script><link rel='stylesheet' type='text/css' href='includes/css-frameworks/kickstart/css/kickstart.css' media='all' /><link rel='stylesheet' type='text/css' href='includes/css-frameworks/kickstart/style.css' media='all' />"; break;
+	echo "<script src='includes/css-frameworks/kickstart/js/kickstart.js'></script><link rel='stylesheet' href='includes/css-frameworks/kickstart/css/kickstart.css' media='all' /><link rel='stylesheet' href='includes/css-frameworks/kickstart/style.css' media='all' />"; break;
 	case 2: // CSSframework
-	echo "<link rel='stylesheet' type='text/css' href='includes/css-frameworks/css-framework.css' />"; break;
+	echo "<link rel='stylesheet' href='includes/css-frameworks/css-framework.css' />"; break;
 	case 3: // Skeleton
 	echo "<link rel='stylesheet' href='includes/css-frameworks/skeleton/base.css'><link rel='stylesheet' href='includes/css-frameworks/skeleton/skeleton.css'><link rel='stylesheet' href='includes/css-frameworks/skeleton/layout.css'>"; break;
 	case 4: // Kube
-	echo "<link rel='stylesheet' type='text/css' href='includes/css-frameworks/kube/kube.min.css' /><link rel='stylesheet' type='text/css' href='includes/css-frameworks/kube/master.css' /><script src='includes/css-frameworks/kube/kube.buttons.js'></script><script src='includes/css-frameworks/kube/kube.tabs.js'></script>"; break;
+	echo "<link rel='stylesheet' href='includes/css-frameworks/kube/kube.min.css' /><link rel='stylesheet' href='includes/css-frameworks/kube/master.css' /><script src='includes/css-frameworks/kube/kube.buttons.js'></script><script src='includes/css-frameworks/kube/kube.tabs.js'></script>"; break;
 	case 5: // Bootstrap
 	echo "<link href='includes/css-frameworks/bootstrap/css/bootstrap.min.css' rel='stylesheet'><link href='includes/css-frameworks/bootstrap/css/bootstrap-responsive.min.css' rel='stylesheet'><script src='includes/css-frameworks/bootstrap/js/bootstrap.min.js'></script>"; break;
 	case 6: // 1140 Grid
-	echo "<!--[if lte IE 9]><link rel='stylesheet' href='includes/css-frameworks/1140_cssgrid/ie.css' type='text/css' media='screen' /><![endif]--><link rel='stylesheet' href='includes/css-frameworks/1140_cssgrid/1140.css' type='text/css' media='screen' /><script src='includes/css-frameworks/1140_cssgrid/css3-mediaqueries.js'></script>"; break;
+	echo "<!--[if lte IE 9]><link rel='stylesheet' href='includes/css-frameworks/1140_cssgrid/ie.css' media='screen' /><![endif]--><link rel='stylesheet' href='includes/css-frameworks/1140_cssgrid/1140.css' media='screen' /><script src='includes/css-frameworks/1140_cssgrid/css3-mediaqueries.js'></script>"; break;
 	case 7: // Toast
-	echo "<link rel='stylesheet' type='text/css' href='includes/css-frameworks/toast/toast.css' />"; break;
+	echo "<link rel='stylesheet' href='includes/css-frameworks/toast/toast.css' />"; break;
 	case 8: // Blueprint
-	echo "<link rel='stylesheet' href='includes/css-frameworks/blueprint/screen.css' type='text/css' media='screen, projection'><link rel='stylesheet' href='includes/css-frameworks/blueprint/print.css' type='text/css' media='print'><!--[if lt IE 8]><link rel='stylesheet' href='includes/css-frameworks/blueprint/ie.css' type='text/css' media='screen, projection'><![endif]-->"; break;
+	echo "<link rel='stylesheet' href='includes/css-frameworks/blueprint/screen.css' media='screen, projection'><link rel='stylesheet' href='includes/css-frameworks/blueprint/print.css' media='print'><!--[if lt IE 8]><link rel='stylesheet' href='includes/css-frameworks/blueprint/ie.css' media='screen, projection'><![endif]-->"; break;
 	case 9: // YUI CSS Grids
 	echo "<link rel='stylesheet' href='http://yui.yahooapis.com/3.7.3/build/cssreset/reset-min.css' type='text/css'><link rel='stylesheet' href='http://yui.yahooapis.com/3.7.3/build/cssfonts/fonts-min.css' type='text/css'><link rel='stylesheet' href='http://yui.yahooapis.com/3.7.3/build/cssgrids/grids-min.css' type='text/css'><script src='http://yui.yahooapis.com/3.7.3/build/yui/yui-min.js'></script>"; break;
 	case 10: // 960gs (12 и/или 16 колонок)
@@ -1898,13 +1909,13 @@ switch($kickstart) { // Выбор CSS-фреймворка
 
 // Подключение mp3-плеера
 if ($mp3_player == true)
-	echo "<script src='includes/jquery.jplayer.min.js'></script><script src='includes/jouele/jouele.js'></script><link rel='stylesheet' type='text/css' href='includes/jouele/jouele.css' />";
+	echo "<script src='includes/jquery.jplayer.min.js'></script><script src='includes/jouele/jouele.js'></script><link rel='stylesheet' href='includes/jouele/jouele.css' />";
 
 // Подключение фото-галерей
 if ($gallery_css3 == true) echo "<link rel='stylesheet' href='includes/lightbox-css3.css' media='screen' />";
-if ($gallery_lightbox == true && $kickstart != 1) echo "<script src='includes/jquery.lightbox.js'></script><script src='includes/jquery.ad-gallery.js'></script><script>$(document).ready(function(){ $('.lightbox').lightbox({ fitToScreen: true, imageClickClose: false }); var galleries = $('.ad-gallery').adGallery(); $('#switch-effect').change( function() { galleries[0].settings.effect = $(this).val(); return false; } ); });</script>
+if ($gallery_carusel == false && $kickstart != 1) echo "<script src='includes/jquery.lightbox.js'></script><script src='includes/jquery.ad-gallery.js'></script><script>$(document).ready(function(){ $('.lightbox').lightbox({ fitToScreen: true, imageClickClose: false }); var galleries = $('.ad-gallery').adGallery(); $('#switch-effect').change( function() { galleries[0].settings.effect = $(this).val(); return false; } ); });</script>
 <link rel='stylesheet' href='includes/lightbox.css' media='screen' />"; // при включенном kickstart, lightbox не нужен, включается fancybox
-if ($gallery_carusel == true) echo "<script src='includes/jquery.lightbox.js'></script><script src='includes/jquery.ad-gallery.js'></script><script>$(document).ready(function(){ $('.lightbox').lightbox({ fitToScreen: true, imageClickClose: false }); var galleries = $('.ad-gallery').adGallery(); $('#switch-effect').change( function() { galleries[0].settings.effect = $(this).val(); return false; } ); });</script><link rel='stylesheet' href='includes/carusel.css' media='screen' />";
+if ($gallery_carusel == true) echo "<script src='includes/jquery.lightbox.js'></script><script src='includes/jquery.ad-gallery.js'></script><script>function light_box(){ $('.lightbox').lightbox({ fitToScreen: true, imageClickClose: false } $(document).ready(light_box()); var galleries = $('.ad-gallery').adGallery(); $('#switch-effect').change( function() { galleries[0].settings.effect = $(this).val(); return false; } ); });</script><link rel='stylesheet' href='includes/carusel.css' media='screen' />";
 if ($gallery_sly == true) echo "<script src='includes/sly.min.js'></script><link rel='stylesheet' href='includes/sly.css' media='screen' />";
 if ($gallery_sly_full == true) echo "<script src='includes/sly.min.js'></script><link rel='stylesheet' href='includes/sly_full.css' media='screen' />";
 
@@ -1928,7 +1939,7 @@ if (strlen($add_fonts)>1) {
 }
 	$add_body = "";
 	if ($stopcopy == 1) $add_body .= " oncontextmenu='notmenu();'"; // «защита» от глупых копипастеров
-	if ($kickstart == 10) $add_body .= " class='yui3-skin-sam'>";
+	if ($kickstart == 10) $add_body .= " class='yui3-skin-sam'";
 	if ($kickstart == 1) $add_body .= ' class="elements"';
 	# НАЧАЛО ТЕЛА
 	echo $head_insert."</head>\n<body".$add_body." id='page'>";

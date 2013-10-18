@@ -1291,7 +1291,7 @@ function edit_main($id) {
 
 	// обнулили все опции
 	$titleshow = $media = $folder = $datashow = $tagdelete = $ipdatauser = $design = $open_all = $catshow = $main = $daleeshow = $openshow = $number = $add = $size = $papki_numbers = $zagolovokin = $menu = $noli = $html = $show_title = $random = $showlinks = $open_new_window = $shablon = $show_new_pages = $reload_link_show = $reload_link_time = 0;
-	$opros_type = $limkol = $pageshow = $only_question = $opros_result = $foto_gallery_type = $re_menu = $notitlelink = 1;
+	$opros_type = $limkol = $pageshow = $only_question = $opros_result = $foto_gallery_type = $re_menu = $notitlelink = $foto_num = 1;
 	$col_bukv = 50;
 	$img_width = 0;
 	$img_height = 200;
@@ -1457,14 +1457,14 @@ function edit_main($id) {
 	<td>".input("options[third]", $third)."</td>
 	</tr>";
 	echo "<tr>
-	<td>Показывать заголовок страницы:</td>
+	<td>Показывать заголовок страницы</td>
 	<td>".select("options[show_title]", "2,1,0", "перед фото,под фото,нет", $show_title)."</td>
 	</tr>";
 	}
 
 	if ($name == 9 or $name == 6) {
 	echo "<tr>
-	<td><b>Размер картинки в пикселях:</b><br>
+	<td><b>Размер картинки в пикселях</b><br>
 	<li>по горизонтали, по-умолчанию: 0. Если указать 0 — будет считаться по вертикали</td>
 	<td><br>".input("options[img_width]", $img_width)."</td>
 	</tr>";
@@ -1480,9 +1480,13 @@ function edit_main($id) {
 	<td>".input("options[watermark]", $watermark)."</td>
 	</tr>";
 	echo "<tr>
-	<td><b>Тип галереи фотографий:</b></td>
-	<td>".select("options[foto_gallery_type]", "7,6,5,4,3,2,1,0", "полноэкранные миниатюры с описанием в 2 строки (разделение | ) и увеличением,горизонтальная плавная дорожка с показом по одному фото и с увеличением,горизонтальная плавная дорожка с автопоказом (2 сек.) и увеличением,горизонтальная плавная дорожка с увеличением,горизонтальная плавная дорожка аля MacOs с увеличением,миниатюры одного размера с описанием в 3 строки (разделение | ),миниатюры с описанием в одну строку,«карусель» — большая картинка и миниатюры", $foto_gallery_type)."</td>
+	<td><b>Тип галереи фотографий</b></td>
+	<td>".select("options[foto_gallery_type]", "8,7,6,5,4,3,2,1,0", "вразноброс несколько фото (количество настраивается),полноэкранные миниатюры с описанием в 2 строки (разделение | ) и увеличением,горизонтальная плавная дорожка с показом по одному фото и с увеличением,горизонтальная плавная дорожка с автопоказом (2 сек.) и увеличением,горизонтальная плавная дорожка с увеличением,горизонтальная плавная дорожка аля MacOs с увеличением,миниатюры одного размера с описанием в 3 строки (разделение | ),миниатюры с описанием в одну строку,«карусель» — большая картинка и миниатюры", $foto_gallery_type)."</td>
 	</tr>"; // effects 3, basic 4, cycleitems 5, oneperframe 6
+	echo "<tr>
+	<td>Количество фото при типе галереи «вразноброс»</td>
+	<td>".input("options[foto_num]", $foto_num)."</td>
+	</tr>";
 	}
 
 	if ($name == 22 or $name == 23) {
@@ -1491,11 +1495,11 @@ function edit_main($id) {
 	<td>".select("options[base]", $base_var, $base_names, $base)."</td>
 	</tr>";
 	echo "<tr>
-	<td>Первая по важности колонка: </td>
+	<td>Первая по важности колонка </td>
 	<td>".input("options[first]", $first)."</td>
 	</tr>";
 	echo "<tr>
-	<td>Вторая по важности колонка: </td>
+	<td>Вторая по важности колонка </td>
 	<td>".input("options[second]", $second)."</td>
 	</tr>";
 	if ($name == 22) echo "<tr>

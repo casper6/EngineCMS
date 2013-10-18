@@ -1156,9 +1156,9 @@ function page($pid, $all) {
     $main_title = "[menushow]";
     if ($menushow != 0) {
       if ($cid != 0) $main_titleX = top_menu($cid, 2); 
-      else $main_titleX = "<div class=cat_title><h2 class=cat_categorii_link><a href=-".$DBName.">".$ModuleName."</a></h2></div>";
+      else $main_titleX = "<div class='cat_title'><h2 class='cat_categorii_link'><a href=-".$DBName.">".$ModuleName."</a></h2></div>";
       if (!isset($venzel)) $venzel = "";
-      $venzel .= "<div class=venzel></div>";
+      $venzel .= "<div class='venzel'></div>";
     } else $main_titleX = "";
 
     ############################3

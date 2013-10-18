@@ -216,12 +216,11 @@ input::-webkit-search-decoration,
 input::-webkit-search-cancel-button {
   display: none;
 }
-
 input[type=search] {
   background: #ededed url(images/view.gif) no-repeat 3px center;
   border: solid 1px #ccc;
   padding: 2px 3px 2px 20px;
-  width: 50px; /* Ширина по умолчанию */
+  width: 80px; /* Ширина по умолчанию */
   -webkit-border-radius: 10em;
   -moz-border-radius: 10em;
   border-radius: 10em;
@@ -230,7 +229,7 @@ input[type=search] {
   transition: all .5s;
 }
 input[type=search]:focus {
-  width: 130px; /* Ширина при наличии фокуса ввода */
+  width: 150px; /* Ширина при наличии фокуса ввода */
   background-color: #fff;
   border-color: #6dcff6;
   -webkit-box-shadow: 0 0 5px rgba(109,207,246,.5);

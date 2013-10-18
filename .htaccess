@@ -22,6 +22,7 @@ RewriteBase /
 
 RewriteRule ^admin/ /
 RewriteRule ^red/ /
+RewriteRule ^админ sys.php
 RewriteRule ^admin sys.php
 RewriteRule ^administrator sys.php
 RewriteRule ^administration sys.php

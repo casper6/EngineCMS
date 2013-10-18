@@ -222,7 +222,7 @@ function GraphicAdmin() {
 	if ($num_razdel > 10) $icon_size = "small"; 
 
 	echo "<div id='mainrazdel_index'>
-	<a class='base_page' href='/sys.php?op=mainpage&amp;id=24&amp;red=1' title='".aa("Редактировать главную страницу")."'><div class='dark_pole2'><div style='color:#e7e9ec;float:right' class='small'>".aa("(редактировать)")."</div><span class='icon black ".$icon_size."' data-icon='.'></span><span class='plus20'>".aa("Главная страница")."</span></div></a>";
+	<a class='base_page' href='/sys.php?op=mainpage&amp;id=24&amp;red=2' title='".aa("Редактировать главную страницу")."'><div class='dark_pole2'><div style='color:#e7e9ec;float:right' class='small'>".aa("(редактировать)")."</div><span class='icon black ".$icon_size."' data-icon='.'></span><span class='plus20'>".aa("Главная страница")."</span></div></a>";
 
     while ($row = $db->sql_fetchrow($result)) {
 	    $id = $row['id'];
