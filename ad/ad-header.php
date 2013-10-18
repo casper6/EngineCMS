@@ -2,7 +2,7 @@
 if (stristr(htmlentities($_SERVER['PHP_SELF']), "ad-header.php")) {
 	Header("Location: index.php"); die();
 }
-global $deviceType, $postlink, $name, $sitename, $op, $type, $red, $prefix, $db, $id, $nastroi, $lang_admin;
+global $deviceType, $postlink, $name, $sitename, $op, $type, $red, $prefix, $db, $id, $nastroi, $lang_admin, $siteurl, $op, $ad_fon;
 if ($postlink != "") $post = "<button class='small' onclick='location.href=\"".$postlink."\"' title='".aa("Открыть почтовый сайт...")."'><span class='icon small black' data-icon='@'></span> ".aa("Почта")."</button> "; else $post="";
 
 // Определяем заголовок страницы (title) и цвета кнопок главного меню (какой раздел администрирования выбран)
@@ -35,7 +35,6 @@ echo "<!doctype html>
 <meta http-equiv='cache-control' content='no-cache' />
 <meta name='viewport' content='width=device-width'>
 <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
-<link rel='stylesheet' href='ad/ad-style.css' type='text/css'>
 <link rel='shortcut icon' href='images/favicon_cms.png' type='image/x-icon'>
 <script src='includes/jquery183.min.js'></script>
 <script src='includes/css-frameworks/kickstart/js/ad-kickstart.js'></script>
@@ -44,17 +43,19 @@ echo "<!doctype html>
 <script src='includes/jquery-ui.min.js'></script>
 <script src='includes/jquery-ui-i18n.min.js'></script> 
 <script src='includes/jquery.innerfade.js'></script>
-<link rel='stylesheet' href='includes/jquery-ui.css' media='all' />
+<link rel='stylesheet' href='includes/jquery-ui.css'>
 <!--[if lt IE 9]><script src='includes/html5.js'></script><![endif]-->
-<link rel='stylesheet' type='text/css' href='includes/css-frameworks/kickstart/css/ad-kickstart.css' media='all' />
-<link rel='stylesheet' type='text/css' href='includes/css-frameworks/kickstart/css/kickstart-forms.css' media='all' />
-<link rel='stylesheet' type='text/css' href='includes/css-frameworks/kickstart/css/kickstart-icons.css' media='all' />
-<link rel='stylesheet' type='text/css' href='includes/css-frameworks/kickstart/css/kickstart-buttons.css' media='all' />";
+<link rel='stylesheet' href='engine.css'>
+<link rel='stylesheet' href='includes/css-frameworks/kickstart/css/ad-kickstart.css'>
+<link rel='stylesheet' href='includes/css-frameworks/kickstart/css/kickstart-forms.css'>
+<link rel='stylesheet' href='includes/css-frameworks/kickstart/css/kickstart-icons.css'>
+<link rel='stylesheet' href='includes/css-frameworks/kickstart/css/kickstart-buttons.css'>
+";
 
 if ($lang_admin != 'ru') echo "<script src='language/adm_".$lang_admin.".js'></script>";
 
 if ($red==3) echo "<script src='ed/js/editor/editor.js'></script> 
-<link rel='stylesheet' href='ed/js/editor/css/editor.css' type='text/css' media='screen, projection' /> ";
+<link rel='stylesheet' href='ed/js/editor/css/editor.css' media='screen, projection' /> ";
 if ($red==4) echo "<script src='ed2/redactor.js'></script>
 <link rel='stylesheet' href='ed2/redactor.css' />
 <script src='ed2/".$lang_admin.".js'></script>
@@ -65,11 +66,9 @@ if ($red==4) echo "<script src='ed2/redactor.js'></script>
 <script src='ed2/fontsize.js'></script>
 <script src='ed2/fontfamily.js'></script>";
 
-global $ad_fon;
 if ($ad_fon == 0) $fon = "default.jpg"; else $fon = $ad_fon.".png";
 echo "\n</head>\n<body style=\"background: white url('/images/adfon/".$fon."');\">";
 $url = getenv("REQUEST_URI");
-global $siteurl, $op;
 $url = str_replace("http://".$siteurl,"",$url);
 $url2 = explode("_",$url);
 $url2 = explode("?",$url2[0]);

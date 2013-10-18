@@ -1,8 +1,7 @@
 <?php
 // Всё, что вы накодите, может быть использовано против вас в багтрекере.
 define('MODULE_FILE', true);
-define ( 'ROOT_DIR', dirname ( __FILE__ ) ); // доработать!
-define ( 'CMS_DIR', ROOT_DIR . '/engine' );
+define ('ROOT_DIR', dirname ( __FILE__ ) ); // доработать!
 
 session_start(); // Для капчи (проверочный код-картинка от спама) // проверить вызов
 require_once("mainfile.php");
