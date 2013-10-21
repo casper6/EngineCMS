@@ -164,10 +164,27 @@ function mainpage($name="") {
 	elseif (intval($id)>0) { edit_main($id); }
 	elseif ($display_addmenu == false) echo "<center><br>Создание основных разделов сайта запрещено администратором.</center>";
 	else {
-		echo "<table class='block_back w100 mw800 pm0' cellspacing=0 cellpadding=0><tr valign=top><td id='razdel_td' class='radius'>
+		echo "<div class='curved-vt-2 hide' style='margin-left:-265px; width: 530px; top: 80px;' id='add'>
+		<a title='Закрыть это окно' class=punkt onclick=\"$('#add').hide();\"><div class='radius close_button'>&nbsp;x&nbsp;</div></a>
+			<h1>Вы решили добавить:</h1>
+			<a href='sys.php?op=mainpage&amp;name=design&amp;type=0&amp;red=1#1' class='bigicon'><img class='bigicon bi0' src='/images/1.gif'><b>Дизайн</b><br>
+			Аналог темы, обрамление разделов или блоков</a>
+			<a href='sys.php?op=mainpage&amp;name=css&amp;type=1#1' class='bigicon'><img class='bigicon bi1' src='/images/1.gif'><b>Стиль CSS</b><br>
+			Редактируемый онлайн, для подключения к дизайнам</a>
+			<a href='sys.php?op=mainpage&amp;name=block&amp;type=3#1' class='bigicon'><img class='bigicon bi3' src='/images/1.gif'><b>Блок</b><br>
+			Настраиваемые элементы для вывода различной информации</a>
+			<a href='sys.php?op=mainpage&amp;name=shablon&amp;type=6&amp;red=1#1' class='bigicon'><img class='bigicon bi6' src='/images/1.gif'><b>Шаблон</b><br>
+			Замена настроек на ручной выбор выводимой информации</a>
+			<a href='sys.php?op=mainpage&amp;name=spisok&amp;type=4#1' class='bigicon'><img class='bigicon bi4' src='/images/1.gif'><b>Поле</b><br>
+			Поля для страниц (аналог таксономии)</a>
+			<a href='sys.php?op=mainpage&amp;name=base&amp;type=5#1' class='bigicon'><img class='bigicon bi5' src='/images/1.gif'><b>Базу данных</b><br>
+			Таблица с поиском и фильтрами для внутреннего или открытого использования</a>
+			</div>
+
+		<table class='block_back w100 mw800 pm0' cellspacing=0 cellpadding=0><tr valign=top><td id='razdel_td' class='radius'>
 
 			<div id='razdels' class='razdels' style='width:340px;'>
-			<div class='black_grad h40'><button title='Добавить оформление...' class='small black right3' onclick=\"show_animate('addmain');\"><span class='mr-2 icon darkgrey small' data-icon='+'></button>
+			<div class='black_grad h40'><button title='Добавить оформление...' class='small black right3' onclick=\"$('#add').toggle();\"><span class='mr-2 icon darkgrey small' data-icon='+'></button>
 			<span class='h1'>Оформление:</span>
 			</div>";
 	     ////////////////////// ДИЗАЙН 0
@@ -184,29 +201,12 @@ function mainpage($name="") {
 		 echo "<div id='mainrazdel5' class='dark_pole2'><a class='base_page' onclick=\"oformlenie_show('БД','5','base','/sys.php?op=mainpage&amp;name=base&amp;type=5')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='D'></span><span class='plus20'>Базы данных (таблицы)</span></div></a></div>";
 		 
 		echo "</div></td>
-	<td style='padding:0;'><a class='punkt' title='Свернуть/развернуть левую колонку' onclick='$(\"#razdels\").toggle(\"slow\");'><div class='polosa_razdelitel'>||</div></a></td>
-	<td style='width:100%;'><div style='display:none;' id=addmain>
-			<div class='block_white2 radius add_oformlenie'>
-			<a title='Закрыть это окно' class=punkt onclick=\"show_animate('addmain')\"><div class='radius close_button'>&nbsp;x&nbsp;</div></a>
-
-			<h1>Вы решили добавить:</h1>
-			<a href='sys.php?op=mainpage&amp;name=design&amp;type=0&amp;red=1#1' class='bigicon'><img class='bigicon bi0' src='/images/1.gif'><b>Дизайн</b><br>
-			Аналог темы, обрамление разделов или блоков</a>
-			<a href='sys.php?op=mainpage&amp;name=css&amp;type=1#1' class='bigicon'><img class='bigicon bi1' src='/images/1.gif'><b>Стиль CSS</b><br>
-			Редактируемый онлайн, для подключения к дизайнам</a>
-			<a href='sys.php?op=mainpage&amp;name=block&amp;type=3#1' class='bigicon'><img class='bigicon bi3' src='/images/1.gif'><b>Блок</b><br>
-			Настраиваемые элементы для вывода различной информации</a>
-			<a href='sys.php?op=mainpage&amp;name=shablon&amp;type=6&amp;red=1#1' class='bigicon'><img class='bigicon bi6' src='/images/1.gif'><b>Шаблон</b><br>
-			Замена настроек на ручной выбор выводимой информации</a>
-			<a href='sys.php?op=mainpage&amp;name=spisok&amp;type=4#1' class='bigicon'><img class='bigicon bi4' src='/images/1.gif'><b>Поле</b><br>
-			Поля для страниц, аналог таксономии CMS Drupal</a>
-			<a href='sys.php?op=mainpage&amp;name=base&amp;type=5#1' class='bigicon'><img class='bigicon bi5' src='/images/1.gif'><b>Базу данных</b><br>
-			Удобная таблица с поиском для внутреннего или открытого использования</a>
-			<br><br></div></div>
+	<td style='padding:0;'><a class='punkt' title='Свернуть/развернуть левую колонку' onclick='$(\"#razdels\").toggle(\"slow\");'><div class='polosa_razdelitel'><div id='rotateText'><nobr>↑ Сворачивает Оформление ↑</nobr></div></div></a></td>
+	<td style='width:100%;'>
 			<div class='m5'><button class='small' onclick='location.href=\"/sys.php?op=mainpage&amp;type=0&amp;id=1&amp;red=2\"' title='Редактировать главный дизайн'><span class='icon gray medium' data-icon='7'></span>Главный дизайн</button> 
-			<button class='small' onclick='location.href=\"/sys.php?op=mainpage&amp;type=1&amp;id=20\"' title='Редактировать главный стиль'><span class='icon gray medium' data-icon='7'></span>Главный стиль</button>";
+			<button class='small' onclick='location.href=\"/sys.php?op=mainpage&amp;type=1&amp;id=20\"' title='Редактировать главный стиль'><span class='icon gray medium' data-icon='7'></span>и стиль</button>";
  
-		echo " <a class='button small' onclick=\"oformlenie_show('','2','trash','')\"><span class='icon gray medium' data-icon='T'></span>Удаленное оформление</a>";
+		echo " <a class='button small' onclick=\"oformlenie_show('','2','trash','')\"><span class='icon gray medium' data-icon='T'></span>Удаленное</a>";
 
 		echo "<hr><div class='podrazdel radius' id='podrazdel'></div>
 			</td></tr></table>";
@@ -357,7 +357,7 @@ function create_main($type) {
 	<input type=hidden name=id value=''>
 	</form>
 
-	<div id='photo_upload' style='display:none;'>".add_file_upload_form()."</div>
+	<div id='photo_upload' style='display:none;'>".add_file_upload_form("textarea")."</div>
 
 	</td>
 	<td id='form_block' style='display:none;' width=500 class='block'>
@@ -1264,7 +1264,10 @@ function edit_main($id) {
 
 		echo "<input type='hidden' name='text' value='".$text."'>";
 		if ($id != 24) {
-			echo "<tr><td colspan='2'><a class='dark_pole h2' onClick='$(\"#shablon_show\").toggle(\"slow\")'><img class='icon2 i26' src='/images/1.gif'> Шаблон Предисловия и Содержания страниц</a><div id='shablon_show' class='hide'>".close_button("shablon_show")."Если у большинства страниц раздела особенный дизайн или какое-то первоначальное содержание для всех страниц раздела одинаково — его можно прописать ниже как Шаблон для страниц. Сначала идет шаблон для Предисловия страниц, затем — для Содержания, разделяются они служебным словом [следующий]. Если нужен только шаблон для Предисловия - слово [следующий] можно не писать, а если нужен только шаблон для Содержания - слово [следующий] надо написать перед ним.";
+			echo "<tr><td colspan='2'>
+			<a class='dark_pole' onClick='$(\"#shablon_show\").toggle(\"slow\")'><img class='icon2 i26' src='/images/1.gif'> Шаблон Предисловия и Содержания страниц</a>
+
+			<div id='shablon_show' class='hide'>".close_button("shablon_show")."Если у большинства страниц раздела особенный дизайн или какое-то первоначальное содержание для всех страниц раздела одинаково — его можно прописать ниже как Шаблон для страниц. Сначала идет шаблон для Предисловия страниц, затем — для Содержания, разделяются они служебным словом [следующий]. Если нужен только шаблон для Предисловия - слово [следующий] можно не писать, а если нужен только шаблон для Содержания - слово [следующий] надо написать перед ним.";
 			redactor2($red, $sha, 'shablon');
 			echo "</div>";
 		} else {
@@ -2293,9 +2296,9 @@ function mainpage_create_block($title, $name, $text, $modul, $useit, $design) {
 	$title = trim($title); // Название блока
 	$name = intval($name); // тип блока
 	$useit = "|".trim($useit); // настройки блока
-	if (trim($title) == "") $title = "Вы забыли ввести название этого блока! ОТРЕДАКТИРУЙТЕ!";
+	if (trim($title) == "") $title = "Вы забыли ввести название этого блока!";
 	if ($modul != "0" && $modul != "allrazdely") {
-		//$modul_name = $name_razdels[$modul]; 
+		$modul_name = translit_name($title); 
 		$useit = $modul.",".$useit;
 		$shablon = "block-".$modul_name."-".$name; // css блока имеет вид: block-англ.имя раздела-тип блока
 	} else $shablon = "block-".strtolow(translit_name(trim($title))); // транслитерация имени блока
@@ -2478,16 +2481,14 @@ function block_help() { // проверить вызов
 	    case "mainpage_save":
 	    case "mainpage_save_ayax":
 	    	if ($op == "mainpage_save_ayax") parse_str($_REQUEST['string']);
-	    	else {
-			    if (!isset($descriptionX)) $descriptionX = "";
-			    if (!isset($keywordsX)) $keywordsX = "";
-			    if (!isset($s_tip)) $s_tip = "";
-			    if (!isset($namo)) $namo = "";
-			    if (!isset($title)) $title = "";
-			    if (!isset($text)) $text = "";
-			    if (!isset($useit)) $useit = "";
-			    if (!isset($shablon)) $shablon = "";
-			}
+		    if (!isset($descriptionX)) $descriptionX = "";
+		    if (!isset($keywordsX)) $keywordsX = "";
+		    if (!isset($s_tip)) $s_tip = "";
+		    if (!isset($namo)) $namo = "";
+		    if (!isset($title)) $title = "";
+		    if (!isset($text)) $text = "";
+		    if (!isset($useit)) $useit = "";
+		    if (!isset($shablon)) $shablon = "";
 		    mainpage_save($id, $type, $namo, $title, $text, $useit, $shablon, $descriptionX, $keywordsX, $s_tip);
 	    	break;
 	    case "mainpage_del":

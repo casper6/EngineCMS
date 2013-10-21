@@ -23,7 +23,6 @@ foreach ($_FILES['file'] as $secvalue) {
         die;
     }
 }
-
 $folder =  '../img/';//директория в которую будет загружен файл
 $type = str_replace("image/","",strtolower($_FILES['file']['type']));
 if ($type == 'png' || $type == 'jpg' || $type == 'gif' || $type == 'jpeg' || $type == 'pjpeg') {

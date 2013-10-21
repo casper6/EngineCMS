@@ -183,7 +183,7 @@ echo "<table class='w100 mw800 pm0 block_back' cellspacing=0 cellpadding=0><tr v
 	echo "<div id='mainrazdel10' class='dark_pole2'><a class='base_page' onclick=\"options_show('10','show_options_razrab');\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='b'></span><span class='plus20'>Информация для разработчиков</span></div></a></div>";
 
 	echo "</div></td>
-	<td style='padding:0;'><a class='punkt' title='Свернуть/развернуть левую колонку' onclick='$(\"#razdels\").toggle(\"slow\");'><div class='polosa_razdelitel'>||</div></a></td>
+	<td style='padding:0;'><a class='punkt' title='Свернуть/развернуть левую колонку' onclick='$(\"#razdels\").toggle(\"slow\");'><div class='polosa_razdelitel'><div id='rotateText'><nobr>↑ Сворачивает Настройки ↑</nobr></div></div></a></td>
 	<td style='width:100%;'><form action='".$admin_file.".php' method='post' name='form'>";
 
 echo "

@@ -147,16 +147,16 @@ function razdel_show(title,id,name,type,xxx,sort) {
 	var txt;
 	select_button(id);
 	xxx = Math.floor( Math.random() * (100000 - 9) ) + 10;
-	colors = '<a href="sys.php?op=mainpage_razdel_color&id='+id+'&color=0" title="Без цветовой маркировки">'+icon('gray small',',')+'</a><a href="sys.php?op=mainpage_razdel_color&id='+id+'&color=1" title="Раздел часто используется">'+icon('lightgreen small',',')+'</a><a href="sys.php?op=mainpage_razdel_color&id='+id+'&color=2" title="Раздел редко используется">'+icon('lightyellow small',',')+'</a><a href="sys.php?op=mainpage_razdel_color&id='+id+'&color=3" title="Раздел не используется">'+icon('lightred small',',')+'</a><a href="sys.php?op=mainpage_razdel_color&id='+id+'&color=4" title="Новый раздел, в разработке">'+icon('lightblue small',',')+'</a>';
+	colors = '<span id="colors" class="hide"><a class="punkt" onclick="$(\'#add\').hide(\'slow\');"><div class="radius" style="font-size:12pt; width:20px; height: 20px; color: white; text-align:center; float:right; margin:5px; background: #bbbbbb;">&nbsp;x&nbsp;</div></a><h1>Выберите цвет раздела по частоте его использования:</h1><ul class="button-bar small"><li class="first"><a href="sys.php?op=mainpage_razdel_color&id='+id+'&color=0" title="Без цветовой маркировки">'+icon('gray small',',')+' не выбрано</a></li><li><a href="sys.php?op=mainpage_razdel_color&id='+id+'&color=1" title="Раздел часто используется">'+icon('lightgreen small',',')+' часто</a></li><li><a href="sys.php?op=mainpage_razdel_color&id='+id+'&color=2" title="Раздел редко используется">'+icon('lightyellow small',',')+' редко</a></li><li><a href="sys.php?op=mainpage_razdel_color&id='+id+'&color=3" title="Раздел не используется">'+icon('lightred small',',')+' не используется</a></li><li class="last"><a href="sys.php?op=mainpage_razdel_color&id='+id+'&color=4" title="Новый раздел, в разработке">'+icon('lightblue small',',')+' новый</a></li></ul><br>Цвет может использоваться для сортировки разделов при нажатии <img src="images/sortirovka.png"> кнопки сортировки слева от заголовка «Разделы:».</span>';
 	if (id == 0) txt = '<h1>'+title+'</h1>';
 	else {
-		txt = '<div class=pt10><nobr><ul class="button-bar"><li><a target=_blank class=blue href=-'+name+' title="Открыть этот раздел на сайте">'+icon('blue small','s')+' Открыть</a></li><li><a href="sys.php?op=mainpage&amp;type=2&id='+id+'#1" title="Редактировать Главную страницу этого раздела и Шаблон для заполнения страниц">'+icon('orange medium','7')+' Редактировать</a></li><li><a href="sys.php?op=mainpage&id='+id+'&amp;type=2&nastroi=1#1" title="Настройки (опции) раздела">'+icon('orange medium','V')+' Настроить</a></li><li><a class=pointer onclick=show("del_raz'+id+'") title="Удалить этот раздел">'+icon('red small','F')+'</a></li></ul></nobr><div id=del_raz'+id+' style="display:none"><br><br><div class=block><h1>Вы хотите удалить этот раздел и всё его содержимое?</h1><a onclick=\'delrazdel("'+id+'");show("del_raz'+id+'");show("mainrazdel'+id+'");razdel_show("Раздел удалён", 0)\' title="Удалить этот раздел" class="button red white">'+icon('white medium','F')+' Удалить</a> <a onclick=show("del_raz'+id+'") title="Не удалять" class="ml50 button green">НЕ удалять</a></div></div></div>'; 
+		txt = '<nobr><ul class="button-bar"><li class="first"><a target="_blank" class="blue" href=-'+name+' title="Открыть этот раздел на сайте">'+icon('blue small','s')+' Открыть</a></li><li><a href="sys.php?op=mainpage&amp;type=2&id='+id+'#1" title="Редактировать Главную страницу этого раздела и Шаблон для заполнения страниц">'+icon('orange small','7')+' Редактировать</a></li><li><a href="sys.php?op=mainpage&id='+id+'&amp;type=2&nastroi=1#1" title="Настройки (опции) раздела">'+icon('orange small','V')+' Настроить</a></li><li class="last"><a class=pointer onclick=show("del_raz'+id+'") title="Удалить этот раздел">'+icon('red small','F')+'</a></li></ul></nobr><div id=del_raz'+id+' style="display:none"><br><br><div class=block><h1>Вы хотите удалить этот раздел и всё его содержимое?</h1><a onclick=\'delrazdel("'+id+'");show("del_raz'+id+'");show("mainrazdel'+id+'");razdel_show("Раздел удалён", 0)\' title="Удалить этот раздел" class="button red white">'+icon('white medium','F')+' Удалить</a> <a onclick=show("del_raz'+id+'") title="Не удалять" class="ml50 button green">НЕ удалять</a></div></div>'; 
 		if (type == 'pages') {
-			txt = txt+'<div class="mt5 mb20"><nobr><a class="button green" title="Добавить страницу (в редакторе)" target=_blank href="sys.php?op=base_pages_add_page&name='+name+'#1">'+icon('white small','+')+' Добавить страницу</a><a onclick="add_papka(\''+id+'\',1)" class="button small green" title="Добавить несколько страниц">цы</a> <a onclick="add_papka(\''+id+'\',0)" class="button small green">'+icon('yellow small',',')+' Создать папку</a> ' + colors + '</nobr> <div id="add_papka" style="display:none;"></div></div>';
+			txt = txt+'<div class="mt5 mb20"><ul class="button-bar"><li class="first"><a title="Добавить страницу (в редакторе)" target=_blank href="sys.php?op=base_pages_add_page&name='+name+'#1">'+icon('small','+')+' Добавить страницу</a></li><li class="last"><a class="pointer" onclick="add_papka(\''+id+'\',0)">'+icon('orange small',',')+' Добавить папку</a></li></ul> <a class="button small" onclick=\'$("#add").show().html( $("#colors").html() );\' title="Цвет раздела (видит только администратор)">'+icon('gray small',',')+' Цвет</a><br><a onclick="add_papka(\''+id+'\',1)" class="button small" title="Добавить несколько страниц">или сразу несколько страниц</a> ' + colors + '<div id="add_papka" style="display:none;"></div></div>';
 		} else if (type == 'database') {
-			txt = txt+'<div class="mt5 mb20"><nobr><a class="button green" href="sys.php?op=base_base_create_base&base='+name+'&name='+name+'&amp;red=1#1" title="Добавить строку в базу данных">'+icon('white small','+')+' Добавить строку</a> <a class="button blue" href="sys.php?op=base_base&name='+name+'" title="Открыть базу данных">'+icon('white small','s')+' Открыть таблицу</a> ' + colors + '</nobr></div>';
-		} else txt = txt+'<div style="margin-top: 5px; margin-bottom: 20px;"><nobr>' + colors + '</nobr></div>';
-		if (type == 'page') txt = txt+'Раздел не содержит блока отображения страниц — [содержание], поэтому сам является страницей.<br>Для изменения содержания раздела нажмите кнопку Редактировать.<br>Для размещения в разделе страниц и/или папок — добавьте в содержание раздела блок [содержание]';
+			txt = txt+'<div class="mt5 mb20"><nobr><a class="button green" href="sys.php?op=base_base_create_base&base='+name+'&name='+name+'&amp;red=1#1" title="Добавить строку в базу данных">'+icon('white small','+')+' Добавить строку</a> <a class="button blue" href="sys.php?op=base_base&name='+name+'" title="Открыть базу данных">'+icon('white small','s')+' Открыть таблицу</a> <a class="button small" onclick=\'$("#add").show().html( $("#colors").html() );\' title="Цвет раздела (видит только администратор)">'+icon('gray small',',')+' Цвет</a>' + colors + '</nobr></div>';
+		} else txt = txt+' <a class="button small" onclick=\'$("#add").show().html( $("#colors").html() );\' title="Цвет раздела (видит только администратор)">'+icon('gray small',',')+' Цвет</a>' + colors;
+		if (type == 'page') txt = txt+'<p>Раздел является одиночной страницей, т.к. не содержит блока отображения страниц — [содержание] или [страницы].<br>Для изменения содержания раздела нажмите кнопку Редактировать.<br>Для размещения в разделе страниц и/или папок — добавьте в содержание раздела блок [содержание] или блоки [название] и [страницы].';
 	}
 	document.getElementById('podrazdel').innerHTML = txt;
 	if (type == 'pages') { razdel(id, sort, xxx, txt); }
@@ -175,15 +175,15 @@ function add_papka(id,pages) {
 	if (pages==0) pages = 'add_papka'; else pages = 'add_pages';
 	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': pages, 'id': id},
-	    beforeSend: function(){ $('#add_papka').toggle(); $('#add_papka').html('<p><img src=images/loading.gif> Загрузка списка папок раздела...'); },
-	    success: function(data){ $('#add_papka').html(data); }
+	    beforeSend: function(){ $('#add').show(); $('#add').html('<p><img src=images/loading.gif> Загрузка списка папок раздела...'); },
+	    success: function(data){ $('#add').html(data); }
 	});
 }
 function save_papka(id,title,parent,name,pages) {
 	if (pages==0) pages = 'addpapka'; else pages = 'addpages';
 	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': pages, 'id': id, 'string': title+'*@%'+parent },
-	    success: function(data){ razdel_show(data,id,name,'pages',(Math.floor( Math.random() * (100000 - 9) ) + 10)); }
+	    success: function(data){ $('#add').hide(); razdel_show(data,id,name,'pages',(Math.floor( Math.random() * (100000 - 9) ) + 10)); }
 	});
 }
 function offpage(id,on) {
@@ -195,7 +195,7 @@ function offpage(id,on) {
 	     }
 	});
 }
-function openbox(id,name) {
+function openbox(id,name,type) {
 	var add = '';
 	var no_answer_comm = '<a class="nothing punkt" onclick="openbox(\'7\',\'Комментарии без ответов\');">без ответов</a>';
 	var no_active_comm = '<a class="nothing punkt" onclick="openbox(\'6\',\'Отключенные комментарии\');">отключенные</a>';
@@ -206,10 +206,13 @@ function openbox(id,name) {
 	if (name == 'Резервные копии') add = 'При редактировании страниц создаются их копии для восстановления при необходимости. Внимание: восстанавливая предыдущий вариант страницы, вы заменяете новый!<br><a href="sys.php?op=delete_all&del=backup" style="margin-left: 20px;" class="gray nothing">'+icon('red small','F')+'Удалить все копии</a><br><br>';
 	if (name == 'Добавленное посетителями') add = 'Эти страницы нуждаются в проверке и включении.<br><br>';
 	if (name == 'Новое и отредактированное') add = 'История последних изменений<br><br>';
+
+	if (type != 'add') type = 'podrazdel';
+
 	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'opengarbage', 'id': id},
-	    beforeSend: function(){ $('#podrazdel').html('<h1><img src=images/loading.gif> Загружаю...</h1>'); },
-	    success: function(data){ $('#podrazdel').html('<h1>'+name+'</h1>'+add+data); $('#podrazdel').show(); }
+	    beforeSend: function(){ $('#'+type).html('<h1><img src=images/loading.gif> Загружаю...</h1>'); },
+	    success: function(data){ $('#'+type).html('<h1>'+name+'</h1>'+add+data); $('#'+type).show(); }
 	});
 }
 function delslovo(id) {

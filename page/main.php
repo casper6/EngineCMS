@@ -1,7 +1,5 @@
 <?php
-if (!defined('MODULE_FILE')) {
-  die (ss("У вас нет прав для доступа к этому файлу!"));
-}
+if (!defined('MODULE_FILE')) die (ss("У вас нет прав для доступа к этому файлу!"));
 require_once("shablon.php");
 $module_name = basename(dirname(__FILE__));
 ###########################################
@@ -191,27 +189,23 @@ function top_menu($cid, $page) {
   $no_links_perehod = false;
 
   $links2 .= "<div class='main_cat_links'>";
-
   	foreach ($c_title as $key => $cid_title) {
-    $cid_title = str_replace(" ","&nbsp;",trim($cid_title));
-    
-    if ($cid != 0 and $c_parent[$key]!=0 and $no_links_perehod == false) { 
-      $links2 .= "   </div><div class='podcategorii_cat_links'>"; 
-      $no_links_perehod = true;
-    }
-    
+      $cid_title = str_replace(" ","&nbsp;",trim($cid_title));
+      if ($cid != 0 and $c_parent[$key]!=0 and $no_links_perehod == false) { 
+        $links2 .= "</div><div class='podcategorii_cat_links'>"; 
+        $no_links_perehod = true;
+      }
       if ($podrazdel_active_show == 2) {
-          if ($cid != $key and $c_parent[$cid] != $key) 
-            $links2 .= "   <a href='-".$DBName."_cat_".$key."' class='no_active_podcategorii_link'>".$cid_title."</a>";
-          else 
-            $links2 .= "   <b><a href='-".$DBName."_cat_".$key."' class='active_podcategorii_link'>".$cid_title."</a></b>";
-          
+        if ($cid != $key and $c_parent[$cid] != $key) 
+          $links2 .= "   <a href='-".$DBName."_cat_".$key."' class='no_active_podcategorii_link'>".$cid_title."</a>";
+        else 
+          $links2 .= "   <b><a href='-".$DBName."_cat_".$key."' class='active_podcategorii_link'>".$cid_title."</a></b>";
       } elseif ($podrazdel_active_show == 3) {
-          if ($cid == $key) $sel = " selected"; else $sel = "";
-          if ($key != 0) $links2 .= "<option value='".$key."'".$sel.">".$cid_title."</option>";
+        if ($cid == $key) $sel = " selected"; else $sel = "";
+        if ($key != 0) $links2 .= "<option value='".$key."'".$sel.">".$cid_title."</option>";
       } else {
         if ($key == $cid and $cid_title != "") {
-        // Показываем подразделы, если они есть
+          // Показываем подразделы, если они есть
           $sql = "SELECT `cid`, `title` FROM ".$prefix."_pages_categories where `module`='".$DBName."' and `parent_id`='".$cid."' and `tables`='pages' order by `sort`, `cid`";
           $result = $db->sql_query($sql);
           while ($row = $db->sql_fetchrow($result)) {
@@ -228,9 +222,8 @@ function top_menu($cid, $page) {
         }
       }
   	}
-    
-    if ($no_links_perehod == false) $links2 .= "   </div>";
-    
+    //if ($no_links_perehod == false) $links2 .= "</div>";
+    //$links2 .= "</div>";
     
   /////////////////////////////////////
     if ($podrazdel_active_show == 3) {
@@ -1140,8 +1133,9 @@ function page($pid, $all) {
     $page_tim = $dat[1];
     $dat = explode("-",$dat[0]);
     $p_date = intval($dat[2])." ".findMonthName($dat[1])." ".$dat[0];
-    ///////////////////////////
-    if ($put_in_blog>0) {
+
+    $opentext_blog = "";
+    if ($put_in_blog > 0) {
       $title_blog = htmlspecialchars($title);
       $link = "http://".$siteurl."/-".$DBName."_page_".$pid."";
       $logo_link = "http://".$siteurl."/small_logo.jpg";
@@ -1161,7 +1155,6 @@ function page($pid, $all) {
       $venzel .= "<div class='venzel'></div>";
     } else $main_titleX = "";
 
-    ############################3
     $cat_title = "";
     if ($cid != 0) {
       $sqlZ = "SELECT `title` FROM ".$prefix."_pages_categories WHERE `cid`='".mysql_real_escape_string($cid)."' and `tables`='pages'";
@@ -1282,6 +1275,7 @@ function page($pid, $all) {
   $page_blog .= "</div></div><br>";
   } else $page_blog = "";
 
+  $page_search_news = "";
   if ($search != "") { // Похожие новости // добавить настройку вкл/выкл
     $sql = "SELECT `pid`, `title`, `date` FROM ".$prefix."_pages WHERE `tables`='pages' and `module`='".$module."' and (`active`='1' or `active`='2') and `pid`!='".$pid."' and `cid`='".$cid."'".mysql_real_escape_string($search_keys)." order by `date` desc limit 0,5";
     $result = $db->sql_query($sql);
@@ -1300,7 +1294,7 @@ function page($pid, $all) {
       }
       $page_search_news .= "</div><br>";
     }
-  } else $page_search_news = "";
+  }
 
   // Рейтинг #######################################
   if ($golos==1 and $view!=4) {

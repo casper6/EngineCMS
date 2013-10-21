@@ -27,6 +27,8 @@ foreach ($_FILES['file'] as $secvalue) {
     }
 }
 
+$_FILES['file']['name'] = basename($_FILES['file']['name']);
+
 if (!empty($_FILES['file']['name'])) {
   $type = str_replace("image/","",strtolower($_FILES['file']['type']));
   if ($type == 'png' || $type == 'jpg' || $type == 'gif' || $type == 'jpeg' || $type == 'pjpeg') {

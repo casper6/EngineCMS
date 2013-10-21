@@ -500,7 +500,7 @@ function redactor2($type, $txt, $name, $style="html") {
           });
           document.getElementById('".$name."').style.fontSize='16px';</script>";
   } else {
-    echo "<textarea id='".$name."' class='redactor' name='".$name."' rows=15 cols=40 style='width:100%;'>".$txt."</textarea>";
+    echo "<textarea id='".$name."' class='redactor' name='".$name."' rows=15 cols=40 style='width: 100%; height: 220px;'>".$txt."</textarea>";
   }
 }
 ?>

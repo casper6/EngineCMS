@@ -1,16 +1,15 @@
 <?php
 // Распаковка закачанного на сервер архива с CMS
-if(!function_exists('exec')) die('exec function is not available on this server');
+if(!function_exists('exec')) die('На этом сервере не найдена функция «exec». Облом.');
 if(!$unzip_command = exec('/usr/bin/which unzip')) die();
- 
-if(!$dir_handle = opendir(getcwd())) die ('Can\'t open dir');
+if(!$dir_handle = opendir(getcwd())) die ('Не могу открыть папку');
 while(false != ($files = readdir($dir_handle))){
     if($files != '.' && $files != '..'){
 	if(preg_match('/.\.zip/',$files)){
           exec("$unzip_command $files",$output);
-	  echo '<b>Unzipping ',$files,' </b><br>';
+	  echo '<b>Распаковка ',$files,' </b><br>';
 	  foreach($output as $unzipped_files)
-	      echo "$unzipped_files",'<span style="color: green"> done!</span><br>';
+	      echo "$unzipped_files",'<span style="color: green"> Готово.</span><br>';
         }
      }
 }

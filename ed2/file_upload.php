@@ -61,15 +61,15 @@ function translit_name($cyr_str) { # Транслит названий файл�
    return iconv ( "UTF-8", "UTF-8//IGNORE", strtr ( $cyr_str, $tr ) );
 }
 
+$_FILES['file']['name'] = basename($_FILES['file']['name']);
+
 if (!empty($_FILES['file']['name'])) {  
   $file = translit_name($_FILES['file']['name']);
   if (is_uploaded_file($_FILES['file']['tmp_name'])) {
     if (move_uploaded_file($_FILES['file']['tmp_name'], $folder.$file)) {
       $filetype = $_FILES['file']['type'];
       if ($filetype != 'application/octet-stream' && $filetype != 'text/html' && $filetype != 'text/xml' && $filetype != 'text/php' && $filetype != 'application/x-javascript' && !strpos($file, ".js") && !strpos($file, ".php") && !strpos($file, ".htm") && !strpos($file, ".vb") && !strpos($file, ".vbs") && !strpos($file, ".exe")) {
-
         $add = ""; // Возможно добавление иконок файлов
-
         $array = array(
           'filelink' => '/files/'.$file,
           'filename' => $add.str_replace('"', '', str_replace('%22', '', $_FILES['file']['name']))

@@ -1,10 +1,10 @@
 <?php
 // Все «правила хорошего кода» написаны кровью, вытекшей из глаз программистов, читавших чужой код.
-header("Expires: " . date("r", time() + 3600));
-header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
-header("Cache-Control: post-check=0, pre-check=0", false);
-header("Pragma: no-cache"); // HTTP/1.0
+//header("Expires: " . date("r", time() + 3600));
+//header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+//header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
+//header("Cache-Control: post-check=0, pre-check=0", false);
+//header("Pragma: no-cache"); // HTTP/1.0
 require_once("../mainfile.php");
 global $prefix, $db, $admin, $now, $adminmail, $ip, $siteurl, $title_razdels_by_id, $name_razdels, $deviceType;
 if (is_admin($admin)) {
@@ -861,13 +861,14 @@ if ($func == "add_pages") { // Создание страниц
     $list .= "<option value=".$cid.">вложены в «".$title."»</option>";
   }
   $list .= "</select><br>
-  <input type=submit value=\" Добавить \" onclick=\"save_papka('".$id."',document.getElementById('title".$id."').value,document.getElementById('select".$id."').value,'".$name_raz."',1);\" style='width:100%; height:55px; font-size: 22px; margin-top:20px;'>
+  <input type='submit' value=' Добавить ' onclick=\"save_papka('".$id."',document.getElementById('title".$id."').value,document.getElementById('select".$id."').value,'".$name_raz."',1);\" style='width:100%; height:55px; font-size: 22px; margin-top:20px;'>
   </td></tr></table>
-  <blockquote class=small>Вы можете создать сразу несколько страниц — пишите их заголовки в столбик, разделяя Enter.<br>Добавить предисловие, содержание и активность (вкл./выкл = 1/0) к страницам можно сразу после заголовка через символ «|». Пример: Заголовок|Предисловие|Содержание|1<br>
+  <a class='button small' onclick='$(\"#help\").toggle()'>Справка</a>
+  <p id='help' class='hide'>Вы можете создать сразу несколько страниц — пишите их заголовки в столбик, разделяя Enter.<br>Добавить предисловие, содержание и активность (вкл./выкл = 1/0) к страницам можно сразу после заголовка через символ «|». Пример: Заголовок|Предисловие|Содержание|1<br>
   В качестве разделителя страниц по-умолчанию используется Enter, но если вам нужно сразу добавить страницы с большим количеством текста, в котором присутствуют переносы строк — используйте разделитель &&&<br>
-  Если вы не видите созданных страниц — обновите страницу (нажав F5) и вновь откройте этот раздел.</blockquote>
+  Если вы не видите созданных страниц — обновите страницу (нажав F5) и вновь откройте этот раздел.</p>
   </form>";
-  $list = close_button('add_papka').$list."<hr>";
+  $list = close_button('add').$list;
   echo $list; exit;
 }
 ######################################################################################
@@ -891,13 +892,14 @@ if ($func == "add_papka") { // Создание папки
      $list .= "<option value=".$cid.">вложена в «".$title."»</option>";
    }
   $list .= "</select><br>
-  <input type=submit value=\" Создать \" onclick=\"save_papka('".$id."',document.getElementById('title".$id."').value,document.getElementById('select".$id."').value,'".$name_raz."',0);\" style='width:100%; height:55px; font-size: 22px; margin-top:20px;'>
+  <input type='submit' value=' Создать ' onclick=\"save_papka('".$id."',document.getElementById('title".$id."').value,document.getElementById('select".$id."').value,'".$name_raz."',0);\" style='width:100%; height:55px; font-size: 22px; margin-top:20px;'>
   </td></tr></table>
-  <blockquote class=small>Вы можете создать сразу несколько папок — пишите их имена в столбик, разделяя Enter.<br>Добавить описание к папке можно сразу после названия через символ «|». Пример: Название | Описание.<br>
+  <a class='button small' onclick='$(\"#help\").toggle()'>Справка</a>
+  <p id='help' class='hide'>Вы можете создать сразу несколько папок — пишите их имена в столбик, разделяя Enter.<br>Добавить описание к папке можно сразу после названия через символ «|». Пример: Название | Описание.<br>
   В качестве разделителя страниц по-умолчанию используется Enter, но если вам нужно сразу добавить папки с большим количеством текста в описании, в котором присутствуют переносы строк — используйте разделитель &&&<br>
-  Если вы не видите созданной папки — обновите страницу (нажав F5) и вновь откройте этот раздел.</blockquote>
+  Если вы не видите созданной папки — обновите страницу (нажав F5) и вновь откройте этот раздел.</p>
   </form>";
-  $list = close_button('add_papka').$list."<hr>";
+  $list = close_button('add').$list;
   echo $list; exit;
 }
 ######################################################################################
@@ -938,28 +940,26 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
         }
         $styles .= "<option value='".$row2['id']."'".$sel.">".$title_design."</option>";
       }
-    $pageslistdel .= "<form method='post' action=sys.php>
-      <TABLE width=100% class='table_light'><tr><td>
-      <span class=h2>Название раздела:</span><br>
+    $pageslistdel .= close_button("add")."
+    <h1>Вы решили добавить раздел:</h1>
+    <form method='post' action=sys.php>
+      <h2>Название раздела:</h2>
       <input id=name_razdel type=text name=title size=30 class=w100 autofocus><br>
-      <i>Примеры: «О нас», «Наша продукция», «Каталог», «Контакты» и т.д.</i> <a class=punkt onclick='$(\"#psevdonim\").toggle(\"slow\");'>Псевдоним</a> будет создан транслитом.<br>
-      </td></tr>
-      <tr id=psevdonim style='display:none;'><td>
-      <span class=h3>Псевдоним:</span><br>
+      <i>Примеры: «О нас», «Наша продукция», «Каталог», «Контакты» и т.д.</i> <br><a class=punkt onmousemove='$(\"#psevdonim\").show();'>Адрес раздела</a> будет создан транслитом.<br>
+
+      <div id='psevdonim' class='hide'>
+      <h2>Адрес раздела:</h2>
       <input type=text name=namo size=30 class=w100><br>
-      <a href=# onclick=\"window.open('http://translate.google.ru/#".$lang."/en/' + $('#name_razdel').val(),'Перевод',' width=800,height=400'); return false;\"><b>Перевести название</b></a>. <i>Используются англ. буквы и знак «_», без пробелов. Примеры: «about_me», «product», «catalog», «contact» и т.д.</i>
-      </td></tr><tr><td>
-      <span class=h2>Использовать настройки:</span><br><select name=text size=10 class=w100>
+      <a href=# onclick=\"window.open('http://translate.google.ru/#".$lang."/en/' + $('#name_razdel').val(),'Перевод',' width=800,height=400'); return false;\"><b>Перевести название</b></a>. <i>Используются англ. буквы и знак «_», без пробелов. Примеры: «about_me», «product», «catalog», «contact» и т.д.</i></div>
+      <h2>Использовать настройки:</h2><select name=text size=8 class=w100>
       <option value='[название]'>• раздел будет отдельной страницей без вложенных папок и страниц</option>
       <option value='lim=15&amp;comments=0' selected>• вариант «Статьи» (15 страниц на листе, комментарии выключены)</option>
       <option value='lim=10&amp;comments=1&amp;comments_add=1&amp;vetki=2&amp;comments_mail=1&amp;comments_adres=1'>• вариант «Блог» (10 страниц на листе, комментарии включены)</option>
       <option value='lim=500&amp;comments=0'>• вариант «Каталог» (500 страниц на листе, комментарии выключены)</option>
-      ".$options."</select><br><i>Можно моментально настроить новый раздел, выбрав один из вариантов или ранее созданных разделов.</i>
-      </td></tr><tr><td>
-      <span class=h2>Выберите дизайн:</span><br>
+      ".$options."</select><br><i>Можно настроить новый раздел, выбрав один из вариантов или ранее созданных разделов.</i>
+      <h2>Выберите дизайн:</h2>
       <select name=useit class=w100>".$styles."</select><br><i>Дизайн раздела окружает содержимое раздела оформлением, он обязательно должен содержать в себе блок [содержание] (который выводит содержание раздела), а также у дизайна должен быть выбран стиль (css).</i>
-      </td></tr></table>
-      <input type=\"submit\" value=\"Добавить раздел\" class='w100 h40 f16'>
+      <p class='center'><input type=\"submit\" value=\"Добавить раздел\" class='w100 h40 f16'>
       <input type=hidden name=type value='2'>
       <input type=hidden name=shablon>
       <input type=hidden name=id value=''>
@@ -987,7 +987,7 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
           $p_active_color = " bgcolor=#dddddd";
           $vkl_title = "<a onclick=offpage(".$pid.",1) class=\"punkt\" title=\"Включение страницы\">".icon('white small','`')."Включить</a>";
         }
-        $pageslistdel .= "<tr id=1page".$pid."".$p_active_color." class='tr_hover'><td class='".$gray_date."'><nobr>".$date."</nobr></td><td>".$m_title."</td><td>".$vkl_title."</td><td><a title='Удалить страницу в Удаленные' onclick=delpage(".$pid.") class='pointer' style='float:right;'>".icon('red small','T')."</a><a title='Изменить страницу' href='sys.php?op=base_pages_edit_page&name=".$module."&pid=".$pid."'>".icon('orange small','7')."<a title='Открыть страницу на сайте' target=_blank href=-".$module."_page_".$pid.">".$title."</a>&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>";
+        $pageslistdel .= "<tr id='1page".$pid."".$p_active_color."' class='tr_hover'><td class='".$gray_date."'><nobr>".$date."</nobr></td><td>".$m_title."</td><td>".$vkl_title."</td><td><a title='Удалить страницу в Удаленные' onclick='delpage(".$pid.")' class='pointer' style='float:right;'>".icon('red small','T')."</a><a title='Изменить страницу' href='sys.php?op=base_pages_edit_page&name=".$module."&pid=".$pid."'>".icon('orange small','7')."<a title='Открыть страницу на сайте' target='_blank' href='-".$module."_page_".$pid."'>".$title."</a>&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>";
     }
     $pageslistdel .= "</tbody></table>";
 
@@ -1001,7 +1001,7 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
       $module = $row7['module'];
       if (!isset($module)) $title_razdel_and_bd[$module] = "РАЗДЕЛ УДАЛЁН! &rarr; $module";
       $date = date2normal_view(str_replace(".","-",$row7['date']), 2, 1);
-      $pageslistdel .= "<tr id=1page".$pid." class='tr_hover'><td class='gray'><nobr>".$date."</nobr></td><td class='gray'>".$title_razdel_and_bd[$module]."</td><td><a onclick=offpage(".$pid.",1) class=\"punkt\" title=\"Включение страницы\">".icon('white small','`')."Включить</a></td><td><a title='Удалить страницу в Удаленные' onclick=delpage(".$pid.") class='pointer' style='float:right;'>".icon('red small','T')."</a><a title='Изменить страницу в Редакторе' href='sys.php?op=base_pages_edit_page&name=".$module."&pid=".$pid."'>".icon('orange small','7')."</a><a title='Открыть страницу на сайте' target=_blank href=-".$module."_page_".$pid.">".$title."</a>&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>";
+      $pageslistdel .= "<tr id='1page".$pid."' class='tr_hover'><td class='gray'><nobr>".$date."</nobr></td><td class='gray'>".$title_razdel_and_bd[$module]."</td><td><a onclick='offpage(".$pid.",1)' class='punkt' title='Включение страницы'>".icon('white small','`')."Включить</a></td><td><a title='Удалить страницу в Удаленные' onclick='delpage(".$pid.")' class='pointer' style='float:right;'>".icon('red small','T')."</a><a title='Изменить страницу в Редакторе' href='sys.php?op=base_pages_edit_page&name=".$module."&pid=".$pid."'>".icon('orange small','7')."</a><a title='Открыть страницу на сайте' target='_blank' href='-".$module."_page_".$pid."'>".$title."</a>&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>";
     }
   $pageslistdel .= "</tbody></table><i>Максимум отображения: 10.000 страниц.</i>";
 
@@ -1074,7 +1074,7 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
         //if ($del == true) $del = "<a title='Удалить отключенный комментарий' onclick=delcomm(".$cid.") class=punkt><div style='float:right; margin-left:20px;' title='Отключить комментарий'>".icon('red small','F')."</div></a>"; 
         //else 
         $del = "";
-        $pageslistdel .= "<tr onclick=show('comm".$cid."') title='Показать комментарий...' valign=top style='cursor:pointer;' class='tr_hover' id=1comm".$cid.$bgcolor."><td class='gray'><nobr>".$data."</nobr></td><td>".$del."<a onclick=offcomm(".$cid.") class=punkt>".$vkl."</a>
+        $pageslistdel .= "<tr onclick='show(\"comm".$cid."\")' title='Показать комментарий...' valign='top' style='cursor:pointer;' class='tr_hover' id='1comm".$cid.$bgcolor."'><td class='gray'><nobr>".$data."</nobr></td><td>".$del."<a onclick='offcomm(".$cid.")' class='punkt'>".$vkl."</a>
 
         <a style='float:right;' title='Изменить комментарий' href='sys.php?op=base_comments_edit_comments&cid=".$cid."'>".icon('orange small','7')."</a>
 
@@ -1083,16 +1083,16 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
         <div style='display:none;' id=comm".$cid.">
         ".$otvet.$mails.$tel."<br><br>
         <div class=bggray>".$txt."</div><br>
-        <a id='show_otvet_link".$cid."' onclick=\"show_otvet_comm($cid,'".$avtor."','".$mail."','".$module."')\" class='button medium'>".icon('orange small','\'')." Ответить на комментарий</a>
-        <div id=otvet_comm".$cid."></div><br><br>
+        <a id='show_otvet_link".$cid."' onclick=\"show_otvet_comm(".$cid.",'".$avtor."','".$mail."','".$module."')\" class='button medium'>".icon('orange small','\'')." Ответить на комментарий</a>
+        <div id='otvet_comm".$cid."'></div><br><br>
         </div>
         </td></tr>";
       } else {
-        if ($mail != "") $pageslistdel .= "<tr valign=top id=1comm".$cid.$bgcolor."><td class='gray'><nobr>".$data."</nobr></td><td><a title='Удалить подписку' onclick=delcomm(".$cid.") class=punkt>".icon('red small','F')."</a><a style='float:right;' title='Изменить подписку' href='sys.php?op=base_comments_edit_comments&cid=".$cid."'>".icon('orange small','7')."</a> <span class=green>Подписка на рассылку</span>, ".$avtor." &rarr; ".$mail."</td></tr>";
+        if ($mail != "") $pageslistdel .= "<tr valign='top' id='1comm".$cid.$bgcolor."'><td class='gray'><nobr>".$data."</nobr></td><td><a title='Удалить подписку' onclick='delcomm(".$cid.")' class='punkt'>".icon('red small','F')."</a><a style='float:right;' title='Изменить подписку' href='sys.php?op=base_comments_edit_comments&cid=".$cid."'>".icon('orange small','7')."</a> <span class='green'>Подписка на рассылку</span>, ".$avtor." &rarr; ".$mail."</td></tr>";
         else {
           // Преобразование адреса URL в ссылку (с учетом тире)
-          $txt = preg_replace('@(https?://([-\w\.]+)+(:\d+)?(/([-\w/_\.]*(\?\S+)?)?)?)@', '<a href="$1" terget="_blank">$1</a>', $txt);
-          $pageslistdel .= "<tr valign=top id=1comm".$cid.$bgcolor."><td class='gray'><nobr>".$data."</nobr></td><td><a style='float:right;' title='Удалить сообщение' onclick=delcomm(".$cid.") class=punkt>".icon('red small','F')."</a> <span class=green>".$avtor."</span> &rarr; ".$txt."</td></tr>";
+          $txt = preg_replace('@(https?://([-\w\.]+)+(:\d+)?(/([-\w/_\.]*(\?\S+)?)?)?)@', '<a href="$1" target="_blank">$1</a>', $txt);
+          $pageslistdel .= "<tr valign=top id='1comm".$cid.$bgcolor."'><td class='gray'><nobr>".$data."</nobr></td><td><a style='float:right;' title='Удалить сообщение' onclick='delcomm(".$cid.")' class='punkt'>".icon('red small','F')."</a> <span class='green'>".$avtor."</span> &rarr; ".$txt."</td></tr>";
         }
       }
     }
@@ -1103,7 +1103,7 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
     if ($id == 1) {
       $sql3 = "select `id`, `title` from ".$prefix."_mainpage where `type`='2' and `tables`='del'";
       $result3 = $db->sql_query($sql3);
-      $pageslistdel .= "<h2>Разделы:</h2><table width=100% class=table_light>";
+      $pageslistdel .= "<h2>Разделы:</h2><table class='w100 table_light'>";
       while ($row = $db->sql_fetchrow($result3)) {
         $pageslistdel .= "<tr id='block_".$row['id']."'><td><div style='float:right; display: inline;'><a target='_blank' href='sys.php?op=mainpage&type=2&id=".$row['id']."' title='Редактировать'>".icon('black small','7')."</a> 
        <a class='padleft30 punkt' onclick='delblock(".$row['id'].",2)' title='Восстановить'>".icon('green small',';')."</a> 
@@ -1120,8 +1120,7 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
     $sql6 = "SELECT `pid`, `module`, `title`, `redate` from ".$prefix."_pages where `tables`='".$deistvo."' order by `redate` desc limit 500";
     $iid = $deistvo."page";
     $result6 = $db->sql_query($sql6);
-    $pageslistdel .= "<h2>Страницы (".$numrows."):</h2>
-        <table width=100% class=table_light><thead><tr><th>".$slovo."</th><th>Раздел </th><th>Страница</th></tr></thead><tbody>";
+    $pageslistdel .= "<h2>Страницы (".$numrows."):</h2><table width=100% class=table_light><thead><tr><th>".$slovo."</th><th>Раздел </th><th>Страница</th></tr></thead><tbody>";
     while ($row6 = $db->sql_fetchrow($result6)) {
       $pid = $row6['pid'];
       $title = strip_tags($row6['title'], '<b><strong><em><i>');
@@ -1147,7 +1146,7 @@ if ($func == "rep") { // Копия/Перемещения/Ярлык стран
   if ($type == 1) { // создать ярлык (ссылку)
   $info = "<b>Страница успешно продублирована.</b> При изменении любой из страниц-ярлыков, информация будет меняться во всех остальных страницах. Удаление одной из страниц-ярлыков (в том числе оригинала) не затронет других страниц.";
   // получим все данные об этой странице
-  $sql = "SELECT * FROM ".$prefix."_pages WHERE pid='$id'";
+  $sql = "SELECT * FROM ".$prefix."_pages WHERE pid='".$id."'";
   $result = $db->sql_query($sql);
   $row = $db->sql_fetchrow($result);
     $keys = $row['keywords'];

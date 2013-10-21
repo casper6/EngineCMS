@@ -26,7 +26,9 @@
   // Запрет использования других серверов
   if ($_SERVER['REQUEST_METHOD'] == "POST") {
     if (isset($_SERVER['HTTP_REFERER'])) {
-      if (strcasecmp(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST), $_SERVER['HTTP_HOST']) != 0) {
+      if (strcasecmp(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST), $_SERVER['HTTP_HOST']) != 0 && 
+        strcasecmp(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST).":".parse_url($_SERVER['HTTP_REFERER'], PHP_URL_PORT), $_SERVER['HTTP_HOST']) != 0) {
+        print_r(parse_url($_SERVER['HTTP_REFERER']));
        die(ss("Запрещено размещение информации с другого сервера"));
       }
     } else die(ss("Ошибка: браузер не смог послать заголовок HTTP_REFERER для этого сайта.<br>Проблема может быть в браузере, использовании прокси-сервера или фаервола.<br>Смените браузер, отключите прокси и фаервол.<br><br>А может быть вы просто сохранили страницу сайта, открыли её и пытаетесь отправить письмо, комментарий или проголосовать — это возможно только со страниц сайта."));

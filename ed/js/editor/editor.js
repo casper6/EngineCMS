@@ -19,8 +19,6 @@ var $current_tr = false;
 var $current_td = false;
 
 (function($){
-
-
 	// Initialization	
 	$.fn.editor = function(options)
 	{				
@@ -48,9 +46,7 @@ var $current_td = false;
 			image_upload: 'ed/upload.php',
 			imageUploadParams: '', // GET params
 			imageUploadFunction: false, // callback function
-			file_upload: 'ed/file.php',	
-			file_download: '/ed/file.php?file=',		
-			file_delete: '/ed/file.php?delete=',		
+			file_upload: 'ed/file.php',
 			fileUploadParams: '', // GET params
 			fileUploadFunction: false, // callback function
 			autoclear: true,
@@ -621,7 +617,6 @@ var $current_td = false;
 		convertRGB: function(rgbString)
 		{
 			var parts = rgbString.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
-			
 			delete (parts[0]);
 			for (var i = 1; i <= 3; ++i)
 			{
@@ -854,37 +849,11 @@ var $current_td = false;
 		{
 			var el = e.target;
 			var file_id = $(el).attr('rel');
-			
-			var handler = function()
-            {
+			var handler = function() {
 				$('#file').val($(el).text());
-				$('#editorFileDeleteBtn').click(function()
-				{
-					this.fileDelete(el, file_id);					
-				}.bind(this));
-				
-				$('#editorFileDownloadBtn').click(function()
-				{				
-					this.fileDownload(el, file_id);
-				}.bind(this));
-			
 			}.bind(this);
-			
 			editorActive = this;
-			this.modalInit(RLANG.file, this.opts.path + 'plugins/file_edit.html', 400, 200, handler);
 		},
-		fileDelete: function(el, file_id)
-		{
-			$(el).remove();
-			$.get(this.opts.file_delete + file_id);
-			editorActive.frame.get(0).contentWindow.focus();
-			this.modalClose();				
-		},
-		fileDownload: function(el, file_id)
-		{
-			top.location.href = this.opts.file_download + file_id;				
-		},		
-
   		/*
             Table
         */
@@ -924,9 +893,7 @@ var $current_td = false;
             this.docObserve();          
             this.modalClose();
             
-            $table = $(this.doc).find('body').find('#table' + tableid);
-    
-            
+            $table = $(this.doc).find('body').find('#table' + tableid); 
         },
 		tableObserver: function(e)
 		{

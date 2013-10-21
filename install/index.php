@@ -187,7 +187,7 @@ if (stristr(htmlentities($_SERVER[\'PHP_SELF\']), "config.php")) { Header("Locat
 	    return $ok; 
 	} //function copy_safe
 
-	unlink('config.php');
+	if (file_exists('config.php')) unlink('config.php');
 	if (!file_put_contents('config.php', $conf, LOCK_EX)) die('<li>Файл config.php в корне сайта не перезаписан! Попробуйте его удалить и перезапустить установку CMS.');
 	echo "<li>Файл config.php настроен";
 

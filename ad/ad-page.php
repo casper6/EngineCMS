@@ -281,7 +281,7 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
 
   echo "<form action='sys.php' method='post' enctype='multipart/form-data'>
   <div class='fon w100 mw800'><div class='black_grad h40'>
-  <button type=submit onClick=\" if (document.getElementById('to_razdel').value=='') { alert('Выберите раздел для страницы (слева сверху)'); return false; } else { submit(); } \" class='medium green left3'><span class='icon white small mr-2' data-icon='c'></span> Сохранить</button>
+  <button type=submit onClick=\" if (document.getElementById('to_razdel').value=='') { alert('Выберите раздел для страницы (слева сверху)'); return false; } else { submit(); } \" class='small green left3'><span class='icon white medium mr-2' data-icon='c'></span> Сохранить</button>
   <span class='h1 pt10'>".$main_title."</span>";
   if ($nastroi != 1) red_vybor();
   echo "</div>
@@ -326,9 +326,9 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
     <div id='izmenapapka'><script>izmenapapka($('#to_razdel').val(),'".$cid."','','','addpage');</script></div>";
   } else echo "<input type=hidden name=cid value='0'><i>В разделе нет папок.</i><br><br>";    
   
-  echo "<div id='mainrazdel' class='dark_pole2'><a class='base_page' onclick=\"if ( $('#dop').is(':hidden') ) $('#mainrazdel').attr('class', 'dark_pole2sel'); else $('#mainrazdel').attr('class', 'dark_pole2'); $('#main').toggle(); $('#dop').toggle('slow'); \"><div id='mainrazdel'><div style=\"float:right\"><span class=\"f16 gray\">⟩</span></div><span class='icon gray large in_b' data-icon='z'><span aria-hidden='true'>z</span></span><span class='plus20'>Дополнительные настройки</span></div></a></div> ";
+  echo "<div id='mainrazdel' class='dark_pole2'><a class='base_page' onclick=\"if ( $('#dop').is(':hidden') ) $('#mainrazdel').attr('class', 'dark_pole2sel'); else $('#mainrazdel').attr('class', 'dark_pole2'); $('#main').toggle(); $('#dop').toggle('slow'); \"><div id='mainrazdel'><div style=\"float:right\"><span class=\"f16 gray\">></span></div><span class='icon gray large in_b' data-icon='z'><span aria-hidden='true'>z</span></span><span class='plus20'>Дополнительные настройки</span></div></a></div> ";
 
-  echo "</td><td style='padding:0;'><a class='punkt' title='Свернуть/развернуть левую колонку' onclick='$(\"#razdels\").toggle(\"slow\");'><div class='polosa_razdelitel'>||</div></a></td><td>";
+  echo "</td><td style='padding:0;'><a class='punkt' title='Свернуть/развернуть левую колонку' onclick='$(\"#razdels\").toggle(\"slow\");'><div class='polosa_razdelitel'><div id='rotateText'><nobr>↑ Сворачивает левую колонку ↑</nobr></div></div></a></td><td>";
 
   echo "<div style='display:none' id='dop'><a title='Закрыть' class='punkt' onclick=\"if ( $('#dop').is(':hidden') ) $('#mainrazdel').attr('class', 'dark_pole2sel'); else $('#mainrazdel').attr('class', 'dark_pole2'); $('#main').toggle(); $('#dop').toggle('slow'); \"><div class='radius' style='font-size:12pt; width:20px; height: 20px; color: white; text-align:center; float:right; margin:5px; background: #bbbbbb;'>&nbsp;x&nbsp;</div></a>
   

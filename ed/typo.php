@@ -1,17 +1,13 @@
 <?php
-
 $html = stripslashes(urldecode($_POST['editor']));
 echo typo($html);
 
-function typo($html, $lang = 'ru')
-{
+function typo($html, $lang = 'ru') {
 	$html = stripslashes($html);
-
 	// remove pre
 	preg_match_all('/<pre>([\\w\\W]*?)<\/pre>/i', $html, $matches);
 
-	foreach ($matches[0] as $k => $v)
-	{
+	foreach ($matches[0] as $k => $v) {
 		$html = str_replace($v, md5($v), $html);
 		$pre_cache[md5($v)] = $v;
 	}
@@ -19,8 +15,7 @@ function typo($html, $lang = 'ru')
 	// remove style
 	preg_match_all('/<style([\\w\\W]*?)<\/style>/i', $html, $matches);
 
-	foreach ($matches[0] as $k => $v)
-	{
+	foreach ($matches[0] as $k => $v) {
 		$html = str_replace($v, md5($v), $html);
 		$pre_css[md5($v)] = $v;
 	}
@@ -28,8 +23,7 @@ function typo($html, $lang = 'ru')
 	// remove script
 	preg_match_all('/<script([\\w\\W]*?)<\/script>/i', $html, $matches);
 
-	foreach ($matches[0] as $k => $v)
-	{
+	foreach ($matches[0] as $k => $v) {
 		$html = str_replace($v, md5($v), $html);
 		$pre_script[md5($v)] = $v;
 	}
@@ -37,8 +31,7 @@ function typo($html, $lang = 'ru')
 	// remove tags
 	preg_match_all('/<(.*?)>/i', $html, $tag_cache);
 
-	foreach ($tag_cache[1] as $k => $v)
-	{
+	foreach ($tag_cache[1] as $k => $v) {
 		$html = str_replace($tag_cache[0][$k], '<'.md5($v).'>', $html);
 		$full_cache['<'.md5($v).'>'] = $tag_cache[0][$k];
 	}
@@ -53,8 +46,7 @@ function typo($html, $lang = 'ru')
 
 	// One-two words
 	$html = preg_replace('/(?<![-:])\b([\w]{1,2}\b(?:[,:;]?))(?!\n)\s/i', "$1&nbsp;", $html);
-	if ($lang == 'ru')
-	{	
+	if ($lang == 'ru') {	
 		$html = preg_replace('/(\s|&nbsp;)(Р¶Рµ|Р»Рё|Р»СЊ|Р±С‹|Р±|Р¶|РєР°)([\.,!\?:;])?&nbsp;/i', "&nbsp;$2$3 ", $html);
 	}
 
@@ -76,8 +68,7 @@ function typo($html, $lang = 'ru')
 	$html = preg_replace('/([ ]+|&nbsp;)\-\s+/i', '&nbsp;&mdash; ', $html);
 
 	// Russian quotes
-	if ($lang == 'ru')
-	{
+	if ($lang == 'ru') {
 	   	$html = preg_replace('/(?<!\s)([!?]|&hellip;)?"(?!\b)/i', '$1&raquo;', $html);
 		$html = preg_replace('/(?<!\b)"(?!\s)/i', '&laquo;', $html);
 	}
@@ -94,5 +85,4 @@ function typo($html, $lang = 'ru')
 
 	return $html;
 }
-
 ?>

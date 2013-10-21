@@ -1,10 +1,10 @@
 <?php
 // Все «правила хорошего кода» написаны кровью, вытекшей из глаз программистов, читавших чужой код.
-header("Expires: " . date("r", time() + 3600));
-header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
-header("Cache-Control: post-check=0, pre-check=0", false);
-header("Pragma: no-cache"); // HTTP/1.0
+//header("Expires: " . date("r", time() + 3600));
+//header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+//header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
+//header("Cache-Control: post-check=0, pre-check=0", false);
+//header("Pragma: no-cache"); // HTTP/1.0
 define('ADMIN_FILE', true);
 if(isset($aid)) {
   if(!empty($aid) AND (!isset($admin) OR empty($admin)) AND $op!='login') {
@@ -164,7 +164,7 @@ function GraphicAdmin() {
 	$soderganie_menu = "";
  	
  	global $deviceType;
- 	$buttons = explode(",", aa(" Новое, Проверить: , Удаленное, Старое, Блоки, Отзывы:, Дата"));
+ 	$buttons = explode(",", aa(" Новое, Проверить: , Удаленное, Старое, Блоки, Отзывы:, Вставить дату"));
 	if ($deviceType != 'computer') $buttons = array('','','','','','','');
 
 	if ($comm_segodnya > 0) $color_comm = " orange"; else $color_comm = "";
@@ -211,9 +211,15 @@ function GraphicAdmin() {
 	$razdel_txt = "";
 	if ($num_razdel == 0) $razdel_txt = "<div style='padding-left:5px; color: red;'>".aa("Разделов пока нет. Добавьте, нажав на кнопку +. Если вам нужен одностраничный сайт — нажмите по кнопке «Главная страница» для её редактирования.")."</div>";
 
-	if ($registr=='1') echo "&nbsp;&nbsp;&nbsp;<a href=".$admin_file.".php?op=MainUser>".aa("Пользователи")."</a> <a href=".$admin_file.".php?op=sortuser>".aa("Список")."</a>";
+	if ($registr=='1') echo "&nbsp;&nbsp;&nbsp;<a href='".$admin_file.".php?op=MainUser'>".aa("Пользователи")."</a> <a href=".$admin_file.".php?op=sortuser>".aa("Список")."</a>";
 
-	echo "<div class='black_grad'><button id=new_razdel_button title='".aa("Сортировка...")."' class='small black' onclick=\"show('sortirovka');\" style='float:left; margin-left:3px;margin-top:3px;'><img src='images/sortirovka.png'></button><button id=new_razdel_button title='".aa("Добавить раздел...")."' class='small right3' onclick=\"openbox('10','".aa("Вы решили добавить раздел:")."'); $('.dark_pole2sel').attr('class', 'dark_pole2');\"><span class=\"mr-2 icon darkgrey small\" data-icon=\"+\"></span></button><span class='h1'>".aa("Разделы:")."</span>
+	echo "<div class='curved-vt-2 hide' style='margin-left:-350px; width: 700px; top: 80px;' id='add'></div>
+
+	<div class='black_grad'><button id='new_razdel_button' title='".aa("Сортировка...")."' class='small black' onclick=\"show('sortirovka');\" style='float:left; margin-left:3px;margin-top:3px;'><img src='images/sortirovka.png'></button>
+
+	<button id='new_razdel_button' title='".aa("Добавить раздел...")."' class='small right3' onclick=\"openbox('10','', 'add'); $('.dark_pole2sel').attr('class', 'dark_pole2');\"><span class=\"mr-2 icon darkgrey small\" data-icon=\"+\"></span></button>
+
+	<span class='h1'>".aa("Разделы:")."</span>
 		</div>".$razdel_txt."<div id='sortirovka' style='display:none;'>
 		".close_button('sortirovka')."<p class=f14>".aa("Сортировать разделы по:")." <p class=f14>".$razdel_sort_name[0].", ".$razdel_sort_name[1]." ".aa("или")." ".$razdel_sort_name[2]."</p></div>";
 
@@ -221,8 +227,9 @@ function GraphicAdmin() {
 	if ($num_razdel > 5) $icon_size = "medium"; 
 	if ($num_razdel > 10) $icon_size = "small"; 
 
-	echo "<div id='mainrazdel_index'>
-	<a class='base_page' href='/sys.php?op=mainpage&amp;id=24&amp;red=2' title='".aa("Редактировать главную страницу")."'><div class='dark_pole2'><div style='color:#e7e9ec;float:right' class='small'>".aa("(редактировать)")."</div><span class='icon black ".$icon_size."' data-icon='.'></span><span class='plus20'>".aa("Главная страница")."</span></div></a>";
+	echo "<div id='mainrazdel_index' class='dark_pole2'>
+	<div style='float:right'><a class='button small ml5' href='sys.php?op=mainpage&id=24&red=2#1' title='".aa("Редактировать Главную страницу")."'><span class='icon small' data-icon='7'></span></a></div>
+	<a class='base_page' href='/sys.php?op=mainpage&amp;id=24&amp;red=2' title='".aa("Редактировать Главную страницу")."'><div id='mainrazdel_index'><span class='icon black ".$icon_size."' data-icon='.'></span><span class='plus20'>".aa("Главная страница")."</span></div></a></div>";
 
     while ($row = $db->sql_fetchrow($result)) {
 	    $id = $row['id'];
@@ -246,8 +253,8 @@ function GraphicAdmin() {
 		$type_opisX = "";
 		if ($nam!="index") {
 			if ($size < 1) $size = ""; 
-			if ($size_off < 1) $size_off = ""; else $size_off = "-".$size_off;
-			$type_opisX = "<span class='f14 radius bb1 pr10 pl10'><span class='green' title='".aa("Включенные страницы")."'>".$size."</span>&nbsp;<span class='red' title='".aa("Отключенные страницы")."'>".$size_off."</span></span>";
+			if ($size_off < 1) $size_off = ""; else $size_off = "&nbsp;<span class='red' title='".aa("Отключенные страницы")."'>-".$size_off."</span>";
+			$type_opisX = "<span class='f14 pr10 pl10'><span class='green' title='".aa("Включенные страницы")."'>".$size."</span>".$size_off."</span>";
 			if ($size < 1 and $size_off < 1) $type_opisX = "";
 		} elseif ($nam=="index") $type_opisX = "";
 		if ($current_type != $type) $current_type = $type;
@@ -316,7 +323,7 @@ function GraphicAdmin() {
 	echo "</div>
 	</td>
 	<td style='padding:0;'><a class='punkt' title='Свернуть/развернуть левую колонку' onclick='$(\"#razdels\").toggle(\"slow\");'><div class='polosa_razdelitel'><div id='rotateText'><nobr>↑ Сворачивает Разделы ↑</nobr></div></div></a></td>
-	<td style='width:100%;'>".$soderganie_menu."<div class='podrazdel radius nothing' id='podrazdel'>";
+	<td style='width:100%;padding:0;'><div class='black_grad'><div class='pt5'>".$soderganie_menu."</div></div><div class='podrazdel radius nothing' id='podrazdel'>";
 
 	// ЗАПИСКИ
 	$row = $db->sql_fetchrow($db->sql_query("SELECT `adminmes` from ".$prefix."_config"));
@@ -329,11 +336,12 @@ function GraphicAdmin() {
 	if (!empty($project_logotip) && file_exists($project_logotip)) echo "<img src='".$project_logotip."' class=center>";
 	if (!empty($project_name)) echo "<br><font style='font-size:44px; color:gray;'>".$project_name."</font>";
 	echo "</div>
-	<form action='".$admin_file.".php?op=mes' method='post' name=form class='nothing' class=w100>
+	<form action='".$admin_file.".php?op=mes' method='post' name=form class='nothing' class='w100'>
 		<div class='black_grad' style='height:242px; border: #ddd 1px solid;'>
-		<button class='small punkt' type=submit style='float:left; margin:3px;'><span class=\"icon gray small\" data-icon=\"c\"></span> ".aa("Сохранить")."</button><span class='h3'>".$mes_ok."</span>
-		<a style='float:right; margin:3px;' onclick=\"document.getElementById('adminmes').value+='\\r'+getDateNow()+'  '\" title='".aa("Вставить дату и время (в конце текста)")."' class='button small punkt ml20'><span class=\"icon gray small\" data-icon=\"6\"></span>".$buttons[6]."</a>
-		<textarea id=adminmes name=adminmes rows=3 cols=40 style='width:99%' class=' f14 yellow_grad h200'>".$adminmes."</textarea>
+		<a id='adminmes_date' style='float:right; margin:3px; display:none;' onclick=\"document.getElementById('adminmes').value+='\\r'+getDateNow()+'  '\" title='".aa("Вставить дату и время (в конце текста)")."' class='button small ml20'><span class='icon gray small' data-icon='6'></span>".$buttons[6]."</a>
+		<button id='adminmes_save' class='hide small punkt' type='submit' style='float:left; margin:3px;'><span class=\"icon gray small\" data-icon=\"c\"></span> ".aa("Сохранить")."</button><div class='h3' style='height:40px;'>".$mes_ok."</div>
+		
+		<textarea id='adminmes' name='adminmes' rows='3' cols='40' style='width:99%' class='f14 yellow_grad h200' onclick='$(\"#adminmes_save\").show(); $(\"#adminmes_date\").show();'>".$adminmes."</textarea>
 		</div>
 	</form>
 	</div>
@@ -445,7 +453,7 @@ function adminMain() {
 if($admintest) {
 	switch($op) {
 		case "mes";
-			$db->sql_query("UPDATE `".$prefix."_config` SET `adminmes` = '".mysql_real_escape_string($adminmes)."' LIMIT 1 ;") or die (aa("Не сохранилось..."));
+			if (isset($adminmes)) $db->sql_query("UPDATE `".$prefix."_config` SET `adminmes` = '".mysql_real_escape_string($adminmes)."' LIMIT 1 ;") or die (aa("Не сохранилось..."));
 			adminMain();
 			break;
 		case "GraphicAdmin":
