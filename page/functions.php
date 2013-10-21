@@ -511,7 +511,7 @@ function WhatArrayElement($array, $value, $keys=0) { // функция для п
 function form($module, $text, $type="open") { // Функция для форматирования текста страниц
   // type: open, main - text
   global $db, $prefix;
-  $result8 = $db->sql_query("select `text` from ".$prefix."_mainpage where `type`='2' and `name`='".mysql_real_escape_string($module)."'");
+  $result8 = $db->sql_query("select `text` from ".$prefix."_mainpage where `type`='2' and (`name` = '".mysql_real_escape_string($module)."' or `name` like '".mysql_real_escape_string($module)." %')");
   $row8 = $db->sql_fetchrow($result8);
   $text2 = $row8['text'];
   if (strpos($text2,"tipograf=0") < 1) { // Типограф

@@ -28,11 +28,16 @@ function menu() {
 		$sql = "select `name`, `title`, `counter` from ".$prefix."_mainpage where `tables`='pages' and `name`!='index' and `type`='2' order by counter desc";
 		$result = $db->sql_query($sql) or die('Ошибка при попытке прочитать посещаемость разделов');
 		while ($row = $db->sql_fetchrow($result)) {
-			$stat_razdel .= "<tr valign=top><td class='polosa gray'><a target='_blank' href='/-".$row['name']."'>".strip_tags($row['title'], '<b><i>')."</a></td><td align=center class='polosa gray'>".$row['counter']."</td></tr>";
+			$name2 = $row['name'];
+			if (strpos($name2, "\n")) { // заменяем имя запароленного раздела
+				$name2 = explode("\n", str_replace("\r", "", $name2));
+				$name2 = trim($name2[0]);
+			}
+			$stat_razdel .= "<tr valign=top><td class='polosa gray'><a target='_blank' href='/-".$name2."'>".strip_tags($row['title'], '<b><i>')."</a></td><td align=center class='polosa gray'>".$row['counter']."</td></tr>";
 		}
 		$stat_razdel = "<strong>Посещаемость разделов:</strong><table class='w100 table_light'>".$stat_razdel."</table>Посещения страниц сайта администратором не учитываются. ";
 	
-		$sql = "SELECT pid, module, title, counter from ".$prefix."_pages where active='1' and `tables`='pages' order by counter desc limit 0,20";
+		$sql = "SELECT `pid`,`module`,`title`,`counter` from ".$prefix."_pages where `active`='1' and `tables`='pages' order by counter desc limit 0,20";
 		$result = $db->sql_query($sql) or die('Ошибка при попытке прочитать посещаемость страниц');
 		while ($row = $db->sql_fetchrow($result)) {
 		$stat_page .= "<tr valign=top><td class='polosa gray'><a target='_blank' href='/-".$row['module']."_page_".$row['pid']."'>".strip_tags($row['title'], '<b><i>')."</a></td><td align=center class='polosa gray'>".$row['counter']."</td></tr>";
@@ -63,7 +68,7 @@ function menu() {
 		<strong>В средней колонке</strong> также выводится предполагаемое имя, email и телефон человека, искавшего этот запрос.<br>
 		<strong>В последней колонке:</strong> первое число - найдено в названии страниц, второе - в содержании.";
 		
-		if ($statlink != "") echo "<h2><span class=\"icon black medium\" data-icon=\"j\"></span> <a href=".$statlink." target=_blank>Сторонняя статистика</a></h2>"; else echo "<div class='notice warning w100 mw800'>Сторонняя статистика не настроена. См. <a href='sys.php?op=Configure'>Настройки</a></div>";
+		if ($statlink != "") echo "<h2><span class=\"icon black medium\" data-icon=\"j\"></span> <a href=".$statlink." target=_blank>Сторонняя статистика</a></h2>"; else echo "<div class='notice warning w100 mw800'>Сторонняя статистика не настроена. См. <a href='sys.php?op=options'>Настройки</a></div>";
 		echo "<h2><span class=\"icon gray medium\" data-icon=\"j\"></span> Встроенная статистика:</h2>
 		<table cellpadding=2 class='w100 mw800 block radius'><tr valign=top><td width=25%>".$stat_razdel."</td><td width=30%>".$stat_page."</td><td>".$stat_search."</td></tr></table></div>
 		</body>
@@ -72,8 +77,8 @@ function menu() {
 	}
 	##############################################################################
 	if ($type=="stat_search") {
-		echo "<h1>Статистика поисковых запросов (полная версия, макс. 10000 шт.)</h1>
-		<a href=/sys.php?op=mainpage&amp;type=stat>Вернуться к общей статистике</a><br><br>";
+		echo "<h1>Статистика поисковых запросов (полная версия)</h1>
+		<a href='sys.php?op=mainpage&amp;type=stat'>Вернуться к общей статистике</a><br><br>";
 		$user_name = array();
 		$user_mail = array();
 		$user_tel = array();
@@ -85,7 +90,7 @@ function menu() {
 			$user_mail[$user_ip] = $row['mail'];
 			$user_tel[$user_ip] = $row['tel'];
 		}
-		$sql = "SELECT id, ip, slovo, data, pages from ".$prefix."_search order by data desc limit 0,10000";
+		$sql = "SELECT id, ip, slovo, data, pages from ".$prefix."_search order by data desc limit 0,50000";
 		$result = $db->sql_query($sql); // or die('Ошибка при попытке прочитать названия разделов');
 		$stat_search1 = $stat_search2 = $stat_search3 = $stat_search4 = array();
 		while ($row = $db->sql_fetchrow($result)) {
@@ -124,7 +129,7 @@ function menu() {
 		$stat_page = "";
 		$proc = 0;
 		echo "<h1>Статистика посещений страниц</h1>
-		<a href=/sys.php?op=mainpage&amp;type=stat>Вернуться к общей статистике</a><br><br>";
+		<a href='sys.php?op=mainpage&amp;type=stat'>Вернуться к общей статистике</a><br><br>";
 		$sql = "SELECT pid, module, title, `date`, counter from ".$prefix."_pages where active='1' and `tables`='pages' and `counter` > 15 order by counter desc limit 0,1000000";
 		$result = $db->sql_query($sql); // or die('Ошибка при попытке прочитать названия разделов');
 		$numrows = $db->sql_numrows($result);
@@ -163,7 +168,7 @@ function mainpage($name="") {
 	if ($name=="design" or $name=="css" or $name=="module" or $name=="block" or $name=="spisok" or $name=="base" or $name=="shablon") { create_main($name); }
 	elseif (intval($id)>0) { edit_main($id); }
 	elseif ($display_addmenu == false) echo "<center><br>Создание основных разделов сайта запрещено администратором.</center>";
-	else {
+	else { 
 		echo "<div class='curved-vt-2 hide' style='margin-left:-265px; width: 530px; top: 80px;' id='add'>
 		<a title='Закрыть это окно' class=punkt onclick=\"$('#add').hide();\"><div class='radius close_button'>&nbsp;x&nbsp;</div></a>
 			<h1>Вы решили добавить:</h1>
@@ -226,9 +231,9 @@ function create_main($type) {
 	<table class='w100 mw800'><tr><td>
 	<span class=h2>Название:</span> По-русски, можно с пробелами
 	<input type='text' name='title' value='' size=40 class='w100 h40 f16' autofocus><br>
-	<br>".help_design()."<br>
-	<span class=h2>Содержание дизайна (HTML):</span><br>
-	<textarea name=text rows=15 cols=86 class='w100 h40 f16'></textarea>
+	".help_design()."
+	<h2>Содержание дизайна (HTML):</h2>
+	".redactor('2', '', 'text', '', 'html','return')."
 	<div class='notice success black w100 mw800'><span class='icon large white' data-icon='C'></span>
 	Здесь вы можете вставить готовый HTML-код (от тега &lt;body&gt; до &lt;/body&gt;, не включительно) или набрать его с нуля.
 	<br><b>[содержание]</b> - автоматический блок для вывода страниц. Не использовать его можно лишь в случае присоединения дизайна к разделу, состоящему из одной страницы — в этом случае можно всю страницу поместить в дизайн или в раздел.</div>
@@ -508,7 +513,7 @@ function create_main($type) {
 	case "spisok": $type_opis = "поля (дополнительное поле для страниц)";
 		$create.="";
 			$modules = ""; // Выборка разделов заменить!
-			$sql2 = "select id, title from ".$prefix."_mainpage where `tables`='pages' and type='2' and name!='index'";
+			$sql2 = "select `id`, `title` from ".$prefix."_mainpage where `tables`='pages' and `type`='2' and `name`!='index'";
 			$result2 = $db->sql_query($sql2);
 			while ($row2 = $db->sql_fetchrow($result2)) {
 			   $id_modul = $row2['id'];
@@ -697,24 +702,28 @@ function create_main($type) {
 function edit_main($id) {
 	global $tip, $admintip, $prefix, $db, $red, $nastroi;
 	echo "<div id=podrazdel></div>";
-     $sql = "select type,name,title,text,useit,shablon,description,keywords from ".$prefix."_mainpage where id='".$id."'";
-     // здесь учитываем и возможность редактирования удаленных и старых версий, поэтому нет «`tables`='pages'»
-     $result = $db->sql_query($sql);
-     $row = $db->sql_fetchrow($result);
-     $type = $row['type']; 
-     $name = $row['name']; 
-     $title = $row['title'];
-     $text = $row['text'];
-     $useit = str_replace("  "," ",$row['useit']);
-     $sha = $row['shablon'];
-	 $descriptionX = $row['description'];
-	 $keywordsX = $row['keywords'];
+    $sql = "select `type`,`name`,`title`,`text`,`useit`,`shablon`,`description`,`keywords` from ".$prefix."_mainpage where `id`='".$id."'";
+    // здесь учитываем и возможность редактирования удаленных и старых версий, поэтому нет «`tables`='pages'»
+	$result = $db->sql_query($sql);
+	$row = $db->sql_fetchrow($result);
+	$type = $row['type']; 
+	$name_all = $name = $row['name']; 
+	if (strpos($name, "\n")) { // заменяем имя запароленного раздела
+		$name = explode("\n", str_replace("\r", "", $name));
+		$name = trim($name[0]);
+	}
+	$title = $row['title'];
+	$text = $row['text'];
+	$useit = str_replace("  "," ",$row['useit']);
+	$sha = $row['shablon'];
+	$descriptionX = $row['description'];
+	$keywordsX = $row['keywords'];
 	// Если это раздел
 	if ($type == "3") { 
 		$useit_module = explode("|",$useit); 
 		$useit_module = $useit_module[0]; 
 			if ($useit_module != "") {
-				$sql = "select title from ".$prefix."_mainpage where `tables`='pages' and name='".$useit_module."' and type='2'";
+				$sql = "select `title` from ".$prefix."_mainpage where `tables`='pages' and (`name` = '".$useit_module."' or `name` like '".$useit_module." %') and `type`='2'";
 				$result = $db->sql_query($sql);
 				$row = $db->sql_fetchrow($result);
 				$useit_module = trim($row['title']);
@@ -724,14 +733,13 @@ function edit_main($id) {
 	$color = "#ffffff"; // убрать
 	$type_opis = "";
 
-	echo "
-	<form method='POST' action=sys.php>
-	<input type=hidden name=type value='".$type."'><input type=hidden name=id value='".$id."'><input type=hidden name=op value='".$admintip."_save'>";
+	echo "<form method='POST' action='sys.php'>
+	<input type='hidden' name='type' value='".$type."'><input type='hidden' name='id' value='".$id."'><input type='hidden' name='op' value='".$admintip."_save'>";
 
 	// Определение дизайнов // проверить - возможно заменить на функции из mainfile
 	$design_var = array();
 	$design_names = array();
-	$result2 = $db->sql_query("select id, title from ".$prefix."_mainpage where `tables`='pages' and type='0'");
+	$result2 = $db->sql_query("select `id`, `title` from ".$prefix."_mainpage where `tables`='pages' and `type`='0'");
 	while ($row2 = $db->sql_fetchrow($result2)) { $design_var[] = $row2['id']; $design_names[] = trim($row2['title']); }
 	$design_var = implode(",",$design_var);
 	$design_names = implode(",",$design_names);
@@ -741,10 +749,15 @@ function edit_main($id) {
 	$razdel_names = array();
 	$razdel_name = array();
 	$razdel_engname = array();
-	$result2 = $db->sql_query("select id, name, title from ".$prefix."_mainpage where `tables`='pages' and name!='users' and type='2' and name!='' order by title");
+	$result2 = $db->sql_query("select `id`, `name`, `title` from ".$prefix."_mainpage where `tables`='pages' and `name`!='users' and `type`='2' and `name`!='' order by `title`");
 	while ($row2 = $db->sql_fetchrow($result2)) { 
-		$raz_id = $row2['id']; 
-		$razdel_engname[] = $row2['name']; 
+		$raz_id = $row2['id'];
+		$name2 = $row2['name'];
+		if (strpos($name2, "\n")) { // заменяем имя запароленного раздела
+			$name2 = explode("\n", str_replace("\r", "", $name2));
+			$name2 = trim($name2[0]);
+		}
+		$razdel_engname[] = $name2; 
 		$razdel_var[] = $row2['id']; 
 		$razdel_names[$raz_id] = str_replace(","," ",trim($row2['title']));
 	}
@@ -816,9 +829,9 @@ function edit_main($id) {
 		$stil = "";
 		$styles = "";
 		for ($x=0; $x < $n; $x++) { // Определение использованных стилей в дизайне
-			$stil .= " $useit_all[$x]";
+			$stil .= " ".$useit_all[$x];
 		}
-			 $sql5 = "select id, title from ".$prefix."_mainpage where `tables`='pages' and type='1' order by title, id";
+			 $sql5 = "select `id`, `title` from ".$prefix."_mainpage where `tables`='pages' and `type`='1' order by `title`, `id`";
 			 $result5 = $db->sql_query($sql5);
 			 while ($row5 = $db->sql_fetchrow($result5)) {
 				 $title_id = $row5['id'];
@@ -1258,7 +1271,7 @@ function edit_main($id) {
 		<textarea class='big w100 h40 f16' name='title' rows='2' cols='10'>".$title."</textarea>
 		</td><td>
 		<span class=h2>Адрес раздела на сайте</span><br>
-		<textarea class='big w100 h40 f16' name='namo' rows='1' cols='10'>".$name."</textarea>
+		<textarea class='big w100 h40 f16' name='namo' rows='1' cols='10'>".$name_all."</textarea>
 		<span class=f12>Ссылка на раздел: <a href='/-".$name."' target='_blank'>-".$name."</a>. Не изменять, если созданы папки/страницы!</span>
 		</td></tr>
 		<tr><td colspan='2'>
@@ -1278,10 +1291,10 @@ function edit_main($id) {
 		}
 		echo "</td></tr><tr valign='top'><td width='50%'>
 		<span class=h2>Ключевые слова:</span> <span class=f12><a onclick=\"show('help5')\" class=help>?</a></span><br><textarea name='keywordsX' class='big w100 h40' rows='2' cols='10'>".$keywordsX."</textarea>
-		<div id='help5' style='display:none;' class=f12>Это поле keywords для поисковых систем. Максимум 250 символов. Разделять запятой. Если пусто - используются ключевые словосочетания из <a href=/sys.php?op=Configure target=_blank>Настроек портала</a>).<br></div>
+		<div id='help5' style='display:none;' class=f12>Это поле keywords для поисковых систем. Максимум 250 символов. Разделять запятой. Если пусто - используются ключевые словосочетания из <a href=/sys.php?op=options target=_blank>Настроек портала</a>).<br></div>
 		</td><td>
 		<span class=h2>Описание:</span> <span class=f12><a onclick=\"show('help6')\" class=help>?</a></span><br><textarea name='descriptionX' class='big w100 h40' rows='2' cols='10'>".$descriptionX."</textarea>
-		<div id='help6' style='display:none;' class=f12>Это поле description для поисковых систем. Максимум 250 символов. Если пусто - используется основное описание из <a href=/sys.php?op=Configure target=_blank>Настроек портала</a>.</div>
+		<div id='help6' style='display:none;' class=f12>Это поле description для поисковых систем. Максимум 250 символов. Если пусто - используется основное описание из <a href=/sys.php?op=options target=_blank>Настроек портала</a>.</div>
 		</td></tr></table>";
 	} // конец редактирования раздела
 } ############################### ЗАКРЫТИЕ РАЗДЕЛА
@@ -1924,7 +1937,7 @@ function edit_main($id) {
 
 	if ($type == "4") { ############################### ОТКРЫТИЕ ПОЛЕ
 		// определение названия использованного раздела
-		$sql = "select title from ".$prefix."_mainpage where `tables`='pages' and id='".$useit."'";
+		$sql = "select `title` from ".$prefix."_mainpage where `tables`='pages' and `id`='".$useit."'";
 		$result = $db->sql_query($sql);
 		$row = $db->sql_fetchrow($result);
 		$main_design_title = trim($row['title']);
@@ -1932,7 +1945,7 @@ function edit_main($id) {
 		else $main_design_title = "все разделы";
 		// Определение списка названий разделов
 		$modules = "";
-		$sql = "select id, title from ".$prefix."_mainpage where `tables`='pages' and type='2' and name!='index'";
+		$sql = "select `id`, `title` from ".$prefix."_mainpage where `tables`='pages' and `type`='2' and `name`!='index'";
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result)) {
 			$id_modul = trim($row['id']);
@@ -2017,10 +2030,14 @@ function edit_main($id) {
 function mainpage_save($id=0, $type, $namo, $title, $text, $useit, $shablon, $descriptionX, $keywordsX, $s_tip) {
 	global $sgatie, $tip, $admintip, $prefix, $db, $nastroi;
 	$op = $_REQUEST['op'];
-	$sql = "select name from ".$prefix."_mainpage where `id`='".$id."'";
+	$sql = "select `name` from ".$prefix."_mainpage where `id`='".$id."'";
 	$result = $db->sql_query($sql);
 	$row = $db->sql_fetchrow($result);
 	$mod_name = $row['name'];
+	if (strpos($mod_name, "\n")) { // заменяем имя запароленного раздела
+		$mod_name = explode("\n", str_replace("\r", "", $mod_name));
+		$mod_name = trim($mod_name[0]);
+	}
 	recash("/-".$mod_name); // Удаление кеша раздела
 
 	// Обратное преобразование textarea (замена русской буквы е)
@@ -2280,19 +2297,6 @@ function mainpage_del($id, $type, $name="") {
 	}
 }
 ##################################################################################################
-/*
-function mainpage_recycle_spiski() {
-	global $admintip, $prefix, $db;
-	$sql = "select name from ".$prefix."_mainpage where type='4' and text like '%type=1%'";
-	$result = $db->sql_query($sql);
-	while ($row = $db->sql_fetchrow($result)) {
-		$nam = $row['name'];
-		$db->sql_query("DELETE FROM ".$prefix."_spiski WHERE type='".$nam."' and pages=''");
-	}
-	Header("Location: sys.php");
-}
-*/
-##################################################################################################
 function mainpage_create_block($title, $name, $text, $modul, $useit, $design) {
 	global $tip, $admintip, $prefix, $db; //, $name_razdels;
 	# id type name title text useit shablon
@@ -2476,7 +2480,7 @@ function block_help() { // проверить вызов
 	    case "mainpage":
 		    if (isset($name)) { // узнать id
 		    	global $prefix, $db;
-				$row = $db->sql_fetchrow( $db->sql_query("select `id` from ".$prefix."_mainpage where `tables`='pages' and `name`='".$name."' and `type`='2'") );
+				$row = $db->sql_fetchrow( $db->sql_query("select `id` from ".$prefix."_mainpage where `tables`='pages' and (`name` = '".$name."' or `name` like '".$name." %') and `type`='2'") );
 				$id = $row['id'];
 		    }
 		    if (isset($id)) mainpage($id); else mainpage();

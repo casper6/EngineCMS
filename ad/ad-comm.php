@@ -17,8 +17,12 @@ if ($realadmin==1) {
         $sql = "SELECT name, title FROM ".$prefix."_mainpage where `tables`='pages' and type='2' and name!='index'";
         $result = $db->sql_query($sql) or die(aa("Не удалось собрать разделы... "));
         while ($rows = $db->sql_fetchrow($result)) {
-            $module_name = $rows['name'];
-            $module_names[] = $rows['name'];
+            $module_name = $rows['name'];            
+            if (strpos($module_name, "\n")) { // заменяем имя запароленного раздела
+                $module_name = explode("\n", str_replace("\r", "", $module_name));
+                $module_name = trim($module_name[0]);
+            }
+            $module_names[] = $module_name;
             $module_title[$module_name] = $rows['title'];
         }
         // Определяем все папки

@@ -1,6 +1,6 @@
 <?php
 // Настройка
-$lang = "po"; // Работа ведется с этим языком.
+$lang = "en"; // Работа ведется с этим языком.
 
 $php_ss_ok = $php_aa_ok = $js_ss = $js_aa = $php_ss = $php_aa = array();
 function it($path){
@@ -100,7 +100,8 @@ $php_ss_ok = array_merge($php_ss_ok, $php_ss_ok_2);
 // Добавить JS !!!
 
 $php_aa_ok = "<?php\nreturn array(\n".implode(",\n",$php_aa_ok)."\n);\n?>";
-$php_ss_ok = "<?php\nreturn array(\n".implode(",\n",$php_ss_ok)."\n);\n?>";
+$php_ss_ok = "<?php\nreturn array(\n".str_replace("
+11111\",", "", implode(",\n",$php_ss_ok))."\n);\n?>";
 
 file_put_contents('language/shablon_language_admin_'.$lang.'.php',$php_aa_ok);
 file_put_contents('language/shablon_language_'.$lang.'.php',$php_ss_ok);

@@ -16,7 +16,7 @@ function base_base($name) {
         header("Content-Disposition: attachment; Content-type: application/msword; filename=База_данных.htm"); 
     }
     // Определяем имя и настройки раздела
-    $sql = "SELECT `id`, `title`, `text` FROM ".$prefix."_mainpage where `type`='2' and `name`='".$name."'";
+    $sql = "SELECT `id`, `title`, `text` FROM ".$prefix."_mainpage where `type`='2' and (`name` = '".$name."' or `name` like '".$name." %')";
     $result = $db->sql_query($sql);
     $row = $db->sql_fetchrow($result);
     $module_id = $row['id']; // номер раздела
@@ -410,11 +410,11 @@ function base_base_edit_base($id, $base, $name, $red=0) {
     echo "<br><a href=/sys.php?op=base_base&name=".$name." style='padding-left:5px;padding-right:5px;' class='punkt radius'> &larr; Вернуться к базе данных </a></b><br>";
     echo "<h1>Редактирование строки №$id в базе данных</h1>";
 
-    $sql = "SELECT * FROM ".$prefix."_base_".$base." WHERE id='$id'";
+    $sql = "SELECT * FROM ".$prefix."_base_".$base." WHERE `id`='".$id."'";
     $result = $db->sql_query($sql);
     $row = $db->sql_fetchrow($result);
 
-    $sql2 = "SELECT text FROM ".$prefix."_mainpage WHERE name='$base' and type='5'";
+    $sql2 = "SELECT `text` FROM ".$prefix."_mainpage WHERE `name`='".$base."' and `type`='5'";
     $result2 = $db->sql_query($sql2);
     $row2 = $db->sql_fetchrow($result2);
 
@@ -602,7 +602,7 @@ function base_base_create_base($base, $name, $red=0) {
     echo "<br><a href=/sys.php?op=base_base&name=".$name." style='padding-left:5px;padding-right:5px;' class='punkt radius'> &larr; Вернуться к базе данных </a></b><br>";
     if (intval($ok) == 1) echo "<h2 class=green>Строка успешно добавлена. Добавим еще одну?</h2>";
     echo "<h1>Добавление строки к базе данных «".trim($title_razdel_and_bd[$name])."»</h1>";
-    $sql2 = "SELECT text FROM ".$prefix."_mainpage WHERE name='$base' and type='5'";
+    $sql2 = "SELECT `text` FROM ".$prefix."_mainpage WHERE `name`='".$base."' and `type`='5'";
     $result2 = $db->sql_query($sql2);
     $row2 = $db->sql_fetchrow($result2);
     

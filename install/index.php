@@ -439,7 +439,7 @@ if (!isset($_REQUEST['lang'])) {
 <form>
 	<div class="container" style="background:url('images/fon.png'); z-index:10; margin: auto; top:0;">
 		<div class="sixteen columns" style="background:url('install/world.png') no-repeat 360px 50px; min-height:155px;">
-			<h1 class="remove-bottom" style="margin-top: 40px">CMS «ДвижОк» Install</h1>
+			<h1 class="remove-bottom" style="margin-top: 40px">EngineCMS Install</h1>
 			<h5 style="margin-bottom:30px;"><? echo $ver; ?></h5>
 
 			<img src="install/users.png" style="float:left; margin-right:10px;"> 

@@ -175,7 +175,12 @@ else {
       $allpids = $pids = $pids1 = $pids2 = $rr_title = $rr_useit = $rr_name = array(); //  = $rr_name
       while ($row = $db->sql_fetchrow($res2)) {
         $id = $row['id'];
-        $rr_name[$id] = $row['name'];
+        $name2 = $row['name'];
+        if (strpos($name2, "\n")) { // заменяем имя запароленного раздела
+          $name2 = explode("\n", str_replace("\r", "", $name2));
+          $name2 = trim($name2[0]);
+        }
+        $rr_name[$id] = $name2;
         $rr_title[$id] = $row['title'];
         $rr_useit[$id] = $row['useit'];
       }

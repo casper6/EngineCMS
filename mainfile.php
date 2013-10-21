@@ -222,14 +222,21 @@
     $txt_razdels = array(); // список содержания разделов
     $useit_razdels = array(); // список настроек разделов
     $name_razdels = array(); // список англ. названий разделов
+    $pass_razdels = array(); // список паролей для раздела
     //$sqlY = "SELECT `id`,`type`,`name`,`title`,`text`,`useit` from `".$prefix."_mainpage` where `tables`='pages' and (`type`='2' or `type`='5')";
     $sqlY = "SELECT `id`,`type`,`name`,`title`,`text`,`useit` from `".$prefix."_mainpage` where `tables`='pages' and (`type`='1' or `type`='2' or `type`='5')";//`type`='1' or 
     $resultY = $db->sql_query($sqlY);
     while ($rowY = $db->sql_fetchrow($resultY)) {
       $nameX = $rowY['name'];
+      if (strpos($rowY['name'], "\n")) {
+        $names = explode("\n", str_replace("\r", "", $rowY['name']));
+        $nameX = trim($names[0]);
+        $pass_razdels[$nameX] = $names;
+      }
       $idX = $rowY['id'];
       $id_razdel_and_bd[$nameX] = $rowY['id']; 
       $title_razdel_and_bd[$nameX] = $rowY['title']; 
+
       if ($rowY['type'] == 5) $title_razdel_and_bd[$nameX] = aa("База данных")." «".$title_razdel_and_bd[$nameX]."»";
       else {
         if ($rowY['type'] != 1) {

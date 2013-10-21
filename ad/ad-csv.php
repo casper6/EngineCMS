@@ -56,7 +56,7 @@ function txt_and_csv_main() {
 			echo $row2['file'].'<br>';
 		}
 		echo '</td><td>Выберите раздел в который импортировать содержимое <form action="sys.php?op=start_txt_and_csv&amp;id='.$id.'"" method="post"><select name="modul">';
-		$resl = $db->sql_query("select id, title from ".$prefix."_mainpage where `type`='2' and `id`!='24'");
+		$resl = $db->sql_query("select `id`, `title` from ".$prefix."_mainpage where `type`='2' and `id`!='24'");
 		while ($row = $db->sql_fetchrow($resl)) {
 			echo "<option value=\"".$row['id']."\">".$row['title']."</option>";
 		}
@@ -167,9 +167,13 @@ function step2_txt_and_csv() {
 	echo tools_menu().'<br>';
 	$active = '1'; // все страницы будут включенны
 	$rss = '1'; // доступно по RSS
-	$res = $db->sql_query("SELECT name FROM ".$prefix."_mainpage where `id` = '$cat' ") or die('Ошибка');
+	$res = $db->sql_query("SELECT `name` FROM ".$prefix."_mainpage where `tables`='pages' and `id`='".$cat."' ") or die('Ошибка');
 	while ($row = $db->sql_fetchrow($res)) {
 		$module = $row['name']; // Определили наш раздел
+		if (strpos($module, "\n")) { // заменяем имя запароленного раздела
+			$module = explode("\n", str_replace("\r", "", $module));
+			$module = trim($module[0]);
+		}
 	}
 	// Начинаем проверку, если одно поле установленно нескольким значениям
 	$count = count($stroka);
@@ -178,27 +182,27 @@ function step2_txt_and_csv() {
 	if ($count2 !== $count) echo 'Ошибка - выбранно несколько значений данных для одного поля';
 	else {
 		$revers = array_flip ($stroka); // Меняем местами ключи и значения массива
-		$result2 = $db->sql_query("SELECT file FROM ".$prefix."_txt_and_csv where id = '$id'") or die('<center>Ошибка</center>');
+		$result2 = $db->sql_query("SELECT `file` FROM ".$prefix."_txt_and_csv where `id`='".$id."'") or die('Ошибка');
 		$row = $db->sql_fetchrow($result2);
 		$arr = file("includes/txt_and_csv/".$row['file']);
 		$count = count($arr);
 		for ($i = 0; $i < $count; $i++) {
-		    $a = iconv("cp1251", "UTF-8",$arr[$i]);
+		    $a = iconv("cp1251", "UTF-8",$arr[$i]); // проверить
 			$a = str_replace("&quot", "", $a);
 			$a = str_replace("&amp", "", $a);
 			$a = explode($znak, $a);
 			if (array_key_exists("0", $revers)) { // Если выбрали поле папка $revers[0] Папка
 				$y = $revers[0]; $title_name = $a[$y]; // имя папки
-				$result = $db->sql_query("SELECT count(1) 'counter' FROM ".$prefix."_pages_categories where title ='$title_name' and module ='$module'");
+				$result = $db->sql_query("SELECT count(1) `counter` FROM ".$prefix."_pages_categories where `title`='".$title_name."' and `module`='".$module."'");
 				while ($row2 = $db->sql_fetchrow($result)) {
 					$counter = $row2['counter'];
 			        if ( $counter > 0 ) { // если нашли папку то получаем ее id
-						$result = $db->sql_query("SELECT cid FROM ".$prefix."_pages_categories where title ='$title_name' and module ='$module'");
+						$result = $db->sql_query("SELECT `cid` FROM ".$prefix."_pages_categories where `title`='".$title_name."' and `module`='".$module."'");
 						$row3 = $db->sql_fetchrow($result);
 						$cid = $row3['cid'];        
                 	} else { // если не нашли папку то создаем ее
-						$db->sql_query("INSERT INTO ".$prefix."_pages_categories VALUES (NULL, '$module', '$title_name', '', '', '0', '0', '0', 'pages')");
-						$result = $db->sql_query("SELECT cid FROM ".$prefix."_pages_categories where title ='$title_name' and module ='$module'"); // и получаем ее id
+						$db->sql_query("INSERT INTO ".$prefix."_pages_categories VALUES (NULL, '".$module."', '".$title_name."', '', '', '0', '0', '0', 'pages')");
+						$result = $db->sql_query("SELECT `cid` FROM ".$prefix."_pages_categories where `title`='".$title_name."' and `module`='".$module."'"); // и получаем ее id
 						$row4 = $db->sql_fetchrow($result);
 						$cid = $row4['cid']; 
 					}

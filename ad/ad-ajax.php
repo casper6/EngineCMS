@@ -61,7 +61,7 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
       "4"=>"Поля", 
       "5"=>"Базы данных", 
       "6"=>"Шаблоны");
-    $sql = "select `id`,`type`,`title`,`useit` from ".$prefix."_mainpage where `tables`='del' and `type` != '2' order by `type`, `title`, `name`";
+    $sql = "select `id`,`type`,`title`,`useit` from ".$prefix."_mainpage where `tables`='del' and `type`!='2' order by `type`, `title`, `name`";
     $result = $db->sql_query($sql);
     $info = "<table width=100% class='table_light'>";
     if (!isset($nam)) $nam = "";
@@ -193,8 +193,13 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
           if ($diz != "") $diz .= "<br>";
           $razr = "<span class='green'> &rarr; используется в разделах: ";
           while ($row2 = $db->sql_fetchrow($result2)) {
-            $id = $row2['id'];
-            $razr .= "<a href='/-".$row2['name']."' target='_blank' class='gray'>".$row2['title']."</a> ";
+            $name2 = $row2['name'];
+            if (strpos($name2, "\n")) { // заменяем имя запароленного раздела
+              $name2 = explode("\n", str_replace("\r", "", $name2));
+              $name2 = trim($name2[0]);
+            }
+            //$id = $row2['id'];
+            $razr .= "<a href='/-".$name2."' target='_blank' class='gray'>".$row2['title']."</a> ";
           }
           $razr .= "</span>";
         }
@@ -207,7 +212,7 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
           if ($razr != "") $razr .= "<br>";
           $bloc = "<span class='green'> &rarr; используется в блоках: ";
           while ($row2 = $db->sql_fetchrow($result2)) {
-            $id = $row2['id'];
+            //$id = $row2['id'];
             $bloc .= "[".$row2['title']."] ";
           }
           $bloc .= "</span>";

@@ -1,9 +1,4 @@
 <?php
-header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
-header("Cache-Control: post-check=0, pre-check=0", false);
-header("Pragma: no-cache"); // HTTP/1.0
 require_once("../mainfile.php");
 global $prefix, $db, $otpravka_pic, $_COOKIE; 
 
@@ -43,7 +38,7 @@ if ($opros_res != 1 && $opros_res != 3) {
           if ($line_id == $opros_golos) $col = $col + 1;
           $txt .= $line."|".$col."\r\n";
         } // for закончился
-        $db->sql_query("UPDATE ".$prefix."_mainpage SET `text`='$txt' WHERE `id`='".$opros_num."' and `name`='5' and `type`='3'");
+        $db->sql_query("UPDATE ".$prefix."_mainpage SET `text`='".$txt."' WHERE `id`='".$opros_num."' and `name`='5' and `type`='3'");
       }
 }
 

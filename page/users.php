@@ -49,16 +49,16 @@ if ($_POST["submit"] == "Добавить") {
 		<a href="--edituser_'.$_COOKIE['user_id'].'">'.ss('Редактировать профиль').'</a><br> 
 		<a href="--logout">Выход</a></div>';
 		// выводим шаблон страницы пользователя
-		$result = $db->sql_query("select useit from ".$prefix."_mainpage where `id`='".$_COOKIE['user_group']."'");
+		$result = $db->sql_query("select `useit` from ".$prefix."_mainpage where `id`='".$_COOKIE['user_group']."'");
 		$row = $db->sql_fetchrow($result);
 		$userhtml = '<div id="user_dinfo">'.$row['useit'].'</div>';
 		// получаем список полей пользователя
-		$result = $db->sql_query("select name, title from ".$prefix."_mainpage where `useit`='1,".$_COOKIE['user_group']."'");
+		$result = $db->sql_query("select `name`, `title` from ".$prefix."_mainpage where `useit`='1,".$_COOKIE['user_group']."'");
 		while ($row = $db->sql_fetchrow($result)) {
 			$upole = $row['name'];
 			$utitle = $row['title'];
 			// содержание поля для пользователя
-			$result = $db->sql_query("select name from ".$prefix."_spiski where `type`='$upole' and `pages`='1,".$_COOKIE['user_id']."'");
+			$result = $db->sql_query("select `name` from ".$prefix."_spiski where `type`='".$upole."' and `pages`='1,".$_COOKIE['user_id']."'");
 			while ($row = $db->sql_fetchrow($result)) {
 				// выполняем замену имени блока на содержание
 				$userhtml2 .= str_replace("[".$upole."]", "$utitle ".$row['name'], $userhtml);

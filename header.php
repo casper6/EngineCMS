@@ -16,9 +16,9 @@ if ($name=="-email") { // занесение мыла как скрытого к
 	if (!strpos($mail, "@")) {
 		echo "<h2>".ss("Вы указали неправильный Email.")."</h2>
 		".ss("Попробуйте еще раз")."
-		<form method=POST action=\"/--email\" class=main_mail_form><table><tr>
-		<td align=right>".ss("Email").": </td><td><input type=text name=mail class=main_mail_input size=10></td></tr><tr>
-		<td align=right>".ss("Имя").": </td><td><input type=text name=avtor value='".$avtor."' class=main_mail_input size=10></td></tr><tr><td colspan=2 align=right><input type='submit' name='ok' value='".ss("Подписаться на рассылку")."'></td></tr></table></form>";
+		<form method='POST' action='--email' class='main_mail_form'><table><tr>
+		<td align='right'>".ss("Email").": </td><td><input type='text' name='mail' class='main_mail_input' size='10'></td></tr><tr>
+		<td align='right'>".ss("Имя").": </td><td><input type='text' name='avtor' value='".$avtor."' class='main_mail_input' size='10'></td></tr><tr><td colspan='2' align='right'><input type='submit' name='ok' value='".ss("Подписаться на рассылку")."'></td></tr></table></form>";
 	} else {
 		// проверка наличия такого email в БД 
 		$numrows = $db->sql_numrows($db->sql_query("SELECT `cid` from ".$prefix."_pages_comments where `mail`='$mail' and `num`='0'"));
@@ -77,8 +77,15 @@ if ($name=="-email") { // занесение мыла как скрытого к
 		// Настройки раздела по-умолчанию
 		$designpages = 0; // т.е. дизайн для страниц = дизайну разделов
 
-		if (!isset($title_razdels[$name])) $title_razdels[$name] = "";
-
+		if (!isset($title_razdels[$name])) {
+			$title_razdels[$name] = "";
+			// Проверяем на наличие среди паролей
+			foreach ($pass_razdels as $key => $pass_razdel) {
+				if (in_array($name, $pass_razdel)) {
+					$name = $key;
+				}
+			}
+		}
 		if ($title_razdels[$name] == "") {
 			$main_title = ""; // ИЗМЕНА на mainfile
 			$main_file = "";
@@ -494,7 +501,10 @@ case "0": # Блок страниц раздела
 		} else $data = "";
 
 		$page_comments_word = ss("Пока без комментариев");
-		if ($comm > 0) $page_comments_word = $comm." ".num_ending($comm, Array(ss("комментариев"),ss("комментарий"),ss("комментария")));
+
+		if (isset($comm))
+			if ($comm > 0)
+				$page_comments_word = $comm." ".num_ending($comm, Array(ss("комментариев"),ss("комментарий"),ss("комментария")));
 
 		// Начало замены
 		if ($shablon != "") {
@@ -1385,7 +1395,7 @@ case "23": # База данных (список по нескольким ко�
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 case "30": # Статистика раздела, выводит кол-во посещений
 	$textX = ss("Ошибка");
-	$sql8 = "select counter from ".$prefix."_mainpage where `tables`='pages' and name='".$useitX."' and type='2'";
+	$sql8 = "select counter from ".$prefix."_mainpage where `tables`='pages' and (`name` = '".$useitX."' or `name` like '".$useitX." %') and type='2'";
 	$result8 = $db->sql_query($sql8);
 	$row8 = $db->sql_fetchrow($result8);
 	$textX = $row8['counter'];

@@ -371,7 +371,7 @@ function showcat($cid=0, $pag=0, $slovo="") {
   $cid = intval($cid);
   $pag = intval($pag);
   $add_css = $rus_names_ok = "";
-  $sql = "select `description`, `keywords` from ".$prefix."_mainpage where `tables`='pages' and `name`='".$DBName."' and `type`='2'";
+  $sql = "select `description`, `keywords` from ".$prefix."_mainpage where `tables`='pages' and (`name` = '".$DBName."' or `name` like '".$DBName." %') and `type`='2'";
   $result = $db->sql_query($sql);
   $row = $db->sql_fetchrow($result);
   $keywords2 = $row['keywords'];
@@ -381,7 +381,7 @@ function showcat($cid=0, $pag=0, $slovo="") {
   $ANDDATA="";
 
   if (!is_admin($admin)) // Счетчик
-    $db->sql_query("UPDATE ".$prefix."_mainpage SET `counter`=`counter`+1 WHERE `tables`='pages' and `name`='".$DBName."' and `type`='2'");
+    $db->sql_query("UPDATE ".$prefix."_mainpage SET `counter`=`counter`+1 WHERE `tables`='pages' and (`name` = '".$DBName."' or `name` like '".$DBName." %') and `type`='2'");
 
   if ($base=="") { // Если это не база данных
     $offset = $pag * $lim * $limkol;
@@ -550,7 +550,7 @@ function showcat($cid=0, $pag=0, $slovo="") {
       $s_names = array();
       $s_opts = array();
       // Определим № раздела
-      $sql = "select `id` from ".$prefix."_mainpage where `tables`='pages' and name='".$DBName."' and type='2'";
+      $sql = "select `id` from ".$prefix."_mainpage where `tables`='pages' and (`name` = '".$DBName."' or `name` like '".$DBName." %') and type='2'";
       $result7 = $db->sql_query($sql);
       $row7 = $db->sql_fetchrow($result7);
       $r_id = mysql_real_escape_string($row7['id']);
@@ -904,7 +904,7 @@ function showcat($cid=0, $pag=0, $slovo="") {
     $offset = $pag * $lim;
 
     // Определяем имя и настройки раздела - заменить?
-    $sql = "SELECT `id`, `title`, `text` FROM ".$prefix."_mainpage where `tables`='pages' and `type`='2' and `name`='".mysql_real_escape_string($name)."'";
+    $sql = "SELECT `id`, `title`, `text` FROM ".$prefix."_mainpage where `tables`='pages' and `type`='2' and (`name` = '".mysql_real_escape_string($name)."' or `name` like '".mysql_real_escape_string($name)." %')";
     $result = $db->sql_query($sql);
     $row = $db->sql_fetchrow($result);
     $module_options = explode("|",$row['text']); 
@@ -1401,15 +1401,13 @@ function page($pid, $all) {
     $page_text = "";
     $page_opentext = "";
     // Определяем имя и настройки раздела
-    $sql = "SELECT `title`, `text` FROM ".$prefix."_mainpage where `tables`='pages' and `type`='2' and `name`='".mysql_real_escape_string($name)."'";
+    $sql = "SELECT `title`, `text` FROM ".$prefix."_mainpage where `tables`='pages' and `type`='2' and (`name` = '".mysql_real_escape_string($name)."' or `name` like '".mysql_real_escape_string($name)." %')";
     $result = $db->sql_query($sql);
     $row = $db->sql_fetchrow($result);
     //$module_id = $row['id']; // номер раздела
     $module_title = $row['title']; // Название раздела
     $module_options = explode("|",$row['text']); $module_options = $module_options[1]; 
-
     $page_title = "<div class='cat_title'><h1 class='cat_categorii_link'><a href='-".$name."'>".$module_title."</a> ".$strelka." ".ss("Запись №").$pid."</h1></div>"; // Заголовок страницы
-
     $base = 0;
     parse_str($module_options); // Настройки раздела
     // Определяем имя и настройки БД
@@ -1800,7 +1798,7 @@ function addpost($cid) {
   global $soderganie, $media_post, $DBName, $db, $prefix, $cookie, $module_name, $admin, $tema, $tema_name, $tema_title, $tema_opis, $post, $tema_zapret, $add_post_to_mainpage;
   $cid = intval($cid);
   $DBName = mysql_real_escape_string($DBName);
-  $sql = "select `id`, `shablon` from ".$prefix."_mainpage where `tables`='pages' and `name`='".$DBName."' and `type`='2'";
+  $sql = "select `id`, `shablon` from ".$prefix."_mainpage where `tables`='pages' and (`name` = '".$DBName."' or `name` like '".$DBName." %') and `type`='2'";
   $result = $db->sql_query($sql);
   $row = $db->sql_fetchrow($result);
   $id = mysql_real_escape_string($row['id']);

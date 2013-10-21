@@ -2,7 +2,7 @@
   if (strpos($_SERVER['PHP_SELF'], 'sys.php') === false) { die (aa("Доступ закрыт!")); }
   $aid = trim($aid);
   global $prefix, $db, $red;
-  $sql = "select realadmin from ".$prefix."_authors where aid='$aid'";
+  $sql = "select `realadmin` from ".$prefix."_authors where `aid`='$aid'";
   $result = $db->sql_query($sql);
   $row = $db->sql_fetchrow($result);
   $realadmin = $row['realadmin'];
@@ -10,7 +10,7 @@
 
 function seo($edit=false){
   global $geo, $kolkey;
-  echo "<script type='text/javascript'>
+  echo "<script>
   function seo(){
     var x = $('#open_text').val();
     var y = $('#main_text').val();
@@ -60,7 +60,7 @@ function edit_base_pages_category($cid, $red=0) {
   include("ad/ad-header.php");
   $cid = intval($cid);
   $red = intval($red);
-  $sql = "SELECT * FROM ".$prefix."_pages_categories WHERE cid='$cid'";
+  $sql = "SELECT * FROM ".$prefix."_pages_categories WHERE `cid`='".$cid."'";
   $result = $db->sql_query($sql);
   $row = $db->sql_fetchrow($result);
   $name = $row['module'];
@@ -69,7 +69,6 @@ function edit_base_pages_category($cid, $red=0) {
   $desc = $row['description'];
   $sortirovka = $row['sort'];
   $parent_id = $row['parent_id'];
-
   echo "<form action='sys.php' method='post'>
   <div class='fon w100 mw800'>
   <div class='black_grad' style='height:45px;'>
@@ -78,16 +77,19 @@ function edit_base_pages_category($cid, $red=0) {
     ".$title_razdel_and_bd[$module]." &rarr; Редактирование папки</span>";
   if (intval($nastroi) != 1) red_vybor();
   echo "</div>";
-
   # cid module title description pic sort counter parent_id
   echo "<table width=100%><tr valign=top><td bgcolor=#eeeeee>
   <h2>Раздел:</h2>";
-  $sql = "select `name`, `title`, `color` from ".$prefix."_mainpage where `type`='2' and useit not like '%".aa("[название]")."%' and `tables`='pages' and `name` != 'index' order by `color` desc, `title`";
+  $sql = "select `name`, `title`, `color` from ".$prefix."_mainpage where `type`='2' and `useit` not like '%".aa("[название]")."%' and `tables`='pages' and `name` != 'index' order by `color` desc, `title`";
   $result = $db->sql_query($sql);
   $numrows = $db->sql_numrows($result);
   echo "<select name='module' id='to_razdel' class='w100' size='1' onChange=\"izmenapapka(document.getElementById('to_razdel').value, '', '','','editdir');\">";
   while ($row = $db->sql_fetchrow($result)) {
     $name2 = $row['name'];
+    if (strpos($name2, "\n")) { // заменяем имя запароленного раздела
+      $name2 = explode("\n", str_replace("\r", "", $name2));
+      $name2 = trim($name2[0]);
+    }
     $title2 = $row['title'];
     $color = $row['color'];
     switch ($color) {
@@ -110,7 +112,7 @@ function edit_base_pages_category($cid, $red=0) {
     $sql = "select * from ".$prefix."_pages_categories where module='$name' and `tables`='pages' and cid != '$cid' order by parent_id,cid";
     $result = $db->sql_query($sql);
     echo "<div id='izmenapapka'><script>izmenapapka(document.getElementById('to_razdel').value, '$parent_id', '$cid','','editdir')</script></div><br><br>";
-    $sql3 = "select `text` from `".$prefix."_mainpage` where `name`='".$name."' and `type`='2'";
+    $sql3 = "select `text` from `".$prefix."_mainpage` where (`name` = '".$name."' or `name` like '".$name." %') and `type`='2'";
     $result3 = $db->sql_query($sql3);
     $row3 = $db->sql_fetchrow($result3);
     if (trim($row3['text'])!="") {
@@ -149,15 +151,15 @@ function base_pages_save_category($cid, $module, $title, $desc, $sortirovka, $pa
 
 function delete_razdel_base_pages($name) { 
   global $name, $prefix, $db; 
-  $db->sql_query("DELETE FROM ".$prefix."_mainpage WHERE `tables`='del' and name='$name'"); 
-  $db->sql_query("DELETE FROM ".$prefix."_pages_categories WHERE module='$name' and `tables`='del'"); 
-  $db->sql_query("DELETE FROM ".$prefix."_pages WHERE module='$name' and `tables`='del'"); 
+  $db->sql_query("DELETE FROM ".$prefix."_mainpage WHERE `tables`='del' and (`name` = '".$name."' or `name` like '".$name." %')"); 
+  $db->sql_query("DELETE FROM ".$prefix."_pages_categories WHERE `module`='".$name."' and `tables`='del'"); 
+  $db->sql_query("DELETE FROM ".$prefix."_pages WHERE `module`='".$name."' and `tables`='del'"); 
   Header("Location: sys.php");
 }
 
 function delete_page_base_pages($pid) { 
   global $name, $prefix, $db; 
-  $db->sql_query("DELETE FROM ".$prefix."_pages WHERE `tables`='pages' and pid='$pid'"); 
+  $db->sql_query("DELETE FROM ".$prefix."_pages WHERE `tables`='pages' and `pid`='".$pid."'"); 
   Header("Location: sys.php");
 }
 
@@ -306,6 +308,10 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
   $result = $db->sql_query($sql);
   while ($row = $db->sql_fetchrow($result)) {
     $name2 = $row['name'];
+    if (strpos($name2, "\n")) { // заменяем имя запароленного раздела
+      $name2 = explode("\n", str_replace("\r", "", $name2));
+      $name2 = trim($name2[0]);
+    }
     $title2 = $row['title'];
     $color = $row['color'];
     $color = $colors[$color];
@@ -386,7 +392,7 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
   echo "<br><input type=hidden name=foto value=''>";
   echo "<input type=hidden name=price value=''>";
 
-  $sql = "select text from ".$prefix."_mainpage where name='$name' and type='2'";
+  $sql = "select `text` from ".$prefix."_mainpage where (`name` = '".$name."' or `name` like '".$name." %') and `type`='2'";
   $result = $db->sql_query($sql);
   $row = $db->sql_fetchrow($result);
   $tex = $row['text'];
@@ -410,36 +416,16 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
 ####################################################################################
 function base_pages_save_page($cid, $module, $title, $open_text, $main_text, $foto, $link_foto, $search, $active, $mainpage, $rss, $nocomm, $price, $add, $data1, $data2, $data3, $data4, $keywords2, $description2, $sor, $open_text_mysor, $main_text_mysor) {
   global $red, $prefix, $db, $admin_file, $now;
-  /*
-  // это галерея?
-  $sql = "select text from ".$prefix."_mainpage where name='".$module."' and type='2'";
-  $result = $db->sql_query($sql);
-  $row = $db->sql_fetchrow($result);
-  $tex = $row['text'];
-  if (strpos($tex,"media=1")) {
-  $ImgDir="img";
-  if (trim($link_foto)=="/img/" or trim($link_foto)=="") {
-  // Обработка имени файла: транслит и удаление пробелов
-  $pic_name2 = date("Y-m-d_H-i-s_", time()).str_replace(" ","",translit($_FILES["foto"]["name"]));
-  	if (Copy($_FILES["foto"]["tmp_name"], $ImgDir."/".basename($pic_name2))) {
-  	unlink($_FILES["foto"]["tmp_name"]);
-  	chmod($ImgDir."/".basename($pic_name2),0644);
-  	$foto="/".$ImgDir."/".basename($pic_name2);
-  	} else echo "ОШИБКА при копировании файла";
-  } else $foto=trim($link_foto);
-  } else 
-  */
   $foto="";
-  ##----------------------------------------------------##
   // это магазин?
-    $price=intval($price);
-  ##----------------------------------------------------##
-      $search = str_replace(", "," ",$search);
-      $search = str_replace(","," ",$search);
-      $search = str_replace(". "," ",$search);
-      $search = str_replace("."," ",$search);
-      $search = str_replace("  "," ",$search);
-      $search = " ".trim($search)." "; //strtolow(
+  $price=intval($price);
+
+  $search = str_replace(", "," ",$search);
+  $search = str_replace(","," ",$search);
+  $search = str_replace(". "," ",$search);
+  $search = str_replace("."," ",$search);
+  $search = str_replace("  "," ",$search);
+  $search = " ".trim($search)." "; //strtolow(
   # pid module cid title open_text main_text date counter active golos comm foto search mainpage
   if ($open_text == " <br><br>") $open_text = "";
   if ($main_text == " <br><br>") $main_text = "";
@@ -471,7 +457,7 @@ function base_pages_save_page($cid, $module, $title, $open_text, $main_text, $fo
   foreach ($add as $name => $elements) {
     // Получение информации о каждом списке
     if ($name != "") {
-    $sql = "select * from ".$prefix."_mainpage where name='".$name."' and type='4'";
+    $sql = "select * from ".$prefix."_mainpage where name='".$name."' and `type`='4'";
     $result = $db->sql_query($sql);
     $row = $db->sql_fetchrow($result);
     $s_id = $row['id'];
@@ -621,7 +607,7 @@ function base_pages_edit_sv_page($pid, $module, $cid, $title, $open_text, $main_
   $search = str_replace("."," ",$search);
   $search = str_replace("  "," ",$search);
   $search = " ".trim($search)." "; // strtolow(
-  if ($mainpage=="") $mainpage=0;
+  if ($mainpage == "") $mainpage = 0;
   $sor = intval($sor);
   $rss = intval($rss);
   $nocomm = intval($nocomm);

@@ -4,7 +4,7 @@ if (!defined('ADMIN_FILE')) {
 }
 global $prefix, $db, $admin_file;
 $aid = substr($aid, 0,25);
-$row = $db->sql_fetchrow($db->sql_query("SELECT realadmin FROM " . $prefix . "_authors WHERE aid='".$aid."'"));
+$row = $db->sql_fetchrow($db->sql_query("SELECT `realadmin` FROM ".$prefix."_authors WHERE `aid`='".$aid."'"));
 if ($row['realadmin'] == 1) {
 
 	function main_ban($ip=0) {
@@ -12,9 +12,8 @@ if ($row['realadmin'] == 1) {
 		echo "<h2>Блокировка посетителей (запрет использования сайта)</h2>";
 		$numrows = $db->sql_numrows($db->sql_query("SELECT * from ".$prefix."_banned_ip"));
 		if ($numrows != 0) {
-			echo "<a class='punkt dark_pole' onclick=\"show_animate('show_stop_users');\"><img class='icon2 i3' src='/images/1.gif' align='bottom'>Заблокированные по IP-адресу посетители: ".$numrows."</a><div id='show_stop_users' style='display:none;'>
-			"
-			."<table class=table_light>"
+			echo "<a class='punkt dark_pole' onclick=\"show_animate('show_stop_users');\"><img class='icon2 i3' src='/images/1.gif' align='bottom'>Заблокированные по IP-адресу посетители: ".$numrows."</a><div id='show_stop_users' style='display:none;'>"
+			."<table class='table_light'>"
 			."<tr><td bgcolor='".$bgcolor2."' align='left'><b>IP-адрес</b>&nbsp;</td>"
 			."<td bgcolor='".$bgcolor2."' align='left'><b>Причина блокировки</b>&nbsp;</td>"
 			."<td bgcolor='".$bgcolor2."' align='center'><b>Дата запрета</b>&nbsp;</td>"

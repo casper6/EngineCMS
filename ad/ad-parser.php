@@ -186,17 +186,22 @@ echo "<div style='background: #e2e5ea;'><div class='black_grad' style='height:45
 	<option value='1'>Страница</option></select></td><td>
 	<b>Содержит:</b> <input id='sodr'></td><td>
 	<b>Записать в:</b> <select class='imv'>";
-		$res = $db->sql_query("SELECT id, title, name FROM ".$prefix."_mainpage where type='2' and id !='24'");
-while ($row = $db->sql_fetchrow($res)) {
-echo "<option value='".$row['name']."|0'>".$row['title']."</option>";
-		$res3 = $db->sql_query("SELECT cid, title FROM ".$prefix."_pages_categories where module='".$row['name']."'");
-while ($row3 = $db->sql_fetchrow($res3)) {
-echo "<option value='".$row['name']."|".$row3['cid']."'>Папка - ".$row3['title']."</option>";
-}
-}
+	$res = $db->sql_query("SELECT `id`, `title`, `name` FROM ".$prefix."_mainpage where `type`='2' and `id` !='24'");
+	while ($row = $db->sql_fetchrow($res)) {
+		$name2 = $row['name'];
+		if (strpos($name2, "\n")) { // заменяем имя запароленного раздела
+			$name2 = explode("\n", str_replace("\r", "", $name2));
+			$name2 = trim($name2[0]);
+		}
+		echo "<option value='".$name2."|0'>".$row['title']."</option>";
+		$res3 = $db->sql_query("SELECT `cid`, `title` FROM ".$prefix."_pages_categories where `module`='".$name2."'");
+		while ($row3 = $db->sql_fetchrow($res3)) {
+			echo "<option value='".$name2."|".$row3['cid']."'>Папка - ".$row3['title']."</option>";
+		}
+	}
 	echo "</select></td><td>
 	<b>Используя шаблон:</b> <select class='sh'>";
-	$res2 = $db->sql_query("SELECT id, url, config FROM ".$prefix."_parser where class='h'");
+	$res2 = $db->sql_query("SELECT `id`, `url`, `config` FROM ".$prefix."_parser where `class`='h'");
 while ($row = $db->sql_fetchrow($res2)) {
 echo "<option value='".$row['id']."'>".$row['url']."</option>";
 }

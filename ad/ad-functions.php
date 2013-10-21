@@ -14,7 +14,7 @@ function delpage(id) {
 <a class=ad_button target=_blank href='/sys.php?op=base_pages_edit_page&amp;pid=".$pid."'><img class='ad_icon' src='/images/sys/edit.png'>Редактировать страницу <nobr>в редакторе</nobr></a><a class=ad_button target=_blank href='javascript:delpage(".$pid.");'><img class='ad_icon' src='/images/sys/trash_fill.png'>Удалить страницу <nobr>в Корзину</nobr></a>"; 
   elseif ( $pid == 0 and $module_name != "" ) {
     // выяснить id
-    $sql55="SELECT `id` from ".$prefix."_mainpage where `tables`='pages' and `type`='2' and `name`='".$name."'";
+    $sql55="SELECT `id` from ".$prefix."_mainpage where `tables`='pages' and `type`='2' and (`name` = '".$name."' or `name` like '".$name." %')";
     $result55 = $db->sql_query($sql55);
     $row55 = $db->sql_fetchrow($result55);
     $name_id = $row55['id'];

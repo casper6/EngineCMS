@@ -32,13 +32,13 @@ echo "<div id='show_first' class='show_pole'>
 		$gid = $row['id'];
 		$ids = explode(",", trim($row['text']));
 		echo '<tr><td><h2>'.$row['name'].'&darr;</h2>'; 
-		$res = $db->sql_query("select * from ".$prefix."_mainpage where `id`='".$html."'");
+		$res = $db->sql_query("select `title` from ".$prefix."_mainpage where `id`='".$html."'");
 		$row = $db->sql_fetchrow($res);
 		echo "<h3>Использует дизайн: ".$row['title']."</h3>
 		<h3>Можно добавлять материалы в разделы: ";
 		$titles = array();
 		foreach($ids as $id) {
-			if ($id != '') $titles[] = $title_razdels_by_id[$id];
+			if ($id != '') $titles[] = $title_razdels_by_id[$id]; // заменить на html ???
 		}
 		echo implode(", ",$titles).'</h3></td><td>
 		<a href="sys.php?op=edit_group&amp;id='.$gid.'" title="Настроить"><img class="icon2 i38" src="/images/1.gif"></a>
@@ -53,16 +53,16 @@ echo "<div id='show_first' class='show_pole'>
 		$htmlstr = $row['useit'];
 		echo '<form action="sys.php?op=save_users" method="post">
 		<p>Дизайн для модуля:<br><select name="html">';
-		$res = $db->sql_query("select * from ".$prefix."_mainpage where `id`='".$id."'");
+		$res = $db->sql_query("select `id`, `title` from ".$prefix."_mainpage where `id`='".$id."'");
 		while ($row = $db->sql_fetchrow($res)) {
 			echo '<option value="'.$row['id'].'">'.$row['title'].'</option>'; 
 		}
-		$res2 = $db->sql_query("select * from ".$prefix."_mainpage where `type`='0' and `id`!='".$id."'");
+		$res2 = $db->sql_query("select `id`, `title` from ".$prefix."_mainpage where `type`='0' and `id`!='".$id."'");
 		while ($row = $db->sql_fetchrow($res2)) {
 			echo "<option value=\"".$row['id']."\">".$row['title']."</option>";
 		}
         echo '</select><p>Минимальная длина пароля <input type="text" name="cat" size=3 value="'.$cat.'"> символов';
-	    $numrows = $db->sql_numrows($db->sql_query("SELECT id FROM ".$prefix."_regions"));
+	    $numrows = $db->sql_numrows($db->sql_query("SELECT `id` FROM ".$prefix."_regions"));
 			if ($numrows > 0) {
 				echo '<h2>Использование регионов:</h2>';
 				include("includes/regions/config.php");
@@ -87,17 +87,16 @@ echo "<div id='show_first' class='show_pole'>
 	<p>Название группы: <input type="text" size="60" name="group" value="" class="w100" placeholder="Имя группы" autofocus></p>
 	<button type="submit" class="medium green right3"><span class="mr-2 icon white medium" data-icon="c" style="display: inline-block; "></span>Добавить</button>
 	<p>Дизайн группы: <select name="html"><option value="0">Выберите дизайн для группы</option>'; 
-	$res3 = $db->sql_query("select * from ".$prefix."_mainpage where `type`='0'");
+	$res3 = $db->sql_query("select `id`, `title` from ".$prefix."_mainpage where `type`='0'");
 	while ($row = $db->sql_fetchrow($res3)) {
 		echo "<option value=\"".$row['id']."\">".$row['title']."</option>";
 	}
     echo '</select>
     <h2>Выберите разделы для публикаций</h2>
     <p>Все пользователи группы имеют право добавлять материалы в выбранные ниже разделы:</p>'; 
-	$resl = $db->sql_query("select * from ".$prefix."_mainpage where `type`='2' and `id`!='24'");
+	$resl = $db->sql_query("select `id`, `title` from ".$prefix."_mainpage where `type`='2' and `id`!='24'");
 	while ($row = $db->sql_fetchrow($resl)) {
-		$a  = $row['id'];
-		echo '<input type="checkbox" name="cat'.$a.'" value="'.$row['id'].'">'.$row['title'].'<Br>';
+		echo '<input type="checkbox" name="cat'.$row['id'].'" value="'.$row['id'].'">'.$row['title'].'<Br>';
 	}
     echo '</form>';
 	echo "</div></div><div id='show_user' class='show_pole' style='display:none;'>
@@ -131,7 +130,7 @@ function add_group() {
     $group=$_POST['group'];
     $html=$_POST['html'];
 	$cat = "";
-    $res = $db->sql_query("select * from ".$prefix."_mainpage where `type`='2' and `id`!='24'");
+    $res = $db->sql_query("select `id` from ".$prefix."_mainpage where `type`='2' and `id`!='24'");
 	while ($row = $db->sql_fetchrow($res)) {
 		if ( isset($_POST['cat'.$row['id']]) ) $cat .= $row['id'].',';
 	}
@@ -152,35 +151,34 @@ function del_group() {
 	global $prefix, $db;
 	$id= $_GET["id"];
 	$id2= $_POST["group"];
-	$result = $db->sql_query("select * from ".$prefix."_users where `user_group`='".$id."'");
+	$result = $db->sql_query("select `user_id` from ".$prefix."_users where `user_group`='".$id."'");
 	while ($row = $db->sql_fetchrow($result)) {
-		$db->sql_query("UPDATE ".$prefix."_users SET `user_group`='$id2' WHERE `user_id`='".$row['user_id']."';") or die('Не удалось обновить. Попробуйте еще раз и в случае неудачи обратитесь к разработчику.');
+		$db->sql_query("UPDATE ".$prefix."_users SET `user_group`='".$id2."' WHERE `user_id`='".$row['user_id']."';") or die('Не удалось обновить. Попробуйте еще раз и в случае неудачи обратитесь к разработчику.');
 	}
-    $db->sql_query("DELETE FROM ".$prefix."_mainpage WHERE id='$id'");
+    $db->sql_query("DELETE FROM ".$prefix."_mainpage WHERE id='".$id."'");
 	Header("Location: sys.php?op=users");
 }
 ////////////////////////////////////////////////////////
 function del_group2() {
 	global $prefix, $db;
 	include("ad/ad-header.php");
-	$result = $db->sql_query("select count(*) as cnt from ".$prefix."_mainpage where `type`='10' and `name`!='config'");
-	while ($row = $db->sql_fetchrow($result)) {
-		$a = $row['cnt'];
-	}
+	$result = $db->sql_query("select count(*) as `cnt` from ".$prefix."_mainpage where `type`='10' and `name`!='config'"); // заменить * на id
+	$row = $db->sql_fetchrow($result);
+	$a = $row['cnt'];
 	if ($a == 1) { 
 		echo 'Единственная группа не подлежит удалению';
 	} else {
-        echo 'Переместить всех пользователей из группы<form action="sys.php?op=del_group&amp;id='.$id.'"  method="post">';   
-		$result = $db->sql_query("select * from ".$prefix."_mainpage where `id`='".$id."'");
+        echo 'Переместить всех пользователей из группы<form action="sys.php?op=del_group&amp;id='.$id.'" method="post">';   
+		$result = $db->sql_query("select `name` from ".$prefix."_mainpage where `id`='".$id."'");
 		while ($row = $db->sql_fetchrow($result)) {
 			echo '<b>   '.$row['name'].'</b><br>в группу'; 
 		}
 		echo '<select name="group"><option value="0">Выберите группу</option>';
-		$result = $db->sql_query("select * from ".$prefix."_mainpage where `id`!='".$id."' and `type`='10' and `name`!='config'");
+		$result = $db->sql_query("select `id`, `name` from ".$prefix."_mainpage where `id`!='".$id."' and `type`='10' and `name`!='config'");
 		while ($row = $db->sql_fetchrow($result)) {
 			echo '<option value="'.$row['id'].'">'.$row['name'].'</option>'; 
 		}
-		echo '</select><Br><input type="submit" value="Удалить">
+		echo '</select><br><input type="submit" value="Удалить">
         </form>';
     }				
 }
@@ -191,7 +189,7 @@ function edit_group() {
 	echo '<form action="sys.php?op=s_group&amp;id='.$id.'"  method="post"><br/><p>'; 
 	$result = $db->sql_query("select * from ".$prefix."_mainpage where `id`='".$id."'");
 	while ($row = $db->sql_fetchrow($result)) {
-		$html=$row['title'];
+		$html = $row['title'];
 		echo 'Название группы: <input type="text" name="group" value="'.$row['name'].'"></p>
 		<p>Дизайн группы: <select name="html"><option value="'.$html.'">';
 		$res = $db->sql_query("select * from ".$prefix."_mainpage where `type`='0' and `id`='".$html."'");
@@ -199,15 +197,14 @@ function edit_group() {
 			echo $row['title'].'</option>';
 		}
 	}		   
-	$res = $db->sql_query("select * from ".$prefix."_mainpage where `type`='0' and `id`!='".$html."'");
+	$res = $db->sql_query("select `id`, `title` from ".$prefix."_mainpage where `type`='0' and `id`!='".$html."'");
 	while ($row = $db->sql_fetchrow($res)) {
 		echo "<option value=\"".$row['id']."\">".$row['title']."</option>";
 	}
     echo '</select></p><p>Группа имеет право добавлять материалы в разделы:</br>(Необходимо указать заново)</p>'; 
-	$resl = $db->sql_query("select * from ".$prefix."_mainpage where `type`='2' and `id`!='24'");
+	$resl = $db->sql_query("select `id`, `title` from ".$prefix."_mainpage where `type`='2' and `id`!='24'");
 	while ($row = $db->sql_fetchrow($resl)) {
-		$a  = $row['id'];
-		echo '<input type="checkbox" name="cat'.$a.'" value="'.$row['id'].'">'.$row['title'].'<Br>';
+		echo '<input type="checkbox" name="cat'.$row['id'].'" value="'.$row['id'].'">'.$row['title'].'<Br>';
 	}
     echo '<Br><input type="submit" value="Изменить"></form>';
 }
@@ -218,11 +215,11 @@ function s_group() {
     $group=$_POST['group'];
     $html=$_POST['html'];
 	$cat = "";
-    $res = $db->sql_query("select * from ".$prefix."_mainpage where `type`='2' and `id`!='24'");
+    $res = $db->sql_query("select `id` from ".$prefix."_mainpage where `type`='2' and `id`!='24'");
 	while ($row = $db->sql_fetchrow($res)) {
 		if ( isset($_POST['cat'.$row['id']]) ) $cat .= $row['id'].',';
 	}
-	$db->sql_query("UPDATE ".$prefix."_mainpage SET `name`='$group', `title`='$html', `text`='$cat' WHERE `id`='$id';") or die('Не удалось обновить. Попробуйте еще раз и в случае неудачи обратитесь к разработчику.');
+	$db->sql_query("UPDATE ".$prefix."_mainpage SET `name`='".$group."', `title`='".$html."', `text`='".$cat."' WHERE `id`='".$id."';") or die('Не удалось обновить. Попробуйте еще раз и в случае неудачи обратитесь к разработчику.');
 	Header("Location: sys.php?op=users");
 	
 }
@@ -237,10 +234,10 @@ function html_group() {
 	$sql = "select * from ".$prefix."_mainpage where `useit`='".$a."'";
 	$result = $db->sql_query($sql);
 	while ($row = $db->sql_fetchrow($result)) {
-		echo '<b>'.$row['title'].'</b>   ['.$row['name'].']<br>';
+		echo '<b>'.$row['title'].'</b> ['.$row['name'].']<br>';
 	}
 	echo '<hr><form action="sys.php?op=s_html_group&id='.$id.'"  method="post">';
-	$result2 = $db->sql_query("select useit from ".$prefix."_mainpage where `id`='".$id."'");
+	$result2 = $db->sql_query("select `useit` from ".$prefix."_mainpage where `id`='".$id."'");
 	$row = $db->sql_fetchrow($result2);
 	$html = $row['useit'];
 	echo "<textarea name=\"html\" rows=\"10\" cols=\"100\" style='width:100%;'>".$html."</textarea>";
@@ -251,7 +248,7 @@ function s_html_group() {
 	global $prefix, $db;
 	$id= $_GET["id"];
 	$html = $_POST['html'];
-	$db->sql_query("UPDATE ".$prefix."_mainpage SET `useit`='$html' WHERE `id`='$id';") or die('Не удалось обновить. Попробуйте еще раз и в случае неудачи обратитесь к разработчику.');
+	$db->sql_query("UPDATE ".$prefix."_mainpage SET `useit`='".$html."' WHERE `id`='".$id."';") or die('Не удалось обновить. Попробуйте еще раз и в случае неудачи обратитесь к разработчику.');
 	Header("Location: sys.php?op=html_group&id=".$id);
 }
 ////////////////////////////////////////////////////////
@@ -284,7 +281,7 @@ function adduser() {
 			}
 			$password = generate_simvols($simvol_pass);
 			$crypt_pwd = md5($password);
-			$result = $db->sql_query("INSERT INTO ".$prefix."_users (user_id, user_group, name, photo,  password, email, remote_addr, confirm_hash, date_created, regions) VALUES ('', '$group', '', '',  '$crypt_pwd', '$email', '', '$hash', NOW(), '$regions')");
+			$result = $db->sql_query("INSERT INTO ".$prefix."_users (user_id, user_group, name, photo,  password, email, remote_addr, confirm_hash, date_created, regions) VALUES ('', '$group', '', '', '$crypt_pwd', '$email', '', '$hash', NOW(), '$regions')");
 			if (!$result) { 
 				echo 'ОШИБКА - Ошибка базы данных'; 
 			} else {

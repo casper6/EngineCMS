@@ -1,10 +1,5 @@
 <?php
 // Все «правила хорошего кода» написаны кровью, вытекшей из глаз программистов, читавших чужой код.
-//header("Expires: " . date("r", time() + 3600));
-//header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-//header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
-//header("Cache-Control: post-check=0, pre-check=0", false);
-//header("Pragma: no-cache"); // HTTP/1.0
 define('ADMIN_FILE', true);
 if(isset($aid)) {
   if(!empty($aid) AND (!isset($admin) OR empty($admin)) AND $op!='login') {
@@ -235,7 +230,11 @@ function GraphicAdmin() {
     while ($row = $db->sql_fetchrow($result)) {
 	    $id = $row['id'];
 	    $type = $row['type'];
-	    $nam = mysql_real_escape_string($row['name']); 
+	    $nam = mysql_real_escape_string($row['name']);
+	    if (strpos($nam, "\n")) { // заменяем имя запароленного раздела
+	        $nam = explode("\n", str_replace("\r", "", $nam));
+	        $nam = trim($nam[0]);
+	    }
 	    $title = strip_tags($row['title'], '<b><i>');
 	    if ($type == 3) $title = "[$title]";
 		$color = $row['color'];
@@ -357,7 +356,7 @@ function GraphicAdmin() {
 	if ($map == false) {
 		global $siteurl, $show_reserv;
 		$output = "";
-				$sql = "SELECT `pid`, `module`, `date` from ".$prefix."_".$pages." where `tables`='pages' and `active`='1' order by `date` desc limit 0,40000";
+				$sql = "SELECT `pid`, `module`, `date` from ".$prefix."_pages where `tables`='pages' and `active`='1' order by `date` desc limit 0,40000";
 				$result = $db->sql_query($sql) or die(aa("Не могу добавить в карту сайта страницы. Обратитесь к разработчику."));
 				while ($row = $db->sql_fetchrow($result)) {
 					$pid = $row['pid'];
@@ -372,9 +371,12 @@ function GraphicAdmin() {
 				// Добавление разделов
 				$sql = "SELECT `name` from ".$prefix."_mainpage where `tables`='pages' and `name`!='index' and `type`='2'";
 				$result = $db->sql_query($sql) or die(aa("Ошибка: Не получается добавить разделы в карту сайта. Обратитесь к разработчику."));
-
 				while ($row = $db->sql_fetchrow($result)) {
 					$module = $row['name'];
+					if (strpos($module, "\n")) { // заменяем имя запароленного раздела
+						$module = explode("\n", str_replace("\r", "", $module));
+						$module = trim($module[0]);
+					}
 					$output .= "<url>\n<loc>http://".$siteurl."/-".$module."</loc>\n<changefreq>weekly</changefreq>\n<priority>0.5</priority>\n</url>\n";
 				}
 			// Добавление тегов

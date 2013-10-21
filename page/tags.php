@@ -16,6 +16,10 @@
   $result3 = $db->sql_query($sql3);
   while ($row3 = $db->sql_fetchrow($result3)) {
     $m_name = $row3['name'];
+    if (strpos($m_name, "\n")) { // заменяем имя запароленного раздела
+      $m_name = explode("\n", str_replace("\r", "", $m_name));
+      $m_name = trim($m_name[0]);
+    }
     $m_title[$m_name] = $row3['title'];
   }
   

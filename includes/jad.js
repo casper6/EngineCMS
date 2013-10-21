@@ -209,9 +209,7 @@ function openbox(id,name,type) {
 	if (name == 'Резервные копии') add = 'При редактировании страниц создаются их копии для восстановления при необходимости. Внимание: восстанавливая предыдущий вариант страницы, вы заменяете новый!<br><a href="sys.php?op=delete_all&del=backup" style="margin-left: 20px;" class="gray nothing">'+icon('red small','F')+'Удалить все копии</a><br><br>';
 	if (name == 'Добавленное посетителями') add = 'Эти страницы нуждаются в проверке и включении.<br><br>';
 	if (name == 'Новое и отредактированное') add = 'История последних изменений<br><br>';
-
 	if (type != 'add') type = 'podrazdel';
-
 	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'opengarbage', 'id': id},
 	    beforeSend: function(){ $('#'+type).html('<h1><img src=images/loading.gif> Загружаю...</h1>'); },
