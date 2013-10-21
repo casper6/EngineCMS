@@ -199,16 +199,19 @@ function mainpage($name="") {
 		 echo "<div id='mainrazdel4' class='dark_pole2'><a class='base_page' onclick=\"oformlenie_show('поле','4','pole','/sys.php?op=mainpage&amp;name=spisok&amp;type=4')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='S'></span><span class='plus20'>Поля (для страниц)</span></div></a></div>";
 		 ////////////////////// БАЗЫ ДАННЫХ 5
 		 echo "<div id='mainrazdel5' class='dark_pole2'><a class='base_page' onclick=\"oformlenie_show('БД','5','base','/sys.php?op=mainpage&amp;name=base&amp;type=5')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='D'></span><span class='plus20'>Базы данных (таблицы)</span></div></a></div>";
+
+		 echo "<br>";
+		 ////////////////////// УДАЛЕННОЕ
+		 echo "<div id='mainrazdel2' class='dark_pole2'><a class='base_page' onclick=\"oformlenie_show('','2','trash','')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='T'></span><span class='plus20'>Удаленное оформление</span></div></a></div>";
 		 
 		echo "</div></td>
 	<td style='padding:0;'><a class='punkt' title='Свернуть/развернуть левую колонку' onclick='$(\"#razdels\").toggle(\"slow\");'><div class='polosa_razdelitel'><div id='rotateText'><nobr>↑ Сворачивает Оформление ↑</nobr></div></div></a></td>
-	<td style='width:100%;'>
-			<div class='m5'><button class='small' onclick='location.href=\"/sys.php?op=mainpage&amp;type=0&amp;id=1&amp;red=2\"' title='Редактировать главный дизайн'><span class='icon gray medium' data-icon='7'></span>Главный дизайн</button> 
-			<button class='small' onclick='location.href=\"/sys.php?op=mainpage&amp;type=1&amp;id=20\"' title='Редактировать главный стиль'><span class='icon gray medium' data-icon='7'></span>и стиль</button>";
- 
-		echo " <a class='button small' onclick=\"oformlenie_show('','2','trash','')\"><span class='icon gray medium' data-icon='T'></span>Удаленное</a>";
-
-		echo "<hr><div class='podrazdel radius' id='podrazdel'></div>
+	<td class='w100 pm0'>
+			<div class='black_grad'><div class='pt5'>
+			<button class='small' onclick='location.href=\"/sys.php?op=mainpage&amp;type=0&amp;id=1&amp;red=2\"' title='Редактировать главный дизайн'><span class='icon gray medium' data-icon='7'></span>Главный дизайн</button> 
+			<button class='small' onclick='location.href=\"/sys.php?op=mainpage&amp;type=1&amp;id=20\"' title='Редактировать главный стиль'><span class='icon gray medium' data-icon='7'></span>Главный стиль</button>";
+		echo "</div></div>
+		<div class='podrazdel radius' id='podrazdel'></div>
 			</td></tr></table>";
 		}
 	echo "</div></body></html>";

@@ -168,21 +168,21 @@ function GraphicAdmin() {
 	if ($deviceType != 'computer') $buttons = array('','','','','','','');
 
 	if ($comm_segodnya > 0) $color_comm = " orange"; else $color_comm = "";
-	if ($show_comments == 1) $soderganie_menu .= "<button class='nothing small".$color_comm."' onclick=\"openbox('3','".aa("Комментарии")."'); $('#razdels').hide('slow')\" title='".aa("Комментарии за сегодня/вчера/позавчера")."'><span class=\"icon gray small\" data-icon=\"'\"></span><nobr>".$buttons[5]." ".$comm_segodnya."/".$comm_vchera."/".$comm_pozavchera."</nobr></button>";
+	if ($show_comments == 1) $soderganie_menu .= "<button id='openbox3' class='nothing dark_pole2".$color_comm."' onclick=\"openbox('3','".aa("Комментарии")."'); $('#razdels').hide('slow')\" title='".aa("Комментарии за сегодня/вчера/позавчера")."'><span class=\"icon gray small\" data-icon=\"'\"></span><nobr>".$buttons[5]." ".$comm_segodnya."/".$comm_vchera."/".$comm_pozavchera."</nobr></button>";
 
-	$soderganie_menu .= " <button class='nothing small' onclick=\"openbox('5','".aa("Новое и отредактированное")."'); $('#razdels').hide('slow')\" title='".aa("Новые и отредактированные страницы, свежие изменения")."'><span class=\"icon gray small\" data-icon=\"M\"></span>".$buttons[0]."</button>";
+	$soderganie_menu .= " <button id='openbox5' class='nothing dark_pole2' onclick=\"openbox('5','".aa("Новое и отредактированное")."'); $('#razdels').hide('slow')\" title='".aa("Новые и отредактированные страницы, свежие изменения")."'><span class=\"icon gray small\" data-icon=\"M\"></span>".$buttons[0]."</button>";
 	if (!isset($num_add_pages)) $num_add_pages = 0;
 
-	if ($num_add_pages > 0 and $show_userposts != 0) $soderganie_menu .= "<button class='nothing small orange' style='color: red;' onclick=\"openbox('4','".aa("Добавленное посетителями")."'); $('#razdels').hide('slow')\"><span class=\"icon gray small\" data-icon=\"u\"></span><nobr>".$buttons[1]."<strong>".$num_add_pages."</strong></nobr></button>";
+	if ($num_add_pages > 0 and $show_userposts != 0) $soderganie_menu .= "<button id='openbox4' class='nothing dark_pole2 orange' style='color: red;' onclick=\"openbox('4','".aa("Добавленное посетителями")."'); $('#razdels').hide('slow')\"><span class=\"icon gray small\" data-icon=\"u\"></span><nobr>".$buttons[1]."<strong>".$num_add_pages."</strong></nobr></button>";
 
 	$del_page = $db->sql_numrows($db->sql_query("SELECT `pid` from ".$prefix."_".$pages." where `tables`='del' limit 0,1"));
 	$del_razdel = $db->sql_numrows($db->sql_query("SELECT `id` from ".$prefix."_mainpage where `type`='2' and `tables`='del' limit 0,1"));
-	if ($del_page > 0 || $del_razdel > 0) $soderganie_menu .= "<button class='nothing small' onclick=\"openbox('1','".aa("Удаленное")."'); $('#razdels').hide('slow')\" title='".aa("Удаленные страницы")."'><span class=\"icon gray small\" data-icon=\"T\"></span>".$buttons[2]."</button>";
+	if ($del_page > 0 || $del_razdel > 0) $soderganie_menu .= "<button id='openbox1' class='nothing dark_pole2' onclick=\"openbox('1','".aa("Удаленное")."'); $('#razdels').hide('slow')\" title='".aa("Удаленные страницы")."'><span class=\"icon gray small\" data-icon=\"T\"></span>".$buttons[2]."</button>";
 
 	$backup_page = $db->sql_numrows($db->sql_query("SELECT `pid` from ".$prefix."_".$pages." where `tables`='backup' limit 0,1"));
-	if ($backup_page > 0) $soderganie_menu .= "<button class='nothing small' onclick=\"openbox('2','".aa("Резервные копии")."'); $('#razdels').hide('slow')\" title='".aa("Резервные копии созданных ранее страниц")."'><span class=\"icon gray small\" data-icon=\"t\"></span>".$buttons[3]."</button>";
+	if ($backup_page > 0) $soderganie_menu .= "<button id='openbox2' class='nothing dark_pole2' onclick=\"openbox('2','".aa("Резервные копии")."'); $('#razdels').hide('slow')\" title='".aa("Резервные копии созданных ранее страниц")."'><span class=\"icon gray small\" data-icon=\"t\"></span>".$buttons[3]."</button>";
 
-	$soderganie_menu .= " <button class='nothing small' onclick=\"oformlenie_show('блок','3','block','/sys.php?op=mainpage&name=block&type=3'); $('#razdels').hide('slow')\" title='".aa("Резервные копии созданных ранее страниц")."'><span class=\"icon gray small\" data-icon=\"R\"></span>".$buttons[4]."</button> ";
+	$soderganie_menu .= " <button id='mainrazdel3' class='nothing dark_pole2' onclick=\"oformlenie_show('блок','3','block','/sys.php?op=mainpage&name=block&type=3'); $('#razdels').hide('slow')\" title='".aa("Резервные копии созданных ранее страниц")."'><span class=\"icon gray small\" data-icon=\"R\"></span>".$buttons[4]."</button> ";
 
 	//$soderganie_menu .= "<button id='new_razdel_button' title='Добавить страницу...' class='medium green nothing' onclick='location.href=\"/sys.php?op=base_pages_add_page#1\"'><span class=\"icon white small\" data-icon=\"+\"></span> страницу</button>";
 
@@ -195,7 +195,7 @@ function GraphicAdmin() {
 		$razdel_sort = 0;
 	}
 	else $razdel_sort = intval($_COOKIE["razdel_sort"]);
-	$razdel_sort_name[$razdel_sort] = "<span class='sortirovka radius'>".$razdel_sort_name[$razdel_sort]."</span>";
+	$razdel_sort_name[$razdel_sort] = "<span class='dark_pole3 white radius'>".$razdel_sort_name[$razdel_sort]."</span>";
 	if ($razdel_sort == 0) $razdel_sort = "color desc, title";
 	elseif ($razdel_sort == 1) $razdel_sort = "title";
 	elseif ($razdel_sort == 2) $razdel_sort = "counter desc";
@@ -215,13 +215,14 @@ function GraphicAdmin() {
 
 	echo "<div class='curved-vt-2 hide' style='margin-left:-350px; width: 700px; top: 80px;' id='add'></div>
 
-	<div class='black_grad'><button id='new_razdel_button' title='".aa("Сортировка...")."' class='small black' onclick=\"show('sortirovka');\" style='float:left; margin-left:3px;margin-top:3px;'><img src='images/sortirovka.png'></button>
+	<div class='black_grad'><button id='new_razdel_button' title='".aa("Сортировка разделов")."' class='small black' onclick=\"$('#add').show().html( $('#sortirovka').html() )\" style='float:left; margin-left:3px;margin-top:3px;'><img src='images/sortirovka.png'></button>
 
 	<button id='new_razdel_button' title='".aa("Добавить раздел...")."' class='small right3' onclick=\"openbox('10','', 'add'); $('.dark_pole2sel').attr('class', 'dark_pole2');\"><span class=\"mr-2 icon darkgrey small\" data-icon=\"+\"></span></button>
 
 	<span class='h1'>".aa("Разделы:")."</span>
-		</div>".$razdel_txt."<div id='sortirovka' style='display:none;'>
-		".close_button('sortirovka')."<p class=f14>".aa("Сортировать разделы по:")." <p class=f14>".$razdel_sort_name[0].", ".$razdel_sort_name[1]." ".aa("или")." ".$razdel_sort_name[2]."</p></div>";
+		</div>".$razdel_txt."
+		<div id='sortirovka' class='hide'>
+		".close_button('add')."<h1>".aa("Сортировать разделы по:")."</h1><h2>".$razdel_sort_name[0].", ".$razdel_sort_name[1]." ".aa("или")." ".$razdel_sort_name[2]."</h2></div>";
 
 	$icon_size = "large";
 	if ($num_razdel > 5) $icon_size = "medium"; 

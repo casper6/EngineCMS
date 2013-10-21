@@ -71,6 +71,7 @@ input#redactorSaveBtn {background:green; color:white;}
 .eee {background-color:#eee;}
 .fff {background-color:#fff;}
 .darkgreen {color:darkgreen;}
+.in_l {display:inline; float:left;}
 .in_r {display:inline; float:right;}
 .in_b {display:inline-block;}
 .mw800 {min-width:750px;}
@@ -267,7 +268,7 @@ img.bigicon {margin-bottom: 5px; width:128px; height:128px; border:0; float:left
 }
 
 
-.white {color: #222;} 
+.white, .white a {color: #fff;} 
 .white:hover {color: #111;} 
 
 div.b4f3b4 {background: #b4f3b4; border:1px solid gray;}
@@ -354,8 +355,9 @@ border-bottom-left-radius: 10;
 .sho_page a {padding:5px; display:block;}
 .sho_page a:hover, .sho_page a:hover span {color: white !important;}
 
-ul.button-bar li.black, .sortirovka, 
+ul.button-bar li.black,
 .dark_pole2sel,
+.dark_pole2sel:hover,
 .dark_pole2:hover,
 .sho_page a:hover {
 	background: #333333;
@@ -425,7 +427,6 @@ p {margin-top: 15px;margin-left: 5px;}
 .dark_pole:hover, .dark_pole2:hover h2, .dark_pole3:hover {color:black !important; background:#eeeeee; cursor:pointer;}
 .dark_pole2:hover {color:black !important; cursor:pointer;}
 
-.sortirovka, 
 .dark_pole2sel,
 .dark_pole2:hover,
 .sho_page a:hover { 
@@ -436,12 +437,10 @@ p {margin-top: 15px;margin-left: 5px;}
 
 .sho_page a:hover { min-height:18px;}
 
-.dark_pole2sel span, .dark_pole2:hover span { color: white; max-height:44px; overflow:hidden; }
+.dark_pole2sel, .dark_pole2sel span, .dark_pole2:hover, .dark_pole2:hover span { color: white !important; max-height:44px; overflow:hidden; }
+.dark_pole2,
 .dark_pole2sel span.icon span, .dark_pole2:hover span.icon span { color: gray !important; }
 .dark_pole2sel .f14, .dark_pole2:hover .f14 { color: #058bf5 !important; }
-
-#sortirovka {position: absolute; width:344px; z-index:1000; height:92px; margin-top:-5px; margin-left:-10px; background: url(/images/bubble.png); font-size:1.2em; color:#ddd; padding-left:20px; padding-top:20px;}
-#sortirovka a {color:white;}
 
 .sortir_page {width:200px; float:right; }
 

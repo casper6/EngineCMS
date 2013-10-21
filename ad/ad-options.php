@@ -165,29 +165,30 @@ if ($row['realadmin'] == 1) {
 $opt_save = ":";
 if ($ok==1) $opt_save = " сохранены";
 
-echo "<table class='w100 mw800 pm0 block_back' cellspacing=0 cellpadding=0><tr valign=top><td id='razdel_td' class='radius nothing'>
-
-	<div id='razdels' style='background:#e7e9ec; width:340px;'>
-			<div class='black_grad'><span class='h1'>Настройки".$opt_save."</span></div>";
-	echo "<div id='mainrazdel8' class='dark_pole2sel'><a class='base_page' onclick=\"options_show('8','show_first')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='.'></span><span class='plus20'>Начальные настройки и Шрифты</span></div></a></div>";
+echo "<table class='w100 mw800 pm0 block_back'><tr valign=top><td id='razdel_td' class='radius nothing'>
+<form action='".$admin_file.".php' method='post' name='form'>
+	<div id='razdels' style='background:#e7e9ec; width:340px;'>";
+	echo "<div id='mainrazdel8' class='dark_pole2sel'><a class='base_page' onclick=\"options_show('8','show_first')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='.'></span><span class='plus20'>Начальные настройки</span></div></a></div>";
+	echo "<div id='mainrazdel12' class='dark_pole2'><a class='base_page' onclick=\"options_show('12','show_options_fonts')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='i'></span><span class='plus20'>Шрифты</span></div></a></div>";
+	echo "<div id='mainrazdel13' class='dark_pole2'><a class='base_page' onclick=\"options_show('13','show_shop')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='$'></span><span class='plus20'>Магазин</span></div></a></div>";
 	echo "<div id='mainrazdel0' class='dark_pole2'><a class='base_page' onclick=\"options_show('0','show_options')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='Z'></span><span class='plus20'>Основные настройки Сайта</span></div></a></div>";
 	echo "<div id='mainrazdel1' class='dark_pole2'><a class='base_page' onclick=\"options_show('1','show_options_company')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='Y'></span><span class='plus20'>Карточка компании (мини блоки)</span></div></a></div>";
-	
 	echo "<div id='mainrazdel5' class='dark_pole2'><a class='base_page' onclick=\"options_show('5','show_options_zagotovka')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='7'></span><span class='plus20'>Настройки редактора</span></div></a></div>";
 	echo "<div id='mainrazdel3' class='dark_pole2'><a class='base_page' onclick=\"options_show('3','show_options_adspeed')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='z'></span><span class='plus20'>Настройки Администрирования</span></div></a></div>";
+	echo "<br>";
 	echo "<div id='mainrazdel4' class='dark_pole2'><a class='base_page' onclick=\"options_show('4','show_options_pass_block')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='O'></span><span class='plus20'>Смена пароля и Блокировка по IP</span></div></a></div>";
 	echo "<div id='mainrazdel7' class='dark_pole2'><a class='base_page' onclick=\"options_show('7','show_options_oldfotos'); trash_pics();\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='1'></span><span class='plus20'>Удаление старых фото</span></div></a></div>";
 	echo "<div id='mainrazdel5' class='dark_pole2'><a class='base_page' href='sys.php?op=subscribe'><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='@'></span><span class='plus20'>Cписок адресатов для рассылки</span></div></a></div>";
-	echo "<div id='mainrazdel6' class='dark_pole2'><a class='base_page' href='sys.php?op=users'><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='U'></span><span class='plus20'>Пользователи (в разработке!)</span></div></a></div>";
+	echo "<div id='mainrazdel6' class='dark_pole2'><a class='base_page' href='sys.php?op=users'><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='U'></span><span class='plus20'>Пользователи (в разработке)</span></div></a></div>";
     echo "<div id='mainrazdel11' class='dark_pole2'><a class='base_page' href='sys.php?op=txt_and_csv_main'><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='('></span><span class='plus20'>Импорт из txt и csv (в разработке)</span></div></a></div>";
 	echo "<div id='mainrazdel10' class='dark_pole2'><a class='base_page' onclick=\"options_show('10','show_options_razrab');\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='b'></span><span class='plus20'>Информация для разработчиков</span></div></a></div>";
-
+	if (is_dir("includes/regions")) echo "<div id='mainrazdel14' class='dark_pole2'><a class='base_page' href='sys.php?op=regions_main'><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='&'></span><span class='plus20'>Регионы</span></div></a></div>";
 	echo "</div></td>
 	<td style='padding:0;'><a class='punkt' title='Свернуть/развернуть левую колонку' onclick='$(\"#razdels\").toggle(\"slow\");'><div class='polosa_razdelitel'><div id='rotateText'><nobr>↑ Сворачивает Настройки ↑</nobr></div></div></a></td>
-	<td style='width:100%;'><form action='".$admin_file.".php' method='post' name='form'>";
+	<td class='w100 p0'>";
 
 echo "
-<div id='show_options_razrab' class='show_pole' style='display:none;'>";
+<div id='show_options_razrab' class='show_pole pl10' style='display:none;'>";
 
 $phpversion = preg_replace('/[a-z-]/', '', phpversion());
 if ($phpversion{0}<4) die ('Версия PHP ниже плинтуса. Где же ты нарыл такое старьё?! 0_о');
@@ -203,18 +204,18 @@ if (!extension_loaded('imagick') || !class_exists("Imagick"))
 
 echo "<p><a href='http://hotel-s.ru' target='_blank'>Официальный сайт CMS «ДвижОк»</a>
 <p><a href='http://translate.google.com/manager/website/add' target='_blank'>Переводчик сайтов</a>
+</div>	
 
-	</div>	
+<div class='black_grad p0'>
+<button id='save_options' type='submit' class='small green' style='float:left; margin:3px;'><span class='mr-2 icon white medium' data-icon='c'></span>Сохранить</button>
+<span class='h1'>Настройки".$opt_save."</span>
+</div>
 
-<div id='show_first' class='show_pole'>
-	<a class='button' onclick=\"options_show('8','show_options_fonts')\"><span class='icon gray medium' data-icon='i'></span> Шрифты</a>
-	<a class='button' onclick=\"options_show('8','show_shop')\"><span class='icon gray medium' data-icon='$'></span> Магазин</a> ";
-	if (is_dir("includes/regions")) echo "<a class='button' href='sys.php?op=regions_main'><span class='icon gray medium' data-icon='&'></span> Регионы</a>";
-
-	echo "<hr><table class=table_light>
-
-<tr valign=top><td style='min-width:250px;'>
-<b>Включить <a href='http://necolas.github.com/normalize.css/' target='_blank'>normalize.css</a></b>:</td><td class=small>
+<div id='show_first' class='show_pole pl10'>";
+	
+echo "<table class='table_light'>
+<tr valign='top'><td style='min-width:250px;'>
+<b>Включить <a href='http://necolas.github.com/normalize.css/' target='_blank'>normalize.css</a></b>:</td><td class='small'>
 ".select("options[normalize]", "0,1", "НЕТ,ДА", $normalize)."<br>
 Нормализация отличается от подхода reset.css тем, что выравнивает различия стандартных стилей разных браузеров и пытается нейтрализовать баги, не сбрасывая при этом самих стандартных стилей.
 </td></tr>
@@ -319,7 +320,7 @@ body {}
 </div>
 
 
-<div id='show_shop' class='show_pole' style='display:none;'>
+<div id='show_shop' class='show_pole pl10' style='display:none;'>
 	<h1>Подключение магазина</h1>
 	<p><b>Блок [корзина]</b> можно поставить в любом месте сайта. Он поддерживает добавление/удаление товаров и подсчет итоговой суммы. Работает через куки (cookie).
 	<p><b>Cсылку «Купить»</b> можно создать в шаблоне блока, раздела или страниц раздела — для взаимодействия с блоком [корзина]. Помимо использования в шаблонах, ссылку «Купить» можно использовать в любом произвольном месте. Ссылка содержит id страницы раздела и стоимость товара, описанного на этой странице. При массовом наполнении реализуется за счет поля «Стоимость» (или «Цена») и шаблона.<br>
@@ -395,7 +396,7 @@ body {}
 
 
 
-<div id='show_options' class='show_pole' style='display:none;'>
+<div id='show_options' class='show_pole pl10' style='display:none;'>
 	<table class=table_light>
 
 	<tr valign=top><td style='min-width:250px;'>
@@ -507,7 +508,7 @@ body {}
 
 
 
-<div id='show_options_fonts' class='show_pole' style='display:none;'>
+<div id='show_options_fonts' class='show_pole pl10' style='display:none;'>
 	<h1>Подключение шрифтов</h1>
 	<p>Вы можете выбрать дополнительные шрифты (<i><a href='http://www.google.com/webfonts/' target='_blank'>от Google</a></i>) и эффекты для них.<br>Эффекты выбирать необязательно.</p>";
 
@@ -610,7 +611,7 @@ body {}
 	<div style='text-align:center;'><input type='submit' value=' Сохранить настройки ' style='width:300px; height:40px;'></div>
 	</div>
 
-<div id='show_options_company' class='show_pole' style='display:none;'>
+<div id='show_options_company' class='show_pole pl10' style='display:none;'>
 	<p>Основные данные компании могут быть вставлены в любом месте сайта как мини-блоки и используются для быстрой замены, т.е. мы меняем информацию только на странице настроек, а она меняется на всем сайте.
 	<p>Информация разделяется тремя символами «вертикальная черта», т.е. ||| Каждому последующему мини-блоку присваивается аналогичное имя с порядковым номером.
 	<p>Пример: пишем в поле «Краткое название компании:» текст «АгроХолдинг|||Промышленная палата|||РусТранс»
@@ -647,7 +648,7 @@ body {}
 	</div>
 
 
-<div id='show_options_adspeed' class='show_pole' style='display:none;'>";
+<div id='show_options_adspeed' class='show_pole pl10' style='display:none;'>";
 	
 	// Получаем количество добавленных в кеш страниц, а также занимаемый ими размер
 	if ($site_cash == "file" || $site_cash == "base") {
@@ -749,7 +750,7 @@ body {}
   if ($color_tema_css == "") $color_tema_css = "monokai";
   if ($color_tema_js == "") $color_tema_js = "monokai";
   if ($color_tema_php == "") $color_tema_php = "monokai";
-echo "<div id='show_options_zagotovka' class='show_pole' style='display:none;'>
+echo "<div id='show_options_zagotovka' class='show_pole pl10' style='display:none;'>
 	<table class='table_light' width='100%'>
 
 	<tr><td colspan=3><h1>Невизуальный редактор с подсветкой кода</h1><img src='images/2.png'></td></tr>
@@ -894,7 +895,7 @@ echo "
 	$adm_aid = filter($row['aid'], "nohtml");
 	$adm_aid = trim(strtolower(substr($adm_aid, 0,25)));
 
-	echo "<div id='show_options_pass_block' class='show_pole' style='display:none;'>";
+	echo "<div id='show_options_pass_block' class='show_pole pl10' style='display:none;'>";
 	if (!isset($ip)) $ip="";
 	if ($ipban != false) {
 		echo "<a class='nothing punkt dark_pole' onclick=\"show_animate('show_options3');\"><img class='icon2 i43' src='/images/1.gif' align=bottom>Блокировка посетителей</a><div id='show_options3' style='display:none;'>";
@@ -924,7 +925,7 @@ echo "
 	<br><br><div class='notice warning hide'><a href='sys.php?op=admins_list'>Список администраторов</a></div>
 	</div>
 
-	<div class='show_pole' id='show_options_oldfotos' style='display:none;'>Загружаю...</div>
+	<div class='show_pole pl10' id='show_options_oldfotos' style='display:none;'>Загружаю...</div>
 	</div>
 
 	</td></tr></table>

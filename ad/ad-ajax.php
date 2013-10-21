@@ -1,10 +1,5 @@
 <?php
 // Все «правила хорошего кода» написаны кровью, вытекшей из глаз программистов, читавших чужой код.
-//header("Expires: " . date("r", time() + 3600));
-//header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-//header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
-//header("Cache-Control: post-check=0, pre-check=0", false);
-//header("Pragma: no-cache"); // HTTP/1.0
 require_once("../mainfile.php");
 global $prefix, $db, $admin, $now, $adminmail, $ip, $siteurl, $title_razdels_by_id, $name_razdels, $deviceType;
 if (is_admin($admin)) {
@@ -14,7 +9,6 @@ if (is_admin($admin)) {
   if (isset($_REQUEST['string'])) $string = $_REQUEST['string']; else $string = "";
   ######################################################################################
 if ($func == "save_spisok") { // Сохраняем новое или отредактированное значение списка
-  // id=0&type=grill&name=1212&pages=&opis=&sort=0&parent=0
   parse_str($string);
   $id = intval($id);
   $sort = intval($sort);
@@ -407,11 +401,12 @@ if ($func == "trash_pics") { // Создаем список неиспользу
     $info .= "<h1>Загруженных на сервер фотографий: ".$inf2_count.".<h1>";
     $diff = array_diff($inf2, $inf);
     $diff = array_unique($diff);
-    $diff_count = count($diff);
-    $info .= "<h2>Неиспользованных на сайте фотографий (из числа загруженных): <b>".$diff_count."</b>.</h2><b>Вы можете удалить</b> те фотографии, которые не понадобятся в дальнейшем.<br>";
-    $num = 1;
+    $diff_count = count($diff)-1;
+    $info .= "<h2>Неиспользованных на сайте фотографий (из числа загруженных): <b>".$diff_count."</b>.</h2>";
+    if ($diff_count > 0) $info .= "<b>Вы можете удалить</b> те фотографии, которые не понадобятся в дальнейшем.<br>";
+    $num = 0;
     foreach ($diff as $a) { 
-      $info .= "<div id='file".$num."' class='delfoto'><a href='".$a."' target='_blank'><img src='includes/phpThumb/phpThumb.php?src=/".$a."&w=0&h=100&q=0'></a><br><a class='punkt' onclick=\"del_file('".$a."', '".$num."');\">Удалить фото</a></div>"; // <br>".$a."
+      if ($a != '') $info .= "<div id='file".$num."' class='delfoto'><a href='".$a."' target='_blank'><img src='includes/phpThumb/phpThumb.php?src=/".$a."&w=0&h=100&q=0'></a><br><a class='punkt' onclick=\"del_file('".$a."', '".$num."');\">Удалить фото</a></div>"; // <br>".$a."
       $num++;
     }
   } else $info .= "<br>Фотографий на сайте не найдено<br>";
@@ -846,27 +841,25 @@ if ($func == "add_pages") { // Создание страниц
   $name_raz = $name_razdels[$id];
   $list = "<form method=post style=\"display:inline;\" onsubmit='return false'>
   <h1>Добавим сразу несколько страниц</h1>
-  <table width=100% class='table_light'><tr valign=top><td>
-  <span class=h2>Заголовки страниц:</span><br>
+  <h2>Заголовки страниц:</h2>
   <textarea name=title2 id='title".$id."' rows=5 cols=3 style='width:100%; height: 200px;' autofocus></textarea>
-  </td></tr><tr><td><span class=h2>В начале раздела или вложены в папку?</span><br>";
+  <h2>В начале раздела или вложены в папку?</h2>";
   $sql = "select cid, title, parent_id from ".$prefix."_pages_categories where module='".$name_raz."' and `tables`='pages' order by parent_id,cid";
   $result = $db->sql_query($sql);
-  $list .= "<select id='select".$id."' name=parent_id style='width: 100%;'><option value=0>в начале раздела</option>";
+  $list .= "<select id='select".$id."' name='parent_id' class='w100'><option value='0'>в начале раздела</option>";
   while ($row = $db->sql_fetchrow($result)) {
     $cid = $row['cid'];
     $title = strip_tags($row['title'], '<b><i>');
     $parentid = $row['parent_id'];
     $title = getparent($name_raz,$parentid,$title);
-    $list .= "<option value=".$cid.">вложены в «".$title."»</option>";
+    $list .= "<option value='".$cid."'>вложены в «".$title."»</option>";
   }
-  $list .= "</select><br>
-  <input type='submit' value=' Добавить ' onclick=\"save_papka('".$id."',document.getElementById('title".$id."').value,document.getElementById('select".$id."').value,'".$name_raz."',1);\" style='width:100%; height:55px; font-size: 22px; margin-top:20px;'>
-  </td></tr></table>
+  $list .= "</select>
+  <p class='center'><input type='submit' value=' Добавить ' onclick=\"save_papka('".$id."',document.getElementById('title".$id."').value,document.getElementById('select".$id."').value,'".$name_raz."',1);\" style='width:100%; height:55px; font-size: 22px;'></p>
+
   <a class='button small' onclick='$(\"#help\").toggle()'>Справка</a>
-  <p id='help' class='hide'>Вы можете создать сразу несколько страниц — пишите их заголовки в столбик, разделяя Enter.<br>Добавить предисловие, содержание и активность (вкл./выкл = 1/0) к страницам можно сразу после заголовка через символ «|». Пример: Заголовок|Предисловие|Содержание|1<br>
-  В качестве разделителя страниц по-умолчанию используется Enter, но если вам нужно сразу добавить страницы с большим количеством текста, в котором присутствуют переносы строк — используйте разделитель &&&<br>
-  Если вы не видите созданных страниц — обновите страницу (нажав F5) и вновь откройте этот раздел.</p>
+  <p id='help' class='hide'>Вы можете создать несколько страниц — пишите их заголовки в столбик, разделяя Enter.<br>Добавить предисловие, содержание и активность (вкл./выкл = 1/0) к страницам можно сразу после заголовка через символ «|». Пример: Заголовок|Предисловие|Содержание|1<br>
+  В качестве разделителя страниц по-умолчанию используется Enter, но если вам нужно сразу добавить страницы с большим количеством текста, в котором присутствуют переносы строк — используйте разделитель &&&</p>
   </form>";
   $list = close_button('add').$list;
   echo $list; exit;
@@ -876,11 +869,10 @@ if ($func == "add_papka") { // Создание папки
   // Узнаем название раздела
   $name_raz = $name_razdels[$id];
   $list = "<form method=post style=\"display:inline;\" onsubmit='return false'>
-  <h1>Создадим папку (или папки) в этом разделе</h1>
-  <table width=100% class='table_light'><tr valign=top><td>
-  <span class=h2>Имя папки:</span><br>
+  <h1>Создадим папку (папки) в этом разделе</h1>
+  <h2>Имя папки (папок — разделять Enter):</h2>
   <textarea name=title2 id='title".$id."' rows=5 cols=3 style='width:100%; height: 200px;' autofocus></textarea>
-  </td></tr><tr><td><span class=h2>В начале раздела или вложена в другую папку?</span><br>";
+  <h2>В начале раздела или вложена в другую папку?</h2>";
    $sql = "select cid, title, parent_id from ".$prefix."_pages_categories where module='".$name_raz."' and `tables`='pages' order by parent_id,cid";
    $result = $db->sql_query($sql);
    $list .= "<select id='select".$id."' name=parent_id style='width: 100%;'><option value=0>в начале раздела</option>";
@@ -891,13 +883,11 @@ if ($func == "add_papka") { // Создание папки
      $title = getparent($name_raz,$parentid,$title);
      $list .= "<option value=".$cid.">вложена в «".$title."»</option>";
    }
-  $list .= "</select><br>
-  <input type='submit' value=' Создать ' onclick=\"save_papka('".$id."',document.getElementById('title".$id."').value,document.getElementById('select".$id."').value,'".$name_raz."',0);\" style='width:100%; height:55px; font-size: 22px; margin-top:20px;'>
-  </td></tr></table>
+  $list .= "</select>
+  <p class='center'><input type='submit' value=' Создать ' onclick=\"save_papka('".$id."',document.getElementById('title".$id."').value,document.getElementById('select".$id."').value,'".$name_raz."',0);\" style='width:100%; height:55px; font-size: 22px;'></p>
   <a class='button small' onclick='$(\"#help\").toggle()'>Справка</a>
-  <p id='help' class='hide'>Вы можете создать сразу несколько папок — пишите их имена в столбик, разделяя Enter.<br>Добавить описание к папке можно сразу после названия через символ «|». Пример: Название | Описание.<br>
-  В качестве разделителя страниц по-умолчанию используется Enter, но если вам нужно сразу добавить папки с большим количеством текста в описании, в котором присутствуют переносы строк — используйте разделитель &&&<br>
-  Если вы не видите созданной папки — обновите страницу (нажав F5) и вновь откройте этот раздел.</p>
+  <p id='help' class='hide'>Вы можете создать несколько папок — пишите их имена в столбик, разделяя Enter.<br>Добавить описание к папке можно сразу после названия через символ «|». Пример: Название | Описание.<br>
+  В качестве разделителя страниц по-умолчанию используется Enter, но если вам нужно сразу добавить папки с большим количеством текста в описании, в котором присутствуют переносы строк — используйте разделитель &&&</p>
   </form>";
   $list = close_button('add').$list;
   echo $list; exit;
