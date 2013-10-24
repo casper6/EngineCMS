@@ -80,7 +80,7 @@ function edit_base_pages_category($cid, $red=0) {
   # cid module title description pic sort counter parent_id
   echo "<table width=100%><tr valign=top><td bgcolor=#eeeeee>
   <h2>Раздел:</h2>";
-  $sql = "select `name`, `title`, `color` from ".$prefix."_mainpage where `type`='2' and `useit` not like '%".aa("[название]")."%' and `tables`='pages' and `name` != 'index' order by `color` desc, `title`";
+  $sql = "select `name`, `title`, `color` from ".$prefix."_mainpage where `type`='2' and (`useit` like '%".aa("[страницы]")."%' or `useit` like '%".aa("[содержание]")."%') and `tables`='pages' order by `color` desc, `title`";
   $result = $db->sql_query($sql);
   $numrows = $db->sql_numrows($result);
   echo "<select name='module' id='to_razdel' class='w100' size='1' onChange=\"izmenapapka(document.getElementById('to_razdel').value, '', '','','editdir');\">";
@@ -304,7 +304,7 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
 
   $colors = array("ffffff","b4f3b4","f3f3a3","ffa4ac","b8f4f2");
 
-  $sql = "select `name`, `title`, `color` from ".$prefix."_mainpage where `type`='2' and useit not like '%".aa("[название]")."%' and `tables`='pages' and `name` != 'index' order by `color` desc, `title`";
+  $sql = "select `name`, `title`, `color` from ".$prefix."_mainpage where `type`='2' and (`useit` like '%".aa("[страницы]")."%' or `useit` like '%".aa("[содержание]")."%') and `tables`='pages' order by `color` desc, `title`";
   $result = $db->sql_query($sql);
   while ($row = $db->sql_fetchrow($result)) {
     $name2 = $row['name'];
@@ -330,7 +330,7 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
     echo "<div class='in_r'><div id=showa class='in_r'><a style='cursor:pointer;' onclick=\"show('hidea'); show('showa'); $('#to_papka').width(500); $('#to_papka').height(400);\">развернуть &rarr;</a></div><div id=hidea style='display:none;'><a style='cursor:pointer;' onclick=\"show('showa'); show('hidea'); $('#to_papka').width(300); $('#to_papka').height(155);\">&larr; свернуть</a></div></div><span class=h2>Папка:</span><br>
 
     <div id='izmenapapka'><script>izmenapapka($('#to_razdel').val(),'".$cid."','','','addpage');</script></div>";
-  } else echo "<input type=hidden name=cid value='0'><i>В разделе нет папок.</i><br><br>";    
+  } else echo "<input type='hidden' name='cid' value='0'><i>В разделе нет папок.</i><br><br>";    
   
   echo "<div id='mainrazdel' class='dark_pole2'><a class='base_page' onclick=\"if ( $('#dop').is(':hidden') ) $('#mainrazdel').attr('class', 'dark_pole2sel'); else $('#mainrazdel').attr('class', 'dark_pole2'); $('#main').toggle(); $('#dop').toggle('slow'); \"><div id='mainrazdel'><div style=\"float:right\"><span class=\"f16 gray\">></span></div><span class='icon gray large in_b' data-icon='z'><span aria-hidden='true'>z</span></span><span class='plus20'>Дополнительные настройки</span></div></a></div> ";
 
@@ -338,29 +338,29 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
 
   echo "<div style='display:none' id='dop'><a title='Закрыть' class='punkt' onclick=\"if ( $('#dop').is(':hidden') ) $('#mainrazdel').attr('class', 'dark_pole2sel'); else $('#mainrazdel').attr('class', 'dark_pole2'); $('#main').toggle(); $('#dop').toggle('slow'); \"><div class='radius' style='font-size:12pt; width:20px; height: 20px; color: white; text-align:center; float:right; margin:5px; background: #bbbbbb;'>&nbsp;x&nbsp;</div></a>
   
-  <h3>Ключевые слова для поисковых систем: <a onclick=\"show('help10')\" class='help'>?</a></h3><textarea id=keywords2 name=keywords2 class='big w100' rows=2 cols=10>".$keywords."</textarea>
-  <br><div id='help10' style='display:none;'><span class=small>Максимум 1000 символов. Разделять словосочетания желательно запятой. Если пусто - используются <b>Теги</b> (если и они пустые - используются Ключевые словосочетания из <a href=/sys.php?op=Configure target=_blank>Настроек портала</a>).</span><br></div>
+  <h3>Ключевые слова для поисковых систем: <a onclick=\"show('help10')\" class='help'>?</a></h3><textarea id=keywords2 name=keywords2 class='big w100' rows='2' cols='10'>".$keywords."</textarea>
+  <br><div id='help10' style='display:none;'><span class=small>Максимум 1000 символов. Разделять словосочетания желательно запятой. Если пусто - используются <b>Теги</b> (если и они пустые - используются Ключевые словосочетания из <a href='/sys.php?op=options' target='_blank'>Настроек портала</a>).</span><br></div>
 
-  <h3>Описание для поисковых систем: <a onclick=\"show('help11')\" class='help'>?</a></h3><textarea id=description2 name=description2 class='big w100' rows=4 cols=10>".$description."</textarea>
+  <h3>Описание для поисковых систем: <a onclick=\"show('help11')\" class='help'>?</a></h3><textarea id='description2' name='description2' class='big w100' rows='4' cols='10'>".$description."</textarea>
   <br><div id='help11' style='display:none;'><span class=small>Максимум 200 символов. Если пусто - используется <b>Название</b> страницы.</span><br></div>";
 
   if ($page_id > 0) {
-    echo "<input type=hidden name=pid value='".$pid."'>";
+    echo "<input type='hidden' name='pid' value='".$pid."'>";
     seo(true);
   } else seo();
 
-  echo "<h3>Тэги (слова для похожих по тематике страниц): <a onclick=\"show('help12')\" class='help'>?</a></h3> <textarea name=search class='big w100' rows=1 cols=10>".$search."</textarea>
+  echo "<h3>Тэги (слова для похожих по тематике страниц): <a onclick=\"show('help12')\" class='help'>?</a></h3> <textarea name='search' class='big w100' rows='1' cols='10'>".$search."</textarea>
   <br><div id='help12' style='display:none;'><span class=small>Разделять пробелами, а слова в словосочетаниях символом + <br>
   Писать только существительные! НИКАКИХ ПРЕДЛОГОВ! Максимум неограничен. Разделять слова необходимо пробелом. Разделять слова в словосочетаниях символом +, например: игра+разума игротека game. Писать желательно в единственном числе и именительном падеже. Можно создать Блок «Облако тегов». Теги также могут выводиться на страницах (в настройках Раздела).</span><br></div>
 
   <table class='w100 f12'><tr><td>
-  <label><input type=checkbox name=mainpage value=1".$check4."> На главную страницу</label> <a onclick=\"show('help_mainpage')\" class=help>?</a>
+  <label><input type='checkbox' name='mainpage' value='1'".$check4."> На главную страницу</label> <a onclick=\"show('help_mainpage')\" class='help'>?</a>
   </td><td>
-  <label><input type=checkbox name=rss value=1".$check3."> Добавить в RSS</label> <a onclick=\"show('help_rss')\" class=help>?</a>
+  <label><input type='checkbox' name='rss' value='1'".$check3."> Добавить в RSS</label> <a onclick=\"show('help_rss')\" class='help'>?</a>
   </td><td>
-  <label><input type=checkbox name=nocomm value=1".$check2."> Запретить комментарии</label> <a onclick=\"show('help_nocomm')\" class=help>?</a>
+  <label><input type='checkbox' name='nocomm' value='1'".$check2."> Запретить комментарии</label> <a onclick=\"show('help_nocomm')\" class='help'>?</a>
   </td><td>
-  Очередность: <input type=text name=sor value='".$sor."' size=4 style='text-align:center;'> <a onclick=\"show('help_sor')\" class=help>?</a>
+  Очередность: <input type='text' name='sor' value='".$sor."' size='4' style='text-align:center;'> <a onclick=\"show('help_sor')\" class='help'>?</a>
   </td></tr></table>
 
   <div id='help_nocomm' style='display:none;'>Если в данном разделе разрешены комментарии — вы можете отключить их выборочно на данной странице, поставив галочку.<br><br></div>
@@ -368,8 +368,8 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
   <div id='help_mainpage' style='display:none;'>Если отметить эту галочку, данная страница будет отображаться в блоке, который настроен на отображение только помеченных этой галочкой страниц, или не будет отображаться в блоке, который настроен на показ всех неотмеченных галочкой страниц.<br><br></div>
   <div id='help_sor' style='display:none;'>Настраивается в настройках раздела. Может быть равна цифре. Применяется для ручной сортировки страниц. Лучше всего делать кратной 10, например 20, 30, 40 и т.д. для того, чтобы было удобно вставлять страницы между двумя другими. Если очередность у двух страниц совпадает, сортировка происходит по дате.<br><br></div>
 
-  <span class=h2>Дата создания:</span> <script>$(function() { $.datepicker.setDefaults( $.datepicker.regional[ \"ru\" ] ); $( \"#f_date_c999\" ).datepicker({ changeMonth: true, changeYear: true, dateFormat: \"d MM yy\", showAnim: 'slide' }); });</script>
-  <INPUT type=text name=data1 id=\"f_date_c999\" value=\"".$data1."\" onchange=\"document.getElementById('add999').value=document.getElementById('f_date_c999').value+'|'+document.getElementById('f_date_c2999').value\" readonly=1 size=18> <a onclick=\"show('help0')\" class=help>?</a> <nobr>Время: <select name=data2 class='f12'>";
+  <span class='h2'>Дата создания:</span> <script>$(function() { $.datepicker.setDefaults( $.datepicker.regional[ \"ru\" ] ); $( \"#f_date_c999\" ).datepicker({ changeMonth: true, changeYear: true, dateFormat: \"d MM yy\", showAnim: 'slide' }); });</script>
+  <INPUT type=text name=data1 id=\"f_date_c999\" value=\"".$data1."\" onchange=\"document.getElementById('add999').value=document.getElementById('f_date_c999').value+'|'+document.getElementById('f_date_c2999').value\" readonly='1' size='18'> <a onclick=\"show('help0')\" class='help'>?</a> <nobr>Время: <select name='data2' class='f12'>";
   for ($x=0; $x < 24; $x++) {
     if ($x<10) $xx = "0".$x; else $xx = $x;
     $sel = ""; if ($xx == $data2) $sel = " selected";
@@ -382,15 +382,15 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
   echo "</div>
 
   <div id='main'>
-  <span class=h2>Название страницы (заголовок)</span><br>
+  <span class='h2'>Название страницы (заголовок)</span><br>
   <textarea class='f16 w100 h40' name=title rows=1 cols=10>".$titl."</textarea>
-  <br><span class=h2>Предисловие (начальный текст)</span><br>";
+  <br><span class='h2'>Предисловие (начальный текст)</span><br>";
   redactor($red, $shablon1, 'open_text', 'main_text'); // редактор: тип редактора, редактируемое поле
-  echo "<br><span class=h2>Содержание (основной текст)</span><br>";
+  echo "<br><span class='h2'>Содержание (основной текст)</span><br>";
   redactor2($red, $shablon2, 'main_text');
 
-  echo "<br><input type=hidden name=foto value=''>";
-  echo "<input type=hidden name=price value=''>";
+  echo "<br><input type='hidden' name='foto' value=''>";
+  echo "<input type='hidden' name='price' value=''>";
 
   $sql = "select `text` from ".$prefix."_mainpage where (`name` = '".$name."' or `name` like '".$name." %') and `type`='2'";
   $result = $db->sql_query($sql);

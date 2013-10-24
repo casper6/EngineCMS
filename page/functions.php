@@ -24,6 +24,17 @@ function is_admin($admin) { // Проверка админа
   }
   return $adminSave = 0;
 }
+///////////////////////////////////////////////////////////////
+function num_ending($number, $endings) { // функция правильных окончаний слов
+    $num100 = $number % 100;
+    $num10 = $number % 10;
+    if ($num100 >= 5 && $num100 <= 20) { return $endings[0];
+    } else if ($num10 == 0) { return $endings[0];
+    } else if ($num10 == 1) { return $endings[1];
+    } else if ($num10 >= 2 && $num10 <= 4) { return $endings[2];
+    } else if ($num10 >= 5 && $num10 <= 9) { return $endings[0];
+    } else { return $endings[2]; }
+}
 /////////////////////////////////////////////////////////
 function FixQuotes($what = "",$strip="") {
   while (stripos($what, "\\\\'")) { // stristr

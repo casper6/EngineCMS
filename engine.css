@@ -1,15 +1,10 @@
 ﻿/* Основной стиль админки */
 @page {mso-page-orientation:landscape;}
-html { font-size: 100%; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
-body, html { height: 100%; }
 body, td {
-	margin: 5px; 
 	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 14px !important;
-	color: black;
-	font-weight:normal;
+	font-size: 14px;
 }
-body, td, ul li a { text-shadow: none !important;}
+ul li a { text-shadow: none !important;}
 
 @media print {
   .noprint { display:none; }
@@ -23,6 +18,7 @@ body, td, ul li a { text-shadow: none !important;}
     background: green;
 }
 
+.v_bottom {vertical-align: bottom !important; }
 button, a.btn, a.btn:visited, a.button, a.button:visited, input[type="submit"], input[type="reset"], input[type="button"] { text-shadow: none !important; }
 input#redactorSaveBtn {background:green; color:white;}
 
@@ -311,6 +307,7 @@ h1, h2, h3 {margin:0; padding:5px; font-weight: normal;}
 .h3 {font-size: 13pt; color: #333;}
 h1 {font-size: 21px;color:#333;}
 h2 {font-size: 17px;color:#333; margin-top:15px;}
+.dark_pole h2, .table_light h2 {margin-top:0;}
 h3 {font-size: 14px;color:#333;}
 #podrazdel, .preview {margin-top:5px; padding-left:5px; padding-right:5px;}
 
@@ -416,7 +413,7 @@ p {margin-top: 15px;margin-left: 5px;}
 .block_red { padding: 5px; background: #f2e2e2; }
 
 #block1, #block2, #block3, #block4, #block5, #block6, #block7, #block8, #block9, #block10 {
-	border:3px solid #aaaaaa; padding: 1px; margin-bottom:30px;
+	margin-bottom:30px;
 }
 
 .dark_pole {border:0; border-radius: 5px; -moz-border-radius: 5; -webkit-border-radius: 5; padding:2px; margin:2px;background:#dddddd; display: inline-block; cursor:pointer;}

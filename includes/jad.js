@@ -102,7 +102,7 @@ function select_button(id) {
 }
 function options_show(id,type) {
 	select_button('mainrazdel'+id);
-	if (id == 4 || id == 7) $('#save_options').hide();
+	if (id == 4 || id == 7 || id == 10) $('#save_options').hide();
 	else $('#save_options').show();
 	$('.show_pole').hide();
 	$('#'+type).show();
@@ -135,10 +135,9 @@ function spiski_show(name, title) {
 	});
 }
 function oformlenie_show(title,id,type,link) {
-	var txt;
+	var txt = '';
 	select_button('mainrazdel'+id);
-	if (id!=2) txt = '<a class="button green" style="margin-top:4px;margin-bottom:10px;" target="_blank" href='+link+'#1> '+icon('white small','+')+' Добавить '+title+'</a> ';
-	else txt = '<span class=h2>Удаленное оформление</span><p>При удалении объекта оформления, он попадает в «Удаленное оформление» для окончательного удаления или восстановления.<p>'+icon('red small','F')+' <a href=sys.php?op=delete_all&del=design>Очистить Удаленное</a>';
+	if (id==2) txt = '<p>При удалении объекта оформления, он попадает в «Удаленное оформление» для окончательного удаления или восстановления.<p>'+icon('red small','F')+' <a href=sys.php?op=delete_all&del=design>Очистить Удаленное</a>';
 	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'oformlenie_show', 'type': type },
 	    beforeSend: function(){ $('#podrazdel').html( txt + '<p><img src=images/loading.gif> Загрузка...' ); },
@@ -150,9 +149,11 @@ function razdel_show(title,id,name,type,xxx,sort) {
 	select_button('mainrazdel'+id);
 	xxx = Math.floor( Math.random() * (100000 - 9) ) + 10;
 	colors = '<span id="colors" class="hide"><a class="punkt" onclick="$(\'#add\').hide(\'slow\');"><div class="radius" style="font-size:12pt; width:20px; height: 20px; color: white; text-align:center; float:right; margin:5px; background: #bbbbbb;">&nbsp;x&nbsp;</div></a><h1>Выберите цвет раздела по частоте его использования:</h1><ul class="button-bar small"><li class="first"><a href="sys.php?op=mainpage_razdel_color&id='+id+'&color=0" title="Без цветовой маркировки">'+icon('gray small',',')+' не выбрано</a></li><li><a href="sys.php?op=mainpage_razdel_color&id='+id+'&color=1" title="Раздел часто используется">'+icon('lightgreen small',',')+' часто</a></li><li><a href="sys.php?op=mainpage_razdel_color&id='+id+'&color=2" title="Раздел редко используется">'+icon('lightyellow small',',')+' редко</a></li><li><a href="sys.php?op=mainpage_razdel_color&id='+id+'&color=3" title="Раздел не используется">'+icon('lightred small',',')+' не используется</a></li><li class="last"><a href="sys.php?op=mainpage_razdel_color&id='+id+'&color=4" title="Новый раздел, в разработке">'+icon('lightblue small',',')+' новый</a></li></ul><br>Цвет может использоваться для сортировки разделов при нажатии <img src="images/sortirovka.png"> кнопки сортировки слева от заголовка «Разделы:».</span>';
+	del_razdel = '<li><a href="sys.php?op=mainpage&id='+id+'&amp;type=2&nastroi=1#1" title="Настройки (опции) раздела">'+icon('orange small','V')+' Настроить</a></li><li class="last"><a class=pointer onclick="$(\'#add\').show().html( $(\'#del_raz'+id+'\').html() )" title="Удалить этот раздел">'+icon('red small','F')+'</a></li></ul></nobr><div id="del_raz'+id+'" class="hide"><h1>Вы хотите удалить этот раздел и всё его содержимое?</h1><a onclick=\'delrazdel("'+id+'"); $("#add").hide("slow"); show("mainrazdel'+id+'"); razdel_show("Раздел удалён", 0)\' title="Удалить этот раздел" class="button red white">'+icon('white medium','F')+' Удалить</a> <a onclick="$(\'#add\').hide(\'slow\')" title="Не удалять" class="ml50 button">НЕ удалять</a></div>';
+	if (name == 'index') del_razdel = '<li class="last"><a href="sys.php?op=mainpage&id='+id+'&amp;type=2&nastroi=1#1" title="Настройки (опции) раздела">'+icon('orange small','V')+' Настроить</a></li></ul></nobr>';
 	if (id == 0) txt = '<h1>'+title+'</h1>';
 	else {
-		txt = '<nobr><ul class="button-bar"><li class="first"><a target="_blank" class="blue" href=-'+name+' title="Открыть этот раздел на сайте">'+icon('blue small','s')+' Открыть</a></li><li><a href="sys.php?op=mainpage&amp;type=2&id='+id+'#1" title="Редактировать Главную страницу этого раздела и Шаблон для заполнения страниц">'+icon('orange small','7')+' Редактировать</a></li><li><a href="sys.php?op=mainpage&id='+id+'&amp;type=2&nastroi=1#1" title="Настройки (опции) раздела">'+icon('orange small','V')+' Настроить</a></li><li class="last"><a class=pointer onclick="$(\'#add\').show().html( $(\'#del_raz'+id+'\').html() )" title="Удалить этот раздел">'+icon('red small','F')+'</a></li></ul></nobr><div id="del_raz'+id+'" class="hide"><h1>Вы хотите удалить этот раздел и всё его содержимое?</h1><a onclick=\'delrazdel("'+id+'"); $("#add").hide("slow"); show("mainrazdel'+id+'"); razdel_show("Раздел удалён", 0)\' title="Удалить этот раздел" class="button red white">'+icon('white medium','F')+' Удалить</a> <a onclick="$(\'#add\').hide(\'slow\')" title="Не удалять" class="ml50 button">НЕ удалять</a></div>'; 
+		txt = '<nobr><ul class="button-bar"><li class="first"><a target="_blank" class="blue" href=-'+name+' title="Открыть этот раздел на сайте">'+icon('blue small','s')+' Открыть</a></li><li><a href="sys.php?op=mainpage&amp;type=2&id='+id+'#1" title="Редактировать Главную страницу этого раздела и Шаблон для заполнения страниц">'+icon('orange small','7')+' Редактировать</a></li>'+del_razdel; 
 		if (type == 'pages') {
 			txt = txt+'<div class="mt5 mb20"><ul class="button-bar"><li class="first"><a title="Добавить страницу (в редакторе)" target=_blank href="sys.php?op=base_pages_add_page&name='+name+'#1">'+icon('small','+')+' Добавить страницу</a></li><li class="last"><a class="pointer" onclick="add_papka(\''+id+'\',0)">'+icon('orange small',',')+' Добавить папку</a></li></ul> <a class="button small" onclick=\'$("#add").show().html( $("#colors").html() );\' title="Цвет раздела (видит только администратор)">'+icon('gray small',',')+' Цвет</a><br><a onclick="add_papka(\''+id+'\',1)" class="button small" title="Добавить несколько страниц">или несколько страниц</a> ' + colors + '<div id="add_papka" style="display:none;"></div></div>';
 		} else if (type == 'database') {

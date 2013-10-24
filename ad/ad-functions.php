@@ -87,17 +87,6 @@ function foto_find($content) { // Поиск фотографий на стра�
   }
   return $info;
 }
-///////////////////////////////////////////////////////////////
-function num_ending($number, $endings) { // функция правильных окончаний слов
-    $num100 = $number % 100;
-    $num10 = $number % 10;
-    if ($num100 >= 5 && $num100 <= 20) { return $endings[0];
-    } else if ($num10 == 0) { return $endings[0];
-    } else if ($num10 == 1) { return $endings[1];
-    } else if ($num10 >= 2 && $num10 <= 4) { return $endings[2];
-    } else if ($num10 >= 5 && $num10 <= 9) { return $endings[0];
-    } else { return $endings[2]; }
-}
 /////////////////////////////////////////////////////////////// Проверить вызов
 function show_cids($cid_papka, $cids=array()) { // получим cid вложенных папок
   global $prefix, $db;

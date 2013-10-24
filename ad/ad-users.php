@@ -15,7 +15,7 @@ function users() {
 	echo "<table style='width:100%; margin-top:5px; padding:0; background: #e2e5ea;' cellspacing=0 cellpadding=0><tr valign=top><td id='razdel_td' class='radius nothing' width=340>
 			<div id='razdels' style='background:#e7e9ec;'>
 			<div class='black_grad'>
-			<button id=new_razdel_button title='Назад в настройки сайта' class='small black' onclick='location.href=\"/sys.php?op=Configure#1\"' style='float:left; margin:3px;'><span style='margin-right: -2px;' class=\"icon darkgrey small\" data-icon=\"{\"></span></button>
+			<button id=new_razdel_button title='Назад в настройки сайта' class='small black' onclick='location.href=\"/sys.php?op=options#1\"' style='float:left; margin:3px;'><span style='margin-right: -2px;' class=\"icon darkgrey small\" data-icon=\"{\"></span></button>
 			<span class='h1'>Настройка пользователей</span></div>";
 	
 	echo "<div id='mainrazdel1' class='dark_pole2'><a class='base_page' onclick=\"options_show('1','show_recent')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"v\"></span><span class='plus20'>Настройка регистрации</span></div></a></div>";

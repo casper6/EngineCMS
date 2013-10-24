@@ -10,10 +10,11 @@ if(isset($aid)) {
 }
 require_once("mainfile.php");
 $checkurl = $_SERVER['REQUEST_URI'];
-if (preg_match("/AddAuthor/", $checkurl)) die (aa("Попытка взлома")." №6");
-if (preg_match("/UpdateAuthor/", $checkurl)) die (aa("Попытка взлома")." №7");
-
-if((stripos($checkurl,'AddAuthor')) OR (stripos($checkurl,'VXBkYXRlQXV0aG9y')) OR (stripos($checkurl,'QWRkQXV0aG9y')) OR (stripos($checkurl,'UpdateAuthor')) OR (stripos($checkurl, "?admin")) OR (stripos($checkurl, "&admin")) OR (stripos($checkurl,'%20union%20') OR stripos($checkurl,'*%2f*') OR stripos($checkurl,'/*') OR stripos($checkurl,'*/union/*') OR stripos($checkurl,'c2nyaxb0') OR stripos($checkurl,'+union+') OR (stripos($checkurl,'cmd=') AND stripos($checkurl,'&cmd')===false) OR (stripos($checkurl,'exec') AND stripos($checkurl,'execu')===false) OR stripos($checkurl,'concat'))) die(aa("Попытка взлома")." №8");
+if (preg_match("/admins_add/", $checkurl)) die (aa("Попытка взлома")." №6");
+if (preg_match("/update_author/", $checkurl)) die (aa("Попытка взлома")." №7");
+if (preg_match("/admins_delete/", $checkurl)) die (aa("Попытка взлома")." №12");
+if (preg_match("/admins_edit_save/", $checkurl)) die (aa("Попытка взлома")." №13");
+if((stripos($checkurl,'VXBkYXRlQXV0aG9y')) OR (stripos($checkurl,'QWRkQXV0aG9y')) OR (stripos($checkurl,'admins_delete')) OR (stripos($checkurl,'admins_edit_save')) OR (stripos($checkurl,'admins_add')) OR (stripos($checkurl,'update_author')) OR (stripos($checkurl, "?admin")) OR (stripos($checkurl, "&admin")) OR (stripos($checkurl,'%20union%20') OR stripos($checkurl,'*%2f*') OR stripos($checkurl,'/*') OR stripos($checkurl,'*/union/*') OR stripos($checkurl,'c2nyaxb0') OR stripos($checkurl,'+union+') OR (stripos($checkurl,'cmd=') AND stripos($checkurl,'&cmd')===false) OR (stripos($checkurl,'exec') AND stripos($checkurl,'execu')===false) OR stripos($checkurl,'concat'))) die(aa("Попытка взлома")." №8");
 
 global $admin_file;
 
@@ -71,10 +72,13 @@ if(isset($admin) && !empty($admin)) {
 		}
 	}
 }
+// Включение режима редактора (отключение функций админа)
+$editor_style = false;
+if ($rname == "EDITOR") $editor_style = true;
 
 if(!isset($op)) { 
 	$op = "adminMain"; 
-} elseif(($op=="mod_authors" OR $op=="modifyadmin" OR $op=="UpdateAuthor" OR $op=="AddAuthor" OR $op=="deladmin2" OR $op=="deladmin" OR $op=="deladminconf") AND ($rname != "BOG")) {
+} elseif(($op=="mod_authors" OR $op=="admins_list" OR $op=="admins_delete" OR $op=="admins_edit" OR $op=="modifyadmin" OR $op=="update_author" OR $op=="admins_edit_save" OR $op=="admins_add" OR $op=="options") AND ($rname != "BOG")) {
   die(aa("Запрещенная операция! Возможно, вы только что сменили имя и/или пароль администратора - тогда перейдите ко <a href=sys.php?op=login>входу в администрирование</a>."));
 }
 $pagetitle = "- ".aa("Администрирование");
@@ -149,12 +153,12 @@ function GraphicAdmin() {
 	$date_now1 = date("Y.m.d");
 	$date_now2 = date("Y.m.d",time()-86400);
 	$date_now3 = date("Y.m.d",time()-172800);
-	$comm_segodnya = $db->sql_numrows($db->sql_query("select `cid` from ".$prefix."_".$pages."_comments where `tables`='pages' and `data` like '".mysql_real_escape_string($date_now1)." %'"));
-	$comm_vchera = $db->sql_numrows($db->sql_query("select `cid` from ".$prefix."_".$pages."_comments where `tables`='pages' and `data` like '".mysql_real_escape_string($date_now2)." %'"));
-	$comm_pozavchera = $db->sql_numrows($db->sql_query("select `cid` from ".$prefix."_".$pages."_comments where `tables`='pages' and `data` like '".mysql_real_escape_string($date_now3)." %'"));
+	$comm_segodnya = $db->sql_numrows($db->sql_query("SELECT `cid` FROM ".$prefix."_".$pages."_comments where `tables`='pages' and `data` like '".mysql_real_escape_string($date_now1)." %'"));
+	$comm_vchera = $db->sql_numrows($db->sql_query("SELECT `cid` FROM ".$prefix."_".$pages."_comments where `tables`='pages' and `data` like '".mysql_real_escape_string($date_now2)." %'"));
+	$comm_pozavchera = $db->sql_numrows($db->sql_query("SELECT `cid` FROM ".$prefix."_".$pages."_comments where `tables`='pages' and `data` like '".mysql_real_escape_string($date_now3)." %'"));
 
 	if ($show_userposts != 0) {
-		$num_add_pages = $db->sql_numrows($db->sql_query("SELECT `pid` from ".$prefix."_pages where (`active`='2' or `active`='3') and `tables`!='del'"));
+		$num_add_pages = $db->sql_numrows($db->sql_query("SELECT `pid` FROM ".$prefix."_pages where (`active`='2' or `active`='3') and `tables`!='del'"));
 	}
 	$soderganie_menu = "";
  	
@@ -170,11 +174,11 @@ function GraphicAdmin() {
 
 	if ($num_add_pages > 0 and $show_userposts != 0) $soderganie_menu .= "<button id='openbox4' class='nothing dark_pole2 orange' style='color: red;' onclick=\"openbox('4','".aa("Добавленное посетителями")."'); $('#razdels').hide('slow')\"><span class=\"icon gray small\" data-icon=\"u\"></span><nobr>".$buttons[1]."<strong>".$num_add_pages."</strong></nobr></button>";
 
-	$del_page = $db->sql_numrows($db->sql_query("SELECT `pid` from ".$prefix."_".$pages." where `tables`='del' limit 0,1"));
-	$del_razdel = $db->sql_numrows($db->sql_query("SELECT `id` from ".$prefix."_mainpage where `type`='2' and `tables`='del' limit 0,1"));
+	$del_page = $db->sql_numrows($db->sql_query("SELECT `pid` FROM ".$prefix."_".$pages." where `tables`='del' limit 0,1"));
+	$del_razdel = $db->sql_numrows($db->sql_query("SELECT `id` FROM ".$prefix."_mainpage where `type`='2' and `tables`='del' limit 0,1"));
 	if ($del_page > 0 || $del_razdel > 0) $soderganie_menu .= "<button id='openbox1' class='nothing dark_pole2' onclick=\"openbox('1','".aa("Удаленное")."'); $('#razdels').hide('slow')\" title='".aa("Удаленные страницы")."'><span class=\"icon gray small\" data-icon=\"T\"></span>".$buttons[2]."</button>";
 
-	$backup_page = $db->sql_numrows($db->sql_query("SELECT `pid` from ".$prefix."_".$pages." where `tables`='backup' limit 0,1"));
+	$backup_page = $db->sql_numrows($db->sql_query("SELECT `pid` FROM ".$prefix."_".$pages." where `tables`='backup' limit 0,1"));
 	if ($backup_page > 0) $soderganie_menu .= "<button id='openbox2' class='nothing dark_pole2' onclick=\"openbox('2','".aa("Резервные копии")."'); $('#razdels').hide('slow')\" title='".aa("Резервные копии созданных ранее страниц")."'><span class=\"icon gray small\" data-icon=\"t\"></span>".$buttons[3]."</button>";
 
 	$soderganie_menu .= " <button id='mainrazdel3' class='nothing dark_pole2' onclick=\"oformlenie_show('блок','3','block','/sys.php?op=mainpage&name=block&type=3'); $('#razdels').hide('slow')\" title='".aa("Резервные копии созданных ранее страниц")."'><span class=\"icon gray small\" data-icon=\"R\"></span>".$buttons[4]."</button> ";
@@ -197,11 +201,11 @@ function GraphicAdmin() {
 	else $razdel_sort = "color, title";
 
 	$subg = "";
-	$sql = "select * from ".$prefix."_mainpage where `tables`!='del' and type='2' and name!='index' order by ".mysql_real_escape_string($razdel_sort);
+	$sql = "select * from ".$prefix."_mainpage where `tables`!='del' and type='2' order by ".mysql_real_escape_string($razdel_sort);
 	$result = $db->sql_query($sql) or die(aa("Ошибка: не найдена таблица разделов."));
 	$current_type = ""; 
 
-	$num_razdel = $db->sql_numrows($db->sql_query("select `id` from ".$prefix."_mainpage where `type`='2' and `name`!='index' and `tables`!='del'"));
+	$num_razdel = $db->sql_numrows($db->sql_query("SELECT `id` FROM ".$prefix."_mainpage where `type`='2' and `name`!='index' and `tables`!='del'"));
 
 	$razdel_txt = "";
 	if ($num_razdel == 0) $razdel_txt = "<div style='padding-left:5px; color: red;'>".aa("Разделов пока нет. Добавьте, нажав на кнопку +. Если вам нужен одностраничный сайт — нажмите по кнопке «Главная страница» для её редактирования.")."</div>";
@@ -223,14 +227,10 @@ function GraphicAdmin() {
 	if ($num_razdel > 5) $icon_size = "medium"; 
 	if ($num_razdel > 10) $icon_size = "small"; 
 
-	echo "<div id='mainrazdel_index' class='dark_pole2'>
-	<div style='float:right'><a class='button small ml5' href='sys.php?op=mainpage&id=24&red=2#1' title='".aa("Редактировать Главную страницу")."'><span class='icon small' data-icon='7'></span></a></div>
-	<a class='base_page' href='/sys.php?op=mainpage&amp;id=24&amp;red=2' title='".aa("Редактировать Главную страницу")."'><div id='mainrazdel_index'><span class='icon black ".$icon_size."' data-icon='.'></span><span class='plus20'>".aa("Главная страница")."</span></div></a></div>";
-
     while ($row = $db->sql_fetchrow($result)) {
 	    $id = $row['id'];
 	    $type = $row['type'];
-	    $nam = mysql_real_escape_string($row['name']);
+	    $nam = $row['name'];
 	    if (strpos($nam, "\n")) { // заменяем имя запароленного раздела
 	        $nam = explode("\n", str_replace("\r", "", $nam));
 	        $nam = trim($nam[0]);
@@ -242,21 +242,21 @@ function GraphicAdmin() {
 	    $useit = $row['useit'];
 		$tables = $row['tables'];
 		if ($show_page == 1) {
-			$result3 = $db->sql_query("select `pid` from ".$prefix."_pages where `active`='1' and `tables`='pages' and `module`='".$nam."'");
+			$result3 = $db->sql_query("SELECT `pid` FROM ".$prefix."_pages where `active`='1' and `tables`='pages' and `module`='".$nam."'");
 			$size = $db->sql_numrows($result3);
-			$result4 = $db->sql_query("select `pid` from ".$prefix."_pages where `active`!='1' and `tables`='pages' and `module`='".$nam."'");
+			$result4 = $db->sql_query("SELECT `pid` FROM ".$prefix."_pages where `active`!='1' and `tables`='pages' and `module`='".$nam."'");
 			$size_off = $db->sql_numrows($result4);
 		} else { 
 			$size = 0; $size_off = 0; 
 		}
 
 		$type_opisX = "";
-		if ($nam!="index") {
+		//if ($nam!="index") {
 			if ($size < 1) $size = ""; 
 			if ($size_off < 1) $size_off = ""; else $size_off = "&nbsp;<span class='red' title='".aa("Отключенные страницы")."'>-".$size_off."</span>";
 			$type_opisX = "<span class='f14 pr10 pl10'><span class='green' title='".aa("Включенные страницы")."'>".$size."</span>".$size_off."</span>";
 			if ($size < 1 and $size_off < 1) $type_opisX = "";
-		} elseif ($nam=="index") $type_opisX = "";
+		//} elseif ($nam=="index") $type_opisX = "";
 		if ($current_type != $type) $current_type = $type;
 		$text = explode("|",$text); 
 		$options = $text[1];
@@ -316,6 +316,7 @@ function GraphicAdmin() {
 			$ico = ".";
 			$reaction = "razdel_show(\"\", ".$id.", \"".$nam."\", \"page\");";
 		}
+		if ($nam=="index") $title = "<b>".$title."</b>";
 		echo "<div id='mainrazdel".$id."' class='dark_pole2'><div style='float:right'>".$right."</div><a class='base_page' title='".aa("Нажмите для просмотра действий над этим разделом и его содержимым")."' href=#1 onclick='".$reaction."'><div id='mainrazdel".$id."'>
 		<span class='icon ".$color." ".$icon_size."' data-icon='".$ico."'></span><span class='plus20'>".$title."</span>
 		</div></a></div>";
@@ -326,7 +327,7 @@ function GraphicAdmin() {
 	<td style='width:100%;padding:0;'><div class='black_grad'><div class='pt5'>".$soderganie_menu."</div></div><div class='podrazdel radius nothing' id='podrazdel'>";
 
 	// ЗАПИСКИ
-	$row = $db->sql_fetchrow($db->sql_query("SELECT `adminmes` from ".$prefix."_config"));
+	$row = $db->sql_fetchrow($db->sql_query("SELECT `adminmes` FROM ".$prefix."_config"));
 	$adminmes = $row['adminmes'];
 	global $op, $project_logotip, $project_name;
 	if ($op == "mes") $mes_ok = "<span class='green'>".aa("Записки сохранены")."</span>"; 
@@ -356,7 +357,7 @@ function GraphicAdmin() {
 	if ($map == false) {
 		global $siteurl, $show_reserv;
 		$output = "";
-				$sql = "SELECT `pid`, `module`, `date` from ".$prefix."_pages where `tables`='pages' and `active`='1' order by `date` desc limit 0,40000";
+				$sql = "SELECT `pid`, `module`, `date` FROM ".$prefix."_pages where `tables`='pages' and `active`='1' order by `date` desc limit 0,40000";
 				$result = $db->sql_query($sql) or die(aa("Не могу добавить в карту сайта страницы. Обратитесь к разработчику."));
 				while ($row = $db->sql_fetchrow($result)) {
 					$pid = $row['pid'];
@@ -369,7 +370,7 @@ function GraphicAdmin() {
 					//if ($comm > 0) $output .= "<url>\n<loc>http://".$siteurl."/-".$module."_page_".$pid."_comm</loc>\n<lastmod>".$dat."</lastmod>\n<priority>0.6</priority>\n</url>\n";
 				}
 				// Добавление разделов
-				$sql = "SELECT `name` from ".$prefix."_mainpage where `tables`='pages' and `name`!='index' and `type`='2'";
+				$sql = "SELECT `name` FROM ".$prefix."_mainpage where `tables`='pages' and `name`!='index' and `type`='2'";
 				$result = $db->sql_query($sql) or die(aa("Ошибка: Не получается добавить разделы в карту сайта. Обратитесь к разработчику."));
 				while ($row = $db->sql_fetchrow($result)) {
 					$module = $row['name'];
@@ -381,7 +382,7 @@ function GraphicAdmin() {
 				}
 			// Добавление тегов
 			$tags = array();
-			$sql = "select `search` from ".$prefix."_pages where `tables`='pages' and `active`='1' limit 0,500";
+			$sql = "SELECT `search` FROM ".$prefix."_pages where `tables`='pages' and `active`='1' limit 0,500";
 			$result = $db->sql_query($sql);
 			while ($row = $db->sql_fetchrow($result)) {
 				if (trim($row['search']) != "") {

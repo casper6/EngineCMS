@@ -17,7 +17,7 @@ global $strelka, $go, $cid, $pid, $all, $avtor, $to, $info, $num, $ip, $golos, $
 // настройки раздела из БД
 global $post, $comments, $datashow, $sort, $lim, $foto, $view, $search, $search_papka, $tema, $tema_name, $tema_title, $tema_opis, $menushow, $design; 
 
-$media = $folder = $col = $view = $golos = $golosrazdel = $post = $comments = $datashow = $favorites = $socialnetwork = $search = $search_papka = $put_in_blog = $base = $vetki = $citata = $media_comment = $no_html_in_opentext = $no_html_in_text = $show_add_post_on_first_page = $media_post = $razdel_shablon = $page_shablon = $comments_all = $comments_num = $comments_mail = $comments_adres = $comments_tel = $comments_desc = $golostype = $pagenumbers = $comments_main = $tags_type = $tema_zapret_comm = $pagekol = $table_light = $designpages = $comments_add = $div_or_table = $papka_show = $more_smile = $add_post_to_mainpage = 0;
+$media = $folder = $col = $view = $golos = $golosrazdel = $post = $comments = $datashow = $favorites = $socialnetwork = $search = $search_papka = $put_in_blog = $base = $vetki = $citata = $media_comment = $no_html_in_opentext = $no_html_in_text = $show_add_post_on_first_page = $media_post = $razdel_shablon = $page_shablon = $comments_all = $comments_num = $comments_mail = $comments_adres = $comments_tel = $comments_desc = $golostype = $pagenumbers = $comments_main = $tags_type = $tema_zapret_comm = $pagekol = $table_light = $designpages = $comments_add = $div_or_table = $papka_show = $more_smile = $add_post_to_mainpage = $design_tablet = $designpages_tablet = $design_phone = $designpages_phone = 0;
 $menushow = $titleshow = $razdel_link = $peopleshow = $design = $tags = $podrobno = $podrazdel_active_show = $podrazdel_show = $tipograf = $limkol = $tags_show = $tema_zapret = $opentextshow = $maintextshow = 1;
 
 $comment_shablon = 2;
@@ -450,10 +450,11 @@ function showcat($cid=0, $pag=0, $slovo="") {
       $and_1_3 = "";
     }
 
+    if (!isset($soderganieALL)) $soderganieALL = "";
     //////////////////////////////////////////////////////
     if ($cid == 0 and $view!=2) {
       if ($menushow != 0) $soderganieMENU = top_menu($cid, 0);
-      if (!isset($soderganieALL)) $soderganieALL = "";
+      //if (!isset($soderganieALL)) $soderganieALL = ""; // перенесено выше!
       $soderganieALL .= $tagcloud.$tag_slovo;
       # Если не выбран ни один каталог
       if ($div_or_table == 0) {

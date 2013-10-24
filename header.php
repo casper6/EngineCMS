@@ -5,7 +5,7 @@ define ('ROOT_DIR', dirname ( __FILE__ ) ); // доработать!
 
 session_start(); // Для капчи (проверочный код-картинка от спама) // проверить вызов
 require_once("mainfile.php");
-global $strelka, $siteurl, $prefix, $name, $db, $admin, $sitename, $pagetitle, $pagetitle2, $registr, $pogoda, $flash, $keywords, $description, $counter, $startdate, $adminmail, $keywords2, $description2, $stopcopy, $nocash, $blocks, $http_siteurl, $display_errors, $gallery_css3, $gallery_lightbox, $gallery_carusel, $gallery_sly;
+global $strelka, $siteurl, $prefix, $name, $db, $admin, $sitename, $pagetitle, $pagetitle2, $registr, $pogoda, $flash, $keywords, $description, $counter, $startdate, $adminmail, $keywords2, $description2, $stopcopy, $nocash, $blocks, $http_siteurl, $display_errors, $gallery_css3, $gallery_lightbox, $gallery_carusel, $gallery_sly, $deviceType;
 $nocash = $gallery_css3 = $gallery_lightbox = $gallery_carusel = $gallery_sly = $gallery_sly_full = $mp3_player = false;
 if ($name == "") $name = "index";
 
@@ -82,15 +82,18 @@ if ($name=="-email") { // занесение мыла как скрытого к
 			// Проверяем на наличие среди паролей
 			foreach ($pass_razdels as $key => $pass_razdel) {
 				if (in_array($name, $pass_razdel)) {
-					$name = $key;
+					$pass_name = $name;
+					$pass_rename = $name = $key;
 				}
 			}
 		}
+		$index_ok = true; // индексирование поисковиками
 		if ($title_razdels[$name] == "") {
 			$main_title = ""; // ИЗМЕНА на mainfile
 			$main_file = "";
 			$main_options = "";
 		} else {
+			if (isset($pass_razdels[$name])) $index_ok = false;
 			$main_title = $title_razdels[$name];
 			$main_file = array();
 			if (trim($txt_razdels[$name])!="") {
@@ -107,14 +110,20 @@ if ($name=="-email") { // занесение мыла как скрытого к
 
 		parse_str($main_options); // Включили все настройки раздела
 
-		// Выбор дизайна: для страниц или раздела
-		if ($designpages != 0 and $pid != 0) $design = $designpages;
-
+		// Выбор дизайна:
+		if ($pid == 0) { // для разделов
+			if (isset($design_tablet)) if ($design_tablet != 0 && $deviceType == "tablet") $design = $design_tablet;
+			if (isset($design_phone)) if ($design_phone != 0 && $deviceType == "phone") $design = $design_phone;
+		} else { // для страниц
+			if (isset($designpages)) if ($designpages != 0) $design = $designpages;
+			if (isset($designpages_tablet)) if ($designpages_tablet != 0 && $deviceType == "tablet") $design = $designpages_tablet;
+			if (isset($designpages_phone)) if ($designpages_phone != 0 && $deviceType == "phone") $design = $designpages_phone;
+		}
 		// Разберемся со стилями id, type, name, opis, sort, pages, parent
 		$style_type = array();
 		$style_name = array();
 		$style_pages = array();
-		$sql7 = "SELECT id, type, name, pages from ".$prefix."_spiski";
+		$sql7 = "SELECT id, type, name, pages FROM ".$prefix."_spiski";
 		$result7 = $db->sql_query($sql7);
 		while ($row7 = $db->sql_fetchrow($result7)) {
 			$style_id = $row7['id'];
@@ -132,6 +141,7 @@ if ($name=="-email") { // занесение мыла как скрытого к
 		$titles_papka = titles_papka(0,1);
 
 		// Определяем Главный раздел
+		/*
 		if ($name == "index") {
 			// Смотрим чему равно значение Главной страницы
 			global $useit_razdels; // ЗАМЕНА mainpage2
@@ -141,7 +151,7 @@ if ($name=="-email") { // занесение мыла как скрытого к
 			$main_file = $name13;
 			$main_options = "no";
 		}
-
+		*/
 		global $soderganie, $soderganie2, $options, $ModuleName, $tip, $DBName, $page_cat, $http_siteur, $cid, $pid, $include_tabs;
 		$options = $main_options;
 		$ModuleName = $main_title;
@@ -292,7 +302,7 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 		$design_open = "<div class='".$shablonX."'>".$design[0]; 
 		if ($titleshow != 0 and $titleshow != 3) {
 			if (($nameX==0 or $nameX==1 or $nameX==4 or $nameX==6 or $nameX==8 or $nameX==9) and $notitlelink==0) {
-				$design_open .= "<h3 class=\"h3_block_title class_".$class."\"><a href=".$alternative_title_link." title=\"".$block_title."\" class=\"h3_block_title class_".$class."\">".$block_title."</a>".$block_title2."</h3><div class=polosa></div>"; 
+				$design_open .= "<h3 class=\"h3_block_title class_".$class."\"><a href=".$alternative_title_link." title=\"".$block_title."\" class=\"h3_block_title class_".$class."\">".$block_title."</a>".$block_title2."</h3><div class=polosa></div>";
 			} else {
 				if ($titleshow != 2) $design_open .= "<h3 class=\"h3_block_title class_".$class."\">".$block_title."</h3><div class='polosa'></div>";
 			}
@@ -356,12 +366,12 @@ case "0": # Блок страниц раздела
 
 
 	if ($useitX=="open_razdel") { // Показывать ВСЕ разделы или выбранный
-		if ($name == "index") {
-			$block = str_replace("[".$titleX."]", "", $block);
-			break 1;
-		} else {
+		//if ($name == "index") {
+			//$block = str_replace("[".$titleX."]", "", $block);
+			//break 1;
+		//} else {
 			$and2 = " and module='".$name."'";
-		}
+		//}
 	} elseif ($useitX==aa("все") or $useitX=="") { // Показывать ВСЕ разделы или выбранный
 		$and2 = ""; 
 	} elseif ( strpos($useitX, ",") ) { // Показывать определенные разделы, через «,»
@@ -684,8 +694,8 @@ case "3": # Блок ротатор рекламы
 	$type = ""; break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////	
 case "4": # Блок папок раздела 
-	if ($useitX == 'index') $block = str_replace("[".$titleX."]", "", $block); // если главная - ничего не выводим
-	else {
+	//if ($useitX == 'index') $block = str_replace("[".$titleX."]", "", $block); // если главная - ничего не выводим
+	//else {
 		if ($noli == 0) $textX = "<ul id='block_ul_title_".$useitX."' class='block_ul_title'>"; 
 		// В эту переменную входит содержание блока
 
@@ -730,7 +740,7 @@ case "4": # Блок папок раздела
 		if ($noli == 0) $textX .= "</ul>";
 		// Вставим шаблон из блока!!!
 		$block = str_replace("[".$titleX."]", $design_open.$textX.$design_close, $block);
-	}
+	//}
 	$type = ""; break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 case "5": # Блок голосования
@@ -1089,11 +1099,16 @@ case "10": # Блок меню
 			}
 		}
 	} else {
-		// Добавить поиск и замену блоков в меню
+		// поиск и замену блоков в меню
+		
+		
 		$tr = array("http://".$siteurl=>"");
 		$textX = strtr($textX,$tr);
-		$tr = array(aa("[уровень открыть]")=>$lvl_open,aa("[уровень закрыть]")=>$lvl_close,aa("[элемент открыть]")=>$el_open,aa("[элемент закрыть]")=>$el_close,"[url="=>$url_open,"[/url]"=>$url_close2,"]"=>$url_close1);
+		$tr = array(aa("[уровень открыть]")=>$lvl_open,aa("[уровень закрыть]")=>$lvl_close,aa("[элемент открыть]")=>$el_open,aa("[элемент закрыть]")=>$el_close,"[url="=>$url_open,"[/url]"=>$url_close2);
 		$textXX = strtr($textX,$tr);
+
+		$textXX = str_replace("]".$el_close,"$$$".$el_close,$textXX);
+		$textXX = str_replace("]",$url_close1,$textXX);
 		//if ($url != "/") {
 			$textXX = str_replace("' href='".$url1."'>", " mainmenu_open' href='".$url1."'>", $textXX);
 			$textXX = str_replace("<li><a class='li1menu_link mainmenu_open' href='".$url1."'>", "<li class='li_mainmenu_open'><a class='li1menu_link mainmenu_open' href='".$url1."'>", $textXX);
@@ -1169,6 +1184,12 @@ case "10": # Блок меню
 	}
 	if ($class != "") $class_menu = $class; 
 	if ($menu != "1" and $menu != "2") $textXX = "<ul id='menu' class='".$class_menu."'>".$textXX."</ul>";
+	$textXX = str_replace("$$$","]",$textXX);
+	$textXX = str_replace("<a class='li2menu_link' href=''>","",$textXX);
+	$textXX = str_replace("<a class='li1menu_link' href=''>","",$textXX);
+	$textXX = str_replace("<a class='li2menu_openlink' href=''>","",$textXX);
+	$textXX = str_replace("</div></a>","",$textXX);
+	$textXX = str_replace("</ul></a>","",$textXX);
 	$block = str_replace("[".$titleX."]", $design_open.$textXX.$design_close, $block);
 	$type = ""; break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1395,7 +1416,7 @@ case "23": # База данных (список по нескольким ко�
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 case "30": # Статистика раздела, выводит кол-во посещений
 	$textX = ss("Ошибка");
-	$sql8 = "select counter from ".$prefix."_mainpage where `tables`='pages' and (`name` = '".$useitX."' or `name` like '".$useitX." %') and type='2'";
+	$sql8 = "SELECT `counter` FROM ".$prefix."_mainpage WHERE `tables`='pages' and (`name` = '".$useitX."' or `name` like '".$useitX." %') and type='2'";
 	$result8 = $db->sql_query($sql8);
 	$row8 = $db->sql_fetchrow($result8);
 	$textX = $row8['counter'];
@@ -1405,7 +1426,7 @@ case "30": # Статистика раздела, выводит кол-во п�
 case "31": # Блок JS
 	if ($js == "") {
 		$contents = array();
-		$sql = "select `id` from ".$prefix."_mainpage where `type`='3' and `name`='31' and `tables`='pages' and `color`='0'";
+		$sql = "SELECT `id` FROM ".$prefix."_mainpage WHERE `type`='3' and `name`='31' and `tables`='pages' and `color`='0'";
 		$result = $db->sql_query($sql);
 		while($row = $db->sql_fetchrow($result)) {
 			$contents[] = $row['id'];
@@ -1611,7 +1632,9 @@ case "31": # Блок JS
 		$block=str_replace(aa("[название_проекта]"), $project_name, $block);
 		$block=str_replace(aa("[название_лого_проекта]"), "<h1 class='project_logotip_name'><a href='/'' title='".ss("Главная страница")."'><span>".$project_name."</span><img src='".$project_logotip."' alt=''></a></h1>", $block);
 	}
-
+	if (strpos(" ".$block, aa("[закрытая зона]"))) {
+		$block=str_replace(aa("[закрытая зона]"), "Введите пароль:<br><input class='closed_zona' id='closed_zona'><input class='closed_zona' type='button' value='Войти' onclick='location.href = \"-\" + $(\"#closed_zona\").val();'>", $block);
+	}
 	// Ставим кнопку Твиттера
 	$block=str_replace(aa("[твиттер]"), "<div><a href='https://twitter.com/share' class='twitter-share-button' data-lang='ru' data-size='large'>Твитнуть</a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=\"//platform.twitter.com/widgets.js\";fjs.parentNode.insertBefore(js,fjs);}}(document,\"script\",\"twitter-wjs\");</script></div>", $block);
 
@@ -1864,12 +1887,12 @@ if (file_exists("favicon.png"))  echo "<link rel='shortcut icon' href='favicon.p
 else echo "<link rel='shortcut icon' href='favicon.ico' />";
 // <meta http-equiv='Content-language' content='".$lang."'> 
 // <meta name='copyright' content='".str_replace("'","",$sitename)."'>
+if (isset($pass_name) || $index_ok == false) echo "<meta content='noindex, nofollow' name='robots' />";
+else echo "<meta content='index, follow' name='robots' />";
 echo "<title>".$pagetit.$sitename."</title>
 <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
 <meta name='keywords' content='".str_replace("'","",$keywords2)."'>
 <meta name='description' content='".str_replace("'","",$description2)."'>
-<meta name='robots' content='index, follow'>
-<meta name='author' content=''>
 <meta name='viewport' content='width=device-width, initial-scale=1.0'>
 <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
 <!--[if lt IE 9]><script src='http://html5shim.googlecode.com/svn/trunk/html5.js'></script><![endif]-->
@@ -1958,7 +1981,7 @@ if (strlen($add_fonts)>1) {
 	//if ($kickstart == 4) echo "<div id='page'>";
 	echo $block; // Вывод страницы
 
-	if ($url=="-index") {
+	if ($url=="-index") { // снег, листья и шарики на Главной
 		if ($pogoda==1) echo "<script src='includes/sneg.js'></script>\n";
 		if ($pogoda==2) echo "<script src='includes/list.js'></script>\n";
 		if ($pogoda==3) { echo "<script src='includes/shar.js'></script>\n"; include("includes/ballon.htm"); }
@@ -1977,6 +2000,9 @@ if (strlen($add_fonts)>1) {
 	echo "</body></html>";
 
 	$txt = ob_get_contents(); // собираем файл для вывода на экран и сохранения в кеше
+
+	if (isset($pass_name)) $txt = str_replace("-".$pass_rename, "-".$pass_name, $txt);
+
 	ob_end_clean();
 	if (is_admin($admin)) echo page_admin($txt,$pid); // добавили функции админа к страничке
 	else echo $txt;

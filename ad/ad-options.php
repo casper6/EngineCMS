@@ -7,36 +7,32 @@ $aid = substr($aid, 0,25);
 $row = $db->sql_fetchrow($db->sql_query("SELECT `realadmin` FROM ".$prefix."_authors WHERE `aid`='".$aid."'"));
 if ($row['realadmin'] == 1) {
 
-	function main_ban($ip=0) {
+	function main_ban($ip_address=0) {
 		global $prefix, $db, $bgcolor2, $admin_file;
 		echo "<h2>Блокировка посетителей (запрет использования сайта)</h2>";
 		$numrows = $db->sql_numrows($db->sql_query("SELECT * from ".$prefix."_banned_ip"));
 		if ($numrows != 0) {
-			echo "<a class='punkt dark_pole' onclick=\"show_animate('show_stop_users');\"><img class='icon2 i3' src='/images/1.gif' align='bottom'>Заблокированные по IP-адресу посетители: ".$numrows."</a><div id='show_stop_users' style='display:none;'>"
-			."<table class='table_light'>"
-			."<tr><td bgcolor='".$bgcolor2."' align='left'><b>IP-адрес</b>&nbsp;</td>"
-			."<td bgcolor='".$bgcolor2."' align='left'><b>Причина блокировки</b>&nbsp;</td>"
-			."<td bgcolor='".$bgcolor2."' align='center'><b>Дата запрета</b>&nbsp;</td>"
-			."<td bgcolor='".$bgcolor2."' align='center'><b>Функции</b>&nbsp;</td></tr>";
+			echo "<a class='button medium' onclick=\"$('#show_stop_users').toggle();\"><span class=\"icon gray medium\" data-icon=\"U\"></span> Заблокированные по IP-адресу посетители: ".$numrows."</a><div id='show_stop_users' class='hide'>"
+			."<table class='table_light w100'>"
+			."<tr><td bgcolor='".$bgcolor2."' align='left'>IP-адрес</td>"
+			."<td bgcolor='".$bgcolor2."' align='left'>Причина блокировки</td>"
+			."<td bgcolor='".$bgcolor2."' align='center'>Дата запрета</td>"
+			."<td bgcolor='".$bgcolor2."' align='center'>Функции</td></tr>";
 			$result = $db->sql_query("SELECT * from ".$prefix."_banned_ip ORDER by date DESC");
 			while ($row = $db->sql_fetchrow($result)) {
 				$row['reason'] = filter($row['reason'], "nohtml");
 				echo "<tr><td bgcolor='".$bgcolor2."' align='left'>".$row['ip_address']."</td>"
 				."<td bgcolor='".$bgcolor2."'>".$row['reason']."&nbsp;</td>"
 				."<td bgcolor='".$bgcolor2."' align='center' nowrap>".date2normal_view($row['date'])."&nbsp;</td>"
-				."<td bgcolor='".$bgcolor2."' align='center'><a href='".$admin_file.".php?op=ipban_edit&amp;id=".intval($row['id'])."'><img class='icon2 i34' src=/images/1.gif title='Редактировать'></a>&nbsp;<a href='".$admin_file.".php?op=ipban_delete&amp;id=".intval($row['id'])."'><img class='icon2 i21' src=/images/1.gif title='Снять запрет'></a>&nbsp;</td></tr>";
+				."<td bgcolor='".$bgcolor2."' align='center'><a href='".$admin_file.".php?op=ipban_edit&amp;id=".intval($row['id'])."' title='Редактировать'><span class=\"icon black small\" data-icon=\"7\"></span></a>&nbsp;<a href='".$admin_file.".php?op=ipban_delete&amp;id=".intval($row['id'])."' title='Снять запрет'><span class=\"icon red small\" data-icon=\"F\"></span></a>&nbsp;</td></tr>";
 			}
-			echo "</table></div>";
+			echo "</table><br><br></div>";
 		}
-		echo "<br><br><form action='".$admin_file.".php' method='post'>
-		<table><tr><td>Введите IP-адрес пользователя:</td><td width=20></td><td>Причина блокировки:</td></tr><tr><td>";
-		if ($ip != 0) {
-			$ip = explode(".", $ip);
-			echo "<input type='text' class=polosa name='ip1' size='4' maxlength='3' value='".$ip[0]."'> . <input type='text' class=polosa name='ip5' size='4' maxlength='3' value='".$ip[1]."'> . <input type='text' class=polosa name='ip3' size='4' maxlength='3' value='".$ip[2]."'> . <input type='text' class=polosa name='ip4' size='4' maxlength='3' value='".$ip[3]."'>";
-		} else {
-			echo "<input type='text' class=polosa name='ip1' size='3' maxlength='3'>.<input type='text' class=polosa name='ip5' size='3' maxlength='3'>.<input type='text' class=polosa name='ip3' size='3' maxlength='3'>.<input type='text' class=polosa name='ip4' size='3' maxlength='3'>";
-		}
-		echo "</td><td width=20></td><td><input type='text' class=polosa name='reason' size='20' maxlength='255'><input type='submit' value='ЗАПРЕТИТЬ'><input type='hidden' name='op' value='save_banned'>
+		echo "<form action='".$admin_file.".php' method='post'>
+		<table><tr><td>IP-адрес пользователя:</td><td>Причина блокировки:</td></tr><tr><td>";
+		if ($ip_address == 0) $ip_address = "";
+		echo "<input type='text' class='polosa' name='ip_address' value='".$ip_address."'>";
+		echo "</td><td><input type='text' class='polosa' name='reason' size='20' maxlength='255'> <input type='submit' value='Запретить'><input type='hidden' name='op' value='ipban_save'><input type='hidden' name='id' value='0'>
 		</td></tr></table></form>";
 	}
 
@@ -52,48 +48,28 @@ if ($row['realadmin'] == 1) {
 		$id = intval($id);
 		$row = $db->sql_fetchrow($db->sql_query("SELECT * from ".$prefix."_banned_ip WHERE id='".$id."'"));
 		include ("ad/ad-header.php");
-		echo "<h3>Блокировка пользователей (запрет использования сайта)</h3><b>Измените IP-адрес пользователя:</b><br>";
+		echo "<h3>Редактирование блокировки пользователей</h3><b>IP-адрес:</b><br>";
 		echo "<form action='".$admin_file.".php' method='post'>";
-		$ip = explode(".", $row['ip_address']);
+		$ip_address = $row['ip_address'];
 		$reason = filter($row['reason'], "nohtml");
-		echo "<input type='text' class=polosa name='ip1' size='4' maxlength='3' value='".$ip[0]."'> . <input type='text' class=polosa name='ip5' size='4' maxlength='3' value='".$ip[1]."'> . <input type='text' class=polosa name='ip3' size='4' maxlength='3' value='".$ip[2]."'> . <input type='text' class=polosa name='ip4' size='4' maxlength='3' value='".$ip[3]."'>";
-		echo "<br><br><b>...или причину запрета:</b><br><input type='text' class=polosa name='reason' size='50' maxlength='255' value='".$reason."'><br><br>";
+		echo "<input type='text' class='polosa' name='ip_address' value='".$ip_address."'>";
+		echo "<br><br><b>Причина запрета:</b><br><input type='text' class=polosa name='reason' size='50' maxlength='255' value='".$reason."'><br><br>";
 		echo "<input type='hidden' name='id' value='".$id."'><input type='hidden' name='op' value='ipban_save'>";
 		echo "<input type='submit' value='Сохранить изменения'><br></center>";
 		echo "</form>";
 		admin_footer();
 	}
 
-	function ipban_save($id=0, $ip1, $ip5, $ip3, $ip4, $reason) {
+	function ipban_save($id=0, $ip_address, $reason) {
 		global $prefix, $db, $admin_file;
 		include ("ad/ad-header.php");
 		$id = intval($id);
-		$ip = $ip1.'.'.$ip5.'.'.$ip3.'.'.$ip4;
-		if (($ip1 == "" OR $ip5 == "" OR $ip3 == "" OR $ip4 == "") or ($ip1 > 255 OR $ip5 > 255 OR $ip3 > 255 OR $ip4 > 255 && $ip4 != "*") ) {
-			echo "<center><b>Ошибка: </b> Введенный адрес неправильный: одна из цифр меньше 0 или больше 255! <b>$ip1.$ip5.$ip3.$ip4</b><br><br>Вернуться</center>";
-			die();
-		}
-		if (!is_numeric($ip1) && !empty($ip1) OR !is_numeric($ip5) && !empty($ip5) OR !is_numeric($ip3) && !empty($ip3) OR !is_numeric($ip4) && !empty($ip4) && $ip4 != "*") {
-			echo "<center><b>Ошибка: </b> Введенный адрес неправильный: нужно вводить только цифры от 0 до 255! <b>$ip1.$ip5.$ip3.$ip4</b><br><br>Вернуться</center>";
-			die();
-		}
-		if (substr($ip1, 0, 1) == 0) {
-			echo "<center><b>Ошибка: </b> Введенный адрес неправильный: ip-адрес не может начинаться с нуля! <b>$ip1.$ip5.$ip3.$ip4</b><br><br>Вернуться</center>";
-			die();
-		}
-		if ($ip == "127.0.0.1") {
-			echo "<center><b>Ошибка: </b> Введенный адрес неправильный: введен адрес вашего компьютера, а не сервера в Интернете! <b>127.0.0.1</b><br><br>Вернуться</center>";
-			die();
-		}
-		$my_ip = $_SERVER["REMOTE_ADDR"];
-		if ($ip == $my_ip) {
-			echo "<center><b>Ошибка: </b> Введенный адрес неправильный: введен ваш сетевой адрес! <b>$ip</b><br><br>Вернуться</center>";
-			die();
-		}
+		if ($ip_address == "127.0.0.1") die("<p class='center'><b>Ошибка: </b> Введенный адрес неправильный: введен адрес вашего компьютера, а не сервера в Интернете! <b>127.0.0.1</b><br><br>Вернуться</p>");
+		if ($ip_address == $_SERVER["REMOTE_ADDR"]) die("<p class='center'><b>Ошибка: </b> Введенный адрес неправильный: введен ваш сетевой адрес! <b>".$ip_address."</b><br><br>Вернуться</p>");
 		$reason = filter($reason, "nohtml");
 		$date = date("Y-m-d");
-		if ($id==0) $db->sql_query("INSERT INTO ".$prefix."_banned_ip VALUES (NULL, '".$ip."', '".$reason."', '".$date."')");
-		else $db->sql_query("UPDATE ".$prefix."_banned_ip SET ip_address='".$ip."', reason='".$reason."' WHERE id='".$id."'");
+		if ($id==0) $db->sql_query("INSERT INTO ".$prefix."_banned_ip VALUES (NULL, '".$ip_address."', '".mysql_real_escape_string($reason)."', '".$date."')");
+		else $db->sql_query("UPDATE ".$prefix."_banned_ip SET `ip_address`='".$ip_address."', `reason`='".mysql_real_escape_string($reason)."' WHERE `id`='".$id."'");
 		Header("Location: ".$admin_file.".php?op=options");
 	}
 	///////////////////////////////////////////////////////////////////////////////////////
@@ -186,7 +162,11 @@ echo "<table class='w100 mw800 pm0 block_back'><tr valign=top><td id='razdel_td'
 	<td style='padding:0;'><a class='punkt' title='Свернуть/развернуть левую колонку' onclick='$(\"#razdels\").toggle(\"slow\");'><div class='polosa_razdelitel'><div id='rotateText'><nobr>↑ Сворачивает Настройки ↑</nobr></div></div></a></td>
 	<td class='w100 p0'>";
 
-echo "
+echo "<div class='black_grad p0'>
+<button id='save_options' type='submit' class='small green' style='float:left; margin:3px;'><span class='mr-2 icon white medium' data-icon='c'></span>Сохранить</button>
+<span class='h1'>Настройки".$opt_save."</span>
+</div>
+
 <div id='show_options_razrab' class='show_pole pl10' style='display:none;'>";
 
 $phpversion = preg_replace('/[a-z-]/', '', phpversion());
@@ -203,12 +183,10 @@ if (!extension_loaded('imagick') || !class_exists("Imagick"))
 
 echo "<p><a href='http://hotel-s.ru' target='_blank'>Официальный сайт CMS «ДвижОк»</a>
 <p><a href='http://translate.google.com/manager/website/add' target='_blank'>Переводчик сайтов</a>
-</div>	
 
-<div class='black_grad p0'>
-<button id='save_options' type='submit' class='small green' style='float:left; margin:3px;'><span class='mr-2 icon white medium' data-icon='c'></span>Сохранить</button>
-<span class='h1'>Настройки".$opt_save."</span>
-</div>
+<h2>Внутреннее устройство CMS «ДвижОк»<h2>
+<a title='Нажмите для увеличения' href='images/shema.jpg' target='_blank'><img src='images/shema.jpg' width=90%></a>
+</div>	
 
 <div id='show_first' class='show_pole pl10'>";
 	
@@ -508,8 +486,7 @@ body {}
 
 
 <div id='show_options_fonts' class='show_pole pl10' style='display:none;'>
-	<h1>Подключение шрифтов</h1>
-	<p>Вы можете выбрать дополнительные шрифты (<i><a href='http://www.google.com/webfonts/' target='_blank'>от Google</a></i>) и эффекты для них.<br>Эффекты выбирать необязательно.</p>";
+	<p>Вы можете выбрать и подключить дополнительные шрифты (<i><a href='http://www.google.com/webfonts/' target='_blank'>от Google</a></i>) и эффекты для них.<br>Эффекты выбирать необязательно.</p>";
 
 	$fonts_rus = explode(",","Andika,Anonymous Pro,Bad Script,Comfortaa,Cuprum,Didact Gothic,EB Garamond,Forum,Istok Web,Jura,Kelly Slab,Ledger,Lobster,Marck Script,Marmelad,Neucha,Open Sans,Open Sans Condensed,Oranienbaum,PT Mono,PT Sans,PT Sans Caption,PT Sans Narrow,PT Serif,PT Serif Caption,Philosopher,Play,Poiret One,Press Start 2P,Prosto One,Ruslan Display,Russo One,Scada,Stalinist One,Tenor Sans,Ubuntu,Ubuntu Condensed,Ubuntu Mono,Underdog,Yeseva One");
 	$fonts_eng = explode(",","ABeeZee,Abel,Abril Fatface,Aclonica,Acme,Actor,Adamina,Advent Pro,Aguafina Script,Akronim,Aladin,Aldrich,Alegreya,Alegreya SC,Alex Brush,Alfa Slab One,Alice,Alike,Alike Angular,Allan,Allerta,Allerta Stencil,Allura,Almendra,Almendra SC,Amarante,Amaranth,Amatic SC,Amethysta,Andada,Andika,Annie Use Your Telescope,Anonymous Pro,Antic,Antic Didone,Antic Slab,Anton,Arapey,Arbutus,Arbutus Slab,Architects Daughter,Archivo Black,Archivo Narrow,Arimo,Arizonia,Armata,Artifika,Arvo,Asap,Asset,Astloch,Asul,Atomic Age,Aubrey,Audiowide,Autour One,Average,Averia Gruesa Libre,Averia Libre,Averia Sans Libre,Averia Serif Libre,Bad Script,Balthazar,Bangers,Basic,Baumans,Belgrano,Belleza,BenchNine,Bentham,Berkshire Swash,Bevan,Bigshot One,Bilbo,Bilbo Swash Caps,Bitter,Black Ops One,Bonbon,Boogaloo,Bowlby One,Bowlby One SC,Brawler,Bree Serif,Bubblegum Sans,Bubbler One,Buda,Buenard,Butcherman,Butterfly Kids,Cabin,Cabin Condensed,Cabin Sketch,Caesar Dressing,Cagliostro,Calligraffitti,Cambo,Candal,Cantarell,Cantata One,Cantora One,Capriola,Cardo,Carme,Carrois Gothic,Carrois Gothic SC,Carter One,Caudex,Cedarville Cursive,Ceviche One,Changa One,Chango,Chau Philomene One,Chelsea Market,Cherry Cream Soda,Chewy,Chicle,Chivo,Coda,Coda Caption,Codystar,Combo,Comfortaa,Coming Soon,Concert One,Condiment,Contrail One,Convergence,Cookie,Copse,Corben,Courgette,Cousine,Coustard,Covered By Your Grace,Crafty Girls,Creepster,Crete Round,Crimson Text,Crushed,Cuprum,Cutive,Damion,Dancing Script,Dawning of a New Day,Days One,Delius,Delius Swash Caps,Delius Unicase,Della Respira,Devonshire,Didact Gothic,Diplomata,Diplomata SC,Doppio One,Dorsa,Dosis,Dr Sugiyama,Droid Sans,Droid Sans Mono,Droid Serif,Duru Sans,Dynalight,EB Garamond,Eagle Lake,Eater,Economica,Electrolize,Emblema One,Emilys Candy,Engagement,Enriqueta,Erica One,Esteban,Euphoria Script,Ewert,Exo,Expletus Sans,Fanwood Text,Fascinate,Fascinate Inline,Federant,Federo,Felipa,Fenix,Finger Paint,Fjord One,Flamenco,Flavors,Fondamento,Fontdiner Swanky,Forum,Francois One,Fredericka the Great,Fredoka One,Fresca,Frijole,Fugaz One,Galdeano,Galindo,Gentium Basic,Gentium Book Basic,Geo,Geostar,Geostar Fill,Germania One,Give You Glory,Glass Antiqua,Glegoo,Gloria Hallelujah,Goblin One,Gochi Hand,Gorditas,Goudy Bookletter 1911,Graduate,Gravitas One,Great Vibes,Griffy,Gruppo,Gudea,Habibi,Hammersmith One,Handlee,Happy Monkey,Headland One,Henny Penny,Herr Von Muellerhoff,Holtwood One SC,Homemade Apple,Homenaje,IM Fell DW Pica,IM Fell DW Pica SC,IM Fell Double Pica,IM Fell Double Pica SC,IM Fell English,IM Fell English SC,IM Fell French Canon,IM Fell French Canon SC,IM Fell Great Primer,IM Fell Great Primer SC,Iceberg,Iceland,Imprima,Inconsolata,Inder,Indie Flower,Inika,Irish Grover,Istok Web,Italiana,Italianno,Jacques Francois,Jacques Francois Shadow,Jim Nightshade,Jockey One,Jolly Lodger,Josefin Sans,Josefin Slab,Judson,Julee,Junge,Jura,Just Another Hand,Just Me Again Down Here,Kameron,Karla,Kaushan Script,Kelly Slab,Kenia,Knewave,Kotta One,Kranky,Kreon,Kristi,Krona One,La Belle Aurore,Lancelot,Lato,League Script,Leckerli One,Ledger,Lekton,Lemon,Life Savers,Lilita One,Limelight,Linden Hill,Lobster,Lobster Two,Londrina Outline,Londrina Shadow,Londrina Sketch,Londrina Solid,Lora,Love Ya Like A Sister,Loved by the King,Lovers Quarrel,Luckiest Guy,Lusitana,Lustria,Macondo,Macondo Swash Caps,Magra,Maiden Orange,Mako,Marcellus,Marcellus SC,Marck Script,Marko One,Marmelad,Marvel,Mate,Mate SC,Maven Pro,McLaren,Meddon,MedievalSharp,Medula One,Megrim,Meie Script,Merienda One,Merriweather,Metal Mania,Metamorphous,Metrophobic,Michroma,Miltonian,Miltonian Tattoo,Miniver,Miss Fajardose,Modern Antiqua,Molengo,Molle,Monofett,Monoton,Monsieur La Doulaise,Montaga,Montez,Montserrat,Montserrat Alternates,Montserrat Subrayada,Mountains of Christmas,Mr Bedfort,Mr Dafoe,Mr De Haviland,Mrs Saint Delafield,Mrs Sheppards,Muli,Mystery Quest,Neucha,Neuton,News Cycle,Niconne,Nixie One,Nobile,Norican,Nosifer,Nothing You Could Do,Noticia Text,Nova Cut,Nova Flat,Nova Mono,Nova Oval,Nova Round,Nova Script,Nova Slim,Nova Square,Numans,Nunito,Old Standard TT,Oldenburg,Oleo Script,Open Sans,Open Sans Condensed,Oranienbaum,Orbitron,Oregano,Orienta,Original Surfer,Oswald,Over the Rainbow,Overlock,Overlock SC,Ovo,Oxygen,Oxygen Mono,PT Mono,PT Sans,PT Sans Caption,PT Sans Narrow,PT Serif,PT Serif Caption,Pacifico,Parisienne,Passero One,Passion One,Patrick Hand,Patua One,Paytone One,Peralta,Permanent Marker,Petit Formal Script,Petrona,Philosopher,Piedra,Pinyon Script,Plaster,Play,Playball,Playfair Display,Podkova,Poiret One,Poller One,Poly,Pompiere,Pontano Sans,Port Lligat Sans,Port Lligat Slab,Prata,Press Start 2P,Princess Sofia,Prociono,Prosto One,Puritan,Quando,Quantico,Quattrocento,Quattrocento Sans,Questrial,Quicksand,Qwigley,Racing Sans One,Radley,Raleway,Raleway Dots,Rammetto One,Ranchers,Rancho,Rationale,Redressed,Reenie Beanie,Revalia,Ribeye,Ribeye Marrow,Righteous,Rochester,Rock Salt,Rokkitt,Romanesco,Ropa Sans,Rosario,Rosarivo,Rouge Script,Ruda,Ruge Boogie,Ruluko,Ruslan Display,Russo One,Ruthie,Rye,Sail,Salsa,Sancreek,Sansita One,Sarina,Satisfy,Scada,Schoolbell,Seaweed Script,Sevillana,Shadows Into Light,Shadows Into Light Two,Shanti,Share,Shojumaru,Short Stack,Sigmar One,Signika,Signika Negative,Simonetta,Sirin Stencil,Six Caps,Skranji,Slackey,Smokum,Smythe,Sniglet,Snippet,Sofadi One,Sofia,Sonsie One,Sorts Mill Goudy,Source Code Pro,Source Sans Pro,Special Elite,Spicy Rice,Spinnaker,Spirax,Squada One,Stalinist One,Stardos Stencil,Stint Ultra Condensed,Stint Ultra Expanded,Stoke,Sue Ellen Francisco,Sunshiney,Supermercado One,Swanky and Moo Moo,Syncopate,Tangerine,Telex,Tenor Sans,The Girl Next Door,Tienne,Tinos,Titan One,Titillium Web,Trade Winds,Trocchi,Trochut,Trykker,Tulpen One,Ubuntu,Ubuntu Condensed,Ubuntu Mono,Ultra,Uncial Antiqua,Underdog,UnifrakturCook,UnifrakturMaguntia,Unkempt,Unlock,Unna,VT323,Varela,Varela Round,Vast Shadow,Vibur,Vidaloka,Viga,Voces,Volkhov,Vollkorn,Voltaire,Waiting for the Sunrise,Wallpoet,Walter Turncoat,Warnes,Wellfleet,Wire One,Yanone Kaffeesatz,Yellowtail,Yeseva One,Yesteryear,Zeyada");
@@ -889,26 +866,24 @@ echo "
 	</form>";
 
 	///////////////////////////////////////////////////////////////////////////////////////////
-	$result = $db->sql_query("SELECT aid, name from " . $prefix . "_authors where name='BOG'");
+	$result = $db->sql_query("SELECT `aid`, `name` from " . $prefix . "_authors where `name`='BOG'");
 	$row = $db->sql_fetchrow($result);
 	$adm_aid = filter($row['aid'], "nohtml");
 	$adm_aid = trim(strtolower(substr($adm_aid, 0,25)));
-
-	echo "<div id='show_options_pass_block' class='show_pole pl10' style='display:none;'>";
-	if (!isset($ip)) $ip="";
-	if ($ipban != false) {
-		echo "<a class='nothing punkt dark_pole' onclick=\"show_animate('show_options3');\"><img class='icon2 i43' src='/images/1.gif' align=bottom>Блокировка посетителей</a><div id='show_options3' style='display:none;'>";
-		main_ban($ip);
-		echo "<br><br></div>";
-	} else echo "<div class='notice warning'>Блокировка посетителей отключена. Включить можно через config.php</div>";
-	echo "<h2>Смена пароля администратора:</h2>";
-	$row = $db->sql_fetchrow($db->sql_query("SELECT aid, name, pwd from " . $prefix . "_authors where name='BOG'"));
+	$row = $db->sql_fetchrow($db->sql_query("SELECT `aid`, `name`, `pwd` from " . $prefix . "_authors where `name`='BOG'"));
 	$chng_aid = filter($row['aid'], "nohtml");
 	$chng_name = filter($row['name'], "nohtml");
 	$chng_pwd = filter($row['pwd'], "nohtml");
 	$chng_aid = strtolower(substr($chng_aid, 0,25));
 	$aid = $chng_aid;
-	echo "<form action=".$admin_file.".php method=post>
+	echo "<div id='show_options_pass_block' class='show_pole pl10' style='display:none;'>";
+	if (!isset($ip_address)) $ip_address="";
+	if ($ipban != false) {
+		main_ban($ip_address);
+		echo "<hr>";
+	} else echo "<div class='notice warning'>Блокировка посетителей отключена. Включить можно через config.php</div>";
+	echo "<h2>Смена пароля администратора:</h2>
+	<form action=".$admin_file.".php method=post>
 	<table class=tight>
 	<tr><td align=right>Псевдоним:</td>
 	<td><input type=text name=chng_aid value='".$chng_aid."' size=20 maxlength=25></td></tr>
@@ -920,9 +895,42 @@ echo "
 	<input type=hidden name=chng_name value='".$chng_name."'>
 	<input type=hidden name=adm_aid value='".$adm_aid."'>
 	<input type=hidden name=op value='update_author'>
-	</form>
-	<br><br><div class='notice warning hide'><a href='sys.php?op=admins_list'>Список администраторов</a></div>
-	</div>
+	</form>";
+	if ($chng_name == "BOG") {
+		echo "<hr><a class='button medium' onclick=\"$('#show_admins').toggle();\"><span class=\"icon gray medium\" data-icon=\"u\"></span> Редактирование администраторов</a>
+		<div id='show_admins' class='hide'>";
+		echo "	<table class='w100 table_light'>
+				<tr>
+					<td>Псевдоним</td>
+					<td>Окружение</td>
+					<td>Функции</td>
+				</tr>";
+		$result = $db->sql_query("SELECT * from ".$prefix."_authors");
+		while ($row = $db->sql_fetchrow($result)) {
+			$a_aid = filter($row['aid'], "nohtml");
+			$name = filter($row['name'], "nohtml");
+			//$editor=filter($row['editor'],"nohtml");
+			$a_aid = strtolower(substr($a_aid, 0,25));
+			$name = substr($name, 0,50);
+			if ($editor==='1') $editor = "Да"; else $editor = "Нет";
+			echo "<tr><td>".$a_aid."</td>
+			<td align='center'>".$editor."</td>
+			<td><a href='sys.php?op=admins_edit&amp;chng_aid=".$a_aid."' title='Редактировать'><span class=\"icon black small\" data-icon=\"7\"></span></a>
+			<a href='sys.php?op=admins_delete&amp;aid=".$a_aid."' title='Удалить'><span class=\"icon red small\" data-icon=\"F\"></span></a></td></tr>";
+		}
+		echo "</table>";
+		echo "<h1>Добавить администратора</h1>
+			<form action='sys.php' method='post'>
+			<table class='table_light'><tr><td>Псевдоним:</td>
+			<td colspan='3'><input type='text' name='add_aid' size='30' maxlength='25'></td></tr>
+			<tr><td>Пароль</td>
+			<td colspan='3'><input type='text' name='add_pwd' size='30' maxlength='40'></td></tr>
+			<tr><td>Режим редактора</td>
+			<td colspan='3'>".select('options[add_editor]','1,0','ДА,НЕТ','1')." Скрыть Настройки и Оформление</td></tr>
+			<tr><td colspan='3'><input type='hidden' name='op' value='admins_add'><input type='submit' value='Добавить администратора'></td></tr></table>
+			</form></div>";
+	}
+	echo "</div>
 
 	<div class='show_pole pl10' id='show_options_oldfotos' style='display:none;'>Загружаю...</div>
 	</div>
@@ -932,90 +940,6 @@ echo "
 	</html>";
 	}
 	///////////////////////////////////////////////////////////////////
-	function admins_list() {
-		global $admin, $prefix, $db, $admin_file, $bgcolor2, $modules_info;
-		include ("ad/ad-header.php");
-
-		echo "<center><font class='option'><b>Редактирование админов</b></font></center><br>";
-		echo "	<table border='1' align='center'>
-				<tr>
-					<td>&nbsp;<b>Псевдоним</b>&nbsp;</td>
-					<td>&nbsp;<b>Окружение</b>&nbsp;</td>
-					<td>&nbsp;<b>Функции</b>&nbsp;</td>
-				</tr>
-		";
-		$result = $db->sql_query("SELECT * from ".$prefix."_authors");
-		while ($row = $db->sql_fetchrow($result)) {
-			$a_aid = filter($row['aid'], "nohtml");
-			$name = filter($row['name'], "nohtml");
-			//$editor=filter($row['editor'],"nohtml");
-			$a_aid = strtolower(substr($a_aid, 0,25));
-			$name = substr($name, 0,50);
-			echo "	<tr>";
-			if ($name == "God") {
-				echo "	<td>&nbsp;".$a_aid." <i>(главный аккаунт)</i>&nbsp;</td>";
-			} 
-			else {
-				echo "	<td>&nbsp;".$a_aid."&nbsp;</td>";
-			}
-			if ($editor==='0') $editor="Да";
-			else $editor="Нет";
-			echo "<td align='center'>&nbsp;".$editor."</td>
-					<td align='center'>
-						<a href='".$admin_file.".php?op=admins_edit&amp;chng_aid=".$a_aid."'><img src='images/edit.png' alt='Редактировать' title='Редактировать' border='0' width='17' height='17'></a>
-			";
-			if($name == "God") {
-				echo "		<img src='images/delete_x.png' alt='Главный аккаунт' title='Главный аккаунт' border='0' width='17' height='17'></a></td>";
-			} 
-			else {
-				echo "		<a href='".$admin_file.".php?op=admins_delete&amp;aid=".$a_aid."'><img src='images/delete.gif' alt='Удалить' title='Удалить' border='0' width='17' height='17'></a></td>";
-			}
-			echo "	</tr>";
-		}
-		echo "	</table><br><br>";
-
-		echo "<center><font class='option'><b>Добавить админа</b></font></center>
-			<form action='".$admin_file.".php' method='post'>
-			<table border='0'>
-				<tr>
-					<td>Имя (необязательно):</td>
-					<td colspan='3'><input type='text' name='add_name' size='30' maxlength='50'> </td>
-				</tr>
-				<tr>
-					<td>Псевдоним/ник, до 25 символов:</td>
-					<td colspan='3'><input type='text' name='add_aid' size='30' maxlength='25'></td>
-				</tr>
-				<tr>
-					<td>Какую страницу открывать (ссылка, необязательно):</td>
-					<td colspan='3'><input type='text' name='add_email' size='30'></td>
-				</tr>
-		";
-		echo "	<tr>
-					<td>Скрыть Настройки и Оформление (режим редактора)?</td>
-					<td colspan='3'>
-						<select name='add_editor'>
-							<option name='add_editor' value='0'>Да</option>
-							<option name='add_editor' value='1'>Нет</option>
-						</select>
-					</td>
-				</tr>
-		";
-		echo "	<tr>
-					<td>Пароль</td>
-					<td colspan='3'><input type='text' name='add_pwd' size='12' maxlength='40'></td>
-				</tr>
-				<tr>
-					<td colspan='3'>
-						<input type='hidden' name='op' value='admins_add'>
-						<input type='submit' value='Добавить администратора'>
-					</td>
-				</tr>
-			</table>
-			</form>
-		";
-		admin_footer();
-	}
-
 	function admins_add() { // доработать
 		global $db, $prefix, $admin_file, $modules_info;
 		$ok=intval($_POST['ok']);
@@ -1064,7 +988,7 @@ echo "
 				require_once(INCLUDE_PATH."includes/core/modules2cache.php");
 				Modules2Cache();			
 			}
-			Header("Location: ".$admin_file.".php?op=admins_list");
+			Header("Location: ".$admin_file.".php?op=options");
 		}
 		else {
 			include ("ad/ad-header.php");
@@ -1082,7 +1006,7 @@ echo "
 					<input type='hidden' name='add_editor' value='".$add_editor."'>
 					<input type='hidden' name='auth_modules' value='".$auth_modules."'>
 					<input type='hidden' name='ok' value='1'>
-					<input type='submit' value='"._ADD."'> | <a href='".$admin_file.".php?op=admins_list'>"._NO."</a> 
+					<input type='submit' value='"._ADD."'> | <a href='".$admin_file.".php?op=options'>"._NO."</a> 
 				</form>";
 			echo "</center>";
 			admin_footer();
@@ -1127,7 +1051,7 @@ echo "
 		$s_edit0="selected";
 
 		echo "<input type='hidden' name='chng_admlanguage' value=''>";
-		if ($row['name'] != "God") {
+		if ($row['name'] != "BOG") {
 			echo "	<tr>
 					<td>Права:</td>";
 
@@ -1168,6 +1092,14 @@ echo "
 	}
 
 	function admins_edit_save() { // доработать
+		/*
+		add_editor
+		EDITOR>1
+		ADMIN>0
+		
+		add_aid
+		add_pwd
+		*/
 		global $admin, $prefix, $db, $admin_file, $modules_info;
 		$chng_aid=filter($_POST['chng_aid'],"nohtml");
 		$chng_name=filter($_POST['chng_name'],"nohtml");
@@ -1182,10 +1114,10 @@ echo "
 		$auth_modules=$_POST['auth_modules'];
 		$chng_aid = trim($chng_aid);
 		if (!($chng_aid AND $chng_name AND $chng_email AND $chng_editor)) {
-			Header("Location: ".$admin_file.".php?op=admins_list");
+			Header("Location: ".$admin_file.".php?op=options");
 		}
 		$is_god=0;
-		if ($chng_name=='God') {
+		if ($chng_name=='BOG') {
 			$chng_radminsuper=1;
 			$is_god=1;
 		}
@@ -1220,7 +1152,7 @@ echo "
 			$sql="UPDATE ".$prefix."_authors SET pwd='".$chng_pwd."' WHERE name='".$chng_name."'";
 			$db->sql_query($sql);
 		}
-		Header("Location: ".$admin_file.".php?op=admins_list");
+		Header("Location: ".$admin_file.".php?op=options");
 	}
 
 	function admins_delete() { // доработать
@@ -1230,13 +1162,13 @@ echo "
 			$aid = trim(filter($_POST['aid'],"nohtml"));
 			$crow=$db->sql_fetchrow($db->sql_query("SELECT name from ".$prefix."_authors WHERE aid='".$aid."' LIMIT 1"));
 			$name = substr($crow['name'], 0, 25);
-			if ($name!='God') {
+			if ($name!='BOG') {
 				$db->sql_query("UPDATE ".$prefix."_modules SET admins=REPLACE(admins,'".$name.",','') WHERE admins LIKE '%".$name.",%'");
 				$db->sql_query("DELETE FROM ".$prefix."_authors WHERE aid='".$aid."'");
 				require_once(INCLUDE_PATH."includes/core/modules2cache.php");
 				Modules2Cache();
 			}
-			Header("Location: ".$admin_file.".php?op=admins_list");
+			Header("Location: ".$admin_file.".php?op=options");
 		}
 		else {
 			$aid = trim(filter($_GET['aid'],"nohtml"));
@@ -1247,7 +1179,7 @@ echo "
 					<input type='hidden' name='aid' value='".$aid."'>
 					<input type='hidden' name='op' value='admins_delete'>
 					<input type='hidden' name='ok' value='1'>
-					<input type='submit' value='"._DELETE."'> | <a href='".$admin_file.".php?op=admins_list'>"._NO."</a> 
+					<input type='submit' value='"._DELETE."'> | <a href='".$admin_file.".php?op=options'>"._NO."</a> 
 				</form>";
 			admin_footer();
 		}
@@ -1330,9 +1262,6 @@ echo "
 			if ($_POST['op'] != 'update_author') exit;
 			updateadmin($chng_aid, $chng_name, $chng_pwd, $chng_pwd2, $adm_aid);
 			break;
-		case "save_banned":
-			ipban_save(0, $ip1, $ip5, $ip3, $ip4, $reason);
-			break;
 		case "ipban_delete":
 			ipban_delete($id);
 			break;
@@ -1340,10 +1269,7 @@ echo "
 			ipban_edit($id);
 			break;
 		case "ipban_save":
-			ipban_save($id, $ip1, $ip5, $ip3, $ip4, $reason);
-			break;
-		case "admins_list":
-			admins_list();
+			ipban_save($id, $ip_address, $reason);
 			break;
 		case "admins_edit":
 			admins_edit();

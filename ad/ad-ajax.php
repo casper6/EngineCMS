@@ -720,7 +720,7 @@ if ($func == "addpapka") { // Добавляем папку(и)
     $title_name = explode("|",$title_value);
     $title_opis = $title_name[1];
     $title_name = $title_name[0];
-    if ($pap!="" && $title_name!="") $db->sql_query("INSERT INTO ".$prefix."_pages_categories VALUES (NULL, '$name_raz', '$title_name', '$title_opis', '', '0', '0', '$parent', 'pages')");
+    if ($pap!="" && $title_name!="") $db->sql_query("INSERT INTO ".$prefix."_pages_categories VALUES (NULL, '".$name_raz."', '".$title_name."', '".$title_opis."', '', '0', '0', '".$parent."', 'pages')");
   }
   echo $title_razdel_and_bd[$name_raz]; exit;
 }
@@ -731,12 +731,21 @@ if ($func == "addpages") { // Добавляем страницы
   $name_raz = $name_razdels[$id];
   if (strpos($title, "&&&")) $title = explode("&&&",$title);
   else $title = explode("\n",$title);
+  $hour = date("H");
+  $min = date("i");
+  $sec = '00';
   foreach( $title as $value ) {
     $pap = mysql_real_escape_string(trim($value));
     $value = explode("|",$value);
     $tit = $value[0];
     $open_text = $value[1];
-    $main_text = $value[2];
+    $main_text = $value[2]; 
+    // Прибавление времени по секунде, чтобы все добавленные страницы не были созданы одновременно
+    $now = date("Y.m.d ").$hour.":".$min.":".$sec;
+    $sec++;
+    if ($sec > 59) { $min++; $sec = '00'; }
+    if ($min > 59) { $hour++; $min = '00'; $sec = '00'; }
+    if ($hour > 23) { $hour = '00'; $min = '00'; $sec = '00'; }
     $active = $value[3]; if ($active=="") $active = "1";
     if ($pap!="" && $tit!="") $db->sql_query("INSERT INTO ".$prefix."_pages VALUES (NULL, '".$name_raz."', '".$cid."', '".$tit."', '".$open_text."', '".$main_text."', '".$now."', '".$now."', '0', '".$active."', '0', '0', '', '', '', '".$active."', '', '', '', 'pages', '0','0', '0');");
   }
@@ -905,7 +914,7 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
   if ($id == 10) {
     $options = ""; // Выборка настроек
     $styles2 = ""; // Выяснить основной дизайн у всех разделов
-    $sql3 = "select `title`, `text` from ".$prefix."_mainpage where `type`='2' and `name`!='index' and `tables`!='del'";
+    $sql3 = "select `title`, `text` from ".$prefix."_mainpage where `type`='2' and `tables`!='del'";
     $result3 = $db->sql_query($sql3);
     $num_razdel = $db->sql_numrows($result3);
     if ($num_razdel > 0) {
@@ -939,26 +948,25 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
     <h1>Вы решили добавить раздел:</h1>
     <form method='post' action=sys.php>
       <h2>Название раздела:</h2>
-      <input id=name_razdel type=text name=title size=30 class=w100 autofocus><br>
+      <input id='name_razdel' type='text' name='title' size='30' class='w100' autofocus><br>
       <i>Примеры: «О нас», «Наша продукция», «Каталог», «Контакты» и т.д.</i> <br><a class=punkt onmousemove='$(\"#psevdonim\").show();'>Адрес раздела</a> будет создан транслитом.<br>
-
       <div id='psevdonim' class='hide'>
       <h2>Адрес раздела:</h2>
-      <input type=text name=namo size=30 class=w100><br>
-      <a href=# onclick=\"window.open('http://translate.google.ru/#".$lang."/en/' + $('#name_razdel').val(),'Перевод',' width=800,height=400'); return false;\"><b>Перевести название</b></a>. <i>Используются англ. буквы и знак «_», без пробелов. Примеры: «about_me», «product», «catalog», «contact» и т.д.</i></div>
-      <h2>Использовать настройки:</h2><select name=text size=8 class=w100>
+      <input type='text' name='namo' size='30' class='w100'><br>
+      <a class='button small' onclick=\"window.open('http://translate.google.ru/#".$lang."/en/' + $('#name_razdel').val(),'Перевод',' width=800,height=400'); return false;\">Перевести название</a><br><i>Используются англ. буквы и знаки «_» и «-», без пробелов. Примеры: «about_me», «product», «catalog», «contact», «main-price» и т.д.</i></div>
+      <h2>Использовать настройки:</h2><select name='text' size='8' class='w100'>
       <option value='[название]'>• раздел будет отдельной страницей без вложенных папок и страниц</option>
       <option value='lim=15&amp;comments=0' selected>• вариант «Статьи» (15 страниц на листе, комментарии выключены)</option>
       <option value='lim=10&amp;comments=1&amp;comments_add=1&amp;vetki=2&amp;comments_mail=1&amp;comments_adres=1'>• вариант «Блог» (10 страниц на листе, комментарии включены)</option>
       <option value='lim=500&amp;comments=0'>• вариант «Каталог» (500 страниц на листе, комментарии выключены)</option>
       ".$options."</select><br><i>Можно настроить новый раздел, выбрав один из вариантов или ранее созданных разделов.</i>
       <h2>Выберите дизайн:</h2>
-      <select name=useit class=w100>".$styles."</select><br><i>Дизайн раздела окружает содержимое раздела оформлением, он обязательно должен содержать в себе блок [содержание] (который выводит содержание раздела), а также у дизайна должен быть выбран стиль (css).</i>
-      <p class='center'><input type=\"submit\" value=\"Добавить раздел\" class='w100 h40 f16'>
-      <input type=hidden name=type value='2'>
-      <input type=hidden name=shablon>
-      <input type=hidden name=id value=''>
-      <input type=hidden name=op value=mainpage_save>
+      <select name='useit' class='w100'>".$styles."</select><br><i>Дизайн раздела окружает содержимое раздела оформлением, он обязательно должен содержать в себе блок [содержание] (который выводит содержание раздела), а также у дизайна должен быть выбран стиль (css).</i>
+      <p class='center'><input type='submit' value='Добавить раздел' class='w100 h40 f16'>
+      <input type='hidden' name='type' value='2'>
+      <input type='hidden' name='shablon'>
+      <input type='hidden' name='id' value=''>
+      <input type='hidden' name='op' value='mainpage_save'>
       </form>";
   } elseif ($id == 8) { // ПОМОЩЬ на Главной
     require_once ('help.php');
@@ -1219,7 +1227,7 @@ if ($func == "replace") { // Перемещение страницы
   <option value=3>переместим</option>
   </select> <div id='rep".$id."'></div>
   <p><b>В какой раздел?</b> ";
-  $sql = "select `name`, `title`, `color` from ".$prefix."_mainpage where `type`='2' and `useit` not like '%".aa("[название]")."%' and `name` != 'index' and `tables`='pages' order by `color` desc, `title`";
+  $sql = "select `name`, `title`, `color` from ".$prefix."_mainpage where `type`='2' and (`useit` like '%".aa("[страницы]")."%' or `useit` like '%".aa("[содержание]")."%') and `tables`='pages' order by `color` desc, `title`";
   $result = $db->sql_query($sql);
   $list .= "<select name='to_razdel' id='to_razdel".$id."' style='width:100%;' onChange=\"izmenapapka(document.getElementById('to_razdel".$id."').value, $name_pap, '$name_raz',$id,'izmenapage');\">";
   while ($row = $db->sql_fetchrow($result)) {
@@ -1365,13 +1373,13 @@ if ($func == "papka") { // Папка
 if ($func == "razdel") { // Папка
   list($re, $sort) = explode("*@%", $string);
   switch ($sort) {
-    case "0": $order = "date desc"; break;
+    case "0": $order = "date desc, title"; break;
+    case "1": $order = "title"; break;
     case "2": $order = "redate desc";  break;
     case "3": $order = "comm desc"; break;
     case "4": $order = "counter desc"; break;
     case "5": $order = "active"; break;
-    case "1":
-    default: $order = "title, date desc"; break;
+    default: $order = "date desc, title"; break;
   }
   $list = "";
   $name_raz = $name_razdels[$id];
@@ -1380,16 +1388,16 @@ if ($func == "razdel") { // Папка
   // Папки раздела
   $nopapka = 0;
   $nopage = 0;
-  $sql = "SELECT cid, title, parent_id FROM ".$prefix."_pages_categories where module='$name_raz' and `tables`='pages' and parent_id='0' order by title";
+  $sql = "SELECT `cid`, `title`, `parent_id` FROM ".$prefix."_pages_categories where `module`='".$name_raz."' and `tables`='pages' and `parent_id`='0' order by `title`";
   $result = $db->sql_query($sql);
   $siz_papka = $db->sql_numrows($result);
   if ($siz_papka > 0) {
     while ($rows = $db->sql_fetchrow($result)) {
       $с_cid = $rows['cid'];
       $name_cid = strip_tags($rows['title'], '<b><i>');
-      $cid_pages = $db->sql_numrows($db->sql_query("select pid from ".$prefix."_pages where `tables`='pages' and module='$name_raz' and cid='$с_cid'"));
+      $cid_pages = $db->sql_numrows($db->sql_query("select `pid` from ".$prefix."_pages where `tables`='pages' and `module`='".$name_raz."' and `cid`='".$с_cid."'"));
       if (trim($name_cid) == "") $name_cid = "<span class=red>Папка без Названия. Отредактируйте!</span>";
-      $cid_papki = $db->sql_numrows($db->sql_query("select cid from ".$prefix."_pages_categories where `tables`='pages' and module='$name_raz' and parent_id='$с_cid'"));
+      $cid_papki = $db->sql_numrows($db->sql_query("select `cid` from ".$prefix."_pages_categories where `tables`='pages' and `module`='".$name_raz."' and `parent_id`='".$с_cid."'"));
       if ($cid_pages == 0 and $cid_papki == 0) $pusto = "<span class='small red'>пустая папка</span>";
       if ($cid_pages > 0) $pusto = "<span class='small'>содержит ".$cid_pages." ".num_ending($cid_pages, Array(aa("страниц"),aa("страницу"),aa("страницы")))."</span>";
       if ($cid_papki > 0) $pusto = "<span class='small'>содержит ".$cid_papki." ".num_ending($cid_papki, Array(aa("папок"),aa("папку"),aa("папки")))."</span>";

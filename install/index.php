@@ -89,10 +89,11 @@ if (isset($_REQUEST['ipban'])) {
 	// Создание config.php
 	$conf = '<?php
 ##############################################
-## CMS «ДвижОк» (Content Management System)    ##
+## CMS «ДвижОк» (Content Management System) ##
+## English name — EngineCMS                 ##
 ## Распространяется по лицензии.	        ##
-## 2006-2013 © Влад Мерк, г. Самара         ##
-## 13i@list.ru | http://hotel-s.ru          ##
+## Since 2006 © Влад Мерк, г. Самара        ##
+## 13i@list.ru | http://cms.ru.com          ##
 ##############################################
 
 ################### БАЗА ДАННЫХ

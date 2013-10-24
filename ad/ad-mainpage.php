@@ -11,7 +11,7 @@ if ($_REQUEST['op'] == "mainpage_save_ayax") {
 	if (strpos($_SERVER['PHP_SELF'], 'sys.php') === false) { die ("Доступ закрыт!"); }
 	$aid = trim($aid);
 	global $prefix, $db, $red;
-	$sql = "select realadmin from ".$prefix."_authors where aid='".$aid."'";
+	$sql = "SELECT realadmin FROM ".$prefix."_authors where aid='".$aid."'";
 	$result = $db->sql_query($sql);
 	$row = $db->sql_fetchrow($result);
 	$realadmin = $row['realadmin'];
@@ -25,7 +25,7 @@ function menu() {
 	$stat_razdel = $stat_page = $stat_search = $mail_list = "";
 	##############################################################################
 	if ($type=="stat") {
-		$sql = "select `name`, `title`, `counter` from ".$prefix."_mainpage where `tables`='pages' and `name`!='index' and `type`='2' order by counter desc";
+		$sql = "SELECT `name`, `title`, `counter` FROM ".$prefix."_mainpage where `tables`='pages' and `type`='2' order by `counter` desc";
 		$result = $db->sql_query($sql) or die('Ошибка при попытке прочитать посещаемость разделов');
 		while ($row = $db->sql_fetchrow($result)) {
 			$name2 = $row['name'];
@@ -37,7 +37,7 @@ function menu() {
 		}
 		$stat_razdel = "<strong>Посещаемость разделов:</strong><table class='w100 table_light'>".$stat_razdel."</table>Посещения страниц сайта администратором не учитываются. ";
 	
-		$sql = "SELECT `pid`,`module`,`title`,`counter` from ".$prefix."_pages where `active`='1' and `tables`='pages' order by counter desc limit 0,20";
+		$sql = "SELECT `pid`,`module`,`title`,`counter` FROM ".$prefix."_pages where `active`='1' and `tables`='pages' order by `counter` desc limit 0,20";
 		$result = $db->sql_query($sql) or die('Ошибка при попытке прочитать посещаемость страниц');
 		while ($row = $db->sql_fetchrow($result)) {
 		$stat_page .= "<tr valign=top><td class='polosa gray'><a target='_blank' href='/-".$row['module']."_page_".$row['pid']."'>".strip_tags($row['title'], '<b><i>')."</a></td><td align=center class='polosa gray'>".$row['counter']."</td></tr>";
@@ -46,7 +46,7 @@ function menu() {
 		$user_name = array();
 		$user_mail = array();
 		$user_tel = array();
-		$sql = "select `avtor`, `mail`, `ip`, `tel` from ".$prefix."_pages_comments where `mail`!='' or `tel`!='' order by ip";
+		$sql = "SELECT `avtor`, `mail`, `ip`, `tel` FROM ".$prefix."_pages_comments where `mail`!='' or `tel`!='' order by `ip`";
 		$result = $db->sql_query($sql) or die('Ошибка при попытке прочитать комментарии');
 		while ($row = $db->sql_fetchrow($result)) {
 			$user_ip = $row['ip'];
@@ -54,7 +54,7 @@ function menu() {
 			$user_mail[$user_ip] = $row['mail'];
 			$user_tel[$user_ip] = $row['tel'];
 		}
-		$sql = "SELECT ip, slovo, data, pages from ".$prefix."_search order by data desc limit 0,20";
+		$sql = "SELECT ip, slovo, data, pages FROM ".$prefix."_search order by data desc limit 0,20";
 		$result = $db->sql_query($sql) or die('Ошибка при попытке прочитать внутренние поисковые запросы сайта');
 		while ($row = $db->sql_fetchrow($result)) {
 			$user_ip = $row['ip'];
@@ -82,7 +82,7 @@ function menu() {
 		$user_name = array();
 		$user_mail = array();
 		$user_tel = array();
-		$sql = "select `avtor`, `mail`, `ip`, `tel` from ".$prefix."_pages_comments where `mail`!='' or `tel`!='' order by ip";
+		$sql = "SELECT `avtor`, `mail`, `ip`, `tel` FROM ".$prefix."_pages_comments where `mail`!='' or `tel`!='' order by ip";
 		$result = $db->sql_query($sql); // or die('Ошибка при попытке прочитать названия разделов');
 		while ($row = $db->sql_fetchrow($result)) {
 			$user_ip = $row['ip'];
@@ -90,7 +90,7 @@ function menu() {
 			$user_mail[$user_ip] = $row['mail'];
 			$user_tel[$user_ip] = $row['tel'];
 		}
-		$sql = "SELECT id, ip, slovo, data, pages from ".$prefix."_search order by data desc limit 0,50000";
+		$sql = "SELECT id, ip, slovo, data, pages FROM ".$prefix."_search order by data desc limit 0,50000";
 		$result = $db->sql_query($sql); // or die('Ошибка при попытке прочитать названия разделов');
 		$stat_search1 = $stat_search2 = $stat_search3 = $stat_search4 = array();
 		while ($row = $db->sql_fetchrow($result)) {
@@ -130,7 +130,7 @@ function menu() {
 		$proc = 0;
 		echo "<h1>Статистика посещений страниц</h1>
 		<a href='sys.php?op=mainpage&amp;type=stat'>Вернуться к общей статистике</a><br><br>";
-		$sql = "SELECT pid, module, title, `date`, counter from ".$prefix."_pages where active='1' and `tables`='pages' and `counter` > 15 order by counter desc limit 0,1000000";
+		$sql = "SELECT `pid`, `module`, `title`, `date`, counter FROM ".$prefix."_pages where active='1' and `tables`='pages' and `counter` > 15 order by `counter` desc limit 0,1000000";
 		$result = $db->sql_query($sql); // or die('Ошибка при попытке прочитать названия разделов');
 		$numrows = $db->sql_numrows($result);
 		$nu = 0;
@@ -513,7 +513,7 @@ function create_main($type) {
 	case "spisok": $type_opis = "поля (дополнительное поле для страниц)";
 		$create.="";
 			$modules = ""; // Выборка разделов заменить!
-			$sql2 = "select `id`, `title` from ".$prefix."_mainpage where `tables`='pages' and `type`='2' and `name`!='index'";
+			$sql2 = "SELECT `id`, `title` FROM ".$prefix."_mainpage WHERE `tables`='pages' and `type`='2' and `name`!='index'";
 			$result2 = $db->sql_query($sql2);
 			while ($row2 = $db->sql_fetchrow($result2)) {
 			   $id_modul = $row2['id'];
@@ -521,7 +521,7 @@ function create_main($type) {
 			   $modules .= "<option value='".$id_modul."'>".$title_modul."</option>";
 			}
 			// Добавлены пользователи USERAD
-			$sql3 = "select * from ".$prefix."_users_group where `group`!='rigion' and `group`!='config' and `group`!='obl'";
+			$sql3 = "SELECT * FROM ".$prefix."_users_group WHERE `group`!='rigion' and `group`!='config' and `group`!='obl'";
 			$result3 = $db->sql_query($sql3);
 			while ($row3 = $db->sql_fetchrow($result3)) {
 			   $id = "1,".$row3['id'];
@@ -702,7 +702,7 @@ function create_main($type) {
 function edit_main($id) {
 	global $tip, $admintip, $prefix, $db, $red, $nastroi;
 	echo "<div id=podrazdel></div>";
-    $sql = "select `type`,`name`,`title`,`text`,`useit`,`shablon`,`description`,`keywords` from ".$prefix."_mainpage where `id`='".$id."'";
+    $sql = "SELECT `type`,`name`,`title`,`text`,`useit`,`shablon`,`description`,`keywords` FROM ".$prefix."_mainpage where `id`='".$id."'";
     // здесь учитываем и возможность редактирования удаленных и старых версий, поэтому нет «`tables`='pages'»
 	$result = $db->sql_query($sql);
 	$row = $db->sql_fetchrow($result);
@@ -723,7 +723,7 @@ function edit_main($id) {
 		$useit_module = explode("|",$useit); 
 		$useit_module = $useit_module[0]; 
 			if ($useit_module != "") {
-				$sql = "select `title` from ".$prefix."_mainpage where `tables`='pages' and (`name` = '".$useit_module."' or `name` like '".$useit_module." %') and `type`='2'";
+				$sql = "SELECT `title` FROM ".$prefix."_mainpage where `tables`='pages' and (`name` = '".$useit_module."' or `name` like '".$useit_module." %') and `type`='2'";
 				$result = $db->sql_query($sql);
 				$row = $db->sql_fetchrow($result);
 				$useit_module = trim($row['title']);
@@ -739,7 +739,7 @@ function edit_main($id) {
 	// Определение дизайнов // проверить - возможно заменить на функции из mainfile
 	$design_var = array();
 	$design_names = array();
-	$result2 = $db->sql_query("select `id`, `title` from ".$prefix."_mainpage where `tables`='pages' and `type`='0'");
+	$result2 = $db->sql_query("SELECT `id`, `title` FROM ".$prefix."_mainpage where `tables`='pages' and `type`='0'");
 	while ($row2 = $db->sql_fetchrow($result2)) { $design_var[] = $row2['id']; $design_names[] = trim($row2['title']); }
 	$design_var = implode(",",$design_var);
 	$design_names = implode(",",$design_names);
@@ -749,7 +749,7 @@ function edit_main($id) {
 	$razdel_names = array();
 	$razdel_name = array();
 	$razdel_engname = array();
-	$result2 = $db->sql_query("select `id`, `name`, `title` from ".$prefix."_mainpage where `tables`='pages' and `name`!='users' and `type`='2' and `name`!='' order by `title`");
+	$result2 = $db->sql_query("SELECT `id`, `name`, `title` FROM ".$prefix."_mainpage where `tables`='pages' and `name`!='users' and `type`='2' and `name`!='' order by `title`");
 	while ($row2 = $db->sql_fetchrow($result2)) { 
 		$raz_id = $row2['id'];
 		$name2 = $row2['name'];
@@ -771,7 +771,7 @@ function edit_main($id) {
 	// Определение шаблонов
 	$shablon_var = array();
 	$shablon_names = array();
-	$result2 = $db->sql_query("select id, title from ".$prefix."_mainpage where `tables`='pages' and type='6'");
+	$result2 = $db->sql_query("SELECT id, title FROM ".$prefix."_mainpage where `tables`='pages' and type='6'");
 	while ($row2 = $db->sql_fetchrow($result2)) { $shablon_var[] = $row2['id']; $shablon_names[] = trim($row2['title']); }
 	$shablon_var = implode(",",$shablon_var);
 	$shablon_names = implode(",",$shablon_names);
@@ -781,7 +781,7 @@ function edit_main($id) {
 	// Определение баз данных
 	$base_var = array("0");
 	$base_names = array("нет");
-	$result2 = $db->sql_query("select id, title from ".$prefix."_mainpage where `tables`='pages' and type='5'");
+	$result2 = $db->sql_query("SELECT id, title FROM ".$prefix."_mainpage where `tables`='pages' and type='5'");
 	while ($row2 = $db->sql_fetchrow($result2)) { $base_var[] = $row2['id']; $base_names[] = trim($row2['title']); }
 	$base_var = implode(",",$base_var);
 	$base_names = implode(",",$base_names);
@@ -789,7 +789,7 @@ function edit_main($id) {
 	// Определение полей
 	$spisok_var = array("");
 	$spisok_names = array("нет");
-	$result2 = $db->sql_query("select name, title, useit from ".$prefix."_mainpage where `tables`='pages' and type='4'");
+	$result2 = $db->sql_query("SELECT name, title, useit FROM ".$prefix."_mainpage where `tables`='pages' and type='4'");
 	while ($row2 = $db->sql_fetchrow($result2)) { 
 		if ($row2['useit'] != 0) { 
 			$use_it = $row2['useit']; 
@@ -801,11 +801,9 @@ function edit_main($id) {
 	}
 	$spisok_var = implode(",",$spisok_var);
 	$spisok_names = implode(",",$spisok_names);
-
 	echo "<div class='fon w100 mw800'>
 	<div class='black_grad h40'>
 	<a class='button small green' onclick='save_main(\"ad/ad-mainpage.php\", \"mainpage_save_ayax\")' style='float:left; margin:3px;'><span class='mr-2 icon white medium' data-icon='c'></span> Сохранить</a>
-
 
 	<script type='text/javascript'>
 	jQuery(function(){
@@ -831,7 +829,7 @@ function edit_main($id) {
 		for ($x=0; $x < $n; $x++) { // Определение использованных стилей в дизайне
 			$stil .= " ".$useit_all[$x];
 		}
-			 $sql5 = "select `id`, `title` from ".$prefix."_mainpage where `tables`='pages' and `type`='1' order by `title`, `id`";
+			 $sql5 = "SELECT `id`, `title` FROM ".$prefix."_mainpage where `tables`='pages' and `type`='1' order by `title`, `id`";
 			 $result5 = $db->sql_query($sql5);
 			 while ($row5 = $db->sql_fetchrow($result5)) {
 				 $title_id = $row5['id'];
@@ -882,7 +880,7 @@ function edit_main($id) {
 	$options = str_replace($module_name."|","",$text);
 
 	// обнулили все опции
-	$media = $folder = $col = $view = $golos = $golosrazdel = $post = $comments = $datashow = $favorites = $socialnetwork = $search = $search_papka = $put_in_blog = $base = $vetki = $citata = $media_comment = $no_html_in_opentext = $no_html_in_text = $show_add_post_on_first_page = $media_post = $razdel_shablon = $page_shablon = $comments_all = $comments_num = $comments_mail = $comments_adres = $comments_tel = $comments_desc = $golostype = $pagenumbers = $comments_main = $tags_type = $pagekol = $table_light = $designpages = $comments_add = $div_or_table = $papka_show = $add_post_to_mainpage = 0;
+	$media = $folder = $col = $view = $golos = $golosrazdel = $post = $comments = $datashow = $favorites = $socialnetwork = $search = $search_papka = $put_in_blog = $base = $vetki = $citata = $media_comment = $no_html_in_opentext = $no_html_in_text = $show_add_post_on_first_page = $media_post = $razdel_shablon = $page_shablon = $comments_all = $comments_num = $comments_mail = $comments_adres = $comments_tel = $comments_desc = $golostype = $pagenumbers = $comments_main = $tags_type = $pagekol = $table_light = $designpages = $comments_add = $div_or_table = $papka_show = $add_post_to_mainpage = $design_tablet = $designpages_tablet = $design_phone = $designpages_phone = 0;
 	$menushow = $titleshow = $razdel_link = $peopleshow = $design = $tags = $podrobno = $podrazdel_active_show = $podrazdel_show = $tipograf = $limkol = $tags_show = $tema_zapret = $tema_zapret_comm = $show_read_all = $opentextshow = $maintextshow = 1;
 	$comment_shablon = 2;
 	$lim = 20;
@@ -911,19 +909,36 @@ function edit_main($id) {
 	".input("module_name", $module_name, "1", "hidden")."
 
 	Настройка раздела «".trim($title)."»</span></div>
-	<p>Для настройки раздела внимательно прочитайте опции и выберите соответствующие варианты.</p><p class='red'>В текстовых полях нельзя писать символ &</p>
+	<p>Для настройки раздела внимательно прочитайте опции и выберите соответствующие варианты.</p>
 
-	<a class='dark_pole align_center' onclick=\"show_animate('block1');\"><h2>Дизайн (обрамление страниц)</h2>
+	<a class='dark_pole align_center' onclick=\"show_animate('block1');\"><h2>Дизайн (обрамление страниц)</h2> 
 	</a><div id=block1 style='display: none;'>
 	<table  class='w100 mw800 table_light'>
-	<tr>
-	<td><b>Дизайн раздела</b> (по умолчанию - Главный дизайн) [<a href=sys.php?op=mainpage&amp;name=design target=_blank>Добавить дизайн</a>]</td>
-	<td>".select("options[design]", $design_var, $design_names, $design)."</td>
+	<tr class='v_bottom'>
+	<td><b>Общий дизайн:</b> <a class='button small' href='sys.php?op=mainpage&amp;name=design' target='_blank'>Добавить</a>
+	<li>для раздела (по умолчанию - Главный дизайн)
+	<li>для страниц (по умолчанию - дизайн раздела)</td>
+	<td>
+	<p>".select("options[design]", $design_var, $design_names, $design)."
+	<p>".select("options[designpages]", "0,".$design_var, "— как у Общего дизайна раздела,".$design_names, $designpages)."</td>
 	</tr>
-	<tr>
-	<td>Дизайн страниц (по умолчанию - такой же, как и дизайн раздела)</td>
-	<td>".select("options[designpages]", "0,".$design_var, "как у Дизайна раздела,".$design_names, $designpages)."</td>
+	<tr class='v_bottom'>
+	<td><b>Дизайн для планшетов:</b>
+	<li>для раздела
+	<li>для страниц</td>
+	<td>
+	<p>".select("options[design_tablet]", "0,".$design_var, "— как у Общего дизайна раздела,".$design_names, $design_tablet)."
+	<p>".select("options[designpages_tablet]", "0,".$design_var, "— как у Общего дизайна раздела,".$design_names, $designpages_tablet)."</td>
 	</tr>
+	<tr class='v_bottom'>
+	<td><b>Дизайн для смартфонов:</b>
+	<li>для раздела
+	<li>для страниц</td>
+	<td>
+	<p>".select("options[design_phone]", "0,".$design_var, "— как у Общего дизайна раздела,".$design_names, $design_phone)."
+	<p>".select("options[designpages_phone]", "0,".$design_var, "— как у Общего дизайна раздела,".$design_names, $designpages_phone)."</td>
+	</tr>
+
 	</table>
 	</div>
 
@@ -1258,7 +1273,9 @@ function edit_main($id) {
 	<td>".select("options[podrobno]", "1,0", "ДА,НЕТ", $podrobno)."</td>
 	</tr>
 	</table>
-	</div>";
+	</div>
+
+	<p class='red'>В текстовых полях нельзя писать символ &</p>";
 	######################################################################
 	} else { // конец редактирования настроек раздела
 	// начало редактирования раздела
@@ -1341,8 +1358,7 @@ function edit_main($id) {
 	if (intval($nastroi) == 1) { // начало редактирования настроек блока
 	echo "Настройка блока «".$title."»</span>";
 	echo "</div>
-	<span class=f12>Для настройки блока внимательно прочитайте опции и выберите соответствующие варианты.</span><br>
-	<span class='red f12'>В текстовых полях нельзя писать символ &</span><br>
+	<p>Для настройки блока внимательно прочитайте опции и выберите соответствующие варианты.</p>
 	".input("nastroi", "1", "1", "hidden")."
 	<h2>Общие настройки блока:</h2>
 	<table width=100% class=table_light>";
@@ -1728,7 +1744,9 @@ function edit_main($id) {
 		<td>".input("options[folder]", $folder)."</td>
 		</tr>";
 	}
-	echo "</table>";
+	echo "</table>
+
+	<p class='red'>В текстовых полях нельзя писать символ &</p>";
 
 	/////////////////////////////////////////////////////////
 	} else { // Редактирование содержания блока
@@ -1937,7 +1955,7 @@ function edit_main($id) {
 
 	if ($type == "4") { ############################### ОТКРЫТИЕ ПОЛЕ
 		// определение названия использованного раздела
-		$sql = "select `title` from ".$prefix."_mainpage where `tables`='pages' and `id`='".$useit."'";
+		$sql = "SELECT `title` FROM ".$prefix."_mainpage where `tables`='pages' and `id`='".$useit."'";
 		$result = $db->sql_query($sql);
 		$row = $db->sql_fetchrow($result);
 		$main_design_title = trim($row['title']);
@@ -1945,7 +1963,7 @@ function edit_main($id) {
 		else $main_design_title = "все разделы";
 		// Определение списка названий разделов
 		$modules = "";
-		$sql = "select `id`, `title` from ".$prefix."_mainpage where `tables`='pages' and `type`='2' and `name`!='index'";
+		$sql = "SELECT `id`, `title` FROM ".$prefix."_mainpage where `tables`='pages' and `type`='2' and `name`!='index'";
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result)) {
 			$id_modul = trim($row['id']);
@@ -1953,7 +1971,7 @@ function edit_main($id) {
 			$modules .= "<option value='".$id_modul."'>".$title_modul."</option>";
 		}
 		// Добавлены пользователи USERAD
-		$sql3 = "select * from ".$prefix."_users_group where `group`!='rigion' and `group`!='config' and `group`!='obl'";
+		$sql3 = "SELECT * FROM ".$prefix."_users_group where `group`!='rigion' and `group`!='config' and `group`!='obl'";
 		$result3 = $db->sql_query($sql3);
 		while ($row3 = $db->sql_fetchrow($result3)) {
 			$id = "1,".$row3['id'];
@@ -2030,7 +2048,7 @@ function edit_main($id) {
 function mainpage_save($id=0, $type, $namo, $title, $text, $useit, $shablon, $descriptionX, $keywordsX, $s_tip) {
 	global $sgatie, $tip, $admintip, $prefix, $db, $nastroi;
 	$op = $_REQUEST['op'];
-	$sql = "select `name` from ".$prefix."_mainpage where `id`='".$id."'";
+	$sql = "SELECT `name` FROM ".$prefix."_mainpage where `id`='".$id."'";
 	$result = $db->sql_query($sql);
 	$row = $db->sql_fetchrow($result);
 	$mod_name = $row['name'];
@@ -2094,7 +2112,7 @@ function mainpage_save($id=0, $type, $namo, $title, $text, $useit, $shablon, $de
 	//$text = str_replace("tеxtarea","textarea",$text); // ireplace
 	//$useit = str_replace("tеxtarea","textarea",$useit); // ireplace
 
-	$sql = "select `text` from ".$prefix."_mainpage where `tables`='pages' and id='".$id."'";
+	$sql = "SELECT `text` FROM ".$prefix."_mainpage where `tables`='pages' and id='".$id."'";
 	$result = $db->sql_query($sql);
 
 	if ($numrows = $db->sql_numrows($result) > 0) {
@@ -2190,7 +2208,7 @@ function mainpage_save($id=0, $type, $namo, $title, $text, $useit, $shablon, $de
 
 			// Вставляем данные в таблицу с именем $prefix_base_$namo
 			if (trim($_FILES["useit"]["tmp_name"] != "")) {
-				$sql = "load data local infile '".mysql_real_escape_string($_FILES["useit"]["tmp_name"])."' INTO table ".$prefix."_base_".$namo." FIELDS TERMINATED BY '".$line_razdel."' ENCLOSED BY '". $line_ekran."' LINES TERMINATED BY '".$line_close."'".$del_stroka.";"; // local 
+				$sql = "LOAD DATA LOCAL INFILE '".mysql_real_escape_string($_FILES["useit"]["tmp_name"])."' INTO table ".$prefix."_base_".$namo." FIELDS TERMINATED BY '".$line_razdel."' ENCLOSED BY '". $line_ekran."' LINES TERMINATED BY '".$line_close."'".$del_stroka.";"; // local 
 				$db->sql_query($sql) or die("Не удалось добавить информацию из файла CSV в таблицу базы данных. SQL: $sql");
 			} else echo "Файл не доступен";
 
@@ -2221,7 +2239,7 @@ function mainpage_save($id=0, $type, $namo, $title, $text, $useit, $shablon, $de
 
 	// узнаем id
 	if ($id == 0 && ($type == 2 or $type==5)) {
-		$row2 = $db->sql_fetchrow($db->sql_query("select `id` from ".$prefix."_mainpage where `tables`='pages' and `type`='".$type."' and `name`='".$namo."' and `title`='".$title."' and `text`='".$text."' and `useit`='".$useit."'")) or die("SQL: select `id` from ".$prefix."_mainpage where `tables`='pages' and `type`='".$type."' and `name`='".$namo."' and `title`='".$title."' and `text`='".$text."' and `useit`='".$useit."'");
+		$row2 = $db->sql_fetchrow($db->sql_query("SELECT `id` FROM ".$prefix."_mainpage where `tables`='pages' and `type`='".$type."' and `name`='".$namo."' and `title`='".$title."' and `text`='".$text."' and `useit`='".$useit."'")) or die("SQL: SELECT `id` FROM ".$prefix."_mainpage where `tables`='pages' and `type`='".$type."' and `name`='".$namo."' and `title`='".$title."' and `text`='".$text."' and `useit`='".$useit."'");
 		if ($type==5) { // Создаем раздел для БД
 			// База данных будет подключена к одноименному разделу, ... 
 			if ($s_tip == "1") 	$useit2 = "[содержание]"; // доступному на сайте
@@ -2233,7 +2251,7 @@ function mainpage_save($id=0, $type, $namo, $title, $text, $useit, $shablon, $de
 	  		$shablon = str_replace("tеxtarea","textarea",$shablon); // ireplace
 			$db->sql_query("INSERT INTO ".$prefix."_mainpage (`id`, `type`, `name`, `title`, `text`, `useit`, `shablon`, `counter`, `tables`, `color`, `description`, `keywords`) VALUES (NULL, '2', '".$namo."', '".$title."', '".$text2."', '".$useit2."', '".$shablon."', '0', 'pages', '0', '', '');") or die('Не удалось создать раздел для БД. Попробуйте еще раз и в случае неудачи обратитесь к разработчику.');
 			// узнаем id папки для БД, чтобы перейти к ее настройке
-			$row2 = $db->sql_fetchrow($db->sql_query("select `id` from ".$prefix."_mainpage where `tables`='pages' and `type`='2' and `name`='".$namo."' and `title`='".$title."' and `text`='".$text2."' and `useit`='".$useit2."'")) or die("SQL: select `id` from ".$prefix."_mainpage where `tables`='pages' and `type`='2' and `name`='".$namo."' and `title`='".$title."' and `text`='".$text2."' and `useit`='".$useit2."'");
+			$row2 = $db->sql_fetchrow($db->sql_query("SELECT `id` FROM ".$prefix."_mainpage where `tables`='pages' and `type`='2' and `name`='".$namo."' and `title`='".$title."' and `text`='".$text2."' and `useit`='".$useit2."'")) or die("SQL: select `id` from ".$prefix."_mainpage where `tables`='pages' and `type`='2' and `name`='".$namo."' and `title`='".$title."' and `text`='".$text2."' and `useit`='".$useit2."'");
 		}
 		// после сохранения откроем настройку раздела или блока 
 		Header("Location: sys.php?op=mainpage&id=".$row2['id']."&nastroi=1");
@@ -2320,7 +2338,7 @@ function mainpage_create_block($title, $name, $text, $modul, $useit, $design) {
 	$shablon = str_replace("tеxtarea","textarea",$shablon); // ireplace
 	$db->sql_query("INSERT INTO ".$prefix."_mainpage VALUES (NULL, '3', '".$name."', '".$title."', '".$text."', '".$useit."', '".$shablon."', '0', 'pages', '0', '', '')") or die("Не удалось создать блок. INSERT INTO ".$prefix."_mainpage VALUES (NULL, '3', '".$name."', '".$title."', '".$text."', '', '".$useit."', '".$shablon."', '0', 'pages', '0', '', '') ");
 	// узнаем id
-	$row = $db->sql_fetchrow($db->sql_query("select `id` from ".$prefix."_mainpage where `tables`='pages' and `type`='3' and `name`='".$name."' and `title`='".$title."' and `text`='".$text."' and `useit`='".$useit."' limit 1"));
+	$row = $db->sql_fetchrow($db->sql_query("SELECT `id` FROM ".$prefix."_mainpage where `tables`='pages' and `type`='3' and `name`='".$name."' and `title`='".$title."' and `text`='".$text."' and `useit`='".$useit."' limit 1"));
 	if ($name != 31) Header("Location: sys.php?op=".$admintip."&type=3&id=".$row['id']."&nastroi=1");
 	else Header("Location: sys.php?op=mainpage&type=element");
 }
@@ -2480,7 +2498,7 @@ function block_help() { // проверить вызов
 	    case "mainpage":
 		    if (isset($name)) { // узнать id
 		    	global $prefix, $db;
-				$row = $db->sql_fetchrow( $db->sql_query("select `id` from ".$prefix."_mainpage where `tables`='pages' and (`name` = '".$name."' or `name` like '".$name." %') and `type`='2'") );
+				$row = $db->sql_fetchrow( $db->sql_query("SELECT `id` FROM ".$prefix."_mainpage where `tables`='pages' and (`name` = '".$name."' or `name` like '".$name." %') and `type`='2'") );
 				$id = $row['id'];
 		    }
 		    if (isset($id)) mainpage($id); else mainpage();

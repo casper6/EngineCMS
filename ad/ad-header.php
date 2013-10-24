@@ -82,8 +82,8 @@ echo "<table class='mw800 w100 m0'><tr><td class=center width=170><a title='".aa
 global $buttons;
 $buttons = explode(",", aa(" Содержание, Оформление, Настройки, Статистика, ПОМОЩЬ, "));
 if ($deviceType != 'computer') $buttons = array('','','','','','');
-echo "<a class='button small in_r' onclick=\"openbox('8','".aa("Помощь")."'); $('#show_razdel').click();\" title='".aa("Открыть справочную информацию")."'><span class='icon small' data-icon='n'></span>".$buttons[4]."</a>
-<nobr>
+if ($url == "/red" || $url == "/sys.php" || $url == "/sys.php?op=mes") echo "<a class='button small in_r' onclick=\"openbox('8','".aa("Помощь")."'); $('#show_razdel').click();\" title='".aa("Открыть справочную информацию")."'><span class='icon small' data-icon='n'></span>".$buttons[4]."</a>";
+echo "<nobr>
 <button class='small' target=_blank onclick='window.open(\"/\")' title='".aa("Перейти на сайт (откроется в новом окне)")."'><span class='icon small' data-icon='4'></span> ".aa("На сайт")."</button>
 <form method=post name=search action='/--search' style='display:inline;' class='nothing'><input type='search' placeholder='".aa("Поиск по сайту")."' name='slovo' class='w25'></form>
 ".$post."
@@ -91,10 +91,14 @@ echo "<a class='button small in_r' onclick=\"openbox('8','".aa("Помощь")."
 <a class='in_r button small' title='".aa("Выход из администрирования\n(мера безопасности)")."' href='sys.php?op=logout'><span class='icon small' data-icon='Q'></span></a>
 
 <ul class='button-bar'>
-<li class='first ".$color1."'><a title='".aa("Содержание сайта: разделы, папки, страницы и комментарии")."' href='sys.php'><span class='icon gray small' data-icon=','></span>".$buttons[0]."</a></li>
-<li class='".$color2."'><a title='".aa("Дизайн, стиль, блоки и прочие элементы оформления сайта")."' href='sys.php?op=mainpage&amp;type=element'><span class='icon gray small' data-icon='Y'></span>".$buttons[1]."</a></li>
-<li class='".$color3."'><a title='".aa("Настройки сайта")."' href='sys.php?op=options'><span class='icon gray small' data-icon='='></span>".$buttons[2]."</a></li>
-<li class='last ".$color4."'><a title='".aa("Открыть статистику сайта")."' href='sys.php?op=mainpage&amp;type=stat'><span class='icon gray small' data-icon='j'></span>".$buttons[3]."</a></li>
+<li class='first ".$color1."'><a title='".aa("Содержание сайта: разделы, папки, страницы и комментарии")."' href='sys.php'><span class='icon gray small' data-icon=','></span>".$buttons[0]."</a></li>";
+
+if ($editor_style == false) {
+	echo "<li class='".$color2."'><a title='".aa("Дизайн, стиль, блоки и прочие элементы оформления сайта")."' href='sys.php?op=mainpage&amp;type=element'><span class='icon gray small' data-icon='Y'></span>".$buttons[1]."</a></li>
+	<li class='".$color3."'><a title='".aa("Настройки сайта")."' href='sys.php?op=options'><span class='icon gray small' data-icon='='></span>".$buttons[2]."</a></li>";
+}
+
+echo "<li class='last ".$color4."'><a title='".aa("Открыть статистику сайта")."' href='sys.php?op=mainpage&amp;type=stat'><span class='icon gray small' data-icon='j'></span>".$buttons[3]."</a></li>
 </ul>
 </div></td></tr>
 <tr><td colspan=2 class='black_grad2 h2 mp0'>
