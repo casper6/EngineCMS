@@ -1,4 +1,6 @@
 ﻿<?php
+// Настройки
+$imagick = true; // Если картинки не закачиваются - можно попробовать установить в false
 if(!eregi('image/', $_FILES['file']['type'])) exit(0);
 
 foreach ($_FILES['file'] as $secvalue) {
@@ -29,7 +31,7 @@ if ($type == 'png' || $type == 'jpg' || $type == 'gif' || $type == 'jpeg' || $ty
   $foto =  md5(date('YmdHis')).'.'.$type;
   if (is_uploaded_file($_FILES['file']['tmp_name'])) {
     if (move_uploaded_file($_FILES['file']['tmp_name'], $folder.$foto)) {
-      if (extension_loaded('imagick') && class_exists("Imagick")) {
+      if (extension_loaded('imagick') && class_exists("Imagick") && $imagick == true) {
         $image = new Imagick($folder.$foto);
         // сжатие
         list($width, $height, $type, $attr) = getimagesize($folder.$foto);

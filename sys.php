@@ -10,11 +10,7 @@ if(isset($aid)) {
 }
 require_once("mainfile.php");
 $checkurl = $_SERVER['REQUEST_URI'];
-if (preg_match("/admins_add/", $checkurl)) die (aa("Попытка взлома")." №6");
-if (preg_match("/update_author/", $checkurl)) die (aa("Попытка взлома")." №7");
-if (preg_match("/admins_delete/", $checkurl)) die (aa("Попытка взлома")." №12");
-if (preg_match("/admins_edit_save/", $checkurl)) die (aa("Попытка взлома")." №13");
-if((stripos($checkurl,'VXBkYXRlQXV0aG9y')) OR (stripos($checkurl,'QWRkQXV0aG9y')) OR (stripos($checkurl,'admins_delete')) OR (stripos($checkurl,'admins_edit_save')) OR (stripos($checkurl,'admins_add')) OR (stripos($checkurl,'update_author')) OR (stripos($checkurl, "?admin")) OR (stripos($checkurl, "&admin")) OR (stripos($checkurl,'%20union%20') OR stripos($checkurl,'*%2f*') OR stripos($checkurl,'/*') OR stripos($checkurl,'*/union/*') OR stripos($checkurl,'c2nyaxb0') OR stripos($checkurl,'+union+') OR (stripos($checkurl,'cmd=') AND stripos($checkurl,'&cmd')===false) OR (stripos($checkurl,'exec') AND stripos($checkurl,'execu')===false) OR stripos($checkurl,'concat'))) die(aa("Попытка взлома")." №8");
+if((stripos($checkurl,'VXBkYXRlQXV0aG9y')) OR (stripos($checkurl,'QWRkQXV0aG9y')) OR (stripos($checkurl, "?admin")) OR (stripos($checkurl, "&admin")) OR (stripos($checkurl,'%20union%20') OR stripos($checkurl,'*%2f*') OR stripos($checkurl,'/*') OR stripos($checkurl,'*/union/*') OR stripos($checkurl,'c2nyaxb0') OR stripos($checkurl,'+union+') OR (stripos($checkurl,'cmd=') AND stripos($checkurl,'&cmd')===false) OR (stripos($checkurl,'exec') AND stripos($checkurl,'execu')===false) OR stripos($checkurl,'concat'))) die(aa("Попытка взлома")." №8");
 
 global $admin_file;
 
@@ -40,7 +36,7 @@ if ($the_first == 0) {
 		$code = substr($rcode, 2, 6);
 		if(!empty($aid) AND !empty($pwd)) {
 			$pwd = md5($pwd);
-			$result = $db->sql_query("SELECT pwd FROM ".$prefix."_authors WHERE aid='".$aid."'");
+			$result = $db->sql_query("SELECT `pwd` FROM ".$prefix."_authors WHERE `aid`='".$aid."'");
 			list($rpwd) = $db->sql_fetchrow($result);
 			if($rpwd == $pwd) {
 				$admin = base64_encode($aid.":".$pwd);
@@ -57,30 +53,29 @@ if(isset($admin) && !empty($admin)) {
 	$admin = explode(":", $admin);
 	$aid = addslashes($admin[0]);
 	$pwd = $admin[1];
-	if (empty($aid) OR empty($pwd)) {
-		$admintest = 0;
+	if (empty($aid) OR empty($pwd))
 		die(aa("Если вы не взломщик, а администратор этого сайта, почистите, пожалуйста, куки (cookie). Например так: меню браузера Сервис -> Свойства обозревателя -> Удалить... -> Удалить \"Cookie\"."));
-	}
 	$aid = substr($aid, 0,25);
 	$result2 = $db->sql_query("SELECT `name`, `pwd` FROM ".$prefix."_authors WHERE `aid`='".$aid."'");
-	if (!$result2) {
+	if (!$result2)
 		die(aa("Выбор из базы данных не удался!"));
-	} else {
+	else {
 		list($rname, $rpwd) = $db->sql_fetchrow($result2);
-		if($rpwd == $pwd && !empty($rpwd)) {
+
+		if($rpwd == $pwd && !empty($rpwd))
 			$admintest = 1;
-		}
 	}
 }
 // Включение режима редактора (отключение функций админа)
+global $editor_style;
 $editor_style = false;
-if ($rname == "EDITOR") $editor_style = true;
+if (isset($rname)) if ($rname == "EDITOR") $editor_style = true;
 
-if(!isset($op)) { 
+if(!isset($op))
 	$op = "adminMain"; 
-} elseif(($op=="mod_authors" OR $op=="admins_list" OR $op=="admins_delete" OR $op=="admins_edit" OR $op=="modifyadmin" OR $op=="update_author" OR $op=="admins_edit_save" OR $op=="admins_add" OR $op=="options") AND ($rname != "BOG")) {
-  die(aa("Запрещенная операция! Возможно, вы только что сменили имя и/или пароль администратора - тогда перейдите ко <a href=sys.php?op=login>входу в администрирование</a>."));
-}
+elseif(($op=="mod_authors" || $op=="admins_list" || $op=="admins_delete" || $op=="admins_edit" || $op=="modifyadmin" || $op=="update_author" || $op=="admins_edit_save" || $op=="admins_add" || $op=="options") AND ($rname != "BOG" && $rname != "ADMIN"))
+  	die(aa("$rname Запрещенная операция! Возможно, вы только что сменили имя и/или пароль администратора - тогда перейдите ко <a href='sys.php?op=login'>входу в администрирование</a>."));
+
 $pagetitle = "- ".aa("Администрирование");
 
 // Стирание кеша главной страницы
@@ -88,7 +83,7 @@ if (is_admin($admin)) recash("/");
 
 global $razdel_sort; // Сортировка разделов в Содержании
 $razdel_sort = intval($razdel_sort);
-if ( $razdel_sort == 1 or $razdel_sort == 2 or $razdel_sort == 0 ) setcookie("razdel_sort", $razdel_sort, time()+60*60*24*360);
+if ( $razdel_sort == 1 || $razdel_sort == 2 || $razdel_sort == 0 ) setcookie("razdel_sort", $razdel_sort, time()+60*60*24*360);
 
 // Вход в Админку
 function login() {
@@ -106,9 +101,7 @@ if (file_exists("favicon.png"))  echo "<link rel='shortcut icon' href='favicon.p
 else echo "<link rel='shortcut icon' href='favicon.ico' />";
 echo "<title>".aa("Вход в Администрирование")."</title>
 <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-<meta http-equiv='Content-language' content='".$lang_admin."'> 
-<meta name='copyright' content='".aa("ДвижОк CMS")."'>
-<meta name='author' content='13i'>
+<meta http-equiv='Content-language' content='".$lang_admin."'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0'>
 <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
 <!--[if lt IE 9]><script src='includes/html5.js'></script><![endif]-->

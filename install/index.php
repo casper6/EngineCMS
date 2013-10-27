@@ -523,7 +523,7 @@ if (!isset($_REQUEST['lang'])) {
 					Будет отправлен на указанный email</li>
 				<li id='all_show'><a onclick='$("#blo_show").show();$("#cash_show").show();$("#all_show").hide();' style='color:darkgreen; cursor:pointer; text-decoration:none; border-bottom:1px dashed green;'>IP-блокировка и кеш отключены</a></li>
 				<li id='blo_show' style='display:none'><strong>Блокировка по IP-адресу</strong>:<br><select style="width:100%;" name="ipban"><option value="true">Включить</option><option value="false" selected>Отключить</option></select></li>
-				<li id='cash_show' style='display:none'><strong>Кеширование страниц сайта</strong>:<br><select style="width:100%;" name="site_cash"><option value="false">Отключено</option><option value="file">в файлы</option><option value="base">в базу данных</option></select></li>
+				<li id='cash_show' style='display:none'><strong>Кеширование страниц сайта</strong>:<br><select style="width:100%;" name="site_cash"><option value="false">Отключено</option><option value="file" disabled>в файлы (доработка в процессе)</option><option value="base" disabled>в базу данных (доработка в процессе)</option></select></li>
 			</ul>
 			
 		</div>

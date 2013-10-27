@@ -717,8 +717,8 @@ function base_pages_edit_sv_page($pid, $module, $cid, $title, $open_text, $main_
               $sql = "SELECT `pages` FROM ".$prefix."_spiski WHERE `type`='".$name."' and `name`='".$elements."'";
               $result = $db->sql_query($sql);
               $numrows = $db->sql_numrows($result);
-              $row = $db->sql_fetchrow($result);
               if ($numrows > 0) { // Список есть - добавляем к нему
+                $row = $db->sql_fetchrow($result);
                 $s_pages2 = $row['pages'];
                 $s_pages2 = str_replace("  "," ", $s_pages2." ".$page_id." ");
                 $db->sql_query("UPDATE ".$prefix."_spiski SET `pages`='".$s_pages2."' WHERE `type`='".$name."' and `name`='".$elements."'") or die ('Ошибка: Не удалось обновить список. 1');

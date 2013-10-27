@@ -92,12 +92,11 @@ echo "<nobr>
 
 <ul class='button-bar'>
 <li class='first ".$color1."'><a title='".aa("Содержание сайта: разделы, папки, страницы и комментарии")."' href='sys.php'><span class='icon gray small' data-icon=','></span>".$buttons[0]."</a></li>";
-
+global $editor_style;
 if ($editor_style == false) {
 	echo "<li class='".$color2."'><a title='".aa("Дизайн, стиль, блоки и прочие элементы оформления сайта")."' href='sys.php?op=mainpage&amp;type=element'><span class='icon gray small' data-icon='Y'></span>".$buttons[1]."</a></li>
 	<li class='".$color3."'><a title='".aa("Настройки сайта")."' href='sys.php?op=options'><span class='icon gray small' data-icon='='></span>".$buttons[2]."</a></li>";
 }
-
 echo "<li class='last ".$color4."'><a title='".aa("Открыть статистику сайта")."' href='sys.php?op=mainpage&amp;type=stat'><span class='icon gray small' data-icon='j'></span>".$buttons[3]."</a></li>
 </ul>
 </div></td></tr>

@@ -155,7 +155,7 @@ echo "<table class='w100 mw800 pm0 block_back'><tr valign=top><td id='razdel_td'
 	echo "<div id='mainrazdel7' class='dark_pole2'><a class='base_page' onclick=\"options_show('7','show_options_oldfotos'); trash_pics();\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='1'></span><span class='plus20'>Удаление старых фото</span></div></a></div>";
 	echo "<div id='mainrazdel5' class='dark_pole2'><a class='base_page' href='sys.php?op=subscribe'><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='@'></span><span class='plus20'>Cписок адресатов для рассылки</span></div></a></div>";
 	echo "<div id='mainrazdel6' class='dark_pole2'><a class='base_page' href='sys.php?op=users'><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='U'></span><span class='plus20'>Пользователи (в разработке)</span></div></a></div>";
-    echo "<div id='mainrazdel11' class='dark_pole2'><a class='base_page' href='sys.php?op=txt_and_csv_main'><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='('></span><span class='plus20'>Импорт из txt и csv (в разработке)</span></div></a></div>";
+    echo "<div id='mainrazdel11' class='dark_pole2'><a class='base_page' href='sys.php?op=txt_and_csv_main'><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='('></span><span class='plus20'>Импорт из csv</span></div></a></div>";
 	echo "<div id='mainrazdel10' class='dark_pole2'><a class='base_page' onclick=\"options_show('10','show_options_razrab');\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='b'></span><span class='plus20'>Информация для разработчиков</span></div></a></div>";
 	if (is_dir("includes/regions")) echo "<div id='mainrazdel14' class='dark_pole2'><a class='base_page' href='sys.php?op=regions_main'><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='&'></span><span class='plus20'>Регионы</span></div></a></div>";
 	echo "</div></td>
@@ -866,16 +866,14 @@ echo "
 	</form>";
 
 	///////////////////////////////////////////////////////////////////////////////////////////
-	$result = $db->sql_query("SELECT `aid`, `name` from " . $prefix . "_authors where `name`='BOG'");
-	$row = $db->sql_fetchrow($result);
-	$adm_aid = filter($row['aid'], "nohtml");
-	$adm_aid = trim(strtolower(substr($adm_aid, 0,25)));
-	$row = $db->sql_fetchrow($db->sql_query("SELECT `aid`, `name`, `pwd` from " . $prefix . "_authors where `name`='BOG'"));
-	$chng_aid = filter($row['aid'], "nohtml");
+	/*
+	$row = $db->sql_fetchrow($db->sql_query("SELECT `name`, `pwd` from " . $prefix . "_authors where `aid`='".$admin[0]."'"));
+	$chng_aid = $admin[0];
 	$chng_name = filter($row['name'], "nohtml");
 	$chng_pwd = filter($row['pwd'], "nohtml");
 	$chng_aid = strtolower(substr($chng_aid, 0,25));
 	$aid = $chng_aid;
+	*/
 	echo "<div id='show_options_pass_block' class='show_pole pl10' style='display:none;'>";
 	if (!isset($ip_address)) $ip_address="";
 	if ($ipban != false) {
@@ -884,17 +882,16 @@ echo "
 	} else echo "<div class='notice warning'>Блокировка посетителей отключена. Включить можно через config.php</div>";
 	echo "<h2>Смена пароля администратора:</h2>
 	<form action=".$admin_file.".php method=post>
-	<table class=tight>
-	<tr><td align=right>Псевдоним:</td>
-	<td><input type=text name=chng_aid value='".$chng_aid."' size=20 maxlength=25></td></tr>
-	<tr><td align=right>Пароль:</td>
-	<td><input type=password name=chng_pwd size=20 maxlength=40></td></tr>
-	<tr><td align=right>Пароль еще раз:</td>
-	<td><input type=password name=chng_pwd2 size=20 maxlength=40></td></tr>
-	<tr><td colspan=2><input type=submit value=' Сохранить '></td></tr></table>
-	<input type=hidden name=chng_name value='".$chng_name."'>
-	<input type=hidden name=adm_aid value='".$adm_aid."'>
-	<input type=hidden name=op value='update_author'>
+	<table class='table_light'>
+	<tr><td align='right'>Псевдоним:</td>
+	<td><input type=text name='chng_aid' value='".$admin[0]."' size='20' maxlength='25'></td></tr>
+	<tr><td align='right'>Старый пароль:</td>
+	<td><input type='password' name='chng_pwd' size='20' maxlength='40'></td></tr>
+	<tr><td align='right'>Новый пароль:</td>
+	<td><input type='password' name='chng_pwd2' size='20' maxlength='40'></td></tr>
+	<tr><td colspan='2'><input type='submit' value=' Сохранить '></td></tr></table>
+	<input type='hidden' name='adm_aid' value='".$admin[0]."'>
+	<input type='hidden' name='op' value='update_author'>
 	</form>";
 	if ($chng_name == "BOG") {
 		echo "<hr><a class='button medium' onclick=\"$('#show_admins').toggle();\"><span class=\"icon gray medium\" data-icon=\"u\"></span> Редактирование администраторов</a>
@@ -916,7 +913,7 @@ echo "
 			echo "<tr><td>".$a_aid."</td>
 			<td align='center'>".$editor."</td>
 			<td><a href='sys.php?op=admins_edit&amp;chng_aid=".$a_aid."' title='Редактировать'><span class=\"icon black small\" data-icon=\"7\"></span></a>
-			<a href='sys.php?op=admins_delete&amp;aid=".$a_aid."' title='Удалить'><span class=\"icon red small\" data-icon=\"F\"></span></a></td></tr>";
+			<a href='sys.php?op=admins_delete&amp;aid_del=".$a_aid."' title='Удалить'><span class=\"icon red small\" data-icon=\"F\"></span></a></td></tr>";
 		}
 		echo "</table>";
 		echo "<h1>Добавить администратора</h1>
@@ -939,250 +936,32 @@ echo "
 	</body>
 	</html>";
 	}
-	///////////////////////////////////////////////////////////////////
-	function admins_add() { // доработать
-		global $db, $prefix, $admin_file, $modules_info;
-		$ok=intval($_POST['ok']);
-		$add_aid=$_POST['add_aid'];
-		$add_name=$_POST['add_name'];
-		$add_email=$_POST['add_email'];
-		$add_url='';
-		$add_radminsuper=intval($_POST['add_radminsuper']);
-		$add_pwd=$_POST['add_pwd'];
-		$add_admlanguage=$_POST['add_admlanguage'];
-		$add_editor=filter($_POST['add_editor']);
-		$auth_modules=$_POST['auth_modules'];
-		$add_aid = strtolower(substr($add_aid, 0,25));
-		$add_name = substr($add_name, 0,25);
-		if (!($add_aid && $add_name && $add_email && $add_pwd)) {
-			include("ad/ad-header.php");
-			echo "<center><b>Ошибка создания</b><br>Заполните поля, вернувшись назад</center>";
-		}
-		if ($ok==1) {
-			$add_pwd = md5($add_pwd);
-			$result = $db->sql_query("INSERT INTO ".$prefix."_authors SET
-				aid='".$add_aid."',
-				name='".$add_name."',
-				url='".$add_url."',
-				email='".$add_email."',
-				pwd='".$add_pwd."',
-				counter='0',
-				radminsuper='".$add_radminsuper."',
-				admlanguage='".$add_admlanguage."',
-				editor='".$add_editor."'"
-			);
-			$auth_modules=unserialize(base64_decode($auth_modules));
-			$so=sizeof($auth_modules);
-			if (is_array($auth_modules) AND $so>0) {
-				$tmp=array();
-				for ($i=0; $i < $so; $i++) {
-					foreach ($modules_info as $k=>$v) {
-						if (intval($auth_modules[$i])==intval($v['mid'])) {
-							$tmp[]=intval($v['mid']);
-						}
-					}
-				}
-				$tmp=implode(",",$tmp);
-				$sql="UPDATE ".$prefix."_modules SET admins=CONCAT(admins,'".$add_name."',',') WHERE mid IN (".$tmp.")";
-				$db->sql_query($sql);
-				require_once(INCLUDE_PATH."includes/core/modules2cache.php");
-				Modules2Cache();			
-			}
-			Header("Location: ".$admin_file.".php?op=options");
-		}
-		else {
-			include ("ad/ad-header.php");
-			echo "<center><b>"._AREYOUSURETOADDADMIN."</b><BR><BR>";
-			$auth_modules=base64_encode(serialize($auth_modules));
-			echo "	<form action='".$admin_file.".php' method='post'>
-					<input type='hidden' name='op' value='admins_add'>
-					<input type='hidden' name='add_aid' value='".$add_aid."'>
-					<input type='hidden' name='add_name' value='".$add_name."'>
-					<input type='hidden' name='add_email' value='".$add_email."'>
-					<input type='hidden' name='add_pwd' value='".$add_pwd."'>
-					<input type='hidden' name='add_url' value='".$add_url."'>
-					<input type='hidden' name='add_radminsuper' value='".$add_radminsuper."'>
-					<input type='hidden' name='add_admlanguage' value='".$add_admlanguage."'>
-					<input type='hidden' name='add_editor' value='".$add_editor."'>
-					<input type='hidden' name='auth_modules' value='".$auth_modules."'>
-					<input type='hidden' name='ok' value='1'>
-					<input type='submit' value='"._ADD."'> | <a href='".$admin_file.".php?op=options'>"._NO."</a> 
-				</form>";
-			echo "</center>";
-			admin_footer();
-		}
-	}
-
-
-	function admins_edit() { // доработать
-		global $admin, $prefix, $db, $admin_file, $modules_info;
-		$chng_aid=$_GET['chng_aid'];
-		include ("ad/ad-header.php");
-		echo "<center><font class='option'><b>"._MODIFYINFO."</b></font></center><br><br>";
-		$adm_aid = filter($chng_aid, "nohtml");
-		$adm_aid = trim(substr($adm_aid,0,25));
-		$row = $db->sql_fetchrow($db->sql_query("SELECT aid, name, url, email, pwd, radminsuper, admlanguage, editor FROM ".$prefix."_authors WHERE aid='".$adm_aid."'"));
-		$chng_aid = filter($row['aid'], "nohtml");
-		$chng_name = filter($row['name'], "nohtml");
-		$chng_email = filter($row['email'], "nohtml");
-		$chng_pwd = filter($row['pwd'], "nohtml");
-		$chng_radminsuper = intval($row['radminsuper']);
-		$chng_admlanguage = addslashes($row['admlanguage']);
-		$chng_editor=filter($row['editor']);
-		$chng_aid = strtolower(substr($chng_aid, 0,25));
-		$aid = $chng_aid;
-		echo "<form action='".$admin_file.".php' method='post'>
-			<table border='0'>
-				<tr>
-					<td>"._NAME.":</td>
-					<td colspan='3'><b>".$chng_name."</b><input type='hidden' name='chng_name' value='".$chng_name."'></td>
-				</tr>
-				<tr>
-					<td>"._NICKNAME.":</td>
-					<td colspan='3'><input type='text' name='chng_aid' value='".$chng_aid."' size='30' maxlength='25'> <font class='tiny'>"._REQUIRED."</font></td>
-				</tr>
-				<tr>
-					<td>"._EMAIL.":</td>
-					<td colspan='3'><input type='text' name='chng_email' value='".$chng_email."' size='30' maxlength='60'> <font class='tiny'>"._REQUIRED."</font></td>
-				</tr>
-		";
-
-		$s_edit1=$s_edit2=$s_edit3=$s_edit0="";
-		$s_edit0="selected";
-
-		echo "<input type='hidden' name='chng_admlanguage' value=''>";
-		if ($row['name'] != "BOG") {
-			echo "	<tr>
-					<td>Права:</td>";
-
-			if ($chng_radminsuper == 1) {
-				$sel1 = "checked";
-			}
-			echo "	</tr>
-				<tr>
-					<td>&nbsp;</td>
-					<td><input type='checkbox' name='chng_radminsuper' value='1' ".$sel1."> <b>СуперПользователь</b></td>
-				</tr>
-				<tr>
-					<td>&nbsp;</td>
-					<td colspan='3'><font class='tiny'><i>Предупреждение</i></font></td>
-				</tr>
-				
-			";
-		}
-		echo "		<tr>
-					<td>Пароль:</td>
-					<td colspan='3'><input type='password' name='chng_pwd' size='12' maxlength='40'></td>
-				</tr>
-				<tr>
-					<td>Пароль еще раз:</td>
-					<td colspan='3'><input type='password' name='chng_pwd2' size='12' maxlength='40'> <font class='tiny'>(только при изменении)</font></td>
-				</tr>
-				<tr>
-					<td colspan='2'>
-						<input type='hidden' name='adm_aid' value='".$adm_aid."'>
-						<input type='hidden' name='op' value='admins_edit_save'>
-						<input type='submit' value='Сохранить'> Назад
-					</td>
-				</tr>
-			</table>
-			</form>
-		";
-		admin_footer();
-	}
-
-	function admins_edit_save() { // доработать
-		/*
-		add_editor
-		EDITOR>1
-		ADMIN>0
-		
-		add_aid
-		add_pwd
-		*/
-		global $admin, $prefix, $db, $admin_file, $modules_info;
-		$chng_aid=filter($_POST['chng_aid'],"nohtml");
-		$chng_name=filter($_POST['chng_name'],"nohtml");
-		$chng_email=filter($_POST['chng_email'],"nohtml");
-		$chng_url='';
-		$chng_radminsuper=intval($_POST['chng_radminsuper']);
-		$chng_pwd=filter($_POST['chng_pwd'],"nohtml");
-		$chng_pwd2=filter($_POST['chng_pwd2'],"nohtml");
-		$chng_admlanguage=filter($_POST['chng_admlanguage'],"nohtml");
-		$chng_editor=filter($_POST['chng_editor'],"nohtml");
-		$adm_aid=filter($_POST['adm_aid'],"nohtml");
-		$auth_modules=$_POST['auth_modules'];
-		$chng_aid = trim($chng_aid);
-		if (!($chng_aid AND $chng_name AND $chng_email AND $chng_editor)) {
-			Header("Location: ".$admin_file.".php?op=options");
-		}
-		$is_god=0;
-		if ($chng_name=='BOG') {
-			$chng_radminsuper=1;
-			$is_god=1;
-		}
-		$chng_name = substr($chng_name, 0, 25);
-		$sql="UPDATE ".$prefix."_modules SET admins=REPLACE(admins,'".$chng_name.",','') WHERE admins LIKE '%".$chng_name.",%'";
-		$db->sql_query($sql);
-		$sql="UPDATE ".$prefix."_authors SET aid='".$chng_aid."', email='".$chng_email."', url='".$chng_url."', radminsuper='".$chng_radminsuper."', admlanguage='".$chng_admlanguage."', editor='".$chng_editor."' WHERE name='".$chng_name."'";
-		$db->sql_query($sql);
-		if($chng_radminsuper==0) {
-			$tmp=array();
-			foreach ($modules_info as $k=>$v) {
-				for ($i=0; $i < sizeof($auth_modules); $i++) {
-					if (intval($auth_modules[$i])==intval($v['mid'])) {
-						$tmp[]=intval($v['mid']);
-					}
-				}
-			}
-			$tmp=implode(",",$tmp);
-			$db->sql_query("UPDATE ".$prefix."_modules SET admins=CONCAT(admins,'".$chng_name."',',') WHERE mid IN (".$tmp.")");
-		}
-		require_once(INCLUDE_PATH."includes/core/modules2cache.php");
-		Modules2Cache();
-		if (!empty($chng_pwd2)) {
-			if($chng_pwd != $chng_pwd2) {
-				include ("ad/ad-header.php");
-				echo _PASSWDNOMATCH . "<br><br>"
-				."<center>" . _GOBACK . "</center>";
-				admin_footer();
-				exit;
-			}
-			$chng_pwd = md5($chng_pwd);
-			$sql="UPDATE ".$prefix."_authors SET pwd='".$chng_pwd."' WHERE name='".$chng_name."'";
-			$db->sql_query($sql);
+	//////////////////////////////////////////
+	function admins_edit_save($add=0, $add_aid, $add_pwd, $add_editor, $old_name=0) { // доработать
+		global $admin, $prefix, $db, $admin_file;
+		// aid name pwd realadmin link all
+		// admin BOG c4ca4... 1 _ 0
+		if ($add_editor == "1") $add_name = "EDITOR"; else $add_name = "ADMIN";
+		$add_pwd = md5($add_pwd);
+		$add_aid = substr($add_aid, 0, 25);
+		if ($add == 1) { // Создадим админа
+			$result = $db->sql_query("INSERT INTO ".$prefix."_authors SET `aid`='".$add_aid."', `name`='".$add_name."', `pwd`='".$add_pwd."', `realadmin`='1', `link`='', `all`='0'");
+		} else { // Отредактируем админа
+			if (!($add_aid && $add_pwd && $add_editor))
+				Header("Location: ".$admin_file.".php?op=options");
+			else
+				$db->sql_query("UPDATE ".$prefix."_authors SET `aid`='".$add_aid."', name='".$add_name."', pwd='".$add_pwd."' WHERE aid='".$old_name."'");
 		}
 		Header("Location: ".$admin_file.".php?op=options");
 	}
 
-	function admins_delete() { // доработать
-		global $db, $prefix, $admin_file, $modules_info;
-		$ok=intval($_POST['ok']);
-		if ($ok==1) {
-			$aid = trim(filter($_POST['aid'],"nohtml"));
-			$crow=$db->sql_fetchrow($db->sql_query("SELECT name from ".$prefix."_authors WHERE aid='".$aid."' LIMIT 1"));
-			$name = substr($crow['name'], 0, 25);
-			if ($name!='BOG') {
-				$db->sql_query("UPDATE ".$prefix."_modules SET admins=REPLACE(admins,'".$name.",','') WHERE admins LIKE '%".$name.",%'");
-				$db->sql_query("DELETE FROM ".$prefix."_authors WHERE aid='".$aid."'");
-				require_once(INCLUDE_PATH."includes/core/modules2cache.php");
-				Modules2Cache();
-			}
-			Header("Location: ".$admin_file.".php?op=options");
-		}
-		else {
-			$aid = trim(filter($_GET['aid'],"nohtml"));
-			include ("ad/ad-header.php");
-			echo "<center><font class='option'><b>"._AUTHORDEL."</b></font><br><br>"
-			._AUTHORDELSURE." <i>".$aid."</i>?<br><br>";
-			echo "	<form action='".$admin_file.".php' method='post'>
-					<input type='hidden' name='aid' value='".$aid."'>
-					<input type='hidden' name='op' value='admins_delete'>
-					<input type='hidden' name='ok' value='1'>
-					<input type='submit' value='"._DELETE."'> | <a href='".$admin_file.".php?op=options'>"._NO."</a> 
-				</form>";
-			admin_footer();
-		}
+	function admins_delete($aid_del) { // доработать
+		global $db, $prefix, $admin_file;
+		$aid_del = trim(filter($aid_del,"nohtml"));
+		$crow = $db->sql_fetchrow($db->sql_query("SELECT `name` from ".$prefix."_authors WHERE `aid`='".$aid_del."' LIMIT 1"));
+		if ($name != 'BOG')
+			$db->sql_query("DELETE FROM ".$prefix."_authors WHERE `aid`='".$aid_del."'");
+		Header("Location: ".$admin_file.".php?op=options");
 	}
 /////////////////////////////////////////////////
 	function subscribe() {
@@ -1275,13 +1054,13 @@ echo "
 			admins_edit();
 			break;
 		case "admins_edit_save":
-			admins_edit_save();
+			admins_edit_save(0, $add_aid, $add_pwd, $add_editor);
 			break;
 		case "admins_add":
-			admins_add();
+			admins_edit_save(1, $add_aid, $add_pwd, $add_editor);
 			break;
 		case "admins_delete":
-			admins_delete();
+			admins_delete($aid_del);
 			break;
 	}
 } else die('Доступ закрыт!<br>Возможно, вы только что сменили имя и/или пароль администратора — тогда перейдите ко <a href="/sys.php?op=login">входу в администрирование</a>.');
