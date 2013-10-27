@@ -18,7 +18,7 @@ global $strelka, $go, $cid, $pid, $all, $avtor, $to, $info, $num, $ip, $golos, $
 global $post, $comments, $datashow, $sort, $lim, $foto, $view, $search, $search_papka, $tema, $tema_name, $tema_title, $tema_opis, $menushow, $design; 
 
 $media = $folder = $col = $view = $golos = $golosrazdel = $post = $comments = $datashow = $favorites = $socialnetwork = $search = $search_papka = $put_in_blog = $base = $vetki = $citata = $media_comment = $no_html_in_opentext = $no_html_in_text = $show_add_post_on_first_page = $media_post = $razdel_shablon = $page_shablon = $comments_all = $comments_num = $comments_mail = $comments_adres = $comments_tel = $comments_desc = $golostype = $pagenumbers = $comments_main = $tags_type = $tema_zapret_comm = $pagekol = $table_light = $designpages = $comments_add = $div_or_table = $papka_show = $more_smile = $add_post_to_mainpage = $design_tablet = $designpages_tablet = $design_phone = $designpages_phone = 0;
-$menushow = $titleshow = $razdel_link = $peopleshow = $design = $tags = $podrobno = $podrazdel_active_show = $podrazdel_show = $tipograf = $limkol = $tags_show = $tema_zapret = $opentextshow = $maintextshow = 1;
+$menushow = $titleshow = $razdeltitleshow = $razdel_link = $peopleshow = $design = $tags = $podrobno = $podrazdel_active_show = $podrazdel_show = $tipograf = $limkol = $tags_show = $tema_zapret = $opentextshow = $maintextshow = 1;
 
 $comment_shablon = 2;
 $lim = 20;
@@ -765,7 +765,10 @@ function showcat($cid=0, $pag=0, $slovo="") {
           }
 
           $all_page_link = "";
-          if ($show_read_all == "1") $all_page_link = " <A href='-".$DBName."_page_".$p_pid."'>".$read_all."</a>";
+          if ($show_read_all == "1") {
+            $all_page_link = " <A href='-".$DBName."_page_".$p_pid."'>".$read_all."</a>";
+            $open_text = str_replace('<hr class="editor_cut">','',$open_text);
+          }
 
           // Дополнение - преобразователь ссылок. //////////////////////
           /*
@@ -1064,7 +1067,7 @@ function showcat($cid=0, $pag=0, $slovo="") {
 function page($pid, $all) {
   global $strelka, $soderganie, $soderganie2, $DBName, $db, $prefix, $module_name, $admin, $pagetitle, $pagetitle2, $ModuleName, $print, $siteurl, $keywords2, $description2, $data_page;
   // настройки модуля из БД
-  global $golos, $golostype, $post, $comments, $datashow, $sort, $tags, $lim, $folder, $view, $col, $menushow, $favorites, $socialnetwork, $name, $put_in_blog, $base, $titleshow, $comments_add, $add_css, $comment_shablon, $page_shablon, $comments_all, $comments_num, $comments_mail, $comments_adres, $comments_tel, $vetki, $comments_all, $comments_num, $comments_desc, $comments_1, $comments_2, $comments_3, $comments_4, $comments_5, $comments_6, $comments_7, $comments_8, $tag_text_show, $opentextshow, $maintextshow;
+  global $golos, $golostype, $post, $comments, $datashow, $sort, $tags, $lim, $folder, $view, $col, $menushow, $favorites, $socialnetwork, $name, $put_in_blog, $base, $titleshow, $razdeltitleshow, $comments_add, $add_css, $comment_shablon, $page_shablon, $comments_all, $comments_num, $comments_mail, $comments_adres, $comments_tel, $vetki, $comments_all, $comments_num, $comments_desc, $comments_1, $comments_2, $comments_3, $comments_4, $comments_5, $comments_6, $comments_7, $comments_8, $tag_text_show, $opentextshow, $maintextshow;
   $pid = mysql_real_escape_string(intval($pid));
 
   if ($base=="") { // Если это не база данных
@@ -1149,7 +1152,7 @@ function page($pid, $all) {
     }
 
     $main_title = "[menushow]";
-    if ($menushow != 0) {
+    if ($menushow != 0 && $razdeltitleshow == 1) {
       if ($cid != 0) $main_titleX = top_menu($cid, 2); 
       else $main_titleX = "<div class='cat_title'><h2 class='cat_categorii_link'><a href=-".$DBName.">".$ModuleName."</a></h2></div>";
       if (!isset($venzel)) $venzel = "";
@@ -1209,7 +1212,7 @@ function page($pid, $all) {
 
   $page_title = "";
   if ($titleshow == 1) {
-    if ($page_shablon == 0) $page_title .= "<h1 class=page_title>".$title."</h1>";
+    if ($page_shablon == 0) $page_title .= "<h1 class='page_title'>".$title."</h1>";
     else $page_title .= $title;
   }
 

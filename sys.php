@@ -178,7 +178,7 @@ function GraphicAdmin() {
 
 	//$soderganie_menu .= "<button id='new_razdel_button' title='Добавить страницу...' class='medium green nothing' onclick='location.href=\"/sys.php?op=base_pages_add_page#1\"'><span class=\"icon white small\" data-icon=\"+\"></span> страницу</button>";
 
-	echo "<table style='background: url(/images/fon.png);' cellspacing=0 cellpadding=0 class='w100 pm0 mw800'><tr valign=top><td id='razdel_td' class='pm0 nothing' style='background:#e7e9ec;'><div id='razdels' style='min-width:400px;'>";
+	echo "<table cellspacing=0 cellpadding=0 class='light_fon w100 pm0 mw800'><tr valign=top><td id='razdel_td' class='pm0 nothing'><div id='razdels' style='min-width:400px;'>";
 
 	// Сортировка разделов: 0 - цвет, 1 - алфавит, 2 - посещаемость
 	$razdel_sort_name = array("<a href=red?razdel_sort=0>".aa("цвету")."</a>", "<a href=red?razdel_sort=1>".aa("названию")."</a>", "<a href=red?razdel_sort=2>".aa("посещаемости")."</a>");
@@ -214,7 +214,8 @@ function GraphicAdmin() {
 	<span class='h1'>".aa("Разделы:")."</span>
 		</div>".$razdel_txt."
 		<div id='sortirovka' class='hide'>
-		".close_button('add')."<h1>".aa("Сортировать разделы по:")."</h1><h2>".$razdel_sort_name[0].", ".$razdel_sort_name[1]." ".aa("или")." ".$razdel_sort_name[2]."</h2></div>";
+		".close_button('add')."<h1>".aa("Сортировать разделы по:")."</h1><h2>".$razdel_sort_name[0].", ".$razdel_sort_name[1]." ".aa("или")." ".$razdel_sort_name[2]."</h2></div>
+		<div style='max-height:700px;'>";
 
 	$icon_size = "large";
 	if ($num_razdel > 5) $icon_size = "medium"; 
@@ -314,7 +315,7 @@ function GraphicAdmin() {
 		<span class='icon ".$color." ".$icon_size."' data-icon='".$ico."'></span><span class='plus20'>".$title."</span>
 		</div></a></div>";
     }
-	echo "</div>
+	echo "</div></div>
 	</td>
 	<td style='padding:0;'><a class='punkt' title='Свернуть/развернуть левую колонку' onclick='$(\"#razdels\").toggle(\"slow\");'><div class='polosa_razdelitel'><div id='rotateText'><nobr>↑ Сворачивает Разделы ↑</nobr></div></div></a></td>
 	<td style='width:100%;padding:0;'><div class='black_grad'><div class='pt5'>".$soderganie_menu."</div></div><div class='podrazdel radius nothing' id='podrazdel'>";
@@ -331,7 +332,7 @@ function GraphicAdmin() {
 	if (!empty($project_name)) echo "<br><font style='font-size:44px; color:gray;'>".$project_name."</font>";
 	echo "</div>
 	<form action='".$admin_file.".php?op=mes' method='post' name=form class='nothing' class='w100'>
-		<div class='black_grad' style='height:242px; border: #ddd 1px solid;'>
+		<div class='center light_fon' style='height:242px; border: #ddd 1px solid;'>
 		<a id='adminmes_date' style='float:right; margin:3px; display:none;' onclick=\"document.getElementById('adminmes').value+='\\r'+getDateNow()+'  '\" title='".aa("Вставить дату и время (в конце текста)")."' class='button small ml20'><span class='icon gray small' data-icon='6'></span>".$buttons[6]."</a>
 		<button id='adminmes_save' class='hide small punkt' type='submit' style='float:left; margin:3px;'><span class=\"icon gray small\" data-icon=\"c\"></span> ".aa("Сохранить")."</button><div class='h3' style='height:40px;'>".$mes_ok."</div>
 		

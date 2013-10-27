@@ -68,9 +68,10 @@ function menu() {
 		<strong>В средней колонке</strong> также выводится предполагаемое имя, email и телефон человека, искавшего этот запрос.<br>
 		<strong>В последней колонке:</strong> первое число - найдено в названии страниц, второе - в содержании.";
 		
-		if ($statlink != "") echo "<h2><span class=\"icon black medium\" data-icon=\"j\"></span> <a href=".$statlink." target=_blank>Сторонняя статистика</a></h2>"; else echo "<div class='notice warning w100 mw800'>Сторонняя статистика не настроена. См. <a href='sys.php?op=options'>Настройки</a></div>";
+		if ($statlink != "") echo "<h2><span class=\"icon black medium\" data-icon=\"j\"></span> <a href=".$statlink." target=_blank>Сторонняя статистика</a></h2>"; 
+		else echo "<div class='notice warning mw800'>Сторонняя статистика не настроена. См. <a href='sys.php?op=options'>Настройки</a></div>";
 		echo "<h2><span class=\"icon gray medium\" data-icon=\"j\"></span> Встроенная статистика:</h2>
-		<table cellpadding=2 class='w100 mw800 block radius'><tr valign=top><td width=25%>".$stat_razdel."</td><td width=30%>".$stat_page."</td><td>".$stat_search."</td></tr></table></div>
+		<table cellpadding=2 class='w100 mw800 light_fon radius'><tr valign=top><td width=25%>".$stat_razdel."</td><td width=30%>".$stat_page."</td><td>".$stat_search."</td></tr></table></div>
 		</body>
 		</html>";
 		exit;
@@ -188,26 +189,26 @@ function mainpage($name="") {
 
 		<table class='block_back w100 mw800 pm0' cellspacing=0 cellpadding=0><tr valign=top><td id='razdel_td' class='radius'>
 
-			<div id='razdels' class='razdels' style='width:340px;'>
-			<div class='black_grad h40'><button title='Добавить оформление...' class='small black right3' onclick=\"$('#add').toggle();\"><span class='mr-2 icon darkgrey small' data-icon='+'></button>
+			<div id='razdels' style='width:340px;'>
+			<div class='black_grad h40'><button id='addmain' title='Добавить оформление...' class='small right3' onclick=\"$('#add').toggle();\"><span class='mr-2 icon darkgrey small' data-icon='+'></button>
 			<span class='h1'>Оформление:</span>
 			</div>";
 	     ////////////////////// ДИЗАЙН 0
-		 echo "<div id='mainrazdel0' class='dark_pole2'><a class='base_page' onclick=\"oformlenie_show('дизайн (html)','0','design','/sys.php?op=mainpage&amp;name=design&amp;type=0&amp;red=1')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='4'></span><span class='plus20'>Дизайн разделов и блоков (html)</span></div></a></div>";
+		 echo "<div id='mainrazdel0' class='dark_pole2'><a class='base_page' onclick=\"$('#addmain').attr('class', 'small right3 green'); oformlenie_show('дизайн (html)','0','design','/sys.php?op=mainpage&amp;name=design&amp;type=0&amp;red=1')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='4'></span><span class='plus20'>Дизайн разделов и блоков (html)</span></div></a></div>";
 		 ////////////////////// СТИЛЬ 1
-		 echo "<div id='mainrazdel1' class='dark_pole2'><a class='base_page' onclick=\"oformlenie_show('стиль (css)','1','css','/sys.php?op=mainpage&amp;name=css&amp;type=1')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='#'></span><span class='plus20'>Стиль для дизайна (css)</span></div></a></div>";
+		 echo "<div id='mainrazdel1' class='dark_pole2'><a class='base_page' onclick=\"$('#addmain').attr('class', 'small right3 green'); oformlenie_show('стиль (css)','1','css','/sys.php?op=mainpage&amp;name=css&amp;type=1')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='#'></span><span class='plus20'>Стиль для дизайна (css)</span></div></a></div>";
 		 ////////////////////// БЛОКИ 3
-		 echo "<div id='mainrazdel3' class='dark_pole2'><a class='base_page' onclick=\"oformlenie_show('блок','3','block','/sys.php?op=mainpage&amp;name=block&amp;type=3')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='R'></span><span class='plus20'>Блоки (небольшие элементы)</span></div></a></div>";
+		 echo "<div id='mainrazdel3' class='dark_pole2'><a class='base_page' onclick=\"$('#addmain').attr('class', 'small right3 green'); oformlenie_show('блок','3','block','/sys.php?op=mainpage&amp;name=block&amp;type=3')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='R'></span><span class='plus20'>Блоки (небольшие элементы)</span></div></a></div>";
 		 ////////////////////// ШАБЛОНЫ 6
-		 echo "<div id='mainrazdel6' class='dark_pole2'><a class='base_page' onclick=\"oformlenie_show('шаблон','6','shablon','/sys.php?op=mainpage&amp;name=shablon&amp;type=6&amp;red=1')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='v'></span><span class='plus20'>Шаблоны (внешний вид)</span></div></a></div>";
+		 echo "<div id='mainrazdel6' class='dark_pole2'><a class='base_page' onclick=\"$('#addmain').attr('class', 'small right3 green'); oformlenie_show('шаблон','6','shablon','/sys.php?op=mainpage&amp;name=shablon&amp;type=6&amp;red=1')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='v'></span><span class='plus20'>Шаблоны (внешний вид)</span></div></a></div>";
 		 ////////////////////// ПОЛЯ 4
-		 echo "<div id='mainrazdel4' class='dark_pole2'><a class='base_page' onclick=\"oformlenie_show('поле','4','pole','/sys.php?op=mainpage&amp;name=spisok&amp;type=4')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='S'></span><span class='plus20'>Поля (для страниц)</span></div></a></div>";
+		 echo "<div id='mainrazdel4' class='dark_pole2'><a class='base_page' onclick=\"$('#addmain').attr('class', 'small right3 green'); oformlenie_show('поле','4','pole','/sys.php?op=mainpage&amp;name=spisok&amp;type=4')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='S'></span><span class='plus20'>Поля (для страниц)</span></div></a></div>";
 		 ////////////////////// БАЗЫ ДАННЫХ 5
-		 echo "<div id='mainrazdel5' class='dark_pole2'><a class='base_page' onclick=\"oformlenie_show('БД','5','base','/sys.php?op=mainpage&amp;name=base&amp;type=5')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='D'></span><span class='plus20'>Базы данных (таблицы)</span></div></a></div>";
+		 echo "<div id='mainrazdel5' class='dark_pole2'><a class='base_page' onclick=\"$('#addmain').attr('class', 'small right3 green'); oformlenie_show('БД','5','base','/sys.php?op=mainpage&amp;name=base&amp;type=5')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='D'></span><span class='plus20'>Базы данных (таблицы)</span></div></a></div>";
 
 		 echo "<br>";
 		 ////////////////////// УДАЛЕННОЕ
-		 echo "<div id='mainrazdel2' class='dark_pole2'><a class='base_page' onclick=\"oformlenie_show('','2','trash','')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='T'></span><span class='plus20'>Удаленное оформление</span></div></a></div>";
+		 echo "<div id='mainrazdel2' class='dark_pole2'><a class='base_page' onclick=\"$('#addmain').attr('class', 'small right3'); oformlenie_show('','2','trash','')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='T'></span><span class='plus20'>Удаленное оформление</span></div></a></div>";
 		 
 		echo "</div></td>
 	<td style='padding:0;'><a class='punkt' title='Свернуть/развернуть левую колонку' onclick='$(\"#razdels\").toggle(\"slow\");'><div class='polosa_razdelitel'><div id='rotateText'><nobr>↑ Сворачивает Оформление ↑</nobr></div></div></a></td>
@@ -881,7 +882,7 @@ function edit_main($id) {
 
 	// обнулили все опции
 	$media = $folder = $col = $view = $golos = $golosrazdel = $post = $comments = $datashow = $favorites = $socialnetwork = $search = $search_papka = $put_in_blog = $base = $vetki = $citata = $media_comment = $no_html_in_opentext = $no_html_in_text = $show_add_post_on_first_page = $media_post = $razdel_shablon = $page_shablon = $comments_all = $comments_num = $comments_mail = $comments_adres = $comments_tel = $comments_desc = $golostype = $pagenumbers = $comments_main = $tags_type = $pagekol = $table_light = $designpages = $comments_add = $div_or_table = $papka_show = $add_post_to_mainpage = $design_tablet = $designpages_tablet = $design_phone = $designpages_phone = 0;
-	$menushow = $titleshow = $razdel_link = $peopleshow = $design = $tags = $podrobno = $podrazdel_active_show = $podrazdel_show = $tipograf = $limkol = $tags_show = $tema_zapret = $tema_zapret_comm = $show_read_all = $opentextshow = $maintextshow = 1;
+	$menushow = $titleshow = $razdeltitleshow = $razdel_link = $peopleshow = $design = $tags = $podrobno = $podrazdel_active_show = $podrazdel_show = $tipograf = $limkol = $tags_show = $tema_zapret = $tema_zapret_comm = $show_read_all = $opentextshow = $maintextshow = 1;
 	$comment_shablon = 2;
 	$lim = 20;
 	$where = $order = $calendar = $reclama = "";
@@ -1071,6 +1072,10 @@ function edit_main($id) {
 	<a class='dark_pole align_center' onclick=\"show_animate('block8');\"><h2>Страницы в разделе</h2>
 	</a><div id=block8 style='display: none;'>
 	<table  class='w100 mw800 table_light'>
+	<tr>
+	<td>Показывать Название раздела?</td>
+	<td>".select("options[razdeltitleshow]", "1,0", "ДА,НЕТ", $razdeltitleshow)."</td>
+	</tr>
 	<tr>
 	<td>Показывать Название страницы?</td>
 	<td>".select("options[titleshow]", "1,0", "ДА,НЕТ", $titleshow)."</td>

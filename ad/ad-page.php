@@ -326,13 +326,20 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
   if ($numrows > 10) $size = 10*16; else $size = ($numrows+2)*16;
   echo "</select>";
 
-  if ($numrows > 0) {
+  //if ($numrows > 0) {
     echo "<div class='in_r'><div id=showa class='in_r'><a style='cursor:pointer;' onclick=\"show('hidea'); show('showa'); $('#to_papka').width(500); $('#to_papka').height(400);\">развернуть &rarr;</a></div><div id=hidea style='display:none;'><a style='cursor:pointer;' onclick=\"show('showa'); show('hidea'); $('#to_papka').width(300); $('#to_papka').height(155);\">&larr; свернуть</a></div></div><span class=h2>Папка:</span><br>
 
     <div id='izmenapapka'><script>izmenapapka($('#to_razdel').val(),'".$cid."','','','addpage');</script></div>";
-  } else echo "<input type='hidden' name='cid' value='0'><i>В разделе нет папок.</i><br><br>";    
+  //} else echo "<input type='hidden' name='cid' value='0'><p><i>В разделе нет папок.</i></p>";    
   
-  echo "<div id='mainrazdel' class='dark_pole2'><a class='base_page' onclick=\"if ( $('#dop').is(':hidden') ) $('#mainrazdel').attr('class', 'dark_pole2sel'); else $('#mainrazdel').attr('class', 'dark_pole2'); $('#main').toggle(); $('#dop').toggle('slow'); \"><div id='mainrazdel'><div style=\"float:right\"><span class=\"f16 gray\">></span></div><span class='icon gray large in_b' data-icon='z'><span aria-hidden='true'>z</span></span><span class='plus20'>Дополнительные настройки</span></div></a></div> ";
+  echo "<div id='mainrazdel' class='dark_pole2'><a class='base_page' onmousemove=\"if ( dop != 1 ) { $('#mainrazdel').attr('class', 'dark_pole2'); $('#main').toggle(); $('#dop').toggle('slow'); $('#mainrazdel').attr('class', 'dark_pole2sel'); dop=1; }\" onclick=\"if ( $('#dop').is(':hidden') ) $('#mainrazdel').attr('class', 'dark_pole2sel'); else { $('#mainrazdel').attr('class', 'dark_pole2');} $('#main').toggle(); $('#dop').toggle('slow'); \"><div id='mainrazdel'><div style=\"float:right\"><span class=\"f16 gray\">></span></div><span class='icon gray large in_b' data-icon='z'><span aria-hidden='true'>z</span></span><span class='plus20'>Дополнительные настройки</span></div></a></div> ";
+
+  if ( $pid > 0 ) echo "<br><a class='button' onmousemove=\"$('#search_engines').show();\">Искать по названию в:</a><ul id='search_engines' class='hide'>
+<li><a target='_blank' href='http://yandex.ru/yandsearch?text=".$titl."'>Яндексе</a>
+<li><a target='_blank' href='http://images.yandex.ru/yandsearch?text=".$titl."'>Яндекс.Картинках</a>
+<li><a target='_blank' href='http://market.yandex.ru/search.xml?text=".$titl."'>Яндекс.Маркете</a>
+<li><a target='_blank' href='http://www.google.ru/search?q=".$titl."'>Гугле</a>
+<li><a target='_blank' href='http://www.google.ru/search?tbm=isch&q=".$titl."'>Гугл.Картинках</a></ul>";
 
   echo "</td><td style='padding:0;'><a class='punkt' title='Свернуть/развернуть левую колонку' onclick='$(\"#razdels\").toggle(\"slow\");'><div class='polosa_razdelitel'><div id='rotateText'><nobr>↑ Сворачивает левую колонку ↑</nobr></div></div></a></td><td>";
 

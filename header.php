@@ -516,6 +516,10 @@ case "0": # Блок страниц раздела
 			if ($comm > 0)
 				$page_comments_word = $comm." ".num_ending($comm, Array(ss("комментариев"),ss("комментарий"),ss("комментария")));
 
+		if ($tagdelete == "1") {
+			$title = strip_tags($title);
+			$open_text = strip_tags($open_text);
+		}
 		// Начало замены
 		if ($shablon != "") {
 		  $tr = array(

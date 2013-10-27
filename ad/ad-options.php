@@ -142,7 +142,7 @@ if ($ok==1) $opt_save = " сохранены";
 
 echo "<table class='w100 mw800 pm0 block_back'><tr valign=top><td id='razdel_td' class='radius nothing'>
 <form action='".$admin_file.".php' method='post' name='form'>
-	<div id='razdels' style='background:#e7e9ec; width:340px;'>";
+	<div id='razdels' style='width:340px;'>";
 	echo "<div id='mainrazdel8' class='dark_pole2sel'><a class='base_page' onclick=\"options_show('8','show_first')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='.'></span><span class='plus20'>Начальные настройки</span></div></a></div>";
 	echo "<div id='mainrazdel12' class='dark_pole2'><a class='base_page' onclick=\"options_show('12','show_options_fonts')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='i'></span><span class='plus20'>Шрифты</span></div></a></div>";
 	echo "<div id='mainrazdel13' class='dark_pole2'><a class='base_page' onclick=\"options_show('13','show_shop')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='$'></span><span class='plus20'>Магазин</span></div></a></div>";
@@ -292,7 +292,7 @@ body {}
 </td></tr>
 
 </table>
-<div style='text-align:center;'><input type='submit' value=' Сохранить настройки ' style='width:300px; height:40px;'></div>
+<div style='text-align:center;'><input type='submit' value=' Сохранить ' style='width:300px; height:40px;'></div>
 <input type='hidden' name='op' value='options_save'>
 </div>
 
@@ -367,7 +367,7 @@ body {}
 	</td></tr>
 
 	</table>
-	<div style='text-align:center;'><input type='submit' value=' Сохранить настройки ' style='width:300px; height:40px;'></div>
+	<div style='text-align:center;'><input type='submit' value=' Сохранить ' style='width:300px; height:40px;'></div>
 	<input type='hidden' name='op' value='options_save'>
 	</div>
 
@@ -479,7 +479,7 @@ body {}
 	</td></tr>
 
 	</table>
-	<div style='text-align:center;'><input type='submit' value=' Сохранить настройки ' style='width:300px; height:40px;'></div>
+	<div style='text-align:center;'><input type='submit' value=' Сохранить ' style='width:300px; height:40px;'></div>
 	<input type='hidden' name='op' value='options_save'>
 	</div>
 
@@ -584,7 +584,7 @@ body {}
 	}
 	</pre></div>
 	<p>
-	<div style='text-align:center;'><input type='submit' value=' Сохранить настройки ' style='width:300px; height:40px;'></div>
+	<div style='text-align:center;'><input type='submit' value=' Сохранить ' style='width:300px; height:40px;'></div>
 	</div>
 
 <div id='show_options_company' class='show_pole pl10' style='display:none;'>
@@ -620,7 +620,7 @@ body {}
 	Контактное(ые) лицо(а): [лицо компании1]
 	".input("options[company_people]", $company_people, 80, "txt")."</td></tr>
 	</table>
-	<div style='text-align:center;'><input type='submit' value=' Сохранить настройки ' style='width:300px; height:40px;'></div>
+	<div style='text-align:center;'><input type='submit' value=' Сохранить ' style='width:300px; height:40px;'></div>
 	</div>
 
 
@@ -718,7 +718,7 @@ body {}
 	</td></tr>
 
 	</table>
-	<div style='text-align:center;'><input type='submit' value=' Сохранить настройки ' style='width:300px; height:40px;'></div>
+	<div style='text-align:center;'><input type='submit' value=' Сохранить ' style='width:300px; height:40px;'></div>
 	</div>";
 
   // Настройки невизуального редактора с подсветкой кода
@@ -860,20 +860,20 @@ echo "
 
 	<div id='clip_preview' style='margin:10px; padding:10px; clear: both; background:white;'>Здесь будет показана выбранная заготовка.</div>
 
-	<div style='text-align:center;'><input type='submit' value=' Сохранить настройки ' style='width:300px; height:40px;'></div>
+	<div style='text-align:center;'><input type='submit' value=' Сохранить ' style='width:300px; height:40px;'></div>
 	<input type='hidden' name='op' value='options_save'>
 	</div>
 	</form>";
 
 	///////////////////////////////////////////////////////////////////////////////////////////
-	/*
-	$row = $db->sql_fetchrow($db->sql_query("SELECT `name`, `pwd` from " . $prefix . "_authors where `aid`='".$admin[0]."'"));
-	$chng_aid = $admin[0];
+	
+	$row = $db->sql_fetchrow($db->sql_query("SELECT `name` from " . $prefix . "_authors where `aid`='".$admin[0]."'"));
+	//$chng_aid = $admin[0];
 	$chng_name = filter($row['name'], "nohtml");
-	$chng_pwd = filter($row['pwd'], "nohtml");
-	$chng_aid = strtolower(substr($chng_aid, 0,25));
-	$aid = $chng_aid;
-	*/
+	//$chng_pwd = filter($row['pwd'], "nohtml");
+	//$chng_aid = strtolower(substr($chng_aid, 0,25));
+	//$aid = $chng_aid;
+	
 	echo "<div id='show_options_pass_block' class='show_pole pl10' style='display:none;'>";
 	if (!isset($ip_address)) $ip_address="";
 	if ($ipban != false) {

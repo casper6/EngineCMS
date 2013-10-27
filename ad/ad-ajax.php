@@ -258,7 +258,8 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
        </td></tr>";
       $blocks_no .= $blocks_ok;
     }
-    $info .= "<br><span class=green>Названия блоков в [квадратных скобках] можно использовать для вставки в дизайн, разделы, папки, страницы, шаблоны или другие блоки (т.е. в любом месте сайта).</span><table class='table_light w100'>".$blocks_no."</table>";
+    $info .= "<table class='table_light w100'>".$blocks_no."</table>
+    <p>Названия блоков в [квадратных скобках] можно использовать для вставки в дизайн, разделы, папки, страницы, шаблоны или другие блоки (т.е. в любом месте сайта).</p>";
   break;
 
 
@@ -313,12 +314,13 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
         }
         $redactor = "<div style='float:right;'>
         <a href='sys.php?op=mainpage&id=".$row['id']."&red=1&type=4' title='Редактировать'>".icon('black small','7')."</a> 
-        <a class='padleft30 punkt' onclick='spiski_show(\"".$row['name']."\", \"".$row['title']."\")' title='Список значений'>".icon('blue small','w')."</a>
+        <a class='padleft30 punkt' onclick='$(\"#addmain\").attr(\"class\", \"small right3\"); spiski_show(\"".$row['name']."\", \"".$row['title']."\")' title='Список значений'>".icon('blue small','w')."</a>
         <a class='padleft30 punkt' onclick='delblock(".$row['id'].",0)' title='Удалить'>".icon('red small','F')."</a></div>";
-        $info .= "<tr id='block_".$row['id']."' onmouseover='$(\"#hide_".$row['id']."\").show();' onmouseout='$(\"#hide_".$row['id']."\").hide();'><td>".$redactor."<h2><a class='punkt' onclick='spiski_show(\"".$row['name']."\", \"".$row['title']."\")'>".$row['title']."</a></h2>
+        $info .= "<tr id='block_".$row['id']."' onmouseover='$(\"#hide_".$row['id']."\").show();' onmouseout='$(\"#hide_".$row['id']."\").hide();'><td>".$redactor."<h2><a class='punkt' onclick='$(\"#addmain\").attr(\"class\", \"small right3\"); spiski_show(\"".$row['name']."\", \"".$row['title']."\")'>".$row['title']."</a></h2>
         <span id='hide_".$row['id']."' class='hide'><sup style=\"color:#999999;\">Блок для использования в шаблоне: [".$row['name']."]</sup><br>Раздел: ".$razdel_title.$papka_title.".<br>Тип: ".$and.".</span></td></tr>";
       }
-      $info .= "</table>";
+      $info .= "</table>
+      <p>Дополнительные поля для страниц появляются внизу при создании и редактировании страниц. Для того, чтобы введенная в них информация появилась на страницах сайта, необходимо прописать их в шаблонах с помощью их коротких англоязычных названий в [квадратных скобках] — их можно посмотреть при наведении на поле («Блок для использования в шаблоне»).</p>";
     }
   break;
 
@@ -339,7 +341,7 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
       } else $link = "";
       $info .= "<tr id='block_".$row['id']."'><td><div style='float:right;'><a class='padleft30 punkt' onclick='delblock(".$row['id'].",0)' title='Удалить'>".icon('red small','F')."</a></div>".$row['title']." ".$link."</td></tr>";
     }
-    $info .= "</table><p>Для редактирования таблица должна быть подключена к разделу (подключение возможно через настройки раздела).<br>При создании таблицы она автоматически создает одноименный раздел и подключается к нему.<br>Редактируется таблица через раздел — на вкладке Содержание.</p>";
+    $info .= "</table><p>При создании таблицы также создается одноименный раздел, к которому она подключается.<br>Редактируется таблица через этот раздел — на вкладке Содержание.</p>";
   break;
 
   default:
@@ -654,12 +656,17 @@ if ($func == "izmenapapka") { // Отображение списка папок 
   list($select, $papka, $this_cid) = explode("*@%", $string);
   $info = "";
   $main_papka = "Основная папка («корень»)";
+  $sql = "select cid, module, title, parent_id from ".$prefix."_pages_categories where module='".$select."' and `tables`='pages' order by parent_id, title";
+  $result = $db->sql_query($sql) or $info = "Ошибка. Попробуйте обновить страницу. Не поможет — обращайтесь к разработчику.";
+  $numrows = $db->sql_numrows($result);
   switch ($type) {
     case "addpage": 
-      $info .= "<select name='cid' onchange='
-    ra_val = $(\"#to_razdel\").val();
-    show_pole(ra[ra_val],page_id,ra_val,this.value);
-    ' id='to_papka' size='2' class='w100' style='height:200px;'>"; break;
+      if ($numrows > 0) $info .= "<select name='cid' onchange='
+      ra_val = $(\"#to_razdel\").val();
+      show_pole(ra[ra_val],page_id,ra_val,this.value);
+      ' id='to_papka' size='2' class='w100' style='height:200px;'>"; 
+      else $info .= "<input type='hidden' name='cid' value='0'><p><i>В разделе нет папок.</i></p>";
+      break;
     case "editdir": 
       $info .= "<select name='parent_id' id='to_papka' size='2' onchange='if(this.value==\"".$this_cid."\") this.value=\"".$papka."\"' style='width:248px; height:400px;'>"; break;
     case "izmenapage": 
@@ -669,10 +676,8 @@ if ($func == "izmenapapka") { // Отображение списка папок 
       $main_papka = "Все папки (по-умолчанию)";
       $info .= "<select class='w100' multiple='multiple' name='shablon[]' id='papki' size='20'>"; break;
   }
-  $sql = "select cid, module, title, parent_id from ".$prefix."_pages_categories where module='".$select."' and `tables`='pages' order by parent_id, title";
-  $result = $db->sql_query($sql) or $info = "Ошибка. Попробуйте обновить страницу. Не поможет — обращайтесь к разработчику.";
 
-  $info .= "<option value=0 selected>".$main_papka."</option>";
+  $info .= "<option value='0' selected>".$main_papka."</option>";
   $last_cid = 0;
   $title = $par = $module = array();
   while ($row = $db->sql_fetchrow($result)) {
@@ -1257,24 +1262,6 @@ if ($func == "replace") { // Перемещение страницы
 <script>
 izmenapapka(document.getElementById('to_razdel".$id."').value, $name_pap, '$name_raz',$id,'izmenapage');
 </script>";
-/*
-  <select style='width:100%;' name=to_papka id='to_papka".$id."' size=10>
-  <option value=0 selected>Основная папка («корень»)</option>";
-  while ($row = $db->sql_fetchrow($result)) {
-    $cid3 = $row['cid'];
-    $title3 = strip_tags($row['title'], '<b><i>');
-    $parentid = $row['parent_id'];
-    if ($parentid != 0) $title3 = "&bull; ".getparent($name_raz,$parentid,$title3);
-    if ($name_pap == $cid3) $sel = "selected"; else $sel = "";
-    if ($parentid == 0) {
-        $first_opt[$cid3] = "<option value=".$cid3." ".$sel." style='background:#fdf;'>".$title3."</option>"; 
-    }
-    // вывести и очистить переменную
-    if (isset($first_opt[$parentid]) && $parentid != 0) $list .= $first_opt[$parentid];
-    $first_opt[$parentid] = "";
-    $list .= "<option value=".$cid3." ".$sel.">".$title3."</option>";
-  }</select>
-  */
   $list .= "</div><input type=button value=\"OK\" style='width:55%; height:35px;' onclick=\"rep($id,document.getElementById('what".$id."').value,document.getElementById('to_razdel".$id."').value,document.getElementById('to_papka".$id."').value); if ($('#what".$id."').val()==3) clo($id);\"><br>Жмём 1 раз, т.к. копирование и ярлыки при каждом нажатии создают новую страницу.
   </form>";
   $list = "<div class='block radius' style='width:95%;'>".$list."
