@@ -332,7 +332,7 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
     <div id='izmenapapka'><script>izmenapapka($('#to_razdel').val(),'".$cid."','','','addpage');</script></div>";
   //} else echo "<input type='hidden' name='cid' value='0'><p><i>В разделе нет папок.</i></p>";    
   
-  echo "<div id='mainrazdel' class='dark_pole2'><a class='base_page' onmousemove=\"if ( dop != 1 ) { $('#mainrazdel').attr('class', 'dark_pole2'); $('#main').toggle(); $('#dop').toggle('slow'); $('#mainrazdel').attr('class', 'dark_pole2sel'); dop=1; }\" onclick=\"if ( $('#dop').is(':hidden') ) $('#mainrazdel').attr('class', 'dark_pole2sel'); else { $('#mainrazdel').attr('class', 'dark_pole2');} $('#main').toggle(); $('#dop').toggle('slow'); \"><div id='mainrazdel'><div style=\"float:right\"><span class=\"f16 gray\">></span></div><span class='icon gray large in_b' data-icon='z'><span aria-hidden='true'>z</span></span><span class='plus20'>Дополнительные настройки</span></div></a></div> ";
+  echo "<div id='mainrazdel' class='dark_pole2'><a class='base_page' onclick=\"if ( $('#dop').is(':hidden') ) $('#mainrazdel').attr('class', 'dark_pole2sel'); else { $('#mainrazdel').attr('class', 'dark_pole2');} $('#main').toggle(); $('#dop').toggle('slow'); \"><div id='mainrazdel'><div style=\"float:right\"><span class=\"f16 gray\">></span></div><span class='icon gray large in_b' data-icon='z'><span aria-hidden='true'>z</span></span><span class='plus20'>Дополнительные настройки</span></div></a></div> ";
 
   if ( $pid > 0 ) echo "<br><a class='button' onmousemove=\"$('#search_engines').show();\">Искать по названию в:</a><ul id='search_engines' class='hide'>
 <li><a target='_blank' href='http://yandex.ru/yandsearch?text=".$titl."'>Яндексе</a>

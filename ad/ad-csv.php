@@ -119,7 +119,9 @@ if ($realadmin==1) {
 			for ($y = 0; $y < $count; $y++) {
 				echo '<tr><td>'.mb_substr($a[$y],0,100).'</td><td>';
 				echo '<select name="stroka['.$y.']">
-				<option value="0">Папка</option>
+				<option value="---">- не добавляем -</option>
+				<option value="7">Номер существующей папки</option>
+				<option value="0">Название папки (если нет - будет создана)</option>
 				<option value="1">Название страницы (заголовок) — обязательно!</option>
 				<option value="2">Предисловие (начальный текст)</option>
 				<option value="3">Содержание (основной текст)</option>
@@ -190,12 +192,24 @@ if ($realadmin==1) {
 						}
 					}
 				} else $cid = '0'; // Если поле папок не было заданно пишем данные в корень раздела
-				if (array_key_exists("1", $revers)) { $q = $revers[1]; $title = $a[$q]; } else $title = ''; // $revers[1] Название страницы (заголовок)
-				if (array_key_exists("2", $revers)) { $w = $revers[2]; $open_text = $a[$w]; } else $open_text = ''; // $revers[2] Предисловие (начальный текст)
-				if (array_key_exists("3", $revers)) { $e = $revers[3]; $main_text = $a[$e]; } else $main_text = ''; // $revers[3] Содержание (основной текст)
-				if (array_key_exists("4", $revers)) { $r = $revers[4]; $keywords2 = $a[$r]; } else $keywords2 = ''; // $revers[4] Ключевые слова(мета-тег)
-				if (array_key_exists("5", $revers)) { $t = $revers[5]; $description2 = $a[$t]; } else $description2 = ''; // $revers[5] Описание (мета-тег)
-				if (array_key_exists("6", $revers)) { $u = $revers[6]; $search = $a[$u]; } else $search = ''; // $revers[6] Ключевые слова (облако тегов)
+
+				if (array_key_exists("1", $revers)) { $q = $revers[1]; $title = $a[$q]; } 
+				else $title = ''; // $revers[1] Название страницы (заголовок)
+				if (array_key_exists("2", $revers)) { $w = $revers[2]; $open_text = $a[$w]; } 
+				else $open_text = ''; // $revers[2] Предисловие (начальный текст)
+				if (array_key_exists("3", $revers)) { $e = $revers[3]; $main_text = $a[$e]; } 
+				else $main_text = ''; // $revers[3] Содержание (основной текст)
+				if (array_key_exists("4", $revers)) { $r = $revers[4]; $keywords2 = $a[$r]; } 
+				else $keywords2 = ''; // $revers[4] Ключевые слова(мета-тег)
+				if (array_key_exists("5", $revers)) { $t = $revers[5]; $description2 = $a[$t]; } 
+				else $description2 = ''; // $revers[5] Описание (мета-тег)
+				if (array_key_exists("6", $revers)) { $u = $revers[6]; $search = $a[$u]; } 
+				else $search = ''; // $revers[6] Ключевые слова (облако тегов)
+				if (array_key_exists("7", $revers)) { 
+					$s = $revers[7]; 
+					$cid = $a[$s]; 
+					if (trim($cid)=='') continue; else $cid = intval($cid); 
+				} else $cid = '0'; // № папки
 				
 				// НАЧИНАЕМ SEO-ОПТИМИЗАЦИЮ
 				/*
