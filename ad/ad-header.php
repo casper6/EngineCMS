@@ -2,7 +2,7 @@
 if (stristr(htmlentities($_SERVER['PHP_SELF']), "ad-header.php")) {
 	Header("Location: index.php"); die();
 }
-global $deviceType, $postlink, $name, $sitename, $op, $type, $red, $prefix, $db, $id, $nastroi, $lang_admin, $siteurl, $op, $ad_fon;
+global $deviceType, $postlink, $name, $sitename, $op, $type, $red, $prefix, $db, $id, $nastroi, $lang_admin, $siteurl, $op, $ad_fon, $hide_top;
 if ($postlink != "") $post = "<button class='small' onclick='location.href=\"".$postlink."\"' title='".aa("Открыть почтовый сайт...")."'><span class='icon small black' data-icon='@'></span> ".aa("Почта")."</button> "; else $post="";
 
 // Определяем заголовок страницы (title) и цвета кнопок главного меню (какой раздел администрирования выбран)
@@ -76,7 +76,8 @@ $url2 = $url2[0];
 
 $lang_logo = "";
 if ($lang_admin != "ru" && $lang_admin != "ua") $lang_logo = "_en";
-echo "<table class='mw800 w100 m0'><tr><td class=center width=170><a title='".aa("Перейти в Содержание")."' href='sys.php' class='nothing'><img src='images/logo_admin".$lang_logo.".png'></a></td><td class=mp0><div class='nothing noprint'><div style='margin: 0 0 5px 0;'>";
+if ($hide_top == 1) $hide = " hide"; else $hide = "";
+echo "<table class='mw800 w100 m0".$hide."'><tr><td class=center width=170><a title='".aa("Перейти в Содержание")."' href='sys.php' class='nothing'><img src='images/logo_admin".$lang_logo.".png'></a></td><td class=mp0><div class='nothing noprint'><div style='margin: 0 0 5px 0;'>";
 //if($detect->isiOS())
 //if($detect->isAndroidOS())
 global $buttons;

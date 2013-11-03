@@ -81,9 +81,11 @@ $pagetitle = "- ".aa("Администрирование");
 // Стирание кеша главной страницы
 if (is_admin($admin)) recash("/");
 
-global $razdel_sort; // Сортировка разделов в Содержании
-$razdel_sort = intval($razdel_sort);
+global $razdel_sort, $hide_top;
+$razdel_sort = intval($razdel_sort); // Сортировка разделов в Содержании
 if ( $razdel_sort == 1 || $razdel_sort == 2 || $razdel_sort == 0 ) setcookie("razdel_sort", $razdel_sort, time()+60*60*24*360);
+$hide_top = intval($hide_top); // Прячем шапку
+if ( $hide_top == 1 || $hide_top == 0 ) setcookie("hide_top", $hide_top, time()+60*60*24*360);
 
 // Вход в Админку
 function login() {
@@ -121,7 +123,7 @@ echo "<title>".aa("Вход в Администрирование")."</title>
 }
 
 function GraphicAdmin() {
-	global $aid, $admin, $prefix, $db, $counter, $admin_file, $show_comments, $show_userposts, $razdel_sort, $registr, $show_page;
+	global $aid, $admin, $prefix, $db, $counter, $admin_file, $show_comments, $show_userposts, $razdel_sort, $hide_top, $registr, $show_page;
 	//$row = $db->sql_fetchrow($db->sql_query("SELECT `realadmin` FROM ".$prefix."_authors WHERE `aid`='".$aid."'"));
 	//$realadmin = intval($row['realadmin']);
 	$inf_base = "";
@@ -185,10 +187,14 @@ function GraphicAdmin() {
 	if (!isset($razdel_sort)) if (!isset($_COOKIE["razdel_sort"])) { 
 		setcookie("razdel_sort", "0", time()+60*60*24*360); 
 		$razdel_sort = 0;
-	}
-	else $razdel_sort = intval($_COOKIE["razdel_sort"]);
+	} else $razdel_sort = intval($_COOKIE["razdel_sort"]);
+	if (!isset($hide_top)) if (!isset($_COOKIE["hide_top"])) { 
+		setcookie("hide_top", "0", time()+60*60*24*360); 
+		$hide_top = 0;
+	} else $hide_top = intval($_COOKIE["hide_top"]);
+
 	$razdel_sort_name[$razdel_sort] = "<span class='dark_pole3 white radius'>".$razdel_sort_name[$razdel_sort]."</span>";
-	if ($razdel_sort == 0) $razdel_sort = "color desc, title";
+	if ($razdel_sort != 1) $razdel_sort = "color desc, title";
 	elseif ($razdel_sort == 1) $razdel_sort = "title";
 	elseif ($razdel_sort == 2) $razdel_sort = "counter desc";
 	else $razdel_sort = "color, title";
@@ -315,10 +321,13 @@ function GraphicAdmin() {
 		<span class='icon ".$color." ".$icon_size."' data-icon='".$ico."'></span><span class='plus20'>".$title."</span>
 		</div></a></div>";
     }
+
+    if ($hide_top == "1") $hide_top_button = "<button class='small' target=_blank onclick='window.open(\"/\")' title='".aa("Перейти на сайт (откроется в новом окне)")."'><span class='icon medium' data-icon='4'></span></button> <a class='button' href='red?hide_top=0'>↓</a>";
+    else $hide_top_button = "<a class='button' href='red?hide_top=1'>↑</a>";
 	echo "</div></div>
 	</td>
 	<td style='padding:0;'><a class='punkt' title='Свернуть/развернуть левую колонку' onmousemove='$(\"#razdels\").show();' onclick='$(\"#razdels\").toggle(\"slow\");'><div class='polosa_razdelitel'><div id='rotateText'><nobr>↑ Сворачивает Разделы ↑</nobr></div></div></a></td>
-	<td style='width:100%;padding:0;'><div class='black_grad'><div class='pt5'>".$soderganie_menu."</div></div><div class='podrazdel radius nothing' id='podrazdel'>";
+	<td style='width:100%;padding:0;'><div class='black_grad'><div class='right3'>".$hide_top_button."</div><div class='pt5'>".$soderganie_menu."</div></div><div class='podrazdel radius nothing' id='podrazdel'>";
 
 	// ЗАПИСКИ
 	$row = $db->sql_fetchrow($db->sql_query("SELECT `adminmes` FROM ".$prefix."_config"));

@@ -2,13 +2,20 @@
 @page {mso-page-orientation:landscape;}
 body {
 	background-color: #eeeeee;
-	background-size: cover;
-	-webkit-background-size: cover;
-	-o-background-size: cover;
-	-moz-background-size: cover;
-	background-position: top center fixed;
+	background-size: auto;
+	-webkit-background-size: auto;
+	-o-background-size: auto;
+	-moz-background-size: auto;
+	background-position: top top;
+	background-attachment: fixed;
 	background-repeat: repeat-y;
 }
+@media (max-width: 1920px) { body { background-size: 1920px auto; -webkit-background-size: 1920px auto; -o-background-size: 1920px auto; -moz-background-size: 1920px auto; } }
+@media (max-width: 1680px) { body { background-size: 1680px auto; -webkit-background-size: 1680px auto; -o-background-size: 1680px auto; -moz-background-size: 1680px auto; } }
+@media (max-width: 1440px) { body { background-size: 1440px auto; -webkit-background-size: 1440px auto; -o-background-size: 1440px auto; -moz-background-size: 1440px auto; } }
+@media (max-width: 1280px) { body { background-size: 1280px auto; -webkit-background-size: 1280px auto; -o-background-size: 1280px auto; -moz-background-size: 1280px auto; } }
+@media (max-width: 1024px) { body { background-size: 1024px auto; -webkit-background-size: 1024px auto; -o-background-size: 1024px auto; -moz-background-size: 1024px auto; } }
+
 body, td {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: 14px;
@@ -459,8 +466,8 @@ img, table {border:0;}
 .white {color: white !important; display:inline;}
 .green2 {color: white; background: lightgreen; display:inline;}
 .red2 {color: white; background: red; display:inline;}
-.noact {color:red; background:#fdd;}
-.deact {color:gray; background:#fdd;}
+.noact {color:red;}
+.deact {color:gray;}
 p {margin-top: 15px;margin-left: 5px;}
 .gray {color:#555; font-size: 0.9em;}
 .bggray {padding: 5px; font-style: italic; background-color:#eeeeee; color:black; font-size: 1.1em;}
@@ -647,7 +654,7 @@ left:50%;
 	line-height: 24px;
 	margin: 0;
 }
-#previewFooter input{vertical-align: middle;}
+#previewFooter input, .vert_center {vertical-align: middle !important;}
 #create,
 #select,
 #upload

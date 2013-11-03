@@ -207,7 +207,7 @@ function offpage(id,on) {
 	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'offpage', 'id': id },
 	    success: function(data){
-	    	if (on == 1) $('#1page'+id).html('<td colspan=4 class="notice success"><h2 class=center>Страница включена</h2></td>');
+	    	if (on == 1) $('#1page'+id).html('<td colspan="4" class="notice success"><h2 class="center">Страница включена</h2></td>');
 	    	else $('#page'+id).html(data);
 	     }
 	});
@@ -234,8 +234,15 @@ function openbox(id,name,type) {
 function delslovo(id) {
 	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'delslovo', 'id': id},
-	    beforeSend: function(){ $('#s_'+id).html(' <img src=images/loading.gif> Удаляю...'); },
-	    success: function(data){ $('#s_'+id).html(' <b class=green>Удалено</b>'); }
+	    beforeSend: function(){ $('#s_'+id).html(' <img src="images/loading.gif"> Удаляю...'); },
+	    success: function(data){ $('#s_'+id).html(' <b class="green">Удалено</b>'); }
+	});
+}
+function del_csv(id) {
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
+	    data: {'func': 'del_csv', 'id': id},
+	    beforeSend: function(){ $('#id_'+id).html('<td colspan="4"></td><td><img src="images/loading.gif"> Удаляю...</td>'); },
+	    success: function(data){ $('#id_'+id).html('<td colspan="5"><div class="notice error">Файл удален</div></td>'); }
 	});
 }
 function delpage(id) {
@@ -256,8 +263,8 @@ function resetpage(id) {
 	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'resetpage', 'id': id }
 	});
-	$('#delpage'+id).html('<td colspan=3 class="notice success"><h2 class=center>Страница успешно восстановлена</h2></td>');
-	$('#backuppage'+id).html('<td colspan=3 class="notice success"><h2 class=center>Оригинал страницы заменен на резервную копию</h2></td>');
+	$('#delpage'+id).html('<td colspan="3" class="notice success"><h2 class="center">Страница успешно восстановлена</h2></td>');
+	$('#backuppage'+id).html('<td colspan="3" class="notice success"><h2 class="center">Оригинал страницы заменен на резервную копию</h2></td>');
 }
 function delcomm(id) {
 	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
