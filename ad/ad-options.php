@@ -122,9 +122,9 @@ if ($row['realadmin'] == 1) {
 		//if ($shop
 
 		$ad_fon_option = ""; // Выбор фоновок для админки
-		for ($i=1; $i < 28; $i++) { // всего 27 фоновок + 1 по-умолчанию в папке images/ad-fon
+		for ($i=1; $i < 30; $i++) { // всего 27 фоновок + 1 по-умолчанию в папке images/ad-fon
 			if ($ad_fon == $i) $sel = " selected"; else $sel = "";
-			$ad_fon_option .= "<option value='".$i."'".$sel.">фон №".$i."</option>";
+			$ad_fon_option .= "<option value='".$i."'".$sel.">№".$i."</option>";
 		}
 
 		$titles_design = titles_design(); // Выборка дизайнов
@@ -159,7 +159,7 @@ echo "<table class='w100 mw800 pm0 block_back'><tr valign=top><td id='razdel_td'
 	echo "<div id='mainrazdel10' class='dark_pole2'><a class='base_page' onclick=\"options_show('10','show_options_razrab');\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='b'></span><span class='plus20'>Информация для разработчиков</span></div></a></div>";
 	if (is_dir("includes/regions")) echo "<div id='mainrazdel14' class='dark_pole2'><a class='base_page' href='sys.php?op=regions_main'><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='&'></span><span class='plus20'>Регионы</span></div></a></div>";
 	echo "</div></td>
-	<td style='padding:0;'><a class='punkt' title='Свернуть/развернуть левую колонку' onclick='$(\"#razdels\").toggle(\"slow\");'><div class='polosa_razdelitel'><div id='rotateText'><nobr>↑ Сворачивает Настройки ↑</nobr></div></div></a></td>
+	<td style='padding:0;'><a class='punkt' title='Свернуть/развернуть левую колонку' onmousemove='$(\"#razdels\").show();' onclick='$(\"#razdels\").toggle(\"slow\");'><div class='polosa_razdelitel'><div id='rotateText'><nobr>↑ Сворачивает Настройки ↑</nobr></div></div></a></td>
 	<td class='w100 p0'>";
 
 echo "<div class='black_grad p0'>
@@ -652,7 +652,7 @@ body {}
 			}
 			$cash_size = "страниц в файлах: ".$num.", размер: ".round( $file_size / 1048576, 3)." Мбайт";
 		}
-		echo "<a class='button' target='_blank' href='?cash=del' style='margin-bottom:5px;'><span class='icon medium gray' data-icon='T'></span>Очистить кеш (".$cash_size.")</a>";
+		echo "<p><a class='button' target='_blank' href='?cash=del' style='margin-bottom:5px;'><span class='icon medium gray' data-icon='T'></span>Очистить кеш (".$cash_size.")</a>";
 	} else echo "<div class='notice warning'>Кеширование страниц отключено. Включить можно в файле config.php — \$site_cash</div>";
 
 	// Цветовые схемы невизуального редактора
@@ -663,7 +663,7 @@ body {}
 
 	<tr valign=top><td style='min-width:250px;'>
 	Фоновая картинка Администрирования:</td><td class=small>
-	<select name=options[ad_fon] onchange=\"$(body).css('backgroundImage', 'url(images/adfon/' + $(this).val() + '.png)')\"><option value='0'>по-умолчанию</option>".$ad_fon_option."</select>
+	<select name=options[ad_fon] onchange=\"$(body).css('backgroundImage', 'url(http://cms.ru.com/fon/' + $(this).val() + '.jpg)')\">".$ad_fon_option."</select>
 	</td></tr>
 
 	<tr valign=top><td>

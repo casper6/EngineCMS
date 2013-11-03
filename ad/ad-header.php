@@ -56,7 +56,8 @@ if ($lang_admin != 'ru') echo "<script src='language/adm_".$lang_admin.".js'></s
 
 if ($red==3) echo "<script src='ed/js/editor/editor.js'></script> 
 <link rel='stylesheet' href='ed/js/editor/css/editor.css' media='screen, projection' /> ";
-if ($red==4) echo "<script src='ed2/redactor.js'></script>
+
+echo "<script src='ed2/redactor.js'></script>
 <link rel='stylesheet' href='ed2/redactor.css' />
 <script src='ed2/".$lang_admin.".js'></script>
 <script src='ed2/clips.js'></script>
@@ -66,8 +67,7 @@ if ($red==4) echo "<script src='ed2/redactor.js'></script>
 <script src='ed2/fontsize.js'></script>
 <script src='ed2/fontfamily.js'></script>";
 
-if ($ad_fon == 0) $fon = "default.jpg"; else $fon = $ad_fon.".png";
-echo "\n</head>\n<body style=\"background: white url('/images/adfon/".$fon."');\">";
+echo "\n</head>\n<body style=\"background-image: url('http://cms.ru.com/fon/".intval($ad_fon).".jpg');\">";
 $url = getenv("REQUEST_URI");
 $url = str_replace("http://".$siteurl,"",$url);
 $url2 = explode("_",$url);

@@ -149,7 +149,7 @@ if ($realadmin==1) {
 		$stroka = $_POST["stroka"];
 		include("ad/ad-header.php");
 		//echo tools_menu().'<br>';
-		$active = '1'; // все страницы будут включенны
+		$active = '0'; // все страницы будут включенны
 		$rss = '1'; // доступно по RSS
 		$res = $db->sql_query("SELECT `name` FROM ".$prefix."_mainpage where `tables`='pages' and `id`='".$cat."' ") or die('Ошибка');
 		while ($row = $db->sql_fetchrow($res)) {
@@ -244,9 +244,9 @@ if ($realadmin==1) {
 								$row = $db->sql_fetchrow($result);
 								$s_pages2 = $row['pages'];
 								$s_pages2 = str_replace("  "," ", $s_pages2." ".$page_id." ");
-								$db->sql_query("UPDATE ".$prefix."_spiski SET `pages`='".$s_pages2."' WHERE `type`='".$pole."' and `name`='".$elements."'") or die ('Ошибка: Не удалось обновить список.');
+								$db->sql_query("UPDATE ".$prefix."_spiski SET `pages`='".$s_pages2."' WHERE `type`='".$pole."' and `name`=' ".$elements." '") or die ('Ошибка: Не удалось обновить список.');
 							} else { // Списка нет - создаем новый
-								if (trim($elements) != "" && trim($pole) != "" && $page_id != 0) $db->sql_query("INSERT INTO ".$prefix."_spiski (id, type, name, opis, sort, pages, parent) VALUES (NULL, '".$pole."', '".$elements."', '', '0', ' ".$page_id." ', '0');") or die ('Ошибка: Не удалось сохранить список.');
+								if (trim($elements) != "" && trim($pole) != "" && $page_id != 0) $db->sql_query("INSERT INTO ".$prefix."_spiski (id, type, name, opis, sort, pages, parent) VALUES (NULL, '".$pole."', ' ".$elements." ', '', '0', ' ".$page_id." ', '0');") or die ('Ошибка: Не удалось сохранить список.');
 							}
 						}
 					}

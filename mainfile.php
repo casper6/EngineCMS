@@ -175,7 +175,7 @@
   if ($uskorenie_blokov == "") $uskorenie_blokov = "0";
   if ($kickstart == "") $kickstart = "0";
   if ($show_page_links == "") $show_page_links = "0";
-  if ($ad_fon == "") $ad_fon = "0";
+  if ($ad_fon == "") $ad_fon = "1";
   if ($search_design == "") $search_design = "1";
   if ($tag_design == "") $tag_design = "1";
   if ($geo == "") $geo = "51";

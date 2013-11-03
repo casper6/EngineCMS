@@ -182,7 +182,7 @@ function mainpage($name="") {
 			<a href='sys.php?op=mainpage&amp;name=shablon&amp;type=6&amp;red=1#1' class='bigicon'><img class='bigicon bi6' src='/images/1.gif'><b>Шаблон</b><br>
 			Замена настроек на ручной выбор выводимой информации</a>
 			<a href='sys.php?op=mainpage&amp;name=spisok&amp;type=4#1' class='bigicon'><img class='bigicon bi4' src='/images/1.gif'><b>Поле</b><br>
-			Поля для страниц (аналог таксономии)</a>
+			для страниц (аналог таксономии, для фильтров и доп. информации)</a>
 			<a href='sys.php?op=mainpage&amp;name=base&amp;type=5#1' class='bigicon'><img class='bigicon bi5' src='/images/1.gif'><b>Базу данных</b><br>
 			Таблица с поиском и фильтрами для внутреннего или открытого использования</a>
 			</div>
@@ -211,7 +211,7 @@ function mainpage($name="") {
 		 echo "<div id='mainrazdel2' class='dark_pole2'><a class='base_page' onclick=\"$('#addmain').attr('class', 'small right3'); oformlenie_show('','2','trash','')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='T'></span><span class='plus20'>Удаленное оформление</span></div></a></div>";
 		 
 		echo "</div></td>
-	<td style='padding:0;'><a class='punkt' title='Свернуть/развернуть левую колонку' onclick='$(\"#razdels\").toggle(\"slow\");'><div class='polosa_razdelitel'><div id='rotateText'><nobr>↑ Сворачивает Оформление ↑</nobr></div></div></a></td>
+	<td style='padding:0;'><a class='punkt' title='Свернуть/развернуть левую колонку' onmousemove='$(\"#razdels\").show();' onclick='$(\"#razdels\").toggle(\"slow\");'><div class='polosa_razdelitel'><div id='rotateText'><nobr>↑ Сворачивает Оформление ↑</nobr></div></div></a></td>
 	<td class='w100 pm0'>
 			<div class='black_grad'><div class='pt5'>
 			<button class='small' onclick='location.href=\"/sys.php?op=mainpage&amp;type=0&amp;id=1&amp;red=2\"' title='Редактировать главный дизайн'><span class='icon gray medium' data-icon='7'></span>Главный дизайн</button> 
@@ -234,7 +234,7 @@ function create_main($type) {
 	<input type='text' name='title' value='' size=40 class='w100 h40 f16' autofocus><br>
 	".help_design()."
 	<h2>Содержание дизайна (HTML):</h2>
-	".redactor('2', '', 'text', '', 'html','return')."
+	".redactor('2', '', 'text', '', 'html')."
 	<div class='notice success black w100 mw800'><span class='icon large white' data-icon='C'></span>
 	Здесь вы можете вставить готовый HTML-код (от тега &lt;body&gt; до &lt;/body&gt;, не включительно) или набрать его с нуля.
 	<br><b>[содержание]</b> - автоматический блок для вывода страниц. Не использовать его можно лишь в случае присоединения дизайна к разделу, состоящему из одной страницы — в этом случае можно всю страницу поместить в дизайн или в раздел.</div>
@@ -256,8 +256,7 @@ function create_main($type) {
 
 	<h2>Содержание стиля: <a class='button small blue' onclick='if ($(\"#color_scheme\").html() == \"\") $(\"#color_scheme\").html(\"<iframe src=http://colorscheme.ru width=985 height=660 scrolling=no frameborder=0></iframe>\"); $(\"#color_scheme\").toggle();'>Подбор цвета</a></h2>
 	<div class='hide' style='position:absolute; margin: 0 auto; width: 985px; height:660px; z-index:1000;' id='color_scheme'></div>
-
-	".redactor('2', '', 'text', '', 'css','return')."
+	".redactor('2', '', 'text', '', 'css')."
 	<input type='hidden' name='id' value=0>
 	<input type='hidden' name='type' value='1'>
 	<input type='hidden' name='namo' value=''>
@@ -804,7 +803,7 @@ function edit_main($id) {
 	$spisok_names = implode(",",$spisok_names);
 	echo "<div class='fon w100 mw800'>
 	<div class='black_grad h40'>
-	<a class='button small green' onclick='save_main(\"ad/ad-mainpage.php\", \"mainpage_save_ayax\")' style='float:left; margin:3px;'><span class='mr-2 icon white medium' data-icon='c'></span> Сохранить</a>
+	<a class='button small green' onclick='save_main(\"ad/ad-mainpage.php\", \"mainpage_save_ayax\", \"\", \"\")' style='float:left; margin:3px;'><span class='mr-2 icon white medium' data-icon='c'></span> Сохранить</a>
 
 	<script type='text/javascript'>
 	jQuery(function(){
@@ -816,7 +815,7 @@ function edit_main($id) {
 	 });
 	});
 	</script>
-	<a class='scroll_on_top button small green' onclick='save_main(\"ad/ad-mainpage.php\", \"mainpage_save_ayax\")' style='position:fixed; top:80%; right:0%; left:90%; width:100px; z-index:1000;'>Сохранить</a>
+	<a class='scroll_on_top button small green' onclick='save_main(\"ad/ad-mainpage.php\", \"mainpage_save_ayax\", \"\", \"\")' style='position:fixed; top:80%; right:0%; left:90%; width:100px; z-index:1000;'>Сохранить</a>
 	<a class='scroll_on_top button small blue' href='#top' style='position:fixed; top:90%; right:0%; left:90%; width:100px; z-index:1000;'>&uarr;<br>Наверх</a>
 
 	<div id='save_main' style='float:left; margin:3px;'></div>
@@ -852,7 +851,7 @@ function edit_main($id) {
 	<textarea class='big w100 h40 f16' name='title' rows='1' cols='10'>".$title."</textarea>
 	".help_design()."
 	<span class=h2>Содержание дизайна (HTML):</span><span class=f12>[содержание] - блок вывода страниц.</span>";
-  	redactor($red, $text, 'text'); // редактор: типа редактора, редактируемое поле
+  	echo redactor($red, $text, 'text'); // редактор: типа редактора, редактируемое поле
 
 	echo "<span class=h2>Использованные в дизайне стили CSS</span>
 	<select name='useit[]' size=6 class='w100' multiple='multiple'>".$styles."</select>
@@ -866,7 +865,7 @@ function edit_main($id) {
 		<textarea class='big w100 h40 f16' name='title' rows='1' cols='10'>".$title."</textarea></h2>
 		<h2>Содержание стиля: <a class='button small blue' onclick='if ($(\"#color_scheme\").html() == \"\") $(\"#color_scheme\").html(\"<iframe src=http://colorscheme.ru width=985 height=660 scrolling=no frameborder=0></iframe>\"); $(\"#color_scheme\").toggle();'>Подбор цвета</a></h2>
 	<div class='hide' style='position:absolute; margin: 0 auto; width: 985px; height:660px; z-index:1000;' id='color_scheme'></div>";
-		redactor('2', $text, 'text', '', 'css');
+		echo redactor('2', $text, 'text', '', 'css');
 		echo "<input type='hidden' name='namo' value='".$name."'></div>";
 	} ############################### ЗАКРЫТИЕ СТИЛЬ
 
@@ -881,7 +880,7 @@ function edit_main($id) {
 	$options = str_replace($module_name."|","",$text);
 
 	// обнулили все опции
-	$media = $folder = $col = $view = $golos = $golosrazdel = $post = $comments = $datashow = $favorites = $socialnetwork = $search = $search_papka = $put_in_blog = $base = $vetki = $citata = $media_comment = $no_html_in_opentext = $no_html_in_text = $show_add_post_on_first_page = $media_post = $razdel_shablon = $page_shablon = $comments_all = $comments_num = $comments_mail = $comments_adres = $comments_tel = $comments_desc = $golostype = $pagenumbers = $comments_main = $tags_type = $pagekol = $table_light = $designpages = $comments_add = $div_or_table = $papka_show = $add_post_to_mainpage = $design_tablet = $designpages_tablet = $design_phone = $designpages_phone = 0;
+	$media = $folder = $col = $view = $golos = $golosrazdel = $post = $comments = $datashow = $favorites = $socialnetwork = $search = $search_papka = $put_in_blog = $base = $vetki = $citata = $media_comment = $no_html_in_opentext = $no_html_in_text = $show_add_post_on_first_page = $media_post = $razdel_shablon = $page_shablon = $comments_all = $comments_num = $comments_mail = $comments_adres = $comments_tel = $comments_desc = $golostype = $pagenumbers = $comments_main = $tags_type = $pagekol = $table_light = $designpages = $comments_add = $div_or_table = $papka_show = $add_post_to_mainpage = $design_tablet = $designpages_tablet = $design_phone = $designpages_phone = $edit_pole = 0;
 	$menushow = $titleshow = $razdeltitleshow = $razdel_link = $peopleshow = $design = $tags = $podrobno = $podrazdel_active_show = $podrazdel_show = $tipograf = $limkol = $tags_show = $tema_zapret = $tema_zapret_comm = $show_read_all = $opentextshow = $maintextshow = 1;
 	$comment_shablon = 2;
 	$lim = 20;
@@ -1280,6 +1279,18 @@ function edit_main($id) {
 	</table>
 	</div>
 
+
+	<a class='dark_pole align_center' onclick=\"show_animate('block12');\"><h2>Администрирование раздела</h2>
+	</a><div id=block12 style='display: none;'>
+	<table  class='w100 mw800 table_light'>
+	<tr>
+	<td>Выводить редактирование полей при раскрытии функций страницы на Главной администрирования?</td>
+	<td>".select("options[edit_pole]", "1,0", "ДА,НЕТ", $edit_pole)."</td>
+	</tr>
+	</table>
+	</div>
+
+
 	<p class='red'>В текстовых полях нельзя писать символ &</p>";
 	######################################################################
 	} else { // конец редактирования настроек раздела
@@ -1298,7 +1309,7 @@ function edit_main($id) {
 		</td></tr>
 		<tr><td colspan='2'>
 		<span class=h2>Содержание раздела:</span><br>";
-	  	redactor($red, $useit, 'useit', 'shablon'); // редактор: типа редактора, редактируемое поле
+	  	echo redactor($red, $useit, 'useit', 'shablon'); // редактор: типа редактора, редактируемое поле
 
 		echo "<input type='hidden' name='text' value='".$text."'>";
 		if ($id != 24) {
@@ -1306,7 +1317,7 @@ function edit_main($id) {
 			<a class='dark_pole' onClick='$(\"#shablon_show\").toggle(\"slow\")'><img class='icon2 i26' src='/images/1.gif'> Шаблон Предисловия и Содержания страниц</a>
 
 			<div id='shablon_show' class='hide'>".close_button("shablon_show")."Если у большинства страниц раздела особенный дизайн или какое-то первоначальное содержание для всех страниц раздела одинаково — его можно прописать ниже как Шаблон для страниц. Сначала идет шаблон для Предисловия страниц, затем — для Содержания, разделяются они служебным словом [следующий]. Если нужен только шаблон для Предисловия - слово [следующий] можно не писать, а если нужен только шаблон для Содержания - слово [следующий] надо написать перед ним.";
-			redactor2($red, $sha, 'shablon');
+			echo redactor2($red, $sha, 'shablon');
 			echo "</div>";
 		} else {
 			echo "<input type='hidden' name='shablon' value='".$sha."'>";
@@ -1780,18 +1791,18 @@ function edit_main($id) {
 
 
 		echo "<span class=h2>Содержание блока:</span>";
-		if ($name != 31 && $name != 7 && $name != 10 && $name != 6) redactor($red, $text, 'text'); // редактор: тип редактора, редактируемое поле
+		if ($name != 31 && $name != 7 && $name != 10 && $name != 6) echo redactor($red, $text, 'text'); // редактор: тип редактора, редактируемое поле
 		if ($name == 6) echo "<div class='pics w100'></div>
 		<textarea name=text rows=3 cols=86 class='w100 h155' id=textarea onchange=\"pics_refresh('#textarea');\">".str_replace("\n\n", "\n", $text)."</textarea>
 		<script>$(function(){pics_refresh('#textarea');$('#textarea').hide();})</script>";
-		if ($name == 31) redactor($red, $text, 'text', '', 'javascript');
+		if ($name == 31) echo redactor($red, $text, 'text', '', 'javascript');
 		if ($name == 7) {
 			$text = str_replace("<? ", "", str_replace(" ?>", "", $text));
-			redactor('2', "<? \n".$text."\n ?>", 'text', '', 'php');
+			echo redactor('2', "<? \n".$text."\n ?>", 'text', '', 'php');
 		}
 		if ($name == 10 && $re_menu == 1) echo "<div style='display:none'>";
-		if ($name == 10 && $re_menu == 1) redactor($red, '', 'text', '');
-		elseif ($name == 10 && $re_menu != 1) redactor($red, $text, 'text', '');
+		if ($name == 10 && $re_menu == 1) echo redactor($red, '', 'text', '');
+		elseif ($name == 10 && $re_menu != 1) echo redactor($red, $text, 'text', '');
 		if ($name == 10 && $re_menu == 1) echo "</div>";
 		echo "</td></tr>";
 		
@@ -2044,7 +2055,7 @@ function edit_main($id) {
 		</td></tr><tr><td colspan=2>
 		".help_shablon()."
 		<h2>Содержание шаблона:</h2>";
-		redactor($red, $text, 'text'); // редактор: типа редактора, редактируемое поле
+		echo redactor($red, $text, 'text'); // редактор: типа редактора, редактируемое поле
 		echo "</td></tr></table>";
 	} ############################### ЗАКРЫТИЕ ШАБЛОН
 	echo "</div></form>";

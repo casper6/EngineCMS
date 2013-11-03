@@ -40,6 +40,7 @@ switch($op) {
     case "base_delit_comm":
     case "delete_all":
     case "base_pages_re":
+    case "page_save_spiski":
     include("ad/ad-page.php");
     break;
 

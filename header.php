@@ -1636,6 +1636,8 @@ case "31": # Блок JS
 		$block=str_replace(aa("[название_проекта]"), $project_name, $block);
 		$block=str_replace(aa("[название_лого_проекта]"), "<h1 class='project_logotip_name'><a href='/'' title='".ss("Главная страница")."'><span>".$project_name."</span><img src='".$project_logotip."' alt=''></a></h1>", $block);
 	}
+
+	// вход в закрытый раздел
 	if (strpos(" ".$block, aa("[закрытая зона]"))) {
 		$block=str_replace(aa("[закрытая зона]"), "Введите пароль:<br><input class='closed_zona' id='closed_zona'><input class='closed_zona' type='button' value='Войти' onclick='location.href = \"-\" + $(\"#closed_zona\").val();'>", $block);
 	}

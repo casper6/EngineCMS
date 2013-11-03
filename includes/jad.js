@@ -24,16 +24,26 @@ function pics_replace(id,txt,search){
 	$(txt).val(text);
 	$(id).hide('slow');
 }
-function sho(pid,name,admintip,act) {
-	if (act == 1) active = icon('red small','Q')+' Выключить страницу</a>';
-	else active = icon('green small','Q')+' Включить страницу</a>';
-	if (document.getElementById('pid'+pid).innerHTML=='') document.getElementById('pid'+pid).innerHTML = '<span class=sho_page> <a href=-'+name+'_page_'+pid+' target=_blank title="Открыть страницу на сайте" class="punkt">'+icon('blue small','s')+' Открыть страницу на сайте</a> <a target=_blank href="sys.php?op='+admintip+'_edit_page&pid='+pid+'#1" title="Редактировать страницу в Редакторе" class="punkt">'+icon('orange small','7')+' Редактировать страницу</a> <a onclick=offpage('+pid+',0) class="punkt" title="Включение/Выключение страницы">'+active+' <a onclick=replace("'+pid+'") class="punkt" title="Копировать/Переместить/Создать ярлык">'+icon('blue small','^')+' Копировать/Переместить/Создать ярлык</a> <a onclick=delpage("'+pid+'") class="punkt" title="Удалить страницу">'+icon('red small','T')+' Удалить страницу в Удаленное</a></span>';
+
+function sho(pid,name,act,id_razdel,cid,edit_pole) {
+	if (edit_pole == "1") add_pole = '<p><form class="light_fon" id="spiski_'+pid+'"><a onclick="save_main(\'ad/ad-page.php\', \'page_save_spiski\', \'#spiski_'+pid+'\', \'#pid'+pid+'\');" class="button small green">'+icon('medium white','c')+' Сохранить</a><input type="hidden" name="page_id" value="'+pid+'"><div id="pole' + pid + '"></div></form>';
+	else add_pole = '';
+	if (act == 1) active = 'Выключить страницу">' + icon('red small','Q')+'</a>';
+	else active = 'Включить страницу">' + icon('green small','Q')+'</a>';
+	if (document.getElementById('pid'+pid).innerHTML=='') document.getElementById('pid'+pid).innerHTML = '<br><ul class="button-bar"><li class="first"><a href=-'+name+'_page_'+pid+' target=_blank title="Открыть страницу на сайте">'+icon('blue small','s')+' Открыть</a></li><li><a target=_blank href="sys.php?op=base_pages_edit_page&pid='+pid+'#1" title="Редактировать страницу">'+icon('orange small','7')+' Редактировать</a></li><li class="punkt"><a onclick=replace("'+pid+'") title="Копировать/Переместить/Создать ярлык">'+icon('blue small','^')+'</a></li><li class="punkt"><a onclick=offpage('+pid+',0) title="'+active+'</li><li class="last punkt"><a onclick=delpage("'+pid+'") title="Удалить страницу">'+icon('red small','F')+'</a></li></ul>'+add_pole;
 	else document.getElementById('pid'+pid).innerHTML = '';
+	if (edit_pole == "1") {
+		var x = '$(function() { show_pole(' + id_razdel + ',' + pid + ',\'' + name + '\',' + cid + '); });';
+		var y = document.createElement ('script'); //Создаём новый тег <SCRIPT> 
+		y.defer = true; // Даём разрешение на исполнение скрипта после его "приживления" на странице 
+		y.text = x; //Записываем полученный от сервера "набор символов" как JS-код 
+		document.body.appendChild (y); //Приживляем тег <SCRIPT> // это делается вместо document.getElementById(id).innerHTML = ...
+	}
 }
 function papka_show(cid, name, sort, id, xxx) {
 	show('podpapka'+cid);
 	if (document.getElementById('papka'+cid).innerHTML=='') { 
-		document.getElementById('papka'+cid).innerHTML = '&nbsp; <a target=_blank href=-'+name+'_cat_'+cid+' title="Посмотреть (открыть эту папку на сайте)">'+icon('blue small','s')+'</a> <a target=_blank href="sys.php?op=edit_base_pages_category&cid='+cid+'#1" title="Редактировать папку">'+icon('orange small','7')+'</a>&nbsp;&nbsp;&nbsp;<a onclick=delpapka("'+cid+'") style="cursor:pointer;" title="Удалить папку">'+icon('red small','F')+'</a>';
+		document.getElementById('papka'+cid).innerHTML = '<br><ul class="button-bar"><li class="first"><a target=_blank href=-'+name+'_cat_'+cid+' title="Открыть эту папку на сайте">'+icon('blue small','s')+' Открыть</a></li><li><a target=_blank href="sys.php?op=edit_base_pages_category&cid='+cid+'#1" title="Редактировать папку">'+icon('orange small','7')+' Редактировать</a></li><li class="last"><a onclick=delpapka("'+cid+'") style="cursor:pointer;" title="Удалить папку">'+icon('red small','F')+'</a></li></ul>';
 		papka(cid, sort, id,xxx);
 	} else {
 		document.getElementById('papka'+cid).innerHTML = '';
@@ -50,18 +60,20 @@ function papka(cid, sort, id, xxx) {
 function show_pole(id, page_id, razdel, cid) {
 	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'show_pole', 'id': id, 'string': razdel+'*@%'+page_id+'*@%'+cid},
-	    beforeSend: function(){ $('#pole').html('<br><img src=images/loading.gif> Загрузка...'); },
-	    success: function(data){ $('#pole').html(data); }
+	    beforeSend: function(){ $('#pole'+page_id).html('<br><img src=images/loading.gif> Загрузка...'); },
+	    success: function(data){ $('#pole'+page_id).html(data); }
 	});
 }
-function save_main(url, op) {
-	var msg = $('form').serialize();
+function save_main(url, op, id, id2) {
+	if (id == "") id = 'form';
+	if (id2 == "") id2 = '#save_main';
+	var msg = $(id).serialize();
     $.ajax({
       type: 'POST',
       url: url,
       data: {'op': op, 'string': msg },
-	  beforeSend: function(){ $('#save_main').html('<img src=images/loading.gif> Сохраняю...'); },
-      success: function(data) { $('#save_main').html(data); },
+	  beforeSend: function(){ $(id2).html('<img src=images/loading.gif> Сохраняю...'); },
+      success: function(data) { $(id2).html(data); if (id2 != '#save_main') $(id2).html(icon('green small','*')); },
       /* error: function(xhr, str) { alert('Возникла ошибка: ' + xhr.responseCode ); } */
     });
 }
@@ -114,13 +126,15 @@ function save_spisok() {
       url: 'ad/ad-ajax.php',
       data: {'func': 'save_spisok', 'string': msg },
 	  beforeSend: function(){ $('#add_spisok').html('<img src=images/loading.gif> Сохраняю...'); },
-      success: function(data) { $('#add_spisok').hide('slow'); spiski_show(global_spisok_name, global_spisok_title); }
+      success: function(data) { $('#add_spisok').hide('slow'); 
+      /*spiski_show(global_spisok_name, global_spisok_title); */
+  }
     });
 }
 function add_spisok(id, type, name, pages, opis, sort, parent) {
 	if (id == 0) { title = 'Добавление значения поля'; name_text = 'Вы можете ввести несколько названий (разделять Enter)'; }
 	else { title = 'Редактирование значения поля'; name_text = 'Название'; }
-	var data = '<span class=h2>' + title + '</span><form id="save_spisok"><input name="id" type="hidden" value="'+id+'"><input name="type" type="hidden" value="'+type+'"><p><b>'+name_text+':</b><textarea class="w100 h40" name="name" autofocus>'+name+'</textarea><p class="right"><a id="button_hide" class="button small" onmousemove="$(\'#another_options\').show(\'slow\'); $(\'#button_hide\').hide();"> Дополнительные настройки </a></p><div class="hide" id="another_options"><p>Страницы (№ страниц через пробел):<textarea class="w100 h40" name="pages">'+pages+'</textarea><p>Описание (пояснительная информация):<textarea class="w100 h40" name="opis">'+opis+'</textarea><p>Сортировка: <input class="w10" name="sort" type="text" value="'+sort+'"> Вложенность: <input class="w10" name="parent" type="text" value="'+parent+'"></div><p class="center"><a class="button middle green white" onclick="save_spisok()"> '+icon('white small','c')+' Сохранить </a> <a class="button middle" onclick="$(\'#add_spisok\').hide();"> Отмена </a></form>';
+	var data = '<span class=h2>' + title + '</span><form id="save_spisok"><input name="id" type="hidden" value="'+id+'"><input name="type" type="hidden" value="'+type+'"><p><b>'+name_text+':</b><textarea class="w100 h40" name="name" autofocus>'+unescape(name)+'</textarea><div class="" id="another_options"><p>Страницы (№ страниц через пробел):<textarea class="w100 h40" name="pages">'+pages+'</textarea><p>Описание (пояснительная информация):<textarea class="w100 h40" name="opis">'+opis+'</textarea><p>Сортировка: <input class="w10" name="sort" type="text" value="'+sort+'"> Вложенность: <input class="w10" name="parent" type="text" value="'+parent+'"></div><p class="center"><a class="button middle green white" onclick="save_spisok()"> '+icon('white small','c')+' Сохранить </a> <a class="button middle" onclick="$(\'#add_spisok\').hide();"> Отмена </a></form>';
 	$('#add_spisok').html( data ).show();
 }
 function spiski_show(name, title) {

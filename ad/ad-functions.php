@@ -332,7 +332,7 @@ $(function () {
 </form>";
 }
 ##########################################################################################
-function redactor($type, $txt, $name, $name2="", $style="html", $return="echo") {
+function redactor($type, $txt, $name, $name2="", $style="html") {
   global $add_clips, $lang_admin;
   $echo = "";
   if ($type=="0") {
@@ -454,15 +454,16 @@ function redactor($type, $txt, $name, $name2="", $style="html", $return="echo") 
     }
     $echo .= "</ul></div></div><div id=\"redactor_modal_footer\">Добавить заготовку можно в Настройках 〉Заготовки для редактора.<br><a href=\"#\" class=\"redactor_modal_btn redactor_btn_modal_close\">Закрыть</a></div></div> ";
   }
-  if ($return=="echo") echo $echo; else return $echo;
+  return $echo;
 }
 ##########################################################################################
 function redactor2($type, $txt, $name, $style="html") {
+  $echo = "";
   if ($type=="1") {
     // Преобразование textarea (замена на русскую букву е, только для редактора)
     $txt = str_replace("textarea","tеxtarea",$txt); // ireplace
     $txt = str_replace("&","&amp;",$txt);
-    echo "<textarea id='".$name."' class='w100 h155' name='".$name."'>".$txt."</textarea><br>";
+    $echo .= "<textarea id='".$name."' class='w100 h155' name='".$name."'>".$txt."</textarea><br>";
   } elseif ($type=="2") {
     global $color_tema_html, $color_tema_css, $color_tema_js, $color_tema_php; // цветовые стили для редактора кода
     // Настройки невизуального редактора с подсветкой кода
@@ -477,7 +478,7 @@ function redactor2($type, $txt, $name, $style="html") {
     // Преобразование textarea (замена на русскую букву е, только для редактора)
     $txt = str_replace("textarea","tеxtarea",$txt); // ireplace
     //$txt = str_replace("&","&amp;",$txt);
-    echo "<textarea id='".$name."X' class='hide' name='".$name."'>".$txt."</textarea>
+    $echo .= "<textarea id='".$name."X' class='hide' name='".$name."'>".$txt."</textarea>
     <pre id='".$name."' class='w100 h700'></pre><br>
     <script src='/includes/ace-redactor/ace.js'></script><script>var ".$name." = ace.edit('".$name."');
           ".$name.".getSession().setValue( $('#".$name."X').val() );
@@ -488,8 +489,13 @@ function redactor2($type, $txt, $name, $style="html") {
               $('#".$name."X').val( ".$name.".getSession().getValue() );
           });
           document.getElementById('".$name."').style.fontSize='16px';</script>";
-  } else {
-    echo "<textarea id='".$name."' class='redactor' name='".$name."' rows=15 cols=40 style='width: 100%; height: 220px;'>".$txt."</textarea>";
+  } elseif ($type=="4") {
+    $echo .= "<textarea id='".$name."' class='redactor' name='".$name."' rows=15 cols=40 style='width: 100%; height: 220px;'>".$txt."</textarea>";
+  } elseif ($type=="3") {
+    $echo .= "<textarea id='".$name."' name='".$name."' rows=15 cols=40 style='width: 100%; height: 220px;'>".$txt."</textarea>";
   }
+  return $echo;
 }
+##########################################################################################
+
 ?>

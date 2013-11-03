@@ -317,7 +317,7 @@ function GraphicAdmin() {
     }
 	echo "</div></div>
 	</td>
-	<td style='padding:0;'><a class='punkt' title='Свернуть/развернуть левую колонку' onclick='$(\"#razdels\").toggle(\"slow\");'><div class='polosa_razdelitel'><div id='rotateText'><nobr>↑ Сворачивает Разделы ↑</nobr></div></div></a></td>
+	<td style='padding:0;'><a class='punkt' title='Свернуть/развернуть левую колонку' onmousemove='$(\"#razdels\").show();' onclick='$(\"#razdels\").toggle(\"slow\");'><div class='polosa_razdelitel'><div id='rotateText'><nobr>↑ Сворачивает Разделы ↑</nobr></div></div></a></td>
 	<td style='width:100%;padding:0;'><div class='black_grad'><div class='pt5'>".$soderganie_menu."</div></div><div class='podrazdel radius nothing' id='podrazdel'>";
 
 	// ЗАПИСКИ

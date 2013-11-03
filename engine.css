@@ -1,5 +1,14 @@
 ﻿/* Основной стиль админки */
 @page {mso-page-orientation:landscape;}
+body {
+	background-color: #eeeeee;
+	background-size: cover;
+	-webkit-background-size: cover;
+	-o-background-size: cover;
+	-moz-background-size: cover;
+	background-position: top center fixed;
+	background-repeat: repeat-y;
+}
 body, td {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: 14px;
@@ -226,6 +235,9 @@ img.bigicon {margin-bottom: 5px; width:128px; height:128px; border:0; float:left
 	-webkit-border-bottom-right-radius: 10;
 }
 
+h2.spiski img {max-height: 60px;}
+h2.spiski p {display: inline;}
+
 /*
 .tr_hover {padding: 1px;}
 .tr_hover:hover {background:#CFC; padding: 1px;}
@@ -324,7 +336,11 @@ div.b8f4f2 {background: #b8f4f2; border:1px solid gray;}
 
 .pid {display:inline; margin:0; padding:0; margin-left:5px;}
 
-.openpage {background:url('images/sys/page.png') no-repeat; margin-top:3px; padding-left:20px; border-left: 1px dashed black;}
+.openpage, .openpapka {
+	min-height: 20px;
+	padding: 2px;
+}
+
 
 .zagolovok { font-size: 14pt; }
 
@@ -388,6 +404,8 @@ ul.button-bar li.black:hover a,
 .dark_pole2sel,
 .dark_pole2sel:hover,
 .dark_pole2:hover,
+.openpage:hover,
+.openpapka:hover,
 .sho_page a:hover {
 	/* webkit example */
 	background-image: -webkit-gradient(
@@ -489,7 +507,7 @@ p {margin-top: 15px;margin-left: 5px;}
 
 .sho_page a:hover { min-height:18px;}
 
-.dark_pole2sel, .dark_pole2sel span.plus20, .dark_pole2:hover span.plus20, .dark_pole2sel span.green, .dark_pole2:hover span.green, .dark_pole2sel span.gray, .dark_pole2:hover span.gray, .dark_pole2:hover { color: white !important; max-height:44px; overflow:hidden; }
+.openpapka:hover a.pointer, .openpapka:hover span.small+.red, .openpage:hover a.pointer, .dark_pole2sel, .dark_pole2sel span.plus20, .dark_pole2:hover span.plus20, .dark_pole2sel span.green, .dark_pole2:hover span.green, .dark_pole2sel span.gray, .dark_pole2:hover span.gray, .dark_pole2:hover { color: white !important; max-height:44px; overflow:hidden; }
 .dark_pole2,
 .dark_pole2sel span.icon span, .dark_pole2:hover span.icon span {  }
 .dark_pole2sel .f14, .dark_pole2:hover .f14 { color: #058bf5 !important; }
@@ -678,7 +696,7 @@ input[type="search"] { -webkit-appearance: textfield; }
 /* Блок с двумя вертикальными изгибами */
 .curved-vt-2 {
 	z-index: 500;
-	position:absolute;
+	position:fixed;
 	left:50%; 
     padding:1em;
     background:#fff;

@@ -1,12 +1,18 @@
 <?php
-  if (strpos($_SERVER['PHP_SELF'], 'sys.php') === false) { die (aa("Доступ закрыт!")); }
+if ($_REQUEST['op'] == "page_save_spiski") {
+  require_once("../mainfile.php");
+  global $prefix, $db, $red, $admin;
+  if (is_admin($admin)) $realadmin = 1; else $realadmin = 0;
+} else {
+  if (strpos($_SERVER['PHP_SELF'], 'sys.php') === false) { die ("Доступ закрыт!"); }
   $aid = trim($aid);
   global $prefix, $db, $red;
-  $sql = "select `realadmin` from ".$prefix."_authors where `aid`='$aid'";
+  $sql = "SELECT realadmin FROM ".$prefix."_authors where aid='".$aid."'";
   $result = $db->sql_query($sql);
   $row = $db->sql_fetchrow($result);
   $realadmin = $row['realadmin'];
-  if ($realadmin==1) {
+}
+if ($realadmin==1) {
 
 function seo($edit=false){
   global $geo, $kolkey;
@@ -132,7 +138,7 @@ function edit_base_pages_category($cid, $red=0) {
     <h2>Название папки:</h2>
     <input type='text' name='title' value='$title' size='60'><br><br>
     ".$blok."";
-    redactor($red, $desc, 'desc'); // редактор: типа редактора, редактируемое поле
+    echo redactor($red, $desc, 'desc'); // редактор: типа редактора, редактируемое поле
 
     echo "<br><div style='float:left; '><h2>Сортировка:&nbsp;</h2></div> <input type='text' name='sortirovka' value='$sortirovka' size='3'><br><br><span class=small>Если вы решили отсортировать папки по-своему - лучше всего использовать десятичную разницу между числами сортировки для разных папок, например: 10, 20, 30, 40... Это нужно для того, чтобы в случае создания новой папки вы не изменяли сортировку для всех предыдущих, а легко присвоили ей следующий номер за сортировкой, стоящей перед ней папки, например: 11, 21, 31, 41... или 15, 25, 35 - чтобы можно было вклинить новые папки между ними.</span>
       <input type='hidden' name='cid' value='$cid'>
@@ -392,9 +398,9 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
   <span class='h2'>Название страницы (заголовок)</span><br>
   <textarea class='f16 w100 h40' name=title rows=1 cols=10>".$titl."</textarea>
   <br><span class='h2'>Предисловие (начальный текст)</span><br>";
-  redactor($red, $shablon1, 'open_text', 'main_text'); // редактор: тип редактора, редактируемое поле
+  echo redactor($red, $shablon1, 'open_text', 'main_text'); // редактор: тип редактора, редактируемое поле
   echo "<br><span class='h2'>Содержание (основной текст)</span><br>";
-  redactor2($red, $shablon2, 'main_text');
+  echo redactor2($red, $shablon2, 'main_text');
 
   echo "<br><input type='hidden' name='foto' value=''>";
   echo "<input type='hidden' name='price' value=''>";
@@ -412,7 +418,7 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
     $id = $id_razdel_and_bd[$module];
   }
 
-  echo "<div id='pole'><script>show_pole(".$id.",".$page_id.",$('#to_razdel').val(),".$cid.");</script></div>";
+  echo "<div id='pole".$page_id."'><script>show_pole(".$id.",".$page_id.",$('#to_razdel').val(),".$cid.");</script></div>";
 
   echo "<input type=hidden name=op value='base_pages".$saveme."'>";
   echo "</div></td></tr></table></div></form>";
@@ -461,143 +467,300 @@ function base_pages_save_page($cid, $module, $title, $open_text, $main_text, $fo
   /////////////////////////////////////////////////////////////////////////
   // РАБОТА СО СПИСКАМИ
   if (!isset($add) or $add == "") $add = array();
+
   foreach ($add as $name => $elements) {
     // Получение информации о каждом списке
     if ($name != "") {
-    $sql = "select * from ".$prefix."_mainpage where name='".$name."' and `type`='4'";
+    $sql = "select * from ".$prefix."_mainpage where `name`='".$name."' and `type`='4'";
     $result = $db->sql_query($sql);
     $row = $db->sql_fetchrow($result);
     $s_id = $row['id'];
     $options = explode("|", $row['text']); 
     $options = $options[1];
-    $type=0; $shablon=""; 
+    $type = 0; 
+    $shablon = ""; 
     parse_str($options); // раскладка всех настроек списка
-  switch($type) {
-    
-    case "6": // регион
-      $id_regions = $_POST['id_regions'];
-      if (!isset($id_regions)) $id_regions = $elements;
-      $region = $db->sql_fetchrow($db->sql_query("select name from ".$prefix."_regions where id='".$id_regions."'"));
-      $db->sql_query("INSERT INTO ".$prefix."_spiski (id, type, name, opis, sort, pages, parent) VALUES (NULL, '".$name."', '".$region['name']."', '', '0', ' ".$page_id." ', '0');") or die ('Ошибка: Не удалось сохранить список. 6'); 
-    break;
-    ////////////////////////////////////////////////////////////////////////////
-    case "1": // текст
-    case "4": // строка
-    case "5": // число
-        // Проверяем наличие подобного элемента
-            $sql = "SELECT `pages` FROM ".$prefix."_spiski WHERE `type`='".$name."' and `name`='".$elements."' limit 1";
-            $result = $db->sql_query($sql);
-            $numrows = $db->sql_numrows($result);
-            if ($numrows == 1) { // если элемент найден
-              $row = $db->sql_fetchrow($result);
-              $s_pages = $row['pages'];
-              //$s_name = $row['name'];
-              $s_pages .= " ".$page_id." ";
-              $s_pages = str_replace("  "," ",$s_pages);
-              // если переносим в существующий элемент
-              $db->sql_query("UPDATE ".$prefix."_spiski SET `pages`='".$s_pages."' WHERE `type`='".$name."' and `name`='".$elements."'") or die ('Ошибка: Не удалось обновить список. 1');
-            } else { // если элемент новый
-              $db->sql_query("INSERT INTO ".$prefix."_spiski (id, type, name, opis, sort, pages, parent) VALUES (NULL, '".$name."', '".$elements."', '', '0', ' ".$page_id." ', '0');") or die ('Ошибка: Не удалось сохранить список. 4');
-            }
-    break;
-    ////////////////////////////////////////////////////////////////////////////
-    case "3": // период времени
-            // создаем диапазон дат и все их проверяем
-            $elements = explode("|",$elements);
-            $dat1 = date2normal_view($elements[0], 1);
-            $dat2 = date2normal_view($elements[1], 1);
-            $period = period($dat1, $dat2);
-            // и все даты проверяем на наличие в БД
-            $upd = array();
-            $noupd = array();
-            $sql = "SELECT name, pages FROM ".$prefix."_spiski WHERE type='".$name."' order by name";
-            $result = $db->sql_query($sql);
-            while ($row = $db->sql_fetchrow($result)) {
-              $nam = $row['name']; // дата
-              $pag = trim($row['pages']); // страницы
-              if (in_array($nam, $period)!=FALSE) { 
-              $noupd[] = $nam; // для INSERT
-              if (strstr($pag,$page_id)==FALSE) $upd[] = $nam; // для UPDATE
-              }
-            }
-            $insert = array();
-            $update = array();
-            foreach ($upd as $up) {
-              $update[] = "name='".$up."'";
-            }
-            foreach ($period as $per) {
-              if (!in_array($per, $noupd)) $insert[] = "(NULL, '".$name.", '".$per."', '', '0', ' $page_id ', '0')";
-            }
-            $insert = implode(", ",$insert);
-            $update = implode(" or ",$update);
-            $sql = "SELECT name, pages FROM ".$prefix."_spiski WHERE type='".$name."' and (".$update.") order by name";
-            $result = $db->sql_query($sql);
-            while ($row = $db->sql_fetchrow($result)) {
-            $na = $row['name']; // дата
-            $pa = $row['pages']; // страницы
-                if (trim($update) != "") {
-                $db->sql_query("UPDATE ".$prefix."_spiski SET pages = ' $pa $page_id ' WHERE type='".$name."' and name='".$na."'") or die ("Ошибка: Не удалось обновить списки. 4 $page_id $name");
-                }
-            }
-            if (trim($insert) != "") {
-              $db->sql_query("INSERT INTO ".$prefix."_spiski (id, type, name, opis, sort, pages, parent) VALUES ".$insert.";") or die ('Ошибка: Не удалось сохранить списки. 5');
-            }
-    break;
-    ////////////////////////////////////////////////////////////////////////////
-    case "2": // файл НЕОКОНЧЕНО!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            // Смотрим настройки - тип файла и что с ним делать
-            // Закачиваем файл
-            // Транслит файла и смена имени на тип и дату
-            // Изменение размеров
-            // Записываем ссылку на него в определенное поле
-    break;
-    ////////////////////////////////////////////////////////////////////////////
-    case "0": // список (одно значение)
-            // Проверяем сколько элементов в списке
-            //$num = count($elements);
-            //for ($x=0; $x < $num; $x++) { // посчитали сколько номеров списка
-            if ($elements != 0) {
-              // узнаем какие страницы уже есть у этого номера из списка
-              $sql = "SELECT pages FROM ".$prefix."_spiski WHERE id='".$elements."'";
+    switch($type) {
+      case "6": // регион
+        $id_regions = $_POST['id_regions'];
+        if (!isset($id_regions)) $id_regions = $elements;
+        $region = $db->sql_fetchrow($db->sql_query("select `name` from ".$prefix."_regions where `id`='".$id_regions."'"));
+        $db->sql_query("INSERT INTO ".$prefix."_spiski (id, type, name, opis, sort, pages, parent) VALUES (NULL, '".$name."', '".$region['name']."', '', '0', ' ".$page_id." ', '0');") or die ('Ошибка: Не удалось сохранить список. 6'); 
+      break;
+      ////////////////////////////////////////////////////////////////////////////
+      case "1": // текст
+      case "4": // строка
+      case "5": // число
+          // Проверяем наличие подобного элемента
+              $sql = "SELECT `pages` FROM ".$prefix."_spiski WHERE `type`='".$name."' and `name`='".$elements."' limit 1";
               $result = $db->sql_query($sql);
-              $row = $db->sql_fetchrow($result);
-              $s_pages = $row['pages'];
-              if (strpos($s_pages," $page_id ") < 1) {
-                $s_pages .= " $page_id ";
+              $numrows = $db->sql_numrows($result);
+              if ($numrows == 1) { // если элемент найден
+                $row = $db->sql_fetchrow($result);
+                $s_pages = $row['pages'];
+                //$s_name = $row['name'];
+                $s_pages .= " ".$page_id." ";
                 $s_pages = str_replace("  "," ",$s_pages);
-                // теперь присвоем каждому из элементов списка id страницы, которую редактируем.
-                $db->sql_query("UPDATE ".$prefix."_spiski SET pages='".$s_pages."' WHERE id='".$elements."'") or die('Ошибка при добавлении страницы в элемент списка. 9. $name');
+                // если переносим в существующий элемент
+                $db->sql_query("UPDATE ".$prefix."_spiski SET `pages`='".$s_pages."' WHERE `type`='".$name."' and `name`='".$elements."'") or die ('Ошибка: Не удалось обновить список. 1');
+              } else { // если элемент новый
+                $db->sql_query("INSERT INTO ".$prefix."_spiski (id, type, name, opis, sort, pages, parent) VALUES (NULL, '".$name."', '".$elements."', '', '0', ' ".$page_id." ', '0');") or die ('Ошибка: Не удалось сохранить список. 4');
               }
-            }
-            //}
-    break;
-    ////////////////////////////////////////////////////////////////////////////
-    case "7": // список (несколько значений)
-            // Проверяем сколько элементов в списке
-            $num = count($elements);
-            for ($x=0; $x < $num; $x++) { // посчитали сколько номеров списка
-                if ($elements[$x] != 0) {
-                  // узнаем какие страницы уже есть у этого номера из списка
-                  $sql = "SELECT pages FROM ".$prefix."_spiski WHERE id='".$elements[$x]."'";
-                  $result = $db->sql_query($sql);
-                  $row = $db->sql_fetchrow($result);
-                  $s_pages = $row['pages'];
-                  if (strpos($s_pages," $page_id ") < 1) {
-                    $s_pages .= " $page_id ";
-                    $s_pages = str_replace("  "," ",$s_pages);
-                    // теперь присвоем каждому из элементов списка id страницы, которую редактируем.
-                    $db->sql_query("UPDATE ".$prefix."_spiski SET pages='".$s_pages."' WHERE id='".$elements[$x]."'") or die('Ошибка при добавлении страницы в элемент списка. 9. $name');
-                  }
+      break;
+      ////////////////////////////////////////////////////////////////////////////
+      case "3": // период времени
+              // создаем диапазон дат и все их проверяем
+              $elements = explode("|",$elements);
+              $dat1 = date2normal_view($elements[0], 1);
+              $dat2 = date2normal_view($elements[1], 1);
+              $period = period($dat1, $dat2);
+              // и все даты проверяем на наличие в БД
+              $upd = array();
+              $noupd = array();
+              $sql = "SELECT name, pages FROM ".$prefix."_spiski WHERE type='".$name."' order by name";
+              $result = $db->sql_query($sql);
+              while ($row = $db->sql_fetchrow($result)) {
+                $nam = $row['name']; // дата
+                $pag = trim($row['pages']); // страницы
+                if (in_array($nam, $period)!=FALSE) { 
+                $noupd[] = $nam; // для INSERT
+                if (strstr($pag,$page_id)==FALSE) $upd[] = $nam; // для UPDATE
                 }
-            }
-    break;
+              }
+              $insert = array();
+              $update = array();
+              foreach ($upd as $up) {
+                $update[] = "name='".$up."'";
+              }
+              foreach ($period as $per) {
+                if (!in_array($per, $noupd)) $insert[] = "(NULL, '".$name.", '".$per."', '', '0', ' $page_id ', '0')";
+              }
+              $insert = implode(", ",$insert);
+              $update = implode(" or ",$update);
+              $sql = "SELECT name, pages FROM ".$prefix."_spiski WHERE type='".$name."' and (".$update.") order by name";
+              $result = $db->sql_query($sql);
+              while ($row = $db->sql_fetchrow($result)) {
+              $na = $row['name']; // дата
+              $pa = $row['pages']; // страницы
+                  if (trim($update) != "") {
+                  $db->sql_query("UPDATE ".$prefix."_spiski SET pages = ' $pa $page_id ' WHERE type='".$name."' and name='".$na."'") or die ("Ошибка: Не удалось обновить списки. 4 $page_id $name");
+                  }
+              }
+              if (trim($insert) != "") {
+                $db->sql_query("INSERT INTO ".$prefix."_spiski (id, type, name, opis, sort, pages, parent) VALUES ".$insert.";") or die ('Ошибка: Не удалось сохранить списки. 5');
+              }
+      break;
+      ////////////////////////////////////////////////////////////////////////////
+      case "2": // файл НЕОКОНЧЕНО!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+              // Смотрим настройки - тип файла и что с ним делать
+              // Закачиваем файл
+              // Транслит файла и смена имени на тип и дату
+              // Изменение размеров
+              // Записываем ссылку на него в определенное поле
+      break;
+      ////////////////////////////////////////////////////////////////////////////
+      case "0": // список (одно значение)
+              // Проверяем сколько элементов в списке
+              //$num = count($elements);
+              //for ($x=0; $x < $num; $x++) { // посчитали сколько номеров списка
+              if ($elements != 0) {
+                // узнаем какие страницы уже есть у этого номера из списка
+                $sql = "SELECT pages FROM ".$prefix."_spiski WHERE id='".$elements."'";
+                $result = $db->sql_query($sql);
+                $row = $db->sql_fetchrow($result);
+                $s_pages = $row['pages'];
+                if (strpos($s_pages," $page_id ") < 1) {
+                  $s_pages .= " $page_id ";
+                  $s_pages = str_replace("  "," ",$s_pages);
+                  // теперь присвоем каждому из элементов списка id страницы, которую редактируем.
+                  $db->sql_query("UPDATE ".$prefix."_spiski SET pages='".$s_pages."' WHERE id='".$elements."'") or die('Ошибка при добавлении страницы в элемент списка. 9. $name');
+                }
+              }
+              //}
+      break;
+      ////////////////////////////////////////////////////////////////////////////
+      case "7": // список (несколько значений)
+              // Проверяем сколько элементов в списке
+              $num = count($elements);
+              for ($x=0; $x < $num; $x++) { // посчитали сколько номеров списка
+                  if ($elements[$x] != 0) {
+                    // узнаем какие страницы уже есть у этого номера из списка
+                    $sql = "SELECT pages FROM ".$prefix."_spiski WHERE id='".$elements[$x]."'";
+                    $result = $db->sql_query($sql);
+                    $row = $db->sql_fetchrow($result);
+                    $s_pages = $row['pages'];
+                    if (strpos($s_pages," $page_id ") < 1) {
+                      $s_pages .= " $page_id ";
+                      $s_pages = str_replace("  "," ",$s_pages);
+                      // теперь присвоем каждому из элементов списка id страницы, которую редактируем.
+                      $db->sql_query("UPDATE ".$prefix."_spiski SET pages='".$s_pages."' WHERE id='".$elements[$x]."'") or die('Ошибка при добавлении страницы в элемент списка. 9. $name');
+                    }
+                  }
+              }
+      break;
+    }
+    }
   }
-  }
-  }
-
   $db->sql_query("DELETE FROM ".$prefix."_spiski WHERE name='-00-00'"); 
   // Удаление ошибок. Потом поправить, чтобы не было их!!!
   Header("Location: sys.php?op=base_pages_add_page&name=".$module."&razdel=".$cid."&red=".$red."&new=1&pid=".$page_id."#1");
+}
+###################################################################################
+function save_spiski ($add, $page_id) {
+  global $db, $prefix;
+    // Получение информации о каждом списке
+  foreach ($add as $name => $elements) { 
+    $sql = "select * from ".$prefix."_mainpage where `name`='".$name."' and `type`='4'";
+    $result = $db->sql_query($sql);
+    $row = $db->sql_fetchrow($result);
+    $s_id = $row['id'];
+    $options = explode("|", $row['text']); $options = $options[1];
+    $type=0; $shablon=""; 
+    parse_str($options); // раскладка всех настроек списка
+    switch($type) {
+
+      case "6": // регион
+        del_spiski($page_id, $name); // Стираем упоминания о списках для переназначения
+        $sql = "SELECT `id`, `name`, `pages` FROM ".$prefix."_spiski WHERE `type`='$name' and `pages` like '% ".$page_id." %'";
+        $result = $db->sql_query($sql);
+        $row = $db->sql_fetchrow($result);
+        $nums = $db->sql_numrows($result);
+        $del_id = $row['id'];
+        $del_name = $row['name'];
+        $del_pages = $row['pages'];
+        if ($nums==0 or ($elements != $del_name and $del_name!="")) {
+          $id_regions = $_POST['id_regions'];
+          if (!isset($id_regions)) $id_regions = $elements;
+           $region = $db->sql_fetchrow($db->sql_query("select `name` from ".$prefix."_regions where `id`='".$id_regions."'"));
+          $db->sql_query("INSERT INTO ".$prefix."_spiski (id, type, name, opis, sort, pages, parent) VALUES (NULL, '".$name."', '".$region['name']."', '', '0', ' ".$page_id." ', '0');") or die ('Ошибка: Не удалось сохранить список. 6'); 
+        }
+      break;
+
+      case "1": // текст
+      case "4": // строка
+      case "5": // число
+        // Проверяем наличие подобного элемента
+        $sql = "SELECT `name`, `pages` FROM ".$prefix."_spiski WHERE `type`='".$name."' and `pages` like '% ".$page_id." %'";
+        $result = $db->sql_query($sql);
+        $numrows = $db->sql_numrows($result);
+        if ($numrows > 0) { // если элемент найден
+          $row = $db->sql_fetchrow($result);
+          $s_pages = $row['pages'];
+          $s_name = $row['name'];
+          if ($elements != $s_name) { // Если значение изменилось
+            if ($s_pages == " ".$page_id." ") {// Удалим весь список, если других страниц в нем нет
+              $db->sql_query("DELETE FROM ".$prefix."_spiski WHERE `type`='".$name."' and `name`='".$s_name."'");
+            } else { // Или удалим лишь номер страницы из списка, если в нем есть другие страницы
+              $s_pages = str_replace(" ".$page_id." "," ", $s_pages);
+              $db->sql_query("UPDATE ".$prefix."_spiski SET `pages`='".$s_pages."' WHERE `type`='".$name."' and `name`='".$s_name."'") or die ('Ошибка: Не удалось обновить список. 1');
+            }
+            // Если name != 0 - создадим новый список или добавим в существующий
+            if ($elements != "") {
+              // Проверим, нет ли такого списка
+              $sql = "SELECT `pages` FROM ".$prefix."_spiski WHERE `type`='".$name."' and `name`='".$elements."'";
+              $result = $db->sql_query($sql);
+              $numrows = $db->sql_numrows($result);
+              if ($numrows > 0) { // Список есть - добавляем к нему
+                $row = $db->sql_fetchrow($result);
+                $s_pages2 = $row['pages'];
+                $s_pages2 = str_replace("  "," ", $s_pages2." ".$page_id." ");
+                $db->sql_query("UPDATE ".$prefix."_spiski SET `pages`='".$s_pages2."' WHERE `type`='".$name."' and `name`='".$elements."'") or die ('Ошибка: Не удалось обновить список. 1');
+              } else { // Списка нет - создаем новый
+                $db->sql_query("INSERT INTO ".$prefix."_spiski (id, type, name, opis, sort, pages, parent) VALUES (NULL, '".$name."', '".$elements."', '', '0', ' ".$page_id." ', '0');") or die ('Ошибка: Не удалось сохранить список. 2');
+              }
+            }
+          } // если значение не изменилось - ничего не трогаем
+        } elseif ($elements != "") { // Если элемент не найден - проверим, нет ли такого списка
+          $sql = "SELECT `pages` FROM ".$prefix."_spiski WHERE `type`='".$name."' and `name`='".$elements."'";
+          $result = $db->sql_query($sql);
+          $numrows = $db->sql_numrows($result);
+          $row = $db->sql_fetchrow($result);
+          if ($numrows > 0) { // Список есть - добавляем к нему
+            $s_pages2 = $row['pages'];
+            $s_pages2 = str_replace("  "," ", $s_pages2." ".$page_id." ");
+            $db->sql_query("UPDATE ".$prefix."_spiski SET `pages`='".$s_pages2."' WHERE `type`='".$name."' and `name`='".$elements."'") or die ('Ошибка: Не удалось обновить список. 1');
+          } else { // Списка нет - создаем новый
+            $db->sql_query("INSERT INTO ".$prefix."_spiski (id, type, name, opis, sort, pages, parent) VALUES (NULL, '".$name."', '".$elements."', '', '0', ' ".$page_id." ', '0');") or die ('Ошибка: Не удалось сохранить список. 2');
+          }
+        }
+      break;
+
+      case "3": // период времени
+        del_spiski($page_id, $name); // Стираем упоминания о списках для переназначения
+        // создаем диапазон дат и все их проверяем
+        $elements = explode("|",$elements);
+        $dat1 = date2normal_view($elements[0], 1);
+        $dat2 = date2normal_view($elements[1], 1);
+        $period = period($dat1, $dat2);
+        // и все даты проверяем на наличие в БД
+        $upd = array();
+        $noupd = array();
+        $sql = "SELECT `name`, `pages` FROM ".$prefix."_spiski WHERE `type`='".$name."' order by `name`";
+        $result = $db->sql_query($sql);
+        while ($row = $db->sql_fetchrow($result)) {
+          $nam = $row['name']; // дата
+          $pag = trim($row['pages']); // страницы
+          if (in_array($nam, $period)!=FALSE) { 
+            $noupd[] = $nam; // для INSERT
+            if (strstr($pag,$page_id)==FALSE) $upd[] = $nam; // для UPDATE
+          }
+        }
+        $insert = array();
+        $update = array();
+        foreach ($upd as $up) {
+          $update[] = "`name`='".$up."'";
+        }
+        foreach ($period as $per) {
+          if (!in_array($per, $noupd)) $insert[] = "(NULL, '".$name."', '".$per."', '', '0', ' ".$page_id." ', '0')";
+        }
+        $insert = implode(", ",$insert);
+        $update = implode(" or ",$update);
+        $sql = "SELECT `name`, `pages` FROM ".$prefix."_spiski WHERE `type`='".$name."' and (".$update.") order by `name`";
+        $result = $db->sql_query($sql);
+        while ($row = $db->sql_fetchrow($result)) {
+          $na = $row['name']; // дата
+          $pa = $row['pages']; // страницы
+          $db->sql_query("UPDATE ".$prefix."_spiski SET `pages` = ' ".$pa." ".$page_id." ' WHERE `type`='".$name."' and `name`='".$na."'") or die ("Ошибка: Не удалось обновить списки. $page_id $name");
+        }
+        if (trim($insert) != "") {
+          $db->sql_query("INSERT INTO ".$prefix."_spiski (id, type, name, opis, sort, pages, parent) VALUES ".$insert.";") or die ('Ошибка: Не удалось сохранить списки.');
+        }
+      break;
+
+      case "2": // файл
+      // Неокончено !!!
+      break;
+
+      case "7": // список (несколько значений)
+        $num = count($elements); // сколько элементов в списке
+        del_spiski($page_id, $name); // Стираем упоминания о списках для переназначения
+        for ($x=0; $x < $num; $x++) { // посчитали сколько номеров списка
+          if ($elements[$x] != 0) { // Если это не "Не выбрано"
+            // узнаем какие страницы уже есть у этого номера из списка
+            $sql = "SELECT `pages` FROM ".$prefix."_spiski WHERE `type`='".$name."' and `id`='".$elements[$x]."'";
+            $result = $db->sql_query($sql);
+            $row = $db->sql_fetchrow($result);
+              $save_pages = str_replace("  "," ", $row['pages']." ".$page_id." ");
+              // теперь присвоем каждому из элементов списка id страницы, которую редактируем.
+              $db->sql_query("UPDATE ".$prefix."_spiski SET `pages` =  '".$save_pages."' WHERE `type`='".$name."' and  `id` = '".$elements[$x]."' LIMIT 1 ;") or die('Ошибка при добавлении страницы в элемент списка');
+          }
+        } 
+      break;
+      
+      case "0": // список (одно значение)
+        del_spiski($page_id, $name); // Стираем упоминания о списках для переназначения
+        if ($elements != 0) { // Если это не "Не выбрано"
+          // узнаем какие страницы уже есть у этого номера из списка
+          $sql = "SELECT `pages` FROM ".$prefix."_spiski WHERE `id`='".$elements."'";
+          $result = $db->sql_query($sql);
+          $row = $db->sql_fetchrow($result);
+          $save_pages = str_replace("  "," ", $row['pages']." ".$page_id." ");
+          // теперь присвоем каждому из элементов списка id страницы, которую редактируем.
+          $db->sql_query("UPDATE `".$prefix."_spiski` SET `pages` =  '".$save_pages."' WHERE `id` =".$elements." LIMIT 1 ;") or die('Ошибка при добавлении страницы в элемент списка');
+        }
+      break;
+    }
+  }
 }
 ###################################################################################
 function base_pages_edit_sv_page($pid, $module, $cid, $title, $open_text, $main_text, $foto, $link_foto, $search, $active, $mainpage, $rss, $nocomm, $price, $add, $data1, $data2, $data3, $data4, $keywords2, $description2, $com, $cop, $count, $sor, $open_text_mysor, $main_text_mysor) {
@@ -672,160 +835,8 @@ function base_pages_edit_sv_page($pid, $module, $cid, $title, $open_text, $main_
   if (isset($cop)) if ($cop != 0) $page_id = $cop;
   if (!isset($add) or $add == "") $add = array();
 
-  // Получение информации о каждом списке
-  foreach ($add as $name => $elements) { 
-    $sql = "select * from ".$prefix."_mainpage where `name`='".$name."' and `type`='4'";
-    $result = $db->sql_query($sql);
-    $row = $db->sql_fetchrow($result);
-    $s_id = $row['id'];
-    $options = explode("|", $row['text']); $options = $options[1];
-    $type=0; $shablon=""; 
-    parse_str($options); // раскладка всех настроек списка
-    switch($type) {
+  save_spiski($add, $page_id);
 
-      case "6": // регион
-        del_spiski($page_id, $name); // Стираем упоминания о списках для переназначения
-        $sql = "SELECT id, name, pages FROM ".$prefix."_spiski WHERE type='$name' and pages like '% $page_id %'";
-        $result = $db->sql_query($sql);
-        $row = $db->sql_fetchrow($result);
-        $nums = $db->sql_numrows($result);
-        $del_id = $row['id'];
-        $del_name = $row['name'];
-        $del_pages = $row['pages'];
-        if ($nums==0 or ($elements != $del_name and $del_name!="")) {
-        	$id_regions = $_POST['id_regions'];
-          if (!isset($id_regions)) $id_regions = $elements;
-           $region = $db->sql_fetchrow($db->sql_query("select name from ".$prefix."_regions where id='".$id_regions."'"));
-          $db->sql_query("INSERT INTO ".$prefix."_spiski (id, type, name, opis, sort, pages, parent) VALUES (NULL, '".$name."', '".$region['name']."', '', '0', ' $page_id ', '0');") or die ('Ошибка: Не удалось сохранить список. 6'); 
-        }
-      break;
-
-      case "1": // текст
-      case "4": // строка
-      case "5": // число
-        // Проверяем наличие подобного элемента
-        $sql = "SELECT `name`, `pages` FROM ".$prefix."_spiski WHERE `type`='".$name."' and `pages` like '% ".$page_id." %'";
-        $result = $db->sql_query($sql);
-        $numrows = $db->sql_numrows($result);
-        if ($numrows > 0) { // если элемент найден
-          $row = $db->sql_fetchrow($result);
-          $s_pages = $row['pages'];
-          $s_name = $row['name'];
-          if ($elements != $s_name) { // Если значение изменилось
-            if ($s_pages == " ".$page_id." ") {// Удалим весь список, если других страниц в нем нет
-              $db->sql_query("DELETE FROM ".$prefix."_spiski WHERE `type`='".$name."' and `name`='".$s_name."'");
-            } else { // Или удалим лишь номер страницы из списка, если в нем есть другие страницы
-              $s_pages = str_replace(" ".$page_id." "," ", $s_pages);
-              $db->sql_query("UPDATE ".$prefix."_spiski SET `pages`='".$s_pages."' WHERE `type`='".$name."' and `name`='".$s_name."'") or die ('Ошибка: Не удалось обновить список. 1');
-            }
-            // Если name != 0 - создадим новый список или добавим в существующий
-            if ($elements != "") {
-              // Проверим, нет ли такого списка
-              $sql = "SELECT `pages` FROM ".$prefix."_spiski WHERE `type`='".$name."' and `name`='".$elements."'";
-              $result = $db->sql_query($sql);
-              $numrows = $db->sql_numrows($result);
-              if ($numrows > 0) { // Список есть - добавляем к нему
-                $row = $db->sql_fetchrow($result);
-                $s_pages2 = $row['pages'];
-                $s_pages2 = str_replace("  "," ", $s_pages2." ".$page_id." ");
-                $db->sql_query("UPDATE ".$prefix."_spiski SET `pages`='".$s_pages2."' WHERE `type`='".$name."' and `name`='".$elements."'") or die ('Ошибка: Не удалось обновить список. 1');
-              } else { // Списка нет - создаем новый
-                $db->sql_query("INSERT INTO ".$prefix."_spiski (id, type, name, opis, sort, pages, parent) VALUES (NULL, '".$name."', '".$elements."', '', '0', ' ".$page_id." ', '0');") or die ('Ошибка: Не удалось сохранить список. 2');
-              }
-            }
-          } // если значение не изменилось - ничего не трогаем
-        } elseif ($elements != "") { // Если элемент не найден - проверим, нет ли такого списка
-          $sql = "SELECT `pages` FROM ".$prefix."_spiski WHERE `type`='".$name."' and `name`='".$elements."'";
-          $result = $db->sql_query($sql);
-          $numrows = $db->sql_numrows($result);
-          $row = $db->sql_fetchrow($result);
-          if ($numrows > 0) { // Список есть - добавляем к нему
-            $s_pages2 = $row['pages'];
-            $s_pages2 = str_replace("  "," ", $s_pages2." ".$page_id." ");
-            $db->sql_query("UPDATE ".$prefix."_spiski SET `pages`='".$s_pages2."' WHERE `type`='".$name."' and `name`='".$elements."'") or die ('Ошибка: Не удалось обновить список. 1');
-          } else { // Списка нет - создаем новый
-            $db->sql_query("INSERT INTO ".$prefix."_spiski (id, type, name, opis, sort, pages, parent) VALUES (NULL, '".$name."', '".$elements."', '', '0', ' ".$page_id." ', '0');") or die ('Ошибка: Не удалось сохранить список. 2');
-          }
-        }
-      break;
-
-      case "3": // период времени
-        del_spiski($page_id, $name); // Стираем упоминания о списках для переназначения
-        // создаем диапазон дат и все их проверяем
-        $elements = explode("|",$elements);
-        $dat1 = date2normal_view($elements[0], 1);
-        $dat2 = date2normal_view($elements[1], 1);
-        $period = period($dat1, $dat2);
-        // и все даты проверяем на наличие в БД
-        $upd = array();
-        $noupd = array();
-        $sql = "SELECT name, pages FROM ".$prefix."_spiski WHERE type='$name' order by name";
-        $result = $db->sql_query($sql);
-        while ($row = $db->sql_fetchrow($result)) {
-          $nam = $row['name']; // дата
-          $pag = trim($row['pages']); // страницы
-          if (in_array($nam, $period)!=FALSE) { 
-            $noupd[] = $nam; // для INSERT
-            if (strstr($pag,$page_id)==FALSE) $upd[] = $nam; // для UPDATE
-          }
-        }
-        $insert = array();
-        $update = array();
-        foreach ($upd as $up) {
-          $update[] = "name='".$up."'";
-        }
-        foreach ($period as $per) {
-          if (!in_array($per, $noupd)) $insert[] = "(NULL, '".$name."', '".$per."', '', '0', ' ".$page_id." ', '0')";
-        }
-        $insert = implode(", ",$insert);
-        $update = implode(" or ",$update);
-        $sql = "SELECT `name`, `pages` FROM ".$prefix."_spiski WHERE `type`='".$name."' and (".$update.") order by `name`";
-        $result = $db->sql_query($sql);
-        while ($row = $db->sql_fetchrow($result)) {
-          $na = $row['name']; // дата
-          $pa = $row['pages']; // страницы
-        	$db->sql_query("UPDATE ".$prefix."_spiski SET `pages` = ' ".$pa." ".$page_id." ' WHERE `type`='".$name."' and `name`='".$na."'") or die ("Ошибка: Не удалось обновить списки. $page_id $name");
-        }
-      	if (trim($insert) != "") {
-      	  $db->sql_query("INSERT INTO ".$prefix."_spiski (id, type, name, opis, sort, pages, parent) VALUES ".$insert.";") or die ('Ошибка: Не удалось сохранить списки.');
-      	}
-      break;
-
-      case "2": // файл
-      // Неокончено !!!
-      break;
-
-      case "7": // список (несколько значений)
-        $num = count($elements); // сколько элементов в списке
-        del_spiski($page_id, $name); // Стираем упоминания о списках для переназначения
-        for ($x=0; $x < $num; $x++) { // посчитали сколько номеров списка
-          if ($elements[$x] != 0) { // Если это не "Не выбрано"
-            // узнаем какие страницы уже есть у этого номера из списка
-            $sql = "SELECT `pages` FROM ".$prefix."_spiski WHERE `type`='".$name."' and `id`='".$elements[$x]."'";
-            $result = $db->sql_query($sql);
-            $row = $db->sql_fetchrow($result);
-              $save_pages = str_replace("  "," ", $row['pages']." ".$page_id." ");
-              // теперь присвоем каждому из элементов списка id страницы, которую редактируем.
-              $db->sql_query("UPDATE `".$prefix."_spiski` SET `pages` =  '".$save_pages."' WHERE `type`='".$name."' and  `id` = '".$elements[$x]."' LIMIT 1 ;") or die('Ошибка при добавлении страницы в элемент списка');
-          }
-        } 
-      break;
-      
-      case "0": // список (одно значение)
-        del_spiski($page_id, $name); // Стираем упоминания о списках для переназначения
-      	if ($elements != 0) { // Если это не "Не выбрано"
-        	// узнаем какие страницы уже есть у этого номера из списка
-        	$sql = "SELECT `pages` FROM ".$prefix."_spiski WHERE `id`='".$elements."'";
-        	$result = $db->sql_query($sql);
-        	$row = $db->sql_fetchrow($result);
-        	$save_pages = str_replace("  "," ", $row['pages']." ".$page_id." ");
-        	// теперь присвоем каждому из элементов списка id страницы, которую редактируем.
-        	$db->sql_query("UPDATE `".$prefix."_spiski` SET `pages` =  '".$save_pages."' WHERE  `id` =".$elements." LIMIT 1 ;") or die('Ошибка при добавлении страницы в элемент списка');
-      	}
-      break;
-      
-    }
-  }
   $db->sql_query("DELETE FROM ".$prefix."_spiski WHERE name='-00-00'"); // Удаление ошибок. Исправить!!!
   Header("Location: sys.php?op=base_pages_edit_page&name=".$module."&new=1&pid=".$pid);
 }
@@ -947,6 +958,11 @@ function base_pages_re($link) {
       
       case "base_pages_re":
       base_pages_re($link);
+      break;
+
+      case "page_save_spiski":
+      parse_str($_REQUEST['string']);
+      save_spiski($add, $page_id);
       break;
   }
 }
