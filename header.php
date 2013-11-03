@@ -210,7 +210,7 @@ if ($name=="-email") { // занесение мыла как скрытого к
 	$sql2 = "select id,name,title,text,useit,shablon,color from ".$prefix."_mainpage where `type`='3' and `tables`='pages'"; 
 	// `name` != '$name' and 
 	// ИЗМЕНА: вынесено за пределы массива и вместо * замена
-	$result2 = $db->sql_query($sql2); // заменить имена переменных :)
+	$result2 = $db->sql_query($sql2);
 	$nameYYY = array();
 	$titleYYY = array();
 	$textYYY = array();

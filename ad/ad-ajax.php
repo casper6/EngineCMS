@@ -430,22 +430,15 @@ if ($func == "trash_pics") { // Создаем список неиспользу
       $num++;
     }
   } else $info .= "<br>Фотографий на сайте не найдено<br>";
-  echo $info; 
-  exit; 
+  echo $info; exit; 
 }
 ###############################################################################################
 if ($func == "delslovo") { // Удаляем слово из статистики поиска по сайту
-  $db->sql_query("DELETE from ".$prefix."_search WHERE `id`='".$id."'"); 
-  exit;
-}###############################################################################################
-if ($func == "del_csv") { // Удаляем запись об импортированном файле .CSV
-  $row = $db->sql_fetchrow($db->sql_query("SELECT `file_id` FROM ".$prefix."_txt_and_csv WHERE `id`='".$id."'"));
-  unlink("../files/".$row['file_id']);
-  $db->sql_query("DELETE from ".$prefix."_txt_and_csv WHERE `id`='".$id."'");
-  exit;
+  $db->sql_query("DELETE from ".$prefix."_search WHERE `id`='$id'"); exit;
 }
 #################################################################################################
 if ($func == "show_pole") { // Ответ на комментарий из администрирования
+
   function spisok_name($s_name,$page_id,$arr=0,$add="") { // Получаем значение поля
     // Если arr=1 - передаем массив
     // add - условия сортировки sql-запроса
@@ -1306,13 +1299,13 @@ if ($func == "papka") { // Папка
   list($cid, $sort) = explode("*@%", $string);
   $list = "";
   switch ($sort) {
-    case "0": $order = "date desc, title"; break;
-    case "1": $order = "title"; break;
+    case "0": $order = "date desc"; break;
     case "2": $order = "redate desc";  break;
     case "3": $order = "comm desc"; break;
     case "4": $order = "counter desc"; break;
     case "5": $order = "active"; break;
-    default: $order = "date desc, title"; break;
+    case "1":
+    default: $order = "title, date desc"; break;
   }
   $name_raz = $name_razdels[$id];
     // Подпапки этой папки
