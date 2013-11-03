@@ -1,5 +1,5 @@
 <?php
-require_once("../mainfile.php");
+require_once("mainfile.php");
 global $prefix, $db, $otpravka_pic, $_COOKIE; 
 
 if (is_admin($admin)) $admin_ok = 1;
@@ -104,8 +104,8 @@ if ($tmp==$opros_id || $opros_res != 1) { // Если голосовали - п�
     $textX .= ss("Вы уже проголосовали. Администратор запретил просмотр результатов голосования.");
   }
 } else { // Если еще не голосовали - ссылка на результаты
-  $textX .= "<form method=post enctype=\"multipart/form-data\" onsubmit=\"return false\">".$textX2."<br><center>
-  <input type='submit' id=\"go\" name='go' value='Отправить' class=\"ok opros\" onclick=\"CheckForm(".$opros_num.");\"></center></form>";
+  $textX .= "<form method=post enctype=\"multipart/form-data\" onsubmit=\"return false\">".$textX2."<br>
+  <input type='submit' id=\"go\" name='go' value='Отправить' class=\"ok opros\" onclick=\"CheckForm(".$opros_num.");\"></form>";
   if ($opros_result == 1 || $admin_ok == 1) $textX .= "<br><a href=\"#golos".$re."\" onclick=\"$(showopros(".$opros_num.",3, 0)); return false;\" class=opros_result_show>".ss("Посмотреть результаты")."</a>";
 }
 $textX .= "</div>";

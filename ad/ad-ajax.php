@@ -1384,7 +1384,7 @@ if ($func == "papka") { // Папка
           $nowork = icon('red small','!');;
         }
 
-        $pg = "<div id='page".$pid."' class='gray openpage'><a href='#".$ver.$pid."' onclick='sho(".$pid.", \"".$name."\", ".$active.",".$id_razdel.",".$cid.",\"".$edit_pole."\");'".$color.">".$nowork."".$title."</a>".$copy." ".$date." ".$keydes." <div id='pid".$pid."' class='pid'></div></div>";
+        $pg = "<div id='page".$pid."' class='gray openpage'><a href='#".$ver.$pid."' onclick='sho(".$pid.", \"".$name."\", ".$active.",".$id_razdel.",".$cid.",\"".$edit_pole."\");'".$color.">".$nowork.$title.$copy." — ".$date."</a> ".$keydes." <div id='pid".$pid."' class='pid'></div></div>";
         if ($no_pages < $granica+1) $list .= $pg; 
         if ($no_pages > $granica) $dop_list .= $pg;
         $no_pages++;
@@ -1493,7 +1493,7 @@ if ($func == "razdel") { // Раздел
         $nowork=icon('red small','!')." ";
       }
 
-      $pg = "<div id='page".$pid."' class='gray openpage'><a href='#".$ver.$pid."' onclick='sho(".$pid.", \"".$name_raz."\", ".$active.",".$id_razdel.",".$cid.",\"".$edit_pole."\");'".$color.">".$nowork."".$title."</a>".$copy." ".$date." ".$keydes." <div id='pid".$pid."' class='pid'></div></div>";
+      $pg = "<div id='page".$pid."' class='gray openpage'><a href='#".$ver.$pid."' onclick='sho(".$pid.", \"".$name_raz."\", ".$active.",".$id_razdel.",".$cid.",\"".$edit_pole."\");'".$color.">".$nowork.$title.$copy." — ".$date."</a> ".$keydes." <div id='pid".$pid."' class='pid'></div></div>";
       if ($no_pages < $granica+1) $list .= $pg; 
       if ($no_pages > $granica) $dop_list .= $pg;
       $no_pages++;

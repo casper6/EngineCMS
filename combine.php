@@ -206,6 +206,13 @@ table[align=right] {margin-left: 10px;}
 .show_block { border: 2px dotted green; padding:1px;  border-radius: 5px;  -moz-border-radius: 5px;  -webkit-border-radius: 5px;}
 .show_block_title {background: #efefef; color: black; padding:2px; padding-left:5px; border: 0;}
 
+input[type=radio] {
+  margin-right:10px;
+  margin-left:5px;
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
 input[type=search] {
   -webkit-appearance: textfield;
   -webkit-box-sizing: content-box;
