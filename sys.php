@@ -155,7 +155,8 @@ function GraphicAdmin() {
 	if ($show_userposts != 0) {
 		$num_add_pages = $db->sql_numrows($db->sql_query("SELECT `pid` FROM ".$prefix."_pages where (`active`='2' or `active`='3') and `tables`!='del'"));
 	}
-	$soderganie_menu = "";
+
+	$soderganie_menu = "<button id='new_razdel_button' title='".aa("Добавить страницу...")."' class='small green nothing left3' onclick='location.href=\"/sys.php?op=base_pages_add_page#1\"'><span class=\"icon white small\" data-icon=\"+\"></span></button>";
  	
  	global $deviceType;
  	$buttons = explode(",", aa(" Новое, Проверить: , Удаленное, Старое, Блоки, Отзывы:, Вставить дату"));
@@ -178,7 +179,7 @@ function GraphicAdmin() {
 
 	$soderganie_menu .= " <button id='mainrazdel3' class='nothing dark_pole2' onclick=\"oformlenie_show('блок','3','block','/sys.php?op=mainpage&name=block&type=3'); $('#razdels').hide('slow')\" title='".aa("Резервные копии созданных ранее страниц")."'><span class=\"icon gray small\" data-icon=\"R\"></span>".$buttons[4]."</button> ";
 
-	//$soderganie_menu .= "<button id='new_razdel_button' title='Добавить страницу...' class='medium green nothing' onclick='location.href=\"/sys.php?op=base_pages_add_page#1\"'><span class=\"icon white small\" data-icon=\"+\"></span> страницу</button>";
+	
 
 	echo "<table cellspacing=0 cellpadding=0 class='light_fon w100 pm0 mw800'><tr valign=top><td id='razdel_td' class='pm0 nothing'><div id='razdels' style='min-width:400px;'>";
 
@@ -251,12 +252,10 @@ function GraphicAdmin() {
 		}
 
 		$type_opisX = "";
-		//if ($nam!="index") {
-			if ($size < 1) $size = ""; 
-			if ($size_off < 1) $size_off = ""; else $size_off = "&nbsp;<span class='red' title='".aa("Отключенные страницы")."'>-".$size_off."</span>";
-			$type_opisX = "<span class='f14 pr10 pl10'><span class='green' title='".aa("Включенные страницы")."'>".$size."</span>".$size_off."</span>";
-			if ($size < 1 and $size_off < 1) $type_opisX = "";
-		//} elseif ($nam=="index") $type_opisX = "";
+		if ($size < 1) $size = ""; 
+		if ($size_off < 1) $size_off = ""; else $size_off = "&nbsp;<span class='red' title='".aa("Отключенные страницы")."'>-".$size_off."</span>";
+		$type_opisX = "<span class='f14 pr10 pl10'><span class='green' title='".aa("Включенные страницы")."'>".$size."</span>".$size_off."</span>";
+		if ($size < 1 and $size_off < 1) $type_opisX = "";
 		if ($current_type != $type) $current_type = $type;
 		$text = explode("|",$text); 
 		$options = $text[1];
@@ -280,17 +279,7 @@ function GraphicAdmin() {
 		$doping = "";
 		if (strpos($options,"base=")) {
 			$title = "БД «".trim($title)."»";
-			// название БД = название раздела
-			// $sql2 = "SELECT `text` FROM ".$prefix."_mainpage where type='2' and name='".$nam."'";
-			// $result2 = $db->sql_query($sql2);
-			// $row2 = $db->sql_fetchrow($result2);
-			// $module_options = explode("|",$row2['text']);
-			// $module_options = $module_options[1]; 
-			// parse_str($module_options);
-			// $sql2 = "SELECT name FROM ".$prefix."_mainpage where id='".$base."'";
-			// $result2 = $db->sql_query($sql2);
-			// $row2 = $db->sql_fetchrow($result2);
-			$baza_name  = $nam; // $row2['name']; // Название таблицы БД 
+			$baza_name  = $nam; // Название таблицы БД 
 			$type_opisX = "<nobr><span class='f14 radius bb1 pr10 pl10'><span class='green' title='".aa("Записи в базе данных")."'>".$db->sql_numrows($db->sql_query("SELECT `id` FROM ".$prefix."_base_".$nam))."</span></span> 
 			<a class='button small ml10' href='sys.php?op=base_base&name=".$nam."' title='".aa("Открыть базу данных")."'><span class='icon small' data-icon='s'></span></a>
 			<a class='button small ml5' href='sys.php?op=base_base_create_base&base=".$baza_name."&name=".$nam."&amp;red=1#1' title='".aa("Добавить строку в базу данных")."'><span class='icon small' data-icon='+'></span></a></nobr>";

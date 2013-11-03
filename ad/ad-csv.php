@@ -7,7 +7,6 @@ $result = $db->sql_query($sql);
 $row = $db->sql_fetchrow($result);
 $realadmin = $row['realadmin'];
 if ($realadmin==1) {
-
 	function txt_and_csv_main() {
 		global $prefix, $db;
 		include("ad/ad-header.php");
@@ -80,35 +79,15 @@ if ($realadmin==1) {
 				// Проверяем загружен ли файл
 				if (is_uploaded_file($_FILES["file"]["tmp_name"])) {
 					// проверяем расширение файла
-					//if ($_FILES["file"]['type'] == "text/plain" || $_FILES["file"]['type'] == "text/comma-separated-values" ) {
 						$files = $_FILES['file']['name'];
 						$filename = date('d-m-Y_H-i-s').'_'.translit($_FILES['file']['name']);
 						move_uploaded_file($_FILES["file"]["tmp_name"], "files/".$filename);
 						$db->sql_query("INSERT INTO ".$prefix."_txt_and_csv (id, file, file_id) VALUES ('', '$files', '$filename')");
 						Header("Location: sys.php?op=txt_and_csv_main");
-					//} else echo "<p>Можно загружать только txt csv файлы.".$_FILES["file"]['type'];
 				} elseif ($_FILES['file']['error'] == "4") echo "<p>Вы не выбрали файл. Вернитесь назад и выберите.</p>";
 				else echo "<p>Ошибка загрузки файла. ".$_FILES['file']['error']."</p>";
 			}
 		}
-		/*
-		if ($_POST["submit"] == "Добавить архив") {
-			if ($_FILES["zip"]["size"] > 52428800) echo "<p>Размер файла превышает 50 Мб.</p>"; 
-			else {
-				// Проверяем загружен ли файл
-				if (is_uploaded_file($_FILES["zip"]["tmp_name"])) {
-					// проверяем расширение файла
-					if ($_FILES["zip"]['type'] == "application/zip" ) {
-						$id= $_GET["id"]; // К какому файлу импорта принадлежит
-						$files = $_FILES['zip']['name'];
-						move_uploaded_file($_FILES["zip"]["tmp_name"], "includes/txt_and_csv/".$files);
-						$db->sql_query("INSERT INTO ".$prefix."_txt_and_csv (id, file, file_id) VALUES ('', '$files', '$id')");
-						Header("Location: sys.php?op=txt_and_csv_main");
-					} else echo "<p>Можно загружать только zip файлы.";
-				} else echo "<p>Ошибка загрузки файла. ".$_FILES['file']['error']."</p>";
-			}
-		}
-		*/
 	}
 
 	function start_txt_and_csv() {
@@ -117,7 +96,6 @@ if ($realadmin==1) {
 		$znak = $_POST["znak"];
 		$cat = $_POST["modul"];
 		include("ad/ad-header.php");
-		//echo tools_menu().'<br>';
 		$result = $db->sql_query("SELECT `file_id` FROM ".$prefix."_txt_and_csv where `id` = '".$id."'") or die('<center>Ошибка</center>');
 		$row = $db->sql_fetchrow($result);
 		$arr = file("files/".$row['file_id']);
@@ -146,9 +124,7 @@ if ($realadmin==1) {
 				// подключаем списки для выбора
 				$res = $db->sql_query("SELECT `name`, `title` FROM ".$prefix."_mainpage where (`useit` = '".$cat."' or `useit` = '0') and `type`='4'") or die('Ошибка подключения полей');
 				while ($row = $db->sql_fetchrow($res)) {
-					//$type = $row['text'];
 					$pole = $row['name'];
-					//if ($type{12} == 1 || $type{12} == 4 || $type{12} == 5 ) 
 					echo '<option value="'.$row['name'].'">'.$row['title'].' ('.$row['name'].')</option>'; // Нужные нам поля, текст и строка
 				}
 			}
@@ -163,7 +139,6 @@ if ($realadmin==1) {
 		$cat = $_GET["cat"];
 		$stroka = $_POST["stroka"];
 		include("ad/ad-header.php");
-		//echo tools_menu().'<br>';
 		$active = '0'; // все страницы будут выключены
 		$rss = '1'; // доступно по RSS
 		$res = $db->sql_query("SELECT `name` FROM ".$prefix."_mainpage where `tables`='pages' and `id`='".$cat."' ") or die('Ошибка');
@@ -174,12 +149,6 @@ if ($realadmin==1) {
 				$module = trim($module[0]);
 			}
 		}
-		// Начинаем проверку, если одно поле установленно нескольким значениям
-		//$count = count($stroka);
-		//$result = array_unique($stroka);
-		//$count2 = count($result);
-		//if ($count2 !== $count) echo '<b>Ошибка:</b>'.$count2.' !== '.$count.' выбрано несколько значений данных для одного поля<br>или в тексте таблицы есть символы-разделители.';
-		//else {
 			$revers = $revers_spiski = array_flip ($stroka); // Меняем местами ключи и значения массива
 
 			// в массиве $revers_spiski остаются только названия списков
@@ -207,8 +176,6 @@ if ($realadmin==1) {
 					$title_name = $a[$y]; // имя папки
 					$result = $db->sql_query("SELECT `cid` FROM ".$prefix."_pages_categories where `title`='".$title_name."' and `module`='".$module."'");
 					$counter = $db->sql_numrows($result);
-					//while ($row2 = $db->sql_fetchrow($result)) {
-					//$counter = $row2['counter'];
 			        if ($counter > 0) { // если нашли папку - получаем ее id
 						$row3 = $db->sql_fetchrow($result);
 						$cid = $row3['cid'];        
@@ -217,7 +184,6 @@ if ($realadmin==1) {
 						$row4 = $db->sql_fetchrow($db->sql_query("SELECT `cid` FROM ".$prefix."_pages_categories where `title`='".$title_name."' and `module`='".$module."'")); // и получаем ее id
 						$cid = $row4['cid']; 
 					}
-					//}
 				} else $cid = '0'; // Если поле папок не было заданно пишем данные в корень раздела
 
 				if (array_key_exists("1", $revers)) { 
@@ -268,7 +234,6 @@ if ($realadmin==1) {
 					$db->sql_query("INSERT INTO ".$prefix."_pages VALUES (NULL, '".$module."', '".$cid."', '".$title."', '".$open_text."', '".$main_text."', '".$now."', '".$now."', '0', '".$active."', '0', '0', '', '".$search."', '0', '".$rss."', '0.00', '".$description2."', '".$keywords2."', 'pages', '0','0','0');") or die ("Не удалось сохранить страницу - сообщите разработчику следующее: ".$sql);
 					
 					if (count($revers_spiski) > 0) { // если есть поля для списков
-						//print_r($revers_spiski);
 						
 						// Узнаем получившийся номер страницы ID
 						$row5 = $db->sql_fetchrow($db->sql_query("select `pid` from ".$prefix."_pages where `title`='".$title."' and `date`='".$now."'"));
@@ -278,9 +243,6 @@ if ($realadmin==1) {
 						while ($row = $db->sql_fetchrow($res)) {
 
 						    // Получение информации о каждом списке
-						    //$sql = "select * from ".$prefix."_mainpage where `name`='".$name."' and `type`='4'";
-						    //$result = $db->sql_query($sql);
-						    //$row = $db->sql_fetchrow($result);
 						    $name = $row['name'];
 						    if (array_key_exists($name, $revers)) { 
 								$elements = $revers[$name]; 
@@ -435,69 +397,13 @@ if ($realadmin==1) {
 							      break;
 							    }
   							}
-
-							/*
-							$type = $row6['text']; 
-							$pole = $row6['name'];
-							if (array_key_exists($pole, $revers)) { 
-								$o = $revers[$pole]; 
-								$elements = $a[$o];
-								if ($type{12} == 5) // цифра
-									$elements = filter_var($elements, FILTER_SANITIZE_NUMBER_FLOAT);
-								// Проверим, нет ли такого списка
-								$result = $db->sql_query("SELECT `pages` FROM ".$prefix."_spiski WHERE `type`='".$pole."' and `name`='".$elements."'");
-								$numrows = $db->sql_numrows($result);
-								if ($numrows > 0) { // Список есть - добавляем к нему
-									$row = $db->sql_fetchrow($result);
-									$s_pages2 = $row['pages'];
-									$s_pages2 = str_replace("  "," ", $s_pages2." ".$page_id." ");
-									$db->sql_query("UPDATE ".$prefix."_spiski SET `pages`='".$s_pages2."' WHERE `type`='".$pole."' and `name`=' ".$elements." '") or die ('Ошибка: Не удалось обновить список.');
-								} else { // Списка нет - создаем новый
-									if (trim($elements) != "" && trim($pole) != "" && $page_id != 0) $db->sql_query("INSERT INTO ".$prefix."_spiski (id, type, name, opis, sort, pages, parent) VALUES (NULL, '".$pole."', ' ".$elements." ', '', '0', ' ".$page_id." ', '0');") or die ('Ошибка: Не удалось сохранить список.');
-								}
-							} */
 						} // end while
 					}
 				}
-			} echo "<div class='light_fon'><div class='black_grad'><h1>Импорт данных завершен</h1></div>";
-			/*
-			$result3 = $db->sql_query("SELECT `id` FROM ".$prefix."_txt_and_csv where `file_id` = '".$id."'");
-			$counter = $db->sql_numrows($result2);
-	        if ($counter > 0) echo '<a href="sys.php?op=txt_and_csv_zip&id='.$id.'">Импортировать архив</a><br>'; // если eсть архивы
-			else 
-			*/
-			echo 'Вернуться <a href="sys.php?op=txt_and_csv_main">на начальную страницу импорта</a> или <a href="sys.php">в Содержание</a>.<br>'; // если нет архивов
-		//}
+			} 
+			echo "<div class='light_fon'><div class='black_grad'><h1>Импорт данных завершен</h1></div>";
+			echo 'Вернуться <a href="sys.php?op=txt_and_csv_main">на начальную страницу импорта</a> или <a href="sys.php">в Содержание</a>.<br>';
 	}
-	/*
-	function txt_and_csv_zip() { // Функция импорта архивов
-		global $prefix, $db;
-		$id= $_GET["id"];
-		$zip = new ZipArchive;
-		$result2 = $db->sql_query("SELECT * FROM ".$prefix."_txt_and_csv where file_id = '$id'") or die('Ошибка поиска архивов');
-		while ($row2 = $db->sql_fetchrow($result2)) {
-			if ($zip->open("includes/txt_and_csv/".$row2['file']) === true) {
-				$zip->extractTo('includes/txt_and_csv/zip/'); // распаковываем архив
-				$zip->close();
-			}
-		}
-		$files = glob("includes/txt_and_csv/zip/*"); // находим все распакованные файлы
-	    $c = count($files);
-	    if (count($files) > 0) {
-	        foreach ($files as $file) {    
-	            if (file_exists($file)) {
-					$file_extension = end(explode(".", $file)); // узнаем расширение файла
-					if ($file_extension == "jpg" || $file_extension == "jpeg" || $file_extension == "png" || $file_extension == "gif" ) {
-						if (!copy($file, 'img/'.basename($file))) echo "Не удалось скопировать ".$filenames."."; // если изображение
-			  		} else {
-			  			if (!copy($file, 'files/'.basename($file))) echo "Не удалось скопировать ".$filenames."."; // все другие файлы
-					}
-	            	unlink($file); // скопировали и сразу удалили
-	            }
-	        }
-	    }
-	}
-	*/
 	switch ($op) {
 		case "txt_and_csv_main":
 			txt_and_csv_main(); 
@@ -514,8 +420,6 @@ if ($realadmin==1) {
 		case "step2_txt_and_csv":
 			step2_txt_and_csv(); 
 			break;
-		//case "txt_and_csv_zip":
-			//txt_and_csv_zip(); break;
 	}
 }
 ?>
