@@ -474,7 +474,6 @@ function base_pages_save_page($cid, $module, $title, $open_text, $main_text, $fo
     $sql = "select * from ".$prefix."_mainpage where `name`='".$name."' and `type`='4'";
     $result = $db->sql_query($sql);
     $row = $db->sql_fetchrow($result);
-    $s_id = $row['id'];
     $options = explode("|", $row['text']); 
     $options = $options[1];
     $type = 0; 
@@ -610,12 +609,13 @@ function save_spiski ($add, $page_id) {
   global $db, $prefix;
     // Получение информации о каждом списке
   foreach ($add as $name => $elements) { 
-    $sql = "select * from ".$prefix."_mainpage where `name`='".$name."' and `type`='4'";
+    $sql = "select * from ".$prefix."_mainpage where `name`='".$name."' and `type`='4' and `tables` = 'pages'";
     $result = $db->sql_query($sql);
     $row = $db->sql_fetchrow($result);
-    $s_id = $row['id'];
-    $options = explode("|", $row['text']); $options = $options[1];
-    $type=0; $shablon=""; 
+    $options = explode("|", $row['text']); 
+    $options = $options[1];
+    $type = 0; 
+    $shablon = ""; 
     parse_str($options); // раскладка всех настроек списка
     switch($type) {
 
@@ -639,6 +639,7 @@ function save_spiski ($add, $page_id) {
       case "1": // текст
       case "4": // строка
       case "5": // число
+        if ($type == "5") $elements = filter_var($elements, FILTER_SANITIZE_NUMBER_FLOAT);
         // Проверяем наличие подобного элемента
         $sql = "SELECT `name`, `pages` FROM ".$prefix."_spiski WHERE `type`='".$name."' and `pages` like '% ".$page_id." %'";
         $result = $db->sql_query($sql);
