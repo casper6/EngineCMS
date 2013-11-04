@@ -60,7 +60,7 @@ if ($row['realadmin'] == 1) {
 					elseif($row[$j] != "") $schema_insert .= " '".str_replace('$', '\$', addslashes($row[$j]) )."',";
 					else $schema_insert .= " '',";
 				}
-				//$schema_insert = ereg_replace(",$", "", $schema_insert);
+				$schema_insert = ereg_replace(",$", "", $schema_insert);
 				$schema_insert .= ")";
 				$handler(trim($schema_insert));
 				$i++;
