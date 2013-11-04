@@ -12,7 +12,7 @@ require_once("mainfile.php");
 $checkurl = $_SERVER['REQUEST_URI'];
 if((stripos($checkurl,'VXBkYXRlQXV0aG9y')) OR (stripos($checkurl,'QWRkQXV0aG9y')) OR (stripos($checkurl, "?admin")) OR (stripos($checkurl, "&admin")) OR (stripos($checkurl,'%20union%20') OR stripos($checkurl,'*%2f*') OR stripos($checkurl,'/*') OR stripos($checkurl,'*/union/*') OR stripos($checkurl,'c2nyaxb0') OR stripos($checkurl,'+union+') OR (stripos($checkurl,'cmd=') AND stripos($checkurl,'&cmd')===false) OR (stripos($checkurl,'exec') AND stripos($checkurl,'execu')===false) OR stripos($checkurl,'concat'))) die(aa("Попытка взлома")." №8");
 
-global $admin_file;
+global $admin_file, $siteurl, $show_reserv;
 
 $the_first = $db->sql_numrows($db->sql_query("SELECT * FROM ".$prefix."_authors"));
 if ($the_first == 0) {
@@ -81,11 +81,40 @@ $pagetitle = "- ".aa("Администрирование");
 // Стирание кеша главной страницы
 if (is_admin($admin)) recash("/");
 
-global $razdel_sort, $hide_top;
-$razdel_sort = intval($razdel_sort); // Сортировка разделов в Содержании
-if ( $razdel_sort == 1 || $razdel_sort == 2 || $razdel_sort == 0 ) setcookie("razdel_sort", $razdel_sort, time()+60*60*24*360);
-$hide_top = intval($hide_top); // Прячем шапку
-if ( $hide_top == 1 || $hide_top == 0 ) setcookie("hide_top", $hide_top, time()+60*60*24*360);
+global $razdel_sort, $razdel_sort_set, $hide_top, $hide_top_set;
+
+if (isset($_COOKIE["razdel_sort"])) $razdel_sort = intval($_COOKIE["razdel_sort"]);
+else $razdel_sort = 0;
+if ($razdel_sort_set == 1 || $razdel_sort_set == 2 || $razdel_sort_set == 0) {
+	setcookie("razdel_sort", intval($razdel_sort_set), time()+60*60*24*360);
+	$razdel_sort = intval($razdel_sort_set);
+}
+
+if (isset($_COOKIE["hide_top"])) $hide_top = intval($_COOKIE["hide_top"]);
+else $hide_top = 0;
+if ($hide_top_set == 1 || $hide_top_set == 0) {
+	setcookie("hide_top", intval($hide_top_set), time()+60*60*24*360);
+	$hide_top = intval($hide_top_set);
+}
+//if (isset($_COOKIE["hide_top"])) print_r($_COOKIE);
+	//$hide_top = intval($_COOKIE["hide_top"]);
+
+//$razdel_sort = intval($razdel_sort); // Сортировка разделов в Содержании
+
+//$hide_top = intval($hide_top); // Прячем шапку
+//if ( $hide_top == 1 || $hide_top == 0 ) setcookie("hide_top", $hide_top, time()+60*60*24*360, "/", $siteurl);
+
+/*
+$razdel_sort = 0;
+if (!isset($_COOKIE["razdel_sort"])) { 
+	setcookie("razdel_sort", "0", time()+60*60*24*360); 
+} else $razdel_sort = intval($_COOKIE["razdel_sort"]);
+
+$hide_top = 0;
+if (!isset($_COOKIE["hide_top"])) {
+	setcookie("hide_top", "0", time()+60*60*24*360); 
+} else $hide_top = intval($_COOKIE["hide_top"]);
+*/
 
 // Вход в Админку
 function login() {
@@ -184,16 +213,7 @@ function GraphicAdmin() {
 	echo "<table cellspacing=0 cellpadding=0 class='light_fon w100 pm0 mw800'><tr valign=top><td id='razdel_td' class='pm0 nothing'><div id='razdels' style='min-width:400px;'>";
 
 	// Сортировка разделов: 0 - цвет, 1 - алфавит, 2 - посещаемость
-	$razdel_sort_name = array("<a href=red?razdel_sort=0>".aa("цвету")."</a>", "<a href=red?razdel_sort=1>".aa("названию")."</a>", "<a href=red?razdel_sort=2>".aa("посещаемости")."</a>");
-	if (!isset($razdel_sort)) if (!isset($_COOKIE["razdel_sort"])) { 
-		setcookie("razdel_sort", "0", time()+60*60*24*360); 
-		$razdel_sort = 0;
-	} else $razdel_sort = intval($_COOKIE["razdel_sort"]);
-	if (!isset($hide_top)) if (!isset($_COOKIE["hide_top"])) { 
-		setcookie("hide_top", "0", time()+60*60*24*360); 
-		$hide_top = 0;
-	} else $hide_top = intval($_COOKIE["hide_top"]);
-
+	$razdel_sort_name = array("<a href='red?razdel_sort_set=0'>".aa("цвету")."</a>", "<a href='red?razdel_sort_set=1'>".aa("названию")."</a>", "<a href='red?razdel_sort_set=2'>".aa("посещаемости")."</a>");
 	$razdel_sort_name[$razdel_sort] = "<span class='dark_pole3 white radius'>".$razdel_sort_name[$razdel_sort]."</span>";
 	if ($razdel_sort != 1) $razdel_sort = "color desc, title";
 	elseif ($razdel_sort == 1) $razdel_sort = "title";
@@ -311,8 +331,8 @@ function GraphicAdmin() {
 		</div></a></div>";
     }
 
-    if ($hide_top == "1") $hide_top_button = "<button class='small' target=_blank onclick='window.open(\"/\")' title='".aa("Перейти на сайт (откроется в новом окне)")."'><span class='icon medium' data-icon='4'></span></button> <a class='button' href='red?hide_top=0'>↓</a>";
-    else $hide_top_button = "<a class='button' href='red?hide_top=1'>↑</a>";
+    if ($hide_top == "1") $hide_top_button = "<button class='small' target=_blank onclick='window.open(\"/\")' title='".aa("Перейти на сайт (откроется в новом окне)")."'><span class='icon medium' data-icon='4'></span></button> <a class='button' href='red?hide_top_set=0'>↓</a>";
+    else $hide_top_button = "<a class='button' href='red?hide_top_set=1'>↑</a>";
 	echo "</div></div>
 	</td>
 	<td style='padding:0;'><a class='punkt' title='Свернуть/развернуть левую колонку' onmousemove='$(\"#razdels\").show();' onclick='$(\"#razdels\").toggle(\"slow\");'><div class='polosa_razdelitel'><div id='rotateText'><nobr>↑ Сворачивает Разделы ↑</nobr></div></div></a></td>
@@ -347,7 +367,6 @@ function GraphicAdmin() {
 	$map = false;
 	if (file_exists("map.xml")) if (date("Y-m-d", filectime("map.xml")) == date("Y-m-d")) $map = true;
 	if ($map == false) {
-		global $siteurl, $show_reserv;
 		$output = "";
 				$sql = "SELECT `pid`, `module`, `date` FROM ".$prefix."_pages where `tables`='pages' and `active`='1' order by `date` desc limit 0,40000";
 				$result = $db->sql_query($sql) or die(aa("Не могу добавить в карту сайта страницы. Обратитесь к разработчику."));

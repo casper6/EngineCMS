@@ -103,34 +103,34 @@ $arr3[$i]= $koren; // Массив с корнями
 }
 }
 $text_koren = '';
-for($i=0;$i<$counts;$i++) {
-if (mb_strlen($text) > 4)
-$text_koren .= sklon(trim($texts[$i]))." "; // строим текст из корней
-else $text_koren .= trim($texts[$i])." ";
+for ($i=0;$i<$counts;$i++) {
+  if (mb_strlen($text) > 4) $text_koren .= sklon(trim($texts[$i]))." "; // строим текст из корней
+  else $text_koren .= trim($texts[$i])." ";
 }
-for($i=0;$i<$counts;$i++) { // строим фразы
-if (mb_substr_count('-—,.?();:!',trim($texts[$i])) == 0 and mb_substr_count('-—,.?();:!',trim($texts[$i+1])) == 0) {
-$sear1 = sklon(trim($texts[$i]));
-$sear2 = sklon(trim($texts[$i+1]));
-$sear3 = sklon(trim($texts[$i+2]));
-if (array_key_exists($sear1,$arr) 
-and array_key_exists($sear2,$arr) 
-and mb_substr_count($arr5,$sear1.' '.$sear2) == 0 
-and mb_substr_count($text_koren, $sear1.' '.$sear2) > 1) {
-$arr4[trim($texts[$i]).' '.trim($texts[$i+1])] = mb_substr_count($text_koren, $sear1.' '.$sear2); // Фраза в 2 слова и ее вес
-$arr5 .= $sear1.' '.$sear2.'|';
-$arr5 .= $sear2.' '.$sear1.'|';
-}
-if ($i < $counts-1 
-and array_key_exists($sear1,$arr) 
-and array_key_exists($sear3,$arr) 
-and mb_substr_count($arr5,$sear1.' '.trim($texts[$i+1]).' '.$sear3) == 0
-and mb_substr_count($arr5,$sear1.' '.$sear2) == 0 
-and mb_substr_count($text_koren, $sear1.' '.trim($texts[$i+1]).' '.$sear3) > 1) {
-$arr4[trim($texts[$i]).' '.trim($texts[$i+1]).' '.trim($texts[$i+2])] = mb_substr_count($text_koren, $sear1.' '.trim($texts[$i+1]).' '.$sear3); // Фраза в 3 слова с предлогом в середине и ее вес
-$arr5 .= $sear1.' '.trim($texts[$i+1]).' '.$sear3.'|';
-}
-}
+for ($i=0;$i<$counts;$i++) { // строим фразы
+  if (isset($texts[$i]) && isset($texts[$i+1]))
+    if (mb_substr_count('-—,.?();:!', trim($texts[$i])) == 0 && mb_substr_count('-—,.?();:!',trim($texts[$i+1])) == 0) {
+      $sear1 = sklon(trim($texts[$i]));
+      $sear2 = sklon(trim($texts[$i+1]));
+      $sear3 = sklon(trim($texts[$i+2]));
+      if (array_key_exists($sear1,$arr) 
+      && array_key_exists($sear2,$arr) 
+      && mb_substr_count($arr5,$sear1.' '.$sear2) == 0 
+      && mb_substr_count($text_koren, $sear1.' '.$sear2) > 1) {
+        $arr4[trim($texts[$i]).' '.trim($texts[$i+1])] = mb_substr_count($text_koren, $sear1.' '.$sear2); // Фраза в 2 слова и ее вес
+        $arr5 .= $sear1.' '.$sear2.'|';
+        $arr5 .= $sear2.' '.$sear1.'|';
+      }
+      if ($i < $counts-1 
+      && array_key_exists($sear1,$arr) 
+      && array_key_exists($sear3,$arr) 
+      && mb_substr_count($arr5,$sear1.' '.trim($texts[$i+1]).' '.$sear3) == 0
+      && mb_substr_count($arr5,$sear1.' '.$sear2) == 0 
+      && mb_substr_count($text_koren, $sear1.' '.trim($texts[$i+1]).' '.$sear3) > 1) {
+        $arr4[trim($texts[$i]).' '.trim($texts[$i+1]).' '.trim($texts[$i+2])] = mb_substr_count($text_koren, $sear1.' '.trim($texts[$i+1]).' '.$sear3); // Фраза в 3 слова с предлогом в середине и ее вес
+        $arr5 .= $sear1.' '.trim($texts[$i+1]).' '.$sear3.'|';
+      }
+    }
 }
 arsort($arr4); // сортируем словосочетания по вхождениям
 $arrres2 = array_keys($arr4); // переводим в массив словосочетаний (номер - словосочетание)
@@ -146,8 +146,10 @@ $count2=count($arr3);
 $vhod1 = array();
 $arr6 = array_slice($arr4, 0, $kolslov);
 // в итоге получаем
-for($i=0;$i<$count2;$i++) { 
-if ( mb_substr_count($str,$arr3[$i]) < 1) $arr6[$arr2[$arr3[$i]]] = $arr[$arr3[$i]]; } // слово и сколько вхождений в тексте
+for ($i=0;$i<$count2;$i++)
+  if (isset($arr3[$i]))
+    if (mb_substr_count($str,$arr3[$i]) < 1) 
+      $arr6[$arr2[$arr3[$i]]] = $arr[$arr3[$i]]; // слово и сколько вхождений в тексте
 $str2 = ''; // продолжаем строить строку с ключами
 
 
