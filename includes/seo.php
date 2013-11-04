@@ -25,60 +25,46 @@ if ($metod == "procent") {
   $str = explode(".", trim($ys));
   $keys = array(); $go = array(); $i=0;
   foreach ($str as $word) {
-$k = explode(",", trim($word));
-foreach ($k as $fraza) { if(mb_substr_count(trim($fraza), ' ') > 2) { $keys[$i]= trim($fraza); $i++;
-$go[$i] = '!('.trim($fraza).')'; }}
-}
-  $count=count($keys);
+    $k = explode(",", trim($word));
+    foreach ($k as $fraza) { 
+      if(mb_substr_count(trim($fraza), ' ') > 2) {
+        $keys[$i]= trim($fraza); $i++;
+        $go[$i] = '!('.trim($fraza).')'; 
+      }
+    }
+  }
+  $count = count($keys);
   $arr = array();
   $arr = gopars($go);
-  $y=0;
+  $y = 0;
   $s = false;
   $zamena = '';
-  for($i=0;$i<$count-1;$i++) {
-  $poisk = $arr[$i];
-  $a = str_ireplace("&quot;", "", $keys[$i]);
-  $a= mb_convert_case($a, MB_CASE_LOWER); // все в нижний регистр
-  $count2 = count($poisk);
-  for($p=0;$p<$count2-1;$p++) {
-  $ar = str_replace(chr(194).chr(160), " ", $poisk[$p]);
-  $ar = str_ireplace("&quot;", "", $ar);
-  $ar = str_ireplace(array("<em>", "</em>", "<b>", "</b>"), "", $ar);
-  $ar= mb_convert_case($ar, MB_CASE_LOWER); // все в нижний регистр
-   if (mb_substr_count($ar,$a) > 0 and $s === false) { $y++; $s= true;
-   $zamena .= '['.$keys[$i].']<br>';
-   }}
-  $s = false;
+  for($i=0; $i<$count-1; $i++) {
+    $poisk = $arr[$i];
+    $a = str_ireplace("&quot;", "", $keys[$i]);
+    $a = mb_convert_case($a, MB_CASE_LOWER); // все в нижний регистр
+    $count2 = count($poisk);
+    for ($p=0; $p<$count2-1; $p++) {
+      $ar = str_replace(chr(194).chr(160), " ", $poisk[$p]);
+      $ar = str_ireplace("&quot;", "", $ar);
+      $ar = str_ireplace(array("<em>", "</em>", "<b>", "</b>"), "", $ar);
+      $ar = mb_convert_case($ar, MB_CASE_LOWER); // все в нижний регистр
+      if (mb_substr_count($ar,$a) > 0 && $s === false) { 
+        $y++; 
+        $s= true;
+        $zamena .= '['.$keys[$i].']<br>';
+      }
+    }
+    $s = false;
   }
-  $proc = 100-100/(($count-1)/$y)."%";
-  if ($proc > 79) $strok = 'Текст уникален<br>'; else $strok = 'Текст не уникален, измените следующие фразы:<br>'.$zamena;
+  if ($y == 0) $y = 1;
+  // || $count - 1 == 0) $proc = "0%";
+  // else 
+  $proc = 100 - 100 / (($count - 1) / $y)."%";
+  if ($proc > 79) $strok = 'Текст уникален<br>'; 
+  else $strok = 'Текст не уникален, измените следующие фразы:<br>'.$zamena;
   $strok .= procent($ys,$key,$sin);
   echo $strok;
-}
-if ($metod == "wordstat") {
-  $text = $_POST['x']; 
-  $key = stopslov($_POST['key']);
-  $geo = $_POST['geo'];
-  $keys = explode(",", trim($key));
-  $count=count($keys);
-  $rezult = array();
-  echo "<table width=100%><tr valign=top>";
-  $arr = array();
-  $arr = yapars($keys, $geo);
-  for($i=0;$i<$count;$i++) {
-  $slovo = trim($keys[$i]);
-    echo "<td><b>".$slovo."</b>";
-	$ch = 0;
-	echo '<table class="table_light" width=100%>';
-    foreach ( $arr[$i][1] as $k=>$v ) {
-      // слово и кол-во запросов
-	  if($ch++ % 2) { echo '<tr><td style="color:gray">'.str_ireplace('+', '', html_entity_decode($v)).'</td><td style="color:gray">'.$arr[$i][2][$k].'</td></tr>';  } else
-      echo '<tr><td>'.str_ireplace('+', '', html_entity_decode($v)).'</td><td>'.$arr[$i][2][$k].'</td></tr>';
-    }
-	echo "</table>";
-    echo "</td>";
-  }
-  echo "</tr></table>";
 }
 
 function newkey($text,$kol,$kolslov) {
@@ -108,7 +94,7 @@ for ($i=0;$i<$counts;$i++) {
   else $text_koren .= trim($texts[$i])." ";
 }
 for ($i=0;$i<$counts;$i++) { // строим фразы
-  if (isset($texts[$i]) && isset($texts[$i+1]))
+  if (!empty($texts[$i]) && !empty($texts[$i+1]))
     if (mb_substr_count('-—,.?();:!', trim($texts[$i])) == 0 && mb_substr_count('-—,.?();:!',trim($texts[$i+1])) == 0) {
       $sear1 = sklon(trim($texts[$i]));
       $sear2 = sklon(trim($texts[$i+1]));
@@ -146,8 +132,8 @@ $count2=count($arr3);
 $vhod1 = array();
 $arr6 = array_slice($arr4, 0, $kolslov);
 // в итоге получаем
-for ($i=0;$i<$count2;$i++)
-  if (isset($arr3[$i]))
+for ($i=0; $i<$count2; $i++)
+  if (!empty($arr3[$i]))
     if (mb_substr_count($str,$arr3[$i]) < 1) 
       $arr6[$arr2[$arr3[$i]]] = $arr[$arr3[$i]]; // слово и сколько вхождений в тексте
 $str2 = ''; // продолжаем строить строку с ключами
@@ -338,69 +324,6 @@ $result .= "</tr>";
   return  $result;
 }
 
-function yapars($word, $geo='0') {
-  $count = count($word);
-  $uri = array();
-  for($i=0;$i<$count;$i++) {
-  $params = array(
-    'cmd' => 'words',
-    'page' => 1,
-    't' => $word[$i],
-    'geo' => $geo,
-  );
-//'http://wordstat.yandex.ru/?cmd=words&page=1&t=%D0%BF%D0%BE%D0%BC%D0%B8%D0%B4%D0%BE%D1%80%D1%8B&geo=&text_geo='
-  /* Запрос к wordstat Яндекс */
-  $uri[$i] = 'http://wordstat.yandex.ru/?'.http_build_query($params);
-  }
-  $contents = array();
-  $contents = multiyapars($uri);
-  $m = array();
-  for($i=0;$i<$count;$i++) {
-  /* Парсинг данных и их вывод на экран */
-  if ( preg_match('/<table border="0" cellpadding="5" cellspacing="0" width="100%">(.*)<\/table>/isU', $contents[$i], $table) ) {
-    if ( preg_match_all('/<tr class="tlist" bgcolor=".*">\s*?<td>\s*?<a href=".*">(.*)<\/a>\s*?<\/td>\s*?<td><div style="width: 10px"><\/div> <\/td>\s*?<td class="align-right-td">(.*)<\/td>\s*?<\/tr>/isU', $table[1], $m) ) {
-	$s[$i] = $m;
-      }}}
-	  return $s;
-}
-function multiyapars($data) {
-  $fuid01 = '5092466b0cbab62d.jJgD6rQ2fWFcESmYT9oT82-ExFT4NaO7vw8H86HaqzHrhrHEdXNSr8DA2RI2rDYEP4N120pWif5GgR3hKu1WywHo_7plw1WyTzAYGkDRzDILyuWXBgIVE8KIWS3Cp9eO';
-  $curls = array();
-  $result = array();
-  $mh = curl_multi_init();
-  // Дескриптор мульти потока. Тоесть эта штука отвечает за то, чтобы много
-  // запросов шли параллельно.
-  foreach ($data as $id => $d) {
-    $curls[$id] = curl_init();
-        // Для каждого url создаем отдельный curl механизм чтоб посылал запрос)
-        $url = (is_array($d) && !empty($d['url'])) ? $d['url'] : $d;
-        // Если $d это массив (как в случае с пост), то достаем из массива url
-        // если это не массив, а уже ссылка - то берем сразу ссылку
-  curl_setopt($curls[$id], CURLOPT_URL,$url);
-  curl_setopt($curls[$id], CURLOPT_HEADER,0);
-  curl_setopt($curls[$id], CURLOPT_RETURNTRANSFER, true);
-  curl_setopt($curls[$id], CURLOPT_REFERER, 'http://wordstat.yandex.ru/');
-  curl_setopt($curls[$id], CURLOPT_CONNECTTIMEOUT, 30);
-  curl_setopt($curls[$id], CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
-  curl_setopt($curls[$id], CURLOPT_COOKIE, 'fuid01='.$fuid01);
-        // добавляем текущий механизм к числу работающих параллельно
-    curl_multi_add_handle($mh, $curls[$id]);
-  }
-  // число работающих процессов.
-  $running = null;
-  // curl_mult_exec запишет в переменную running количество еще не завершившихся
-  // процессов. Пока они есть - продолжаем выполнять запросы.
-  do { curl_multi_exec($mh, $running); } while($running > 0);
-  // Собираем из всех созданных механизмов результаты, а сами механизмы удаляем
-  foreach($curls as $id => $c) {
-    $result[$id] = curl_multi_getcontent($c);
-    curl_multi_remove_handle($mh, $c);
-  }
-  // Освобождаем память от механизма мультипотоков
-  curl_multi_close($mh);
-  // возвращаем данные собранные из всех потоков.
-  return $result;
-}
 function sinonim($sinonim) { 
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, 'http://seogenerator.ru/api/synonym/');
@@ -416,7 +339,7 @@ function sinonim($sinonim) {
   if ($contents == 'Exceeded the limit queries from this IP address') $contents = 'Перегрузка сервера.';
   return $contents;
 }
-function gopars($word, $geo='0') {
+function gopars($word) {
   $count = count($word);
   $uri = array();
   for($i=0;$i<$count;$i++) {

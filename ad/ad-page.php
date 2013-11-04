@@ -15,7 +15,7 @@ if ($_REQUEST['op'] == "page_save_spiski") {
 if ($realadmin==1) {
 
 function seo($edit=false){
-  global $geo, $kolkey;
+  global $kolkey;
   echo "<script>
   function seo(){
     var x = $('#open_text').val();
@@ -23,9 +23,7 @@ function seo($edit=false){
     var kolkey = $('select.kolkey').val();
     var kolslov = $('select.kolslov').val();
     var kolslov = $('select.kolslov').val();
-    var wordstatv = $('select.wordstatv').val();
     var poisksin = $('select.poisksin').val();
-    var geo = $('#geo').val();
     var koldes=250;
     var a = (x+y);
     if ( (x + y).length >= 400) {
@@ -36,10 +34,8 @@ function seo($edit=false){
         if( key.length >= 3 )  {
           $('#key').show('slow'); $('#key_hide').hide();
       document.getElementById('procent').innerHTML = '<h2>".aa("Загружаю вычисления...")."</h2>';
-          if (wordstatv == 1) { document.getElementById('wordstat').innerHTML = '<h2>".aa("Загружаю популярные подходящие словосочетания...")."</h2>';}
           zapros('metod=des&x='+a+'&key='+key+'&kol='+koldes,document.getElementById('description2'),'des');
           zapros('metod=procent&x='+a+'&key='+key+'&sin='+poisksin,document.getElementById('procent'),'proc');
-  		if (wordstatv == 1) { zapros('metod=wordstat&x='+a+'&geo='+geo+'&key='+key,document.getElementById('wordstat'),'word'); }
         } 
       }
       xps.open('POST','includes/seo.php',true);
@@ -58,7 +54,7 @@ function seo($edit=false){
     metod.setRequestHeader('Content-type','application/x-www-form-urlencoded');
     metod.send(url);
   }
-  </script><span id='ajax'></span><input type='button' value='".aa("Заполнить ключевые слова")."' onclick='seo()'> <a class=punkt onclick='$(\"#opt_seo\").toggle(\"slow\")'>".aa("Настройки")."</a><div id=opt_seo style='display:none'><br><b>".aa("Регион:")."</b> <input id='geo' value='".$geo."' size=5> <a href='http://search.yaca.yandex.ru/geo.c2n' target='_blank'>".aa("Найти регион")."</a><br><b>".aa("Ключевых слов всего:")."</b> <select class='kolkey'><option value='30'>30</option><option value='20'>20</option><option value='15'>15</option><option value='10' selected='selected'>10</option><option value='9'>9</option><option value='8'>8</option><option value='7'>7</option><option value='6'>6</option><option value='5'>5</option><option value='4'>4</option><option value='3'>3</option><option value='2'>2</option><option value='1'>1</option></select><br><b>".aa("Из них словосочетаний:")."</b> <select class='kolslov'><option value='1'>1</option><option value='2'>2</option><option value='3'>3</option><option value='4'>4</option><option value='5'>5</option><option value='6'>6</option><option value='7'>7</option><option value='8'>8</option><option value='9'>9</option><option value='10'>10</option></select><br><b>".aa("Искать синонимы:")."</b> <select class='poisksin'><option value='0' selected='selected'>".aa("НЕТ")."</option><option value='1'>".aa("ДА")."</option></select><br><b>".aa("Выдача вордстат:")."</b> <select class='wordstatv'><option value='0' selected='selected'>".aa("НЕТ")."</option><option value='1'>".aa("ДА")."</option></select></div><p id='procent'></p><p id='wordstat'></p>";
+  </script><span id='ajax'></span><input type='button' value='".aa("Заполнить ключевые слова")."' onclick='seo()'> <a class=punkt onclick='$(\"#opt_seo\").toggle(\"slow\")'>".aa("Настройки")."</a><div id=opt_seo style='display:none'><br><b>".aa("Ключевых слов всего:")."</b> <select class='kolkey'><option value='30'>30</option><option value='20'>20</option><option value='15'>15</option><option value='10' selected='selected'>10</option><option value='9'>9</option><option value='8'>8</option><option value='7'>7</option><option value='6'>6</option><option value='5'>5</option><option value='4'>4</option><option value='3'>3</option><option value='2'>2</option><option value='1'>1</option></select><br><b>".aa("Из них словосочетаний:")."</b> <select class='kolslov'><option value='1'>1</option><option value='2'>2</option><option value='3'>3</option><option value='4'>4</option><option value='5'>5</option><option value='6'>6</option><option value='7'>7</option><option value='8'>8</option><option value='9'>9</option><option value='10'>10</option></select><br><b>".aa("Искать синонимы:")."</b> <select class='poisksin'><option value='0' selected='selected'>".aa("НЕТ")."</option><option value='1'>".aa("ДА")."</option></select></div><p id='procent'></p>";
 }
 
 function edit_base_pages_category($cid, $red=0) {
@@ -185,7 +181,7 @@ function delete_all($del="del") {
 
 # СТРАНИЦЫ =================
 function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pid=0) {
-  global $module, $prefix, $db, $red, $new, $pid, $redaktor, $toolbars, $geo, $kolkey, $title_razdel_and_bd, $siteurl;
+  global $module, $prefix, $db, $red, $new, $pid, $redaktor, $toolbars, $kolkey, $title_razdel_and_bd, $siteurl;
   include("ad/ad-header.php");
   $id = intval ($id);
   $cid = 0;

@@ -707,9 +707,9 @@ body {}
 	<br>Для автовосстановления в случае поражения «вирусом».
 	</td></tr>
 
-	<tr valign=top><td>
+	<tr valign=top class='hide'><td>
 	Регион:</td><td>
-	".input("options[geo]", $geo, "5", "number")." <a href='http://search.yaca.yandex.ru/geo.c2n' target='_blank'>Найти регион</a>
+	".input("options[geo]", $geo, "5", "number")."
 	</td></tr>
 
 	<tr valign=top><td>

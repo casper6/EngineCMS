@@ -49,25 +49,19 @@ if ($row['realadmin'] == 1) {
 			$i = 0;
 			while($row = mysql_fetch_row($result)) {
 				$table_list = "(";
-				for($j=0; $j<mysql_num_fields($result);$j++)
-				$table_list .= mysql_field_name($result,$j).", ";
+				for($j=0; $j<mysql_num_fields($result); $j++)
+					$table_list .= mysql_field_name($result,$j).", ";
 				$table_list = substr($table_list,0,-2);
 				$table_list .= ")";
-				
-			if(isset($GLOBALS["showcolumns"])) $schema_insert = "\$db->sql_query(\"INSERT INTO `".$table_name."` ".$table_list." VALUES (";
-			else $schema_insert = "\$db->sql_query(\"INSERT INTO `".$table_name."` VALUES (";
+				if(isset($GLOBALS["showcolumns"])) $schema_insert = "\$db->sql_query(\"INSERT INTO `".$table_name."` ".$table_list." VALUES (";
+				else $schema_insert = "\$db->sql_query(\"INSERT INTO `".$table_name."` VALUES (";
 				for($j=0; $j<mysql_num_fields($result);$j++) {
-					if(!isset($row[$j]))
-					$schema_insert .= " NULL,";
-					elseif($row[$j] != "")
-					$schema_insert .= " '".addslashes($row[$j])."',";
-					else
-					$schema_insert .= " '',";
+					if(!isset($row[$j])) $schema_insert .= " NULL,";
+					elseif($row[$j] != "") $schema_insert .= " '".str_replace('$', '\$', addslashes($row[$j]) )."',";
+					else $schema_insert .= " '',";
 				}
-
-				$schema_insert = ereg_replace(",$", "", $schema_insert);
+				//$schema_insert = ereg_replace(",$", "", $schema_insert);
 				$schema_insert .= ")";
-
 				$handler(trim($schema_insert));
 				$i++;
 			}
