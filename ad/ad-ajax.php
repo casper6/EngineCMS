@@ -160,26 +160,28 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
 
   case "block":
     $block_names = array("-"=>"",
-      "2"=>"Текст или HTML (<i>в том числе [другие блоки]</i>)", 
-      "10"=>"Меню сайта", 
-      "5"=>"Голосование (<i>опрос, несколько ответов на вопрос</i>)", 
-      "3"=>"Ротатор – для блоков, текста или HTML", 
-      "6"=>"Фотогалерея (<i>список фото</i>)", 
-      "9"=>"Экстрактор страниц", 
-      "4"=>"Папки раздела", 
-      "8"=>"Папки открытого раздела", 
       "0"=>"Страницы раздела", 
       "1"=>"Комментарии раздела", 
+      "2"=>"Текст или HTML (<i>в том числе [другие блоки]</i>)",
+      "3"=>"Ротатор – для блоков, текста или HTML", 
+      "4"=>"Папки раздела", 
+      "5"=>"Голосование (<i>опрос, несколько ответов на вопрос</i>)", 
+      "6"=>"Фотогалерея (<i>список фото</i>)", 
+      "7"=>"PHP-код (<i>вывод через переменную \$txt</i>)", 
+      "8"=>"Папки открытого раздела", 
+      "9"=>"Экстрактор страниц",  
+      "10"=>"Меню сайта",
       "11"=>"Календарь", 
       "12"=>"Форма для заполнения (анкеты, опросы и т.д.)", 
       "13"=>"Облако тегов (<i>ключевых слов</i>)", 
-      "30"=>"Посещаемость раздела", 
-      "31"=>"JavaScript (<i>ставится на место автоматически</i>)", 
-      "7"=>"PHP-код (<i>вывод через переменную \$txt</i>)", 
+      "14"=>"Расписание с записью на прием",
+      "15"=>"Карта",
       "20"=>"База данных (<i>количество по 1 колонке, вертикально</i>)", 
       "21"=>"База данных (<i>количество по 1 колонке, горизонтально</i>)", 
       "22"=>"База данных (<i>количество по 2 колонкам</i>)", 
-      "23"=>"База данных (<i>список колонок</i>)");
+      "23"=>"База данных (<i>список колонок</i>)",
+      "30"=>"Посещаемость раздела", 
+      "31"=>"JavaScript (<i>ставится на место автоматически</i>)");
     global $uskorenie_blokov;
     $sql = "select `id`,`name`,`title`,`color` from ".$prefix."_mainpage where `tables`='pages' and `type`='3' order by `name`, `title`";
     $result = $db->sql_query($sql);
@@ -834,10 +836,10 @@ if ($func == "delpapka") { // Удаление папки
 ######################################################################################
 if ($func == "delcomm") { // Удаление комментария
   // узнаем номер страницы
-  $raz = $db->sql_fetchrow($db->sql_query("SELECT num FROM ".$prefix."_pages_comments where cid='$id'"));
+  $raz = $db->sql_fetchrow($db->sql_query("SELECT `num` FROM ".$prefix."_pages_comments where `cid`='".intval($id)."'"));
   $num = $raz['num'];
-  $db->sql_query("DELETE from ".$prefix."_pages_comments WHERE cid='$id'");
-  $db->sql_query("UPDATE ".$prefix."_pages SET comm=comm-1 WHERE pid='$num'");
+  $db->sql_query("DELETE from ".$prefix."_pages_comments WHERE `cid`='".intval($id)."'");
+  if ($num != '0') $db->sql_query("UPDATE ".$prefix."_pages SET `comm`=`comm`-1 WHERE `pid`='".$num."'");
   exit;
 }
 ######################################################################################
@@ -991,7 +993,7 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
       <h2>Адрес раздела:</h2>
       <input type='text' name='namo' size='30' class='w100'><br>
       <a class='button small' onclick=\"window.open('http://translate.google.ru/#".$lang."/en/' + $('#name_razdel').val(),'Перевод',' width=800,height=400'); return false;\">Перевести название</a><br><i>Используются англ. буквы и знаки «_» и «-», без пробелов. Примеры: «about_me», «product», «catalog», «contact», «main-price» и т.д.</i></div>
-      <h2>Использовать настройки:</h2><select name='text' size='8' class='w100'>
+      <h2>Использовать настройки:</h2><select name='text' class='w100'>
       <option value='[название]'>• раздел будет отдельной страницей без вложенных папок и страниц</option>
       <option value='lim=15&amp;comments=0' selected>• вариант «Статьи» (15 страниц на листе, комментарии выключены)</option>
       <option value='lim=10&amp;comments=1&amp;comments_add=1&amp;vetki=2&amp;comments_mail=1&amp;comments_adres=1'>• вариант «Блог» (10 страниц на листе, комментарии включены)</option>
@@ -1112,7 +1114,7 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
         if (!isset($module)) $titl_mainpage = "РАЗДЕЛ УДАЛЁН! &rarr; $module";
         else $titl_mainpage = trim($title_razdel_and_bd[$module]);
         $del = "";
-        $pageslistdel .= "<tr onclick='show(\"comm".$cid."\")' title='Показать комментарий...' valign='top' style='cursor:pointer;' class='tr_hover' id=1comm".$cid.$bgcolor."><td class='gray'><nobr>".$data."</nobr></td><td>".$del."<a onclick='offcomm(".$cid.")' class='punkt'>".$vkl."</a>
+        $pageslistdel .= "<tr onclick='show(\"comm".$cid."\")' title='Показать комментарий...' valign='top' style='cursor:pointer;' class='tr_hover' id='1comm".$cid."'".$bgcolor."><td class='gray'><nobr>".$data."</nobr></td><td>".$del."<a onclick='offcomm(".$cid.")' class='punkt'>".$vkl."</a>
 
         <a style='float:right;' title='Изменить комментарий' href='sys.php?op=base_comments_edit_comments&cid=".$cid."'>".icon('orange small','7')."</a>
 
@@ -1126,11 +1128,11 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
         </div>
         </td></tr>";
       } else {
-        if ($mail != "") $pageslistdel .= "<tr valign='top' id='1comm".$cid.$bgcolor."'><td class='gray'><nobr>".$data."</nobr></td><td><a title='Удалить подписку' onclick='delcomm(".$cid.")' class='pointer'>".icon('red small','F')."</a><a style='float:right;' title='Изменить подписку' href='sys.php?op=base_comments_edit_comments&cid=".$cid."'>".icon('orange small','7')."</a> <span class='green'>Подписка на рассылку</span>, ".$avtor." &rarr; ".$mail."</td></tr>";
+        if ($mail != "") $pageslistdel .= "<tr valign='top' id='1comm".$cid."'".$bgcolor."'><td class='gray'><nobr>".$data."</nobr></td><td><a title='Удалить подписку' onclick='delcomm(".$cid.")' class='pointer'>".icon('red small','F')."</a><a style='float:right;' title='Изменить подписку' href='sys.php?op=base_comments_edit_comments&cid=".$cid."'>".icon('orange small','7')."</a> <span class='green'>Подписка на рассылку</span>, ".$avtor." &rarr; ".$mail."</td></tr>";
         else {
           // Преобразование адреса URL в ссылку (с учетом тире)
           $txt = preg_replace('@(https?://([-\w\.]+)+(:\d+)?(/([-\w/_\.]*(\?\S+)?)?)?)@', '<a href="$1" target="_blank">$1</a>', $txt);
-          $pageslistdel .= "<tr valign=top id='1comm".$cid.$bgcolor."'><td class='gray'><nobr>".$data."</nobr></td><td><a style='float:right;' title='Удалить сообщение' onclick='delcomm(".$cid.")' class='pointer'>".icon('red small','F')."</a> <span class='green'>".$avtor."</span> &rarr; ".$txt."</td></tr>";
+          $pageslistdel .= "<tr valign=top id='1comm".$cid."'".$bgcolor."'><td class='gray'><nobr>".$data."</nobr></td><td><a style='float:right;' title='Удалить сообщение' onclick='delcomm(".$cid.")' class='pointer'>".icon('red small','F')."</a> <span class='green'>".$avtor."</span> &rarr; ".$txt."</td></tr>";
         }
       }
     }

@@ -6,6 +6,230 @@ if (isset($_REQUEST['func']))   $func = $_REQUEST['func']; else die(); // Выб
 if (isset($_REQUEST['type']))   $type = $_REQUEST['type']; else $type = 0;
 if (isset($_REQUEST['id']))     $id = intval($_REQUEST['id']); else $id = 0;
 if (isset($_REQUEST['string'])) $string = $_REQUEST['string']; else $string = "";
+///////////////////////////////////////////////////////////
+if ($func == "save_raspisanie") {
+	global $adminmail;
+	parse_str($string);
+	if (($your_name != "" && $your_tel != "") || is_admin($admin)) {
+		// Запись в базу
+		$result = $db->sql_query("SELECT `useit` FROM ".$prefix."_mainpage where `id`='".$id_block."' and `useit` like '%".$zapis.$zapis_num.",".$zapis_data.";%'");
+		if ($db->sql_numrows($result) == 0) {
+			
+			$result = $db->sql_query("SELECT `useit` FROM ".$prefix."_mainpage where `id`='".$id_block."'");
+			$row = $db->sql_fetchrow($result);
+			$useit = substr($row['useit'], 1);
+			parse_str($useit);
+			// 1,15.11.2013, 14:00,777,666;,15.11.2013, 14:00,77700,00;
+			if (is_admin($admin) && !is_numeric($zapis_num)) {
+				if (trim($your_name) == "" or trim($your_tel) == "") { // Удаление
+					$useit = str_replace($zapis_num, "", $row['useit']);
+					echo aa("Запись удалена.");
+				} else { // Редактирование
+					$z_num = explode(",", $zapis_num);
+					$useit = str_replace($zapis_num, $z_num[0].",".$zapis_data.",".str_replace(",", ".", $your_name).",".str_replace(",", ".", $your_tel).";", $row['useit']);
+					echo aa("Запись отредактирована.");
+				}
+			}
+			if (is_numeric($zapis_num)) $useit = str_replace("zapis=".$zapis, "zapis=".$zapis.$zapis_num.",".$zapis_data.",".str_replace(",", ".", $your_name).",".str_replace(",", ".", $your_tel).";", $row['useit']);
+			$db->sql_query("UPDATE ".$prefix."_mainpage SET `useit`='".$useit."' WHERE `id`='".$id_block."';");
+
+			// Отправка письма
+			if (!is_admin($admin)) {
+				$order = "<b>".aa("Заявка")."</b><br>".aa("Имя").": ".$your_name."<br>".aa("Телефон").": ".$your_tel."<br>".$zapis_spec."<br>".aa("Дата и время").": ".$zapis_data;
+				if ($adminmail != "") mail($adminmail, "=?utf-8?b?" . base64_encode(aa("Новая заявка")) . "?=", str_replace("<br>","\r\n",$order), "MIME-Version: 1.0\r\nContent-type: text/html; charset=utf-8\r\nFrom: =?utf-8?b?" . base64_encode(aa("Администратор")) . "?= <" . $adminmail . ">");
+				// Отправляем системное сообщение админу
+				system_mes($order);
+			}
+			if (is_numeric($zapis_num)) echo $zapis_zayavka_send;
+		} else echo ss("Запись на это время уже есть. Обновите страницу (по F5).");
+	} else echo ss("Вы не ввели имя или телефон. Обновите страницу (по F5) и повторите.");
+	exit();
+}
+///////////////////////////////////
+if ($func == "show_raspisanie") {
+	list($specialist, $work_time, $record, $all_days, $next_day, $current_dayX) = explode("*@%", $string); // убрать за счет options
+	// Получаем текст блока по id
+	$sql2 = "select `text`, `useit` from ".$prefix."_mainpage where `id`='".$id."' and `type`='3' and `tables`='pages'";
+	$result2 = $db->sql_query($sql2);
+	$row2 = $db->sql_fetchrow($result2);
+	$raspisaniya = explode("\n", trim($row2['text']));
+	$options = substr($row2['useit'], 1);
+	parse_str($options);
+	// 2,11.11.2013, 14:00;
+	$info = "";
+	$zapisi = explode(";", $zapis);
+	$all_zapisi = $all_zapisi_person = array();
+	foreach ($zapisi as $zapis) {
+		if ($zapis != "") {
+			$zapis = explode(",", $zapis);
+			$zapis_person = $zapis[0];
+			$zapis_day = $zapis[1];
+			$zapis_time = trim($zapis[2]);
+			$zapis_name = trim($zapis[3]);
+			$zapis_tel = trim($zapis[4]);
+			$all_zapisi[$zapis_day." ".$zapis_time] = $zapis_person;
+			if (is_admin($admin)) $all_zapisi_person[$zapis_day." ".$zapis_time] = $zapis_name."\n".$zapis_tel;
+		}
+	}
+
+	for ($nextday = $next_day; $nextday < $next_day + $all_days; $nextday++) {
+		if ($current_dayX == 0) $tim = time()+86400*$nextday;
+		else {
+			$current_dayX = explode(".", $current_dayX);
+			$tim = mktime(0,0,0,$current_dayX[1], $current_dayX[0], $current_dayX[2]);
+		}
+		$now_day = date("j", $tim);
+		$now_day_0 = date("d", $tim); // с нулем число
+		$now_year = date("Y", $tim);
+		$day_num = date("w", $tim); 
+		$mes_num = date("m", $tim);
+		$day_name = array("воскресенье","понедельник","вторник","среда","четверг","пятница","суббота");
+		$day_name_big = array("Воскресенье","Понедельник","Вторник","Среда","Четверг","Пятница","Суббота");
+		$mes_name = array("","января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря");
+		$day_name = $day_name[$day_num];
+		$info .= "<table style='width:100%; margin:0; padding:0; margin-bottom:40px;'>
+		<tr><th width=15%>".$specialist."</th><th>".$day_name_big[$day_num].", ".$now_day." ".$mes_name[$mes_num]." ".$now_year.". ".$work_time."</th></tr>";
+		foreach ($raspisaniya as $raspisanie) {
+			$raspisanie = explode(";", $raspisanie);
+			$person_num = intval($raspisanie[0]); // номер для заполнения записи
+			$person_name = trim($raspisanie[1]);
+			$person_profession = trim($raspisanie[2]);
+			$person_work_time = intval(trim(str_replace("минут", "replace", $raspisanie[3])));
+			$count = count($raspisanie);
+			$person_day_time = array("воскресенье"=>"","понедельник"=>"","вторник"=>"","среда"=>"","четверг"=>"","пятница"=>"","суббота"=>"","нечетные"=>"","четные"=>"","будни"=>"","выходные"=>"","ежедневно"=>"");
+			//$chet = 0;
+			for ($i=4; $i < $count; $i++) { 
+				$times = explode(" ", trim($raspisanie[$i]));
+				$days = $times[0];
+				$time = $times[1];
+				$monthX = "";
+				if (isset($times[2])) { // числа месяца
+					$time = $times[2];
+					$monthX = $times[1];
+				}
+				$times = explode("-", $days);
+				foreach ($times as $t) {
+					$t = trim($t);
+					if ($monthX != "") $person_day_time[$t.$monthX] = $time;
+					else $person_day_time[$t] = $time;
+				}
+			}
+			// Выводим информацию по каждому врачу за выбранный день
+			$work_hours = $work_order = array();
+			// высчитываем процент - кол-во часов текущего дня
+			
+			$mes_name2 = $mes_name[$mes_num];
+			if ($person_day_time[$now_day.$mes_name2] != "") { // числа
+				$person_day_time = $person_day_time[$now_day.$mes_name2];
+			} elseif ($person_day_time["нечетные"] != "" || $person_day_time["четные"] != "") { // чет/не чет
+				if ($now_day & 1) {
+			       if ($person_day_time["нечетные"] != "") $person_day_time = $person_day_time["нечетные"];
+			    } else { 
+			       if ($person_day_time["четные"] != "") $person_day_time = $person_day_time["четные"];
+			    }
+			} elseif ($person_day_time["будни"] != "" && $day_num != 6 && $day_num != 0) $person_day_time = $person_day_time["будни"];
+			elseif ($person_day_time["выходные"] != "" && ($day_num == 6 || $day_num == 0)) $person_day_time = $person_day_time["выходные"];
+			elseif ($person_day_time["ежедневно"] != "") $person_day_time = $person_day_time["ежедневно"];
+			else { // дни недели
+				$person_day_time = $person_day_time[$day_name];
+			}
+
+			if ($person_day_time != "" && !is_array($person_day_time)) {
+				$time_interval = explode("-", $person_day_time);
+				$time_interval_1 = $time_interval[0]; // 15:00
+				$time_interval_2 = $time_interval[1]; // 20:30
+				$hour_1 = explode(":", $time_interval_1);
+					$hour_minutes_1 = 60;
+					if (intval($hour_1[1]) > 0) $hour_minutes_1 = intval($hour_1[1]);
+					$minutes_1 = intval($hour_1[0] * 60 + $hour_1[1]);
+				$hour_1 = intval($hour_1[0]);
+				$hour_2 = explode(":", $time_interval_2);
+					$hour_minutes_2 = 60;
+					if (intval($hour_2[1]) > 0) $hour_minutes_2 = intval($hour_2[1]);
+					$minutes_2 = intval($hour_2[0] * 60 + $hour_2[1]);
+				$hour_2_2 = intval($hour_2[0]);
+				if ($hour_2[1] != "00") $hour_2_2++; //  && $hour_2_2 != 23
+				$hour_2 = $hour_2_2;
+
+				$raznica_hour = ($minutes_2 - $minutes_1) / 60;
+				$procent_hour = intval( 100 / $raznica_hour );
+
+				$raznica_minutes = intval($minutes_2 - $minutes_1);
+				$raznica_minutes2 = intval($raznica_minutes / $person_work_time);
+				
+				$ostatok_minutes_2 = intval($raznica_minutes - ($raznica_minutes2 * $person_work_time));
+				if ($ostatok_minutes_2 != 0) $raznica_minutes2++;
+
+				$procent_minutes = intval( 100 / $raznica_minutes2 );
+
+				$procent_minutes_1 = 100 / $raznica_minutes; /// процент на одну минуту времени
+
+				//$info .= $hour_minutes_1."|".$hour_minutes_2." - $ostatok_minutes_2<br>";
+				if ($person_day_time != "" && !is_array($person_day_time)) {
+					for ($y=$hour_1; $y < $raznica_hour + $hour_1; $y++) {
+						$procent_hour = 60 * $procent_minutes_1;
+						$minutes_for_hour = "00";
+						if ($y == $hour_1) {
+							$procent_hour = $hour_minutes_1 * $procent_minutes_1;
+							if ($hour_minutes_1 != 60) $minutes_for_hour = $hour_minutes_1;
+						}
+						if ($y > $raznica_hour + $hour_1 - 1) $procent_hour = $hour_minutes_2 * $procent_minutes_1;
+						$work_hours[] = "<td width='".$procent_hour."%'>".$y."<sup>".$minutes_for_hour."</sup></td>";
+					}
+					for ($y=0; $y < $raznica_minutes2; $y++) { 
+						$procent_minutes2 = $person_work_time * $procent_minutes_1;
+						if ($ostatok_minutes_2 != 0 && $y > $raznica_minutes2-2) $procent_minutes2 = $ostatok_minutes_2 * $procent_minutes_1;
+
+						$totalMinutes = $minutes_1 + $y * $person_work_time;
+						$totalHours = floor($totalMinutes/60); // Получаем количество полных часов
+						$totalMinutes = $totalMinutes - ($totalHours*60); // Получаем оставшиеся минуты
+						if ($totalMinutes == 0) $totalMinutes = "00";
+
+						if ($all_zapisi[$now_day.".".$mes_num.".".$now_year." ".$totalHours.":".$totalMinutes] != $person_num) {
+							if ($current_dayX == 0 && $next_day == 0 && intval($totalHours) <= intval(date("G",time())))
+								$work_order_ok = "<td width='".$procent_minutes2."%' style='background: lightyellow' title='".$totalHours.":".$totalMinutes."'></td>";
+							else $work_order_ok = "<td width='".$procent_minutes2."%' class='raspisanie'><a title='".$record.$totalHours.":".$totalMinutes."' onclick='show_zapis(\"".$person_num."\", \"".$now_day.".".$mes_num.".".$now_year.", ".$totalHours.":".$totalMinutes."\", \"".$person_name.", ".$person_profession."\")'><div class='raspisanie'></div></a></td>";
+						} else {
+							if (is_admin($admin)) $add_button = "<a onclick='show_zapis(\"".$person_num.",".$now_day.".".$mes_num.".".$now_year.", ".$totalHours.":".$totalMinutes.",".str_replace("\n", ",", $all_zapisi_person[$now_day.".".$mes_num.".".$now_year." ".$totalHours.":".$totalMinutes]).";\", \"".$now_day.".".$mes_num.".".$now_year.", ".$totalHours.":".$totalMinutes."\", \"".$person_name.", ".$person_profession."\")'><div class='raspisanie'></div></a>";
+							$work_order_ok = "<td width='".$procent_minutes2."%' class='raspisanie_add' title='".$totalHours.":".$totalMinutes."\n".$all_zapisi_person[$now_day.".".$mes_num.".".$now_year." ".$totalHours.":".$totalMinutes]."'>".$add_button."</td>";
+						}
+
+						$work_order[] = $work_order_ok;
+					}
+					//if ($ostatok_minutes != 0) $work_order[] = "<td bgcolor=green></td>";
+					$work_time_table = "<table style='width:100%; margin:0; padding:0;'><tr>".implode("",$work_hours)."</tr></table>
+					<table style='width:100%; margin:0; padding:0; height:15px;'><tr>".implode("",$work_order)."</tr></table>";
+					$info .= "<tr><td width='25%'><b>".$person_name.",</b><br>".$person_profession."</td><td>".$work_time_table."</td></tr>";
+				}
+			}
+		}
+		$info .= "</table>";
+	}
+	echo $info;
+	exit();
+}
+///////////////////////////////////
+if ($func == "shop_del_tovar") {
+	$tovars = "";
+	$info = array();
+	if (isset($_COOKIE['shop_tovar'])) if ($_COOKIE['shop_tovar'] != "") $tovars = $_COOKIE['shop_tovar']."|";
+	$tovars = explode("|", $_COOKIE['shop_tovar']);
+		foreach ($tovars as $tovar) {
+			$t = explode("$", $tovar);
+			if (intval($t[0]) != 0) {
+				if (intval($id) != intval($t[0])) $info[] = $tovar;
+				elseif (intval($t[5]) > 1) {
+					$count = intval($t[5]);
+					$count--;
+					if ($count == 1) $count = 0;
+					$info[] = $t[0]."$".$t[1]."$".$t[2]."$".$t[3]."$".$t[4]."$".$count;
+				}
+			}
+		}
+		if (count($info) > 0) $tovars = implode("|",$info);
+		else $tovars = "";
+	setcookie ('shop_tovar', $tovars, time()+60*60*24*60); // список товаров|id страницы товара$стоимость товара
+}
 ///////////////////////////////////
 if ($func == "shop_del_tovar") {
 	$tovars = "";
@@ -109,7 +333,7 @@ if ($func == "shop_send_order") {
 		}
 		$order .= "<br>".aa("ИТОГО:")." ".$shop_text_val1.$itogo.$shop_text_val2."<br>";
 		// Отправка письма
-		mail($shop_admin_mail, "=?utf-8?b?" . base64_encode($subject) . "?=", $order, "MIME-Version: 1.0\r\nContent-type: text/html; charset=utf-8\r\nFrom: =?utf-8?b?" . base64_encode(aa("Администратор")) . "?= <" . $shop_admin_mail . ">");
+		mail($shop_admin_mail, "=?utf-8?b?" . base64_encode($subject) . "?=", str_replace("<br>","\r\n",$order), "MIME-Version: 1.0\r\nContent-type: text/html; charset=utf-8\r\nFrom: =?utf-8?b?" . base64_encode(aa("Администратор")) . "?= <" . $shop_admin_mail . ">");
     	echo $shop_text_after_mail; 
     	system_mes($order); // Отправляем системное сообщение админу
     	setcookie ('shop_tovar', ''); // очищаем куки

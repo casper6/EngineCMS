@@ -448,6 +448,9 @@ function base_pages_save_page($cid, $module, $title, $open_text, $main_text, $fo
   $main_text = mysql_real_escape_string(form($module, $main_text, "main"));
   $title = mysql_real_escape_string(form($module, trim($title), "title"));
 
+  $open_text = str_replace("http://http://", "http://", str_replace("http//", "http://", $open_text));
+  $main_text = str_replace("http://http://", "http://", str_replace("http//", "http://", $main_text));
+
   $keywords2 = trim(str_replace("  "," ",str_replace("   "," ",str_replace(" ,",", ",$keywords2))));
   $description2 = trim($description2);
 

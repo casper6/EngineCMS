@@ -643,7 +643,7 @@ function antivirus($x=0) { // антивирус для защиты от htacce
 ///////////////////////////////////////////////////////////////
 function system_mes($subg) { // Отправка системного сообщения администратору (в список «Комментарии»)
   global $prefix, $db, $now;
-  $db->sql_query("INSERT INTO ".$prefix."_pages_comments ( `cid` , `num` , `avtor` , `mail` , `text` , `ip` , `data`, `drevo`, `adres`, `tel`, `active` ) VALUES ('', '0', '".aa("ДвижОк")."', '', '".mysql_real_escape_string($subg)."', '', '".mysql_real_escape_string($now)."', '', '', '', '1')");
+  $db->sql_query("INSERT INTO ".$prefix."_pages_comments ( `cid` , `num` , `avtor` , `mail` , `text` , `ip` , `data`, `drevo`, `adres`, `tel`, `active` ) VALUES ('', '0', '".aa("Системное сообщение")."', '', '".mysql_real_escape_string($subg)."', '', '".mysql_real_escape_string($now)."', '', '', '', '1')");
 }
 /////////////////////////////////////////////////////////////////
 function vhodyagie($id,$par,$num) { // Функция подсчета входящих в подкатегории страниц

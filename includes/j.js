@@ -137,6 +137,25 @@ function shop_show_card() {
 	});
 }
 
+function show_raspisanie(id, string) {
+	$.ajax({ url: 'ajax.php', cache: false, dataType : "html",
+data: {'func': 'show_raspisanie', 'id': id, 'string': string},
+beforeSend: function(){ $('#show_raspisanie'+id).html('<img src="images/loading.gif">'); },
+	    success: function(data){ $('#show_raspisanie'+id).html(data); }
+	});
+}
+
+function save_raspisanie() {
+	var msg = $('form#zapis').serialize();
+    $.ajax({
+      type: 'POST',
+      url: 'ajax.php',
+      data: {'func': 'save_raspisanie', 'string': msg },
+	  beforeSend: function(){ $('#zapis_dialog').html('<img src=images/loading.gif> Отправляю...'); },
+      success: function(data) { $('#zapis_dialog').html(data); }
+    });
+}
+
 function shop_add_tovar(id,price) {
 	$.ajax({ url: 'ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'shop_add_tovar', 'id': id, 'string': price},

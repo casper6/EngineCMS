@@ -248,6 +248,7 @@ function help_shablon() {
     '>Вставки для шаблона комментариев на странице</option>
 
     <option value='Вставки для шаблона <b>блока страниц</b>:<br>
+    [number] - порядковый номер с 1 до ...<br>
     [page_id] — Идентификационный уникальный номер (ID) страницы<br>
     [page_razdel] — Англ. наименование раздела страницы<br>
     [cat_id] — Идентификационный уникальный номер (ID) папки, 0 — если корень раздела<br>
@@ -353,15 +354,40 @@ function redactor($type, $txt, $name, $name2="", $style="html") {
     // section>h2+ul.nav>li.nav-item$*5>a
     $echo .= "<textarea id='".$name."X' class='hide' name='".$name."'>".$txt."</textarea>
     <pre id='".$name."' class='w100 h700'></pre><br>
-    <script src='/includes/ace-redactor/ace.js'></script><script>var ".$name." = ace.edit('".$name."');
-          ".$name.".getSession().setValue( $('#".$name."X').val() );
-          ".$name.".setTheme('ace/theme/".$theme."');
-          ".$name.".getSession().setMode('ace/mode/".$style."');
-          ".$name.".getSession().setUseWrapMode(true);
-          ".$name.".getSession().on('change', function(e) {
-              $('#".$name."X').val( ".$name.".getSession().getValue() );
-          });
-          document.getElementById('".$name."').style.fontSize='16px';</script>";
+    <script src='/includes/ace-redactor/ace.js'></script><script>
+      var config = ace.require(\"ace/config\");
+      var ".$name." = ace.edit('".$name."');
+      ".$name.".setTheme('ace/theme/".$theme."');
+      ".$name.".getSession().setValue( $('#".$name."X').val() );
+      ".$name.".getSession().setMode('ace/mode/".$style."');
+      ".$name.".getSession().setUseWrapMode(true);
+
+      ".$name.".getSession().setWrapLimitRange(null, null);
+      ".$name.".setBehavioursEnabled(true); //auto pairing of quotes & brackets
+      ".$name.".setShowPrintMargin(false);
+      ".$name.".session.setUseSoftTabs(true); //use soft tabs (likely the default)
+      ".$name.".getSession().on('change', function (e) {
+          EditorChanged();
+      });
+      //called when editor changes
+      function EditorChanged() {
+        //custom stuff
+      }
+      // Include auto complete- Only for Template Editor page
+      ace.config.loadModule('ace/ext/language_tools', function () {
+        ".$name.".setOptions({
+            enableBasicAutocompletion: true,
+            enableSnippets: true
+        })
+        ace.config.loadModule(\"ace/snippets/".$style."\");
+      });
+
+      ".$name.".getSession().on('change', function(e) {
+          $('#".$name."X').val( ".$name.".getSession().getValue() );
+      });
+      document.getElementById('".$name."').style.fontSize='16px';
+      
+    </script>";
   } elseif ($type=="1") {
     // Преобразование textarea (замена на русскую букву е, только для редактора)
     $txt = str_replace("textarea","tеxtarea",$txt); // ireplace

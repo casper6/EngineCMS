@@ -22,10 +22,10 @@ function shablon_show($shablon_type, $shablon_id) {
 			// [all_cat_link] [all_page_counter] [all_page_data] [all_page_comments]
 			// [page_active] [page_golos] [page_foto_adres] [page_foto] [page_search] [page_price] [page_rss]
 				// Форум
-				case "1": return "<tr><td class=cat_page_title><a href=[page_link]>[page_title]</a></td>
-				<td class=cat_page_date><nobr>[page_data]</nobr></td>
-				<td class=cat_page_date>".ss("читали:")."&nbsp;[page_counter]</td>
-				<td class=cat_page_commnum>[page_comments]</td></tr>"; break;
+				case "1": return "<tr><td class=cat_page_title_forum><a href=[page_link]>[page_title]</a></td>
+				<td class=cat_page_date_forum><nobr>[page_data]</nobr></td>
+				<td class=cat_page_read_forum>".ss("читали:")."&nbsp;[page_counter]</td>
+				<td class=cat_page_commnum_forum>[page_comments]</td></tr>"; break;
 				############################################################################################
 				case "2": return ""; break;
 				############################################################################################

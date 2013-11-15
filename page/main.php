@@ -632,6 +632,7 @@ function showcat($cid=0, $pag=0, $slovo="") {
     $result2 = $db->sql_query($sql2);
 
       $copy_s = array();
+      $last_cat_page_cattitle = 0;
       while ($row2 = $db->sql_fetchrow($result2)) {
         if ( ( $row2['copy'] == 0 || $row2['copy'] == $row2['pid'] || !in_array($row2['copy'], $pid_s) ) 
           && !in_array($row2['copy'], $copy_s) 
@@ -641,9 +642,11 @@ function showcat($cid=0, $pag=0, $slovo="") {
           $numm++;
           $p_pid = $row2['pid'];
           $pсid = $row2['cid'];
+
           $p_name = "";
-          if ($pсid!=0 and $cid == 0) 
+          if ($pсid!=0 && $cid == 0) {
             $p_name = "<div class='cat_page_cattitle'><a href='-".$DBName."_cat_".$pсid."' class='cat_page_cattitle'>".$c_name[$pсid]."</a></div>";
+          }
           $title = stripcslashes($row2['title']);
           $open_text = stripcslashes($row2['open_text']);
           if (trim($open_text) == "<br><br>") $open_text = "";
@@ -720,7 +723,7 @@ function showcat($cid=0, $pag=0, $slovo="") {
             if ($p_pid_last != $pсid and $pсid != 0) { 
               $sha_first = "<tr valign='top'><td colspan='".$colspan."' class='cat_page_forum'>".$p_name."</td></tr><tr valign='top'>";
               $p_pid_last = $pсid; 
-            }
+            } else $sha_first = "";
             if ($comments==1) {
               if ($p_comm>0) $p_comm = "".$p_comm." ".ss("комм.");
               else $p_comm = "<a href='-".$DBName."_page_".$p_pid."#comm'>".ss("Добавить комментарий")."</a>";

@@ -19,6 +19,8 @@ if ($add != "") {
 $contents = "
 .filter_name {font-size: 20px;}
 
+.align_center {text-align:center;}
+
 .editor_file_link {
 	padding-left: 20px;
 }
@@ -38,6 +40,17 @@ $contents = "
 .editor_file_ico_txt 	{ background: url(ed/js/editor/i/fileicons/txt.png) no-repeat; }
 .editor_file_ico_xls 	{ background: url(ed/js/editor/i/fileicons/xls.png) no-repeat; }
 .editor_file_ico_zip 	{ background: url(ed/js/editor/i/fileicons/zip.png) no-repeat; }
+
+td.raspisanie {background: lightgreen; min-width:5px; padding:0;}
+td.raspisanie a:hover div {background: green;}
+td.raspisanie_add {background: #ff7373; min-width:5px; padding:0;}
+td.raspisanie_add a:hover div {background: red;}
+td.raspisanie a:hover, td.raspisanie_add a:hover {cursor:pointer;}
+div.raspisanie { height:15px; width:100%; min-width:5px; border-left: 1px solid white;}
+
+#zapis_dialog_data {font-weight:bold;}
+
+.filter_interval {font-weight:bold;}
 
 .redactor_toolbar {height: 30px;}
 .redactor_toolbar li {padding-left:5px !important;}
@@ -308,6 +321,16 @@ span.golos_user {background: url(/images/sys/007.png) no-repeat left top; paddin
 .star-rating i ~ i ~ i {width: 60%;}
 .star-rating i ~ i ~ i ~ i {width: 80%;}
 .star-rating i ~ i ~ i ~ i ~ i {width: 100%;}
+
+.ui-dialog {min-width:450px;}
+.ui-datepicker th, .ui-widget-header { font-weight: normal; }
+.ui-state-default {background: lightgreen !important;}
+.ui-state-disabled .ui-state-default {background: white !important;}
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default, 
+.ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight,
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {text-align: center; border-radius: 10px; border: 1px solid white;}
+.ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight {border: 1px solid green;}
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {background: green !important; color: white !important;}
 
 ".$sha;
 

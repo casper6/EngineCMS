@@ -121,10 +121,11 @@ if ($row['realadmin'] == 1) {
 		//if ($shop_shablon_mail_client == "") $shop_shablon_mail_client = "";
 		//if ($shop
 
+		$fon_colors = array('#ffffff','#e1e1e1','#cccccc','#b3b3b3','#9a9a9a','#666666','#333333','#000000','#d8f8c4','#ccf4b4','#c4fccc','#c4fccc','#fcfcac','#fcfca4','#fcf9c7','#fce4ac','#fce4d4','#fcccbc','#fcd4dc','#fcccd4','#ddf3fe','#cdeeff','#defff8','#cafff3','#dcdcfc','#ccccfc','#ecdcfc','#ecccfc','#82317a');
 		$ad_fon_option = ""; // Выбор фоновок для админки
-		for ($i=1; $i < 30; $i++) { // всего 27 фоновок + 1 по-умолчанию в папке images/ad-fon
-			if ($ad_fon == $i) $sel = " selected"; else $sel = "";
-			$ad_fon_option .= "<option value='".$i."'".$sel.">№".$i."</option>";
+		for ($i=0; $i < count($fon_colors); $i++) {
+			if ($ad_fon == $fon_colors[$i]) $sel = " selected> → ←"; else $sel = ">";
+			$ad_fon_option .= "<option style='background: ".$fon_colors[$i].";' value='".$fon_colors[$i]."'".$sel." </option>";
 		}
 
 		$titles_design = titles_design(); // Выборка дизайнов
@@ -659,13 +660,12 @@ body {}
 	$color_themes = "chrome,clouds,crimson_editor,dawn,dreamweaver,eclipse,github,solarized_light,textmate,tomorrow,xcode,ambiance,chaos,clouds_midnight,cobalt,idle_fingers,kr_theme,merbivore,merbivore_soft,mono_industrial,monokai,pastel_on_dark,solarized_dark,terminal,tomorrow_night,tomorrow_night_blue,tomorrow_night_bright,tomorrow_night_eighties,twilight,vibrant_ink";
 	$color_themes_names = "Chrome (светлая),Clouds (светлая),Crimson Editor (светлая),Dawn (светлая),Dreamweaver (светлая),Eclipse (светлая),GitHub (светлая),Solarized Light (светлая),TextMate (светлая),Tomorrow (светлая),XCode (светлая),Ambiance (темная),Chaos (темная),Clouds Midnight (темная),Cobalt (темная),idleFingers (темная),krTheme (темная),Merbivore (темная),Merbivore Soft (темная),Mono Industrial (темная),Monokai (темная),Pastel on dark (темная),Solarized Dark (темная),Terminal (темная),Tomorrow Night (темная),Tomorrow Night Blue (темная),Tomorrow Night Bright (темная),Tomorrow Night 80s (темная),Twilight (темная),Vibrant Ink (темная)";
 
-	echo "<table class='table_light'>
+	echo "<table class='w100'><tr valign=top><td width='60'>
+	Цвет<br>фона:<select size='29' style='width:60px; text-align:center;' name=options[ad_fon] onchange=\"$(body).css('background-color', '' + $(this).val() + ' !important' )\">".$ad_fon_option."</select>
+	</td><td>
 
-	<tr valign=top><td style='min-width:250px;'>
-	Фоновая картинка Администрирования:</td><td class=small>
-	<select name=options[ad_fon] onchange=\"$(body).css('backgroundImage', 'url(http://cms.ru.com/fon/' + $(this).val() + '.jpg)')\">".$ad_fon_option."</select>
-	</td></tr>
 
+	<table class='table_light'>
 	<tr valign=top><td>
 	<b>Создание резервной копии:</b><br>
 	<a class='button' href='sys.php?op=backup' target='_blank'>Создать сейчас</a></td><td class=small>
@@ -718,6 +718,10 @@ body {}
 	</td></tr>
 
 	</table>
+
+
+	</td></tr></table>
+	
 	<div style='text-align:center;'><input type='submit' value=' Сохранить ' style='width:300px; height:40px;'></div>
 	</div>";
 
@@ -933,6 +937,7 @@ echo "
 	</div>
 
 	</td></tr></table>
+	<br></div>
 	</body>
 	</html>";
 	}

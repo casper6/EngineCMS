@@ -81,7 +81,7 @@ $pagetitle = "- ".aa("Администрирование");
 // Стирание кеша главной страницы
 if (is_admin($admin)) recash("/");
 
-global $razdel_sort, $razdel_sort_set, $hide_top, $hide_top_set;
+global $razdel_sort, $razdel_sort_set, $hide_top;
 
 if (isset($_COOKIE["razdel_sort"])) $razdel_sort = intval($_COOKIE["razdel_sort"]);
 else $razdel_sort = 0;
@@ -89,31 +89,13 @@ if ($razdel_sort_set == 1 || $razdel_sort_set == 2 || $razdel_sort_set == 0) {
 	setcookie("razdel_sort", intval($razdel_sort_set), time()+60*60*24*360);
 	$razdel_sort = intval($razdel_sort_set);
 }
-
-if (isset($_COOKIE["hide_top"])) $hide_top = intval($_COOKIE["hide_top"]);
-else $hide_top = 0;
-if ($hide_top_set == 1 || $hide_top_set == 0) {
-	setcookie("hide_top", intval($hide_top_set), time()+60*60*24*360);
-	$hide_top = intval($hide_top_set);
-}
-//if (isset($_COOKIE["hide_top"])) print_r($_COOKIE);
-	//$hide_top = intval($_COOKIE["hide_top"]);
-
 //$razdel_sort = intval($razdel_sort); // Сортировка разделов в Содержании
-
-//$hide_top = intval($hide_top); // Прячем шапку
-//if ( $hide_top == 1 || $hide_top == 0 ) setcookie("hide_top", $hide_top, time()+60*60*24*360, "/", $siteurl);
 
 /*
 $razdel_sort = 0;
 if (!isset($_COOKIE["razdel_sort"])) { 
 	setcookie("razdel_sort", "0", time()+60*60*24*360); 
 } else $razdel_sort = intval($_COOKIE["razdel_sort"]);
-
-$hide_top = 0;
-if (!isset($_COOKIE["hide_top"])) {
-	setcookie("hide_top", "0", time()+60*60*24*360); 
-} else $hide_top = intval($_COOKIE["hide_top"]);
 */
 
 // Вход в Админку
@@ -185,7 +167,7 @@ function GraphicAdmin() {
 		$num_add_pages = $db->sql_numrows($db->sql_query("SELECT `pid` FROM ".$prefix."_pages where (`active`='2' or `active`='3') and `tables`!='del'"));
 	}
 
-	$soderganie_menu = "<button id='new_razdel_button' title='".aa("Добавить страницу...")."' class='small green nothing left3' onclick='location.href=\"/sys.php?op=base_pages_add_page#1\"'><span class=\"icon white small\" data-icon=\"+\"></span></button>";
+	//$soderganie_menu = "<button id='new_razdel_button' title='".aa("Добавить страницу...")."' class='small green nothing left3' onclick='location.href=\"/sys.php?op=base_pages_add_page#1\"'><span class=\"icon white small\" data-icon=\"+\"></span></button>";
  	
  	global $deviceType;
  	$buttons = explode(",", aa(" Новое, Проверить: , Удаленное, Старое, Блоки, Отзывы:, Вставить дату"));
@@ -232,7 +214,7 @@ function GraphicAdmin() {
 
 	if ($registr=='1') echo "&nbsp;&nbsp;&nbsp;<a href='".$admin_file.".php?op=MainUser'>".aa("Пользователи")."</a> <a href=".$admin_file.".php?op=sortuser>".aa("Список")."</a>";
 
-	echo "<div class='curved-vt-2 hide' style='margin-left:-350px; width: 700px; top: 80px;' id='add'></div>
+	echo "<div class='curved-vt-2 hide' style='margin-left:-350px; width: 700px; top: 10px;' id='add'></div>
 
 	<div class='black_grad'><button id='new_razdel_button' title='".aa("Сортировка разделов")."' class='small black' onclick=\"$('#add').show().html( $('#sortirovka').html() )\" style='float:left; margin-left:3px;margin-top:3px;'><img src='images/sortirovka.png'></button>
 
@@ -330,9 +312,6 @@ function GraphicAdmin() {
 		<span class='icon ".$color." ".$icon_size."' data-icon='".$ico."'></span><span class='plus20'>".$title."</span>
 		</div></a></div>";
     }
-
-    if ($hide_top == "1") $hide_top_button = "<button class='small' target=_blank onclick='window.open(\"/\")' title='".aa("Перейти на сайт (откроется в новом окне)")."'><span class='icon medium' data-icon='4'></span></button> <a class='button' href='red?hide_top_set=0'>↓</a>";
-    else $hide_top_button = "<a class='button' href='red?hide_top_set=1'>↑</a>";
 	echo "</div></div>
 	</td>
 	<td style='padding:0;'><a class='punkt' title='Свернуть/развернуть левую колонку' onmousemove='$(\"#razdels\").show();' onclick='$(\"#razdels\").toggle(\"slow\");'><div class='polosa_razdelitel'><div id='rotateText'><nobr>↑ Сворачивает Разделы ↑</nobr></div></div></a></td>
@@ -360,7 +339,7 @@ function GraphicAdmin() {
 	</div>
 	</td></tr></table>";
 
-	global $display_errors;
+	global $siteurl, $display_errors;
 	if ($display_errors == true) print("<!-- ".aa("запросов:")." $db->num_queries \n $db->num_q -->");
 
 	// Генерация XML-карты сайта
@@ -428,7 +407,7 @@ function GraphicAdmin() {
 
 		if ($show_reserv == 1) echo "<iframe src=sys.php?op=backup style='display:none;'></iframe>";
 	}
-	echo "</div>\n</body>\n</html>";
+	echo "<br></div>\n</body>\n</html>";
 }
 
 function red_vybor() { // Выбор редактора

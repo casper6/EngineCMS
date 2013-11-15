@@ -67,7 +67,7 @@ echo "<script src='ed2/redactor.js'></script>
 <script src='ed2/fontsize.js'></script>
 <script src='ed2/fontfamily.js'></script>";
 
-echo "\n</head>\n<body style=\"background-image: url('http://cms.ru.com/fon/".intval($ad_fon).".jpg');\">";
+echo "\n</head>\n<body style=\"background-color: ".$ad_fon.";\"><div class='light_fon radius'>";
 $url = getenv("REQUEST_URI");
 $url = str_replace("http://".$siteurl,"",$url);
 $url2 = explode("_",$url);
@@ -101,6 +101,6 @@ if ($editor_style == false) {
 echo "<li class='last ".$color4."'><a title='".aa("Открыть статистику сайта")."' href='sys.php?op=mainpage&amp;type=stat'><span class='icon gray small' data-icon='j'></span>".$buttons[3]."</a></li>
 </ul>
 </div></td></tr>
-<tr><td colspan=2 class='black_grad2 h2 mp0'>
+<tr><td colspan=2 class='black_polosa h2 mp0'>
 </td></tr></table><a name='top'></a>";
 ?>

@@ -9,6 +9,7 @@ body {
 	background-position: top top;
 	background-attachment: fixed;
 	background-repeat: repeat-y;
+	margin: 5px 15px 0 15px;
 }
 @media (max-width: 1920px) { body { background-size: 1920px auto; -webkit-background-size: 1920px auto; -o-background-size: 1920px auto; -moz-background-size: 1920px auto; } }
 @media (max-width: 1680px) { body { background-size: 1680px auto; -webkit-background-size: 1680px auto; -o-background-size: 1680px auto; -moz-background-size: 1680px auto; } }
@@ -28,7 +29,7 @@ input, textarea, select {
 	-khtml-opacity: 0.8; /* Konqueror 3.1, Safari 1.1 */
 	opacity: 0.8; /* CSS3 - Mozilla 1.7b +, Firefox 0.9 +, Safari 1.2+, Opera */
 }
-.light_fon {background: url(/images/fon.png);}
+.light_fon {background-image: url(/images/fon.png);}
 
 @media print {
   .noprint { display:none; }
@@ -106,7 +107,7 @@ input#redactorSaveBtn {background:green; color:white;}
 
 .fon {background: url(/images/fon.png);}
 
-.polosa_razdelitel {width:16px; padding-top: 340px; height:200px; cursor: w-resize; background: url(/images/fon.png);}
+.polosa_razdelitel {width:16px; padding-top: 400px; height:300px; cursor: w-resize; background: url(/images/fon.png);}
 #rotateText {
     -moz-transform: rotate(-90deg);
     -webkit-transform: rotate(-90deg);
@@ -144,7 +145,19 @@ img.bigicon {margin-bottom: 5px; width:128px; height:128px; border:0; float:left
 .bi12 {background: url('/images/bigicons.png') -1536px; }
 .bi13 {background: url('/images/bigicons.png') -1664px; }
 
-.icon {margin-right: 5px; margin-left: 5px; width:16px; height:16px; border:0;}
+/* .icon {margin-right: 5px; margin-left: 5px; width:16px; height:16px; border:0;} */
+ul li .icon span, .dark_pole2 .icon span, .dark_pole2sel .icon span { top: -6px !important; }
+
+
+.dark_pole2sel a div .icon.large span, 
+.dark_pole2 a div .icon.large span { top: -16px !important; }
+
+.dark_pole2sel a div .icon.medium span, 
+.dark_pole2 a div .icon.medium span { top: -10px !important; }
+
+.dark_pole2sel a div .icon.small span, 
+.dark_pole2 a div .icon.small span { top: -7px !important; }
+
 .icon2 {margin:0; padding:0; margin-right: 2px; width:16px; height:16px; border:0; cursor:pointer;}
 .icon3 {margin:0; padding:0; margin-right: 1px; width:8px; height:8px; border:0; cursor:pointer;}
 .i1 {background: url('/images/icons.png'); }
@@ -413,6 +426,7 @@ ul.button-bar li.black:hover a,
 .dark_pole2:hover,
 .openpage:hover,
 .openpapka:hover,
+.black_polosa,
 .sho_page a:hover {
 	/* webkit example */
 	background-image: -webkit-gradient(

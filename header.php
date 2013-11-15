@@ -257,6 +257,30 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 	$show_in_razdel = ss("все");
 	$reload_link_text = ss("Показать еще...");
 
+	// для блока расписания
+	$specialist = "Специалист";
+	$work_time = "Время приема";
+	$record = "Записаться на ";
+	$all_days = "1";
+	$tomorrow_record = "На сегодня запись окончена. Вы можете записаться на другой день.";
+	$numberOfMonths = 2;
+	$calendar_maxDate_days = 30;
+	$calendar_maxDate = 1;
+	$next_day = 0;
+	$end_hour = 16; // Час начала записи на следующий день и окончания на текущий.
+	$show_end_hour = 1;
+	$current_day = 0;
+	$zapis_na_priem = "Запись на прием";
+	$zapis_obrashenie = "Укажите, пожалуйста, телефон, по которому в ближайшее время с вами могут связаться администраторы нашего медицинского центра для подтверждения записи на прием.";
+	$zapis_your_name = "Ваше имя:";
+	$zapis_your_tel = "Ваш телефон:";
+	$zapis_spec = "Врач:";
+	$zapis_data = "Время приема:";
+	$zapis_send = "Записаться";
+	$zapis_zayavka_send = "Ваша заявка успешно отправлена.<br>В ближайшее время мы вам позвоним.";
+	$deleted_days = "воскресенье";
+	$deleted_dates = ""; //,18.11.2013";
+
 	// Для базы данных
 	$base = ""; // Указываем название таблицы БД
 	$first = ""; // первая колонка
@@ -323,8 +347,7 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 	}
 
 	if ($html == 1) { $design_close = ""; $design_open = ""; $block_title = ""; $block_title2 = ""; }
-	if ($blocks == 1) { $design_close .= "</div>"; $design_open = "<div class='show_block'><div class='show_block_title'><a href='sys.php?op=mainpage&id=".$idX."&nastroi=1' title='".ss("Настроить блок")."'><img align='right' width='16' src='/images/sys/cog.png'></a>
-	<a href='sys.php?op=mainpage&id=".$idX."&red=1' title='".ss("Редактировать в HTML")."'><img align='right' width='16' src='/images/sys/edit.png'></a>".$titleX."</div>".$design_open; }
+	if ($blocks == 1) { $design_close .= "</div>"; $design_open = "<div class='show_block'><div class='show_block_title'><a href='sys.php?op=mainpage&id=".$idX."&red=1' title='".ss("Редактировать")."'>".$titleX."</a> (<a href='sys.php?op=mainpage&id=".$idX."&nastroi=1' title='".ss("Настроить блок")."'>настроить</a>)</div>".$design_open; }
 
 	// Определяем наличие шаблонов
 	if (trim($shablon) != "") {
@@ -454,6 +477,7 @@ case "0": # Блок страниц раздела
 		if ($openshow==0) $textX .= "<ul class=\"block_li_title\">"; 
 	
 	$numlock = 0; // Счетчик кол-ва выведенных строк у блоков
+	$number = "1";
 	while ($row = $db->sql_fetchrow($result)) {
 		$numlock++;
 		$p_id = $row['pid'];
@@ -523,6 +547,7 @@ case "0": # Блок страниц раздела
 		// Начало замены
 		if ($shablon != "") {
 		  $tr = array(
+		  	"[number]"=>$number, // порядковый номер
 		  	"[page_id]"=>$p_id,
 		  	"[page_razdel]"=>$module,
 			"[cat_id]"=>$p_cid,
@@ -570,11 +595,12 @@ case "0": # Блок страниц раздела
 			$shablonX = $shablon;
 			foreach ($s_names as $id2 => $nam2) {
 			// Найдем значение каждого поля для данной страницы
-					if (!isset($s_opts[$nam2][$p_id])) $s_opts[$nam2][$p_id] = "";
-					$nam3 = $s_opts[$nam2][$p_id];
-					$shablonX = str_replace("[".$nam2."]", $nam3, $shablonX);
+				if (!isset($s_opts[$nam2][$p_id])) $s_opts[$nam2][$p_id] = "";
+				$nam3 = $s_opts[$nam2][$p_id];
+				$shablonX = str_replace("[".$nam2."]", $nam3, $shablonX);
 			}
 			$textX .= strtr($shablonX,$tr);
+			$number++;
 			
 		///////////////////////////////////////////////////////////////////////////////////
 		} else { // если без шаблона
@@ -622,7 +648,7 @@ case "0": # Блок страниц раздела
 	$block = str_replace("[".$titleX."]", $design_open.$textX.$design_close, $block);
 break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////
-case "1": # Блок комментариев модуля
+case "1": # Блок комментариев раздела
 	// Получим список № страниц
 	if ($useitX == "") $and = "";
 	else $and = " where `tables`='pages' and module='".$useitX."'"; 
@@ -654,7 +680,7 @@ case "1": # Блок комментариев модуля
 			$cid = $row['cid'];
 			$num = $row['num'];
 			$avtor = $row['avtor'];
-			$text = strip_tags(substr($row['text'], 0, $col_bukv), '<b><i><img><a><strong><em>');
+			$text = strip_tags(mb_substr($row['text'], 0, $col_bukv), '<b><i><img><a><strong><em>');
 			if (strlen($row['text']) > $col_bukv) $text .= "...";
 			$data = $row['data'];
 			$data = date2normal_view(str_replace(".","-",$data), 2, 1);
@@ -1050,19 +1076,25 @@ case "10": # Блок меню
 		$lvl_open = "<ul>";
 		$lvl_close = "</ul>";
 		$el_open = "<li>";
+		$el_open2 = "<li class='li_mainmenu_open'>";
 		$el_close = "</li>";
 		$url_open = "<a class='li1menu_link' href='";
+		$url_open2 = "li1menu_link";
 		$url_close1 = "'>";
 		$url_close2 = "</a>";
 		if ($menu == "1") {
-			$el_open = "<td align='center'>";
+			$el_open = "<td class='align_center'>";
+			$el_open2 = "<td class='align_center td_mainmenu_open'>";
 			$el_close = "</td>";
 			$url_open = "<a class='table1menu_link' href='";
+			$url_open2 = "table1menu_link";
 			$url_close1 = "'><div class='li2menu_div'>";
 			$url_close2 = "</div></a>";
 		} elseif ($menu == "2") {
+			$el_open2 = "<li class='li_mainmenu_open'>";
 			$lvl_open = "<ul class='ul_tree'>";
 			$url_open = "<a class='li2menu_link' href='";
+			$url_open2 = "li2menu_link";
 		}
 
 	if ($re_menu != "1" && $re_menu != "0") {
@@ -1115,14 +1147,18 @@ case "10": # Блок меню
 		$textXX = str_replace("]",$url_close1,$textXX);
 		//if ($url != "/") {
 			$textXX = str_replace("' href='".$url1."'>", " mainmenu_open' href='".$url1."'>", $textXX);
-			$textXX = str_replace("<li><a class='li1menu_link mainmenu_open' href='".$url1."'>", "<li class='li_mainmenu_open'><a class='li1menu_link mainmenu_open' href='".$url1."'>", $textXX);
-			$textXX = str_replace("' href='".$url2."'>", " mainmenu_open' href='".$url2."'>", $textXX);
-			$textXX = str_replace("<li><a class='li1menu_link mainmenu_open' href='".$url2."'>", "<li class='li_mainmenu_open'><a class='li1menu_link mainmenu_open' href='".$url2."'>", $textXX);
+			$textXX = str_replace($el_open."<a class='".$url_open2." mainmenu_open' href='".$url1."'>", $el_open2."<a class='".$url_open2." mainmenu_open' href='".$url1."'>", $textXX);
+			if ($url1 != $url2) {
+				$textXX = str_replace("' href='".$url2."'>", " mainmenu_open' href='".$url2."'>", $textXX);
+				$textXX = str_replace($el_open."<a class='".$url_open2." mainmenu_open' href='".$url2."'>", $el_open2."<a class='".$url_open2." mainmenu_open' href='".$url2."'>", $textXX);
+			}
 			$textXX = str_replace("' href='".$url4."'>", " mainmenu_open' href='".$url4."'>", $textXX);
-			$textXX = str_replace("<li><a class='li1menu_link mainmenu_open' href='".$url4."'>", "<li class='li_mainmenu_open'><a class='li1menu_link mainmenu_open' href='".$url4."'>", $textXX);
-			// основной вариант -имя_cat_№
-			$textXX = str_replace("' href='".$url3."'>", " mainmenu_open' href='".$url3."'>", $textXX);
-			$textXX = str_replace("<li><a class='li1menu_link mainmenu_open' href='".$url3."'>", "<li class='li_mainmenu_open'><a class='li1menu_link mainmenu_open' href='".$url3."'>", $textXX);
+			$textXX = str_replace($el_open."<a class='".$url_open2." mainmenu_open' href='".$url4."'>", $el_open2."<a class='".$url_open2." mainmenu_open' href='".$url4."'>", $textXX);
+			if ($url3 != $url4) {
+				// основной вариант -имя_cat_№
+				$textXX = str_replace("' href='".$url3."'>", " mainmenu_open' href='".$url3."'>", $textXX);
+				$textXX = str_replace($el_open."<a class='".$url_open2." mainmenu_open' href='".$url3."'>", $el_open2."<a class='".$url_open2." mainmenu_open' href='".$url3."'>", $textXX);
+			}
 
 			if (strpos($url3, "_page_")) // если открыта страница
 				if (strpos($textXX, "' href='".$url3."'>")) { // если в меню есть на нее ссылка
@@ -1162,9 +1198,13 @@ case "10": # Блок меню
 				$tr = array(aa("[элемент открыть]")=>$el_open,aa("[элемент закрыть]")=>$el_close,"[/url]"=>$url_close2,"[url="=>$url_open,"]"=>$url_close1); // без 3 уровней!
 				$textXX = strtr($textX,$tr);
 			}
-			$textXX = str_replace("' href='".$url1."'>", " mainmenu_open' href='".$url1."'>", $textXX);
-			$textXX = str_replace("' href='".$url2."'>", " mainmenu_open' href='".$url2."'>", $textXX);
-			$textXX = str_replace("' href='".$url3."'>", " mainmenu_open' href='".$url3."'>", $textXX);
+			//$textXX = str_replace("' href='".$url1."'>", " mainmenu_open' href='".$url1."'>", $textXX);
+			//$textXX = str_replace("' href='".$url2."'>", " mainmenu_open' href='".$url2."'>", $textXX);
+			//$textXX = str_replace("' href='".$url3."'>", " mainmenu_open' href='".$url3."'>", $textXX);
+			$textXX = str_replace($el_open."<a class='".$url_open2."' href='".$url1."'>", $el_open2."<a class='".$url_open2." mainmenu_open' href='".$url1."'>", $textXX);
+			$textXX = str_replace($el_open."<a class='".$url_open2."' href='".$url2."'>", $el_open2."<a class='".$url_open2." mainmenu_open' href='".$url2."'>", $textXX);
+			$textXX = str_replace($el_open."<a class='".$url_open2."' href='".$url3."'>", $el_open2."<a class='".$url_open2." mainmenu_open' href='".$url3."'>", $textXX);
+
 			if ($class != "") $class_menu = $class; else $class_menu = "table1menu";
 			$textXX = "<table class='".$class_menu."' width=100% cellspacing=0 cellpadding=0><tr valign=bottom>".$textXX."</tr></table>";
 		break;
@@ -1339,6 +1379,120 @@ case "13": # ОБЛАКО ТЕГОВ
 		}
 	}
 	$textX .= $tagcloud;
+	$block = str_replace("[$titleX]", $design_open.$textX.$design_close, $block);
+	$type = ""; break;
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+case "14": # Расписание
+		
+	$tomorrow_record = "<h3 class='tomorrow_record'>".$tomorrow_record."</h3>"; 
+	if (date("G",time()) > $end_hour && $show_end_hour == "1") {
+		$next_day = 1;
+	} else $tomorrow_record = "";
+	// maxdate +15D Y M настройка
+
+	$now_calendar = date("Y/m/d",time() + (86400*$next_day));
+
+	$all_options = $specialist."*@%".$work_time."*@%".$record."*@%".$all_days."*@%".$next_day;
+
+	if ($calendar_maxDate == 1) $calendar_maxDate = "maxDate: '+".$calendar_maxDate_days."D',";
+
+	$day_name = array("воскресенье"=>0,"понедельник"=>1,"вторник"=>2,"среда"=>3,"четверг"=>4,"пятница"=>5,"суббота"=>6);
+	$deleted_days = explode(",", $deleted_days);
+	$deleted_day = array();
+	foreach ($deleted_days as $value) {
+		$deleted_day[] = $day_name[ trim($value) ];
+	}
+	$deleted_day = implode(",", $deleted_day);
+
+	$deleted_dates = explode(",", $deleted_dates);
+	$deleted_date = array();
+	foreach ($deleted_dates as $value) {
+		$deleted_date[] = "[".str_replace(".",", ",$value)."]";
+	}
+	$deleted_date = implode(", ", $deleted_date);
+	$textX = "<script>$(function() {
+	    $( '#datepicker' ).datepicker(  {
+	      beforeShowDay: function(date) {
+			var day = date.getDay();
+			var closedDates = [".$deleted_date."];
+			var closedDays = [".$deleted_day."];
+			var x = [true];
+			for (var i = 0; i < closedDays.length; i++) {
+				if (day == closedDays[i]) {
+					x = [false];
+				}
+			}
+			for (var i = 0; i < closedDates.length; i++) {
+				/* 11=30=2013=30=11=2013--
+				alert(date.getMonth() + '=' + date.getDate() + '=' + date.getFullYear() + '=' + closedDates[i][0] + '=' + closedDates[i][1] + '=' + closedDates[i][2] + '--');
+				*/
+				if (closedDates[i][2] === undefined) {
+					if (date.getMonth() == closedDates[i][1] - 1 && date.getDate() == closedDates[i][0]) {
+						x = [false];
+					}
+				} else {
+					if (date.getMonth() == closedDates[i][1] - 1 && date.getDate() == closedDates[i][0] && date.getFullYear() == closedDates[i][2]) {
+						x = [false];
+					}
+				}
+			}
+					
+			return x;
+	      },
+	      numberOfMonths: ".$numberOfMonths.",";
+	      if (!is_admin($admin)) $textX .= "minDate: new Date('".$now_calendar."'), ".$calendar_maxDate;
+	      $textX .= "onSelect: function(date) {
+	            $(show_raspisanie(".$idX.", '".$all_options."*@%' + date));
+	      },
+	    });
+	});
+	function show_zapis(num, data, spec) {
+		$('#zapis_dialog_spec').html(spec);
+		$('#zapis_dialog_data').html(data);
+		$('#zapis_spec').val(spec);
+		$('#zapis_data').val(data);
+		$('#zapis_num').val(num);
+		$('#zapis_dialog').show().dialog();
+		$('#zapis_name').val('');
+		$('#zapis_tel').val('');
+		$('#zapis_del').hide();
+		$('#zapis_send').val('".$zapis_send."');";
+
+		if (is_admin($admin)) $textX .= "num2 = num.split(',');
+		$('#zapis_name').val(num2[3]);
+		num2 = num2[4].split(';');
+		$('#zapis_tel').val(num2[0]);
+		$('#zapis_del').show();
+		if (isNaN(num)) $('#zapis_send').val('".aa("Сохранить изменения")."');";
+
+	$textX .= "}
+	</script>
+
+	<div id='zapis_dialog' class='hide' title='".$zapis_na_priem."'>
+	<form id='zapis'>
+	<p>".$zapis_obrashenie."</p>
+	<p><label for='your_name'>".$zapis_your_name."</label> <input id='zapis_name' name='your_name' type='text' size='30' style='width:100%' required>
+	<p><label for='your_tel'>".$zapis_your_tel."</label> <input id='zapis_tel' name='your_tel' type='tel' size='30' style='width:100%' required>
+	<p><span for='zapis_spec'>".$zapis_spec."</span> <span id='zapis_dialog_spec'>---</span><input id='zapis_spec' value='' name='zapis_spec' type='hidden'>
+	<p><span for='zapis_data'>".$zapis_data."</span> <span id='zapis_dialog_data'>---</span><input id='zapis_data' value='' name='zapis_data' type='hidden'>
+	<p><input value='".$zapis_send."' type='button' id='zapis_send' onclick='save_raspisanie()'> <input value='".aa("Удалить")."' type='button' class='hide' id='zapis_del' onclick='$(\"#zapis_name\").val(\"\"); save_raspisanie()'></p>
+	<input value='".$zapis_zayavka_send."' name='zapis_zayavka_send' type='hidden'>
+
+	<input id='zapis_num' value='' name='zapis_num' type='hidden'>
+	<input value='".$idX."' name='id_block' type='hidden'>
+	</form>
+	</div>";
+
+	$textX .= $tomorrow_record.'<div id="datepicker"></div>
+	<script>$(show_raspisanie('.$idX.', "'.$all_options.'*@%'.$current_day.'"));</script>
+	<div id="show_raspisanie'.$idX.'"></div>';
+
+	$block = str_replace("[$titleX]", $design_open.$textX.$design_close, $block);
+	$type = ""; break;
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+case "15": # КАРТА - доделать!
+
+	//$textX .= $tagcloud;
 	$block = str_replace("[$titleX]", $design_open.$textX.$design_close, $block);
 	$type = ""; break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1654,10 +1808,10 @@ case "31": # Блок JS
 		if ($pid == 0) {
 			$id = $id_razdel_and_bd[$DBName];
 			// получаем список id страниц выбранного раздела и папки
-			$sql2 = "select `pid` from ".$prefix."_pages where `cid`='".$cid."' and `module`='".$DBName."' and `tables`='pages' order by `pid`";
+			$sql2 = "select `pid` from ".$prefix."_pages where `cid`='".$cid."' and `module`='".$DBName."' and `tables`='pages' and `active`='1' order by `pid`";
 			$result2 = $db->sql_query($sql2);
 			$numrows = $db->sql_numrows($result2);
-			if ($numrows > 0) {
+			if ($numrows > 5) {
 				$and = array();
 				while ($row2 = $db->sql_fetchrow($result2)) {
 					$and[] = "`pages` like '% ".$row2['pid']." %'";
@@ -1700,20 +1854,19 @@ case "31": # Блок JS
 								    max: ".$max.",
 								    values: [ ".$min2.", ".$max2." ],
 								    slide: function( event, ui ) {
-									    interval = ui.values[ 0 ] + ' - ' + ui.values[ 1 ];
-									    $('#amount".$s_name."').val( interval );
-									    $('#text_amount".$s_name."').html( interval );
+									    $('#amount".$s_name."').val( ui.values[ 0 ] + ' - ' + ui.values[ 1 ] );
+									    $('#text_amount".$s_name."').html( ' от ' + ui.values[ 0 ] + ' до ' + ui.values[ 1 ] );
 									    $('.change_filter').hide();
 									    $('#change".$s_name."').show();
 								    }
 							    });
-								interval = $( '#slider-range".$s_name."' ).slider( 'values', 0 ) +
-							    ' - ' + $( '#slider-range".$s_name."' ).slider( 'values', 1 )
-							    $( '#amount".$s_name."' ).val( interval );
-							    $( '#text_amount".$s_name."' ).html( interval );
+							    $( '#amount".$s_name."' ).val( $( '#slider-range".$s_name."' ).slider( 'values', 0 ) +
+							    ' - ' + $( '#slider-range".$s_name."' ).slider( 'values', 1 ) );
+							    $( '#text_amount".$s_name."' ).html( ' от ' +$( '#slider-range".$s_name."' ).slider( 'values', 0 ) +
+							    ' до ' + $( '#slider-range".$s_name."' ).slider( 'values', 1 ) );
 						    });
 						    </script>
-						    <p><span class='filter_title filter_title_".$s_name."'>".$s_title.":</span> 
+						    <p><span class='filter_title filter_title_".$s_name."'>".$s_title."</span> 
 						    <nobr><span class='filter_interval filter_interval_".$s_name."' id='text_amount".$s_name."'></span></nobr>
 						    <input type='hidden' name='filter[".$s_name."]' id='amount".$s_name."'></p>
 						    <div id='slider-range".$s_name."'></div>
@@ -1725,7 +1878,7 @@ case "31": # Блок JS
 				    	case "4": // строка (можно написать шаблон)
 						case "7": // список слов (выбор нескольких значений)
 						// получаем максимум и минимум для панели
-						$sql2 = "select `name` from ".$prefix."_spiski where `type`='".$s_name."'".$and;
+						$sql2 = "select `name` from ".$prefix."_spiski where `type`='".$s_name."'".$and." order by `name`";
 						$result2 = $db->sql_query($sql2);
 						$names = array();
 						while ($row2 = $db->sql_fetchrow($result2)) {
@@ -1914,9 +2067,7 @@ if ($normalize != 0) echo "<link rel='stylesheet' href='includes/css-frameworks/
 
 if ($sortable != 0) echo "<script src='includes/jquery.tinysort.min.js'></script>";
 
-if ($jqueryui != 0) echo "<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js'></script>
-<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/i18n/jquery-ui-i18n.min.js'></script>
-<link rel='stylesheet' href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css' media='all' />";
+if ($jqueryui != 0) echo "<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js'></script><script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/i18n/jquery-ui-i18n.min.js'></script><link rel='stylesheet' href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css' media='all' /><script src='includes/jquery-ui-datepicker-ru.js'></script>";
 
 switch($kickstart) { // Выбор CSS-фреймворка
 	case 1: // KickStart
