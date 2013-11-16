@@ -256,7 +256,11 @@ function create_main($type) {
 	<div class='w95 mw800'>
 	<h2>Название: <span class='f12'>По-русски, можно с пробелами</span><br><input type='text' name='title' value='' size='40' class='w100 h40 f16' autofocus></h2>
 
-	<h2>Содержание стиля: <a class='button small blue' onclick='if ($(\"#color_scheme\").html() == \"\") $(\"#color_scheme\").html(\"<iframe src=http://colorscheme.ru width=985 height=660 scrolling=no frameborder=0></iframe>\"); $(\"#color_scheme\").toggle();'>Подбор цвета</a></h2>
+	<h2>Содержание стиля: 
+	<a class='button small blue' onclick='if ($(\"#color_scheme\").html() == \"\") $(\"#color_scheme\").html(\"<iframe src=http://colorscheme.ru width=985 height=660 scrolling=no frameborder=0></iframe>\"); $(\"#color_scheme\").toggle();'>Подбор цвета</a>
+	 <a class='button small blue' href='http://sassmeister.com' target='_blank'>SASS > CSS</a>
+	 <a class='button small blue' href='http://less2css.org' target='_blank'>LESS > CSS</a>
+	</h2>
 	<div class='hide' style='position:absolute; margin: 0 auto; width: 985px; height:660px; z-index:1000;' id='color_scheme'></div>
 	".redactor('2', '', 'text', '', 'css')."
 	<input type='hidden' name='id' value=0>
@@ -866,7 +870,11 @@ function edit_main($id) {
 		<div class='w95 mw800'>
 		<h2>Название стиля <span class=f12>Видит только администратор</span><br>
 		<textarea class='big w100 h40 f16' name='title' rows='1' cols='10'>".$title."</textarea></h2>
-		<h2>Содержание стиля: <a class='button small blue' onclick='if ($(\"#color_scheme\").html() == \"\") $(\"#color_scheme\").html(\"<iframe src=http://colorscheme.ru width=985 height=660 scrolling=no frameborder=0></iframe>\"); $(\"#color_scheme\").toggle();'>Подбор цвета</a></h2>
+		<h2>Содержание стиля: 
+		<a class='button small blue' onclick='if ($(\"#color_scheme\").html() == \"\") $(\"#color_scheme\").html(\"<iframe src=http://colorscheme.ru width=985 height=660 scrolling=no frameborder=0></iframe>\"); $(\"#color_scheme\").toggle();'>Подбор цвета</a>
+		 <a class='button small blue' href='http://sassmeister.com' target='_blank'>SASS > CSS</a>
+		 <a class='button small blue' href='http://less2css.org' target='_blank'>LESS > CSS</a>
+		</h2>
 	<div class='hide' style='position:absolute; margin: 0 auto; width: 985px; height:660px; z-index:1000;' id='color_scheme'></div>";
 		echo redactor('2', $text, 'text', '', 'css');
 		echo "<input type='hidden' name='namo' value='".$name."'></div>";
@@ -1386,6 +1394,7 @@ function edit_main($id) {
 	$end_hour = 16; // Час начала записи на следующий день и окончания на текущий.
 	$show_end_hour = 1;
 	$current_day = 0;
+	$zapis = "";
 	$zapis_na_priem = "Запись на прием";
 	$zapis_obrashenie = "Укажите, пожалуйста, телефон, по которому в ближайшее время с вами могут связаться администраторы нашего медицинского центра для подтверждения записи на прием.";
 	$zapis_your_name = "Ваше имя:";
@@ -1818,6 +1827,10 @@ function edit_main($id) {
 		</tr>
 
 		<tr><td colspan='2'><h2>Запись</h2></td></tr>
+		<tr>
+		<td>Список записанных людей</td>
+		<td>".input("options[zapis]", $zapis, 150, "txt")."</td>
+		</tr>
 		<tr>
 		<td>Надпись «Запись на прием» (заголовок окна записи). Можно заменить на: «Запись на семинар», «Зарегистрируйтесь» и т.д.</td>
 		<td>".input("options[zapis_na_priem]", $zapis_na_priem)."</td>

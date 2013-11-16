@@ -12,7 +12,7 @@ if ($func == "save_raspisanie") {
 	parse_str($string);
 	if (($your_name != "" && $your_tel != "") || is_admin($admin)) {
 		// Запись в базу
-		$result = $db->sql_query("SELECT `useit` FROM ".$prefix."_mainpage where `id`='".$id_block."' and `useit` like '%".$zapis.$zapis_num.",".$zapis_data.";%'");
+		$result = $db->sql_query("SELECT `useit` FROM ".$prefix."_mainpage where `id`='".$id_block."' and `useit` like '%".$zapis.$zapis_num.",".$zapis_dat.";%'");
 		if ($db->sql_numrows($result) == 0) {
 			
 			$result = $db->sql_query("SELECT `useit` FROM ".$prefix."_mainpage where `id`='".$id_block."'");
@@ -26,16 +26,16 @@ if ($func == "save_raspisanie") {
 					echo aa("Запись удалена.");
 				} else { // Редактирование
 					$z_num = explode(",", $zapis_num);
-					$useit = str_replace($zapis_num, $z_num[0].",".$zapis_data.",".str_replace(",", ".", $your_name).",".str_replace(",", ".", $your_tel).";", $row['useit']);
+					$useit = str_replace($zapis_num, $z_num[0].",".$zapis_dat.",".str_replace(",", ".", $your_name).",".str_replace(",", ".", $your_tel).";", $row['useit']);
 					echo aa("Запись отредактирована.");
 				}
 			}
-			if (is_numeric($zapis_num)) $useit = str_replace("zapis=".$zapis, "zapis=".$zapis.$zapis_num.",".$zapis_data.",".str_replace(",", ".", $your_name).",".str_replace(",", ".", $your_tel).";", $row['useit']);
+			if (is_numeric($zapis_num)) $useit = str_replace("zapis=".$zapis, "zapis=".$zapis.$zapis_num.",".$zapis_dat.",".str_replace(",", ".", $your_name).",".str_replace(",", ".", $your_tel).";", $row['useit']);
 			$db->sql_query("UPDATE ".$prefix."_mainpage SET `useit`='".$useit."' WHERE `id`='".$id_block."';");
 
 			// Отправка письма
 			if (!is_admin($admin)) {
-				$order = "<b>".aa("Заявка")."</b><br>".aa("Имя").": ".$your_name."<br>".aa("Телефон").": ".$your_tel."<br>".$zapis_spec."<br>".aa("Дата и время").": ".$zapis_data;
+				$order = "<b>".aa("Заявка")."</b><br>".aa("Имя").": ".$your_name."<br>".aa("Телефон").": ".$your_tel."<br>".$zapis_spec."<br>".aa("Дата и время").": ".$zapis_dat;
 				if ($adminmail != "") mail($adminmail, "=?utf-8?b?" . base64_encode(aa("Новая заявка")) . "?=", str_replace("<br>","\r\n",$order), "MIME-Version: 1.0\r\nContent-type: text/html; charset=utf-8\r\nFrom: =?utf-8?b?" . base64_encode(aa("Администратор")) . "?= <" . $adminmail . ">");
 				// Отправляем системное сообщение админу
 				system_mes($order);

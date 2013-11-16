@@ -21,6 +21,9 @@ $contents = "
 
 .align_center {text-align:center;}
 
+.block_title {display:block; margin-top:20px;}
+.block_open_text {display:block;}
+
 .editor_file_link {
 	padding-left: 20px;
 }

@@ -419,6 +419,9 @@ border-bottom-left-radius: 10;
 .sho_page a {padding:5px; display:block;}
 .sho_page a:hover, .sho_page a:hover span {color: white !important;}
 
+.dark_pole2:hover {transformation: transition(all 1s linear);}
+
+
 ul.button-bar li.black,
 ul.button-bar li.black:hover a,
 .dark_pole2sel,

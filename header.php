@@ -1450,7 +1450,7 @@ case "14": # Расписание
 		$('#zapis_dialog_spec').html(spec);
 		$('#zapis_dialog_data').html(data);
 		$('#zapis_spec').val(spec);
-		$('#zapis_data').val(data);
+		$('#zapis_dat').val(data);
 		$('#zapis_num').val(num);
 		$('#zapis_dialog').show().dialog();
 		$('#zapis_name').val('');
@@ -1474,7 +1474,7 @@ case "14": # Расписание
 	<p><label for='your_name'>".$zapis_your_name."</label> <input id='zapis_name' name='your_name' type='text' size='30' style='width:100%' required>
 	<p><label for='your_tel'>".$zapis_your_tel."</label> <input id='zapis_tel' name='your_tel' type='tel' size='30' style='width:100%' required>
 	<p><span for='zapis_spec'>".$zapis_spec."</span> <span id='zapis_dialog_spec'>---</span><input id='zapis_spec' value='' name='zapis_spec' type='hidden'>
-	<p><span for='zapis_data'>".$zapis_data."</span> <span id='zapis_dialog_data'>---</span><input id='zapis_data' value='' name='zapis_data' type='hidden'>
+	<p><span for='zapis_dat'>".$zapis_data."</span> <span id='zapis_dialog_data'>---</span><input id='zapis_dat' value='' name='zapis_dat' type='hidden'>
 	<p><input value='".$zapis_send."' type='button' id='zapis_send' onclick='save_raspisanie()'> <input value='".aa("Удалить")."' type='button' class='hide' id='zapis_del' onclick='$(\"#zapis_name\").val(\"\"); save_raspisanie()'></p>
 	<input value='".$zapis_zayavka_send."' name='zapis_zayavka_send' type='hidden'>
 
