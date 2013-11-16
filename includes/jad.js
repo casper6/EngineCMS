@@ -7,6 +7,10 @@ function aa(t,lang_admin,lang_admin_text) { // Функция перевода �
       else return " [ Error: no translate for: "+t+" ] ";
   } 
 }
+function window_resize(e) {
+     window.clearTimeout(resizeTimeoutId);
+     resizeTimeoutId = window.setTimeout('doResizeCode();', 10);
+}
 function pics_refresh(txt){
 	$('.pics').html('');
 	text = $(txt).val();

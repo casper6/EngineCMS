@@ -335,9 +335,28 @@ $(function () {
 ##########################################################################################
 function redactor($type, $txt, $name, $name2="", $style="html") {
   global $add_clips, $lang_admin;
-  $echo = "";
+  // индексы клавиш - https://code.google.com/p/jquerykeyboard/wiki/Indexes
+  $echo = "<script>
+  function keying() {
+    document.body.onkeydown = function() {
+      if ( event.ctrlKey || event.keyCode == 91) {
+        document.body.onkeydown = function() {
+          if ( event.keyCode == 83) {
+            save_main(\"ad/ad-mainpage.php\", \"mainpage_save_ayax\", \"\", \"\");
+            keying();
+            return false;
+          } else keying();
+        }
+      }
+    }
+  }
+  keying();
+  </script>";
   if ($type=="0") {
   } elseif ($type=="2") {
+    // editor.insert("I know how to insert text"); вставка текста
+
+
     // Преобразование textarea (замена на русскую букву е, только для редактора)
     $txt = str_replace("textarea","tеxtarea",$txt); // ireplace
     //$txt = str_replace("&","&amp;",$txt);
@@ -353,7 +372,7 @@ function redactor($type, $txt, $name, $name2="", $style="html") {
     if ($style == "javascript") $theme=$color_tema_js;
     // section>h2+ul.nav>li.nav-item$*5>a
     $echo .= "<textarea id='".$name."X' class='hide' name='".$name."'>".$txt."</textarea>
-    <pre id='".$name."' class='w100 h700'></pre><br>
+    <pre id='".$name."' class='w100 h1200 l0'></pre><br>
     <script src='/includes/ace-redactor/ace.js'></script><script>
       var config = ace.require(\"ace/config\");
       var ".$name." = ace.edit('".$name."');
@@ -381,13 +400,22 @@ function redactor($type, $txt, $name, $name2="", $style="html") {
         })
         ace.config.loadModule(\"ace/snippets/".$style."\");
       });
-
       ".$name.".getSession().on('change', function(e) {
           $('#".$name."X').val( ".$name.".getSession().getValue() );
       });
       document.getElementById('".$name."').style.fontSize='16px';
-      
     </script>";
+    /*
+    горячие клавиши для редактора
+      ".$name.".commands.addCommand({
+        name: 'SaveMe',
+        bindKey: {win: 'Ctrl-S',  mac: 'Command-S'}, // вызов на PC и Mac
+        exec: function(".$name.") {
+          // editor.*
+        },
+        readOnly: false
+      });
+    */
   } elseif ($type=="1") {
     // Преобразование textarea (замена на русскую букву е, только для редактора)
     $txt = str_replace("textarea","tеxtarea",$txt); // ireplace
@@ -523,5 +551,13 @@ function redactor2($type, $txt, $name, $style="html") {
   return $echo;
 }
 ##########################################################################################
-
+function button_resize_red($redactor, $savebutton=false) {
+  if ($redactor == 2) {
+    if ($savebutton == true) { $add = " $(\"#button_save\").show();"; $add2 = " $(\"#button_save\").hide();"; } else $add = $add2 = "";
+    $txt = "<a class='right3 button small orange' onclick='$(\".ace_editor\").css(\"position\", \"fixed\").css(\"top\", \"0\").css(\"height\", \"100%\").css(\"margin\", \"0\"); $(\"#button_resize_red\").show();".$add."'>↑ Развернуть</a><a class='z10000 small orange button' id='button_resize_red' onclick='$(\".ace_editor\").css(\"position\", \"relative\").css(\"height\", \"1200px\"); $(\"#button_resize_red\").hide();".$add2."' style='position:absolute; margin:-5px 70%; display:none;'>↓</a>";
+    if ($savebutton == true) $txt .= "<a class='z10000 small green button' id='button_save' onclick='save_main(\"ad/ad-mainpage.php\", \"mainpage_save_ayax\", \"\", \"\")' style='position:absolute; margin:-5px 80%; display:none;'>".aa("Сохранить")."</a>";
+  } else $txt = "";
+  return $txt;
+}
+##########################################################################################
 ?>

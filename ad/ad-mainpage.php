@@ -235,9 +235,9 @@ function create_main($type) {
 	<span class=h2>Название:</span> По-русски, можно с пробелами
 	<input type='text' name='title' value='' size=40 class='w100 h40 f16' autofocus><br>
 	".help_design()."
-	<h2>Содержание дизайна (HTML):</h2>
+	<h2>Содержание дизайна (HTML): ".button_resize_red(2)."</h2>
 	".redactor('2', '', 'text', '', 'html')."
-	<div class='notice success black w100 mw800'><span class='icon large white' data-icon='C'></span>
+	<div class='notice success black'><span class='icon large white' data-icon='C'></span>
 	Здесь вы можете вставить готовый HTML-код (от тега &lt;body&gt; до &lt;/body&gt;, не включительно) или набрать его с нуля.
 	<br><b>[содержание]</b> - автоматический блок для вывода страниц. Не использовать его можно лишь в случае присоединения дизайна к разделу, состоящему из одной страницы — в этом случае можно всю страницу поместить в дизайн или в раздел.</div>
 	<input type=hidden name=id value=0>
@@ -256,7 +256,7 @@ function create_main($type) {
 	<div class='w95 mw800'>
 	<h2>Название: <span class='f12'>По-русски, можно с пробелами</span><br><input type='text' name='title' value='' size='40' class='w100 h40 f16' autofocus></h2>
 
-	<h2>Содержание стиля: 
+	<h2>Содержание стиля: ".button_resize_red(2)."
 	<a class='button small blue' onclick='if ($(\"#color_scheme\").html() == \"\") $(\"#color_scheme\").html(\"<iframe src=http://colorscheme.ru width=985 height=660 scrolling=no frameborder=0></iframe>\"); $(\"#color_scheme\").toggle();'>Подбор цвета</a>
 	 <a class='button small blue' href='http://sassmeister.com' target='_blank'>SASS > CSS</a>
 	 <a class='button small blue' href='http://less2css.org' target='_blank'>LESS > CSS</a>
@@ -854,10 +854,10 @@ function edit_main($id) {
 	if (intval($nastroi) != 1) red_vybor();
 	echo "</div>
 
-	<span class=h2>Название дизайна</span> <span class=f12>Видит только администратор</span><br>
+	<h2>Название дизайна</h2>
 	<textarea class='big w100 h40 f16' name='title' rows='1' cols='10'>".$title."</textarea>
 	".help_design()."
-	<span class=h2>Содержание дизайна (HTML):</span><span class=f12>[содержание] - блок вывода страниц.</span>";
+	<h2>Содержание дизайна (HTML):".button_resize_red($red, true)."</h2>";
   	echo redactor($red, $text, 'text'); // редактор: типа редактора, редактируемое поле
 
 	echo "<span class=h2>Использованные в дизайне стили CSS</span>
@@ -870,7 +870,8 @@ function edit_main($id) {
 		<div class='w95 mw800'>
 		<h2>Название стиля <span class=f12>Видит только администратор</span><br>
 		<textarea class='big w100 h40 f16' name='title' rows='1' cols='10'>".$title."</textarea></h2>
-		<h2>Содержание стиля: 
+		<h2>
+		Содержание стиля: ".button_resize_red(2, true)."
 		<a class='button small blue' onclick='if ($(\"#color_scheme\").html() == \"\") $(\"#color_scheme\").html(\"<iframe src=http://colorscheme.ru width=985 height=660 scrolling=no frameborder=0></iframe>\"); $(\"#color_scheme\").toggle();'>Подбор цвета</a>
 		 <a class='button small blue' href='http://sassmeister.com' target='_blank'>SASS > CSS</a>
 		 <a class='button small blue' href='http://less2css.org' target='_blank'>LESS > CSS</a>
@@ -1312,15 +1313,15 @@ function edit_main($id) {
 		echo "</div>
 
 		<table width='100%' border='0'><tr valign='top'><td width='50%'>
-		<span class=h2>Название раздела</span><br>
+		<h2>Название раздела</h2>
 		<textarea class='big w100 h40 f16' name='title' rows='2' cols='10'>".$title."</textarea>
 		</td><td>
-		<span class=h2>Адрес раздела на сайте</span><br>
+		<h2>Адрес раздела на сайте</h2>
 		<textarea class='big w100 h40 f16' name='namo' rows='1' cols='10'>".$name_all."</textarea>
 		<span class=f12>Ссылка на раздел: <a href='/-".$name."' target='_blank'>-".$name."</a>. Не изменять, если созданы папки/страницы!</span>
 		</td></tr>
 		<tr><td colspan='2'>
-		<span class=h2>Содержание раздела:</span><br>";
+		<h2>Содержание раздела: ".button_resize_red($red, true)."</h2>";
 	  	echo redactor($red, $useit, 'useit', 'shablon'); // редактор: типа редактора, редактируемое поле
 
 		echo "<input type='hidden' name='text' value='".$text."'>";
@@ -1901,16 +1902,14 @@ function edit_main($id) {
 		Редактирование содержания блока</span>";
 		if (intval($nastroi) != 1 && $name != 10 && $name != 6) red_vybor();
 		echo "</div>
-
 		<table class='w100 mw800'><tr valign='top'><td width='50%'>
-		<span class=h2>Название блока</span><br>
+		<h2>Название блока</h2>
 		<textarea class='big w100 h40 f16' name='title' rows='1' cols='10'>".$title."</textarea>
 		</td><td>
-		<span class=h3>Название класса CSS</span><br>
+		<h2>Название класса CSS</h2>
 		<textarea class='big w100 h40 f16' name='shablon' rows='1' cols='10'>".$sha."</textarea>
 		</td></tr>
 		<tr><td colspan=2>";
-
 		if ($name == 6) $text .= "\n";
 
 		if ($name == 3) echo "<b>Разделение кусков рекламы или текста — с помощью символа | </b>";
@@ -1918,10 +1917,8 @@ function edit_main($id) {
 			&lt;? и ?&gt; ставятся <b>только</b> в начале и конце кода, лишь для визуального редактора и наглядности.<br>";
 
 		if ($name == 10 or $name == 5 or $name == 0) $red = 1; // дополнить список при необходимости
-		
 
-
-		echo "<span class=h2>Содержание блока:</span>";
+		echo "<h2>Содержание блока:".button_resize_red($red, true)."</h2>";
 		if ($name != 31 && $name != 7 && $name != 10 && $name != 6) echo redactor($red, $text, 'text'); // редактор: тип редактора, редактируемое поле
 		if ($name == 6) echo "<div class='pics w100'></div>
 		<textarea name=text rows=3 cols=86 class='w100 h155' id=textarea onchange=\"pics_refresh('#textarea');\">".str_replace("\n\n", "\n", $text)."</textarea>
@@ -2185,7 +2182,7 @@ function edit_main($id) {
 		<textarea class='big w100 h40 f16' name='namo' rows='1' cols='10'>".$name."</textarea>
 		</td></tr><tr><td colspan=2>
 		".help_shablon()."
-		<h2>Содержание шаблона:</h2>";
+		<h2>Содержание шаблона:".button_resize_red($red, true)."</h2>";
 		echo redactor($red, $text, 'text'); // редактор: типа редактора, редактируемое поле
 		echo "</td></tr></table>";
 	} ############################### ЗАКРЫТИЕ ШАБЛОН

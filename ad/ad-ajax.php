@@ -250,8 +250,8 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
         if ($diz=="" and $razr=="" and $bloc=="" and $stri=="") 
           $title = $row['title'].'<span class="gray"> &rarr; не используется</span>';
         else 
-          $title = '<a href="sys.php?op=mainpage&type=3&id='.$row['id'].'&red=1">'.$row['title'].'</a>'.$diz.$razr.$bloc.$stri;
-      } else $title = '<a href="sys.php?op=mainpage&type=3&id='.$row['id'].'&red=1">'.$row['title'].'</a>';
+          $title = '<a href="sys.php?op=mainpage&type=3&id='.$row['id'].'&red=2">'.$row['title'].'</a>'.$diz.$razr.$bloc.$stri;
+      } else $title = '<a href="sys.php?op=mainpage&type=3&id='.$row['id'].'&red=2">'.$row['title'].'</a>';
 
       if ($row['color'] != "1") {
         $icon_disable = "red"; $text_disable = "Отключить блок"; $class_disable = "";
@@ -265,7 +265,7 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
        else $block = "<tr valign=top><td style='background:white;'><br><h2>".$block_names[$nu]." &darr;</h2></td></tr><tr id='block_".$row['id']."'><td class='padleft30".$class_disable."'>";
       $title = $block.$title;
       $blocks_ok = $title."<div style='margin-left:20px; display: inline; float:right;'>
-       <a href='sys.php?op=mainpage&type=3&id=".$row['id']."&red=1' title='Редактировать в HTML'>".icon('black small','7')."</a> 
+       <a href='sys.php?op=mainpage&type=3&id=".$row['id']."&red=2' title='Редактировать в HTML'>".icon('black small','7')."</a> 
        <a href='sys.php?op=mainpage&type=3&id=".$row['id']."&nastroi=1' title='Настроить блок'>".icon('yellow medium','V')."</a> 
        <a class='padleft30 pointer' onclick='offblock(".$row['id'].")' title='".$text_disable."'>".icon($icon_disable.' small','Q')."</a>  
        <a class='padleft30 pointer' onclick='delblock(".$row['id'].",0)' title='Удалить блок'>".icon('red small','F')."</a>
@@ -290,7 +290,7 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
       //$useit = $row['useit'];
       //$useit_module = "";
       //$text = $row['text'];
-      $info .= "<tr id='block_".$row['id']."'><td><div style='float:right;'><a href='sys.php?op=mainpage&id=".$row['id']."&red=1&type=6' title='Редактировать'>".icon('black small','7')."</a><a class='padleft30 pointer' onclick='delblock(".$row['id'].",0)' title='Удалить'>".icon('red small','F')."</a></div><h2><a href='sys.php?op=mainpage&id=".$row['id']."&red=1&type=6' title='Редактировать'>".$row['title']."</a></h2></td></tr>";
+      $info .= "<tr id='block_".$row['id']."'><td><div style='float:right;'><a href='sys.php?op=mainpage&id=".$row['id']."&red=2&type=6' title='Редактировать'>".icon('black small','7')."</a><a class='padleft30 pointer' onclick='delblock(".$row['id'].",0)' title='Удалить'>".icon('red small','F')."</a></div><h2><a href='sys.php?op=mainpage&id=".$row['id']."&red=2&type=6' title='Редактировать'>".$row['title']."</a></h2></td></tr>";
     }
     $info .= "</table>";
   break;
@@ -1029,7 +1029,10 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
           $p_active_color = " bgcolor=#dddddd";
           $vkl_title = "<a onclick='offpage(".$pid.",1)' class='button small' title='Включение страницы'>".icon('white small','`')."Включить</a>";
         }
-        $pageslistdel .= "<tr id='1page".$pid."".$p_active_color."' class='tr_hover'><td class='".$gray_date."'><nobr>".$date."</nobr></td><td>".$m_title."</td><td>".$vkl_title."</td><td><a title='Удалить страницу в Удаленные' onclick='delpage(".$pid.")' class='pointer' style='float:right;'>".icon('red small','T')."</a><a title='Изменить страницу' href='sys.php?op=base_pages_edit_page&name=".$module."&pid=".$pid."'>".icon('orange small','7')."<a title='Открыть страницу на сайте' target='_blank' href='-".$module."_page_".$pid."'>".$title."</a>&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>";
+        $pageslistdel .= "<tr id='1page".$pid."".$p_active_color."' class='tr_hover'><td class='".$gray_date."'><nobr>".$date."</nobr></td><td>".$m_title."</td><td>".$vkl_title."</td><td>
+        <a title='Удалить страницу в Удаленные' onclick='delpage(".$pid.")' class='pointer' style='float:right;'>".icon('red small','T')."</a>
+        <a target='_blank' title='Изменить страницу' href='sys.php?op=base_pages_edit_page&name=".$module."&pid=".$pid."' onclick='$(\"#p_".$pid."\").show();'>".icon('orange small','7')."</a> 
+        <a title='Открыть страницу на сайте' target='_blank' href='-".$module."_page_".$pid."'>".$title."</a> <span class='hide' id='p_".$pid."'>".icon('green small','*')."</span></td></tr>";
     }
     $pageslistdel .= "</tbody></table>";
 
