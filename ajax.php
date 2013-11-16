@@ -35,7 +35,7 @@ if ($func == "save_raspisanie") {
 
 			// Отправка письма
 			if (!is_admin($admin)) {
-				$order = "<b>".aa("Заявка")."</b><br>".aa("Имя").": ".$your_name."<br>".aa("Телефон").": ".$your_tel."<br>".$zapis_spec."<br>".aa("Дата и время").": ".$zapis_dat;
+				$order = "<b>".aa("Заявка")."</b><br>".aa("Имя").": ".$your_name."<br>".aa("Телефон").": ".$your_tel."<br>".$zapis_specialist."<br>".aa("Дата и время").": ".$zapis_dat;
 				if ($adminmail != "") mail($adminmail, "=?utf-8?b?" . base64_encode(aa("Новая заявка")) . "?=", str_replace("<br>","\r\n",$order), "MIME-Version: 1.0\r\nContent-type: text/html; charset=utf-8\r\nFrom: =?utf-8?b?" . base64_encode(aa("Администратор")) . "?= <" . $adminmail . ">");
 				// Отправляем системное сообщение админу
 				system_mes($order);
