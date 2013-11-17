@@ -186,10 +186,10 @@ if ($numrows > 0) {
         $soderganie .="<br><br><b>".$s_title.":</b> (".ss("выберите даты из меню, кликнув по значкам")."<br>
         <TABLE cellspacing=0 cellpadding=0 style='border-collapse: collapse'><TBODY><TR> 
         <TD><INPUT type='text' name='text[".$s_name."]' id='f_date_c[".$s_name."]' value='' onchange=\"document.getElementById('add[".$s_name."]').value=document.getElementById('f_date_c[".$s_name."]').value+'|'+document.getElementById('f_date_c2[".$s_name."]').value\" readonly=1 size=15></TD>
-        <TD><IMG src='/images/calendar.gif' id='f_trigger_c[".$s_name."]' title='".ss("Выбор даты")."'></TD>
+        <TD><IMG src='/images/calendar.png' id='f_trigger_c[".$s_name."]' title='".ss("Выбор даты")."'></TD>
         <TD width='20' align='center'> - </TD>
         <TD><INPUT type=text name='text[".$s_name."]' id='f_date_c2[".$s_name."]' value='' onchange=\"document.getElementById('add[".$s_name."]').value=document.getElementById('f_date_c[".$s_name."]').value+'|'+document.getElementById('f_date_c2[".$s_name."]').value\" readonly=1 size=15></TD> 
-        <TD><IMG src='/images/calendar.gif' id='f_trigger_c2[".$s_name."]' title='".ss("Выбор даты")."'></TD>
+        <TD><IMG src='/images/calendar.png' id='f_trigger_c2[".$s_name."]' title='".ss("Выбор даты")."'></TD>
         </TR></TBODY></TABLE>
         <SCRIPT type='text/javascript'> 
             Calendar.setup({

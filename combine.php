@@ -19,6 +19,28 @@ if ($add != "") {
 $contents = "
 .filter_name {font-size: 20px;}
 
+.editorbutton {margin-left: 10px; float: left; cursor: pointer;}
+.but_bold {font-weight: bold;}
+.but_quote {font-style: italic;}
+.but_smile {
+  writing-mode:tb-rl;
+  white-space:nowrap;
+  -moz-transform: rotate(90deg);
+  -webkit-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+
+  color: black;
+  background:yellow;
+  border: 1px gray solid;
+  height: 16px;
+  width: 16px;
+  line-height: 16px;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 10px;
+  font-family: Arial;
+}
+
 .align_center {text-align:center;}
 
 .block_title {display:block; margin-top:20px;}
@@ -100,8 +122,6 @@ input:focus {
 a img {border:0;}
 
 .opros_line, .opros_line2 {height:2px; margin:0px; padding:0px;}
-
-.editorbutton {PADDING-LEFT: 3px; FLOAT: left; CURSOR: pointer;}
 
 .text_link {color: #00f;}
 .text_link A:visited {color: #666;}

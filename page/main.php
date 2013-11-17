@@ -17,7 +17,7 @@ global $strelka, $go, $cid, $pid, $all, $avtor, $to, $info, $num, $ip, $golos, $
 // настройки раздела из БД
 global $post, $comments, $datashow, $sort, $lim, $foto, $view, $search, $search_papka, $tema, $tema_name, $tema_title, $tema_opis, $menushow, $design; 
 
-$media = $folder = $col = $view = $golos = $golosrazdel = $post = $comments = $datashow = $favorites = $socialnetwork = $search = $search_papka = $put_in_blog = $base = $vetki = $citata = $media_comment = $no_html_in_opentext = $no_html_in_text = $show_add_post_on_first_page = $media_post = $razdel_shablon = $page_shablon = $comments_all = $comments_num = $comments_mail = $comments_adres = $comments_tel = $comments_desc = $golostype = $pagenumbers = $comments_main = $tags_type = $tema_zapret_comm = $pagekol = $table_light = $designpages = $comments_add = $div_or_table = $papka_show = $more_smile = $add_post_to_mainpage = $design_tablet = $designpages_tablet = $design_phone = $designpages_phone = 0;
+$media = $folder = $col = $view = $golos = $golosrazdel = $post = $comments = $datashow = $favorites = $socialnetwork = $search = $search_papka = $put_in_blog = $base = $vetki = $citata = $media_comment = $no_html_in_opentext = $no_html_in_text = $show_add_post_on_first_page = $media_post = $razdel_shablon = $page_shablon = $comments_all = $comments_num = $comments_mail = $comments_adres = $comments_tel = $comments_desc = $golostype = $pagenumbers = $comments_main = $tags_type = $tema_zapret_comm = $pagekol = $table_light = $designpages = $comments_add = $div_or_table = $papka_show = $add_post_to_mainpage = $design_tablet = $designpages_tablet = $design_phone = $designpages_phone = 0;
 $menushow = $titleshow = $razdeltitleshow = $razdel_link = $peopleshow = $design = $tags = $podrobno = $podrazdel_active_show = $podrazdel_show = $tipograf = $limkol = $tags_show = $tema_zapret = $opentextshow = $maintextshow = 1;
 
 $comment_shablon = 2;
@@ -351,7 +351,7 @@ function showdate($showdate) {
         if ($pсid>0 and $c_name[$pсid]!="") $soderganieALL .= "<img width='16' src='/images/sys/papka.png' align='bottom' title='".ss("Раздел:")."' style='padding-right:5px;'><A href='-".$DBName."_cat_".$pсid."'><b>".$c_name[$pсid]."</b></a> &nbsp; ";
         if ($peopleshow==1) $soderganieALL .= "<img width='16' src='/images/sys/magnify.png' align='bottom' title='".ss("Просмотры:")."' style='padding-right:5px; padding-left:15px;'><b>".$p_counter."</b>";
         $soderganieALL .= "</div>";
-        if ($datashow==1) $soderganieALL .= "<div class='cat_page_date'><img width='16' src='/images/sys/026.png' align='bottom' title='".ss("Дата:")."' style='padding-right:5px;'>".$p_date."</div>"; // Отображение даты
+        if ($datashow==1) $soderganieALL .= "<div class='cat_page_date'><img width='16' src='/images/calendar.png' align='bottom' title='".ss("Дата:")."' style='padding-right:5px;'>".$p_date."</div>"; // Отображение даты
         if ($p_comm>0) $soderganieALL .= "<div class='cat_page_comments'><a title='".ss("раскрыть")." ".$comments_1."' href='-".$DBName."_page_".$p_pid."_comm#comm'>".$comments_1.": <b>".$p_comm."</b></a></div>"; // Отображение комментариев
         $soderganieALL .= "</td></tr>";
     	} ////////////////////////////////////////////////////////
@@ -733,7 +733,7 @@ function showcat($cid=0, $pag=0, $slovo="") {
             if ($pсid>0 and $c_name[$pсid]!="") $all_cat_link = "<nobr><img width='16' src='/images/sys/papka.png' align='bottom' title='".ss("Раздел:")."' style='padding-right:5px;'><A href='-".$DBName."_cat_".$pсid."'><b>".$c_name[$pсid]."</b></a></nobr> "; else $all_cat_link = "";
             if ($peopleshow==1) $all_page_counter = " <nobr><img width='16' src='/images/sys/magnify.png' align='bottom' title='".ss("Просмотры:")."' style='padding-right:5px; padding-left:15px;'><b>".$p_counter."</b></nobr>";
             else $all_page_counter = "";
-            if ($datashow==1) $all_page_data = " <div class='cat_page_date'><nobr><img width='16' src='/images/sys/026.png' align='bottom' title='".ss("Дата:")."' style='padding-right:5px;'>".$p_date."</nobr></div>";
+            if ($datashow==1) $all_page_data = " <div class='cat_page_date'><nobr><img width='16' src='/images/calendar.png' align='bottom' title='".ss("Дата:")."' style='padding-right:5px;'>".$p_date."</nobr></div>";
             else $all_page_data = "";
             if ($p_comm>0) $all_page_comments = " <div class='cat_page_comments'><nobr><a title='".ss("раскрыть")." ".$comments_1."' href='-".$DBName."_page_".$p_pid."_comm#comm'><img width='16' src='/images/sys/028.png' align='bottom' title='".$comments_1.":' style='padding-right:5px;'><b>".$p_comm."</b></a></nobr></div>";
             else $all_page_comments = "";
@@ -1638,29 +1638,19 @@ function addcomm($pid) {
   if ($tema_zapret_comm == 1 || $tema_zapret_comm == 2) $nolink = true; else $nolink = false;
   if ($media_comment==1) $ret .= site_redactor($nolink)."<div class='comm_label_textarea'>".$comments_7."</div><textarea id='area' class='redactor comm_textarea' name='info' style='width: 100%; height: 220px;'></textarea>".$kcaptcha;
 
-  if ($media_comment==0) {
+  if ($media_comment == 0) {
     $ret .= "<table width=100% cellspacing=0 cellpadding=0><tr valign=bottom><td width=350>".$comments_7."</td><td>
     <DIV class='editor' style='margin-top:10px; width:100%;'> 
-    <DIV class='editorbutton' onclick=\"clc_bbcode('".ss("жирный',1)")."\"><IMG title='".ss("Жирный текст")."' src='images/bold.gif'></DIV>
-    <DIV class='editorbutton' onclick=\"clc_bbcode('".ss("цитата',1)")."\"><IMG title='".ss("Вставить цитату")."' src='images/quote.gif'></DIV>";
-    //global $more_smile;
-    //if ($more_smile == "1" or $more_smile == "0") 
-    $ret .= "<div id=\"cont\" class=\"editorbutton\" OnClick=\"show('onoffsmilies0');\" style=\"cursor: pointer;\"><img title=\"".ss("Показать смайлы: эмоции")."\" src=\"images/smilies/07.gif\"></div>";
-    /*
-    if ($more_smile == "1") $ret .= "<div id=\"cont\" class=\"editorbutton\" OnClick=\"show('onoffsmilies1');\" style=\"cursor: pointer;\"><img title=\"".ss("Смайлы: альтернативная коллекция :)")."\" src=\"images/smilies/75.gif\"></div>
-    <div id=\"cont\" class=\"editorbutton\" OnClick=\"show('onoffsmilies2');\" style=\"cursor: pointer;\"><img title=\"".ss("Смайлы: если эмоций маловато :)")."\" src=\"images/smilies/17.gif\"></div>
-    <div id=\"cont\" class=\"editorbutton\" OnClick=\"show('onoffsmilies3');\" style=\"cursor: pointer;\"><img title=\"".ss("Смайлы: аниме-эмоции o_O")."\" src=\"images/smilies/18.gif\"></div>";
-    */
-    $ret .= "</td></tr></table>
-    <TEXTAREA id=area rows=7 style='font-size:18px;' name=info></TEXTAREA>
-    ".$kcaptcha."
-    <div id=\"onoffsmilies0\" class=\"editor\" style=\"display:none;\"><br><div class=\"editorbutton\">
-    ".smile_generate(array("01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18"))." <div OnClick=\"show('onoffsmilies0');\" style=\"cursor: pointer;\">".ss("Закрыть")."</div></div><br></div>"; // убран лишний div
-    /*if ($more_smile == "1") $ret .= "
-    <div id=\"onoffsmilies1\" style=\"display:none;\"><br><br><div class=\"editorbutton\">".smile_generate(array(75,76,77,78,79,80,81,82,83,84,85,86,87,88))."</div></div>
-    <div id=\"onoffsmilies2\" style=\"display:none;\"><br><br><div class=\"editorbutton\">".smile_generate(array(20,21,22,23,24,25,26,27,28,29,30,31,33,34,36,37,38,39,40,42,43,44,45,46,47,48,49,50,51,53,54,55,56,57,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74))."</div></div>
-    <div id=\"onoffsmilies3\" style=\"display:none;\"><br><br><div class=\"editorbutton\">".smile_generate(array(90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162))."</div></div>"; // </DIV>
-    */
+    <DIV class='editorbutton but_bold' onclick=\"clc_bbcode('".ss("жирный',1)")."\" title='".ss("Жирный текст")."'>Жирный</DIV>
+    <DIV class='editorbutton but_quote' onclick=\"clc_bbcode('".ss("цитата',1)")."\" title='".ss("Вставить цитату")."'>Цитата</DIV>";
+    
+    global $smile_icons;
+    $smile_icon = explode(",", $smile_icons);
+    $smile = "";
+    foreach ($smile_icon as $sm)
+      $smile .= "<img src=\"/images/smilies/".$sm."\" onClick=\"clc_name(' **".$sm."');\"> "; 
+
+    $ret .= "<div id=\"cont\" class=\"editorbutton but_smile\" OnClick=\"show('onoffsmilies0');\" style=\"cursor: pointer;\" title=\"".ss("Показать смайлы")."\">: )</div></td></tr></table><textarea id=area rows=7 style='font-size:18px;' name=info></textarea>".$kcaptcha."<div id=\"onoffsmilies0\" class=\"editor\" style=\"display:none;\"><br><div class=\"editorbutton\">".$smile." <div OnClick=\"show('onoffsmilies0');\" style=\"cursor: pointer;\">".ss("Закрыть")."</div></div><br></div>";
   }
   $ret .= "</div></form>";
   // Для добавления аватара (мини-фото) к комментарию, введите свой email в комментарий и зарегистрируйтесь на <a href='http://ru.gravatar.com/site/signup/' target='_blank' rel='nofollow'>сайте «Gravatar»</a>, если вы не сделали этого ранее.
@@ -1743,7 +1733,7 @@ function addbase($base,$name,$spa=0) {
           $soderganie .= "<p><b>".$one[1].":</b><br>
           <TABLE cellspacing=0 cellpadding=0 style=\"border-collapse: collapse\"><TBODY><TR valign=top> 
            <TD><INPUT type=text name=\"text[".$one[0]."]\" id=\"f_date_c[".$one[0]."]\" readonly=1 size=15></TD> 
-           <TD><IMG src=/images/calendar.gif id=\"f_trigger_c[".$one[0]."]\" title=\"Выбор даты\" onmouseover=\"this.style.background=&#39;red&#39;;\" onmouseout=\"this.style.background=&#39;&#39;\">".ss(" (выберите дату из меню)")."</TD> 
+           <TD><IMG src=/images/calendar.png id=\"f_trigger_c[".$one[0]."]\" title=\"Выбор даты\" onmouseover=\"this.style.background=&#39;red&#39;;\" onmouseout=\"this.style.background=&#39;&#39;\">".ss(" (выберите дату из меню)")."</TD> 
           </TR></TBODY></TABLE>
           <SCRIPT> 
               Calendar.setup({
@@ -1896,10 +1886,10 @@ function addpost($cid) {
           $ret .=  "<br><br><b>".$s_title.":</b> ".ss("(выберите даты из меню, кликнув по значкам)")."<br>
           <table cellspacing=0 cellpadding=0 style=\"border-collapse: collapse\"><tbody><tr valign=top> 
           <td><input type=text name=\"text[".$s_name."]\" id=\"f_date_c[".$s_name."]\" value=\"\" onchange=\"document.getElementById('add[".$s_name."]').value=document.getElementById('f_date_c[".$s_name."]').value+'|'+document.getElementById('f_date_c2[".$s_name."]').value\" readonly=1 size=15></TD>
-          <td><img src=/images/calendar.gif id=\"f_trigger_c[".$s_name."]\" title=\"".ss("Выбор даты")."\" onmouseover=\"this.style.background=&#39;red&#39;;\" onmouseout=\"this.style.background=&#39;&#39;\"></td>
+          <td><img src=/images/calendar.png id=\"f_trigger_c[".$s_name."]\" title=\"".ss("Выбор даты")."\" onmouseover=\"this.style.background=&#39;red&#39;;\" onmouseout=\"this.style.background=&#39;&#39;\"></td>
           <td width=20 align=center> - </td>
           <td><input type=text name=\"text[".$s_name."]\" id=\"f_date_c2[".$s_name."]\" value=\"\" onchange=\"document.getElementById('add[".$s_name."]').value=document.getElementById('f_date_c[".$s_name."]').value+'|'+document.getElementById('f_date_c2[".$s_name."]').value\" readonly=1 size=15></td> 
-          <td><img src=/images/calendar.gif id=\"f_trigger_c2[".$s_name."]\" title=\"".ss("Выбор даты")."\" onmouseover=\"this.style.background=&#39;red&#39;;\" onmouseout=\"this.style.background=&#39;&#39;\"></td>
+          <td><img src=/images/calendar.png id=\"f_trigger_c2[".$s_name."]\" title=\"".ss("Выбор даты")."\" onmouseover=\"this.style.background=&#39;red&#39;;\" onmouseout=\"this.style.background=&#39;&#39;\"></td>
           </tr></tbody></table>
           <script> 
               Calendar.setup({
@@ -2441,11 +2431,6 @@ function savecomm($avtor, $avtory, $info, $num, $comm_otvet, $maily, $mail, $adr
     $tel = str_replace("  "," ",filter($tel));
     if ($media_comment == 0) $info = bbcode(str_replace("document.cookie","",filter($info)));
     if ($media_comment == 1) $info = filter(str_replace("<p><p>","<p>",str_replace("</p></p>","</p>",str_replace("</p><br></p>","</p>",$info))));
-    //$info = str_replace("http://".$siteurl, $siteurl, $info);
-    //$info = str_replace("http://www.onlinedisk.ru", "www.onlinedisk.ru", $info);
-
-    //$info = str_replace(":)", "<img src=/images/smilies/04.gif>", $info);
-    //$info = str_replace(":(", "<img src=/images/smilies/11.gif>", $info);
 
     $info = str_replace(" ,", ",", $info);
     $info = str_replace("!", "! ", str_replace(" !", "!", $info));
@@ -2630,14 +2615,12 @@ function bbcode($text, $nolink=1) {
   //$text =  preg_replace($pattern, $replacement, $text);
 
   // Замена смайлов
-  for ($i=162; $i > 1; $i--) {
-    if ($i < 10) $ii = "0".$i; else $ii = $i;
-    $text = str_replace("**".$ii, "<img src=/images/smilies/".$ii.".gif>",$text);
-  }
-  //$text = preg_replace("/\*(\d{3})/","<img src=/images/smilies/\\1.gif>",$text);
-  //$text = preg_replace("/\*(\d{2})/","<img src=/images/smilies/\\1.gif>",$text);
-  
-  //$text = str_replace("viewer.php?file=","images/",$text);
+  global $smile_icons;
+    $smile_icon = explode(",", $smile_icons);
+    $smile = "";
+    foreach ($smile_icon as $sm)
+      $text = str_replace("**".$sm, "<img src='images/smilies/".$sm."'>", $text);
+
   
   //$text = str_replace("'","\"",$text);
   //$text = str_replace("]",">",$text);

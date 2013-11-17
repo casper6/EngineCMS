@@ -146,9 +146,6 @@ function findMonthName($m) { // Функция определения имени
 function tipograf($text, $p=0) { // Типографика - все основные знаки препинания
   global $lang;
   if ($p==0) $text = "<p>".trim($text)."</p>";
-  // Смайлы (можно добавить замену смайлов)
-  //$text=str_replace(" :) ", "<img src=/images/smilies/04.gif>", $text);
-  //$text=str_replace(" :( ", "<img src=/images/smilies/11.gif>", $text);
   $zamena = array(
   "<div><br /> 
   </div>"=>"<br>",
@@ -497,13 +494,6 @@ function input($name,$znachenie,$size="40",$type="text",$add='') { // генер
     if ($size == "100%") $size = " class=w100"; else $size = " size='".$size."'";
     return "<input type='".$type."' name='".$name."'".$add." value='".$znachenie."'".$size.">";
   }
-}
-////////////////////////////////////////////////////////////
-function smile_generate($smiles, $folder="") { // генерация полоски смайлов
-  $smile = "";
-  if ($folder != "") $folder = $folder."/";
-  foreach ($smiles as $sm) { $smile .= "<img src=\"/images/smilies/".$folder.$sm.".gif\" onClick=\"clc_name(' **".$sm."');\"> "; }
-  return $smile;
 }
 ///////////////////////////////////////////////////////////////
 function WhatArrayElement($array, $value, $keys=0) { // функция для поиска индекса массива по значению.
