@@ -301,6 +301,9 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 		$useitY = "";
 	}
 	
+	$show_in_razdel_array = explode(",", $show_in_razdel);
+	$no_show_in_razdel_array = explode(",", $no_show_in_razdel);
+
 	if ($random == 1) $sort = "RAND()";
 
 	if ($alternative_title_link == "" and $useitX != aa("все")) $alternative_title_link = "/-".$useitX."";
@@ -362,7 +365,9 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 
 	// Работа с разными типами блоков
 	if (!isset($cid)) $cid = 0;
-	if (($show_in_razdel != $name and $show_in_razdel != aa("все")) or $no_show_in_razdel == $name or ($show_in_papka != $cid and $show_in_papka != "")) {
+	if ( ( !in_array($name, $show_in_razdel_array) && $show_in_razdel != aa("все") )
+		|| in_array($name, $no_show_in_razdel_array)
+		|| ( $show_in_papka != $cid && $show_in_papka != "" && in_array($name, $show_in_razdel_array) ) ) {
 		$block = str_replace("[".$titleX."]", "", $block);
 		$nameX = "-1";
 	}

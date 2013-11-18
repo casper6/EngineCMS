@@ -19,7 +19,12 @@ if ($add != "") {
 $contents = "
 .filter_name {font-size: 20px;}
 
-.editorbutton {margin-left: 10px; float: left; cursor: pointer;}
+.editorbutton {
+  margin-left: 10px; 
+  display: inline-block;
+  cursor: pointer;
+}
+.bb1gray {border-bottom: 1px dotted gray;}
 .but_bold {font-weight: bold;}
 .but_quote {font-style: italic;}
 .but_smile {
@@ -32,10 +37,10 @@ $contents = "
   color: black;
   background:yellow;
   border: 1px gray solid;
+  border-radius: 8px;
   height: 16px;
   width: 16px;
   line-height: 16px;
-  border-radius: 8px;
   text-align: center;
   font-size: 10px;
   font-family: Arial;

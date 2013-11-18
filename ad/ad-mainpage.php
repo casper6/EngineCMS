@@ -1409,52 +1409,64 @@ function edit_main($id) {
 
 	parse_str($options); // раскладка всех настроек блока
 
+	// убираем лишние запятые в конце
+	if (mb_substr($module_name, -1, 1) == ",") $module_name = mb_substr($module_name, 0, strlen($module_name)-1);
+	if (mb_substr($show_in_razdel, -1, 1) == ",") $show_in_razdel = mb_substr($show_in_razdel, 0, strlen($show_in_razdel)-1);
+
+	if (strpos($show_in_razdel, ",") or $show_in_razdel == "") $razdels2 = "все"; else $razdels2 = $show_in_razdel;
+	if (strpos($module_name, ",")) $razdels1 = ""; else $razdels1 = $module_name;
+	if (strpos($no_show_in_razdel, ",")) $razdels3 = ""; else $razdels3 = $no_show_in_razdel;
+
 	if (intval($nastroi) == 1) { // начало редактирования настроек блока
 	echo "Настройка блока «".$title."»</span>";
 	echo "</div>
-	<p>Для настройки блока внимательно прочитайте опции и выберите соответствующие варианты.</p>
 	".input("nastroi", "1", "1", "hidden")."
-	<h2>Общие настройки блока:</h2>
-	<table width=100% class=table_light>";
-	if ($name == 4 or $name == 0 or $name == 1 or $name == 13 or $name == 11 or $name == 9 or $name == 30) { // дополнить остальные блоки
-	echo "<tr>
-	<td><b>Блок использует содержание Раздела:</b><ul><li><b>всех разделов</b> – оставьте поле пустым, <li><b>определенного раздела</b> — выберите этот раздел и нажмите «Добавить», <li><b>нескольких разделов</b> — добавьте несколько разделов через запятую, <li><b>открытого раздела</b> — выберите из меню разделов пункт «открытого раздела» и добавьте его или напишите в поле «open_razdel» (без кавычек). При выводе страниц открытого раздела на Главной странице блок исчезнет совсем, при выводе в разделе без страниц будет выведен заголовок, если он разрешен в настройках блока.</ul></td>
-	<td>".input("options[module_name]", $module_name, "25","input"," id='add_razdel'")." 
-<a class='button small' onclick='add_raz();'>&larr; Добавить</a><br>
-".select("razdels", $razdel_engname.",open_razdel", $razdel_name."ко всем Разделам,открытого раздела","")."
-<script>function add_raz() { 
-	if ($('#razdels').val() != '') {
-		if ($('#razdels').val() == 'open_razdel') $('#add_razdel').val( $('#razdels').val() ); 
-		else {
-			if ($('#add_razdel').val() == 'open_razdel') $('#add_razdel').val( '' ); 
-			$('#add_razdel').val( $('#add_razdel').val() + $('#razdels').val() + ',' );
-		}
-	} else $('#add_razdel').val('');
-}</script>
-	</td></tr>";
-	}
+	<h2 class='black_polosa'>Общие настройки блока:</h2>
+	<table class='w100 table_light'>";
+	
 	if ($name == 22 or $name == 23) {
 	echo "<tr>
 	<td>Блок подключен к Базе данных</td>
 	<td>".select("options[module_name]", $razdel_var."", $razdel_name."не подключен", $module_name)."</td>
 	</tr>";
 	}
+
 	echo "<tr>
 	<td>Дизайн блока (по умолчанию - нет). Окружает блок заранее созданным Дизайном (оформлением) для этого блока и подключает стиль CSS из дизайна</td>
 	<td>".select("options[design]", $design_var.",0", $design_names.",нет", $design)."</td>
 	</tr>";
+
 	echo "<tr>
-	<td>Показывать блок только в определенном разделе (по умолчанию - нет)</td>
-	<td>".select("options[show_in_razdel]", $razdel_engname."все", $razdel_name."нет", $show_in_razdel)."</td>
-	</tr>";
+	<td><b>Блок БУДЕТ показан:</b><ul><li><b>во всех разделах</b> – все, <li><b>в определенном разделе</b> — выберите этот раздел и нажмите «Добавить», <li><b>в нескольких разделах</b> — добавьте несколько разделов через запятую.</ul></td>
+	<td>".input("options[show_in_razdel]", $show_in_razdel, "25","input"," id='show_in_raz'")." 
+	<a class='button small' onclick='show_raz();'>&larr; Добавить</a><br>
+	".select("razdels2", $razdel_engname.aa("все"), $razdel_name."ко всем Разделам",$razdels2)."
+	<script>function show_raz() { 
+		if ($('#razdels2').val() != '".aa("все")."') {
+			if ($('#show_in_raz').val() == '".aa("все")."') $('#show_in_raz').val( '' ); 
+			$('#show_in_raz').val( $('#show_in_raz').val() + $('#razdels2').val() + ',' );
+		} else $('#show_in_raz').val('".aa("все")."');
+	}</script>
+	</td></tr>";
+
 	echo "<tr>
-	<td>Показывать блок только в определенной папке (указывается цифра — номер папки, по умолчанию - нет)</td>
-	<td>".input("options[show_in_papka]", $show_in_papka)."</td>
+	<td>Показывать блок только в определенной папке, если «Блок будет показан» — «в определенном разделе» (указывается цифра — номер папки, по умолчанию - пустое поле)</td>
+	<td>".input("options[show_in_papka]", $show_in_papka, 5)."</td>
 	</tr>";
+
 	echo "<tr>
-	<td>Не показывать блок в определенном разделе (по умолчанию - нет)</td>
-	<td>".select("options[no_show_in_razdel]", $razdel_engname."", $razdel_name."нет", $no_show_in_razdel)."</td>
-	</tr>";
+	<td><b>Блок НЕ БУДЕТ показан:</b><ul><li><b>в определенном разделе</b> — выберите этот раздел и нажмите «Добавить», <li><b>в нескольких разделах</b> — добавьте несколько разделов через запятую.</ul>По-умолчанию, пустое поле.</td>
+	<td>".input("options[no_show_in_razdel]", $no_show_in_razdel, 25,"input"," id='no_show_in_raz'")." 
+	<a class='button small' onclick='no_show_raz();'>&larr; Добавить</a><br>
+	".select("razdels3", $razdel_engname, $razdel_name."не выбран раздел",$razdels3)."
+	<script>function no_show_raz() { 
+		if ($('#razdels3').val() != '".aa("все")."') {
+			if ($('#no_show_in_raz').val() == '".aa("все")."') $('#no_show_in_raz').val( '' ); 
+			$('#no_show_in_raz').val( $('#no_show_in_raz').val() + $('#razdels3').val() + ',' );
+		} else $('#no_show_in_raz').val('".aa("все")."');
+	}</script>
+	</td></tr>";
+
 	echo "<tr>
 	<td>Использовать только содержание блока, без внутреннего оформления и заголовка</td>
 	<td>".select("options[html]", "1,0", "ДА,НЕТ", $html)."</td>
@@ -1463,9 +1475,27 @@ function edit_main($id) {
 	<td><b>Заголовок блока</b></td>
 	<td>".select("options[titleshow]", "2,1,0", "внутри предисловия как блок [заголовок],показывать,не показывать", $titleshow)."</td>
 	</tr>";
-	////////////////
-	if ($name==0 or $name==1 or $name==3 or $name==4 or $name==6 or $name==8 or $name==9 or $name==10 or $name==13) echo "</table><br><br><h2>Настройка данного типа блока:</h2><table  class='w100 mw800 table_light'>";
+
+	if ($name==0 || $name==1 || $name==3 || $name==4 || $name==6 || $name==8 || $name==9 || $name==10 || $name==11 || $name==13 || $name==30) 
+		echo "</table><h2 class='black_polosa'>Настройки данного типа блока:</h2><table class='w100 mw800 table_light'>";
 	
+	if ($name==0 || $name==1 || $name==4 || $name==9 || $name==11 || $name==13 || $name==30) { // дополнить остальные блоки
+		echo "<tr>
+		<td><b>Блок использует содержание Раздела:</b><ul><li><b>всех разделов</b> – оставьте поле пустым, <li><b>определенного раздела</b> — выберите этот раздел и нажмите «Добавить», <li><b>нескольких разделов</b> — добавьте несколько разделов через запятую, <li><b>открытого раздела</b> — выберите из меню разделов пункт «открытого раздела» и добавьте его или напишите в поле «open_razdel» (без кавычек). При выводе страниц открытого раздела на Главной странице блок исчезнет совсем, при выводе в разделе без страниц будет выведен заголовок, если он разрешен в настройках блока.</ul></td>
+		<td>".input("options[module_name]", $module_name, "25","input"," id='add_razdel'")." 
+	<a class='button small' onclick='add_raz();'>&larr; Добавить</a><br>
+	".select("razdels1", $razdel_engname.",open_razdel", $razdel_name."ко всем Разделам,открытого раздела",$razdels1)."
+	<script>function add_raz() { 
+		if ($('#razdels1').val() != '') {
+			if ($('#razdels1').val() == 'open_razdel') $('#add_razdel').val( $('#razdels1').val() ); 
+			else {
+				if ($('#add_razdel').val() == 'open_razdel') $('#add_razdel').val( '' ); 
+				$('#add_razdel').val( $('#add_razdel').val() + $('#razdels1').val() + ',' );
+			}
+		} else $('#add_razdel').val('');
+	}</script>
+		</td></tr>";
+	}
 
 	if ($name == 3) {
 	echo "<tr>

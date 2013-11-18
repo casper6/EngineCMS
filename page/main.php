@@ -1639,10 +1639,10 @@ function addcomm($pid) {
   if ($media_comment==1) $ret .= site_redactor($nolink)."<div class='comm_label_textarea'>".$comments_7."</div><textarea id='area' class='redactor comm_textarea' name='info' style='width: 100%; height: 220px;'></textarea>".$kcaptcha;
 
   if ($media_comment == 0) {
-    $ret .= "<table width=100% cellspacing=0 cellpadding=0><tr valign=bottom><td width=350>".$comments_7."</td><td>
+    $ret .= "<table width=100% cellspacing=0 cellpadding=0><tr valign=bottom><td width=300>".$comments_7."</td><td>
     <DIV class='editor' style='margin-top:10px; width:100%;'> 
-    <DIV class='editorbutton but_bold' onclick=\"clc_bbcode('".ss("жирный',1)")."\" title='".ss("Жирный текст")."'>Жирный</DIV>
-    <DIV class='editorbutton but_quote' onclick=\"clc_bbcode('".ss("цитата',1)")."\" title='".ss("Вставить цитату")."'>Цитата</DIV>";
+    <DIV class='editorbutton bb1gray but_bold' onclick=\"clc_bbcode('".ss("жирный',1)")."\" title='".ss("Выделите текст, который хотите выделить жирным и нажмите эту кнопку.")."'>Жирный</DIV>
+    <DIV class='editorbutton bb1gray but_quote' onclick=\"clc_bbcode('".ss("цитата',1)")."\" title='".ss("Выделите текст, который хотите выделить как цитату и нажмите эту кнопку.")."'>Цитата</DIV>";
     
     global $smile_icons;
     $smile_icon = explode(",", $smile_icons);
@@ -1650,7 +1650,7 @@ function addcomm($pid) {
     foreach ($smile_icon as $sm)
       $smile .= "<img src=\"/images/smilies/".$sm."\" onClick=\"clc_name(' **".$sm."');\"> "; 
 
-    $ret .= "<div id=\"cont\" class=\"editorbutton but_smile\" OnClick=\"show('onoffsmilies0');\" style=\"cursor: pointer;\" title=\"".ss("Показать смайлы")."\">: )</div></td></tr></table><textarea id=area rows=7 style='font-size:18px;' name=info></textarea>".$kcaptcha."<div id=\"onoffsmilies0\" class=\"editor\" style=\"display:none;\"><br><div class=\"editorbutton\">".$smile." <div OnClick=\"show('onoffsmilies0');\" style=\"cursor: pointer;\">".ss("Закрыть")."</div></div><br></div>";
+    $ret .= "<div id=\"cont\" class=\"editorbutton but_smile\" OnClick=\"show('onoffsmilies0');\" style=\"cursor: pointer;\" title=\"".ss("Показать смайлы")."\">: )</div></td></tr></table><textarea id=area rows=7 style='font-size:18px;' name=info></textarea>".$kcaptcha."<div id=\"onoffsmilies0\" class=\"editor\" style=\"display:none;\"><br><div class=\"editorbutton\">".$smile." <div onclick='show(\"onoffsmilies0\");' class='editorbutton bb1gray'>".ss("Закрыть")."</div></div><br></div>";
   }
   $ret .= "</div></form>";
   // Для добавления аватара (мини-фото) к комментарию, введите свой email в комментарий и зарегистрируйтесь на <a href='http://ru.gravatar.com/site/signup/' target='_blank' rel='nofollow'>сайте «Gravatar»</a>, если вы не сделали этого ранее.
