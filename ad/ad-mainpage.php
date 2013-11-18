@@ -300,7 +300,7 @@ function create_main($type) {
 	$typeX[1]  = "Комментарии раздела"; 
 
 	$typeX[14] = "Расписание с записью на прием";
-	$typeX[15] = "Карта (в разработке)";
+	$typeX[15] = "Карта";
 	$typeX[12] = "Форма для заполнения (в разработке)"; // анкеты, опросы и т.д.
 	$typeX[31] = "JavaScript";
 	$typeX[7]  = "PHP-код";
@@ -1349,10 +1349,11 @@ function edit_main($id) {
 	global $nastroi;
 
 	// выделим имени модуля раздела и настройки
-
-	$options = explode("|",$useit);
-	$module_name = $options[0];
-	$options = str_replace($module_name."|","",$useit);
+	if (mb_substr($useit, 0, 1) != "|") {
+		$options = explode("|",$useit);
+		$module_name = $options[0];
+		$options = str_replace($module_name."|","",$useit);
+	} else $options = mb_substr($useit, 1, mb_strlen($useit)-1);
 
 	// обнулили все опции
 	$titleshow = $media = $folder = $datashow = $tagdelete = $ipdatauser = $design = $open_all = $catshow = $main = $daleeshow = $openshow = $number = $add = $size = $papki_numbers = $zagolovokin = $menu = $noli = $html = $show_title = $random = $showlinks = $open_new_window = $shablon = $show_new_pages = $reload_link_show = $reload_link_time = 0;
@@ -1407,11 +1408,18 @@ function edit_main($id) {
 	$deleted_days = "воскресенье,суббота";
 	$deleted_dates = "1.1,31.12"; //,18.11.2013";
 
+	// для блока карты
+	$map_house_address = $map_house_name = $map_house_description = "";
+	$map_shablon = '<div style="color:red">$[name]</div><div style="color:#0A0">$[description]</div><div style="color:black">$[dom]</div>';
+	$map_yandex_key = 'AIBlZ1IBAAAA8D6sLAIADXX8cFuUyDpQ68hvl-ErRjT9vu0AAAAAAAAAAADCAvqqQC08r3m17iVBNDnpFXnXLw==';
+	$map_center = "Москва";
+	$map_zoom = 9;
+
 	parse_str($options); // раскладка всех настроек блока
 
 	// убираем лишние запятые в конце
-	if (mb_substr($module_name, -1, 1) == ",") $module_name = mb_substr($module_name, 0, strlen($module_name)-1);
-	if (mb_substr($show_in_razdel, -1, 1) == ",") $show_in_razdel = mb_substr($show_in_razdel, 0, strlen($show_in_razdel)-1);
+	if (mb_substr($module_name, -1, 1) == ",") $module_name = mb_substr($module_name, 0, mb_strlen($module_name)-1);
+	if (mb_substr($show_in_razdel, -1, 1) == ",") $show_in_razdel = mb_substr($show_in_razdel, 0, mb_strlen($show_in_razdel)-1);
 
 	if (strpos($show_in_razdel, ",") or $show_in_razdel == "") $razdels2 = "все"; else $razdels2 = $show_in_razdel;
 	if (strpos($module_name, ",")) $razdels1 = ""; else $razdels1 = $module_name;
@@ -1476,7 +1484,7 @@ function edit_main($id) {
 	<td>".select("options[titleshow]", "2,1,0", "внутри предисловия как блок [заголовок],показывать,не показывать", $titleshow)."</td>
 	</tr>";
 
-	if ($name==0 || $name==1 || $name==3 || $name==4 || $name==6 || $name==8 || $name==9 || $name==10 || $name==11 || $name==13 || $name==30) 
+	if ($name==0 || $name==1 || $name==3 || $name==4 || $name==6 || $name==8 || $name==9 || $name==10 || $name==11 || $name==13 || $name==14 || $name==15 || $name==30) 
 		echo "</table><h2 class='black_polosa'>Настройки данного типа блока:</h2><table class='w100 mw800 table_light'>";
 	
 	if ($name==0 || $name==1 || $name==4 || $name==9 || $name==11 || $name==13 || $name==30) { // дополнить остальные блоки
@@ -1807,7 +1815,38 @@ function edit_main($id) {
 	<td>".input("options[class]", $class)."</td>
 	</tr>";
 	}
-	/////////////////
+
+	if ($name == 15) { // для блока карты
+    	echo "<tr>
+		<td width=30%>Центрирование карты по определенному адресу, например названию города.</td>
+		<td>".input("options[map_center]", $map_center, 100)."</td>
+		</tr>
+		<tr>
+		<td>Масштаб увеличения карты</td>
+		<td>".select("options[map_zoom]", "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18", "1 (очень мелко),2 (карта мира),3,4,5 (страна),6,7,8,9 (город),10,11,12,13 (улица),14,15,16 (дом),17,18 (очень крупно)", $map_zoom, 100)."</td>
+		</tr>
+    	<tr>
+		<td>Список адресов, разделенных ||| (например: <i>Самара, ул. Победы, 4 б|||Самара, ул. Стара-Загора, 134</i>). В шаблоне выводится как house_address</td>
+		<td>".input("options[map_house_address]", $map_house_address, 150, "txt")."</td>
+		</tr>
+		<tr>
+		<td>Список названий организаций, мест или строений, разделенных ||| (например: <i>Ресторан «У Палыча»|||Кафе «Морошка»|||Школа №77</i>). В шаблоне выводится как house_name</td>
+		<td>".input("options[map_house_name]", $map_house_name, 150, "txt")."</td>
+		</tr>
+		<tr>
+		<td>Список описаний организаций, мест или строений, разделенных ||| (например: <i>отличная еда|||дешевая выпечка|||хорошие учителя</i>). Можно вписать видео и фотографии, через html. В шаблоне выводится как house_description</td>
+		<td>".input("options[map_house_description]", $map_house_description, 150, "txt")."</td>
+		</tr>
+		<tr>
+		<td>Шаблон для вывода подписей для точек на карте</td>
+		<td>".input("options[map_shablon]", $map_shablon, 150, "txt")."</td>
+		</tr>
+		<tr>
+		<td>Идентификационный ключ для <a href='http://api-maps.yandex.ru' target='_blank'>Яндекс-карт</a></td>
+		<td>".input("options[map_yandex_key]", $map_yandex_key, 100)."</td>
+		</tr>";
+	}
+
 	if ($name == 14) { // для блока расписания
 		echo "<tr><td colspan='2'><h2>Календарь</h2></td></tr>
 		<tr>

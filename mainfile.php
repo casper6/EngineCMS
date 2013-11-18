@@ -164,7 +164,7 @@
 // Основные настройки
   if ($smile_icons == "") // получаем список файлов смайлов
     $smile_icons = str_replace("images/smilies/","",implode(",", glob("images/smilies/{*.gif,*.png,*.jpg,*.jpeg}",GLOB_BRACE))); 
-  if ($strelka == "") $strelka = "&rarr;";
+  //if ($strelka == "") $strelka = "&rarr;";
   if ($gravatar == "") $gravatar = "0";
   if ($project_logotip == "") $project_logotip = "img/logotip.png";  
   if ($tab_obzor == "") $tab_obzor = ss("Обзор");

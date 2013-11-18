@@ -281,6 +281,13 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 	$deleted_days = "воскресенье";
 	$deleted_dates = ""; //,18.11.2013";
 
+	// для блока карты
+	$map_house_address = $map_house_name = $map_house_description = "";
+	$map_shablon = '<div style="color:red">$[name]</div><div style="color:#0A0">$[description]</div><div style="color:black">$[dom]</div>';
+	$map_yandex_key = 'AIBlZ1IBAAAA8D6sLAIADXX8cFuUyDpQ68hvl-ErRjT9vu0AAAAAAAAAAADCAvqqQC08r3m17iVBNDnpFXnXLw==';
+	$map_center = "Москва";
+	$map_zoom = 9;
+
 	// Для базы данных
 	$base = ""; // Указываем название таблицы БД
 	$first = ""; // первая колонка
@@ -290,16 +297,18 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 	$all = 0; // Указывать сколько всего элементов, по умолчанию 0 - не указывать, 1 - указывать.
 	$col = ""; // какие поля будут использоваться для вывода информации
 
-	if (trim($useitX)!="") {
-		$useit = explode("|",$useitX); 
-		$useitX = $useit[0];
-		$useitY = $useit[1]; // опции
+	// выделим имени модуля раздела и настройки
+	if (mb_substr($useitX, 0, 1) != "|") {
+		$useitY = explode("|",$useitX);
+		$useitX0 = $useitY[0];
+		$useitY = str_replace($useitX0."|","",$useit);
+		$useitX = $useitX0;
 		$alternative_title_link = "/-".$useitX."";
-		parse_str($useitY);
 	} else {
-		$useitX = "";
-		$useitY = "";
+		$useitY = mb_substr($useitX, 1, mb_strlen($useitX)-1);
+		$useitX = $alternative_title_link = "";
 	}
+	parse_str($useitY);
 	
 	$show_in_razdel_array = explode(",", $show_in_razdel);
 	$no_show_in_razdel_array = explode(",", $no_show_in_razdel);
@@ -686,7 +695,7 @@ case "1": # Блок комментариев раздела
 			$num = $row['num'];
 			$avtor = $row['avtor'];
 			$text = strip_tags(mb_substr($row['text'], 0, $col_bukv), '<b><i><img><a><strong><em>');
-			if (strlen($row['text']) > $col_bukv) $text .= "...";
+			if (mb_strlen($row['text']) > $col_bukv) $text .= "...";
 			$data = $row['data'];
 			$data = date2normal_view(str_replace(".","-",$data), 2, 1);
 			// Если показывать название страницы
@@ -1358,7 +1367,7 @@ case "13": # ОБЛАКО ТЕГОВ
 			$tag = array();
 			$tag = explode(" ",trim(str_replace("  "," ",$row['search'])));
 			foreach ($tag as $tag1) {
-				if (trim($tag1) != "" and strlen($tag1)>2 ) $tags[] = trim($tag1);
+				if (trim($tag1) != "" and mb_strlen($tag1)>2 ) $tags[] = trim($tag1);
 			}
 		}
 	}
@@ -1495,9 +1504,79 @@ case "14": # Расписание
 	$block = str_replace("[$titleX]", $design_open.$textX.$design_close, $block);
 	$type = ""; break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////
-case "15": # КАРТА - доделать!
+case "15": # КАРТА
+	// Если обображается некорректно, скорее всего вы применили стили оформления (css) к table, tr, th или td напрямую, без указания каких-либо классов.
+	$map_house_address = str_replace('|||', '","', addslashes($map_house_address));
+    $map_house_name = str_replace('|||', '","', addslashes($map_house_name));
+    $map_house_description = str_replace('|||', '","', addslashes($map_house_description));
+    $map_shablon = addslashes($map_shablon);
+    $map_center = addslashes($map_center);
+    $map_zoom = intval($map_zoom);
+    
+	$textX = '<script src="http://api-maps.yandex.ru/1.1/index.xml?key='.$map_yandex_key.'" type="text/javascript"></script>
+    <script type="text/javascript">
+        // Создает обработчик события window.onLoad
+        YMaps.jQuery(function () {
+            // Создает экземпляр карты и привязывает его к созданному контейнеру
+            var map = new YMaps.Map(YMaps.jQuery("#YMapsID")[0]);
+            map.addControl(new YMaps.TypeControl());
+            map.addControl(new YMaps.ToolBar());
+            map.addControl(new YMaps.Zoom());
+            map.addControl(new YMaps.MiniMap());
+            map.addControl(new YMaps.ScaleLine());
+            // Устанавливает начальные параметры отображения карты: центр карты и коэффициент масштабирования
+            var city = new YMaps.Geocoder("'.$map_center.'");
+            YMaps.Events.observe(city, city.Events.Load, function () {
+                if (this.length()) {
+                    map.setCenter(this.get(0).getGeoPoint(), '.$map_zoom.');
+                    //alert("Найдено :" + this.length());
+                    //map.addOverlay(this.get(0));
+                    //map.panTo(this.get(0).getGeoPoint())
+                }
+            });
+            
+            //map.setCenter(new YMaps.GeoPoint(37.64, 55.76), 10);
 
-	//$textX .= $tagcloud;
+            var s = new YMaps.Style();
+            s.balloonContentStyle = new YMaps.BalloonContentStyle(
+                new YMaps.Template("'.$map_shablon.'")
+            );
+
+            // место
+            var house_address = ["'.$map_house_address.'"];
+            var house_name = ["'.$map_house_name.'"];
+            var house_description = ["'.$map_house_description.'"];
+            //var dom = house_address[0];
+            //var name = house_name[0];
+            //var description = house_description[0];
+            for (var i = house_address.length - 1; i >= 0; i--) {
+
+                var geocoder = new YMaps.Geocoder(house_address[i]);
+                geocoder.dom = house_address[i];
+                geocoder.name = house_name[i];
+                geocoder.description = house_description[i];
+
+                YMaps.Events.observe(geocoder, geocoder.Events.Load, function (geocoder) { //, house_address, house_name, house_description
+                    //alert (i);
+                    var geoCoords = geocoder.get(0).getGeoPoint();
+                    // Создает метку в центре города
+                    var placemark = new YMaps.Placemark(geoCoords, {style: s});
+                    // Устанавливает содержимое балуна
+                    placemark.dom = geocoder.dom;
+                    placemark.name = geocoder.name;
+                    placemark.description = geocoder.description;
+                    //placemark.setIconContent(house_name[i]);
+                    // Добавляет метку на карту
+                    map.addOverlay(placemark);
+                    //map.addOverlay(geocoder.get(0));
+                });
+
+            };
+			
+        })
+    </script>
+    <div id="YMapsID" style="width:600px;height:600px"></div>';
+
 	$block = str_replace("[$titleX]", $design_open.$textX.$design_close, $block);
 	$type = ""; break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2118,7 +2197,7 @@ if ($js != "" && $js != "no") echo "<script src='js_".$js.".js'></script>";
 echo "<link rel='alternate' href='/rss/' title='".$project_name." RSS' />
 <link rel='stylesheet' href='".$stil.".css' />";
 
-if (strlen($add_fonts)>1) {
+if (mb_strlen($add_fonts)>1) {
 	$add_fonts = explode(".",$add_fonts);
 	if (count($add_fonts) > 0) {
 
