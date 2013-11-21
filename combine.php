@@ -33,7 +33,6 @@ $contents = "
   -moz-transform: rotate(90deg);
   -webkit-transform: rotate(90deg);
   -o-transform: rotate(90deg);
-
   color: black;
   background:yellow;
   border: 1px gray solid;
@@ -44,6 +43,36 @@ $contents = "
   text-align: center;
   font-size: 10px;
   font-family: Arial;
+}
+
+.w100 {width:100%;}
+
+.opros_otvet {
+  margin-top: 10px;
+}
+.opros_line, .opros_line2 {
+  height:16px; 
+  margin:0px; 
+  padding:0px;
+  display: block;
+  font: 14px Arial;
+  line-height:16px;
+  color: black;
+}
+.opros_line {
+  min-width:35px;
+  text-align:right; 
+  font-weight:bold;
+  background: green;
+  background: -moz-linear-gradient(left, #ff8585, #ffd985, #fffe85, #9dd797);
+  background: -webkit-gradient(linear, left center, right center, from(#ff8585), color-stop(35%, #ffd985), color-stop(65%, #fffe85), to(#9dd797));
+  }
+.opros_line2 { 
+  text-align:left; 
+  background-color: white;
+  float:right;
+  padding-left:5px;
+  margin-left:5px;
 }
 
 .align_center {text-align:center;}
@@ -125,8 +154,6 @@ input:focus {
 .cat_page_comments {margin-right: 10px;}
 
 a img {border:0;}
-
-.opros_line, .opros_line2 {height:2px; margin:0px; padding:0px;}
 
 .text_link {color: #00f;}
 .text_link A:visited {color: #666;}

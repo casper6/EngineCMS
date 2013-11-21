@@ -50,6 +50,8 @@ if ($opros_res != 1 && $opros_res != 3 && $_GET['golos'] != '') {
       }
 }
 
+
+
 // Загрузка информации об опросе
 $sql2 = "select `text`, `useit` from ".$prefix."_mainpage where `type`='3' and `name`='5' and `id`='".$opros_num."'"; 
 $result2 = $db->sql_query($sql2);
@@ -90,21 +92,34 @@ foreach ($lines as $line_id => $line) {
 if ($tmp==$opros_id || $opros_res != 1) { // Если голосовали - показываем результат
   if ($opros_result == 1 || $opros_result == 2 || $admin_ok == 1) { // Если результат можно видеть всем
     if ($opros_result == 0 && $admin_ok == 1) $textX .= aa("Результаты опроса видите только вы — администратор.");
-    $sto = array_sum($cols2);
+
+    $sql2 = "select `ip` from ".$prefix."_golos where `num`='".$opros_num."'"; 
+    $result2 = $db->sql_query($sql2);
+    $sto = array();
+    while ($row = $db->sql_fetchrow($result2))
+      $sto[] = $row['ip'];
+    $sto = count( array_unique($sto) );
+    //$sto = array_sum($cols2);
     //if ($opros == 0) {
       //$textX .= "";
       foreach ($lines2 as $line_id => $line) {
-        if ($sto > 0) $proc = intval($cols2[$line_id] * 100 / $sto); else $proc = $sto;
+        if ($sto > 0) $proc = intval($cols2[$line_id] * 100 / $sto); 
+        else $proc = 0;
+
         if ($proc > 50) { 
+          if ($proc > 100) $proc = 100;
           $line2 = "";
-          $line1 = $proc."%";
+          $line1 = $proc." %";
         } else {
           $line1 = "";
-          $line2 = $proc."%";
+          $line2 = $proc." %";
         }
         $proc2 = 100 - $proc;
-        if ($proc == 0) $proc = 1;
-        $textX .= "<table width=100%><tr><td colspan=2 class=opros_otvet>".$line."</td></tr><tr><td bgcolor=red style='text-align:right; width:".$proc."%;' class=opros_line><b>".$line1."</b></td><td style='text-align:left; width:".$proc2."%;' class=opros_line2>".$line2."</td></tr></table>";
+
+        //if ($proc == 0) $proc = 1;
+        $textX .= "<div class='w100' class='opros_otvet'>".$line."</div>
+        <div class='w100 opros_line'>".$line1."<div style='width:".$proc2."%;' class='opros_line2'>".$line2."</div></div>";
+        //$textX .= "<table width=100%><tr><td colspan=2 class=opros_otvet>".$line."</td></tr><tr><td bgcolor=red style='text-align:right; width:".$proc."%;' class=opros_line><b>".$line1."</b></td><td style='text-align:left; width:".$proc2."%;' class=opros_line2>".$line2."</td></tr></table>";
       }
       //$textX .= "";
     //} else { // Если выбран графический вид результатов опроса
@@ -118,9 +133,9 @@ if ($tmp==$opros_id || $opros_res != 1) { // Если голосовали - п�
 } else { // Если еще не голосовали - ссылка на результаты
   //if ($opros_type==1) $check_function = "CheckForm";
   //else $check_function = "CheckForm2";
-  $textX .= "<form method=post enctype=\"multipart/form-data\" onsubmit=\"return false\">".$textX2."<br>
-  <input type='submit' id=\"go\" name='go' value='Отправить' class=\"ok opros\" onclick=\"CheckForm(".$opros_num.");\"></form>";
-  if ($opros_result == 1 || $admin_ok == 1) $textX .= "<br><a href=\"#golos".$re."\" onclick=\"$(showopros(".$opros_num.",3, 0)); return false;\" class=opros_result_show>".ss("Посмотреть результаты")."</a>";
+  $textX .= "<form method=post enctype=\"multipart/form-data\" onsubmit=\"return false\">".$textX2."
+  <p><input type='submit' id=\"go\" name='go' value='Отправить' class=\"ok opros\" onclick=\"CheckForm(".$opros_num.");\"></form>";
+  if ($opros_result == 1 || $admin_ok == 1) $textX .= "<p><a href=\"#golos".$re."\" onclick=\"$(showopros(".$opros_num.",3, 0)); return false;\" class=opros_result_show>".ss("Посмотреть результаты")."</a>";
 }
 $textX .= "</div>";
 if ($otvet != "") $textX = $otvet; // если нужно сообщить о голосовании
