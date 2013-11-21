@@ -190,7 +190,14 @@ function mainpage($name="") {
 		<table class='block_back w100 mw800 pm0' cellspacing=0 cellpadding=0><tr valign=top><td id='razdel_td' class='radius'>
 
 			<div id='razdels' style='width:340px;'>
-			<div class='black_grad h40'><button id='addmain' title='Добавить оформление...' class='small right3' onclick=\"$('#add').toggle();\"><span class='mr-2 icon darkgrey small' data-icon='+'></button>
+			<div class='black_grad h40'><button id='addmain' title='Добавить оформление...' class='small right3' onclick=\"
+if ($('#mainrazdel0').attr('class') == 'dark_pole2sel') window.location = 'sys.php?op=mainpage&amp;name=design&amp;type=0&amp;red=1#1';
+else if ($('#mainrazdel1').attr('class') == 'dark_pole2sel') window.location = 'sys.php?op=mainpage&amp;name=css&amp;type=1#1';
+else if ($('#mainrazdel3').attr('class') == 'dark_pole2sel') window.location = 'sys.php?op=mainpage&amp;name=block&amp;type=3#1';
+else if ($('#mainrazdel6').attr('class') == 'dark_pole2sel') window.location = 'sys.php?op=mainpage&amp;name=shablon&amp;type=6&amp;red=1#1';
+else if ($('#mainrazdel4').attr('class') == 'dark_pole2sel') window.location = 'sys.php?op=mainpage&amp;name=spisok&amp;type=4#1';
+else if ($('#mainrazdel5').attr('class') == 'dark_pole2sel') window.location = 'sys.php?op=mainpage&amp;name=base&amp;type=5#1';
+			else $('#add').toggle();\"><span class='mr-2 icon darkgrey small' data-icon='+'></button>
 			<span class='h1'>Оформление:</span>
 			</div>";
 	     ////////////////////// ДИЗАЙН 0
@@ -1484,7 +1491,7 @@ function edit_main($id) {
 	<td>".select("options[titleshow]", "2,1,0", "внутри предисловия как блок [заголовок],показывать,не показывать", $titleshow)."</td>
 	</tr>";
 
-	if ($name==0 || $name==1 || $name==3 || $name==4 || $name==6 || $name==8 || $name==9 || $name==10 || $name==11 || $name==13 || $name==14 || $name==15 || $name==30) 
+	if ($name==0 || $name==1 || $name==3 || $name==4 || $name==5 || $name==6 || $name==8 || $name==9 || $name==10 || $name==11 || $name==13 || $name==14 || $name==15 || $name==30) 
 		echo "</table><h2 class='black_polosa'>Настройки данного типа блока:</h2><table class='w100 mw800 table_light'>";
 	
 	if ($name==0 || $name==1 || $name==4 || $name==9 || $name==11 || $name==13 || $name==30) { // дополнить остальные блоки
@@ -1539,7 +1546,7 @@ function edit_main($id) {
 	if ($name == 5) {
 	echo "<tr>
 	<td>Тип ответов опроса:</td>
-	<td>".select("options[opros_type]", "1,0", "одиночный выбор (кружки),множественный выбор (флажки) - НЕ работает", $opros_type)."</td>
+	<td>".select("options[opros_type]", "1,0", "одиночный выбор (кружки),множественный выбор (флажки)", $opros_type)."</td>
 	</tr>";
 
 	echo "<tr>

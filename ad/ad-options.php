@@ -182,8 +182,10 @@ if (!function_exists('curl_init'))
 if (!extension_loaded('imagick') || !class_exists("Imagick")) 
 	echo "<p style='color:red;'>Библиотека Imagick не установлена – вам придется самостоятельно уменьшать размер больших фотографий (полученных фотоаппаратом) перед вставкой в редактор. Советуем перейти на другой хостинг с поддержкой этой библиотеки или договориться с текущим хостингом о её подключении.";
 
-echo "<p><a href='http://hotel-s.ru' target='_blank'>Официальный сайт CMS «ДвижОк»</a>
-<p><a href='http://translate.google.com/manager/website/add' target='_blank'>Переводчик сайтов</a>
+echo "<li><a href='http://hotel-s.ru' target='_blank'>Официальный сайт CMS «ДвижОк»</a>
+<li><a href='http://translate.google.com/manager/website/add' target='_blank'>Переводчик сайтов</a>
+<li><a href='http://uptolike.ru' target='_blank'>Большие удобные настраиваемые социальные кнопки</a>
+
 
 <h2>Внутреннее устройство CMS «ДвижОк»<h2>
 <a title='Нажмите для увеличения' href='images/shema.jpg' target='_blank'><img src='images/shema.jpg' width=90%></a>
