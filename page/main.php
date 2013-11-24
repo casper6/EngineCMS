@@ -17,9 +17,9 @@ global $strelka, $go, $cid, $pid, $all, $avtor, $to, $info, $num, $ip, $golos, $
 // настройки раздела из БД
 global $post, $comments, $datashow, $sort, $lim, $foto, $view, $search, $search_papka, $tema, $tema_name, $tema_title, $tema_opis, $menushow, $design; 
 
-$media = $folder = $col = $view = $golos = $golosrazdel = $post = $comments = $datashow = $favorites = $socialnetwork = $search = $search_papka = $put_in_blog = $base = $vetki = $citata = $media_comment = $no_html_in_opentext = $no_html_in_text = $show_add_post_on_first_page = $media_post = $razdel_shablon = $page_shablon = $comments_all = $comments_num = $comments_mail = $comments_adres = $comments_tel = $comments_desc = $golostype = $pagenumbers = $comments_main = $tags_type = $tema_zapret_comm = $pagekol = $table_light = $designpages = $comments_add = $div_or_table = $papka_show = $add_post_to_mainpage = $design_tablet = $designpages_tablet = $design_phone = $designpages_phone = 0;
-$menushow = $titleshow = $razdeltitleshow = $razdel_link = $peopleshow = $design = $tags = $podrobno = $podrazdel_active_show = $podrazdel_show = $tipograf = $limkol = $tags_show = $tema_zapret = $opentextshow = $maintextshow = 1;
-
+$media = $folder = $col = $view = $golos = $golosrazdel = $post = $comments = $datashow = $favorites = $socialnetwork = $search = $search_papka = $put_in_blog = $base = $vetki = $citata = $media_comment = $no_html_in_opentext = $no_html_in_text = $show_add_post_on_first_page = $media_post = $razdel_shablon = $page_shablon = $comments_all = $comments_num = $comments_mail = $comments_adres = $comments_tel = $comments_desc = $golostype = $pagenumbers = $comments_main = $tags_type = $tema_zapret_comm = $pagekol = $table_light = $designpages = $comments_add = $div_or_table = $papka_show = $add_post_to_mainpage = $design_tablet = $designpages_tablet = $design_phone = $designpages_phone = $show_tags_pages = 0;
+$menushow = $titleshow = $razdeltitleshow = $razdel_link = $peopleshow = $design = $tags = $podrobno = $podrazdel_active_show = $podrazdel_show = $tipograf = $limkol = $tags_show = $tema_zapret = $opentextshow = $maintextshow = $papka_tags_pages = $razdel_tags_pages = 1;
+$col_tags_pages = 5;
 $comment_shablon = 2;
 $lim = 20;
 $where = $order = $calendar = $reclama = "";
@@ -37,7 +37,8 @@ $comments_6 = ss("Ваш телефон:");
 $comments_7 = ss("Ваш вопрос или комментарий:");
 $comments_8 = ss("Раскрыть все комментарии");
 $tag_text_show = ss("Ключевые слова");
-$reiting_data = "Дата написания отзыва";
+$reiting_data = ss("Дата написания отзыва");
+$text_tags_pages = ss("См. также:");
 
 parse_str($options); // раскладка всех настроек модуля
 ###########################################
@@ -1070,7 +1071,7 @@ function showcat($cid=0, $pag=0, $slovo="") {
 function page($pid, $all) {
   global $strelka, $soderganie, $soderganie2, $DBName, $db, $prefix, $module_name, $admin, $pagetitle, $pagetitle2, $ModuleName, $print, $siteurl, $keywords2, $description2, $data_page;
   // настройки модуля из БД
-  global $golos, $golostype, $post, $comments, $datashow, $sort, $tags, $lim, $folder, $view, $col, $menushow, $favorites, $socialnetwork, $name, $put_in_blog, $base, $titleshow, $razdeltitleshow, $comments_add, $add_css, $comment_shablon, $page_shablon, $comments_all, $comments_num, $comments_mail, $comments_adres, $comments_tel, $vetki, $comments_all, $comments_num, $comments_desc, $comments_1, $comments_2, $comments_3, $comments_4, $comments_5, $comments_6, $comments_7, $comments_8, $tag_text_show, $opentextshow, $maintextshow;
+  global $golos, $golostype, $post, $comments, $datashow, $sort, $tags, $lim, $folder, $view, $col, $menushow, $favorites, $socialnetwork, $name, $put_in_blog, $base, $titleshow, $razdeltitleshow, $comments_add, $add_css, $comment_shablon, $page_shablon, $comments_all, $comments_num, $comments_mail, $comments_adres, $comments_tel, $vetki, $comments_all, $comments_num, $comments_desc, $comments_1, $comments_2, $comments_3, $comments_4, $comments_5, $comments_6, $comments_7, $comments_8, $tag_text_show, $opentextshow, $maintextshow, $show_tags_pages, $col_tags_pages, $papka_tags_pages, $razdel_tags_pages, $text_tags_pages;
   $pid = mysql_real_escape_string(intval($pid));
 
   if ($base=="") { // Если это не база данных
@@ -1273,33 +1274,35 @@ function page($pid, $all) {
   } else $page_favorites = "";
 
   if ($put_in_blog>0) {
-  $page_blog = "<div id=\"put_in_blog\" class=\"put_in_blog\" OnClick=\"$('#onoffputinblog').toggle();\" style=\"cursor: pointer;\"><b style=\"border-bottom:1px dotted #999999;\">".ss("Разместите в своем блоге")."</b></div><div id=\"onoffputinblog\" class=\"editor\" style=\"display:none;\"><br>".ss("Код для вставки в блог:")."<br><div style=\"height:150px;overflow:scroll;background-color:#F5F5F5; padding-top:10px;\">";
-  if ($put_in_blog==2) {
-  $page_blog .= "&lt;table width='75%' border='' cellspacing='0' cellpadding='0' style=&quot;border: 1px solid #dfdfdf; background-color:#f1edd3; color: #333333;&quot;&gt;&lt;tr&gt; &lt;td valign=bottom&gt; &lt;div style=&quot;width: 95%;font-size:16px; font-weight:bold;padding: 5px 10px 5px 5px;&quot;&gt;&lt;img src=&quot;".$logo_link."&quot; width=&quot;102&quot; height=&quot;41&quot; align=&quot;left&quot; /&gt; &lt;a href=".$link." target=_blank style=&quot;text-decoration:none; color: #2e64c8;&quot;&gt; &nbsp;".$title_blog." &lt;/a&gt; &lt;/div&gt;&lt;/td&gt;&lt;/tr&gt; &lt;tr&gt; &lt;td align=left valign=top style=&quot;padding: 0 10px 0 10px; font-size:11px;&quot;&gt; ".$opentext_blog." &lt;/td&gt; &lt;/tr&gt; &lt;tr align=right&gt; &lt;td style=&quot;padding:5px 10px 0 10px&quot;&gt;&lt;div style=&quot;border-top: 1px solid #dfdfdf; padding-top: 10px; padding:5px 0 5px 0; font-size: 11px;&quot;&gt;&lt;a href=".$link." target=_blank style=&quot;color: #2e64c8;&quot;&gt;".ss("читать полностью")."&lt;/a&gt;&lt;/div&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;";
-  } elseif ($put_in_blog==1) {
-  $page_blog .= "&lt;table width='100%' border='' cellspacing='0' cellpadding='0' style=&quot;border: 1px solid #dfdfdf; background-color:#FFFFFF; color: #333333;&quot;&gt;&lt;tr&gt; &lt;td valign=bottom&gt; &lt;div style=&quot;width: 95%;font-size:16px; font-weight:bold;padding: 5px 10px 5px 5px;&quot;&gt; &lt;a href=".$link." target=_blank style=&quot;text-decoration:none; color: #2e64c8;&quot;&gt; ".$title_blog." &lt;/a&gt; &lt;/div&gt;&lt;/td&gt;&lt;/tr&gt; &lt;tr&gt; &lt;td align=left valign=top style=&quot;padding: 0 10px 0 10px; font-size:11px;&quot;&gt; ".$opentext_blog." &lt;/td&gt; &lt;/tr&gt; &lt;tr align=right&gt; &lt;td style=&quot;padding:5px 10px 0 10px&quot;&gt;&lt;div style=&quot;border-top: 1px solid #dfdfdf; padding-top: 10px; padding:5px 0 5px 0; font-size: 11px;&quot;&gt;&lt;a href=".$link." target=_blank style=&quot;color: #2e64c8;&quot;&gt;".ss("читать полностью")."&lt;/a&gt;&lt;/div&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;";
-  }
-  $page_blog .= "</div></div><br>";
+    $page_blog = "<div id=\"put_in_blog\" class=\"put_in_blog\" OnClick=\"$('#onoffputinblog').toggle();\" style=\"cursor: pointer;\"><b style=\"border-bottom:1px dotted #999999;\">".ss("Разместите в своем блоге")."</b></div><div id=\"onoffputinblog\" class=\"editor\" style=\"display:none;\"><br>".ss("Код для вставки в блог:")."<br><div style=\"height:150px;overflow:scroll;background-color:#F5F5F5; padding-top:10px;\">";
+    if ($put_in_blog==2) {
+      $page_blog .= "&lt;table width='75%' border='' cellspacing='0' cellpadding='0' style=&quot;border: 1px solid #dfdfdf; background-color:#f1edd3; color: #333333;&quot;&gt;&lt;tr&gt; &lt;td valign=bottom&gt; &lt;div style=&quot;width: 95%;font-size:16px; font-weight:bold;padding: 5px 10px 5px 5px;&quot;&gt;&lt;img src=&quot;".$logo_link."&quot; width=&quot;102&quot; height=&quot;41&quot; align=&quot;left&quot; /&gt; &lt;a href=".$link." target=_blank style=&quot;text-decoration:none; color: #2e64c8;&quot;&gt; &nbsp;".$title_blog." &lt;/a&gt; &lt;/div&gt;&lt;/td&gt;&lt;/tr&gt; &lt;tr&gt; &lt;td align=left valign=top style=&quot;padding: 0 10px 0 10px; font-size:11px;&quot;&gt; ".$opentext_blog." &lt;/td&gt; &lt;/tr&gt; &lt;tr align=right&gt; &lt;td style=&quot;padding:5px 10px 0 10px&quot;&gt;&lt;div style=&quot;border-top: 1px solid #dfdfdf; padding-top: 10px; padding:5px 0 5px 0; font-size: 11px;&quot;&gt;&lt;a href=".$link." target=_blank style=&quot;color: #2e64c8;&quot;&gt;".ss("читать полностью")."&lt;/a&gt;&lt;/div&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;";
+    } elseif ($put_in_blog==1) {
+      $page_blog .= "&lt;table width='100%' border='' cellspacing='0' cellpadding='0' style=&quot;border: 1px solid #dfdfdf; background-color:#FFFFFF; color: #333333;&quot;&gt;&lt;tr&gt; &lt;td valign=bottom&gt; &lt;div style=&quot;width: 95%;font-size:16px; font-weight:bold;padding: 5px 10px 5px 5px;&quot;&gt; &lt;a href=".$link." target=_blank style=&quot;text-decoration:none; color: #2e64c8;&quot;&gt; ".$title_blog." &lt;/a&gt; &lt;/div&gt;&lt;/td&gt;&lt;/tr&gt; &lt;tr&gt; &lt;td align=left valign=top style=&quot;padding: 0 10px 0 10px; font-size:11px;&quot;&gt; ".$opentext_blog." &lt;/td&gt; &lt;/tr&gt; &lt;tr align=right&gt; &lt;td style=&quot;padding:5px 10px 0 10px&quot;&gt;&lt;div style=&quot;border-top: 1px solid #dfdfdf; padding-top: 10px; padding:5px 0 5px 0; font-size: 11px;&quot;&gt;&lt;a href=".$link." target=_blank style=&quot;color: #2e64c8;&quot;&gt;".ss("читать полностью")."&lt;/a&gt;&lt;/div&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;";
+    }
+    $page_blog .= "</div></div><br>";
   } else $page_blog = "";
 
   $page_search_news = "";
-  if ($search != "") { // Похожие новости // добавить настройку вкл/выкл
-    $sql = "SELECT `pid`, `title`, `date` FROM ".$prefix."_pages WHERE `tables`='pages' and `module`='".$module."' and (`active`='1' or `active`='2') and `pid`!='".$pid."' and `cid`='".$cid."'".mysql_real_escape_string($search_keys)." order by `date` desc limit 0,5";
-    $result = $db->sql_query($sql);
+  if ($search != "" && $show_tags_pages == 1) { // Похожие новости // добавить настройку вкл/выкл
+    $and1 = $and2 = "";
+    if ($papka_tags_pages == 1) $and2 = " and `cid`='".$cid."'";
+    if ($razdel_tags_pages == 1) $and1 = " and `module`='".$module."'";
+    $result = $db->sql_query("SELECT `pid`, `title`, `date` FROM ".$prefix."_pages WHERE `tables`='pages'".$and1." and (`active`='1' or `active`='2') and `pid`!='".$pid."'".$and2.$search_keys." order by `date` desc limit 0,".$col_tags_pages);
     $numrows = $db->sql_numrows($result);
-    if ($numrows > 0 and $search_num>0) {
-      $page_search_news = "<br><div class=page_another>".ss("В тему:")."</div> <div class=another_links>";
+    if ($numrows > 0 and $search_num > 0) {
+      $page_search_news = "<br><div class='page_another'>".$text_tags_pages."</div><div class='another_links'>";
       while($row = $db->sql_fetchrow($result)) {
         $p_pid = $row['pid'];
         $p_title = $row['title'];
         $dat2 = explode(" ",$row['date']);
         $dat2 = explode("-",$dat2[0]);
         $p_p_date = intval($dat2[2])." ".findMonthName($dat2[1])." ".$dat2[0];
-        $page_search_news .= "<div class=another_link><a href=-".$DBName."_page_".$p_pid.">".$p_title."</a>";
-        if ($datashow==1) $page_search_news .= "<br>".$p_p_date;
+        $page_search_news .= "<div class='another_link'><a href='-".$DBName."_page_".$p_pid."'>".$p_title."</a>";
+        if ($datashow==1) $page_search_news .= "<div class='another_link_date'>".$p_p_date."</div>";
         $page_search_news .= "</div> ";
       }
-      $page_search_news .= "</div><br>";
+      $page_search_news .= "</div>";
     }
   }
 
@@ -1417,6 +1420,7 @@ function page($pid, $all) {
     $page_title = "<div class='cat_title'><h1 class='cat_categorii_link'><a href='-".$name."'>".$module_title."</a> ".$strelka." ".ss("Запись №").$pid."</h1></div>"; // Заголовок страницы
     $base = 0;
     parse_str($module_options); // Настройки раздела
+
     // Определяем имя и настройки БД
     $sql = "SELECT `name`, `title`, `text` FROM ".$prefix."_mainpage where `tables`='pages' and `id`='".mysql_real_escape_string($base)."'";
     $result = $db->sql_query($sql);
@@ -1425,6 +1429,7 @@ function page($pid, $all) {
     $baza_options  = $row['text']; 
     $baza_name  = $row['name']; // Название таблицы БД 
     parse_str($baza_options);
+
     $options = explode("/!/",$options); // $!$  ранее *
     $options_num = count($options);
     $names = array();

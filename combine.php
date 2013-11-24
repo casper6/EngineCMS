@@ -19,6 +19,9 @@ if ($add != "") {
 $contents = "
 .filter_name {font-size: 20px;}
 
+.another_links {margin: 5px 0 30px;}
+.another_link {margin: 10px 0 10px;}
+
 .editorbutton {
   margin-left: 10px; 
   display: inline-block;
@@ -45,6 +48,9 @@ $contents = "
   font-family: Arial;
 }
 
+.images figure {background-color: #fff;}
+.images figure figcaption h4 {font-size: 13px;}
+
 .w100 {width:100%;}
 
 .opros_otvet {
@@ -64,8 +70,8 @@ $contents = "
   text-align:right; 
   font-weight:bold;
   background: green;
-  background: -moz-linear-gradient(left, #ff8585, #ffd985, #fffe85, #9dd797);
-  background: -webkit-gradient(linear, left center, right center, from(#ff8585), color-stop(35%, #ffd985), color-stop(65%, #fffe85), to(#9dd797));
+  background: -moz-linear-gradient(left, #ffffff, #ff8585, #ffd985, #fffe85, #9dd797);
+  background: -webkit-gradient(linear, left center, right center, from(#ffffff), color-stop(25%, #ff8585), color-stop(50%, #ffd985), color-stop(75%, #fffe85), to(#9dd797));
   }
 .opros_line2 { 
   text-align:left; 

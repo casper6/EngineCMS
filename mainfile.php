@@ -5,10 +5,12 @@
   mb_internal_encoding('UTF-8');
   require_once ('page/functions.php'); // Функции
   require_once ('page/sec.php'); // Функции безопасности
-  require_once ('config.php'); // Настройки сайта
+  //if (file_exists('config.php')) 
+    require_once ('config.php');
+  //else die(ss("Файл")." config.php ".ss("не найден")); // Настройки сайта
   require_once ('includes/db.php'); // Работа с базой данных
   require_once ('includes/sql_layer.php'); // Функции для работы с БД MySQL
-  require_once ('includes/Mobile_Detect.php'); // Определяем устройство - компьютер, планшет или телефон
+  require_once ('includes/mobile_detect.php'); // Определяем устройство - компьютер, планшет или телефон
   $detect = new Mobile_Detect;
   global $deviceType, $ipban, $display_errors, $pid, $site_cash;
   $deviceType = ($detect->isMobile() ? ($detect->isTablet() ? 'tablet' : 'phone') : 'computer');
@@ -225,17 +227,19 @@
     $useit_razdels = array(); // список настроек разделов
     $name_razdels = array(); // список англ. названий разделов
     $pass_razdels = array(); // список паролей для раздела
+    $nopass_razdels = array(); // список без паролей для раздела
     //$sqlY = "SELECT `id`,`type`,`name`,`title`,`text`,`useit` from `".$prefix."_mainpage` where `tables`='pages' and (`type`='2' or `type`='5')";
     $sqlY = "SELECT `id`,`type`,`name`,`title`,`text`,`useit` from `".$prefix."_mainpage` where `tables`='pages' and (`type`='1' or `type`='2' or `type`='5')";//`type`='1' or 
     $resultY = $db->sql_query($sqlY);
     while ($rowY = $db->sql_fetchrow($resultY)) {
       $nameX = $rowY['name'];
+      $idX = $rowY['id'];
       if (strpos($rowY['name'], "\n")) {
         $names = explode("\n", str_replace("\r", "", $rowY['name']));
         $nameX = trim($names[0]);
+        $nopass_razdels[$idX] = $nameX;
         $pass_razdels[$nameX] = $names;
       }
-      $idX = $rowY['id'];
       $id_razdel_and_bd[$nameX] = $rowY['id']; 
       $title_razdel_and_bd[$nameX] = $rowY['title']; 
 

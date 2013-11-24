@@ -76,15 +76,25 @@ foreach ($lines as $line_id => $line) {
   $line = explode("|",$line);
   if (isset($line[1])) $col = $line[1];
   else $col=0;
+  if (isset($line[2])) {
+    $ok_line = true; 
+    $text_line = $line[2];
+  } else $ok_line = false;
+
   $line = $line[0];
   if ($tmp == $opros_id || $opros_res != 1) { // Если голосовали - готовим результат
+    if ($ok_line == true) $line = "<b>".$text_line."</b> <s>".$line."</s>";
     $lines2[] = $line;
     $cols2[] = $col;
   } else { // Если еще не голосовали
+    if ($ok_line == true) {
+      $line = "<b>".$text_line."</b> <s>".$line."</s>";
+      $line_disabled = " disabled";
+    } else $line_disabled = "";
     if ($opros_type==1) { // Выбор кружки
-      $textX2 .= "<label class='radio-opros' onclick='valueOpros = ".$line_id.";'><input name='opros[]' type='radio' value='".$line_id."'> ".$line."</label><br>"; 
+      $textX2 .= "<label class='radio-opros' onclick='valueOpros = ".$line_id.";'><input name='opros[]' type='radio' value='".$line_id."'".$line_disabled."> ".$line."</label><br>"; 
     } else { // Выбор флажки
-      $textX2 .= "<label class='checkbox-opros' onclick='if (valueOpros == \"-1\") valueOpros = \"\"; valueOpros = valueOpros+\" \"+".$line_id.";'><input name='opros[]' type='checkbox' value='".$line_id."'> ".$line."</label><br>"; 
+      $textX2 .= "<label class='checkbox-opros' onclick='if (valueOpros == \"-1\") valueOpros = \"\"; valueOpros = valueOpros+\" \"+".$line_id.";'><input name='opros[]' type='checkbox' value='".$line_id."'".$line_disabled."> ".$line."</label><br>"; 
     }
   }
 } // foreach закончился

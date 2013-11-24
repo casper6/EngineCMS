@@ -1,7 +1,7 @@
 <?php
 // Все «правила хорошего кода» написаны кровью, вытекшей из глаз программистов, читавших чужой код.
 require_once("../mainfile.php");
-global $prefix, $db, $admin, $now, $adminmail, $ip, $siteurl, $title_razdels_by_id, $name_razdels, $deviceType;
+global $prefix, $db, $admin, $now, $adminmail, $ip, $siteurl, $title_razdels_by_id, $nopass_razdels, $name_razdels, $deviceType;
 if (is_admin($admin)) {
   if (isset($_REQUEST['func']))   $func = $_REQUEST['func']; else die(); // Выбор функции
   if (isset($_REQUEST['type']))   $type = $_REQUEST['type']; else $type = 0;
@@ -740,6 +740,8 @@ if ($func == "addpapka") { // Добавляем папку(и)
   list($title, $parent) = explode("*@%", $string);
   global $title_razdel_and_bd;
   $name_raz = $name_razdels[$id];
+  if (strpos($name_raz, "\n")) $name_raz = $nopass_razdels[$id];
+
   if (strpos($title, "&&&")) $title = explode("&&&",$title);
   else $title = explode("\n",$title);
   foreach( $title as $title_value ) {
@@ -756,6 +758,8 @@ if ($func == "addpages") { // Добавляем страницы
   list($title, $cid) = explode("*@%", $string);
   global $title_razdel_and_bd, $now;
   $name_raz = $name_razdels[$id];
+  if (strpos($name_raz, "\n")) $name_raz = $nopass_razdels[$id];
+
   if (strpos($title, "&&&")) $title = explode("&&&",$title);
   else $title = explode("\n",$title);
   $hour = date("H");
@@ -803,6 +807,8 @@ if ($func == "offpage") { // вкл./выкл. страницы
 if ($func == "delrazdel") { // Удаление раздела
   // ДОПИСАТЬ! не хватает рекурсии для удаления комментариев и голосований!
   $name_raz = $name_razdels[$id];
+  if (strpos($name_raz, "\n")) $name_raz = $nopass_razdels[$id];
+
   $db->sql_query("UPDATE ".$prefix."_pages SET `tables`='del' WHERE module='$name_raz'"); 
   $db->sql_query("UPDATE ".$prefix."_pages_categories SET `tables`='del' WHERE module='$name_raz'"); 
   $db->sql_query("UPDATE ".$prefix."_mainpage SET `tables`='del' WHERE id='$id'");
@@ -892,6 +898,8 @@ if ($func == "offblock") { // Вкл./Выкл. блока
 if ($func == "add_pages") { // Создание страниц
   // Узнаем название раздела
   $name_raz = $name_razdels[$id];
+  if (strpos($name_raz, "\n")) $name_raz = $nopass_razdels[$id];
+
   $list = "<form method=post style=\"display:inline;\" onsubmit='return false'>
   <h1>Добавим сразу несколько страниц</h1>
   <h2>Заголовки страниц:</h2>
@@ -921,6 +929,8 @@ if ($func == "add_pages") { // Создание страниц
 if ($func == "add_papka") { // Создание папки
   // Узнаем название раздела
   $name_raz = $name_razdels[$id];
+  if (strpos($name_raz, "\n")) $name_raz = $nopass_razdels[$id];
+
   $list = "<form method=post style=\"display:inline;\" onsubmit='return false'>
   <h1>Создадим папку (папки) в этом разделе</h1>
   <h2>Имя папки (папок — разделять Enter):</h2>
@@ -1320,6 +1330,8 @@ if ($func == "papka") { // Папка
     default: $order = "date desc, title"; break;
   }
   $name_raz = $name_razdels[$id];
+  if (strpos($name_raz, "\n")) $name_raz = $nopass_razdels[$id];
+  
     // Подпапки этой папки
     $sql = "SELECT `cid`, `title`, `parent_id` FROM ".$prefix."_pages_categories where `module`='".$name_raz."' and `tables`='pages' and `parent_id`='".$cid."' order by `title`";
     $result = $db->sql_query($sql);
@@ -1345,6 +1357,7 @@ if ($func == "papka") { // Папка
 
     global $id_razdel_and_bd;
     $id_razdel = $id_razdel_and_bd[$name_raz];
+
     // получим настройки раздела
     $row = $db->sql_fetchrow($db->sql_query("SELECT `text` FROM ".$prefix."_mainpage where `id`='".$id_razdel."'"));
     $options = str_replace("pages|","",$row['text']);
@@ -1421,6 +1434,8 @@ if ($func == "razdel") { // Раздел
   }
   $list = "";
   $name_raz = $name_razdels[$id];
+  if (strpos($name_raz, "\n")) $name_raz = $nopass_razdels[$id];
+
   // получим настройки раздела
   $row = $db->sql_fetchrow($db->sql_query("SELECT `text` FROM ".$prefix."_mainpage where `id`='".$id."'"));
   $options = str_replace("pages|","",$row['text']);
