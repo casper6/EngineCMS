@@ -169,6 +169,7 @@ function GraphicAdmin() {
 
 	//$soderganie_menu = "<button id='new_razdel_button' title='".aa("Добавить страницу...")."' class='small green nothing left3' onclick='location.href=\"/sys.php?op=base_pages_add_page#1\"'><span class=\"icon white small\" data-icon=\"+\"></span></button>";
  	
+ 	$soderganie_menu = "";
  	global $deviceType;
  	$buttons = explode(",", aa(" Новое, Проверить: , Удаленное, Старое, Блоки, Отзывы:, Вставить дату"));
 	if ($deviceType != 'computer') $buttons = array('','','','','','','');
@@ -315,7 +316,7 @@ function GraphicAdmin() {
 	echo "</div></div>
 	</td>
 	<td style='padding:0;'><a class='punkt' title='Свернуть/развернуть левую колонку' onmousemove='$(\"#razdels\").show();' onclick='$(\"#razdels\").toggle(\"slow\");'><div class='polosa_razdelitel'><div id='rotateText'><nobr>↑ Сворачивает Разделы ↑</nobr></div></div></a></td>
-	<td style='width:100%;padding:0;'><div class='black_grad'><div class='right3'>".$hide_top_button."</div><div class='pt5'>".$soderganie_menu."</div></div><div class='podrazdel radius nothing' id='podrazdel'>";
+	<td style='width:100%;padding:0;'><div class='black_grad'><div class='pt5'>".$soderganie_menu."</div></div><div class='podrazdel radius nothing' id='podrazdel'>";
 
 	// ЗАПИСКИ
 	$row = $db->sql_fetchrow($db->sql_query("SELECT `adminmes` FROM ".$prefix."_config"));

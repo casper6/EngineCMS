@@ -680,7 +680,9 @@ function showcat($cid=0, $pag=0, $slovo="") {
           $search = $row2['search'];
 
           $page_on_mainpage = "";
-          if ($row['mainpage'] == "1") $page_on_mainpage = " page_favourite";
+          if (isset($row['mainpage']))
+            if ($row['mainpage'] == "1")
+              $page_on_mainpage = " page_favourite";
             
           $golos = $foto_adres = $foto = $price = $rss = ""; // обнуление
           if ($golostype != 0) $golos = $row2['golos'];

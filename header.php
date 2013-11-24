@@ -301,7 +301,7 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 	if (mb_substr($useitX, 0, 1) != "|") {
 		$useitY = explode("|",$useitX);
 		$useitX0 = $useitY[0];
-		$useitY = str_replace($useitX0."|","",$useit);
+		$useitY = str_replace($useitX0."|","",$useitX);
 		$useitX = $useitX0;
 		$alternative_title_link = "/-".$useitX."";
 	} else {
@@ -560,6 +560,7 @@ case "0": # Блок страниц раздела
 		}
 		// Начало замены
 		if ($shablon != "") {
+			if (!isset($titles_papka[$p_cid])) $titles_papka[$p_cid] = "";
 		  $tr = array(
 		  	"[number]"=>$number, // порядковый номер
 		  	"[page_id]"=>$p_id,
