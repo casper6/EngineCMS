@@ -10,7 +10,7 @@
   //else die(ss("Файл")." config.php ".ss("не найден")); // Настройки сайта
   require_once ('includes/db.php'); // Работа с базой данных
   require_once ('includes/sql_layer.php'); // Функции для работы с БД MySQL
-  require_once ('includes/mobile_detect.php'); // Определяем устройство - компьютер, планшет или телефон
+  require_once ('includes/mobiledetect.php'); // Определяем устройство - компьютер, планшет или телефон
   $detect = new Mobile_Detect;
   global $deviceType, $ipban, $display_errors, $pid, $site_cash;
   $deviceType = ($detect->isMobile() ? ($detect->isTablet() ? 'tablet' : 'phone') : 'computer');
