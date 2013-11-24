@@ -35,6 +35,7 @@ class UploadHandler
     );
 
     function __construct($options = null, $initialize = true, $error_messages = null) {
+        /* , 'DELETE' метод */
         $this->options = array(
             'script_url' => $this->get_full_url().'/',
             'upload_dir' => $_SERVER['DOCUMENT_ROOT'].'/img/', // dirname($_SERVER['SCRIPT_FILENAME']).'/files/'
@@ -53,8 +54,7 @@ class UploadHandler
                 'GET',
                 'POST',
                 'PUT',
-                'PATCH',
-                'DELETE'
+                'PATCH'
             ),
             'access_control_allow_headers' => array(
                 'Content-Type',
@@ -81,7 +81,7 @@ class UploadHandler
             // Set the following option to false to enable resumable uploads:
             'discard_aborted_uploads' => true,
             // Set to true to rotate images based on EXIF meta data, if available:
-            'orient_image' => false,
+            'orient_image' => true,
             'image_versions' => array(
                 // Uncomment the following version to restrict the size of
                 // uploaded images:

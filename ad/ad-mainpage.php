@@ -242,7 +242,7 @@ function create_main($type) {
 	<span class=h2>Название:</span> По-русски, можно с пробелами
 	<input type='text' name='title' value='' size=40 class='w100 h40 f16' autofocus><br>
 	".help_design()."
-	<h2>Содержание дизайна (HTML): ".button_resize_red(2)."</h2>
+	<h2>Содержание дизайна (HTML): ".button_resize_red(2, false)."</h2>
 	".redactor('2', '', 'text', '', 'html')."
 	<div class='notice success black'><span class='icon large white' data-icon='C'></span>
 	Здесь вы можете вставить готовый HTML-код (от тега &lt;body&gt; до &lt;/body&gt;, не включительно) или набрать его с нуля.
@@ -263,7 +263,7 @@ function create_main($type) {
 	<div class='w95 mw800'>
 	<h2>Название: <span class='f12'>По-русски, можно с пробелами</span><br><input type='text' name='title' value='' size='40' class='w100 h40 f16' autofocus></h2>
 
-	<h2>Содержание стиля: ".button_resize_red(2)."
+	<h2>Содержание стиля: ".button_resize_red(2, false)."
 	<a class='button small blue' onclick='if ($(\"#color_scheme\").html() == \"\") $(\"#color_scheme\").html(\"<iframe src=http://colorscheme.ru width=985 height=660 scrolling=no frameborder=0></iframe>\"); $(\"#color_scheme\").toggle();'>Подбор цвета</a>
 	 <a class='button small blue' href='http://sassmeister.com' target='_blank'>SASS > CSS</a>
 	 <a class='button small blue' href='http://less2css.org' target='_blank'>LESS > CSS</a>
@@ -380,7 +380,7 @@ function create_main($type) {
 	<input type=hidden name=id value=''>
 	</form>
 
-	<div id='photo_upload' style='display:none;'>".add_file_upload_form("textarea")."</div>
+	<div id='photo_upload' class='hide'>".add_file_upload_form("textarea", "textarea_block")."</div>
 
 	</td>
 	<td id='form_block' style='display:none;' width=500 class='block'>
@@ -746,6 +746,15 @@ function edit_main($id) {
 	if (!isset($useit_module)) $useit_module = "";
 	$color = "#ffffff"; // убрать
 	$type_opis = "";
+
+	if (!isset($name)) $name = 0;
+	if ($type == "1") $css_true = "true"; else $css_true = "";
+	if ($red == 2 || $type == "1") 
+		if (($name == "0" || $name == "5" || $name == "6" || $name == "10" || $name == "15") && $type == "3") {
+		} else {
+			if ($type == 2) $type_pole = "useit"; else $type_pole = "text";
+			echo "<div id='photo_upload' class='hide'><h2>Можно не нажимать кнопку «Вставить фото», а сразу переносить файл фотографии в редактор.</h2>".add_file_upload_form("textarea", "", false, $type_pole, $css_true)."</div>";
+		}
 
 	echo "<form method='POST' action='sys.php'>
 	<input type='hidden' name='type' value='".$type."'><input type='hidden' name='id' value='".$id."'><input type='hidden' name='op' value='".$admintip."_save'>";
@@ -2004,7 +2013,8 @@ function edit_main($id) {
 
 		if ($name == 10 or $name == 5 or $name == 0) $red = 1; // дополнить список при необходимости
 
-		echo "<h2>Содержание блока:".button_resize_red($red, true)."</h2>";
+		if ($name != 6) echo "<h2>Содержание блока:".button_resize_red($red, true)."</h2>";
+
 		if ($name != 31 && $name != 7 && $name != 10 && $name != 6) echo redactor($red, $text, 'text'); // редактор: тип редактора, редактируемое поле
 		if ($name == 6) echo "<div class='pics w100'></div>
 		<textarea name=text rows=3 cols=86 class='w100 h155' id=textarea onchange=\"pics_refresh('#textarea');\">".str_replace("\n\n", "\n", $text)."</textarea>

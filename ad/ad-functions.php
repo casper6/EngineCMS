@@ -281,15 +281,15 @@ function help_shablon() {
     <a title='Закрыть/Открыть справочное окно' id='show_shablon_var' class=punkt onclick=\"show_animate('shablon_var');\" style='float:right; display:none;'><div class='radius' style='font-size:12pt; width:20px; height: 20px; color: white; text-align:center; float:right; margin:5px; margin-bottom:0; background: #bbbbbb;'>&nbsp;&uarr;&nbsp;</div></a><div id=shablon_var style='display:none; width:95%; height:300px; scroll:auto;' class=block></div>";
 }
 ##########################################################################################
-function add_file_upload_form($textarea="textarea") {
-  return "<form id='fileupload' action='includes/upload/server/php/' method='POST' enctype='multipart/form-data'>
-  <label for='show_oldnames'><input type='checkbox' id='show_oldnames' checked><b>Добавлять имя файла</b> фотографии как её описание (<i>подходит для осмысленных и/или русских имен</i>)</label><br><div class='notice warning green'><span class='icon green medium' data-icon='('></span>Фотографии можно перенести из любой папки вашего компьютера, даже не нажимая кнопку «Добавить файлы...»</div>
+function add_file_upload_form($textarea="textarea", $textarea_show="textarea", $spisok_show = true, $redactor_id = "", $css = false) {
+  $txt = "<form id='fileupload' action='includes/upload/server/php/' method='POST' enctype='multipart/form-data'>
+  <label for='show_oldnames'><input type='checkbox' id='show_oldnames' checked> <b>Добавлять имя файла</b> фотографии как её описание (<i>подходит для осмысленных названий</i>)</label><br><div class='notice warning green'><span class='icon green medium' data-icon='('></span>Фотографии можно перенести из любой папки вашего компьютера, даже не нажимая кнопку «Добавить файлы...»</div>
   <div style='padding:10px; padding-left:30px; margin-bottom:30px;'>
                   <span class='btn btn-success fileinput-button' style='position: relative;  overflow: hidden;  float: left;  margin-right: 5px;'>
                       <a class='button'>Добавить файлы...</a>
-                      <input id='fileupload' type='file' name='files[]' style='position: absolute;  top: 0;  right: 0;  margin: 0;  opacity: 0;  filter: alpha(opacity=0);  transform: translate(-300px, 0) scale(4);  font-size: 23px;  direction: ltr;  cursor: pointer;' data-url='server/php/' multiple>
-                      <a class='button small' onclick='$(\"#textarea\").toggle();'>Показать список</a>
-                  </span>
+                      <input id='fileupload' type='file' name='files[]' style='position: absolute;  top: 0;  right: 0;  margin: 0;  opacity: 0;  filter: alpha(opacity=0);  transform: translate(-300px, 0) scale(4);  font-size: 23px;  direction: ltr;  cursor: pointer;' data-url='server/php/' multiple>";
+                      if ($spisok_show == true) $txt .= "<a class='button small' onclick='$(\"#".$textarea_show."\").toggle();'>Показать список</a>";
+                  $txt .= "</span>
               </div>
 <div id='progress'><div class='bar' style='width: 0%;height: 18px;background: green;'></div></div>
 <script src='includes/upload/js/jquery.ui.widget.js'></script>
@@ -301,10 +301,13 @@ $(function () {
       dataType: 'json',
       autoUpload: true,
       sequentialUploads: true,
-      done: function (e, data) {
-        $('#textarea').hide();
-        $('#textarea_block').show();
-        $.each(data.result.files, function (index, file) {
+      done: function (e, data) {";
+        if ($redactor_id == "") $txt .= "
+          $('#textarea').hide();
+        /* $('#".$textarea_show."').show(); */
+        ";
+        $txt .= "$.each(data.result.files, function (index, file) {";
+          if ($redactor_id == "") $txt .= "
           id = file.name;
           id = id.replace('.', '');
           if (document.getElementById('show_oldnames').checked == false) file.oldname = '';
@@ -312,6 +315,14 @@ $(function () {
           $('#".$textarea."').append(value + '\\n');
           if (file.oldname == null || file.oldname == '' || typeof file.oldname == 'undefined') file.oldname = 'без имени';
           $('.pics').append('<div id=\"' + id + '\" class=\"pic\" style=\"background:url(\'includes/phpThumb/phpThumb.php?src=/img/' + file.name + '&amp;w=160&amp;h=100&amp;q=0\') no-repeat bottom white;\"><a title=\"Удалить фото\" class=\"button small red white\" onclick=\"pics_replace(\'#' + id + '\',\'#".$textarea."\', \'' + value + '\');\">×</a><span>' + file.oldname + '</span></div>');
+          ";
+          else {
+            $txt .= "\nvalue = '/img/' + file.name;\n";
+            if ($css == true) $txt .= $redactor_id.".insert(value);\n";
+            else $txt .= "alt = ''; if (document.getElementById('show_oldnames').checked == true) alt = file.oldname;
+              ".$redactor_id.".insert('<img alt=\"'+alt+'\" src=\"'+value+'\">');\n";
+          }
+          $txt .= "
         });
       },
       progressall: function (e, data) {
@@ -325,6 +336,7 @@ $(function () {
 });
 </script>
 </form>";
+return $txt;
 }
 ##########################################################################################
 function redactor($type, $txt, $name, $name2="", $style="html") {
@@ -341,6 +353,9 @@ function redactor($type, $txt, $name, $name2="", $style="html") {
             return false;
           } else keying();
         }
+      }
+      if (event.keyCode == 27) {
+          if ( $(\"#button_resize_red\").is(\":visible\") ) $(\"#button_resize_red\").click();
       }
     }
   }
@@ -545,10 +560,16 @@ function redactor2($type, $txt, $name, $style="html") {
   return $echo;
 }
 ##########################################################################################
-function button_resize_red($redactor, $savebutton=false) {
+function button_resize_red($redactor, $savebutton=false, $redactor_id) {
   if ($redactor == 2) {
-    if ($savebutton == true) { $add = " $(\"#button_save\").show();"; $add2 = " $(\"#button_save\").hide();"; } else $add = $add2 = "";
-    $txt = "<a class='right3 button small orange' onclick='$(\".ace_editor\").css(\"position\", \"fixed\").css(\"top\", \"0\").css(\"height\", \"100%\").css(\"margin\", \"0\"); $(\"#button_resize_red\").show();".$add."'>↑ Развернуть</a><a class='z10000 small orange button' id='button_resize_red' onclick='$(\".ace_editor\").css(\"position\", \"relative\").css(\"height\", \"1200px\"); $(\"#button_resize_red\").hide();".$add2."' style='position:absolute; margin:-5px 70%; display:none;'>↓</a>";
+    if ($savebutton == true) { 
+      $add = " $(\"#button_save\").show();"; 
+      $add2 = " $(\"#button_save\").hide();"; 
+    } else $add = $add2 = "";
+    $txt = "<a id='editor_large_button' class='right3 button small orange' onclick='$(\".ace_editor\").css(\"position\", \"fixed\").css(\"top\", \"0\").css(\"height\", \"100%\").css(\"margin\", \"0\"); $(\"#button_resize_red\").show();".$add."'>↑ Развернуть</a>
+    <a class='z10000 small orange button' id='button_resize_red' onclick='$(\".ace_editor\").css(\"position\", \"relative\").css(\"height\", \"1200px\"); $(\"#button_resize_red\").hide();".$add2."' style='position:absolute; margin:-5px 70%; display:none;'>↓Esc</a>
+
+    <a class='right3 button small orange' onclick='$(\"#photo_upload\").toggle();'>Вставить фото</a>";
     if ($savebutton == true) $txt .= "<a class='z10000 small green button' id='button_save' onclick='save_main(\"ad/ad-mainpage.php\", \"mainpage_save_ayax\", \"\", \"\")' style='position:absolute; margin:-5px 80%; display:none;'>".aa("Сохранить")."</a>";
   } else $txt = "";
   return $txt;
