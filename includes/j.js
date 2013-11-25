@@ -45,17 +45,15 @@ function clc_bbcode(t,nu){
 }
  
 function otvet(сid, number, t) {
-	//document.getElementById('comm_otvet_show').innerHTML='<p><b>Вы отвечаете.</b> <a class=\'no comm_write\' href=#addcomm onclick=\'otmena_otvet();\'>Отменить ответ</a><br><br>'; document.getElementById('comm_otvet').value = сid;
-	var el=document.getElementById('area');
+	document.getElementById('comm_otvet_show').innerHTML = '<p><b>Вы отвечаете.</b> <a class=\'no comm_write\' href=#addcomm onclick=\'otmena_otvet();\'>Отменить ответ</a><br><br>'; 
+	document.getElementById('comm_otvet').value = сid;
+	var el = document.getElementById('area');
 	el.focus();
-	if (el.selectionStart==null) {
-		var rng=document.selection.createRange();
-		rng.text=rng.text+t;
-	} else {
-		el.value=el.value.substring(0,el.selectionStart)+el.value.substring(el.selectionStart,el.selectionEnd)+t+el.value.substring(el.selectionEnd);
-	}
+	if (el.selectionStart == null) {
+		var rng = document.selection.createRange();
+		rng.text = rng.text + t;
+	} else el.value = el.value.substring(0,el.selectionStart) + el.value.substring(el.selectionStart,el.selectionEnd) + t + el.value.substring(el.selectionEnd);
 }
-
 function otmena_otvet() {
 	document.getElementById('comm_otvet_show').innerHTML = ''; 
 	document.getElementById('comm_otvet').value = 0;
