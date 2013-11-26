@@ -101,7 +101,7 @@ if ($row['realadmin'] == 1) {
 		include ("ad/ad-header.php");
 		$ok = intval($ok);
 		// Получаем настройки из mainfile
-		global $sitename, $startdate, $adminmail, $keywords, $description, $counter, $statlink, $postlink, $stopcopy, $registr, $pogoda, $flash, $sgatie, $ht_backup, $captcha_ok, $xnocashe, $jqueryui, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $comment_send, $company_name, $company_fullname, $company_address, $company_time, $company_tel, $company_sot, $company_fax, $company_email, $company_map, $company_people, $search_design, $tag_design, $add_fonts, $site_cash, $normalize, $project_logotip, $project_name, $geo, $kolkey, $add_clips, $sortable, $color_tema_html, $color_tema_css, $color_tema_js, $color_tema_php, $tab_obzor, $tab_show, $shop_text_val1, $shop_text_val2, $shop_text_itogo, $shop_text_oformit, $shop_text_korzina, $shop_text_delete, $shop_pole, $shop_admin_mail, $shop_text_after_mail,$shop_spisok_pole, $shop_shablon_form_order, $shop_shablon_mail_client, $shop_shablon_mail_admin, $head_insert, $filter_name, $filter_show_all, $gravatar, $strelka, $smile_icons;
+		global $sitename, $startdate, $adminmail, $keywords, $description, $counter, $statlink, $postlink, $stopcopy, $registr, $pogoda, $flash, $sgatie, $ht_backup, $captcha_ok, $xnocashe, $jqueryui, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $comment_send, $company_name, $company_fullname, $company_address, $company_time, $company_tel, $company_sot, $company_fax, $company_email, $company_map, $company_people, $search_design, $tag_design, $add_fonts, $site_cash, $normalize, $project_logotip, $project_name, $geo, $kolkey, $add_clips, $add_mail_shablons, $sortable, $color_tema_html, $color_tema_css, $color_tema_js, $color_tema_php, $tab_obzor, $tab_show, $shop_text_val1, $shop_text_val2, $shop_text_itogo, $shop_text_oformit, $shop_text_korzina, $shop_text_delete, $shop_pole, $shop_admin_mail, $shop_text_after_mail,$shop_spisok_pole, $shop_shablon_form_order, $shop_shablon_mail_client, $shop_shablon_mail_admin, $head_insert, $filter_name, $filter_show_all, $gravatar, $strelka, $smile_icons;
 		
 		// Настройки фильтра
 		if ($filter_name == "") $filter_name = ss("Фильтр товаров");
@@ -150,6 +150,7 @@ echo "<table class='w100 mw800 pm0 block_back'><tr valign=top><td id='razdel_td'
 	echo "<div id='mainrazdel0' class='dark_pole2'><a class='base_page' onclick=\"options_show('0','show_options')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='Z'></span><span class='plus20'>Основные настройки Сайта</span></div></a></div>";
 	echo "<div id='mainrazdel1' class='dark_pole2'><a class='base_page' onclick=\"options_show('1','show_options_company')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='Y'></span><span class='plus20'>Карточка компании (мини блоки)</span></div></a></div>";
 	echo "<div id='mainrazdel5' class='dark_pole2'><a class='base_page' onclick=\"options_show('5','show_options_zagotovka')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='7'></span><span class='plus20'>Настройки редактора</span></div></a></div>";
+	echo "<div id='mainrazdel15' class='dark_pole2'><a class='base_page' onclick=\"options_show('15','show_options_comments')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon=\"'\"></span><span class='plus20'>Настройки комментариев</span></div></a></div>";
 	echo "<div id='mainrazdel3' class='dark_pole2'><a class='base_page' onclick=\"options_show('3','show_options_adspeed')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='z'></span><span class='plus20'>Настройки Администрирования</span></div></a></div>";
 	echo "<br>";
 	echo "<div id='mainrazdel4' class='dark_pole2'><a class='base_page' onclick=\"options_show('4','show_options_pass_block')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='O'></span><span class='plus20'>Смена пароля и Блокировка по IP</span></div></a></div>";
@@ -418,10 +419,6 @@ body {}
 	</td></tr>
 
 	<tr valign=top><td>
-	Использование аватаров <a href='http://ru.gravatar.com' target='_blank'>Gravatar</a> в комментариях:</td><td class=small>
-	".select("options[gravatar]", "0,1", "НЕТ,ЕСТЬ", $gravatar)."</td></tr>
-
-	<tr valign=top><td>
 	Список файлов смайлов из папки /images/smilies/</td><td class=small>
 	".input("options[smile_icons]", $smile_icons, 30, "txt")."Для переопределения смайлов (если вы стерли какие-то смайлы или добавили свои в папку /images/smilies/) очистите эту строку, сохраните настройки, затем сохраните еще раз.<br>В имени файлов смайлов нельзя использовать пробелы, подойдут цифры, эмоции на английском или скобочки (типа «)» или «(((»). Форматы файлов: png, gif, jpg.</td></tr>
 	
@@ -446,11 +443,6 @@ body {}
 	".select("options[stopcopy]", "0,1", "НЕТ,ЕСТЬ", $stopcopy)."
 	<br>Препятствует массовому копированию статей на чужие сайты глупыми злоумышленниками. Невозможность выделить/скопировать текст и нажать правую кнопку мыши. </td></tr>
 
-	<tr valign=top class=p3><td>
-	Отключить защиту комментариев: </td><td class=small>
-	".select("options[captcha_ok]", "0,1", "НЕТ,ЕСТЬ", $captcha_ok)."
-	<br>По умолчанию - выкл. При отключении можно не вводить проверочный код или вводить его неправильно — он не будет проверяться. </td></tr>
-
 	<tr valign=top class=p4><td>
 	Год основания сайта:</td><td class=small>
 	".input("options[startdate]", $startdate, 4)."
@@ -461,12 +453,6 @@ body {}
 	Почта администратора:</td><td class=small>
 	".input("options[adminmail]", $adminmail, "100%")."
 	<br>Используется в автоматическом блоке [почта], для отправки почты администратору сайта.
-	</td></tr>
-
-	<tr valign=top class=p4><td>
-	Получать письма о новых комментариях:</td><td class=small>
-	".select("options[comment_send]", "0,1", "НЕТ,ДА", $comment_send)."
-	<br>Отправка уведомлений о новых комментариях на почту администратору.
 	</td></tr>
 
 	<tr valign=top><td>
@@ -691,11 +677,6 @@ body {}
 	</td></tr>
 
 	<tr valign=top><td>
-	Показывать комментарии в администрировании:</td><td class=small>
-	".select("options[show_comments]", "0,1", "НЕТ,ДА", $show_comments)."
-	</td></tr>
-
-	<tr valign=top><td>
 	Преобразование {Название раздела} и {Название страницы} в ссылки на эти раздел и страницу, соответственно:</td><td class=small>
 	".select("options[show_page_links]", "0,1", "НЕТ,ДА", $show_page_links)." 
 	<br>По-умолчанию отключено. Если вы создаете сайт с большим количеством страниц (более 500) — желательно отключить. В случае отключения останется возможность преобразования названий разделов.
@@ -730,6 +711,89 @@ body {}
 	
 	<div style='text-align:center;'><input type='submit' value=' Сохранить ' style='width:300px; height:40px;'></div>
 	</div>";
+
+
+echo "<div id='show_options_comments' class='show_pole pl10' style='display:none;'>
+	<table class='table_light'>
+
+	<tr valign=top><td>
+	Использование аватаров <a href='http://ru.gravatar.com' target='_blank'>Gravatar</a> в комментариях:</td><td class=small>
+	".select("options[gravatar]", "0,1", "НЕТ,ЕСТЬ", $gravatar)."</td></tr>
+
+	<tr valign=top class=p3><td>
+	Отключить защиту комментариев: </td><td class=small>
+	".select("options[captcha_ok]", "0,1", "НЕТ,ЕСТЬ", $captcha_ok)."
+	<br>По умолчанию - выкл. При отключении можно не вводить проверочный код или вводить его неправильно — он не будет проверяться. </td></tr>
+
+	<tr valign=top class=p4><td>
+	Получать письма о новых комментариях:</td><td class=small>
+	".select("options[comment_send]", "0,1", "НЕТ,ДА", $comment_send)."
+	<br>Отправка уведомлений о новых комментариях на почту администратору.
+	</td></tr>
+
+	<tr valign=top><td>
+	Показывать комментарии в администрировании:</td><td class=small>
+	".select("options[show_comments]", "0,1", "НЕТ,ДА", $show_comments)."
+	</td></tr>
+
+	</table>
+
+	<h2>Шаблоны ответов на комментарии</h2>";
+	$add_mail_shablons1 = "";
+	if (strlen($add_mail_shablons) > 1) {
+		$add_mail_shablons2 = explode("?%?",$add_mail_shablons);
+		foreach ($add_mail_shablons2 as $cli) {
+			$cli2 = explode("*?*",$cli);
+			$add_mail_shablons1 .= "<option value='".$cli."'>".$cli2[0]."</option>";
+		}
+	}
+	echo "<script>
+	function del_mail_shablon() {
+		$(\"#add_mail_shablons :selected\").remove();
+	}
+	function add_mail_shablon() {
+		var mail_shablon = $(\"#mail_shablons\").val();
+		var text = $(\"#mail_shablon_text\").val();
+		if (mail_shablon != '') $('#add_mail_shablons').append('<option value=\"' + mail_shablon + '*?*' + text + '\">' + mail_shablon + '</option>');
+	}
+	function mail_shablon(show) {
+		var mail_shablon = $(\"#add_mail_shablons\").val();
+		mail_shablon = mail_shablon.split('*?*');
+		if (mail_shablon['1']) { text = mail_shablon['1']; mail_shablon = mail_shablon['0']; } else { text = mail_shablon = ''; }
+		$('#mail_shablon_preview').html(text + '<p><a class=\"button small\" onclick=\"$(\'#mail_shablons_html\').toggle();\">Показать HTML</p><textarea id=\"mail_shablons_html\" class=\"w100 hide\">' + text + '</textarea>');
+	}
+	function save_mail_shablons() {
+		var all='';
+		$.each($('#add_mail_shablons option'), function(i,val) { 
+			all = all + this.value;
+			if ( i != $('#add_mail_shablons option').length-1) all = all + '?%?'; 
+		});
+		$('#mail_shablons_spisok').val(all);
+	}
+	</script>
+
+	<div style='display:none;' id='add_mail_shablon' class=block>
+	
+	<h3>Краткое название ответа:</h3>
+	<input id='mail_shablons' class=w100>
+	<h3>Текст ответа (можно использовать HTML):</h3>
+	<textarea id='mail_shablon_text' class=w100></textarea><br>
+	<a class='button' onclick='add_mail_shablon(); save_mail_shablons();'>Добавить &darr;</a>
+	</div>
+
+	<h2><a id='button_add_mail_shablon' title='Добавить шаблон ответа...' class='mr10 button small green' onclick=\"$('#add_mail_shablon').show('slow'); $('#button_add_mail_shablon').hide('slow');\"><span class='mr-2 icon darkgrey small' data-icon='+'></span><span class='plus20'>Добавить</span></a>
+	Используемые шаблоны:</h2>
+	<select style='margin-top:5px;' name='options[add_mail_shablons]' id='add_mail_shablons' onchange='mail_shablon()' size=10 class='w100'>".$add_mail_shablons1."</select>
+	<a class='button white red' onclick='del_mail_shablon(); save_mail_shablons();'>Удалить</a>
+	<input id='mail_shablons_spisok' type=hidden name='options[add_mail_shablons]' value='".$add_mail_shablons."'>
+
+	<div id='mail_shablon_preview' style='margin:10px; padding:10px; clear: both; background:white;'>Здесь будет показан выбранный вариант ответа.</div>
+
+	<div style='text-align:center;'><input type='submit' value=' Сохранить ' style='width:300px; height:40px;'></div>
+	<input type='hidden' name='op' value='options_save'>
+	</div>";
+
+
 
   // Настройки невизуального редактора с подсветкой кода
   if ($color_tema_html == "") $color_tema_html = "monokai";
@@ -834,14 +898,14 @@ echo "
 	}
 	function add_clip() {
 		var clip = $(\"#clips\").val();
-		var text = $(\"#texts\").val();
+		var text = $(\"#clips_text\").val();
 		if (clip != '') $('#add_clips').append('<option value=\"' + clip + '*?*' + text + '\">' + clip + '</option>');
 	}
 	function clip(show) {
 		var clip = $(\"#add_clips\").val();
 		clip = clip.split('*?*');
 		if (clip['1']) { text = clip['1']; clip = clip['0']; } else { text = clip = ''; }
-		$('#clip_preview').html(text + '<p>HTML-код:</p><textarea class=w100>' + text + '</textarea>');
+		$('#clip_preview').html(text + '<p><a class=\"button small\" onclick=\"$(\'#clips_html\').toggle();\">Показать HTML</p><textarea id=\"clips_html\" class=\"w100 hide\">' + text + '</textarea>');
 	}
 	function save_clips() {
 		var all='';
@@ -858,7 +922,7 @@ echo "
 	<h3>Название заготовки:</h3>
 	<input id='clips' class=w100>
 	<h3>Текст заготовки (можно использовать HTML и [блоки]):</h3>
-	<textarea id='texts' class=w100></textarea><br>
+	<textarea id='clips_text' class=w100></textarea><br>
 	<a class='button' onclick='add_clip(); save_clips();'>Добавить &darr;</a>
 	</div>
 
@@ -1023,7 +1087,7 @@ echo "
 
 			$ed2_buttons = $options['ed2_button_html']."|".$options['ed2_button_formatting']."|".$options['ed2_button_bold']."|".$options['ed2_button_italic']."|".$options['ed2_button_deleted']."|".$options['ed2_button_underline']."|".$options['ed2_button_unorderedlist']."|".$options['ed2_button_orderedlist']."|".$options['ed2_button_outdent']."|".$options['ed2_button_indent']."|".$options['ed2_button_image']."|".$options['ed2_button_video']."|".$options['ed2_button_file']."|".$options['ed2_button_table']."|".$options['ed2_button_link']."|".$options['ed2_button_alignment']."|".$options['ed2_button_horizontalrule']."|".$options['ed2_button_more']."|".$options['ed2_button_link2']."|".$options['ed2_button_block']."|".$options['ed2_button_pre']."|".$options['ed2_button_fullscreen']."|".$options['ed2_button_clips']."|".$options['ed2_button_fontcolor']."|".$options['ed2_button_fontsize']."|".$options['ed2_button_fontfamily']."|".$options['ed2_minHeight']."|".$options['ed2_direction'];
 
-			$advanced = $options['jqueryui']."|".$options['show_comments']."|".$options['show_userposts']."|".$options['show_page']."|".$options['show_reserv']."|".$options['uskorenie_blokov']."|".$options['kickstart']."|".$options['show_page_links']."|".$options['ad_fon']."|".$options['search_design']."|".$options['tag_design']."|".$options['add_fonts']."|".$options['normalize']."|".$options['project_logotip']."|".$options['project_name']."|".$options['geo']."|".$options['kolkey']."|".$options['add_clips']."|".$options['sortable']."|".$options['color_tema_html']."|".$options['color_tema_css']."|".$options['color_tema_js']."|".$options['color_tema_php']."|".$options['tab_obzor']."|".$options['tab_show']."|".$options['shop_text_val1']."|".$options['shop_text_val2']."|".$options['shop_text_itogo']."|".$options['shop_text_oformit']."|".$options['shop_text_korzina']."|".$options['shop_text_delete']."|".$options['shop_pole']."|".$options['shop_admin_mail']."|".$options['shop_text_after_mail']."|".$options['shop_spisok_pole']."|".$options['shop_shablon_form_order']."|".$options['shop_shablon_mail_client']."|".$options['shop_shablon_mail_admin']."|".$ed2_buttons."|".$options['head_insert']."|".$options['filter_name']."|".$options['filter_show_all']."|".$options['gravatar']."|".$options['ed2_div_convert']."|".$options['strelka']."|".$options['smile_icons'];
+			$advanced = $options['jqueryui']."|".$options['show_comments']."|".$options['show_userposts']."|".$options['show_page']."|".$options['show_reserv']."|".$options['uskorenie_blokov']."|".$options['kickstart']."|".$options['show_page_links']."|".$options['ad_fon']."|".$options['search_design']."|".$options['tag_design']."|".$options['add_fonts']."|".$options['normalize']."|".$options['project_logotip']."|".$options['project_name']."|".$options['geo']."|".$options['kolkey']."|".$options['add_clips']."|".$options['sortable']."|".$options['color_tema_html']."|".$options['color_tema_css']."|".$options['color_tema_js']."|".$options['color_tema_php']."|".$options['tab_obzor']."|".$options['tab_show']."|".$options['shop_text_val1']."|".$options['shop_text_val2']."|".$options['shop_text_itogo']."|".$options['shop_text_oformit']."|".$options['shop_text_korzina']."|".$options['shop_text_delete']."|".$options['shop_pole']."|".$options['shop_admin_mail']."|".$options['shop_text_after_mail']."|".$options['shop_spisok_pole']."|".$options['shop_shablon_form_order']."|".$options['shop_shablon_mail_client']."|".$options['shop_shablon_mail_admin']."|".$ed2_buttons."|".$options['head_insert']."|".$options['filter_name']."|".$options['filter_show_all']."|".$options['gravatar']."|".$options['ed2_div_convert']."|".$options['strelka']."|".$options['smile_icons']."|".$options['add_mail_shablons'];
 			// sitename	startdate	adminmail	keywords	description	counter	statlink	postlink	registr	pogoda	flash	sgatie	stopcopy	nocashe	adminmes	red	comment	captcha_ok	ht_backup
 			$db->sql_query("UPDATE `".$prefix."_config` SET 
 				`sitename` = '".mysql_real_escape_string($options['sitename'])."',

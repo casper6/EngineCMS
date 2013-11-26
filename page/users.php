@@ -43,7 +43,7 @@ if ($_POST["submit"] == "Добавить") {
 		<br><input type='submit' name='submit' value='".ss("Добавить")."'></form>";
 	} else {
 		// блок пользователя фото и ссылки
-		$soderganie .= '<div id="user_blok"><img src="/includes/phpThumb/phpThumb.php?src=/'.$_COOKIE['user_pfoto'].'&amp;w=150&amp;h=0&amp;q=0" title="'.$_COOKIE['user_name'].'"><br>
+		$soderganie .= '<div id="user_blok"><img src="/includes/php_thumb/php_thumb.php?src=/'.$_COOKIE['user_pfoto'].'&amp;w=150&amp;h=0&amp;q=0" title="'.$_COOKIE['user_name'].'"><br>
 		<a href="--users_'.$_COOKIE['user_id'].'">'.ss('Моя страница').'</a><br>
 		<a href="--adduser_'.$_COOKIE['user_group'].'_0">'.ss('Добавить материал').'</a><br>  
 		<a href="--edituser_'.$_COOKIE['user_id'].'">'.ss('Редактировать профиль').'</a><br> 

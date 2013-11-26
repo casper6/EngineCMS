@@ -74,8 +74,8 @@ function foto_find($content) { // Поиск фотографий на стра�
   }
   preg_match_all("#\s(?:href|src|url)=(?:[\"\'])?(.*?)(?:[\"\'])?(?:[\s\>])#i", $content, $matches);
   foreach($matches[0] as $item) { 
-    if (strpos(" ".$item,"includes/phpThumb")) {
-      $item = explode("&", str_replace("/includes/phpThumb/phpThumb.php?","",$item));
+    if (strpos(" ".$item,"includes/php_thumb")) {
+      $item = explode("&", str_replace("/includes/php_thumb/php_thumb.php?","",$item));
       $item = $item[0];
     }
     $item = str_replace($http_siteurl."/","",$item);
@@ -314,7 +314,7 @@ $(function () {
           value = '/img/' + file.name + '|' + file.oldname;
           $('#".$textarea."').append(value + '\\n');
           if (file.oldname == null || file.oldname == '' || typeof file.oldname == 'undefined') file.oldname = 'без имени';
-          $('.pics').append('<div id=\"' + id + '\" class=\"pic\" style=\"background:url(\'includes/phpThumb/phpThumb.php?src=/img/' + file.name + '&amp;w=160&amp;h=100&amp;q=0\') no-repeat bottom white;\"><a title=\"Удалить фото\" class=\"button small red white\" onclick=\"pics_replace(\'#' + id + '\',\'#".$textarea."\', \'' + value + '\');\">×</a><span>' + file.oldname + '</span></div>');
+          $('.pics').append('<div id=\"' + id + '\" class=\"pic\" style=\"background:url(\'includes/php_thumb/php_thumb.php?src=/img/' + file.name + '&amp;w=160&amp;h=100&amp;q=0\') no-repeat bottom white;\"><a title=\"Удалить фото\" class=\"button small red white\" onclick=\"pics_replace(\'#' + id + '\',\'#".$textarea."\', \'' + value + '\');\">×</a><span>' + file.oldname + '</span></div>');
           ";
           else {
             $txt .= "\nvalue = '/img/' + file.name;\n";

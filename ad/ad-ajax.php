@@ -8,6 +8,31 @@ if (is_admin($admin)) {
   if (isset($_REQUEST['id']))     $id = intval($_REQUEST['id']); else $id = 0;
   if (isset($_REQUEST['string'])) $string = $_REQUEST['string']; else $string = "";
   ######################################################################################
+if ($func == "mail_shablon") {
+  global $add_mail_shablons;
+  $add_mail_shablons1 = "";
+  if (strlen($add_mail_shablons) > 1) {
+    $add_mail_shablons2 = explode("?%?",$add_mail_shablons);
+    $mail_shablon_select_count = count($add_mail_shablons2);
+    if ($mail_shablon_select_count > 15) $mail_shablon_select_count = 15;
+    foreach ($add_mail_shablons2 as $cli) {
+      $cli2 = explode("*?*",$cli);
+      if ($cli[1] != "") $add_mail_shablons1 .= "<option value='".$cli2[1]."'>".$cli2[0]."</option>";
+    }
+    echo "<script>
+    function put_mail_shablon".$id."() {
+      var mail_shablon = $(\"#add_mail_shablons".$id." :selected\").val();
+      $(\"#otvet_comm_txt".$id."\").focus();
+      $(\"#otvet_comm_txt".$id."\").insertAtCaret(mail_shablon);
+    }
+    </script>
+    <h2><a id='button_add_mail_shablon' class='mr10 button small green' onclick=\"put_mail_shablon".$id."();\"><span class='mr-2 icon darkgrey small' data-icon='+'></span><span class='plus20'>Вставить в ответ</span></a>
+    Варианты ответа:</h2>
+    <select style='margin-top:5px;' id='add_mail_shablons".$id."' size='".$mail_shablon_select_count."' class='w100'>".$add_mail_shablons1."</select>";
+  } else echo "Шаблоны не найдены, вы можете их добавить в <a href='sys.php?op=options'>Настройках</a> -> Настройки комментариев.";
+  exit;
+}
+######################################################################################
 if ($func == "save_spiski") {
   require_once ('ad-page.php');
   parse_str($string);
@@ -428,7 +453,7 @@ if ($func == "trash_pics") { // Создаем список неиспользу
     if ($diff_count > 0) $info .= "<b>Вы можете удалить</b> те фотографии, которые не понадобятся в дальнейшем.<br>";
     $num = 0;
     foreach ($diff as $a) { 
-      if ($a != '') $info .= "<div id='file".$num."' class='delfoto'><a href='".$a."' target='_blank'><img src='includes/phpThumb/phpThumb.php?src=/".$a."&w=0&h=100&q=0'></a><br><a class='button' onclick=\"del_file('".$a."', '".$num."');\">Удалить фото</a></div>"; // <br>".$a."
+      if ($a != '') $info .= "<div id='file".$num."' class='delfoto'><a href='".$a."' target='_blank'><img src='includes/php_thumb/php_thumb.php?src=/".$a."&w=0&h=100&q=0'></a><br><a class='button' onclick=\"del_file('".$a."', '".$num."');\">Удалить фото</a></div>"; // <br>".$a."
       $num++;
     }
   } else $info .= "<br>Фотографий на сайте не найдено<br>";
@@ -651,6 +676,7 @@ if ($func == "comm_otvet") { // Ответ на комментарий из ад
   $info = "<b>Ошибка при отправке ответа...</b>";
   if ($comm_otvet == "") $info = "<b>Ответ оказался пустым... ничего не отправлено.</b>";
   else {
+    $comm_otvet = str_replace("\n", "<br>", $comm_otvet);
     // Получение всей информации
     $row = $db->sql_fetchrow($db->sql_query("SELECT `num`, `avtor`, `text` FROM ".$prefix."_pages_comments WHERE cid='$comm_cid'")) or exit;
     // cid  num avtor mail  text  ip  data  golos tables  drevo adres tel active
@@ -660,9 +686,9 @@ if ($func == "comm_otvet") { // Ответ на комментарий из ад
     if ($comm_type == 0 or $comm_type == 2) {
       # отправка ответа на сайт
       // Проверка наличия подобного комментария.
-      if ($numrows = $db->sql_numrows($db->sql_query("SELECT cid FROM ".$prefix."_pages_comments WHERE text='$comm_otvet' and num='$comm_pid'")) == 0) { 
+      if ($numrows = $db->sql_numrows($db->sql_query("SELECT `cid` FROM ".$prefix."_pages_comments WHERE `text`='".$comm_otvet."' and `num`='".$comm_pid."'")) == 0) { 
          $db->sql_query("INSERT INTO ".$prefix."_pages_comments ( `cid` , `num` , `avtor` , `mail` , `text` , `ip` , `data`, `drevo`, `adres`, `tel`, `active` ) VALUES ('', '$comm_pid', '$comm_sender', '$adminmail', '$comm_otvet', '$ip', '$now', '$comm_cid', '', '', '1')");
-         $db->sql_query("UPDATE ".$prefix."_pages SET comm=comm+1 WHERE pid='$comm_pid'");
+         $db->sql_query("UPDATE ".$prefix."_pages SET `comm`=`comm`+1 WHERE `pid`='".$comm_pid."'");
       }
     }
     if (($comm_type == 0 or $comm_type == 1) and $comm_mail != "") {
@@ -1036,10 +1062,10 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
 
         if ($row6['active'] == 1) { $p_active_color = ""; $vkl_title = ""; }
         else {
-          $p_active_color = " bgcolor=#dddddd";
+          $p_active_color = " bgcolor='#dddddd'";
           $vkl_title = "<a onclick='offpage(".$pid.",1)' class='button small' title='Включение страницы'>".icon('white small','`')."Включить</a>";
         }
-        $pageslistdel .= "<tr id='1page".$pid."".$p_active_color."' class='tr_hover'><td class='".$gray_date."'><nobr>".$date."</nobr></td><td>".$m_title."</td><td>".$vkl_title."</td><td>
+        $pageslistdel .= "<tr id='1page".$pid."'".$p_active_color."' class='tr_hover'><td class='".$gray_date."'><nobr>".$date."</nobr></td><td>".$m_title."</td><td>".$vkl_title."</td><td>
         <a title='Удалить страницу в Удаленные' onclick='delpage(".$pid.")' class='pointer' style='float:right;'>".icon('red small','T')."</a>
         <a target='_blank' title='Изменить страницу' href='sys.php?op=base_pages_edit_page&name=".$module."&pid=".$pid."' onclick='$(\"#p_".$pid."\").show();'>".icon('orange small','7')."</a> 
         <a title='Открыть страницу на сайте' target='_blank' href='-".$module."_page_".$pid."'>".$title."</a> <span class='hide' id='p_".$pid."'>".icon('green small','*')."</span></td></tr>";
@@ -1136,7 +1162,8 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
         <div style='display:none;' id=comm".$cid.">
         ".$otvet.$mails.$tel."<br><br>
         <div class=bggray>".$txt."</div><br>
-        <a id='show_otvet_link".$cid."' onclick=\"show_otvet_comm(".$cid.",'".$avtor."','".$mail."','".$module."')\" class='button medium'>".icon('orange small','\'')." Ответить на комментарий</a>
+        <a id='show_otvet_link".$cid."' onclick=\"show_otvet_comm(".$cid.",'".$avtor."','".$mail."','".$module."',0)\" class='button medium'>".icon('orange medium','"')." Ответить на комментарий</a> 
+        <a id='show_shablon_link".$cid."' onclick=\"show_otvet_comm(".$cid.",'".$avtor."','".$mail."','".$module."',1)\" class='button small'>".icon('orange small','\'')." Использовать шаблон ответа</a>
         <div id='otvet_comm".$cid."'></div><br><br>
         </div>
         </td></tr>";

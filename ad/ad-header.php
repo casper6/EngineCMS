@@ -9,7 +9,7 @@ if ($postlink != "") $post = "<button class='small' onclick='location.href=\"".$
 $color1 = $color2 = $color3 = $color4 = "gray"; // Цвета 4х кнопок основных категорий админки (Содержание...)
 $color1 = "black";
 $title = aa("Управление сайтом");
-$titles_text = array("base_pages_add_page" => aa("Добавление страницы в раздел"),"base_pages_edit_page"  => aa("Редактирование страницы"),"edit_base_pages_category"  => aa("Редактирование папки"),"subscribe" => aa("Рассылка (список адресатов и их email'ов)"),"options" => aa("Настройка сайта и администратора"),"users" => aa("Настройка пользователей"),"mainpage" => aa("Редактирование оформления"),"mainpage_0" => aa("Редактирование дизайна (HTML)"),"mainpage_1" => aa("Редактирование стиля (CSS)"),"mainpage_2" => aa("Редактирование раздела"),"mainpage_3" => aa("Редактирование блока"),"mainpage_4" => aa("Редактирование поля"),"mainpage_5" => aa("Редактирование базы данных"),"mainpage_6" => aa("Редактирование шаблона"),"mainpage_design" => aa("Добавление дизайна (HTML)"),"mainpage_css" => aa("Добавление стиля (CSS)"),"mainpage_block" => aa("Добавление блока"),"mainpage_spisok" => aa("Добавление поля"),"mainpage_base" => aa("Добавление базы данных"),"mainpage_shablon" => aa("Добавление шаблона"),"mainpage_nastroi" => aa("Настройка элемента сайта"),"mainpage_nastroi2" => aa("Настройка раздела"),"mainpage_nastroi3" => aa("Настройка блока"),"mainpage_element" => aa("Оформление сайта"),"mainpage_stat" => aa("Общая статистика"),"mainpage_stat_page" => aa("Статистика посещений страниц"),"mainpage_stat_search" => aa("Статистика поисковых запросов") );
+$titles_text = array("base_pages_add_page" => aa("Добавление страницы в раздел"),"base_pages_edit_page"  => aa("Редактирование страницы"),"edit_base_pages_category"  => aa("Редактирование папки"),"subscribe" => aa("Рассылка (список адресатов и их email'ов)"),"options" => aa("Настройка сайта"),"users" => aa("Настройка пользователей"),"mainpage" => aa("Редактирование оформления"),"mainpage_0" => aa("Редактирование дизайна (HTML)"),"mainpage_1" => aa("Редактирование стиля (CSS)"),"mainpage_2" => aa("Редактирование раздела"),"mainpage_3" => aa("Редактирование блока"),"mainpage_4" => aa("Редактирование поля"),"mainpage_5" => aa("Редактирование базы данных"),"mainpage_6" => aa("Редактирование шаблона"),"mainpage_design" => aa("Добавление дизайна (HTML)"),"mainpage_css" => aa("Добавление стиля (CSS)"),"mainpage_block" => aa("Добавление блока"),"mainpage_spisok" => aa("Добавление поля"),"mainpage_base" => aa("Добавление базы данных"),"mainpage_shablon" => aa("Добавление шаблона"),"mainpage_nastroi" => aa("Настройка элемента сайта"),"mainpage_nastroi2" => aa("Настройка раздела"),"mainpage_nastroi3" => aa("Настройка блока"),"mainpage_element" => aa("Оформление сайта"),"stat_main" => aa("Общая статистика"),"stat_page" => aa("Статистика посещений страниц"),"stat_search" => aa("Статистика поисковых запросов") );
 if (isset($titles_text[$op])) $title = $titles_text[$op];
 if ($op == "subscribe" || $op == "options" || $op == "users") { $color1 = "gray"; $color3 = "black"; }
 if ($op == "mainpage") {
@@ -22,8 +22,8 @@ if ($op == "mainpage") {
 		$color2 = "gray"; $color3 = "black";
 		if ($type == 3 || $type == 2) $titles_text[$op."_nastroi".$type];
 	}
-	if (strripos($type, "stat") !== false) { $color2 = "gray"; $color4 = "black"; }
 }
+if (strripos($op, "stat") !== false) { $color1 = "gray"; $color4 = "black"; }
 
 header ("Content-Type: text/html; charset=utf-8");
 echo "<!doctype html>
@@ -98,7 +98,7 @@ if ($editor_style == false) {
 	echo "<li class='".$color2."'><a title='".aa("Дизайн, стиль, блоки и прочие элементы оформления сайта")."' href='sys.php?op=mainpage&amp;type=element'><span class='icon gray small' data-icon='Y'></span>".$buttons[1]."</a></li>
 	<li class='".$color3."'><a title='".aa("Настройки сайта")."' href='sys.php?op=options'><span class='icon gray small' data-icon='='></span>".$buttons[2]."</a></li>";
 }
-echo "<li class='last ".$color4."'><a title='".aa("Открыть статистику сайта")."' href='sys.php?op=mainpage&amp;type=stat'><span class='icon gray small' data-icon='j'></span>".$buttons[3]."</a></li>
+echo "<li class='last ".$color4."'><a title='".aa("Открыть статистику сайта")."' href='sys.php?op=stat_main'><span class='icon gray small' data-icon='j'></span>".$buttons[3]."</a></li>
 </ul>
 </div></td></tr>
 <tr><td colspan=2 class='black_polosa h2 mp0'>

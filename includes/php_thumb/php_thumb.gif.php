@@ -13,7 +13,7 @@
 // <bool> = gif_outputAsJpeg(<gif>, filename, [bgcolor]) - use cjpeg if available otherwise uses GD
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Original code by Fabien Ezber
-// Modified by James Heinrich <info@silisoftware.com> for use in phpThumb() - December 10, 2003
+// Modified by James Heinrich <info@silisoftware.com> for use in php_thumb() - December 10, 2003
 // * Added function gif_loadFileToGDimageResource() - this returns a GD image resource
 // * Modified gif_outputAsJpeg() to check if it's running under Windows, or if cjpeg is not
 //   available, in which case it will attempt to output JPEG using GD functions
@@ -37,7 +37,7 @@ function gif_loadFileToGDimageResource($gifFilename, $bgColor = -1)
 {
 	if ($gif = gif_loadFile($gifFilename)) {
 
-		if (!phpthumb_functions::FunctionIsDisabled('set_time_limit')) {
+		if (!php_thumb_functions::FunctionIsDisabled('set_time_limit')) {
 			// shouldn't take nearly this long
 			set_time_limit(120);
 		}
@@ -1096,7 +1096,7 @@ class CGIF
 		$data = $this->m_img->m_data;
 		$nPxl = ($this->m_gfh->m_nHeight - 1) * $this->m_gfh->m_nWidth;
 		for ($y = 0; $y < $this->m_gfh->m_nHeight; $y++) {
-			if (!phpthumb_functions::FunctionIsDisabled('set_time_limit')) {
+			if (!php_thumb_functions::FunctionIsDisabled('set_time_limit')) {
 				set_time_limit(30);
 			}
 			for ($x = 0; $x < $this->m_gfh->m_nWidth; $x++, $nPxl++) {

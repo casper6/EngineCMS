@@ -19,7 +19,7 @@ function pics_refresh(txt){
 		val = value.split('|');
 		if (val[1] == ''  || typeof val[1] == 'undefined') val[1] = 'без имени';
 		id = val[0].replace(".", "").replace("/", "").replace("/", "");
-		if (val[0] != '') $('.pics').append('<div id="' + id + '" class="pic" style="background:url(\'includes/phpThumb/phpThumb.php?src=' + val[0] + '&amp;w=160&amp;h=100&amp;q=0\') no-repeat bottom white;"><a title="Удалить фото" class="button small red white" onclick="pics_replace(\'#' + id + '\',\'' + txt + '\',\'' + value + '\');">×</a><span>' + val[1] + '</span></div>');
+		if (val[0] != '') $('.pics').append('<div id="' + id + '" class="pic" style="background:url(\'includes/php_thumb/php_thumb.php?src=' + val[0] + '&amp;w=160&amp;h=100&amp;q=0\') no-repeat bottom white;"><a title="Удалить фото" class="button small red white" onclick="pics_replace(\'#' + id + '\',\'' + txt + '\',\'' + value + '\');">×</a><span>' + val[1] + '</span></div>');
 	});
 }
 function pics_replace(id,txt,search){
@@ -81,14 +81,21 @@ function save_main(url, op, id, id2) {
       /* error: function(xhr, str) { alert('Возникла ошибка: ' + xhr.responseCode ); } */
     });
 }
-function show_otvet_comm(cid, name, mail, mod) {
+function show_otvet_comm(cid, name, mail, mod, shablon) {
 	if ($('#otvet_comm'+cid).html() == '') {
 		$('#show_otvet_link'+cid).hide();
+		$('#show_shablon_link'+cid).hide();
 		$('#otvet_comm'+cid).html('<div style="float:left;">'+icon('gray medium','u')+'</div><input type=text id="otvet_comm_sender'+cid+'" value="Администратор" size=15 style="width:90%; max-width:800px;"><br>'+icon('gray medium','@')+' Текст ответа:<br><textarea style="width:95%; max-width:800px;height:100px;" id="otvet_comm_txt'+cid+'"></textarea><dt><a onclick=\'new_otvet(0, '+cid+', document.getElementById("otvet_comm_sender'+cid+'").value, document.getElementById("otvet_comm_txt'+cid+'").value, "'+mail+'", "'+mod+'")\' class="button">'+icon('orange small','\'')+' Отправить ответ</a>');
 		if (mail != '') $('#otvet_comm'+cid).append('Отправить только: <a onclick=\'new_otvet(1, '+cid+', document.getElementById("otvet_comm_sender'+cid+'").value, document.getElementById("otvet_comm_txt'+cid+'").value, "'+mail+'", "'+mod+'")\' class=punkt>по email</a> или <a onclick=\'new_otvet(2, '+cid+', document.getElementById("otvet_comm_sender'+cid+'").value, document.getElementById("otvet_comm_txt'+cid+'").value, "'+mail+'", "'+mod+'")\' class=punkt>через сайт</a>');
 		$('#otvet_comm'+cid).append('<br><div id="otvet_send'+cid+'"></div>');
 		$('#otvet_comm_txt'+cid).focus(); 
-		$('#otvet_comm_txt'+cid).val(name+', '); 
+		$('#otvet_comm_txt'+cid).val(name+', ');
+		if (shablon == 1) {
+			$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
+			    data: {'func': 'mail_shablon', 'id': cid},
+			    success: function(data){ $('#otvet_comm'+cid).append(data); }
+			});
+		}
 	}
 }
 function new_otvet(type, id, sender, info, mail, mod) {
@@ -255,6 +262,7 @@ function delpage(id) {
 	});
 	$('#page'+id).hide();
 	$('#1page'+id).hide();
+	$('#openbox1').show().addClass('orange');
 }
 function deletepage(id) {
 	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
@@ -358,3 +366,33 @@ function show_animate(obj) {
 		}
 	}
 }
+
+// функция вставки текста в месте нахождения курсора 
+// Пример: $('#thetext,#thearea').insertAtCaret("Текст для вставки");
+jQuery.fn.extend({
+    insertAtCaret: function(myValue){
+        return this.each(function(i) {
+            if (document.selection) {
+                // Для браузеров типа Internet Explorer
+                this.focus();
+                var sel = document.selection.createRange();
+                sel.text = myValue;
+                this.focus();
+            }
+            else if (this.selectionStart || this.selectionStart == '0') {
+                // Для браузеров типа Firefox и других Webkit-ов
+                var startPos = this.selectionStart;
+                var endPos = this.selectionEnd;
+                var scrollTop = this.scrollTop;
+                this.value = this.value.substring(0, startPos)+myValue+this.value.substring(endPos,this.value.length);
+                this.focus();
+                this.selectionStart = startPos + myValue.length;
+                this.selectionEnd = startPos + myValue.length;
+                this.scrollTop = scrollTop;
+            } else {
+                this.value += myValue;
+                this.focus();
+            }
+        })
+    }
+});

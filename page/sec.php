@@ -100,6 +100,7 @@
     if ($postString > "") {
      $postString .= "&".$postkey."=".$postvalue;
     } else {
+      if (is_array($postvalue)) $postvalue = implode(" ", $postvalue);
      $postString .= $postkey."=".$postvalue;
     }
   }

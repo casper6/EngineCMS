@@ -73,7 +73,15 @@ switch($op) {
     case "backup":
     include("ad/ad-backup.php");
     break;
-    
+
+    case "stat_main":
+    case "stat_page":
+    case "stat_search":
+    case "stat_delete":
+    case "stat_main_delete":
+    include("ad/ad-stat.php");
+    break;
+
 // Добавлены пользователи
     case "users":
     case "add_group":

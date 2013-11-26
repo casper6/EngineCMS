@@ -91,16 +91,18 @@ if ($realadmin==1) {
 	}
 
 	function start_txt_and_csv() {
+		ini_set("auto_detect_line_endings", true); // для правильного импорта файлов функцией file()
 		global $prefix, $db;
-		$id= $_GET["id"];
+		$id = $_GET["id"];
 		$znak = $_POST["znak"];
 		$cat = $_POST["modul"];
 		include("ad/ad-header.php");
 		$result = $db->sql_query("SELECT `file_id` FROM ".$prefix."_txt_and_csv where `id` = '".$id."'") or die('<center>Ошибка</center>');
 		$row = $db->sql_fetchrow($result);
-		$arr = file("files/".$row['file_id']);
+		$arr = file("files/".$row['file_id'], FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 		echo "<div class='light_fon'><div class='black_grad'>
 		<span class='h1'>Выберите поля для импорта данных</span></div>";
+		//print_r($arr);
 		for ($i = 0; $i < 1; $i++) {
 		    $a = iconv("cp1251", "UTF-8",$arr[$i]);
 			$a = str_replace("&quot", "", $a);
@@ -133,6 +135,7 @@ if ($realadmin==1) {
 	}
 
 	function step2_txt_and_csv() {
+		ini_set("auto_detect_line_endings", true); // для правильного импорта файлов функцией file()
 		global $prefix, $db, $now;
 		$id = $_GET["id"];
 		$znak = $_GET["znak"];
@@ -164,7 +167,7 @@ if ($realadmin==1) {
 
 			$result2 = $db->sql_query("SELECT `file_id` FROM ".$prefix."_txt_and_csv where `id`='".$id."'") or die('Ошибка обращения к базе данных');
 			$row = $db->sql_fetchrow($result2);
-			$arr = file("files/".$row['file_id']);
+			$arr = file("files/".$row['file_id'], FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 			$count = count($arr);
 			for ($i = 0; $i < $count; $i++) {
 			    $a = iconv("cp1251", "UTF-8",$arr[$i]); // проверить
@@ -274,6 +277,7 @@ if ($realadmin==1) {
 							      case "1": // текст
 							      case "4": // строка
 							      case "5": // число
+							      case "0": // список 1 значение
 							        if ($type == "5") $elements = filter_var($elements, FILTER_SANITIZE_NUMBER_FLOAT);
 							        // Проверяем наличие подобного элемента
 							        $sql = "SELECT `name`, `pages` FROM ".$prefix."_spiski WHERE `type`='".$name."' and `pages` like '% ".$page_id." %'";
@@ -383,18 +387,6 @@ if ($realadmin==1) {
 							        } 
 							      break;
 							      
-							      case "0": // список (одно значение)
-							        del_spiski($page_id, $name); // Стираем упоминания о списках для переназначения
-							        if ($elements != 0) { // Если это не "Не выбрано"
-							          // узнаем какие страницы уже есть у этого номера из списка
-							          $sql = "SELECT `pages` FROM ".$prefix."_spiski WHERE `id`='".$elements."'";
-							          $result = $db->sql_query($sql);
-							          $row = $db->sql_fetchrow($result);
-							          $save_pages = str_replace("  "," ", $row['pages']." ".$page_id." ");
-							          // теперь присвоем каждому из элементов списка id страницы, которую редактируем.
-							          $db->sql_query("UPDATE `".$prefix."_spiski` SET `pages` =  '".$save_pages."' WHERE `id` =".$elements." LIMIT 1 ;") or die('Ошибка при добавлении страницы в элемент списка');
-							        }
-							      break;
 							    }
   							}
 						} // end while

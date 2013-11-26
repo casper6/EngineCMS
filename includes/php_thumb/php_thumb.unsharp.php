@@ -11,9 +11,9 @@
 /// From: http://vikjavev.no/hovudsida/umtestside.php       //
 //                                                          //
 //  Reformatted by James Heinrich <info@silisoftware.com>   //
-//  for use in phpThumb() on 3 February 2003.               //
+//  for use in php_thumb() on 3 February 2003.               //
 //                                                          //
-//  phpThumb() is found at http://phpthumb.sourceforge.net ///
+//  php_thumb() is found at http://php_thumb.sourceforge.net ///
 //////////////////////////////////////////////////////////////
 
 class phpUnsharpMask {
@@ -50,7 +50,7 @@ class phpUnsharpMask {
 
 		$builtinFilterSucceeded = false;
 		if ($radius == 1) {
-			if (phpthumb_functions::version_compare_replacement(phpversion(), '5.0.0', '>=') && phpthumb_functions::gd_is_bundled()) {
+			if (php_thumb_functions::version_compare_replacement(phpversion(), '5.0.0', '>=') && php_thumb_functions::gd_is_bundled()) {
 				if (ImageFilter($imgCanvas, IMG_FILTER_GAUSSIAN_BLUR) && ImageFilter($imgCanvas2, IMG_FILTER_GAUSSIAN_BLUR)) {
 					$builtinFilterSucceeded = true;
 				}

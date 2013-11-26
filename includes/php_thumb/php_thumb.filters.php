@@ -1,33 +1,33 @@
 <?php
 //////////////////////////////////////////////////////////////
-///  phpThumb() by James Heinrich <info@silisoftware.com>   //
-//        available at http://phpthumb.sourceforge.net     ///
+///  php_thumb() by James Heinrich <info@silisoftware.com>   //
+//        available at http://php_thumb.sourceforge.net     ///
 //////////////////////////////////////////////////////////////
 ///                                                         //
-// phpthumb.filters.php - image processing filter functions //
+// php_thumb.filters.php - image processing filter functions //
 //                                                         ///
 //////////////////////////////////////////////////////////////
 
-class phpthumb_filters {
+class php_thumb_filters {
 
-	var $phpThumbObject = null;
+	var $php_thumbObject = null;
 
-	function phpthumb_filters() {
+	function php_thumb_filters() {
 		return true;
 	}
 
 	function ApplyMask(&$gdimg_mask, &$gdimg_image) {
-		if (phpthumb_functions::gd_version() < 2) {
-			$this->DebugMessage('Skipping ApplyMask() because gd_version is "'.phpthumb_functions::gd_version().'"', __FILE__, __LINE__);
+		if (php_thumb_functions::gd_version() < 2) {
+			$this->DebugMessage('Skipping ApplyMask() because gd_version is "'.php_thumb_functions::gd_version().'"', __FILE__, __LINE__);
 			return false;
 		}
-		if (phpthumb_functions::version_compare_replacement(phpversion(), '4.3.2', '>=')) {
+		if (php_thumb_functions::version_compare_replacement(phpversion(), '4.3.2', '>=')) {
 
 			$this->DebugMessage('Using alpha ApplyMask() technique', __FILE__, __LINE__);
-			if ($gdimg_mask_resized = phpthumb_functions::ImageCreateFunction(ImageSX($gdimg_image), ImageSY($gdimg_image))) {
+			if ($gdimg_mask_resized = php_thumb_functions::ImageCreateFunction(ImageSX($gdimg_image), ImageSY($gdimg_image))) {
 
 				ImageCopyResampled($gdimg_mask_resized, $gdimg_mask, 0, 0, 0, 0, ImageSX($gdimg_image), ImageSY($gdimg_image), ImageSX($gdimg_mask), ImageSY($gdimg_mask));
-				if ($gdimg_mask_blendtemp = phpthumb_functions::ImageCreateFunction(ImageSX($gdimg_image), ImageSY($gdimg_image))) {
+				if ($gdimg_mask_blendtemp = php_thumb_functions::ImageCreateFunction(ImageSX($gdimg_image), ImageSY($gdimg_image))) {
 
 					$color_background = ImageColorAllocate($gdimg_mask_blendtemp, 0, 0, 0);
 					ImageFilledRectangle($gdimg_mask_blendtemp, 0, 0, ImageSX($gdimg_mask_blendtemp), ImageSY($gdimg_mask_blendtemp), $color_background);
@@ -35,11 +35,11 @@ class phpthumb_filters {
 					ImageSaveAlpha($gdimg_mask_blendtemp, true);
 					for ($x = 0; $x < ImageSX($gdimg_image); $x++) {
 						for ($y = 0; $y < ImageSY($gdimg_image); $y++) {
-							//$RealPixel = phpthumb_functions::GetPixelColor($gdimg_mask_blendtemp, $x, $y);
-							$RealPixel = phpthumb_functions::GetPixelColor($gdimg_image, $x, $y);
-							$MaskPixel = phpthumb_functions::GrayscalePixel(phpthumb_functions::GetPixelColor($gdimg_mask_resized, $x, $y));
+							//$RealPixel = php_thumb_functions::GetPixelColor($gdimg_mask_blendtemp, $x, $y);
+							$RealPixel = php_thumb_functions::GetPixelColor($gdimg_image, $x, $y);
+							$MaskPixel = php_thumb_functions::GrayscalePixel(php_thumb_functions::GetPixelColor($gdimg_mask_resized, $x, $y));
 							$MaskAlpha = 127 - (floor($MaskPixel['red'] / 2) * (1 - ($RealPixel['alpha'] / 127)));
-							$newcolor = phpthumb_functions::ImageColorAllocateAlphaSafe($gdimg_mask_blendtemp, $RealPixel['red'], $RealPixel['green'], $RealPixel['blue'], $MaskAlpha);
+							$newcolor = php_thumb_functions::ImageColorAllocateAlphaSafe($gdimg_mask_blendtemp, $RealPixel['red'], $RealPixel['green'], $RealPixel['blue'], $MaskAlpha);
 							ImageSetPixel($gdimg_mask_blendtemp, $x, $y, $newcolor);
 						}
 					}
@@ -73,8 +73,8 @@ class phpthumb_filters {
         ImageAlphaBlending($gdimg, true);
         for ($i = 0; $i < $width; $i++) {
             $alpha = round(($i / $width) * 127);
-            $color1 = phpthumb_functions::ImageHexColorAllocate($gdimg, $hexcolor1, false, $alpha);
-            $color2 = phpthumb_functions::ImageHexColorAllocate($gdimg, $hexcolor2, false, $alpha);
+            $color1 = php_thumb_functions::ImageHexColorAllocate($gdimg, $hexcolor1, false, $alpha);
+            $color2 = php_thumb_functions::ImageHexColorAllocate($gdimg, $hexcolor2, false, $alpha);
 
             ImageLine($gdimg,                   $i,                   $i + 1,                   $i, ImageSY($gdimg) - $i - 1, $color1); // left
             ImageLine($gdimg,                   $i,                   $i    , ImageSX($gdimg) - $i,                   $i    , $color1); // top
@@ -86,7 +86,7 @@ class phpthumb_filters {
 
 
 	function Blur(&$gdimg, $radius=0.5) {
-		// Taken from Torstein Hшnsi's phpUnsharpMask (see phpthumb.unsharp.php)
+		// Taken from Torstein Hшnsi's phpUnsharpMask (see php_thumb.unsharp.php)
 
 		$radius = round(max(0, min($radius, 50)) * 2);
 		if (!$radius) {
@@ -122,20 +122,20 @@ class phpthumb_filters {
 
 
 	function BlurGaussian(&$gdimg) {
-		if (phpthumb_functions::version_compare_replacement(phpversion(), '5.0.0', '>=') && phpthumb_functions::gd_is_bundled()) {
+		if (php_thumb_functions::version_compare_replacement(phpversion(), '5.0.0', '>=') && php_thumb_functions::gd_is_bundled()) {
 			if (ImageFilter($gdimg, IMG_FILTER_GAUSSIAN_BLUR)) {
 				return true;
 			}
 			$this->DebugMessage('FAILED: ImageFilter($gdimg, IMG_FILTER_GAUSSIAN_BLUR)', __FILE__, __LINE__);
 			// fall through and try it the hard way
 		}
-		$this->DebugMessage('FAILED: phpthumb_filters::BlurGaussian($gdimg) [using phpthumb_filters::Blur() instead]', __FILE__, __LINE__);
-		return phpthumb_filters::Blur($gdimg, 0.5);
+		$this->DebugMessage('FAILED: php_thumb_filters::BlurGaussian($gdimg) [using php_thumb_filters::Blur() instead]', __FILE__, __LINE__);
+		return php_thumb_filters::Blur($gdimg, 0.5);
 	}
 
 
 	function BlurSelective(&$gdimg) {
-		if (phpthumb_functions::version_compare_replacement(phpversion(), '5.0.0', '>=') && phpthumb_functions::gd_is_bundled()) {
+		if (php_thumb_functions::version_compare_replacement(phpversion(), '5.0.0', '>=') && php_thumb_functions::gd_is_bundled()) {
 			if (ImageFilter($gdimg, IMG_FILTER_SELECTIVE_BLUR)) {
 				return true;
 			}
@@ -143,7 +143,7 @@ class phpthumb_filters {
 			// fall through and try it the hard way
 		}
 		// currently not implemented "the hard way"
-		$this->DebugMessage('FAILED: phpthumb_filters::BlurSelective($gdimg) [function not implemented]', __FILE__, __LINE__);
+		$this->DebugMessage('FAILED: php_thumb_filters::BlurSelective($gdimg) [function not implemented]', __FILE__, __LINE__);
 		return false;
 	}
 
@@ -154,7 +154,7 @@ class phpthumb_filters {
 		}
 		$amount = max(-255, min(255, $amount));
 
-		if (phpthumb_functions::version_compare_replacement(phpversion(), '5.0.0', '>=') && phpthumb_functions::gd_is_bundled()) {
+		if (php_thumb_functions::version_compare_replacement(phpversion(), '5.0.0', '>=') && php_thumb_functions::gd_is_bundled()) {
 			if (ImageFilter($gdimg, IMG_FILTER_BRIGHTNESS, $amount)) {
 				return true;
 			}
@@ -166,7 +166,7 @@ class phpthumb_filters {
 		$baseamount = (($amount > 0) ? $amount : 0);
 		for ($x = 0; $x < ImageSX($gdimg); $x++) {
 			for ($y = 0; $y < ImageSY($gdimg); $y++) {
-				$OriginalPixel = phpthumb_functions::GetPixelColor($gdimg, $x, $y);
+				$OriginalPixel = php_thumb_functions::GetPixelColor($gdimg, $x, $y);
 				foreach ($OriginalPixel as $key => $value) {
 					$NewPixel[$key] = round($baseamount + ($OriginalPixel[$key] * $scaling));
 				}
@@ -184,7 +184,7 @@ class phpthumb_filters {
 		}
 		$amount = max(-255, min(255, $amount));
 
-		if (phpthumb_functions::version_compare_replacement(phpversion(), '5.0.0', '>=') && phpthumb_functions::gd_is_bundled()) {
+		if (php_thumb_functions::version_compare_replacement(phpversion(), '5.0.0', '>=') && php_thumb_functions::gd_is_bundled()) {
 			// ImageFilter(IMG_FILTER_CONTRAST) has range +100 to -100 (positive numbers make it darker!)
 			$amount = ($amount / 255) * -100;
 			if (ImageFilter($gdimg, IMG_FILTER_CONTRAST, $amount)) {
@@ -201,7 +201,7 @@ class phpthumb_filters {
 		}
 		for ($x = 0; $x < ImageSX($gdimg); $x++) {
 			for ($y = 0; $y < ImageSY($gdimg); $y++) {
-				$OriginalPixel = phpthumb_functions::GetPixelColor($gdimg, $x, $y);
+				$OriginalPixel = php_thumb_functions::GetPixelColor($gdimg, $x, $y);
 				foreach ($OriginalPixel as $key => $value) {
 					$NewPixel[$key] = min(255, max(0, round($OriginalPixel[$key] * $scaling)));
 				}
@@ -215,13 +215,13 @@ class phpthumb_filters {
 	function Colorize(&$gdimg, $amount, $targetColor) {
 		$amount      = (is_numeric($amount)                          ? $amount      : 25);
 		$amountPct   = $amount / 100;
-		$targetColor = (phpthumb_functions::IsHexColor($targetColor) ? $targetColor : 'gray');
+		$targetColor = (php_thumb_functions::IsHexColor($targetColor) ? $targetColor : 'gray');
 
 		if ($amount == 0) {
 			return true;
 		}
 
-		if (phpthumb_functions::version_compare_replacement(phpversion(), '5.0.0', '>=') && phpthumb_functions::gd_is_bundled()) {
+		if (php_thumb_functions::version_compare_replacement(phpversion(), '5.0.0', '>=') && php_thumb_functions::gd_is_bundled()) {
 			if ($targetColor == 'gray') {
 				$targetColor = '808080';
 			}
@@ -244,14 +244,14 @@ class phpthumb_filters {
 
 		for ($x = 0; $x < ImageSX($gdimg); $x++) {
 			for ($y = 0; $y < ImageSY($gdimg); $y++) {
-				$OriginalPixel = phpthumb_functions::GetPixelColor($gdimg, $x, $y);
+				$OriginalPixel = php_thumb_functions::GetPixelColor($gdimg, $x, $y);
 				if ($targetColor == 'gray') {
-					$TargetPixel = phpthumb_functions::GrayscalePixel($OriginalPixel);
+					$TargetPixel = php_thumb_functions::GrayscalePixel($OriginalPixel);
 				}
 				foreach ($TargetPixel as $key => $value) {
 					$NewPixel[$key] = round(max(0, min(255, ($OriginalPixel[$key] * ((100 - $amount) / 100)) + ($TargetPixel[$key] * $amountPct))));
 				}
-				//$newColor = phpthumb_functions::ImageColorAllocateAlphaSafe($gdimg, $NewPixel['red'], $NewPixel['green'], $NewPixel['blue'], $OriginalPixel['alpha']);
+				//$newColor = php_thumb_functions::ImageColorAllocateAlphaSafe($gdimg, $NewPixel['red'], $NewPixel['green'], $NewPixel['blue'], $OriginalPixel['alpha']);
 				$newColor = ImageColorAllocate($gdimg, $NewPixel['red'], $NewPixel['green'], $NewPixel['blue']);
 				ImageSetPixel($gdimg, $x, $y, $newColor);
 			}
@@ -292,12 +292,12 @@ class phpthumb_filters {
 		if ($amount == 0) {
 			return true;
 		}
-		return phpthumb_filters::Colorize($gdimg, $amount, (phpthumb_functions::IsHexColor($color) ? $color : 'gray'));
+		return php_thumb_filters::Colorize($gdimg, $amount, (php_thumb_functions::IsHexColor($color) ? $color : 'gray'));
 	}
 
 
 	function DropShadow(&$gdimg, $distance, $width, $hexcolor, $angle, $fade) {
-		if (phpthumb_functions::gd_version() < 2) {
+		if (php_thumb_functions::gd_version() < 2) {
 			return false;
 		}
 		$distance = ($distance ? $distance : 10);
@@ -320,16 +320,16 @@ class phpthumb_filters {
 		$tempImageWidth  = ImageSX($gdimg)  + abs($Offset['x']);
 		$tempImageHeight = ImageSY($gdimg) + abs($Offset['y']);
 
-		if ($gdimg_dropshadow_temp = phpthumb_functions::ImageCreateFunction($tempImageWidth, $tempImageHeight)) {
+		if ($gdimg_dropshadow_temp = php_thumb_functions::ImageCreateFunction($tempImageWidth, $tempImageHeight)) {
 
 			ImageAlphaBlending($gdimg_dropshadow_temp, false);
 			ImageSaveAlpha($gdimg_dropshadow_temp, true);
-			$transparent1 = phpthumb_functions::ImageColorAllocateAlphaSafe($gdimg_dropshadow_temp, 0, 0, 0, 127);
+			$transparent1 = php_thumb_functions::ImageColorAllocateAlphaSafe($gdimg_dropshadow_temp, 0, 0, 0, 127);
 			ImageFill($gdimg_dropshadow_temp, 0, 0, $transparent1);
 
 			for ($x = 0; $x < ImageSX($gdimg); $x++) {
 				for ($y = 0; $y < ImageSY($gdimg); $y++) {
-					$PixelMap[$x][$y] = phpthumb_functions::GetPixelColor($gdimg, $x, $y);
+					$PixelMap[$x][$y] = php_thumb_functions::GetPixelColor($gdimg, $x, $y);
 				}
 			}
 			for ($x = 0; $x < $tempImageWidth; $x++) {
@@ -338,7 +338,7 @@ class phpthumb_filters {
 					for ($i = 0; $i < 1; $i++) {
 						if (!isset($PixelMap[$x][$y]['alpha']) || ($PixelMap[$x][$y]['alpha'] > 0)) {
 							if (isset($PixelMap[$x + $Offset['x']][$y + $Offset['y']]['alpha']) && ($PixelMap[$x + $Offset['x']][$y + $Offset['y']]['alpha'] < 127)) {
-								$thisColor = phpthumb_functions::ImageHexColorAllocate($gdimg, $hexcolor, false, $PixelMap[$x + $Offset['x']][$y + $Offset['y']]['alpha']);
+								$thisColor = php_thumb_functions::ImageHexColorAllocate($gdimg, $hexcolor, false, $PixelMap[$x + $Offset['x']][$y + $Offset['y']]['alpha']);
 								ImageSetPixel($gdimg_dropshadow_temp, $x, $y, $thisColor);
 							}
 						}
@@ -350,7 +350,7 @@ class phpthumb_filters {
 			for ($x = 0; $x < ImageSX($gdimg); $x++) {
 				for ($y = 0; $y < ImageSY($gdimg); $y++) {
 					if ($PixelMap[$x][$y]['alpha'] < 127) {
-						$thisColor = phpthumb_functions::ImageColorAllocateAlphaSafe($gdimg_dropshadow_temp, $PixelMap[$x][$y]['red'], $PixelMap[$x][$y]['green'], $PixelMap[$x][$y]['blue'], $PixelMap[$x][$y]['alpha']);
+						$thisColor = php_thumb_functions::ImageColorAllocateAlphaSafe($gdimg_dropshadow_temp, $PixelMap[$x][$y]['red'], $PixelMap[$x][$y]['green'], $PixelMap[$x][$y]['blue'], $PixelMap[$x][$y]['alpha']);
 						ImageSetPixel($gdimg_dropshadow_temp, $x, $y, $thisColor);
 					}
 				}
@@ -359,7 +359,7 @@ class phpthumb_filters {
 			ImageSaveAlpha($gdimg, true);
 			ImageAlphaBlending($gdimg, false);
 			//$this->is_alpha = true;
-			$transparent2 = phpthumb_functions::ImageColorAllocateAlphaSafe($gdimg, 0, 0, 0, 127);
+			$transparent2 = php_thumb_functions::ImageColorAllocateAlphaSafe($gdimg, 0, 0, 0, 127);
 			ImageFilledRectangle($gdimg, 0, 0, ImageSX($gdimg), ImageSY($gdimg), $transparent2);
 			ImageCopyResampled($gdimg, $gdimg_dropshadow_temp, 0, 0, 0, 0, ImageSX($gdimg), ImageSY($gdimg), ImageSX($gdimg_dropshadow_temp), ImageSY($gdimg_dropshadow_temp));
 
@@ -370,7 +370,7 @@ class phpthumb_filters {
 
 
 	function EdgeDetect(&$gdimg) {
-		if (phpthumb_functions::version_compare_replacement(phpversion(), '5.0.0', '>=') && phpthumb_functions::gd_is_bundled()) {
+		if (php_thumb_functions::version_compare_replacement(phpversion(), '5.0.0', '>=') && php_thumb_functions::gd_is_bundled()) {
 			if (ImageFilter($gdimg, IMG_FILTER_EDGEDETECT)) {
 				return true;
 			}
@@ -378,40 +378,40 @@ class phpthumb_filters {
 			// fall through and try it the hard way
 		}
 		// currently not implemented "the hard way"
-		$this->DebugMessage('FAILED: phpthumb_filters::EdgeDetect($gdimg) [function not implemented]', __FILE__, __LINE__);
+		$this->DebugMessage('FAILED: php_thumb_filters::EdgeDetect($gdimg) [function not implemented]', __FILE__, __LINE__);
 		return false;
 	}
 
 
 	function Elipse($gdimg) {
-		if (phpthumb_functions::gd_version() < 2) {
+		if (php_thumb_functions::gd_version() < 2) {
 			return false;
 		}
 		// generate mask at twice desired resolution and downsample afterwards for easy antialiasing
-		if ($gdimg_elipsemask_double = phpthumb_functions::ImageCreateFunction(ImageSX($gdimg) * 2, ImageSY($gdimg) * 2)) {
-			if ($gdimg_elipsemask = phpthumb_functions::ImageCreateFunction(ImageSX($gdimg), ImageSY($gdimg))) {
+		if ($gdimg_elipsemask_double = php_thumb_functions::ImageCreateFunction(ImageSX($gdimg) * 2, ImageSY($gdimg) * 2)) {
+			if ($gdimg_elipsemask = php_thumb_functions::ImageCreateFunction(ImageSX($gdimg), ImageSY($gdimg))) {
 
 				$color_transparent = ImageColorAllocate($gdimg_elipsemask_double, 255, 255, 255);
 				ImageFilledEllipse($gdimg_elipsemask_double, ImageSX($gdimg), ImageSY($gdimg), (ImageSX($gdimg) - 1) * 2, (ImageSY($gdimg) - 1) * 2, $color_transparent);
 				ImageCopyResampled($gdimg_elipsemask, $gdimg_elipsemask_double, 0, 0, 0, 0, ImageSX($gdimg), ImageSY($gdimg), ImageSX($gdimg) * 2, ImageSY($gdimg) * 2);
 
-				phpthumb_filters::ApplyMask($gdimg_elipsemask, $gdimg);
+				php_thumb_filters::ApplyMask($gdimg_elipsemask, $gdimg);
 				ImageDestroy($gdimg_elipsemask);
 				return true;
 
 			} else {
-				$this->DebugMessage('$gdimg_elipsemask = phpthumb_functions::ImageCreateFunction() failed', __FILE__, __LINE__);
+				$this->DebugMessage('$gdimg_elipsemask = php_thumb_functions::ImageCreateFunction() failed', __FILE__, __LINE__);
 			}
 			ImageDestroy($gdimg_elipsemask_double);
 		} else {
-			$this->DebugMessage('$gdimg_elipsemask_double = phpthumb_functions::ImageCreateFunction() failed', __FILE__, __LINE__);
+			$this->DebugMessage('$gdimg_elipsemask_double = php_thumb_functions::ImageCreateFunction() failed', __FILE__, __LINE__);
 		}
 		return false;
 	}
 
 
 	function Emboss(&$gdimg) {
-		if (phpthumb_functions::version_compare_replacement(phpversion(), '5.0.0', '>=') && phpthumb_functions::gd_is_bundled()) {
+		if (php_thumb_functions::version_compare_replacement(phpversion(), '5.0.0', '>=') && php_thumb_functions::gd_is_bundled()) {
 			if (ImageFilter($gdimg, IMG_FILTER_EMBOSS)) {
 				return true;
 			}
@@ -419,7 +419,7 @@ class phpthumb_filters {
 			// fall through and try it the hard way
 		}
 		// currently not implemented "the hard way"
-		$this->DebugMessage('FAILED: phpthumb_filters::Emboss($gdimg) [function not implemented]', __FILE__, __LINE__);
+		$this->DebugMessage('FAILED: php_thumb_filters::Emboss($gdimg) [function not implemented]', __FILE__, __LINE__);
 		return false;
 	}
 
@@ -428,7 +428,7 @@ class phpthumb_filters {
 		if (!$x && !$y) {
 			return false;
 		}
-		if ($tempImage = phpthumb_functions::ImageCreateFunction(ImageSX($gdimg), ImageSY($gdimg))) {
+		if ($tempImage = php_thumb_functions::ImageCreateFunction(ImageSX($gdimg), ImageSY($gdimg))) {
 			if ($x) {
 				ImageCopy($tempImage, $gdimg, 0, 0, 0, 0, ImageSX($gdimg), ImageSY($gdimg));
 				for ($x = 0; $x < ImageSX($gdimg); $x++) {
@@ -454,9 +454,9 @@ class phpthumb_filters {
 		$hexcolor1      = ($hexcolor1      ? $hexcolor1      : 'FFFFFF');
 		$hexcolor2      = ($hexcolor2      ? $hexcolor2      : '000000');
 
-		$color_frame = phpthumb_functions::ImageHexColorAllocate($gdimg, $hexcolor_frame);
-		$color1      = phpthumb_functions::ImageHexColorAllocate($gdimg, $hexcolor1);
-		$color2      = phpthumb_functions::ImageHexColorAllocate($gdimg, $hexcolor2);
+		$color_frame = php_thumb_functions::ImageHexColorAllocate($gdimg, $hexcolor_frame);
+		$color1      = php_thumb_functions::ImageHexColorAllocate($gdimg, $hexcolor1);
+		$color2      = php_thumb_functions::ImageHexColorAllocate($gdimg, $hexcolor2);
 		for ($i = 0; $i < $edge_width; $i++) {
 			// outer bevel
 			ImageLine($gdimg,                   $i,                   $i,                   $i, ImageSY($gdimg) - $i, $color1); // left
@@ -488,14 +488,14 @@ class phpthumb_filters {
 
 
 	function Grayscale(&$gdimg) {
-		if (phpthumb_functions::version_compare_replacement(phpversion(), '5.0.0', '>=') && phpthumb_functions::gd_is_bundled()) {
+		if (php_thumb_functions::version_compare_replacement(phpversion(), '5.0.0', '>=') && php_thumb_functions::gd_is_bundled()) {
 			if (ImageFilter($gdimg, IMG_FILTER_GRAYSCALE)) {
 				return true;
 			}
 			$this->DebugMessage('FAILED: ImageFilter($gdimg, IMG_FILTER_GRAYSCALE)', __FILE__, __LINE__);
 			// fall through and try it the hard way
 		}
-		return phpthumb_filters::Colorize($gdimg, 100, 'gray');
+		return php_thumb_filters::Colorize($gdimg, 100, 'gray');
 	}
 
 
@@ -504,13 +504,13 @@ class phpthumb_filters {
 		$ImageSY = ImageSY($gdimg);
 		for ($x = 0; $x < $ImageSX; $x++) {
 			for ($y = 0; $y < $ImageSY; $y++) {
-				$OriginalPixel = phpthumb_functions::GetPixelColor($gdimg, $x, $y);
+				$OriginalPixel = php_thumb_functions::GetPixelColor($gdimg, $x, $y);
 				@$Analysis['red'][$OriginalPixel['red']]++;
 				@$Analysis['green'][$OriginalPixel['green']]++;
 				@$Analysis['blue'][$OriginalPixel['blue']]++;
 				@$Analysis['alpha'][$OriginalPixel['alpha']]++;
 				if ($calculateGray) {
-					$GrayPixel = phpthumb_functions::GrayscalePixel($OriginalPixel);
+					$GrayPixel = php_thumb_functions::GrayscalePixel($OriginalPixel);
 					@$Analysis['gray'][$GrayPixel['red']]++;
 				}
 			}
@@ -530,7 +530,7 @@ class phpthumb_filters {
 		// equivalent of "Auto Contrast" in Adobe Photoshop
 		// method 0 stretches according to RGB colors. Gives a more conservative stretch.
 		// method 1 band stretches according to grayscale which is color-biased (59% green, 30% red, 11% blue). May give a punchier / more aggressive stretch, possibly appearing over-saturated
-		$Analysis = phpthumb_filters::HistogramAnalysis($gdimg, true);
+		$Analysis = php_thumb_filters::HistogramAnalysis($gdimg, true);
 		$keys = array('r'=>'red', 'g'=>'green', 'b'=>'blue', 'a'=>'alpha', '*'=>(($method == 0) ? 'all' : 'gray'));
 		$band = substr($band, 0, 1);
 		if (!isset($keys[$band])) {
@@ -588,7 +588,7 @@ class phpthumb_filters {
 		$ImageSY = ImageSY($gdimg);
 		for ($x = 0; $x < $ImageSX; $x++) {
 			for ($y = 0; $y < $ImageSY; $y++) {
-				$OriginalPixel = phpthumb_functions::GetPixelColor($gdimg, $x, $y);
+				$OriginalPixel = php_thumb_functions::GetPixelColor($gdimg, $x, $y);
 				if ($band == '*') {
 					$new['red']   = min(255, max(0, ($OriginalPixel['red']   - $range_min) * $range_scale));
 					$new['green'] = min(255, max(0, ($OriginalPixel['green'] - $range_min) * $range_scale));
@@ -598,7 +598,7 @@ class phpthumb_filters {
 					$new = $OriginalPixel;
 					$new[$key] = min(255, max(0, ($OriginalPixel[$key] - $range_min) * $range_scale));
 				}
-				$newColor = phpthumb_functions::ImageColorAllocateAlphaSafe($gdimg, $new['red'], $new['green'], $new['blue'], $new['alpha']);
+				$newColor = php_thumb_functions::ImageColorAllocateAlphaSafe($gdimg, $new['red'], $new['green'], $new['blue'], $new['alpha']);
 				ImageSetPixel($gdimg, $x, $y, $newColor);
 			}
 		}
@@ -610,11 +610,11 @@ class phpthumb_filters {
 	function HistogramOverlay(&$gdimg, $bands='*', $colors='', $width=0.25, $height=0.25, $alignment='BR', $opacity=50, $margin_x=5, $margin_y=null) {
 		$margin_y = (is_null($margin_y) ? $margin_x : $margin_y);
 
-		$Analysis = phpthumb_filters::HistogramAnalysis($gdimg, true);
+		$Analysis = php_thumb_filters::HistogramAnalysis($gdimg, true);
 		$histW = round(($width > 1) ? min($width, ImageSX($gdimg)) : ImageSX($gdimg) * $width);
 		$histH = round(($width > 1) ? min($width, ImageSX($gdimg)) : ImageSX($gdimg) * $width);
 		if ($gdHist = ImageCreateTrueColor($histW, $histH)) {
-			$color_back = phpthumb_functions::ImageColorAllocateAlphaSafe($gdHist, 0, 0, 0, 127);
+			$color_back = php_thumb_functions::ImageColorAllocateAlphaSafe($gdHist, 0, 0, 0, 127);
 			ImageFilledRectangle($gdHist, 0, 0, $histW, $histH, $color_back);
 			ImageAlphaBlending($gdHist, false);
 			ImageSaveAlpha($gdHist, true);
@@ -622,7 +622,7 @@ class phpthumb_filters {
 			$HistogramTempWidth  = 256;
 			$HistogramTempHeight = 100;
 			if ($gdHistTemp = ImageCreateTrueColor($HistogramTempWidth, $HistogramTempHeight)) {
-				$color_back_temp = phpthumb_functions::ImageColorAllocateAlphaSafe($gdHistTemp, 255, 0, 255, 127);
+				$color_back_temp = php_thumb_functions::ImageColorAllocateAlphaSafe($gdHistTemp, 255, 0, 255, 127);
 				ImageAlphaBlending($gdHistTemp, false);
 				ImageSaveAlpha($gdHistTemp, true);
 				ImageFilledRectangle($gdHistTemp, 0, 0, ImageSX($gdHistTemp), ImageSY($gdHistTemp), $color_back_temp);
@@ -636,7 +636,7 @@ class phpthumb_filters {
 						continue;
 					}
 					$PeakValue = max($Analysis[$keys[$band]]);
-					$thisColor = phpthumb_functions::ImageHexColorAllocate($gdHistTemp, phpthumb_functions::IsHexColor(@$Colors[$key]) ? $Colors[$key] : $DefaultColors[$band]);
+					$thisColor = php_thumb_functions::ImageHexColorAllocate($gdHistTemp, php_thumb_functions::IsHexColor(@$Colors[$key]) ? $Colors[$key] : $DefaultColors[$band]);
 					for ($x = 0; $x < $HistogramTempWidth; $x++) {
 						ImageLine($gdHistTemp, $x, $HistogramTempHeight - 1, $x, $HistogramTempHeight - 1 - round(@$Analysis[$keys[$band]][$x] / $PeakValue * $HistogramTempHeight), $thisColor);
 					}
@@ -649,7 +649,7 @@ class phpthumb_filters {
 				return false;
 			}
 
-			phpthumb_filters::WatermarkOverlay($gdimg, $gdHist, $alignment, $opacity, $margin_x, $margin_y);
+			php_thumb_filters::WatermarkOverlay($gdimg, $gdHist, $alignment, $opacity, $margin_x, $margin_y);
 			ImageDestroy($gdHist);
 			return true;
 		}
@@ -665,21 +665,21 @@ class phpthumb_filters {
 		$output_width  = ImageSX($gdimg);
 		$output_height = ImageSY($gdimg);
 
-		list($new_width, $new_height) = phpthumb_functions::ProportionalResize($output_width, $output_height, $output_width - max($border_width * 2, $radius_x), $output_height - max($border_width * 2, $radius_y));
+		list($new_width, $new_height) = php_thumb_functions::ProportionalResize($output_width, $output_height, $output_width - max($border_width * 2, $radius_x), $output_height - max($border_width * 2, $radius_y));
 		$offset_x = ($radius_x ? $output_width  - $new_width  - $radius_x : 0);
 		$offset_y = ($radius_y ? $output_height - $new_height - $radius_y : 0);
 
 //header('Content-Type: image/png');
 //ImagePNG($gdimg);
 //exit;
-		if ($gd_border_canvas = phpthumb_functions::ImageCreateFunction($output_width, $output_height)) {
+		if ($gd_border_canvas = php_thumb_functions::ImageCreateFunction($output_width, $output_height)) {
 
 			ImageSaveAlpha($gd_border_canvas, true);
 			ImageAlphaBlending($gd_border_canvas, false);
-			$color_background = phpthumb_functions::ImageColorAllocateAlphaSafe($gd_border_canvas, 255, 255, 255, 127);
+			$color_background = php_thumb_functions::ImageColorAllocateAlphaSafe($gd_border_canvas, 255, 255, 255, 127);
 			ImageFilledRectangle($gd_border_canvas, 0, 0, $output_width, $output_height, $color_background);
 
-			$color_border = phpthumb_functions::ImageHexColorAllocate($gd_border_canvas, (phpthumb_functions::IsHexColor($hexcolor_border) ? $hexcolor_border : '000000'));
+			$color_border = php_thumb_functions::ImageHexColorAllocate($gd_border_canvas, (php_thumb_functions::IsHexColor($hexcolor_border) ? $hexcolor_border : '000000'));
 
 			for ($i = 0; $i < $border_width; $i++) {
 				ImageLine($gd_border_canvas,             floor($offset_x / 2) + $radius_x,                      $i, $output_width - $radius_x - ceil($offset_x / 2),                         $i, $color_border); // top
@@ -712,13 +712,13 @@ class phpthumb_filters {
 				}
 
 			}
-			$this->phpThumbObject->ImageResizeFunction($gd_border_canvas, $gdimg, floor(($output_width - $new_width) / 2), round(($output_height - $new_height) / 2), 0, 0, $new_width, $new_height, $output_width, $output_height);
+			$this->php_thumbObject->ImageResizeFunction($gd_border_canvas, $gdimg, floor(($output_width - $new_width) / 2), round(($output_height - $new_height) / 2), 0, 0, $new_width, $new_height, $output_width, $output_height);
 
 			ImageDestroy($gdimg);
-			$gdimg = phpthumb_functions::ImageCreateFunction($output_width, $output_height);
+			$gdimg = php_thumb_functions::ImageCreateFunction($output_width, $output_height);
 			ImageSaveAlpha($gdimg, true);
 			ImageAlphaBlending($gdimg, false);
-			$gdimg_color_background = phpthumb_functions::ImageColorAllocateAlphaSafe($gdimg, 255, 255, 255, 127);
+			$gdimg_color_background = php_thumb_functions::ImageColorAllocateAlphaSafe($gdimg, 255, 255, 255, 127);
 			ImageFilledRectangle($gdimg, 0, 0, $output_width, $output_height, $gdimg_color_background);
 
 			ImageCopy($gdimg, $gd_border_canvas, 0, 0, 0, 0, $output_width, $output_height);
@@ -728,7 +728,7 @@ class phpthumb_filters {
 
 
 		} else {
-			$this->DebugMessage('FAILED: $gd_border_canvas = phpthumb_functions::ImageCreateFunction('.$output_width.', '.$output_height.')', __FILE__, __LINE__);
+			$this->DebugMessage('FAILED: $gd_border_canvas = php_thumb_functions::ImageCreateFunction('.$output_width.', '.$output_height.')', __FILE__, __LINE__);
 		}
 		return false;
 	}
@@ -741,12 +741,12 @@ class phpthumb_filters {
 		$rotate_angle = $rotate_angle % 360;
 		if ($rotate_angle != 0) {
 
-			$background_color = phpthumb_functions::ImageHexColorAllocate($gdimg_source, $config_background_hexcolor);
+			$background_color = php_thumb_functions::ImageHexColorAllocate($gdimg_source, $config_background_hexcolor);
 
-			if ((phpthumb_functions::gd_version() >= 2) && !$bg && ($rotate_angle % 90)) {
+			if ((php_thumb_functions::gd_version() >= 2) && !$bg && ($rotate_angle % 90)) {
 
 				//$this->DebugMessage('Using alpha rotate', __FILE__, __LINE__);
-				if ($gdimg_rotate_mask = phpthumb_functions::ImageCreateFunction(ImageSX($gdimg_source), ImageSY($gdimg_source))) {
+				if ($gdimg_rotate_mask = php_thumb_functions::ImageCreateFunction(ImageSX($gdimg_source), ImageSY($gdimg_source))) {
 
 					for ($i = 0; $i <= 255; $i++) {
 						$color_mask[$i] = ImageColorAllocate($gdimg_rotate_mask, $i, $i, $i);
@@ -756,7 +756,7 @@ class phpthumb_filters {
 					$imageY = ImageSY($gdimg_source);
 					for ($x = 0; $x < $imageX; $x++) {
 						for ($y = 0; $y < $imageY; $y++) {
-							$pixelcolor = phpthumb_functions::GetPixelColor($gdimg_source, $x, $y);
+							$pixelcolor = php_thumb_functions::GetPixelColor($gdimg_source, $x, $y);
 							ImageSetPixel($gdimg_rotate_mask, $x, $y, $color_mask[255 - round($pixelcolor['alpha'] * 255 / 127)]);
 						}
 					}
@@ -766,9 +766,9 @@ class phpthumb_filters {
 					ImageAlphaBlending($gdimg_source, false);
 					ImageSaveAlpha($gdimg_source, true);
 					//$this->is_alpha = true;
-					$phpThumbFilters = new phpthumb_filters();
-					$phpThumbFilters->phpThumbObject = $this;
-					$phpThumbFilters->ApplyMask($gdimg_rotate_mask, $gdimg_source);
+					$php_thumbFilters = new php_thumb_filters();
+					$php_thumbFilters->php_thumbObject = $this;
+					$php_thumbFilters->ApplyMask($gdimg_rotate_mask, $gdimg_source);
 
 					ImageDestroy($gdimg_rotate_mask);
 
@@ -778,8 +778,8 @@ class phpthumb_filters {
 
 			} else {
 
-				if (phpthumb_functions::gd_version() < 2) {
-					//$this->DebugMessage('Using non-alpha rotate because gd_version is "'.phpthumb_functions::gd_version().'"', __FILE__, __LINE__);
+				if (php_thumb_functions::gd_version() < 2) {
+					//$this->DebugMessage('Using non-alpha rotate because gd_version is "'.php_thumb_functions::gd_version().'"', __FILE__, __LINE__);
 				} elseif ($bg) {
 					//$this->DebugMessage('Using non-alpha rotate because $this->bg is "'.$bg.'"', __FILE__, __LINE__);
 				} elseif ($rotate_angle % 90) {
@@ -798,9 +798,9 @@ class phpthumb_filters {
 
 						//$this->source_width  = ImageSX($gdimg_source);
 						//$this->source_height = ImageSY($gdimg_source);
-						$gdimg_newsrc = phpthumb_functions::ImageCreateFunction(ImageSX($gdimg_source), ImageSY($gdimg_source));
-						$background_color = phpthumb_functions::ImageHexColorAllocate($gdimg_newsrc, $config_background_hexcolor);
-						ImageFilledRectangle($gdimg_newsrc, 0, 0, ImageSX($gdimg_source), ImageSY($gdimg_source), phpthumb_functions::ImageHexColorAllocate($gdimg_newsrc, $config_background_hexcolor));
+						$gdimg_newsrc = php_thumb_functions::ImageCreateFunction(ImageSX($gdimg_source), ImageSY($gdimg_source));
+						$background_color = php_thumb_functions::ImageHexColorAllocate($gdimg_newsrc, $config_background_hexcolor);
+						ImageFilledRectangle($gdimg_newsrc, 0, 0, ImageSX($gdimg_source), ImageSY($gdimg_source), php_thumb_functions::ImageHexColorAllocate($gdimg_newsrc, $config_background_hexcolor));
 						ImageCopy($gdimg_newsrc, $gdimg_source, 0, 0, 0, 0, ImageSX($gdimg_source), ImageSY($gdimg_source));
 						ImageDestroy($gdimg_source);
 						unset($gdimg_source);
@@ -830,7 +830,7 @@ class phpthumb_filters {
 
 
 	function MeanRemoval(&$gdimg) {
-		if (phpthumb_functions::version_compare_replacement(phpversion(), '5.0.0', '>=') && phpthumb_functions::gd_is_bundled()) {
+		if (php_thumb_functions::version_compare_replacement(phpversion(), '5.0.0', '>=') && php_thumb_functions::gd_is_bundled()) {
 			if (ImageFilter($gdimg, IMG_FILTER_MEAN_REMOVAL)) {
 				return true;
 			}
@@ -838,13 +838,13 @@ class phpthumb_filters {
 			// fall through and try it the hard way
 		}
 		// currently not implemented "the hard way"
-		$this->DebugMessage('FAILED: phpthumb_filters::MeanRemoval($gdimg) [function not implemented]', __FILE__, __LINE__);
+		$this->DebugMessage('FAILED: php_thumb_filters::MeanRemoval($gdimg) [function not implemented]', __FILE__, __LINE__);
 		return false;
 	}
 
 
 	function Negative(&$gdimg) {
-		if (phpthumb_functions::version_compare_replacement(phpversion(), '5.0.0', '>=') && phpthumb_functions::gd_is_bundled()) {
+		if (php_thumb_functions::version_compare_replacement(phpversion(), '5.0.0', '>=') && php_thumb_functions::gd_is_bundled()) {
 			if (ImageFilter($gdimg, IMG_FILTER_NEGATE)) {
 				return true;
 			}
@@ -855,8 +855,8 @@ class phpthumb_filters {
 		$ImageSY = ImageSY($gdimg);
 		for ($x = 0; $x < $ImageSX; $x++) {
 			for ($y = 0; $y < $ImageSY; $y++) {
-				$currentPixel = phpthumb_functions::GetPixelColor($gdimg, $x, $y);
-				$newColor = phpthumb_functions::ImageColorAllocateAlphaSafe($gdimg, (~$currentPixel['red'] & 0xFF), (~$currentPixel['green'] & 0xFF), (~$currentPixel['blue'] & 0xFF), $currentPixel['alpha']);
+				$currentPixel = php_thumb_functions::GetPixelColor($gdimg, $x, $y);
+				$newColor = php_thumb_functions::ImageColorAllocateAlphaSafe($gdimg, (~$currentPixel['red'] & 0xFF), (~$currentPixel['green'] & 0xFF), (~$currentPixel['blue'] & 0xFF), $currentPixel['alpha']);
 				ImageSetPixel($gdimg, $x, $y, $newColor);
 			}
 		}
@@ -868,8 +868,8 @@ class phpthumb_filters {
 		// generate mask at twice desired resolution and downsample afterwards for easy antialiasing
 		// mask is generated as a white double-size elipse on a triple-size black background and copy-paste-resampled
 		// onto a correct-size mask image as 4 corners due to errors when the entire mask is resampled at once (gray edges)
-		if ($gdimg_cornermask_triple = phpthumb_functions::ImageCreateFunction($radius_x * 6, $radius_y * 6)) {
-			if ($gdimg_cornermask = phpthumb_functions::ImageCreateFunction(ImageSX($gdimg), ImageSY($gdimg))) {
+		if ($gdimg_cornermask_triple = php_thumb_functions::ImageCreateFunction($radius_x * 6, $radius_y * 6)) {
+			if ($gdimg_cornermask = php_thumb_functions::ImageCreateFunction(ImageSX($gdimg), ImageSY($gdimg))) {
 
 				$color_transparent = ImageColorAllocate($gdimg_cornermask_triple, 255, 255, 255);
 				ImageFilledEllipse($gdimg_cornermask_triple, $radius_x * 3, $radius_y * 3, $radius_x * 4, $radius_y * 4, $color_transparent);
@@ -881,18 +881,18 @@ class phpthumb_filters {
 				ImageCopyResampled($gdimg_cornermask, $gdimg_cornermask_triple, ImageSX($gdimg) - $radius_x, ImageSY($gdimg) - $radius_y, $radius_x * 3, $radius_y * 3, $radius_x, $radius_y, $radius_x * 2, $radius_y * 2);
 				ImageCopyResampled($gdimg_cornermask, $gdimg_cornermask_triple, ImageSX($gdimg) - $radius_x,                           0, $radius_x * 3,     $radius_y, $radius_x, $radius_y, $radius_x * 2, $radius_y * 2);
 
-				phpthumb_filters::ApplyMask($gdimg_cornermask, $gdimg);
+				php_thumb_filters::ApplyMask($gdimg_cornermask, $gdimg);
 				ImageDestroy($gdimg_cornermask);
 				$this->DebugMessage('RoundedImageCorners('.$radius_x.', '.$radius_y.') succeeded', __FILE__, __LINE__);
 				return true;
 
 			} else {
-				$this->DebugMessage('FAILED: $gdimg_cornermask = phpthumb_functions::ImageCreateFunction('.ImageSX($gdimg).', '.ImageSY($gdimg).')', __FILE__, __LINE__);
+				$this->DebugMessage('FAILED: $gdimg_cornermask = php_thumb_functions::ImageCreateFunction('.ImageSX($gdimg).', '.ImageSY($gdimg).')', __FILE__, __LINE__);
 			}
 			ImageDestroy($gdimg_cornermask_triple);
 
 		} else {
-			$this->DebugMessage('FAILED: $gdimg_cornermask_triple = phpthumb_functions::ImageCreateFunction('.($radius_x * 6).', '.($radius_y * 6).')', __FILE__, __LINE__);
+			$this->DebugMessage('FAILED: $gdimg_cornermask_triple = php_thumb_functions::ImageCreateFunction('.($radius_x * 6).', '.($radius_y * 6).')', __FILE__, __LINE__);
 		}
 		return false;
 	}
@@ -906,20 +906,20 @@ class phpthumb_filters {
 		} else {
 			$amount = abs($amount);
 		}
-		return phpthumb_filters::Desaturate($gdimg, $amount, $color);
+		return php_thumb_filters::Desaturate($gdimg, $amount, $color);
 	}
 
 
 	function Sepia(&$gdimg, $amount, $targetColor) {
 		$amount      = (is_numeric($amount) ? max(0, min(100, $amount)) : 50);
 		$amountPct   = $amount / 100;
-		$targetColor = (phpthumb_functions::IsHexColor($targetColor) ? $targetColor : 'A28065');
+		$targetColor = (php_thumb_functions::IsHexColor($targetColor) ? $targetColor : 'A28065');
 
 		if ($amount == 0) {
 			return true;
 		}
 
-		if (phpthumb_functions::version_compare_replacement(phpversion(), '5.0.0', '>=') && phpthumb_functions::gd_is_bundled()) {
+		if (php_thumb_functions::version_compare_replacement(phpversion(), '5.0.0', '>=') && php_thumb_functions::gd_is_bundled()) {
 			if (ImageFilter($gdimg, IMG_FILTER_GRAYSCALE)) {
 
 				$r = round($amountPct * hexdec(substr($targetColor, 0, 2)));
@@ -947,8 +947,8 @@ class phpthumb_filters {
 		$ImageSY = ImageSY($gdimg);
 		for ($x = 0; $x < $ImageSX; $x++) {
 			for ($y = 0; $y < $ImageSY; $y++) {
-				$OriginalPixel = phpthumb_functions::GetPixelColor($gdimg, $x, $y);
-				$GrayPixel = phpthumb_functions::GrayscalePixel($OriginalPixel);
+				$OriginalPixel = php_thumb_functions::GetPixelColor($gdimg, $x, $y);
+				$GrayPixel = php_thumb_functions::GrayscalePixel($OriginalPixel);
 
 				// http://www.gimpguru.org/Tutorials/SepiaToning/
 				// "In the traditional sepia toning process, the tinting occurs most in
@@ -958,7 +958,7 @@ class phpthumb_filters {
 				foreach ($TargetPixel as $key => $value) {
 					$NewPixel[$key] = round(max(0, min(255, $GrayPixel[$key] * (1 - $SepiaAmount) + ($TargetPixel[$key] * $SepiaAmount))));
 				}
-				$newColor = phpthumb_functions::ImageColorAllocateAlphaSafe($gdimg, $NewPixel['red'], $NewPixel['green'], $NewPixel['blue'], $OriginalPixel['alpha']);
+				$newColor = php_thumb_functions::ImageColorAllocateAlphaSafe($gdimg, $NewPixel['red'], $NewPixel['green'], $NewPixel['blue'], $OriginalPixel['alpha']);
 				ImageSetPixel($gdimg, $x, $y, $newColor);
 			}
 		}
@@ -971,7 +971,7 @@ class phpthumb_filters {
 		if ($amount == 0) {
 			return true;
 		}
-		if (phpthumb_functions::version_compare_replacement(phpversion(), '5.0.0', '>=') && phpthumb_functions::gd_is_bundled()) {
+		if (php_thumb_functions::version_compare_replacement(phpversion(), '5.0.0', '>=') && php_thumb_functions::gd_is_bundled()) {
 			if (ImageFilter($gdimg, IMG_FILTER_SMOOTH, $amount)) {
 				return true;
 			}
@@ -979,7 +979,7 @@ class phpthumb_filters {
 			// fall through and try it the hard way
 		}
 		// currently not implemented "the hard way"
-		$this->DebugMessage('FAILED: phpthumb_filters::Smooth($gdimg, '.$amount.') [function not implemented]', __FILE__, __LINE__);
+		$this->DebugMessage('FAILED: php_thumb_filters::Smooth($gdimg, '.$amount.') [function not implemented]', __FILE__, __LINE__);
 		return false;
 	}
 
@@ -995,8 +995,8 @@ class phpthumb_filters {
 			$cutoffRange = $max_limit - $min_limit;
 			for ($x = 0; $x < $width; $x++) {
 				for ($y = 0; $y < $height; $y++) {
-					$currentPixel = phpthumb_functions::GetPixelColor($gdimg, $x, $y);
-					$colorDiff = phpthumb_functions::PixelColorDifferencePercent($currentPixel, $targetPixel);
+					$currentPixel = php_thumb_functions::GetPixelColor($gdimg, $x, $y);
+					$colorDiff = php_thumb_functions::PixelColorDifferencePercent($currentPixel, $targetPixel);
 					$grayLevel = min($cutoffRange, MAX(0, -$min_limit + $colorDiff)) * (255 / MAX(1, $cutoffRange));
 					$newColor = ImageColorAllocate($gdimg_mask, $grayLevel, $grayLevel, $grayLevel);
 					ImageSetPixel($gdimg_mask, $x, $y, $newColor);
@@ -1014,12 +1014,12 @@ class phpthumb_filters {
 		$cutoff = min(255, max(0, ($cutoff ? $cutoff : 128)));
 		for ($x = 0; $x < $width; $x++) {
 			for ($y = 0; $y < $height; $y++) {
-				$currentPixel = phpthumb_functions::GetPixelColor($gdimg, $x, $y);
-				$grayPixel = phpthumb_functions::GrayscalePixel($currentPixel);
+				$currentPixel = php_thumb_functions::GetPixelColor($gdimg, $x, $y);
+				$grayPixel = php_thumb_functions::GrayscalePixel($currentPixel);
 				if ($grayPixel['red'] < $cutoff) {
-					$newColor = phpthumb_functions::ImageColorAllocateAlphaSafe($gdimg, 0x00, 0x00, 0x00, $currentPixel['alpha']);
+					$newColor = php_thumb_functions::ImageColorAllocateAlphaSafe($gdimg, 0x00, 0x00, 0x00, $currentPixel['alpha']);
 				} else {
-					$newColor = phpthumb_functions::ImageColorAllocateAlphaSafe($gdimg, 0xFF, 0xFF, 0xFF, $currentPixel['alpha']);
+					$newColor = php_thumb_functions::ImageColorAllocateAlphaSafe($gdimg, 0xFF, 0xFF, 0xFF, $currentPixel['alpha']);
 				}
 				ImageSetPixel($gdimg, $x, $y, $newColor);
 			}
@@ -1046,35 +1046,35 @@ class phpthumb_filters {
 		$colors = max(min($colors, 256), 2);
 		// ImageTrueColorToPalette usually makes ugly colors, the replacement is a bit better
 		//ImageTrueColorToPalette($gdimg, $dither, $colors);
-		phpthumb_filters::ImageTrueColorToPalette2($gdimg, $dither, $colors);
+		php_thumb_filters::ImageTrueColorToPalette2($gdimg, $dither, $colors);
 		return true;
 	}
 
 
 	function WhiteBalance(&$gdimg, $targetColor='') {
-		if (phpthumb_functions::IsHexColor($targetColor)) {
+		if (php_thumb_functions::IsHexColor($targetColor)) {
 			$targetPixel = array(
 				'red'   => hexdec(substr($targetColor, 0, 2)),
 				'green' => hexdec(substr($targetColor, 2, 2)),
 				'blue'  => hexdec(substr($targetColor, 4, 2))
 			);
 		} else {
-			$Analysis = phpthumb_filters::HistogramAnalysis($gdimg, false);
+			$Analysis = php_thumb_filters::HistogramAnalysis($gdimg, false);
 			$targetPixel = array(
 				'red'   => max(array_keys($Analysis['red'])),
 				'green' => max(array_keys($Analysis['green'])),
 				'blue'  => max(array_keys($Analysis['blue']))
 			);
 		}
-		$grayValue = phpthumb_functions::GrayscaleValue($targetPixel['red'], $targetPixel['green'], $targetPixel['blue']);
+		$grayValue = php_thumb_functions::GrayscaleValue($targetPixel['red'], $targetPixel['green'], $targetPixel['blue']);
 		$scaleR = $grayValue / $targetPixel['red'];
 		$scaleG = $grayValue / $targetPixel['green'];
 		$scaleB = $grayValue / $targetPixel['blue'];
 
 		for ($x = 0; $x < ImageSX($gdimg); $x++) {
 			for ($y = 0; $y < ImageSY($gdimg); $y++) {
-				$currentPixel = phpthumb_functions::GetPixelColor($gdimg, $x, $y);
-				$newColor = phpthumb_functions::ImageColorAllocateAlphaSafe(
+				$currentPixel = php_thumb_functions::GetPixelColor($gdimg, $x, $y);
+				$newColor = php_thumb_functions::ImageColorAllocateAlphaSafe(
 					$gdimg,
 					max(0, min(255, round($currentPixel['red']   * $scaleR))),
 					max(0, min(255, round($currentPixel['green'] * $scaleG))),
@@ -1106,11 +1106,11 @@ class phpthumb_filters {
 		}
 
 		$metaTextArray = array(
-			'^Fb' =>       $this->phpThumbObject->getimagesizeinfo['filesize'],
-			'^Fk' => round($this->phpThumbObject->getimagesizeinfo['filesize'] / 1024),
-			'^Fm' => round($this->phpThumbObject->getimagesizeinfo['filesize'] / 1048576),
-			'^X'  => $this->phpThumbObject->getimagesizeinfo[0],
-			'^Y'  => $this->phpThumbObject->getimagesizeinfo[1],
+			'^Fb' =>       $this->php_thumbObject->getimagesizeinfo['filesize'],
+			'^Fk' => round($this->php_thumbObject->getimagesizeinfo['filesize'] / 1024),
+			'^Fm' => round($this->php_thumbObject->getimagesizeinfo['filesize'] / 1048576),
+			'^X'  => $this->php_thumbObject->getimagesizeinfo[0],
+			'^Y'  => $this->php_thumbObject->getimagesizeinfo[1],
 			'^x'  => ImageSX($gdimg),
 			'^y'  => ImageSY($gdimg),
 			'^^'  => '^',
@@ -1125,7 +1125,7 @@ class phpthumb_filters {
 		if (@is_readable($ttffont) && is_file($ttffont)) {
 
 			$opacity = 100 - intval(max(min($opacity, 100), 0));
-			$letter_color_text = phpthumb_functions::ImageHexColorAllocate($gdimg, $hex_color, false, $opacity * 1.27);
+			$letter_color_text = php_thumb_functions::ImageHexColorAllocate($gdimg, $hex_color, false, $opacity * 1.27);
 
 			$this->DebugMessage('Using TTF font "'.$ttffont.'"', __FILE__, __LINE__);
 
@@ -1215,11 +1215,11 @@ class phpthumb_filters {
 				}
 
 				//ImageRectangle($gdimg, $text_origin_x + $min_x, $text_origin_y + $TTFbox[1], $text_origin_x + $min_x + $text_width, $text_origin_y + $TTFbox[1] - $text_height, $letter_color_text);
-				if (phpthumb_functions::IsHexColor($bg_color)) {
+				if (php_thumb_functions::IsHexColor($bg_color)) {
 					$text_background_alpha = round(127 * ((100 - min(max(0, $bg_opacity), 100)) / 100));
-					$text_color_background = phpthumb_functions::ImageHexColorAllocate($gdimg, $bg_color, false, $text_background_alpha);
+					$text_color_background = php_thumb_functions::ImageHexColorAllocate($gdimg, $bg_color, false, $text_background_alpha);
 				} else {
-					$text_color_background = phpthumb_functions::ImageHexColorAllocate($gdimg, 'FFFFFF', false, 127);
+					$text_color_background = php_thumb_functions::ImageHexColorAllocate($gdimg, 'FFFFFF', false, 127);
 				}
 				$x1 = $text_origin_x + $min_x;
 				$y1 = $text_origin_y + $TTFbox[1];
@@ -1297,20 +1297,20 @@ class phpthumb_filters {
 				$text_width   = max($text_width, ImageFontWidth($size) * strlen($line));
 				$text_height += ImageFontHeight($size);
 			}
-			if ($img_watermark = phpthumb_functions::ImageCreateFunction($text_width, $text_height)) {
+			if ($img_watermark = php_thumb_functions::ImageCreateFunction($text_width, $text_height)) {
 				ImageAlphaBlending($img_watermark, false);
-				if (phpthumb_functions::IsHexColor($bg_color)) {
+				if (php_thumb_functions::IsHexColor($bg_color)) {
 					$text_background_alpha = round(127 * ((100 - min(max(0, $bg_opacity), 100)) / 100));
-					$text_color_background = phpthumb_functions::ImageHexColorAllocate($img_watermark, $bg_color, false, $text_background_alpha);
+					$text_color_background = php_thumb_functions::ImageHexColorAllocate($img_watermark, $bg_color, false, $text_background_alpha);
 				} else {
-					$text_color_background = phpthumb_functions::ImageHexColorAllocate($img_watermark, 'FFFFFF', false, 127);
+					$text_color_background = php_thumb_functions::ImageHexColorAllocate($img_watermark, 'FFFFFF', false, 127);
 				}
 				$this->DebugMessage('WatermarkText() calling ImageFilledRectangle($img_watermark, 0, 0, '.ImageSX($img_watermark).', '.ImageSY($img_watermark).', $text_color_background)', __FILE__, __LINE__);
 				ImageFilledRectangle($img_watermark, 0, 0, ImageSX($img_watermark), ImageSY($img_watermark), $text_color_background);
 
 				if ($angle && function_exists('ImageRotate')) {
 					// using $img_watermark_mask is pointless if ImageRotate function isn't available
-					if ($img_watermark_mask = phpthumb_functions::ImageCreateFunction($text_width, $text_height)) {
+					if ($img_watermark_mask = php_thumb_functions::ImageCreateFunction($text_width, $text_height)) {
 						$mask_color_background = ImageColorAllocate($img_watermark_mask, 0, 0, 0);
 						ImageAlphaBlending($img_watermark_mask, false);
 						ImageFilledRectangle($img_watermark_mask, 0, 0, ImageSX($img_watermark_mask), ImageSY($img_watermark_mask), $mask_color_background);
@@ -1318,7 +1318,7 @@ class phpthumb_filters {
 					}
 				}
 
-				$text_color_watermark = phpthumb_functions::ImageHexColorAllocate($img_watermark, $hex_color);
+				$text_color_watermark = php_thumb_functions::ImageHexColorAllocate($img_watermark, $hex_color);
 				foreach ($textlines as $key => $line) {
 					switch ($alignment) {
 						case 'C':
@@ -1386,11 +1386,11 @@ class phpthumb_filters {
 				if ($angle && $img_watermark_mask) {
 					$img_watermark      = ImageRotate($img_watermark,      $angle, $text_color_background);
 					$img_watermark_mask = ImageRotate($img_watermark_mask, $angle, $mask_color_background);
-					phpthumb_filters::ApplyMask($img_watermark_mask, $img_watermark);
+					php_thumb_filters::ApplyMask($img_watermark_mask, $img_watermark);
 				}
-				//phpthumb_filters::WatermarkOverlay($gdimg, $img_watermark, $alignment, $opacity, $margin);
-				$this->DebugMessage('WatermarkText() calling phpthumb_filters::WatermarkOverlay($gdimg, $img_watermark, '.($originOffsetX.'x'.$originOffsetY).', '.$opacity.', 0)', __FILE__, __LINE__);
-				phpthumb_filters::WatermarkOverlay($gdimg, $img_watermark, $originOffsetX.'x'.$originOffsetY, $opacity, 0);
+				//php_thumb_filters::WatermarkOverlay($gdimg, $img_watermark, $alignment, $opacity, $margin);
+				$this->DebugMessage('WatermarkText() calling php_thumb_filters::WatermarkOverlay($gdimg, $img_watermark, '.($originOffsetX.'x'.$originOffsetY).', '.$opacity.', 0)', __FILE__, __LINE__);
+				php_thumb_filters::WatermarkOverlay($gdimg, $img_watermark, $originOffsetX.'x'.$originOffsetY, $opacity, 0);
 				ImageDestroy($img_watermark);
 				return true;
 			}
@@ -1419,11 +1419,11 @@ class phpthumb_filters {
 			} else {
 				switch ($alignment) {
 					case '*':
-						if ($gdimg_tiledwatermark = phpthumb_functions::ImageCreateFunction($img_source_width, $img_source_height)) {
+						if ($gdimg_tiledwatermark = php_thumb_functions::ImageCreateFunction($img_source_width, $img_source_height)) {
 
 							ImageAlphaBlending($gdimg_tiledwatermark, false);
 							ImageSaveAlpha($gdimg_tiledwatermark, true);
-							$text_color_transparent = phpthumb_functions::ImageColorAllocateAlphaSafe($gdimg_tiledwatermark, 255, 0, 255, 127);
+							$text_color_transparent = php_thumb_functions::ImageColorAllocateAlphaSafe($gdimg_tiledwatermark, 255, 0, 255, 127);
 							ImageFill($gdimg_tiledwatermark, 0, 0, $text_color_transparent);
 
 							// set the tiled image transparent color to whatever the untiled image transparency index is
@@ -1518,7 +1518,7 @@ class phpthumb_filters {
 			ImageAlphaBlending($gdimg_dest, false);
 			ImageSaveAlpha($gdimg_dest, true);
 			ImageSaveAlpha($img_watermark, true);
-			phpthumb_functions::ImageCopyRespectAlpha($gdimg_dest, $img_watermark, $watermark_destination_x, $watermark_destination_y, 0, 0, $watermark_source_width, $watermark_source_height, $watermark_opacity_percent);
+			php_thumb_functions::ImageCopyRespectAlpha($gdimg_dest, $img_watermark, $watermark_destination_x, $watermark_destination_y, 0, 0, $watermark_source_width, $watermark_source_height, $watermark_opacity_percent);
 
 			return true;
 		}
@@ -1527,8 +1527,8 @@ class phpthumb_filters {
 
 
 	function DebugMessage($message, $file='', $line='') {
-		if (is_object($this->phpThumbObject)) {
-			return $this->phpThumbObject->DebugMessage($message, $file, $line);
+		if (is_object($this->php_thumbObject)) {
+			return $this->php_thumbObject->DebugMessage($message, $file, $line);
 		}
 		return false;
 	}

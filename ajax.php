@@ -417,7 +417,7 @@ if ($func == "shop_show_card") {
 					$itogo += intval($tovar[1]) * $count;
 					$count = " x ".$count;
 				}
-				if ($pic != "") $pic = "<a href='".$tovar[3]."' title='".$tovar[2]."' class='lightbox' rel='group'><div class='shop_card_minifoto' style='background:url(\"includes/phpThumb/phpThumb.php?src=".$tovar[3]."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0\") center center no-repeat;'></div></a>";
+				if ($pic != "") $pic = "<a href='".$tovar[3]."' title='".$tovar[2]."' class='lightbox' rel='group'><div class='shop_card_minifoto' style='background:url(\"includes/php_thumb/php_thumb.php?src=".$tovar[3]."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0\") center center no-repeat;'></div></a>";
 				$info .= "<div class='shop_card'>
 				<div class='shop_card_price'><b>".$shop_text_val1.$tovar[1].$shop_text_val2.$count."</b>
 				<a class='shop_card_del' onclick='shop_del_tovar(".$id_page.")'>".$shop_text_delete."</a></div>

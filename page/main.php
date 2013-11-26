@@ -873,7 +873,7 @@ function showcat($cid=0, $pag=0, $slovo="") {
   if ($div_or_table == 0) {
     if ($cid == 0) $soderganieALL .= $soderganieALL2."</table>"; // </table>
     elseif ($view != 4) $soderganieALL .= $filter_number."<table cellspacing=0 cellpadding=3 width=100%>".$soderganieALL2."</table>";
-  } else $soderganieALL .= $filter_number.$soderganieALL2."<div style='clear:both;'></div>";
+  } else $soderganieALL .= $filter_number.$soderganieALL2."<div class='clear'></div>";
 
   if ($view!=4) {
     // Нумерация страниц
@@ -2466,7 +2466,7 @@ function savecomm($avtor, $avtory, $info, $num, $comm_otvet, $maily, $mail, $adr
       if ($lang == "en") if ($mail_server2 == "com" || $mail_server2 == "net" || $mail_server2 == "org" || $mail_server2 == "gov") $active = 1;
     } else $active = 1;
     //$pattern = "/www.onlinedisk.ru\/image\/"."(\d+)"."\/"."([а-яА-ЯA-Za-z0-9 _-]+)".".jpg"."/i";
-    //$replacement = "<a href=http://www.onlinedisk.ru/get_image.php?id=$1 target=_blank><img src=/includes/phpThumb/phpThumb.php?src=http://www.onlinedisk.ru/get_image.php?id=$1&w=200&h=200&q=45 width=200 /></a> ";
+    //$replacement = "<a href=http://www.onlinedisk.ru/get_image.php?id=$1 target=_blank><img src=/includes/php_thumb/php_thumb.php?src=http://www.onlinedisk.ru/get_image.php?id=$1&w=200&h=200&q=45 width=200 /></a> ";
     //$info =  preg_replace($pattern, $replacement, $info);
 
     $location = "-".$DBName."_page_".$num."#comm";

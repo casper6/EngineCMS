@@ -122,7 +122,7 @@ echo "<title>".aa("Вход в Администрирование")."</title>
 <link REL='shortcut icon' href='images/favicon_cms.png' type='image/x-icon'><script src='includes/jquery183.min.js'></script>
 <script type='text/javascript' src='includes/css-frameworks/kickstart/js/kickstart.js'></script><link rel='stylesheet' type='text/css' href='includes/css-frameworks/kickstart/css/kickstart.css' media='all' /><link rel='stylesheet' type='text/css' href='includes/css-frameworks/kickstart/style.css' media='all' />
 </head>
-<body style='background: url(images/adfon/23.png);' class='elements'>
+<body style='background: rgb(236, 220, 252);' class='elements'>
 <div class='grid'><form action='red' class=radius style='margin-top:20px; ' method='post' id=form>
 <h5>".aa("Вход в администрирование")."</h5>
 <input type=text name=aid size=20> <label>".aa("Псевдоним")."</label><br>
@@ -184,7 +184,9 @@ function GraphicAdmin() {
 
 	$del_page = $db->sql_numrows($db->sql_query("SELECT `pid` FROM ".$prefix."_".$pages." where `tables`='del' limit 0,1"));
 	$del_razdel = $db->sql_numrows($db->sql_query("SELECT `id` FROM ".$prefix."_mainpage where `type`='2' and `tables`='del' limit 0,1"));
-	if ($del_page > 0 || $del_razdel > 0) $soderganie_menu .= "<button id='openbox1' class='nothing dark_pole2' onclick=\"openbox('1','".aa("Удаленное")."'); $('#razdels').hide('slow')\" title='".aa("Удаленные страницы")."'><span class=\"icon gray small\" data-icon=\"T\"></span>".$buttons[2]."</button>";
+
+	if ($del_page > 0 || $del_razdel > 0) $deleted_class = ""; else $deleted_class = " hide";
+	$soderganie_menu .= "<button id='openbox1' class='nothing dark_pole2".$deleted_class."' onclick=\"openbox('1','".aa("Удаленное")."'); $('#razdels').hide('slow')\" title='".aa("Удаленные страницы")."'><span class=\"icon gray small\" data-icon=\"T\"></span>".$buttons[2]."</button>";
 
 	$backup_page = $db->sql_numrows($db->sql_query("SELECT `pid` FROM ".$prefix."_".$pages." where `tables`='backup' limit 0,1"));
 	if ($backup_page > 0) $soderganie_menu .= "<button id='openbox2' class='nothing dark_pole2' onclick=\"openbox('2','".aa("Резервные копии")."'); $('#razdels').hide('slow')\" title='".aa("Резервные копии созданных ранее страниц")."'><span class=\"icon gray small\" data-icon=\"t\"></span>".$buttons[3]."</button>";
