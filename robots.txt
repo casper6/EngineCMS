@@ -24,7 +24,7 @@ Disallow: /*/*
 Disallow: /admin*
 Disallow: /red*
 Disallow: /--login*
-Disallow: /--slovo*
+Disallow: /--tags*
 Disallow: /--search*
 Disallow: /--email*
 Disallow: /--adduser*

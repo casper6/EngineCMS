@@ -34,12 +34,12 @@ if (!$_POST['em'] || !$_POST['pa']) {
   if ($a != 1) {
     $soderganie .= '<p class="errormes">'.ss("ОШИБКА - Пользователь не найден или пароль неверный").'</p>
   	<br><p class="errormes">'.ss("Если забыли пароль введите свой email для получения нового пароля").'</p>'; 
-  	$soderganie .= "<form class='regforma' action='--login' method='post'>
+  	$soderganie .= "<form class='regforma' action='login' method='post'>
   	<br><input class='regmail' type='email' name='em' value='".$em."'>
   	<br><input type='submit' name='submit' value='".ss("Вспомнить пароль")."'></form>"; 
   } else {
     user_set_tokens($em);
-    header("Location: --users_".$_COOKIE['user_id']); 
+    header("Location: users_".$_COOKIE['user_id']); 
   } 
 } }
 list($design_for_reg, $stil) = design_and_style($design);

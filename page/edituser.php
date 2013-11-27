@@ -1,7 +1,7 @@
 <?php
 require_once('page/functions_users.php');
 global $soderganie, $prefix, $db, $design;
-$soderganie .= "<form class=regforma' action='--edituser_".$_COOKIE['user_id']."' method='post'>
+$soderganie .= "<form class=regforma' action='edituser_".$_COOKIE['user_id']."' method='post'>
 	    <br><input class='regname' type='name' name='user_name' value='' placeholder='".$_COOKIE['user_name']."'>
 		<br><input type='submit' name='submit' value='".ss("Обновить имя")."'></form>";
 if ($_POST["submit"] == ss("Обновить имя")) {
@@ -14,7 +14,7 @@ if ($_POST["submit"] == ss("Обновить имя")) {
     $soderganie .= '<p class="errormes">'.ss("Имя обновленно, дождитесь обновления страницы").' <meta http-equiv="Refresh" content="6"/>';
   }
 }
-$soderganie .= "<form class='regforma' action='--edituser_".$_COOKIE['user_id']."' method='post' enctype='multipart/form-data'>
+$soderganie .= "<form class='regforma' action='edituser_".$_COOKIE['user_id']."' method='post' enctype='multipart/form-data'>
 <br><input class='regfile' type='file' name='file' placeholder='".ss("Выберите фотографию")."'>
 <br><input type='submit' name='submit2' value='".ss("Обновить фото")."'></form>";
 if ($_POST["submit2"] == ss("Обновить фото")) { 
@@ -165,7 +165,7 @@ if ($numrows > 0) {
       } // end if
     } // end foreach
   } // end if
-  $soderganie .= "<form class='regforma' action='--edituser_".$_COOKIE['user_id']."' method='post' enctype='multipart/form-data'>";
+  $soderganie .= "<form class='regforma' action='edituser_".$_COOKIE['user_id']."' method='post' enctype='multipart/form-data'>";
   $sql = "select `id`, `title`, `name`, `text` from ".$prefix."_mainpage where `useit`= '1,".$_COOKIE['user_group']."' and `type`='4' order by `title`";
   $result = $db->sql_query($sql);
   while ($row = $db->sql_fetchrow($result)) {

@@ -390,7 +390,7 @@ function GraphicAdmin() {
 			$tags = array_unique($tags);
 			if (count($tags) > 0) {
 				foreach( $tags as $tag_key => $tag_name ) {
-					$output .= "<url>\n<loc>http://".$siteurl."/--slovo_".str_replace( "%","-", urlencode( $tag_name ) )."</loc>\n<changefreq>weekly</changefreq>\n<priority>0.4</priority>\n</url>\n";
+					$output .= "<url>\n<loc>http://".$siteurl."/slovo_".str_replace( "%","-", urlencode( $tag_name ) )."</loc>\n<changefreq>weekly</changefreq>\n<priority>0.4</priority>\n</url>\n";
 				}
 			}
 		// Сборка карты сайта

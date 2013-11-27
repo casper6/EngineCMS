@@ -441,7 +441,7 @@ if ($func == "registration_form") {
 	if ($cnt == 0) $info .= ss("Для регистрации необходимо создать группу.");
 	else {
 	    // Вывести форму на экран 
-	    $info .= "<form class='regforma' action='--register' method='post'>
+	    $info .= "<form class='regforma' action='register' method='post'>
 	    <br><input class='regmail' type='email' name='em' value='' placeholder='".ss("Email")."'>";
 	    if ($cnt > 1) {
 	        $info .= "<br><select name='groups' class='groups'><option value='0'>".ss("Выберите группу")."</option>";

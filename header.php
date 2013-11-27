@@ -8,203 +8,157 @@ require_once("mainfile.php");
 global $strelka, $siteurl, $prefix, $name, $db, $admin, $sitename, $pagetitle, $pagetitle2, $registr, $pogoda, $flash, $keywords, $description, $counter, $startdate, $adminmail, $keywords2, $description2, $stopcopy, $nocash, $blocks, $http_siteurl, $display_errors, $gallery_css3, $gallery_lightbox, $gallery_carusel, $gallery_sly, $deviceType;
 $nocash = $gallery_css3 = $gallery_lightbox = $gallery_carusel = $gallery_sly = $gallery_sly_full = $mp3_player = false;
 if ($name == "") $name = "index";
-
-if ($name=="-email") { // занесение мыла как скрытого комментария Убрать !!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	global $DBName, $prefix, $db, $now, $ip;
-	$avtor = trim(str_replace("  "," ",filter($avtor, "nohtml")));
-	$mail = trim(str_replace("  "," ",filter($mail, "nohtml")));
-	if (!strpos($mail, "@")) {
-		echo "<h2>".ss("Вы указали неправильный Email.")."</h2>
-		".ss("Попробуйте еще раз")."
-		<form method='POST' action='--email' class='main_mail_form'><table><tr>
-		<td align='right'>".ss("Email").": </td><td><input type='text' name='mail' class='main_mail_input' size='10'></td></tr><tr>
-		<td align='right'>".ss("Имя").": </td><td><input type='text' name='avtor' value='".$avtor."' class='main_mail_input' size='10'></td></tr><tr><td colspan='2' align='right'><input type='submit' name='ok' value='".ss("Подписаться на рассылку")."'></td></tr></table></form>";
-	} else {
-		// проверка наличия такого email в БД 
-		$numrows = $db->sql_numrows($db->sql_query("SELECT `cid` from ".$prefix."_pages_comments where `mail`='$mail' and `num`='0'"));
-		if ($numrows == 0) {
-			$db->sql_query("INSERT INTO ".$prefix."_pages_comments ( `cid` , `num` , `avtor` , `mail` , `text` , `ip` , `data`, `drevo`, `adres`, `tel`, `active` ) VALUES ('', '0', '".mysql_real_escape_string($avtor)."', '".mysql_real_escape_string($mail)."', '', '$ip', '$now', '', '', '', '1')");
-			echo "<h2>".ss("Вы подписались на рассылку.")."</h2><h2> Спасибо!</h2>";
-		} else {
-			echo "<h2>".ss("Вы уже подписаны на рассылку.")."</h2>";
-		}
-	}
-	echo "<br>".ss("Вы можете вернуться назад (нажав на клавиатуре клавишу &larr;BackSpace) или перейти")." <a href='/'>".ss("на Главную страницу")."</a>.";
-	exit;
-} else { // Сборка дизайна с разделом и Блоки
+$index_ok = true; // индексирование поисковиками
+// Сборка дизайна с разделом и Блоки
+	
 	###################################################### БЛОКИ
 	$block = ""; // Определение раздела
-	switch ($name) { // упростить
-	    case "-search":
-		    list($block, $stil) = include('page/search.php'); 
-		    $pagetitle = $slov." — ".ss("Поиск")." — ";
-	    	break;
-	    case "-slovo":
-		    list($block, $stil) = include('page/tags.php');	
-		    $pagetitle = $slovo." — ".ss("Тэги")." — ";
-	    	break;
-	    case "-register":
-		    list($block, $stil) = include('page/reg.php'); 
-		    $pagetitle = ss("Регистрация")." — ";
-	    	break;
-	    case "-login":
-		    list($block, $stil) = include('page/login.php'); 
-		    $pagetitle = ss("Вход")." — ";
-	    	break;
-	    case "-user":
-		    list($block, $stil) = include('page/user.php');	
-		    $pagetitle = ss("Страница пользователя");
-	    	break;
-	    case "-users":
-		    list($block, $stil) = include('page/users.php'); 
-		    $pagetitle = ss("Личная анкета")." — ";
-	    	break;
-	    case "-adduser":
-		    list($block, $stil) = include('page/adduser.php'); 
-		    $pagetitle = ss("Добавление публикации")." — ";
-	    	break;
-	    case "-edituser":
-		    list($block, $stil) = include('page/edituser.php'); 
-		    $pagetitle = ss("Редактирование личной анкеты")." — ";
-	    	break;
-	    case "-logout":
-		    list($block, $stil) = include('page/logout.php'); 
-		    $pagetitle = ss("Вы вышли")." — ";
-	    	break;
-		default:
-		global $title_razdels, $txt_razdels, $useit_razdels, $pid, $class;
 
-		// Настройки раздела по-умолчанию
-		$designpages = 0; // т.е. дизайн для страниц = дизайну разделов
+$pagetitles = array(
+	"-email" => ss("Подписка на рассылку новостей сайта")." — ",
+	"-search" => ss("Поиск")." — ",
+	"-tags" => ss("Тэги")." — ",
+	"-register" => ss("Регистрация")." — ",
+	"-login" => ss("Вход")." — ",
+	"-user" => ss("Страница пользователя"),
+	"-users" => ss("Личная анкета")." — ",
+	"-adduser" => ss("Добавление публикации")." — ",
+	"-edituser" => ss("Редактирование личной анкеты")." — ",
+	"-logout" => ss("Вы вышли")." — ");
+if (isset($pagetitles[$name])) {
+    list($block, $stil) = include('page/'.substr($name, 1).'.php'); 
+    $pagetitle = $pagetitles[$name];
+} else {
+	global $title_razdels, $txt_razdels, $useit_razdels, $pid, $class;
 
-		if (!isset($title_razdels[$name])) {
-			$title_razdels[$name] = "";
-			// Проверяем на наличие среди паролей
-			foreach ($pass_razdels as $key => $pass_razdel) {
-				if (in_array($name, $pass_razdel)) {
-					$pass_name = $name;
-					$pass_rename = $name = $key;
-				}
+	// Настройки раздела по-умолчанию
+	$designpages = 0; // т.е. дизайн для страниц = дизайну разделов
+
+	if (!isset($title_razdels[$name])) {
+		$title_razdels[$name] = "";
+		// Проверяем на наличие среди паролей
+		foreach ($pass_razdels as $key => $pass_razdel) {
+			if (in_array($name, $pass_razdel)) {
+				$pass_name = $name;
+				$pass_rename = $name = $key;
 			}
 		}
-		$index_ok = true; // индексирование поисковиками
-		if ($title_razdels[$name] == "") {
-			$main_title = ""; // ИЗМЕНА на mainfile
-			$main_file = "";
-			$main_options = "";
+	}
+	
+	if ($title_razdels[$name] == "") {
+		$main_title = ""; // ИЗМЕНА на mainfile
+		$main_file = "";
+		$main_options = "";
+	} else {
+		if (isset($pass_razdels[$name])) $index_ok = false;
+		$main_title = $title_razdels[$name];
+		$main_file = array();
+		if (trim($txt_razdels[$name])!="") {
+			$main_file = explode("|",  $txt_razdels[$name]);
+			$main_options = $main_file[1];
+			$main_file = $main_file[0];
 		} else {
-			if (isset($pass_razdels[$name])) $index_ok = false;
-			$main_title = $title_razdels[$name];
-			$main_file = array();
-			if (trim($txt_razdels[$name])!="") {
-				$main_file = explode("|",  $txt_razdels[$name]);
-				$main_options = $main_file[1];
-				$main_file = $main_file[0];
-			} else {
-				$main_options = "";
-				$main_file = "";
+			$main_options = "";
+			$main_file = "";
+		}
+	}
+	// Содержание главной страницы раздела
+	if (isset ($useit_razdels[$name]) ) $soda = $useit_razdels[$name]; else $soda = "";
+
+	parse_str($main_options); // Включили все настройки раздела
+
+	// Выбор дизайна:
+	if ($pid == 0) { // для разделов
+		if (isset($design_tablet)) if ($design_tablet != 0 && $deviceType == "tablet") $design = $design_tablet;
+		if (isset($design_phone)) if ($design_phone != 0 && $deviceType == "phone") $design = $design_phone;
+	} else { // для страниц
+		if (isset($designpages)) if ($designpages != 0) $design = $designpages;
+		if (isset($designpages_tablet)) if ($designpages_tablet != 0 && $deviceType == "tablet") $design = $designpages_tablet;
+		if (isset($designpages_phone)) if ($designpages_phone != 0 && $deviceType == "phone") $design = $designpages_phone;
+	}
+	// Разберемся со стилями id, type, name, opis, sort, pages, parent
+	$style_type = array();
+	$style_name = array();
+	$style_pages = array();
+	$sql7 = "SELECT id, type, name, pages FROM ".$prefix."_spiski";
+	$result7 = $db->sql_query($sql7);
+	while ($row7 = $db->sql_fetchrow($result7)) {
+		$style_id = $row7['id'];
+		$style_type[$style_id] = $row7['type'];
+		$style_name[$style_id] = $row7['name'];
+		$style_pages[$style_id] = $row7['pages'];
+	}
+
+	// Определение дизайна и использованных стилей в дизайне
+	if (isset($design)) list($block, $stil) = design_and_style($design); else $block = "0";
+	if ($block == "0") { Header("Location: error.php?code=666"); die; }
+	//die("Ошибка: «Адрес раздела» (".$name.") введен неправильно. Перейдите на <a href=/>Главную страницу</a>.");
+
+	// Получаем список всех папок
+	$titles_papka = titles_papka(0,1);
+
+	// Определяем Главный раздел
+	/*
+	if ($name == "index") {
+		// Смотрим чему равно значение Главной страницы
+		global $useit_razdels; // ЗАМЕНА mainpage2
+		$name13 = $useit_razdels[$name];
+
+		// Ставим содержание главной страницы
+		$main_file = $name13;
+		$main_options = "no";
+	}
+	*/
+	global $soderganie, $soderganie2, $options, $ModuleName, $tip, $DBName, $page_cat, $http_siteur, $cid, $pid, $include_tabs;
+	$options = $main_options;
+	$ModuleName = $main_title;
+	$DBName = $name; // важно не менять!
+	$tip = $main_file;
+
+	if (file_exists("page/main.php") and $main_options != "no") {
+		require_once("page/main.php");
+
+		$soda = explode(aa("[следующий]"),$soda);
+		// $soda[0] - для всех
+		// $soda[1] - только для главной страницы
+		// $soda[2] - только для папок
+		// $soda[3] - только для страниц
+		$soda_col = count($soda);
+		if (strpos(" ".$soda[0], aa("[содержание]"))) $soderganie = str_replace(aa("[содержание]"), $soderganie, $soda[0]);
+		else {
+			$soderganie = str_replace(aa("[название]"), "<div class='cat_title'><h1 class='cat_categorii_link'>".$ModuleName."</h1></div>", $soda[0]);
+			$soderganie = str_replace(aa("[страницы]"), $soderganie2, $soderganie);
+			// Добавление табов
+		    if (strpos(" ".$soderganie, "{{")) {
+		      if ($include_tabs == false) { include ('page/tabs.php'); $include_tabs = true; }
+		      if (strpos(" ".$soderganie, "{{")) $soderganie = show_tabs($soderganie);
+		    }
+		}
+
+		if ($cid=="" and ($pid=="" or $pid==0) and $soda_col > 1) {
+			if (strpos(" ".$soda[1],aa("[содержание]"))) $soderganie = str_replace(aa("[содержание]"), $soderganie, $soda[1]);
+			else {
+				$soderganie = str_replace(aa("[название]"), "<div class='cat_title'><A class='cat_categorii_link' href=-".$DBName.">".$ModuleName."</a></div><div class='polosa'></div>", $soda[1]);
+				$soderganie = str_replace(aa("[страницы]"), $soderganie2, $soderganie);
 			}
 		}
 		// Содержание главной страницы раздела
-		if (isset ($useit_razdels[$name]) ) $soda = $useit_razdels[$name]; else $soda = "";
+		if ($cid!="" and ($pid=="" or $pid==0) and $soda_col > 2) $soderganie = str_replace(aa("[содержание]"), $soderganie, $soda[2]);
+		if ($cid=="" and $pid!="" and $pid!=0 and $soda_col > 3) $soderganie = str_replace(aa("[содержание]"), $soderganie, $soda[3]); 
 
-		parse_str($main_options); // Включили все настройки раздела
+		$block = str_replace(aa("[содержание]"), $soderganie, $block); 
+		// Тело раздела ставится в дизайн
 
-		// Выбор дизайна:
-		if ($pid == 0) { // для разделов
-			if (isset($design_tablet)) if ($design_tablet != 0 && $deviceType == "tablet") $design = $design_tablet;
-			if (isset($design_phone)) if ($design_phone != 0 && $deviceType == "phone") $design = $design_phone;
-		} else { // для страниц
-			if (isset($designpages)) if ($designpages != 0) $design = $designpages;
-			if (isset($designpages_tablet)) if ($designpages_tablet != 0 && $deviceType == "tablet") $design = $designpages_tablet;
-			if (isset($designpages_phone)) if ($designpages_phone != 0 && $deviceType == "phone") $design = $designpages_phone;
+		// Нумерация страниц ставится в дизайн
+		if (strpos(" ".$block, aa("[нумерация]"))) {
+			global $topic_links_global;
+			$block = str_replace(aa("[нумерация]"), $topic_links_global, $block);
 		}
-		// Разберемся со стилями id, type, name, opis, sort, pages, parent
-		$style_type = array();
-		$style_name = array();
-		$style_pages = array();
-		$sql7 = "SELECT id, type, name, pages FROM ".$prefix."_spiski";
-		$result7 = $db->sql_query($sql7);
-		while ($row7 = $db->sql_fetchrow($result7)) {
-			$style_id = $row7['id'];
-			$style_type[$style_id] = $row7['type'];
-			$style_name[$style_id] = $row7['name'];
-			$style_pages[$style_id] = $row7['pages'];
-		}
-
-		// Определение дизайна и использованных стилей в дизайне
-		if (isset($design)) list($block, $stil) = design_and_style($design); else $block = "0";
-		if ($block == "0") { Header("Location: error.php?code=666"); die; }
-		//die("Ошибка: «Адрес раздела» (".$name.") введен неправильно. Перейдите на <a href=/>Главную страницу</a>.");
-
-		// Получаем список всех папок
-		$titles_papka = titles_papka(0,1);
-
-		// Определяем Главный раздел
-		/*
-		if ($name == "index") {
-			// Смотрим чему равно значение Главной страницы
-			global $useit_razdels; // ЗАМЕНА mainpage2
-			$name13 = $useit_razdels[$name];
-
-			// Ставим содержание главной страницы
-			$main_file = $name13;
-			$main_options = "no";
-		}
-		*/
-		global $soderganie, $soderganie2, $options, $ModuleName, $tip, $DBName, $page_cat, $http_siteur, $cid, $pid, $include_tabs;
-		$options = $main_options;
-		$ModuleName = $main_title;
-		$DBName = $name; // важно не менять!
-		$tip = $main_file;
-
-		if (file_exists("page/main.php") and $main_options != "no") {
-			require_once("page/main.php");
-
-			$soda = explode(aa("[следующий]"),$soda);
-			// $soda[0] - для всех
-			// $soda[1] - только для главной страницы
-			// $soda[2] - только для папок
-			// $soda[3] - только для страниц
-			$soda_col = count($soda);
-			if (strpos(" ".$soda[0], aa("[содержание]"))) $soderganie = str_replace(aa("[содержание]"), $soderganie, $soda[0]);
-			else {
-				$soderganie = str_replace(aa("[название]"), "<div class='cat_title'><h1 class='cat_categorii_link'>".$ModuleName."</h1></div>", $soda[0]);
-				$soderganie = str_replace(aa("[страницы]"), $soderganie2, $soderganie);
-				// Добавление табов
-			    if (strpos(" ".$soderganie, "{{")) {
-			      if ($include_tabs == false) { include ('page/tabs.php'); $include_tabs = true; }
-			      if (strpos(" ".$soderganie, "{{")) $soderganie = show_tabs($soderganie);
-			    }
-			}
-
-			if ($cid=="" and ($pid=="" or $pid==0) and $soda_col > 1) {
-				if (strpos(" ".$soda[1],aa("[содержание]"))) $soderganie = str_replace(aa("[содержание]"), $soderganie, $soda[1]);
-				else {
-					$soderganie = str_replace(aa("[название]"), "<div class='cat_title'><A class='cat_categorii_link' href=-".$DBName.">".$ModuleName."</a></div><div class='polosa'></div>", $soda[1]);
-					$soderganie = str_replace(aa("[страницы]"), $soderganie2, $soderganie);
-				}
-			}
-			// Содержание главной страницы раздела
-			if ($cid!="" and ($pid=="" or $pid==0) and $soda_col > 2) $soderganie = str_replace(aa("[содержание]"), $soderganie, $soda[2]);
-			if ($cid=="" and $pid!="" and $pid!=0 and $soda_col > 3) $soderganie = str_replace(aa("[содержание]"), $soderganie, $soda[3]); 
-
-			$block = str_replace(aa("[содержание]"), $soderganie, $block); 
-			// Тело раздела ставится в дизайн
-
-			// Нумерация страниц ставится в дизайн
-			if (strpos(" ".$block, aa("[нумерация]"))) {
-				global $topic_links_global;
-				$block = str_replace(aa("[нумерация]"), $topic_links_global, $block);
-			}
-		// Ставим содержание модуля
-		} else {
-			$block = str_replace(aa("[содержание]"), $main_file, $block);
-		}
-		break;
-	} // крышка определения поиска и тегов
-
-/////////////////////////////////////////////////////////////////////////////////////////
+	// Ставим содержание модуля
+	} else {
+		$block = str_replace(aa("[содержание]"), $main_file, $block);
+	}
+} // крышка определения поиска и тегов
 
 	# НАЧАЛО Определение блоков и их заполнение
 	$sql2 = "select id,name,title,text,useit,shablon,color from ".$prefix."_mainpage where `type`='3' and `tables`='pages'"; 
@@ -382,13 +336,10 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 	}
 
 $js = '';
-
 if (strpos(" ".$block, "[".$titleX."]")) { // определение наличия блока на странице
-
 if ($block_color != "1") {
-
 switch ($nameX) {
-
+				//////////////////////////////////////////////////////////////////////////////////////////////////////
 case "0": # Блок страниц раздела
 	if ($open_new_window == 1) $blank = " target='_blank'"; 
 	else $blank = "";
@@ -534,7 +485,7 @@ case "0": # Блок страниц раздела
 				case "0": $rss = "<a name=rss title='Информация не доступна через RSS-подписку' class=red_link>RSS</a>"; break;
 			} */
 		}
-		////////////////////////////////////////////////////////////////////////////////////!!!!!!!!!!!!!!!!!!!!!!!!!
+						//////////
 		if (trim($class) != "") {
 			$class = trim($class);
 			// Смотрим класс стиля, выбранный из списка для блока показываемой страницы.
@@ -617,7 +568,7 @@ case "0": # Блок страниц раздела
 			$textX .= strtr($shablonX,$tr);
 			$number++;
 			
-		///////////////////////////////////////////////////////////////////////////////////
+						////////////////////////////
 		} else { // если без шаблона
 			 // Если показывать название папки
 			if (($catshow == 1 or $shablon != "") and $p_cid != 0) $cat = "<span class=\"block_li_cat ".$class."\">".$titles_papka[$p_cid]."</span> ".$strelka." "; else $cat = "";
@@ -1390,7 +1341,7 @@ case "13": # ОБЛАКО ТЕГОВ
 	$tagcloud = "";
 	foreach ($tags as $tag_name => $tag_col) {
 		if ($tags3[$tag_col] != "1") {
-			$tagcloud .= "<noindex><a class='slovo' href='--slovo_".$tag_name."' style='color:".$tags4[$tag_col]."; font-size: ".$tags3[$tag_col]."pх;' rel='nofollow'>".$tag_name."</a></noindex> ";
+			$tagcloud .= "<noindex><a class='slovo' href='slovo_".$tag_name."' style='color:".$tags4[$tag_col]."; font-size: ".$tags3[$tag_col]."pх;' rel='nofollow'>".$tag_name."</a></noindex> ";
 		}
 	}
 	$textX .= $tagcloud;
@@ -1679,7 +1630,6 @@ case "31": # Блок JS
 	}
 	$type = ""; break;
 //case "8":
-
 	} # конец switch - определения типа блока
 } else $block = str_replace("[".$titleX."]", "", $block); // убираем отключенный блок
 } // закрытие if наличие блока на странице
@@ -1713,7 +1663,7 @@ case "31": # Блок JS
 		".ss("Загрузка...")."
 		</div>
 		<div class='vhod hide'>
-		<form class='reg_forma' action='--login' method='post'> 
+		<form class='reg_forma' action='login' method='post'> 
 		<input class='reg_mail' type='text' name='em' value='' placeholder='".ss("Email")."'>
 		<br><input class='reg_pass' type='password' name='pa' value='' placeholder='".ss("Пароль")."'>
 		<br><input type='submit' name='submit' value='".ss("Войти")."'></form>
@@ -1844,16 +1794,16 @@ case "31": # Блок JS
 	}
 
 	// Ставим поиск
-	$search = "<form method=POST action=\"/--search\" class='main_search_form'><input type='search' name=slovo placeholder='Поиск'><input type='submit' name='ok' value='".ss("Найти")."' class='main_search_button'></form>";
+	$search = "<form method='POST' action='search' class='main_search_form'><input type='search' name='slovo' placeholder='Поиск'><input type='submit' name='ok' value='".ss("Найти")."' class='main_search_button'></form>";
 	$block=str_replace(aa("[поиск]"), $search, $block);
 
 	// Ставим подписку
 	if (strpos(" ".$block, aa("[подписка"))) {
-		$search = "<form method=POST action=\"/--email\" class=main_mail_form><table width=100%><tr><td align=right>".ss("Электропочта:")." </td><td><input type=text name=mail class=main_mail_input size=10 class=all_width></td></tr><tr><td align=right>".ss("Имя:")." </td><td><input type=text name=avtor class=main_mail_input size=10 class=all_width></td></tr><tr><td colspan=2 align=right><input type='submit' name='ok' value='".ss("Подписаться")."'></td></tr></table></form>";
+		$search = "<form method='POST' action='email' class='main_mail_form'><table width='100%'><tr><td align='right'>".ss("Электропочта:")." </td><td><input type='text' name='mail' class='main_mail_input' size='10' class='all_width'></td></tr><tr><td align='right'>".ss("Имя:")." </td><td><input type='text' name='avtor' class='main_mail_input' size='10' class='all_width'></td></tr><tr><td colspan='2' align='right'><input type='submit' name='ok' value='".ss("Подписаться")."'></td></tr></table></form>";
 		$block=str_replace(aa("[подписка]"), $search, $block);
 
 		// Ставим подписку в линию
-		$search = "<form method=POST action=\"/--email\" class=main_mail_form><table><tr><td><b>".ss("Рассылка:")." </b></td><td>&nbsp;".ss("Электропочта:")."</td><td><input type=text name=mail class=main_mail_input size=10 class=all_width></td><td>&nbsp;Имя:</td><td><input type=text name=avtor class=main_mail_input size=10 class=all_width></td><td colspan=2 align=right><input type='submit' name='ok' value='".ss("Подписаться")."'></td></tr></table></form>";
+		$search = "<form method='POST' action='email' class='main_mail_form'><table><tr><td><b>".ss("Рассылка:")." </b></td><td>&nbsp;".ss("Электропочта:")."</td><td><input type='text' name='mail' class='main_mail_input' size='10' class='all_width'></td><td>&nbsp;Имя:</td><td><input type='text' name='avtor' class='main_mail_input' size='10' class='all_width'></td><td colspan='2' align='right'><input type='submit' name='ok' value='".ss("Подписаться")."'></td></tr></table></form>";
 		$block=str_replace(aa("[подписка_горизонт]"), $search, $block);
 	}
 
@@ -2097,7 +2047,7 @@ case "31": # Блок JS
 			//$block=str_replace("{".$row_title3."}", "<a class='auto_link' href=-".$rows['module']."_page_".$rows['pid'].">".$row_title."</a>", $block);
 		}
 	}
-}
+
 
 # ФОРМИРОВАНИЕ СТРАНИЦЫ
 $pagetit = str_replace("<br>","",$pagetitle);

@@ -393,7 +393,7 @@ function showcat($cid=0, $pag=0, $slovo="") {
     $tagcloud = "";
     if ($tags_type != 0) {
     // Откуда будем добывать теги...
-      if ($tags_type == 1) { $and = ""; $link_tag = "--slovo_"; } // ИЗ всех разделов портала
+      if ($tags_type == 1) { $and = ""; $link_tag = "slovo_"; } // ИЗ всех разделов портала
       if ($tags_type == 2) { $and = " and `module`='".$DBName."'"; $link_tag = "-".$DBName."_slovo_"; } // ИЗ текущего раздела
       if ($tags_type == 3) { $and = " and `cid`='".$cid."' and `module`='".$DBName."'"; $link_tag = "-".$DBName."_cat_".$cid."_slovo_"; } // ИЗ текущей папки раздела
         $tagss = array();
@@ -765,7 +765,7 @@ function showcat($cid=0, $pag=0, $slovo="") {
             $search2 = explode(" ",trim(strtolow($search)));
             $search_num = count($search2);
             for ($x=0; $x < $search_num; $x++) {
-              $searches[] = "<a class='slovo' href='--slovo_".str_replace( "%","-", urlencode( $search2[$x] ) )."'>".str_replace("+","&nbsp;",$search2[$x])."</a>";
+              $searches[] = "<a class='slovo' href='slovo_".str_replace( "%","-", urlencode( $search2[$x] ) )."'>".str_replace("+","&nbsp;",$search2[$x])."</a>";
             }
             $page_tags .= "<br>".$tag_text_show." ".implode(" | ", $searches)."";
           }
@@ -1090,7 +1090,7 @@ function page($pid, $all) {
 
     if ($cid=="") { // or ($active != 1 and !is_admin($admin))
       header("HTTP/1.0 404 Not Found");
-      echo "<center style='margin-top:40px;'>".ss("<img src=/images/icon_no.png> <b>Запрашиваемая страница не существует.</b><br>Она была удалена, отключена или никогда и не создавалась.<br><br>Вы имеете право сохранять молчание и перейти на <a href=/>Главную страницу</a> <br>или попробовать найти нужную информацию на сайте с помощью быстрого поиска:")." <form method=POST action=\"--search\" style='display:inline;' class=main_search_form>
+      echo "<center style='margin-top:40px;'>".ss("<img src=/images/icon_no.png> <b>Запрашиваемая страница не существует.</b><br>Она была удалена, отключена или никогда и не создавалась.<br><br>Вы имеете право сохранять молчание и перейти на <a href=/>Главную страницу</a> <br>или попробовать найти нужную информацию на сайте с помощью быстрого поиска:")." <form method=POST action=\"search\" style='display:inline;' class=main_search_form>
       <input type=search name=slovo class=main_search_input><input type='submit' name='ok' value='".ss("Найти")."' class='main_search_button'>
       </form></center>";
       exit;
@@ -1249,7 +1249,7 @@ function page($pid, $all) {
     $searches = array();
     $search2 = explode(" ",$search);
     for ($x=0; $x < $search_num; $x++) {
-      $searches[] = "<a class='slovo' href='--slovo_".str_replace( "%","-", urlencode( $search2[$x] ) )."'>".str_replace("+","&nbsp;",$search2[$x])."</a>";
+      $searches[] = "<a class='slovo' href='slovo_".str_replace( "%","-", urlencode( $search2[$x] ) )."'>".str_replace("+","&nbsp;",$search2[$x])."</a>";
     }
     $page_tags .= $tag_text_show." ".implode(" | ", $searches)."";
   }
@@ -1585,7 +1585,7 @@ function page($pid, $all) {
 // Добавление комментария
 function addcomm($pid) {
   $ret = "";
-  # Настройка-----------------
+  # Настройка
   $usercomm=1; # писать неюзерам нельзя РЕАЛИЗОВАТЬ!!!
   $commentagain=0;
 
@@ -1666,7 +1666,7 @@ function addcomm($pid) {
 
 ##############################################################################
 function add_base($baza_name,$name) {
-  # Настройка-----------------
+  # Настройка
   $usercomm=1; # писать неюзерам нельзя РЕАЛИЗОВАТЬ!!!
   global $soderganie, $DBName, $db, $prefix, $module_name, $admin, $tema, $tema_name, $tema_title, $tema_opis, $post;
   $soderganie .= "<br><a href=-".$name."_addbase_".$baza_name."><b>".ss("Добавить в базу данных")."</b></a>";
@@ -1677,9 +1677,9 @@ function addbase($base,$name,$spa=0) {
   global $soderganie, $DBName, $db, $prefix, $cookie, $module_name, $admin, $tema, $tema_name, $tema_title, $tema_opis, $post;
   if ($spa == 1) $soderganie .= ss("<b>Спасибо.</b><br>В ближайшее время ваша информация будет проверена и размещена на сайте.");
   else {
-  # Настройка-----------------
+  # Настройка
   $usercomm = 1; # писать неюзерам нельзя РЕАЛИЗОВАТЬ!!!
-  # Настройка-----------------
+  # Настройка
   $soderganie .= ss("<h3>Добавление информации в базу данных</h3>");
   // Заменить календарь!!!
   $soderganie .= "<!-- calendar -->
@@ -1796,9 +1796,9 @@ function savebase ($name, $basename, $type, $text) { // Сохранение д�
 ########################################################################################
 function addpost($cid) {
   $ret = "";
-  # Настройка-----------------
+  # Настройка
   $usercomm = 1; # писать неюзерам нельзя РЕАЛИЗОВАТЬ!!!
-  # Настройка-----------------
+  # Настройка
   global $soderganie, $media_post, $DBName, $db, $prefix, $cookie, $module_name, $admin, $tema, $tema_name, $tema_title, $tema_opis, $post, $tema_zapret, $add_post_to_mainpage;
   $cid = intval($cid);
   $DBName = mysql_real_escape_string($DBName);
@@ -2188,10 +2188,10 @@ function savepost ($avtory, $avtor, $mail, $post_title, $info, $num, $cid, $add)
 // Добаление рейтинга-комментария
 function addcomm_reiting($pid, $cid) {
   $ret = "";
-  # Настройка-----------------
+  # Настройка
   //$usercomm=1; # писать неюзерам нельзя РЕАЛИЗОВАТЬ!!!
   //$commentagain=1; // У рейтингов только один раз можно!!!
-  # Настройка-----------------
+  # Настройка
     global $soderganie, $DBName, $db, $prefix, $cookie, $module_name, $admin, $reiting_data;
     $pid = mysql_real_escape_string(intval($pid));
     $cid = mysql_real_escape_string(intval($cid));
@@ -2584,7 +2584,7 @@ function savegolos ($gol, $num){
   }
 }
 ###########################################
-// BBCODE - преобразование --- ТИПОГРАФИКОЙ_ДОПОЛНИТЬ!!
+// BBCODE - преобразование - ТИПОГРАФИКОЙ_ДОПОЛНИТЬ!!
 function bbcode($text, $nolink=1) {
   $text = str_replace(ss("жирный]"),"b]", str_replace("QUOTE","quote", str_replace(ss("цитата]"),"quote]", str_replace("IMG","img", str_replace(">",")", str_replace("<","(", trim($text)))))));
   $quote1 = "<table border='' align='center' width='98%' cellpadding='3' cellspacing='1'><tr valign=top><td><b><span style=\"font-size: 10px\">".ss("Цитата")."</span></b></td></tr><tr valign=top><td bgcolor='#F5F5F5' style=\"border:1px solid #c0c0c0; padding:5px; margin:5px;\">";
@@ -2674,7 +2674,7 @@ function topic_links($records,$r_start=0,$URL,$inpage=20,$type=0,$names=0) {
 ###########################################
 // Поисковая строка (выводится сверху или снизу модуля - зависит от настроек)
 function search_line($modul, $papka, $slovo="") {
-  return "<div class=\"search_line_".$modul."\"><form method=POST action=--search style='display:inline;'>".ss("Поиск по разделу:")." <input type=text name=slovo size=10 value=\"".$slovo."\"><input type=submit value=\"".ss("Найти")."\"><input type=hidden name=modul value=\"".$modul."\"><input type=hidden name=papka value=\"".$papka."\"><input type=hidden name=go value=search></form></div>";
+  return "<div class='search_line_".$modul."'><form method='POST' action='search' style='display:inline;'>".ss("Поиск по разделу:")." <input type='text' name='slovo' size='10' value='".$slovo."'><input type='submit' value='".ss("Найти")."'><input type='hidden' name='modul' value='".$modul."'><input type='hidden' name='papka' value='".$papka."'><input type='hidden' name='go' value='search'></form></div>";
 }
 ###########################################
 // Поисковый ответ

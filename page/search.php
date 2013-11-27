@@ -1,147 +1,94 @@
 <?php
-  // Настройка поиска (будет вынесена в админку)
-  $col_razdel = 5; // ограничение кол-ва найденных разделов
-  $col_papka = 5; // кол-во папок
-  $col_page = 50; // кол-во страниц
-  $col_showall = 10000; // кол-во страниц при нажатии Показать все
   // Поиск по всем разделам, папкам и страницам
-  // Выставлен лимит на кол-во: 100 папок и 100 разделов, 500 страниц.
-  global $lang, $soderganie, $tip, $DBName, $prefix, $db, $module_name, $ModuleName, $slovo, $design, $now, $ip, $papka, $title_razdels, $showall;
+  global $lang, $soderganie, $tip, $DBName, $prefix, $db, $module_name, $ModuleName, $slovo, $design, $now, $ip, $papka, $title_razdels, $showall, $admin, $search_in_pages, $search_in_papka, $search_in_razdel, $search_col_razdel, $search_col_papka, $search_col_page, $search_col_showall;
+
   $admintip = "base_pages";
   $showall = intval($showall);
-  if ($showall != 0) $col_page = $col_showall; // показать все
+  if ($showall != 0) $search_col_page = $search_col_showall; // показать все
 
   $slov = filter($slovo);
   $soderganiemain = "<h1>".ss("Вы искали:")." ".$slov."</h1>";
+// 43-excel56 39-x
+  $slov = str_replace("-0"," 0",str_replace("-1"," 1",str_replace("-2"," 2",str_replace("-3"," 3",str_replace("-4"," 4",str_replace("-5"," 5",str_replace("-6"," 6",str_replace("-7"," 7",str_replace("-8"," 8",str_replace("-9"," 9", str_replace("—","-",str_replace("."," ",str_replace(","," ",str_replace(":"," ",str_replace(";"," ",str_replace("!"," ",str_replace("?"," ",str_replace("\""," ",$slov)))))))) )))))))))); // меняя знаки пепинания на пробелы, чтобы потом слова не слились
+  $slov = preg_replace("/[^(\w)|(\x7F-\xFF)|(\s)]/","",$slov); // чистим поисковое слово // (\-)
 
-  $slov = str_replace("—","-",str_replace("."," ",str_replace(","," ",str_replace(":"," ",str_replace(";"," ",str_replace("!"," ",str_replace("?"," ",str_replace("\""," ",$slov)))))))); // меняя знаки пепинания на пробелы, чтобы потом слова не слились
-  $slov = preg_replace("/[^(\w)|(\x7F-\xFF)|(\s)(\-)]/","",$slov); // чистим поисковое слово
-  $slov = trim(mb_strtolower(preg_replace("/  +/"," ",$slov))); // убираем лишние пробелы и приводим к нижнему регистру
+  $last_number = false;
+  $slov2 = "";
+  for ($i=0; $i < strlen($slov); $i++) {
+    if (is_numeric($slov[$i])) {
+      if ($last_number == false) $slov2 .= " ".$slov[$i];  
+      else $slov2 .= $slov[$i];
+      $last_number = true; 
+    } else { 
+      if ($last_number == true) $slov2 .= " ".$slov[$i]; 
+      else $slov2 .= $slov[$i];
+      $last_number = false; 
+    }
+  }
+  $slov = trim(mb_strtolower(preg_replace("/  +/"," ", $slov2))); // убираем лишние пробелы и приводим к нижнему регистру
 
-  $soderganiemain .= "<div class='main_search_line'><form method=POST action='--search' class=main_search_form><input type='search' placeholder='".ss("Поиск по сайту")."' style='width:98%' name=slovo class='main_search_input' value='".$slov."' autofocus><input type='submit' name='ok' value='".ss("Найти")."' class='main_search_button'></form></div>";
+  $soderganiemain .= "<div class='main_search_line'><form method='POST' action='search' class='main_search_form'><input type='search' placeholder='".ss("Поиск по сайту")."' style='width:98%' name='slovo' class='main_search_input' value='".$slov."' autofocus><input type='submit' name='ok' value='".ss("Найти")."' class='main_search_button'></form></div>";
 
 if ($slov == "") $soderganie .= "<p>".ss("Вы задали пустой поиск. Напишите что-нибудь в строке поиска.");
 else {
 
-  if (strpos($slov,"@")) $soderganie .= "<p>".ss("E-mail адреса не стоит искать на этом сайте, лучше использовать их для написания писем в почтовых программах или на почтовых сайтах, на которых вы зарегистрированы. Если вам нужны Контакты — посмотрите в меню сайта.");
-  if (strpos(" ".$slov,"www.") or strpos($slov,"http://")) $soderganie .= "<p>".ss("Адреса сайтов нужно писать не в поиске по сайту, а в адресной строке вашего браузера (той программы, через которую вы смотрите этот сайт), в самом верху окна.");
-
   $papka = intval($papka);
   if ($papka == 0) $papka = "";
-  else $papka = " and cid = '".$papka."'";
+  else $papka = " and `cid` = '".$papka."'";
 
-  if (is_admin($admin)) $soderganie .= "<h3>".ss("Справка: Редактирование доступно только Администратору.")."</h3>";
+  if (is_admin($admin)) $soderganie .= "<h3>".ss("Редактирование страниц доступно только Администратору.")."</h3>";
 
+  //$search_line[] = str_replace(" ", "%", $slov); 
   if ($lang == 'ru') {
     $slova = zamena_predlog($slov); // убираем предлоги
-    //echo $slova;
     $stemmer = new Lingua_Stem_Ru();
     $ss = explode(" ", $slova);
     $co = count($ss);
     $slova = array();
-    for ($i=0; $i < $co; $i++) {
-      $slova[] = $stemmer->stem_word($ss[$i]);
-    }
+    for ($i=0; $i < $co; $i++)
+      if (mb_strlen($ss[$i]) > 1) $slova[] = $stemmer->stem_word($ss[$i]);
     $slova = implode(" ",$slova);
-    //echo " - ".$slova;
-    // Формируем список словосочетаний, по которым будем искать
-    if ($slova != $slov) { 
-      $search_line[] = $slov; 
-      $search_line[] = $slova; 
-    } else $search_line[] = $slov; // Значит есть предлоги, будем искать по ним и без них
-  } else $search_line[] = $slov; // если язык не русский
+    //if ($slova != $slov) $search_line[] = $slova; // Значит есть предлоги, будем искать по ним и без них
+  } else $slova = $slov;
 
   // разбиваем строку на слова
-  $slovo = preg_split("/\s+/s",$slova);
+  $slovo = explode(" ",$slova);
   $s = implode("%", $slovo);
-  $count_slovo = count($slovo);
-  $always = array(); // обязательные для поиска слова
-  $notbad = array(); // необязательные для поиска слова
-  for ( $i=0; $i < $count_slovo; $i++ ) {
-    $slovo[$i] = obrez($slovo[$i]);
-    if (preg_match("|^[\d]+$|", $slovo[$i])) 
-      $always[] = $slovo[$i]; // число - заносим в список обязательных
-    else 
-      $notbad[] = $slovo[$i];
-  }
 
-  if (count($always)>3) {
-    $search_line[] = $always[0]."%".$always[1]."%".$always[2];
-    $search_line[] = $always[1]."%".$always[2]."%".$always[3];
-    $search_line[] = $always[3]."%".$always[0]."%".$always[1];
-    $search_line[] = $always[0]."%".$always[1];
-    $search_line[] = $always[1]."%".$always[0];
-    $search_line[] = $always[1]."%".$always[2];
-    $search_line[] = $always[0]."%".$always[2];
-    $search_line[] = $always[2]."%".$always[0];
-    $search_line[] = $always[2]."%".$always[1];
-    $search_line[] = $always[3]."%".$always[0];
-    $search_line[] = $always[0]."%".$always[3];
-    $search_line[] = $always[1]."%".$always[3];
-    $search_line[] = $always[2]."%".$always[3];
-    $search_line[] = $always[3]."%".$always[1];
+  if (count($slovo)>=4) {
+    $search_line[] = $slovo[0]."%".$slovo[1]."%".$slovo[3]."%".$slovo[2];
+    $search_line[] = $slovo[0]."%".$slovo[2]."%".$slovo[1]."%".$slovo[3];
+    $search_line[] = $slovo[0]."%".$slovo[2]."%".$slovo[3]."%".$slovo[1];
+    $search_line[] = $slovo[0]."%".$slovo[3]."%".$slovo[1]."%".$slovo[2];
+    $search_line[] = $slovo[0]."%".$slovo[3]."%".$slovo[2]."%".$slovo[1];
+    $search_line[] = $slovo[1]."%".$slovo[0]."%".$slovo[2]."%".$slovo[3];
+    $search_line[] = $slovo[1]."%".$slovo[0]."%".$slovo[3]."%".$slovo[2];
+    $search_line[] = $slovo[1]."%".$slovo[2]."%".$slovo[0]."%".$slovo[3];
+    $search_line[] = $slovo[1]."%".$slovo[2]."%".$slovo[3]."%".$slovo[0];
+    $search_line[] = $slovo[1]."%".$slovo[3]."%".$slovo[0]."%".$slovo[2];
+    $search_line[] = $slovo[1]."%".$slovo[3]."%".$slovo[2]."%".$slovo[0];
+    $search_line[] = $slovo[2]."%".$slovo[1]."%".$slovo[0]."%".$slovo[3];
+    $search_line[] = $slovo[2]."%".$slovo[1]."%".$slovo[3]."%".$slovo[0];
+    $search_line[] = $slovo[2]."%".$slovo[0]."%".$slovo[1]."%".$slovo[3];
+    $search_line[] = $slovo[2]."%".$slovo[0]."%".$slovo[3]."%".$slovo[1];
+    $search_line[] = $slovo[2]."%".$slovo[3]."%".$slovo[1]."%".$slovo[0];
+    $search_line[] = $slovo[2]."%".$slovo[3]."%".$slovo[0]."%".$slovo[1];
+    $search_line[] = $slovo[3]."%".$slovo[1]."%".$slovo[2]."%".$slovo[0];
+    $search_line[] = $slovo[3]."%".$slovo[1]."%".$slovo[0]."%".$slovo[2];
+    $search_line[] = $slovo[3]."%".$slovo[2]."%".$slovo[1]."%".$slovo[0];
+    $search_line[] = $slovo[3]."%".$slovo[2]."%".$slovo[0]."%".$slovo[1];
+    $search_line[] = $slovo[3]."%".$slovo[0]."%".$slovo[1]."%".$slovo[2];
+    $search_line[] = $slovo[3]."%".$slovo[0]."%".$slovo[2]."%".$slovo[1];
   }
-  if (count($always)==3) {
-    $search_line[] = $always[0]."%".$always[1];
-    $search_line[] = $always[1]."%".$always[0];
-    $search_line[] = $always[1]."%".$always[2];
-    $search_line[] = $always[0]."%".$always[2];
-    $search_line[] = $always[2]."%".$always[0];
-    $search_line[] = $always[2]."%".$always[1];
+  if (count($slovo)==3) {
+    $search_line[] = $slovo[0]."%".$slovo[2]."%".$slovo[1];
+    $search_line[] = $slovo[1]."%".$slovo[2]."%".$slovo[0];
+    $search_line[] = $slovo[1]."%".$slovo[0]."%".$slovo[2];
+    $search_line[] = $slovo[2]."%".$slovo[0]."%".$slovo[1];
+    $search_line[] = $slovo[2]."%".$slovo[1]."%".$slovo[0];
   }
-  if (count($always)==2 and count($notbad)==0) {
-    $search_line[] = $always[0]."%".$always[1];
-    $search_line[] = $always[1]."%".$always[0];
-  }
-  if (count($always)==2 and count($notbad)==1) {
-    $search_line[] = $always[0]."%".$always[1];
-    $search_line[] = $always[1]."%".$always[0];
-    $search_line[] = $always[0]."%".$notbad[0];
-    $search_line[] = $notbad[0]."%".$always[0];
-    $search_line[] = $always[1]."%".$notbad[0];
-    $search_line[] = $notbad[0]."%".$always[1];
-  }
-  if (count($always)==2 and count($notbad)==2) {
-    $search_line[] = $always[0]."%".$always[1];
-    $search_line[] = $always[1]."%".$always[0];
-    $search_line[] = $always[0]."%".$notbad[0];
-    $search_line[] = $notbad[0]."%".$always[0];
-    $search_line[] = $always[1]."%".$notbad[0];
-    $search_line[] = $notbad[0]."%".$always[1];
-    $search_line[] = $always[0]."%".$notbad[1];
-    $search_line[] = $notbad[1]."%".$always[0];
-    $search_line[] = $always[1]."%".$notbad[1];
-    $search_line[] = $notbad[1]."%".$always[1];
-  }
-  if (count($always)==1 and count($notbad)==0) {
-    $search_line[] = $always[0];
-  }
-  if (count($always)==1 and count($notbad)==1) {
-    $search_line[] = $always[0]."%".$notbad[0];
-    $search_line[] = $notbad[0]."%".$always[0];
-  }
-  if (count($always)==1 and count($notbad)>1) {
-    $search_line[] = $always[0]."%".$notbad[0];
-    $search_line[] = $notbad[0]."%".$always[0];
-    $search_line[] = $always[0]."%".$notbad[1];
-    $search_line[] = $notbad[1]."%".$always[0];
-    $search_line[] = $notbad[0]."%".$notbad[1];
-    $search_line[] = $notbad[1]."%".$notbad[0];
-  }
-  if (count($always)==0 and count($notbad)==1) {
-    $search_line[] = $notbad[0];
-  }
-  if (count($always)==0 and count($notbad)==2) {
-    $search_line[] = $notbad[1]."%".$notbad[0];
-    $search_line[] = $notbad[0]."%".$notbad[1];
-  }
-  if (count($always)==0 and count($notbad)>2) {
-    $search_line[] = $notbad[1]."%".$notbad[0];
-    $search_line[] = $notbad[0]."%".$notbad[1];
-    $search_line[] = $notbad[1]."%".$notbad[2];
-    $search_line[] = $notbad[2]."%".$notbad[1];
-    $search_line[] = $notbad[2]."%".$notbad[0];
-    $search_line[] = $notbad[0]."%".$notbad[2];
+  if (count($slovo)==2) {
+    $search_line[] = $slovo[1]."%".$slovo[0];
   }
 
   $add_pages = $add_razdel = $add_papka = array();
@@ -151,9 +98,9 @@ else {
   foreach ($search_line as $s_line) {
     $s_line = mysql_real_escape_string($s_line);
     if ($s_line != $s) {
-      $add_pages[] = " or (LOWER(`title`) LIKE '%".$s_line."%' or LOWER(`main_text`) LIKE '%".$s_line."%' or LOWER(`open_text`) LIKE '%".$s_line."%')";
-      $add_papka[] = " or (LOWER(`title`) LIKE '%".$s_line."%' or LOWER(`description`) LIKE '%".$s_line."%')";
-      $add_razdel[] = " or (LOWER(`title`) LIKE '%".$s_line."%' or LOWER(`useit`) LIKE '%".$s_line."%')";
+      $add_pages[] = " or (LOWER(CONCAT(`title`,' ',`open_text`,' ',`main_text`)) LIKE '%".$s_line."%')";
+      $add_papka[] = " or (LOWER(CONCAT(`title`,' ',`description`)) LIKE '%".$s_line."%')";
+      $add_razdel[] = " or (LOWER(CONCAT(`title`,' ',`useit`)) LIKE '%".$s_line."%')";
     }
   }
   $add_pages = implode("",$add_pages);
@@ -168,141 +115,152 @@ else {
 
   $s = mysql_real_escape_string($s);
 
-  if ( $papka == "" && $showall == 0 ) { // если не выбрана определенная папка и показываются не все страницы - ищем и по разделам
-  ////////////////////////////////////////////////////////////////////////////////////////
-    
-      $res2 = $db->sql_query("SELECT `id`,`name`,`title`,`useit` FROM ".$prefix."_mainpage where `tables`='pages' and type='2' and ( (LOWER(`title`) LIKE '%".$s."%' or LOWER(`useit`) LIKE '%".$s."%')".$add_razdel." ) limit ".$col_razdel);
-      $allpids = $pids = $pids1 = $pids2 = $rr_title = $rr_useit = $rr_name = array(); //  = $rr_name
-      while ($row = $db->sql_fetchrow($res2)) {
-        $id = $row['id'];
-        $name2 = $row['name'];
-        if (strpos($name2, "\n")) { // заменяем имя запароленного раздела
-          $name2 = explode("\n", str_replace("\r", "", $name2));
-          $name2 = trim($name2[0]);
-        }
-        $rr_name[$id] = $name2;
-        $rr_title[$id] = $row['title'];
-        $rr_useit[$id] = $row['useit'];
+  if ( $papka == "" && $showall == 0 && $search_in_razdel == 1) { // если не выбрана определенная папка и показываются не все страницы - ищем и по разделам
+    ////////////////////////////////////////////////////////////////////////////////////////
+    $sql = "SELECT `id`,`name`,`title`,`useit` FROM ".$prefix."_mainpage where `tables`='pages' and type='2' and ( (LOWER(CONCAT(`title`,' ',`useit`) ) LIKE '%".$s."%')".$add_razdel." ) limit ".$search_col_razdel;
+    $res2 = $db->sql_query($sql);
+    //if (is_admin($admin)) echo $sql." <b>".$db->sql_numrows($res2)."</b>";
+    $allpids = $pids = $pids1 = $pids2 = $rr_title = $rr_useit = $rr_name = array(); //  = $rr_name
+    while ($row = $db->sql_fetchrow($res2)) {
+      $id = $row['id'];
+      $name2 = $row['name'];
+      if (strpos($name2, "\n")) { // заменяем имя запароленного раздела
+        $name2 = explode("\n", str_replace("\r", "", $name2));
+        $name2 = trim($name2[0]);
       }
-      foreach ($rr_title as $id => $title) {
-        foreach ($search_line as $s_line) {
-          # поиск в заголовке разделов
-          if(preg_match('/['.str_replace("%", "|", $s_line).']/i',$title)) 
-            if (!in_array($id,$allpids)) { $pids1[] = $id; $allpids[] = $id; } // если нет в списке, заносим в список страниц
-          # поиск в содержании разделов
-          if(preg_match('/['.str_replace("%", "|", $s_line).']/i',$rr_useit[$id])) 
-            if (!in_array($id,$allpids)) { $pids2[] = $id; $allpids[] = $id; }
-        }
+      $rr_name[$id] = $name2;
+      $rr_title[$id] = $row['title'];
+      $rr_useit[$id] = $row['useit'];
+    }
+    foreach ($rr_title as $id => $title) {
+      foreach ($search_line as $s_line) {
+        # поиск в заголовке разделов
+        if(preg_match('/['.str_replace("%", "|", $s_line).']/i',$title)) 
+          if (!in_array($id,$allpids)) { $pids1[] = $id; $allpids[] = $id; } // если нет в списке, заносим в список страниц
+        # поиск в содержании разделов
+        if(preg_match('/['.str_replace("%", "|", $s_line).']/i',$rr_useit[$id])) 
+          if (!in_array($id,$allpids)) { $pids2[] = $id; $allpids[] = $id; }
       }
-      $pids = array_merge($pids1,$pids2);
-      $nu = count($pids);
-      if ($nu != 0) { $soderganie .= "<h2>".ss("В разделах:")." ".$nu."</h2>"; $allnum += $nu; }
+    }
+    $pids = array_merge($pids1,$pids2);
+    $nu = count($pids);
+    if ($nu != 0) { $soderganie .= "<h2>".ss("В разделах:")." ".$nu."</h2>"; $allnum += $nu; }
 
-      foreach ($pids as $p_pid) {
-        $p_title = $rr_title[$p_pid];
-        $soderganie .= "<li>".ss("раздел")." <a class='search_page_link' href='/-".$rr_name[$p_pid]."'>".$p_title."</a>";
-        if (is_admin($admin)) $soderganie .= "&nbsp; <a href='sys.php?op=mainpage&type=2&id=".$p_pid."' title='".ss("Изменить раздел в Редакторе")."'><img src=images/sys/edit_1.png></a><a href='sys.php?op=mainpage&type=2&id=".$p_pid."&red=1' title='".ss("Изменить раздел (быстрый HTML режим)")."'><img src='images/sys/edit_0.png'></a>";
-        foreach ($slovo as $s_line) {
-          $txt = strchop(strip_tags(str_replace("&nbsp;"," ",str_replace("".aa("[содержание]").""," ",str_replace("".aa("[следующий]").""," ",str_replace("".aa("[название]").""," ",str_replace("".aa("[страницы]").""," ",str_replace("<br>"," ",str_replace("<p>"," ",$rr_useit[$p_pid])))))))),$s_line,100);
-          if ($txt != "......" and $txt != false) $soderganie .= "<blockquote>".$txt."</blockquote>";
-        }
+    foreach ($pids as $p_pid) {
+      $p_title = $rr_title[$p_pid];
+      $soderganie .= "<li>".ss("раздел")." <a class='search_page_link' href='/-".$rr_name[$p_pid]."'>".$p_title."</a>";
+      if (is_admin($admin)) $soderganie .= "&nbsp; <a href='sys.php?op=mainpage&type=2&id=".$p_pid."' title='".ss("Изменить раздел в Редакторе")."'><img src=images/sys/edit_1.png></a><a href='sys.php?op=mainpage&type=2&id=".$p_pid."&red=1' title='".ss("Изменить раздел (быстрый HTML режим)")."'><img src='images/sys/edit_0.png'></a>";
+      foreach ($slovo as $s_line) {
+        $txt = strchop(strip_tags(str_replace("&nbsp;"," ",str_replace("".aa("[содержание]").""," ",str_replace("".aa("[следующий]").""," ",str_replace("".aa("[название]").""," ",str_replace("".aa("[страницы]").""," ",str_replace("<br>"," ",str_replace("<p>"," ",$rr_useit[$p_pid])))))))),$s_line,100);
+        if ($txt != "......" and $txt != false) $soderganie .= "<blockquote>".$txt."</blockquote>";
       }
-  ////////////////////////////////////////////////////////////////////////////////////////
-      $res2 = $db->sql_query("SELECT `cid`,`module`,`title`,`description` FROM ".$prefix."_pages_categories where `tables`='pages' and ( (LOWER(`title`) LIKE '%".$s."%' or LOWER(`description`) LIKE '%".$s."%')".$add_papka." ) limit ".$col_papka);
-      $allpids = $pids = $pids1 = $pids2 = $rr_title = $rr_description = $rr_module = array(); //  = $rr_name
-      while ($row = $db->sql_fetchrow($res2)) {
-        $id = $row['cid'];
-        $rr_title[$id] = $row['title'];
-        $rr_module[$id] = $row['module'];
-        $rr_description[$id] = $row['description'];
+    }
+  }
+    ////////////////////////////////////////////////////////////////////////////////////////
+  if ( $papka == "" && $showall == 0 && $search_in_papka == 1) {
+    $sql = "SELECT `cid`,`module`,`title`,`description` FROM ".$prefix."_pages_categories where `tables`='pages' and ( (LOWER(CONCAT(`title`,' ',`description`)) LIKE '%".$s."%')".$add_papka." ) limit ".$search_col_papka;
+    $res2 = $db->sql_query($sql);
+    //if (is_admin($admin)) echo "<br>".$sql." <b>".$db->sql_numrows($res2)."</b>";
+    $allpids = $pids = $pids1 = $pids2 = $rr_title = $rr_description = $rr_module = array(); //  = $rr_name
+    while ($row = $db->sql_fetchrow($res2)) {
+      $id = $row['cid'];
+      $rr_title[$id] = $row['title'];
+      $rr_module[$id] = $row['module'];
+      $rr_description[$id] = $row['description'];
+    }
+    foreach ($rr_title as $id => $title) {
+      foreach ($search_line as $s_line) {
+        # поиск в заголовке папок
+        if(preg_match('/['.str_replace("%", "|", $s_line).']/i',$title)) 
+          if (!in_array($id,$allpids)) { $pids1[] = $id; $allpids[] = $id; }
+        # поиск в содержании папок
+        if(preg_match('/['.str_replace("%", "|", $s_line).']/i',$rr_description[$id])) 
+          if (!in_array($id,$allpids)) { $pids2[] = $id; $allpids[] = $id; }
       }
-      foreach ($rr_title as $id => $title) {
-        foreach ($search_line as $s_line) {
-          # поиск в заголовке папок
-          if(preg_match('/['.str_replace("%", "|", $s_line).']/i',$title)) 
-            if (!in_array($id,$allpids)) { $pids1[] = $id; $allpids[] = $id; }
-          # поиск в содержании папок
-          if(preg_match('/['.str_replace("%", "|", $s_line).']/i',$rr_description[$id])) 
-            if (!in_array($id,$allpids)) { $pids2[] = $id; $allpids[] = $id; }
-        }
-      }
-      $pids = array_merge($pids1,$pids2);
-      $nu = count($pids);
-      if ($nu != 0) { $soderganie .= "<h2>".ss("В подразделах:")." ".$nu."</h2>"; $allnum += $nu; }
+    }
+    $pids = array_merge($pids1,$pids2);
+    $nu = count($pids);
+    if ($nu != 0) { $soderganie .= "<h2>".ss("В подразделах:")." ".$nu."</h2>"; $allnum += $nu; }
 
-      foreach ($pids as $p_cid) {
-        $soderganie .= "<li>".ss("папка")." <a class='search_page_link' href='/-".$rr_module[$p_cid]."_cat_".$p_cid."'>".$rr_title[$p_cid]."</a>";
-        if (is_admin($admin)) $soderganie .= "&nbsp; <a href='sys.php?op=edit_base_pages_category&cid=".$p_cid."' title='".ss("Изменить папку в Редакторе")."'><img src=images/sys/edit_1.png></a><a href='sys.php?op=edit_base_pages_category&cid=".$p_cid."&red=1' title='".ss("Изменить папку (быстрый HTML режим)")."'><img src='images/sys/edit_0.png'></a>";
-        foreach ($slovo as $s_line) {
-          $txt = strchop(strip_tags(str_replace("&nbsp;"," ",str_replace("<br>"," ",str_replace("<p>"," ",$rr_description[$p_cid])))),$s_line,100);
-          if ($txt != "......" and $txt != false) $soderganie .= "<blockquote>".$txt."</blockquote>";
-        }
+    foreach ($pids as $p_cid) {
+      $soderganie .= "<li>".ss("папка")." <a class='search_page_link' href='/-".$rr_module[$p_cid]."_cat_".$p_cid."'>".$rr_title[$p_cid]."</a>";
+      if (is_admin($admin)) $soderganie .= "&nbsp; <a href='sys.php?op=edit_base_pages_category&cid=".$p_cid."' title='".ss("Изменить папку в Редакторе")."'><img src=images/sys/edit_1.png></a><a href='sys.php?op=edit_base_pages_category&cid=".$p_cid."&red=1' title='".ss("Изменить папку (быстрый HTML режим)")."'><img src='images/sys/edit_0.png'></a>";
+      foreach ($slovo as $s_line) {
+        $txt = strchop(strip_tags(str_replace("&nbsp;"," ",str_replace("<br>"," ",str_replace("<p>"," ",$rr_description[$p_cid])))),$s_line,100);
+        if ($txt != "......" and $txt != false) $soderganie .= "<blockquote>".$txt."</blockquote>";
       }
+    }
   }
   ////////////////////////////////////////////////////////////////////////////////////////
-      if ($showall == 0) $show_text = ",`open_text`,`main_text`"; else $show_text = "";
-      $res2 = $db->sql_query("SELECT `pid`,`module`,`cid`,`title`".$show_text.",`date` FROM ".$prefix."_pages where `tables`='pages'".$papka." and `active`='1' and (`copy`='0' or `copy`=`pid`) and ( (LOWER(`title`) LIKE '%".$s."%' or LOWER(`main_text`) LIKE '%".$s."%' or LOWER(`open_text`) LIKE '%".$s."%')".$add_pages." ) order by `date` desc limit ".$col_page);
-      //echo "SELECT `pid`,`module`,`cid`,`title`,`open_text`,`main_text` FROM ".$prefix."_pages where `tables`='pages'".$papka." and `active`='1' and (`copy`='0' or `copy`=`pid`) and ( (LOWER(`title`) LIKE '%".$s."%' or LOWER(`main_text`) LIKE '%".$s."%' or LOWER(`open_text`) LIKE '%".$s."%')".$add_pages." ) limit ".$col_page;
+  if ( $search_in_pages == 1 ) {
+    if ($showall == 0) $show_text = ",`open_text`,`main_text`"; else $show_text = "";
+    $sql = "SELECT `pid`,`module`,`cid`,`title`".$show_text.",`date` FROM ".$prefix."_pages where `tables`='pages'".$papka." and `active`='1' and (`copy`='0' or `copy`=`pid`) and ( (LOWER(CONCAT(`title`,' ',`open_text`,' ',`main_text`)) LIKE '%".$s."%')".$add_pages." ) order by `date` desc limit ".$search_col_page;
+    $res2 = $db->sql_query($sql);
+    //if (is_admin($admin)) echo "<br>".$sql." <b>".$db->sql_numrows($res2)."</b>";
+    
+    $allpids = $pids = $pids1 = $pids2 = $p_pid = $pp_title = $pp_module = $pp_cid = $pp_open_text = $p_date = array();
+    while ($row = $db->sql_fetchrow($res2)) {
+      $id = $row['pid'];
+      if ($showall != 0) $p_pid[$id] = $row['pid'];
+      $pp_title[$id] = stripslashes($row['title']);
+      //echo $row['title'];
+      $pp_module[$id] = $row['module'];
+      $pp_cid[$id] = $row['cid'];
+      $p_date[$id] = date2normal_view($row['date'], 2); 
+      if ($showall == 0) $pp_open_text[$id] = stripslashes($row['open_text'].$row['main_text']);
+    }
+    if ($showall == 0) {
+      foreach ($pp_title as $id => $title) {
+        foreach ($search_line as $s_line) {
+          # поиск в заголовке страниц
+          if ( mb_stripos(" ".$title, $s_line)) 
+            if (!in_array($id,$allpids)) { // если нет в списке, заносим в список страниц
+              $pids1[] = $id; 
+              $allpids[] = $id; 
+            } 
+          # поиск в предисловии страниц
+          if ( mb_stripos(" ".$pp_open_text[$id], $s_line)) //  || mb_stripos(" ".str_replace(" ","%",$pp_open_text[$id]), $s_line) 
+            if (!in_array($id,$allpids)) { // если нет в списке, заносим в список страниц
+              $pids2[] = $id; 
+              $allpids[] = $id; 
+            }
+        }
+      } 
+      $pids = array_merge($pids1,$pids2);
+      $nu = count($pids);
+    } else { 
+      $nu = count($pp_title); 
+      $pids = $p_pid; 
+    }
+
+    if ($nu == $search_col_page && $showall == 0) { 
+      $bolee = " ".ss("более")." "; $vse = ". <a class='search_showall' href='header.php?name=-search&slovo=".$slov."&showall=1'>".ss("Показать все")."</a>"; 
+    } else $vse = $bolee = " "; 
+    if ($nu != 0) { $soderganie .= "<h2>".ss("В страницах:").$bolee.$nu.$vse."</h2>"; $allnum += $nu; }
+
+    foreach ($pids as $p_pid) {
+      $p_title = $pp_title[$p_pid];
+      $p_module = $pp_module[$p_pid];
+      $p_cid = $pp_cid[$p_pid];
+      $cat = "";
+      if ($showall == 0) 
+        if ($p_cid != 0) 
+          $cat = " ".$strelka." <a class='search_folder_link' href='/-".$p_module."_cat_".$p_cid."'>".$c_name[$p_cid]."</a>"; 
       
-      $allpids = $pids = $pids1 = $pids2 = $p_pid = $pp_title = $pp_module = $pp_cid = $pp_open_text = $p_date = array();
-      while ($row = $db->sql_fetchrow($res2)) {
-        $id = $row['pid'];
-        if ($showall != 0) $p_pid[$id] = $row['pid'];
-        $pp_title[$id] = stripslashes($row['title']);
-        //echo $row['title'];
-        $pp_module[$id] = $row['module'];
-        $pp_cid[$id] = $row['cid'];
-        $p_date[$id] = date2normal_view($row['date'], 2); 
-        if ($showall == 0) $pp_open_text[$id] = stripslashes($row['open_text'].$row['main_text']);
-      }
-      if ($showall == 0) {
-        foreach ($pp_title as $id => $title) {
-          foreach ($search_line as $s_line) {
-            # поиск в заголовке страниц
-            if ( mb_stripos(" ".$title, $s_line)) 
-              if (!in_array($id,$allpids)) { // если нет в списке, заносим в список страниц
-                $pids1[] = $id; 
-                $allpids[] = $id; 
-              } 
-            # поиск в предисловии страниц
-            if ( mb_stripos(" ".$pp_open_text[$id], $s_line)) //  || mb_stripos(" ".str_replace(" ","%",$pp_open_text[$id]), $s_line) 
-              if (!in_array($id,$allpids)) { // если нет в списке, заносим в список страниц
-                $pids2[] = $id; 
-                $allpids[] = $id; 
-              }
-          }
-        } 
-        $pids = array_merge($pids1,$pids2);
-        $nu = count($pids);
-      } else { $nu = count($pp_title); $pids = $p_pid; }
-
-      if ($nu == $col_page && $showall == 0) { 
-        $bolee = " ".ss("более")." "; $vse = ". <a class='search_showall' href='header.php?name=-search&slovo=".$slov."&showall=1'>".ss("Показать все")."</a>"; 
-      } else $vse = $bolee = " "; 
-      if ($nu != 0) { $soderganie .= "<h2>".ss("В страницах:").$bolee.$nu.$vse."</h2>"; $allnum += $nu; }
-
-      foreach ($pids as $p_pid) {
-        $p_title = $pp_title[$p_pid];
-        $p_module = $pp_module[$p_pid];
-        $p_cid = $pp_cid[$p_pid];
-        $cat = "";
-        if ($showall == 0) 
-          if ($p_cid != 0) 
-            $cat = " ".$strelka." <a class='search_folder_link' href='/-".$p_module."_cat_".$p_cid."'>".$c_name[$p_cid]."</a>"; 
-        
-        $soderganie .= "<li>".ss("стр.")." <a class='search_page_link' href='/-".$p_module."_page_".$p_pid."'>".$p_title."</a> <span class='search_page_date'>".$p_date[$p_pid]."</span>";
-        
-        if (is_admin($admin)) 
-          $soderganie .= "&nbsp; <a href='sys.php?op=".$admintip."_edit_page&name=".$p_module."&pid=".$p_pid."' title='".aa("Изменить страницу в Редакторе")."'><img src='images/sys/edit_1.png'></a><a href='sys.php?op=".$admintip."_edit_page&name=".$p_module."&pid=".$p_pid."&red=1' title='".aa("Изменить страницу (быстрый HTML режим)")."'><img src='images/sys/edit_0.png'></a>";
-        
-        if ($showall == 0) { // если показать ограниченное кол-во
-          $soderganie .= "<br><a class='search_razdel_link' href='/-".$p_module."'>".$title_razdels[$p_module]."</a> ".$cat;
-          foreach ($slovo as $s_line) {
-            $txt = strchop(strip_tags(str_replace("&nbsp;"," ",str_replace("<br>"," ",str_replace("<p>"," ",$pp_open_text[$p_pid])))),$s_line,100);
-            if ($txt != "......") $soderganie .= "<blockquote>".$txt."</blockquote>";
-          }
+      $soderganie .= "<li>".ss("стр.")." <a class='search_page_link' href='/-".$p_module."_page_".$p_pid."'>".$p_title."</a> <span class='search_page_date'>".$p_date[$p_pid]."</span>";
+      
+      if (is_admin($admin)) 
+        $soderganie .= "&nbsp; <a href='sys.php?op=".$admintip."_edit_page&name=".$p_module."&pid=".$p_pid."' title='".aa("Изменить страницу в Редакторе")."'><img src='images/sys/edit_1.png'></a><a href='sys.php?op=".$admintip."_edit_page&name=".$p_module."&pid=".$p_pid."&red=1' title='".aa("Изменить страницу (быстрый HTML режим)")."'><img src='images/sys/edit_0.png'></a>";
+      
+      if ($showall == 0) { // если показать ограниченное кол-во
+        $soderganie .= "<br><a class='search_razdel_link' href='/-".$p_module."'>".$title_razdels[$p_module]."</a> ".$cat;
+        foreach ($slovo as $s_line) {
+          $txt = strchop(strip_tags(str_replace("&nbsp;"," ",str_replace("<br>"," ",str_replace("<p>"," ",$pp_open_text[$p_pid])))),$s_line,100);
+          if ($txt != "......") $soderganie .= "<blockquote>".$txt."</blockquote>";
         }
       }
+    }
+  }
   $soderganie .= "</ol></div>";
 
   if ($allnum == 0) $soderganie = $soderganiemain."<h3>".ss("Данное словосочетание не обнаружено. Попробуйте поискать по другим словам.")."</h3>";
@@ -354,7 +312,7 @@ function strchop($data,$word,$interval,$ci=true) {
 }
 ///////////////////////////////////////////////////////////////
 function zamena_predlog($text) { # Замена предлогов
-  $zamena = array(" а "=>" "," в "=>" "," и "=>" "," к "=>" "," о "=>" "," с "=>" "," у "=>" "," я "=>" "," во "=>" "," до "=>" "," за "=>" "," из "=>" "," на "=>" "," не "=>" "," ни "=>" "," но "=>" "," по "=>" "," об "=>" "," то "=>" "," для "=>" "," или "=>" "," над "=>" "," обо "=>" "," про "=>" ","Про "=>""," же "=>" ", " около "=>" "," перед "=>" "," после "=>" "," против "=>" "," напротив "=>" "," кто такой "=>" "," что такое "=>" "," кто "=>" "," что "=>" "," какой "=>" "," зачем "=>" "," почему "=>" "," когда же "=>" "," когда будет "=>" "," когда "=>" "," разрешается ли "=>" "," можно ли "=>" "," как бы "=>" "," как "=>" "," с какими "=>" "," какими "=>" "," с какой "=>" "," какой "=>" "," с каким "=>" "," каким "=>" "," о ком "=>" "," о чем "=>" "," чем "=>" ");
+  $zamena = array(" а "=>" "," в "=>" "," и "=>" "," к "=>" "," о "=>" "," с "=>" "," у "=>" "," я "=>" "," во "=>" "," до "=>" "," за "=>" "," из "=>" "," на "=>" "," не "=>" "," ни "=>" "," но "=>" "," по "=>" "," об "=>" "," то "=>" "," для "=>" "," или "=>" "," над "=>" "," обо "=>" "," про "=>" ","Про "=>""," же "=>" ", " около "=>" "," перед "=>" "," после "=>" "," против "=>" "," напротив "=>" ");
   $text = trim(strtr(" ".$text." ",$zamena));
   return $text;
 }

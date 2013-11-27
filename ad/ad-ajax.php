@@ -26,10 +26,10 @@ if ($func == "mail_shablon") {
       $(\"#otvet_comm_txt".$id."\").insertAtCaret(mail_shablon);
     }
     </script>
-    <h2><a id='button_add_mail_shablon' class='mr10 button small green' onclick=\"put_mail_shablon".$id."();\"><span class='mr-2 icon darkgrey small' data-icon='+'></span><span class='plus20'>Вставить в ответ</span></a>
-    Варианты ответа:</h2>
+    <h2><a id='button_add_mail_shablon' class='mr10 button small' onclick=\"put_mail_shablon".$id."();\"><span class='mr-2 icon darkgrey small' data-icon='+'></span><span class='plus20'>↑ Вставить в ответ</span></a>
+    Варианты ответа на комментарий:</h2>
     <select style='margin-top:5px;' id='add_mail_shablons".$id."' size='".$mail_shablon_select_count."' class='w100'>".$add_mail_shablons1."</select>";
-  } else echo "Шаблоны не найдены, вы можете их добавить в <a href='sys.php?op=options'>Настройках</a> -> Настройки комментариев.";
+  } else echo "Шаблоны не найдены, вы можете добавить их в <a href='sys.php?op=options'>Настройках</a> -> Настройки комментариев.";
   exit;
 }
 ######################################################################################
@@ -1133,7 +1133,7 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
 
       $pishet = "пишет в";
       if ($otvet != 0) {
-        $otvet = "<br>Является ответом на <a target='_blank' href='/sys.php?op=base_comments&name=".$module."&pid=".$num."#".$otvet."'>комм. №".$otvet."</a>.";
+        $otvet = "<p>Является ответом на <a target='_blank' href='/sys.php?op=base_comments&name=".$module."&pid=".$num."#".$otvet."'>комм. №".$otvet."</a>.";
         $pishet = "отвечает в";
       }
       else $otvet = "";
@@ -1150,6 +1150,14 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
       if ($avtor == "Администратор") $avtor2 = "<span class=red>".$avtor."</span>";
       else $avtor2 = $avtor;
       if ($num != 0) {
+        global $avtor_comments;
+        $avtor_comment = explode(",", $avtor_comments);
+        $avtor_comment1 = trim($avtor_comment[0]);
+        $add_option = array();
+        foreach ($avtor_comment as $a_comm) {
+          $add_option[] = trim($a_comm);
+        }
+        $add_option = implode(",", $add_option);
         if (!isset($module)) $titl_mainpage = "РАЗДЕЛ УДАЛЁН! &rarr; $module";
         else $titl_mainpage = trim($title_razdel_and_bd[$module]);
         $del = "";
@@ -1158,12 +1166,12 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
         <a style='float:right;' title='Изменить комментарий' href='sys.php?op=base_comments_edit_comments&cid=".$cid."'>".icon('orange small','7')."</a>
 
         <i>".$avtor2."</i><span class='gray'> ".$pishet." разделе «".$titl_mainpage."» на странице </span><a title='Открыть на сайте...' target=_blank href='-".$module."_page_".$num."#comm_".$cid."'>".$titles."</a>: <span class='gray'>".$textline."</span></td></tr>
-        <tr><td colspan=2".$bgcolor." style='padding:0; margin:0;'>
+        <tr><td colspan='2' style='padding:0; margin:0;'>
         <div style='display:none;' id=comm".$cid.">
         ".$otvet.$mails.$tel."<br><br>
         <div class=bggray>".$txt."</div><br>
-        <a id='show_otvet_link".$cid."' onclick=\"show_otvet_comm(".$cid.",'".$avtor."','".$mail."','".$module."',0)\" class='button medium'>".icon('orange medium','"')." Ответить на комментарий</a> 
-        <a id='show_shablon_link".$cid."' onclick=\"show_otvet_comm(".$cid.",'".$avtor."','".$mail."','".$module."',1)\" class='button small'>".icon('orange small','\'')." Использовать шаблон ответа</a>
+        <a id='show_otvet_link".$cid."' onclick=\"show_otvet_comm(".$cid.",'".$avtor."','".$mail."','".$module."',0, '".$avtor_comment1."', '".$add_option."')\" class='button medium'>".icon('orange medium','"')." Ответить на комментарий</a> 
+        <a id='show_shablon_link".$cid."' onclick=\"show_otvet_comm(".$cid.",'".$avtor."','".$mail."','".$module."',1, '".$avtor_comment1."', '".$add_option."')\" class='button small'>".icon('orange small','\'')." Использовать шаблон ответа</a>
         <div id='otvet_comm".$cid."'></div><br><br>
         </div>
         </td></tr>";

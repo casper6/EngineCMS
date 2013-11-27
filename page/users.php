@@ -37,17 +37,17 @@ if ($_POST["submit"] == "Добавить") {
 } else {
 	if (!$_COOKIE['user_name']) {
 		$soderganie .= "<p class='errormes'>".ss("Для начала работы введите ваше имя и загрузите фотогфию.")."</p><br>
-        <form class='regforma' action='--users_".$_COOKIE['user_id']."' method='post' enctype='multipart/form-data'>
+        <form class='regforma' action='users_".$_COOKIE['user_id']."' method='post' enctype='multipart/form-data'>
 	    <br><input class='regname' type='name' name='user_name' value='' placeholder='".ss("Ваше имя")."'>
 		<br><input class='regfile' type='file' name='file' placeholder='".ss("Выберите фотографию")."'>
 		<br><input type='submit' name='submit' value='".ss("Добавить")."'></form>";
 	} else {
 		// блок пользователя фото и ссылки
 		$soderganie .= '<div id="user_blok"><img src="/includes/php_thumb/php_thumb.php?src=/'.$_COOKIE['user_pfoto'].'&amp;w=150&amp;h=0&amp;q=0" title="'.$_COOKIE['user_name'].'"><br>
-		<a href="--users_'.$_COOKIE['user_id'].'">'.ss('Моя страница').'</a><br>
-		<a href="--adduser_'.$_COOKIE['user_group'].'_0">'.ss('Добавить материал').'</a><br>  
-		<a href="--edituser_'.$_COOKIE['user_id'].'">'.ss('Редактировать профиль').'</a><br> 
-		<a href="--logout">Выход</a></div>';
+		<a href="users_'.$_COOKIE['user_id'].'">'.ss('Моя страница').'</a><br>
+		<a href="adduser_'.$_COOKIE['user_group'].'_0">'.ss('Добавить материал').'</a><br>  
+		<a href="edituser_'.$_COOKIE['user_id'].'">'.ss('Редактировать профиль').'</a><br> 
+		<a href="logout">Выход</a></div>';
 		// выводим шаблон страницы пользователя
 		$result = $db->sql_query("select `useit` from ".$prefix."_mainpage where `id`='".$_COOKIE['user_group']."'");
 		$row = $db->sql_fetchrow($result);

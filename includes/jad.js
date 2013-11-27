@@ -81,11 +81,16 @@ function save_main(url, op, id, id2) {
       /* error: function(xhr, str) { alert('Возникла ошибка: ' + xhr.responseCode ); } */
     });
 }
-function show_otvet_comm(cid, name, mail, mod, shablon) {
+function show_otvet_comm(cid, name, mail, mod, shablon, main_nick, all_nicks) {
 	if ($('#otvet_comm'+cid).html() == '') {
+		all_nicks = all_nicks.split(',');
+		var option = '';
+		for (var i=0; i<all_nicks.length; i++) {
+    		option = option + '<option value="' + all_nicks[i] + '">' + all_nicks[i] + '</option>';
+		}
 		$('#show_otvet_link'+cid).hide();
 		$('#show_shablon_link'+cid).hide();
-		$('#otvet_comm'+cid).html('<div style="float:left;">'+icon('gray medium','u')+'</div><input type=text id="otvet_comm_sender'+cid+'" value="Администратор" size=15 style="width:90%; max-width:800px;"><br>'+icon('gray medium','@')+' Текст ответа:<br><textarea style="width:95%; max-width:800px;height:100px;" id="otvet_comm_txt'+cid+'"></textarea><dt><a onclick=\'new_otvet(0, '+cid+', document.getElementById("otvet_comm_sender'+cid+'").value, document.getElementById("otvet_comm_txt'+cid+'").value, "'+mail+'", "'+mod+'")\' class="button">'+icon('orange small','\'')+' Отправить ответ</a>');
+		$('#otvet_comm'+cid).html('<div style="float:left;">'+icon('gray medium','u')+'</div><input type=text id="otvet_comm_sender'+cid+'" value="'+main_nick+'" size=15 style="width:60%; max-width:700px;"><select style="width:20%; min-width:190px;" onchange="$(\'#otvet_comm_sender'+cid+'\').val(this.value);"><option value="">- выберите вариант -</option>'+option+'</select><br>'+icon('gray medium','@')+' Текст ответа:<br><textarea style="width:95%; max-width:800px;height:100px;" id="otvet_comm_txt'+cid+'"></textarea><dt><a onclick=\'new_otvet(0, '+cid+', document.getElementById("otvet_comm_sender'+cid+'").value, document.getElementById("otvet_comm_txt'+cid+'").value, "'+mail+'", "'+mod+'")\' class="button">'+icon('orange small','\'')+' Отправить ответ</a>');
 		if (mail != '') $('#otvet_comm'+cid).append('Отправить только: <a onclick=\'new_otvet(1, '+cid+', document.getElementById("otvet_comm_sender'+cid+'").value, document.getElementById("otvet_comm_txt'+cid+'").value, "'+mail+'", "'+mod+'")\' class=punkt>по email</a> или <a onclick=\'new_otvet(2, '+cid+', document.getElementById("otvet_comm_sender'+cid+'").value, document.getElementById("otvet_comm_txt'+cid+'").value, "'+mail+'", "'+mod+'")\' class=punkt>через сайт</a>');
 		$('#otvet_comm'+cid).append('<br><div id="otvet_send'+cid+'"></div>');
 		$('#otvet_comm_txt'+cid).focus(); 

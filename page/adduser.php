@@ -10,7 +10,7 @@ $catspisok = substr($row['text'],0,-1);
 $soderganie .= "<div id='list_razdel'>".ss("Выберите раздел")."<br>";
 $result2 = $db->sql_query("select title, name from ".$prefix."_mainpage where id IN (".$catspisok.")");
 while ($row = $db->sql_fetchrow($result2)) {
-  $soderganie .= '<a href="--adduser_'.$_COOKIE['user_group'].'_'.$row['name'].'">'.$row['title'].'</a><br>';
+  $soderganie .= '<a href="adduser_'.$_COOKIE['user_group'].'_'.$row['name'].'">'.$row['title'].'</a><br>';
 }
 $soderganie .= '</div>';
 if ($_POST["submit"] == ss("Добавить")) {
@@ -132,12 +132,12 @@ if ($_POST["submit"] == ss("Добавить")) {
     }
   }
   $soderganie .= "<p class='errormes'>".ss("Материал добавлен!")."</p><br>";
-  recash('/--users_'.$_COOKIE['user_id']);
+  recash('users_'.$_COOKIE['user_id']);
 }
 
 if($_GET["id"] != "0") {
   // получаем список доспных разделов для добавления
-  $soderganie .= "<form class='regforma' action='--adduser_".$_COOKIE['user_group']."_".$id."' method='post' enctype='multipart/form-data'>".ss("Выберите категорию:")."<select name='categor'>";
+  $soderganie .= "<form class='regforma' action='adduser_".$_COOKIE['user_group']."_".$id."' method='post' enctype='multipart/form-data'>".ss("Выберите категорию:")."<select name='categor'>";
   $result = $db->sql_query("select `title`, `cid` from ".$prefix."_pages_categories where `module`='".$id."'");
   while ($row = $db->sql_fetchrow($result)) {
     $soderganie .= '<option value="'.$row['cid'].'">'.$row['title'].'</option>';

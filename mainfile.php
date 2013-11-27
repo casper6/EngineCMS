@@ -159,14 +159,13 @@
   $captcha_ok = intval($row['captcha_ok']); // отключение проверки комментариев
   $jqueryui = $show_comments = $show_userposts = $normalize = "";
   // Получаем настройки
-  list($jqueryui, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $search_design, $tag_design, $add_fonts, $normalize, $project_logotip, $project_name, $geo, $kolkey, $add_clips, $sortable, $color_tema_html, $color_tema_css, $color_tema_js, $color_tema_php, $tab_obzor, $tab_show, $shop_text_val1, $shop_text_val2, $shop_text_itogo, $shop_text_oformit, $shop_text_korzina, $shop_text_delete, $shop_pole, $shop_admin_mail, $shop_text_after_mail,$shop_spisok_pole, $shop_shablon_form_order, $shop_shablon_mail_client, $shop_shablon_mail_admin,$ed2_button_html,$ed2_button_formatting, $ed2_button_bold, $ed2_button_italic, $ed2_button_deleted, $ed2_button_underline, $ed2_button_unorderedlist, $ed2_button_orderedlist, $ed2_button_outdent, $ed2_button_indent, $ed2_button_image, $ed2_button_video, $ed2_button_file, $ed2_button_table, $ed2_button_link, $ed2_button_alignment, $ed2_button_horizontalrule, $ed2_button_more, $ed2_button_link2, $ed2_button_block, $ed2_button_pre, $ed2_button_fullscreen, $ed2_button_clips, $ed2_button_fontcolor, $ed2_button_fontsize, $ed2_button_fontfamily, $ed2_minHeight, $ed2_direction, $head_insert, $filter_name, $filter_show_all, $gravatar, $ed2_div_convert, $strelka, $smile_icons, $add_mail_shablons) = explode("|",trim($row['nocashe']));
+  list($jqueryui, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $search_design, $tag_design, $add_fonts, $normalize, $project_logotip, $project_name, $geo, $kolkey, $add_clips, $sortable, $color_tema_html, $color_tema_css, $color_tema_js, $color_tema_php, $tab_obzor, $tab_show, $shop_text_val1, $shop_text_val2, $shop_text_itogo, $shop_text_oformit, $shop_text_korzina, $shop_text_delete, $shop_pole, $shop_admin_mail, $shop_text_after_mail,$shop_spisok_pole, $shop_shablon_form_order, $shop_shablon_mail_client, $shop_shablon_mail_admin,$ed2_button_html,$ed2_button_formatting, $ed2_button_bold, $ed2_button_italic, $ed2_button_deleted, $ed2_button_underline, $ed2_button_unorderedlist, $ed2_button_orderedlist, $ed2_button_outdent, $ed2_button_indent, $ed2_button_image, $ed2_button_video, $ed2_button_file, $ed2_button_table, $ed2_button_link, $ed2_button_alignment, $ed2_button_horizontalrule, $ed2_button_more, $ed2_button_link2, $ed2_button_block, $ed2_button_pre, $ed2_button_fullscreen, $ed2_button_clips, $ed2_button_fontcolor, $ed2_button_fontsize, $ed2_button_fontfamily, $ed2_minHeight, $ed2_direction, $head_insert, $filter_name, $filter_show_all, $gravatar, $ed2_div_convert, $strelka, $smile_icons, $add_mail_shablons, $avtor_comments, $search_in_pages, $search_in_papka, $search_in_razdel, $newsmail_design, $search_col_razdel, $search_col_papka, $search_col_page, $search_col_showall) = explode("|",trim($row['nocashe']));
   //if ($add_fonts != "") $add_fonts = explode(".",$add_fonts);
   $project_name = filter($project_name);
-
-// Основные настройки
+  // Основные настройки
   if ($smile_icons == "") // получаем список файлов смайлов
-    $smile_icons = str_replace("images/smilies/","",implode(",", glob("images/smilies/{*.gif,*.png,*.jpg,*.jpeg}",GLOB_BRACE))); 
-  //if ($strelka == "") $strelka = "&rarr;";
+    $smile_icons = str_replace("images/smilies/","",implode(",", glob("images/smilies/{*.gif,*.png,*.jpg,*.jpeg}",GLOB_BRACE)));
+  if ($avtor_comments == "") $avtor_comments = "Администратор, Редактор, Модератор, Менеджер";
   if ($gravatar == "") $gravatar = "0";
   if ($project_logotip == "") $project_logotip = "img/logotip.png";  
   if ($tab_obzor == "") $tab_obzor = ss("Обзор");
@@ -180,10 +179,34 @@
   if ($kickstart == "") $kickstart = "0";
   if ($show_page_links == "") $show_page_links = "0";
   if ($ad_fon == "") $ad_fon = "1";
-  if ($search_design == "") $search_design = "1";
   if ($tag_design == "") $tag_design = "1";
+  if ($newsmail_design == "") $newsmail_design = "1";
   if ($geo == "") $geo = "51";
   if ($kolkey == "") $kolkey = "8";
+  // поиск
+  if ($search_in_pages == "") $search_in_pages = "1";
+  if ($search_in_papka == "") $search_in_papka = "0";
+  if ($search_in_razdel == "") $search_in_razdel = "0";
+  if ($search_design == "") $search_design = "1";
+  if ($search_col_razdel == "") $search_col_razdel = "10"; // ограничение кол-ва найденных разделов
+  if ($search_col_papka == "") $search_col_papka = "10"; // кол-во папок
+  if ($search_col_page == "") $search_col_page = "50"; // кол-во страниц
+  if ($search_col_showall == "") $search_col_showall = "500"; // кол-во страниц при нажатии Показать все
+  // Настройки фильтра
+  if ($filter_name == "") $filter_name = ss("Фильтр товаров");
+  if ($filter_show_all == "") $filter_show_all = ss("Показать все");
+  // Настройки магазина
+  if ($shop_text_val2 == "") $shop_text_val2 = ss(" руб.");
+  if ($shop_text_itogo == "") $shop_text_itogo = ss("Итого:");
+  if ($shop_text_oformit == "") $shop_text_oformit = ss("Оформить покупку");
+  if ($shop_text_korzina == "") $shop_text_korzina = ss("Ваша Корзина пуста.");
+  if ($shop_text_delete == "") $shop_text_delete = "×";
+  if ($shop_pole == "") $shop_pole = "";
+  if ($shop_admin_mail == "") $shop_admin_mail = $adminmail;
+  if ($shop_text_after_mail == "") $shop_text_after_mail = "<h1>".ss("Спасибо!")."</h1><h3>".ss("Ваш заказ успешно отправлен. В ближайшее время мы вам позвоним.")."</h3>";
+  if ($shop_spisok_pole == "") $shop_spisok_pole = ss("Ф.И.О.:*\nТелефон:*\nEmail:\nАдрес:\nДополнительная информация:");
+  //if ($shop_shablon_form_order == "") $shop_shablon_form_order = "";
+  //if ($shop_shablon_mail_client == "") $shop_shablon_mail_client = "";
   list($company_name, $company_fullname, $company_address, $company_time, $company_tel, $company_sot, $company_fax, $company_email, $company_map, $company_people) = explode("|||||",trim($row['sgatie']));
   $red_type = intval($row['red']); // редактор
   if (!isset($red) or $red=="") $red = $red_type;
@@ -258,7 +281,7 @@
     }
     
   // отключение кеширования для выборочных страниц // доработать
-  //$nocash = explode(" ",$mods."/?name=-search /--search ".trim(str_replace("  "," ",str_replace("\n"," ",$row['nocashe']))));
+  //$nocash = explode(" ",$mods."/?name=-search search ".trim(str_replace("  "," ",str_replace("\n"," ",$row['nocashe']))));
   ///////////////////////////////////////////////////////////////////////////////////////////////
 }
 #############################

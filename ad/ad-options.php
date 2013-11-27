@@ -101,26 +101,8 @@ if ($row['realadmin'] == 1) {
 		include ("ad/ad-header.php");
 		$ok = intval($ok);
 		// Получаем настройки из mainfile
-		global $sitename, $startdate, $adminmail, $keywords, $description, $counter, $statlink, $postlink, $stopcopy, $registr, $pogoda, $flash, $sgatie, $ht_backup, $captcha_ok, $xnocashe, $jqueryui, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $comment_send, $company_name, $company_fullname, $company_address, $company_time, $company_tel, $company_sot, $company_fax, $company_email, $company_map, $company_people, $search_design, $tag_design, $add_fonts, $site_cash, $normalize, $project_logotip, $project_name, $geo, $kolkey, $add_clips, $add_mail_shablons, $sortable, $color_tema_html, $color_tema_css, $color_tema_js, $color_tema_php, $tab_obzor, $tab_show, $shop_text_val1, $shop_text_val2, $shop_text_itogo, $shop_text_oformit, $shop_text_korzina, $shop_text_delete, $shop_pole, $shop_admin_mail, $shop_text_after_mail,$shop_spisok_pole, $shop_shablon_form_order, $shop_shablon_mail_client, $shop_shablon_mail_admin, $head_insert, $filter_name, $filter_show_all, $gravatar, $strelka, $smile_icons;
+		global $sitename, $startdate, $adminmail, $keywords, $description, $counter, $statlink, $postlink, $stopcopy, $registr, $pogoda, $flash, $sgatie, $ht_backup, $captcha_ok, $xnocashe, $jqueryui, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $comment_send, $company_name, $company_fullname, $company_address, $company_time, $company_tel, $company_sot, $company_fax, $company_email, $company_map, $company_people, $search_design, $tag_design, $add_fonts, $site_cash, $normalize, $project_logotip, $project_name, $geo, $kolkey, $add_clips, $add_mail_shablons, $sortable, $color_tema_html, $color_tema_css, $color_tema_js, $color_tema_php, $tab_obzor, $tab_show, $shop_text_val1, $shop_text_val2, $shop_text_itogo, $shop_text_oformit, $shop_text_korzina, $shop_text_delete, $shop_pole, $shop_admin_mail, $shop_text_after_mail,$shop_spisok_pole, $shop_shablon_form_order, $shop_shablon_mail_client, $shop_shablon_mail_admin, $head_insert, $filter_name, $filter_show_all, $gravatar, $strelka, $smile_icons, $avtor_comments, $search_in_pages, $search_in_papka, $search_in_razdel, $newsmail_design, $search_col_razdel, $search_col_papka, $search_col_page, $search_col_showall;
 		
-		// Настройки фильтра
-		if ($filter_name == "") $filter_name = ss("Фильтр товаров");
-  		if ($filter_show_all == "") $filter_show_all = ss("Показать все");
-
-  		// Настройки магазина
-		if ($shop_text_val2 == "") $shop_text_val2 = ss(" руб.");
-		if ($shop_text_itogo == "") $shop_text_itogo = ss("Итого:");
-		if ($shop_text_oformit == "") $shop_text_oformit = ss("Оформить покупку");
-		if ($shop_text_korzina == "") $shop_text_korzina = ss("Ваша Корзина пуста.");
-		if ($shop_text_delete == "") $shop_text_delete = "×";
-		if ($shop_pole == "") $shop_pole = "";
-		if ($shop_admin_mail == "") $shop_admin_mail = $adminmail;
-		if ($shop_text_after_mail == "") $shop_text_after_mail = "<h1>".ss("Спасибо!")."</h1><h3>".ss("Ваш заказ успешно отправлен. В ближайшее время мы вам позвоним.")."</h3>";
-		if ($shop_spisok_pole == "") $shop_spisok_pole = ss("Ф.И.О.:*\nТелефон:*\nEmail:\nАдрес:\nДополнительная информация:");
-		//if ($shop_shablon_form_order == "") $shop_shablon_form_order = "";
-		//if ($shop_shablon_mail_client == "") $shop_shablon_mail_client = "";
-		//if ($shop
-
 		$fon_colors = array('#ffffff','#e1e1e1','#cccccc','#b3b3b3','#9a9a9a','#666666','#333333','#000000','#d8f8c4','#ccf4b4','#c4fccc','#c4fccc','#fcfcac','#fcfca4','#fcf9c7','#fce4ac','#fce4d4','#fcccbc','#fcd4dc','#fcccd4','#ddf3fe','#cdeeff','#defff8','#cafff3','#dcdcfc','#ccccfc','#ecdcfc','#ecccfc','#82317a');
 		$ad_fon_option = ""; // Выбор фоновок для админки
 		for ($i=0; $i < count($fon_colors); $i++) {
@@ -140,18 +122,17 @@ if ($row['realadmin'] == 1) {
 
 $opt_save = ":";
 if ($ok==1) $opt_save = " сохранены";
-
+// mainrazdel0
 echo "<table class='w100 mw800 pm0 block_back'><tr valign=top><td id='razdel_td' class='radius nothing'>
 <form action='".$admin_file.".php' method='post' name='form'>
 	<div id='razdels' style='width:340px;'>";
 	echo "<div id='mainrazdel8' class='dark_pole2sel'><a class='base_page' onclick=\"options_show('8','show_first')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='.'></span><span class='plus20'>Начальные настройки</span></div></a></div>";
+	echo "<div id='mainrazdel1' class='dark_pole2'><a class='base_page' onclick=\"options_show('1','show_options_company')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='Y'></span><span class='plus20'>Карточка компании (мини блоки)</span></div></a></div>";
+	echo "<div id='mainrazdel3' class='dark_pole2'><a class='base_page' onclick=\"options_show('3','show_options_adspeed')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='z'></span><span class='plus20'>Администрирование</span></div></a></div>";
+	echo "<div id='mainrazdel5' class='dark_pole2'><a class='base_page' onclick=\"options_show('5','show_options_zagotovka')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='7'></span><span class='plus20'>Редактор</span></div></a></div>";
+	echo "<div id='mainrazdel15' class='dark_pole2'><a class='base_page' onclick=\"options_show('15','show_options_comments')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon=\"'\"></span><span class='plus20'>Комментарии</span></div></a></div>";
 	echo "<div id='mainrazdel12' class='dark_pole2'><a class='base_page' onclick=\"options_show('12','show_options_fonts')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='i'></span><span class='plus20'>Шрифты</span></div></a></div>";
 	echo "<div id='mainrazdel13' class='dark_pole2'><a class='base_page' onclick=\"options_show('13','show_shop')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='$'></span><span class='plus20'>Магазин</span></div></a></div>";
-	echo "<div id='mainrazdel0' class='dark_pole2'><a class='base_page' onclick=\"options_show('0','show_options')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='Z'></span><span class='plus20'>Основные настройки Сайта</span></div></a></div>";
-	echo "<div id='mainrazdel1' class='dark_pole2'><a class='base_page' onclick=\"options_show('1','show_options_company')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='Y'></span><span class='plus20'>Карточка компании (мини блоки)</span></div></a></div>";
-	echo "<div id='mainrazdel5' class='dark_pole2'><a class='base_page' onclick=\"options_show('5','show_options_zagotovka')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='7'></span><span class='plus20'>Настройки редактора</span></div></a></div>";
-	echo "<div id='mainrazdel15' class='dark_pole2'><a class='base_page' onclick=\"options_show('15','show_options_comments')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon=\"'\"></span><span class='plus20'>Настройки комментариев</span></div></a></div>";
-	echo "<div id='mainrazdel3' class='dark_pole2'><a class='base_page' onclick=\"options_show('3','show_options_adspeed')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='z'></span><span class='plus20'>Настройки Администрирования</span></div></a></div>";
 	echo "<br>";
 	echo "<div id='mainrazdel4' class='dark_pole2'><a class='base_page' onclick=\"options_show('4','show_options_pass_block')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='O'></span><span class='plus20'>Смена пароля и Блокировка по IP</span></div></a></div>";
 	echo "<div id='mainrazdel7' class='dark_pole2'><a class='base_page' onclick=\"options_show('7','show_options_oldfotos'); trash_pics();\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='1'></span><span class='plus20'>Удаление старых фото</span></div></a></div>";
@@ -196,7 +177,7 @@ echo "<li><a href='http://hotel-s.ru' target='_blank'>Официальный с�
 	
 echo "<table class='table_light'>
 <tr valign='top'><td style='min-width:250px;'>
-<b>Включить <a href='http://necolas.github.com/normalize.css/' target='_blank'>normalize.css</a></b>:</td><td class='small'>
+Включить <a href='http://necolas.github.com/normalize.css/' target='_blank'>normalize.css</a>:</td><td class='small'>
 ".select("options[normalize]", "0,1", "НЕТ,ДА", $normalize)."<br>
 Нормализация отличается от подхода reset.css тем, что выравнивает различия стандартных стилей разных браузеров и пытается нейтрализовать баги, не сбрасывая при этом самих стандартных стилей.
 </td></tr>
@@ -243,7 +224,7 @@ switch($kickstart) {
 if ($kickstart != 0) echo " <a target='_blank' class='button small' href='".$kick_link."' title='Открыть сайт CSS-фреймворка «".$kick_name."»'><span class='icon small black' data-icon='S'></span> ".$kick_name."</a>";
 
 echo "</td><td class=small>
-".select("options[kickstart]", "0,1,2,3,4,5,6,7,8,9,10,11", "-- НЕТ --,KickStart,CSSframework,Skeleton,Kube,Bootstrap,1140 Grid,Toast,Blueprint,YUI CSS Grids,960gs (12 и/или 16 колонок),960gs (24 колонки)", $kickstart, ' id=kickstart onchange="if ( $(\'#kickstart\').val() == 1) $(\'#frame1\').show(); else $(\'#frame1\').hide(); if ( $(\'#kickstart\').val() == 6) $(\'#frame6\').show(); else $(\'#frame6\').hide(); "')."
+".select("options[kickstart]", "0,1,2,3,4,5,6,7,8,9,10,11", "- НЕТ -,KickStart,CSSframework,Skeleton,Kube,Bootstrap,1140 Grid,Toast,Blueprint,YUI CSS Grids,960gs (12 и/или 16 колонок),960gs (24 колонки)", $kickstart, ' id=kickstart onchange="if ( $(\'#kickstart\').val() == 1) $(\'#frame1\').show(); else $(\'#frame1\').hide(); if ( $(\'#kickstart\').val() == 6) $(\'#frame6\').show(); else $(\'#frame6\').hide(); "')."
 <br>Ссылка на сайт фреймворка (для просмотра правил оформления CSS и HTML) появится слева после сохранения.
 
 <pre id='frame1' style='display:none;'>
@@ -275,12 +256,12 @@ body {}
 </td></tr>
 
 <tr valign=top><td style='min-width:250px;'>
-<b>Включить вкладки («табы»)</b>:</td><td class=small>
+Включить вкладки («табы»):</td><td class=small>
 ".select("options[tab_show]", "0,1", "НЕТ,ДА", $tab_show)."<br>Вкладки будут работать только при включенном jQuery UI или использовании css-фреймворка Cube или KickStart.<br><br>Название первой вкладки по-умолчанию (если вкладки начинаются с текста):<br>".input("options[tab_obzor]", $tab_obzor, "100%")."
 </td></tr>
 
 <tr valign=top><td style='min-width:250px;'>
-<b>Включить <a href='http://tinysort.sjeiti.com' target='_blank'>сортировку TinySort</a></b>:</td><td class=small>
+Включить <a href='http://tinysort.sjeiti.com' target='_blank'>сортировку TinySort</a>:</td><td class=small>
 ".select("options[sortable]", "0,1", "НЕТ,ДА", $sortable)."<br>
 Позволяет сортировать любые элементы, обращаясь к ним через jQuery. <a class='punkt' onclick=\"$('#sortable').toggle('slow');\">Пример</a>.
 <div id=sortable style='display:none;'>".close_button('sortable')."
@@ -295,90 +276,6 @@ body {}
 </div>
 </td></tr>
 
-</table>
-<div style='text-align:center;'><input type='submit' value=' Сохранить ' style='width:300px; height:40px;'></div>
-<input type='hidden' name='op' value='options_save'>
-</div>
-
-
-<div id='show_shop' class='show_pole pl10' style='display:none;'>
-	<h1>Подключение магазина</h1>
-	<p><b>Блок [корзина]</b> можно поставить в любом месте сайта. Он поддерживает добавление/удаление товаров и подсчет итоговой суммы. Работает через куки (cookie).
-	<p><b>Cсылку «Купить»</b> можно создать в шаблоне блока, раздела или страниц раздела — для взаимодействия с блоком [корзина]. Помимо использования в шаблонах, ссылку «Купить» можно использовать в любом произвольном месте. Ссылка содержит id страницы раздела и стоимость товара, описанного на этой странице. При массовом наполнении реализуется за счет поля «Стоимость» (или «Цена») и шаблона.<br>
-	Код ссылки и кнопки «Купить»:<br>
-<pre>&lt;a onclick=\"shop_add_tovar([id],[price])\"&gt;Купить&lt;/a&gt;
-&lt;button onclick=\"shop_add_tovar([id],[price])\"&gt;Купить&lt;/button&gt;</pre>
-	Вместо блоков можно использовать и цифры, например (2 - номер страницы, 590 — стоимость в рублях):<br>
-	<pre>&lt;a onclick=\"shop_add_tovar(2,590)\"&gt;Купить&lt;/a&gt;</pre>
-	<p>Использование в шаблоне блоков [Купить_ссылка] и [Купить_кнопка] возможно только при подключении поля, которое содержит цену товара. В РАЗРАБОТКЕ!
-	<table class='table_light'>
-	<tr valign=top><td colspan=2>
-
-	<h1>Настройка Фильтра (блок [фильтр])</h1>
-	</td></tr><tr valign=top><td width=40%>
-	Заголовок «Фильтр товаров» (чтобы убрать, замените на пробел)</td><td class=small>
-	".input("options[filter_name]", $filter_name, "100%")."
-	</td></tr><tr valign=top><td>
-	Кнопка «Показать все» (или «убрать все фильтры»):</td><td class=small>
-	".input("options[filter_show_all]", $filter_show_all, "100%")."
-	</td></tr><tr valign=top><td colspan=2>
-
-	<h1>Настройка Корзины</h1>
-	</td></tr><tr valign=top><td width=40%>
-	Денежный знак слева или справа от суммы:</td><td class=small>
-	".input("options[shop_text_val1]", $shop_text_val1, 4)." ЧИСЛО ".input("options[shop_text_val2]", $shop_text_val2, 4)."<br>
-	Пример: $ ЧИСЛО или ЧИСЛО руб.
-	</td></tr><tr valign=top><td>
-	Поле для автоматических блоков [Купить_ссылка] и [Купить_кнопка]</td><td class=small>
-	".input("options[shop_pole]", $shop_pole, "100%")."<br>Блоки можно использовать в шаблонах.
-	</td></tr><tr valign=top><td>
-	Замена надписи на ссылке «Оформить покупку»:</td><td class=small>
-	".input("options[shop_text_oformit]", $shop_text_oformit, "100%")."
-	</td></tr><tr valign=top><td>
-	Замена надписи «Итого:»:</td><td class=small>
-	".input("options[shop_text_itogo]", $shop_text_itogo, "100%")."
-	</td></tr><tr valign=top><td>
-	Замена надписи «Ваша Корзина пуста.»:</td><td class=small>
-	".input("options[shop_text_korzina]", $shop_text_korzina, "100%")."
-	</td></tr><tr valign=top><td>
-	Замена надписи на кнопке удаления товара «×»:</td><td class=small>
-	".input("options[shop_text_delete]", $shop_text_delete, "100%")."
-	</td></tr><tr valign=top><td colspan=2>
-
-	<h1>Настройка Оформления заказа</h1>
-	</td></tr><tr valign=top><td>
-	Список полей для отправки (разделяется через Enter):</td><td class=small>
-	".input("options[shop_spisok_pole]", $shop_spisok_pole, 100, "txt")."<br>
-	Если после названия поля поставить «звездочку» — поле будет обязательным для заполнения. Пример: Ф.И.О.:*
-	</td></tr><tr valign=top><td>
-	Шаблон формы отправки заказа:</td><td class=small>
-	".input("options[shop_shablon_form_order]", $shop_shablon_form_order, 100, "txt")."
-	</td></tr><tr valign=top><td colspan=2>
-
-	<h1>Настройка Отправки заказа</h1>
-	</td></tr><tr valign=top><td>
-	Email для приёма заказов:</td><td class=small>
-	".input("options[shop_admin_mail]", $shop_admin_mail, "100%")."
-	</td></tr><tr valign=top><td>
-	Текст после отправки формы заказа:</td><td class=small>
-	".input("options[shop_text_after_mail]", $shop_text_after_mail, 60, "txt")."
-	</td></tr><tr valign=top><td>
-	Шаблон письма отправки заказа клиенту:</td><td class=small>
-	".input("options[shop_shablon_mail_client]", $shop_shablon_mail_client, 100, "txt")."
-	</td></tr><tr valign=top><td>
-	Шаблон письма отправки заказа администратору:</td><td class=small>
-	".input("options[shop_shablon_mail_admin]", $shop_shablon_mail_admin, 100, "txt")."
-	</td></tr>
-
-	</table>
-	<div style='text-align:center;'><input type='submit' value=' Сохранить ' style='width:300px; height:40px;'></div>
-	<input type='hidden' name='op' value='options_save'>
-	</div>
-
-
-
-<div id='show_options' class='show_pole pl10' style='display:none;'>
-	<table class=table_light>
 
 	<tr valign=top><td style='min-width:250px;'>
 	Название сайта (для title):</td><td class=small>
@@ -456,19 +353,123 @@ body {}
 	</td></tr>
 
 	<tr valign=top><td>
-	Дизайн для страницы поиска:</td><td>
-	".select("options[search_design]", $id_designs, $title_designs, $search_design)." В дизайне должен быть блок [содержание]
-	</td></tr>
-
-	<tr valign=top><td>
 	Дизайн для страницы тэгов (ключевых слов):</td><td class=small>
 	".select("options[tag_design]", $id_designs, $title_designs, $tag_design)." В дизайне должен быть блок [содержание]
 	</td></tr>
 
+	<tr valign=top><td>
+	Дизайн для страницы подписки на новости:</td><td class=small>
+	".select("options[newsmail_design]", $id_designs, $title_designs, $newsmail_design)." В дизайне должен быть блок [содержание]
+	</td></tr>
+
 	<tr valign=top class=p4><td>
 	Разделитель между датой и названием страницы, а также между названием раздела и названием папки:</td><td class=small>
-	".input("options[strelka]", $strelka, "50%")."
+	".input("options[strelka]", $strelka, 30)."
 	<br>По-умолчанию, стрелка &rarr;
+	</td></tr>
+
+	<tr valign=top><td colspan='2' class='black_grad'>
+	<h2>Поиск по сайту поставить на сайт можно автоматическим блоком [поиск]</h2>
+	</td></tr>
+
+	<tr valign=top><td>
+	Включить поиск по:</td><td>".select("options[search_in_pages]", "0,1", "НЕТ,ДА", $search_in_pages)." страницам, 
+	".select("options[search_in_papka]", "0,1", "НЕТ,ДА", $search_in_papka)." папкам и 
+	".select("options[search_in_razdel]", "0,1", "НЕТ,ДА", $search_in_razdel)." разделам.
+	</td></tr>
+
+	<tr valign=top class=p4><td>
+	Ограничение количества найденных:</td><td class=small>
+	".input("options[search_col_page]", $search_col_page, 4)." страниц, 
+	".input("options[search_col_papka]", $search_col_papka, 3)." папок и 
+	".input("options[search_col_razdel]", $search_col_razdel, 3)." разделов
+	</td></tr>
+
+	<tr valign=top class=p4><td>
+	Ограничение количества найденных страниц при расширенном поиске</td><td class=small>
+	".input("options[search_col_showall]", $search_col_showall, 7)."
+	</td></tr>
+
+	<tr valign=top><td>
+	Дизайн для страницы поиска:</td><td>
+	".select("options[search_design]", $id_designs, $title_designs, $search_design)." В дизайне должен быть блок [содержание]
+	</td></tr>
+
+</table>
+<div style='text-align:center;'><input type='submit' value=' Сохранить ' style='width:300px; height:40px;'></div>
+<input type='hidden' name='op' value='options_save'>
+</div>
+
+
+<div id='show_shop' class='show_pole pl10' style='display:none;'>
+	<h1>Подключение магазина</h1>
+	<p><b>Блок [корзина]</b> можно поставить в любом месте сайта. Он поддерживает добавление/удаление товаров и подсчет итоговой суммы. Работает через куки (cookie).
+	<p><b>Cсылку «Купить»</b> можно создать в шаблоне блока, раздела или страниц раздела — для взаимодействия с блоком [корзина]. Помимо использования в шаблонах, ссылку «Купить» можно использовать в любом произвольном месте. Ссылка содержит id страницы раздела и стоимость товара, описанного на этой странице. При массовом наполнении реализуется за счет поля «Стоимость» (или «Цена») и шаблона.<br>
+	Код ссылки и кнопки «Купить»:<br>
+<pre>&lt;a onclick=\"shop_add_tovar([id],[price])\"&gt;Купить&lt;/a&gt;
+&lt;button onclick=\"shop_add_tovar([id],[price])\"&gt;Купить&lt;/button&gt;</pre>
+	Вместо блоков можно использовать и цифры, например (2 - номер страницы, 590 — стоимость в рублях):<br>
+	<pre>&lt;a onclick=\"shop_add_tovar(2,590)\"&gt;Купить&lt;/a&gt;</pre>
+	
+	<p class=hide>Использование в шаблоне блоков [Купить_ссылка] и [Купить_кнопка] возможно только при подключении поля, которое содержит цену товара. В РАЗРАБОТКЕ!</p>
+
+	<table class='table_light'>
+	<tr valign=top><td colspan=2>
+
+	<h1>Настройка Фильтра (блок [фильтр])</h1>
+	</td></tr><tr valign=top><td width=40%>
+	Заголовок «Фильтр товаров» (чтобы убрать, замените на пробел)</td><td class=small>
+	".input("options[filter_name]", $filter_name, "100%")."
+	</td></tr><tr valign=top><td>
+	Кнопка «Показать все» (или «убрать все фильтры»):</td><td class=small>
+	".input("options[filter_show_all]", $filter_show_all, "100%")."
+	</td></tr><tr valign=top><td colspan=2>
+
+	<h1>Настройка Корзины</h1>
+	</td></tr><tr valign=top><td width=40%>
+	Денежный знак слева или справа от суммы:</td><td class=small>
+	".input("options[shop_text_val1]", $shop_text_val1, 4)." ЧИСЛО ".input("options[shop_text_val2]", $shop_text_val2, 4)."<br>
+	Пример: $ ЧИСЛО или ЧИСЛО руб.
+	</td></tr><tr valign=top><td>
+	Поле для автоматических блоков [Купить_ссылка] и [Купить_кнопка]</td><td class=small>
+	".input("options[shop_pole]", $shop_pole, "100%")."<br>Блоки можно использовать в шаблонах.
+	</td></tr><tr valign=top><td>
+	Замена надписи на ссылке «Оформить покупку»:</td><td class=small>
+	".input("options[shop_text_oformit]", $shop_text_oformit, "100%")."
+	</td></tr><tr valign=top><td>
+	Замена надписи «Итого:»:</td><td class=small>
+	".input("options[shop_text_itogo]", $shop_text_itogo, "100%")."
+	</td></tr><tr valign=top><td>
+	Замена надписи «Ваша Корзина пуста.»:</td><td class=small>
+	".input("options[shop_text_korzina]", $shop_text_korzina, "100%")."
+	</td></tr><tr valign=top><td>
+	Замена надписи на кнопке удаления товара «×»:</td><td class=small>
+	".input("options[shop_text_delete]", $shop_text_delete, "100%")."
+	</td></tr><tr valign=top><td colspan=2>
+
+	<h1>Настройка Оформления заказа</h1>
+	</td></tr><tr valign=top><td>
+	Список полей для отправки (разделяется через Enter):</td><td class=small>
+	".input("options[shop_spisok_pole]", $shop_spisok_pole, 100, "txt")."<br>
+	Если после названия поля поставить «звездочку» — поле будет обязательным для заполнения. Пример: Ф.И.О.:*
+	</td></tr><tr valign=top><td>
+	Шаблон формы отправки заказа:</td><td class=small>
+	".input("options[shop_shablon_form_order]", $shop_shablon_form_order, 100, "txt")."
+	</td></tr><tr valign=top><td colspan=2>
+
+	<h1>Настройка Отправки заказа</h1>
+	</td></tr><tr valign=top><td>
+	Email для приёма заказов:</td><td class=small>
+	".input("options[shop_admin_mail]", $shop_admin_mail, "100%")."
+	</td></tr><tr valign=top><td>
+	Текст после отправки формы заказа:</td><td class=small>
+	".input("options[shop_text_after_mail]", $shop_text_after_mail, 60, "txt")."
+	</td></tr><tr valign=top><td>
+	Шаблон письма отправки заказа клиенту:</td><td class=small>
+	".input("options[shop_shablon_mail_client]", $shop_shablon_mail_client, 100, "txt")."
+	</td></tr><tr valign=top><td>
+	Шаблон письма отправки заказа администратору:</td><td class=small>
+	".input("options[shop_shablon_mail_admin]", $shop_shablon_mail_admin, 100, "txt")."
 	</td></tr>
 
 	</table>
@@ -720,20 +721,27 @@ echo "<div id='show_options_comments' class='show_pole pl10' style='display:none
 	Использование аватаров <a href='http://ru.gravatar.com' target='_blank'>Gravatar</a> в комментариях:</td><td class=small>
 	".select("options[gravatar]", "0,1", "НЕТ,ЕСТЬ", $gravatar)."</td></tr>
 
-	<tr valign=top class=p3><td>
+	<tr valign=top><td>
 	Отключить защиту комментариев: </td><td class=small>
 	".select("options[captcha_ok]", "0,1", "НЕТ,ЕСТЬ", $captcha_ok)."
 	<br>По умолчанию - выкл. При отключении можно не вводить проверочный код или вводить его неправильно — он не будет проверяться. </td></tr>
 
-	<tr valign=top class=p4><td>
+	<tr valign=top><td>
 	Получать письма о новых комментариях:</td><td class=small>
 	".select("options[comment_send]", "0,1", "НЕТ,ДА", $comment_send)."
-	<br>Отправка уведомлений о новых комментариях на почту администратору.
+	<br>Отправка уведомлений о новых комментариях на почту администратора.
 	</td></tr>
 
 	<tr valign=top><td>
 	Показывать комментарии в администрировании:</td><td class=small>
 	".select("options[show_comments]", "0,1", "НЕТ,ДА", $show_comments)."
+	</td></tr>
+
+	<tr valign=top><td>
+	Варианты отправителей (должности, ники или имена), через запятую:</td><td class=small>
+	".input("options[avtor_comments]", $avtor_comments, 100)."
+	При ответе на комментарий можно выбрать отправителя или написать что-то другое.<br>
+	По-умолчанию будет предложен первый вариант.
 	</td></tr>
 
 	</table>
@@ -1087,7 +1095,7 @@ echo "
 
 			$ed2_buttons = $options['ed2_button_html']."|".$options['ed2_button_formatting']."|".$options['ed2_button_bold']."|".$options['ed2_button_italic']."|".$options['ed2_button_deleted']."|".$options['ed2_button_underline']."|".$options['ed2_button_unorderedlist']."|".$options['ed2_button_orderedlist']."|".$options['ed2_button_outdent']."|".$options['ed2_button_indent']."|".$options['ed2_button_image']."|".$options['ed2_button_video']."|".$options['ed2_button_file']."|".$options['ed2_button_table']."|".$options['ed2_button_link']."|".$options['ed2_button_alignment']."|".$options['ed2_button_horizontalrule']."|".$options['ed2_button_more']."|".$options['ed2_button_link2']."|".$options['ed2_button_block']."|".$options['ed2_button_pre']."|".$options['ed2_button_fullscreen']."|".$options['ed2_button_clips']."|".$options['ed2_button_fontcolor']."|".$options['ed2_button_fontsize']."|".$options['ed2_button_fontfamily']."|".$options['ed2_minHeight']."|".$options['ed2_direction'];
 
-			$advanced = $options['jqueryui']."|".$options['show_comments']."|".$options['show_userposts']."|".$options['show_page']."|".$options['show_reserv']."|".$options['uskorenie_blokov']."|".$options['kickstart']."|".$options['show_page_links']."|".$options['ad_fon']."|".$options['search_design']."|".$options['tag_design']."|".$options['add_fonts']."|".$options['normalize']."|".$options['project_logotip']."|".$options['project_name']."|".$options['geo']."|".$options['kolkey']."|".$options['add_clips']."|".$options['sortable']."|".$options['color_tema_html']."|".$options['color_tema_css']."|".$options['color_tema_js']."|".$options['color_tema_php']."|".$options['tab_obzor']."|".$options['tab_show']."|".$options['shop_text_val1']."|".$options['shop_text_val2']."|".$options['shop_text_itogo']."|".$options['shop_text_oformit']."|".$options['shop_text_korzina']."|".$options['shop_text_delete']."|".$options['shop_pole']."|".$options['shop_admin_mail']."|".$options['shop_text_after_mail']."|".$options['shop_spisok_pole']."|".$options['shop_shablon_form_order']."|".$options['shop_shablon_mail_client']."|".$options['shop_shablon_mail_admin']."|".$ed2_buttons."|".$options['head_insert']."|".$options['filter_name']."|".$options['filter_show_all']."|".$options['gravatar']."|".$options['ed2_div_convert']."|".$options['strelka']."|".$options['smile_icons']."|".$options['add_mail_shablons'];
+			$advanced = $options['jqueryui']."|".$options['show_comments']."|".$options['show_userposts']."|".$options['show_page']."|".$options['show_reserv']."|".$options['uskorenie_blokov']."|".$options['kickstart']."|".$options['show_page_links']."|".$options['ad_fon']."|".$options['search_design']."|".$options['tag_design']."|".$options['add_fonts']."|".$options['normalize']."|".$options['project_logotip']."|".$options['project_name']."|".$options['geo']."|".$options['kolkey']."|".$options['add_clips']."|".$options['sortable']."|".$options['color_tema_html']."|".$options['color_tema_css']."|".$options['color_tema_js']."|".$options['color_tema_php']."|".$options['tab_obzor']."|".$options['tab_show']."|".$options['shop_text_val1']."|".$options['shop_text_val2']."|".$options['shop_text_itogo']."|".$options['shop_text_oformit']."|".$options['shop_text_korzina']."|".$options['shop_text_delete']."|".$options['shop_pole']."|".$options['shop_admin_mail']."|".$options['shop_text_after_mail']."|".$options['shop_spisok_pole']."|".$options['shop_shablon_form_order']."|".$options['shop_shablon_mail_client']."|".$options['shop_shablon_mail_admin']."|".$ed2_buttons."|".$options['head_insert']."|".$options['filter_name']."|".$options['filter_show_all']."|".$options['gravatar']."|".$options['ed2_div_convert']."|".$options['strelka']."|".$options['smile_icons']."|".$options['add_mail_shablons']."|".$options['avtor_comments']."|".$options['search_in_pages']."|".$options['search_in_papka']."|".$options['search_in_razdel']."|".$options['newsmail_design']."|".$options['search_col_razdel']."|".$options['search_col_papka']."|".$options['search_col_page']."|".$options['search_col_showall'];
 			// sitename	startdate	adminmail	keywords	description	counter	statlink	postlink	registr	pogoda	flash	sgatie	stopcopy	nocashe	adminmes	red	comment	captcha_ok	ht_backup
 			$db->sql_query("UPDATE `".$prefix."_config` SET 
 				`sitename` = '".mysql_real_escape_string($options['sitename'])."',
