@@ -730,7 +730,7 @@ function edit_main($id) {
 	<h2>Название дизайна</h2>
 	<textarea class='big w100 h40 f16' name='title' rows='1' cols='10'>".$title."</textarea>
 	".help_design()."
-	<h2>Содержание дизайна (HTML):".button_resize_red($red, true)."</h2>";
+	<h2>Содержание дизайна (HTML):".button_resize_red($red, true)."</h2>"; 
   	echo redactor($red, $text, 'text'); // редактор: типа редактора, редактируемое поле
 
 	echo "<span class=h2>Использованные в дизайне стили CSS</span>
@@ -1236,10 +1236,13 @@ function edit_main($id) {
 		$options = explode("|",$useit);
 		$module_name = $options[0];
 		$options = str_replace($module_name."|","",$useit);
-	} else $options = mb_substr($useit, 1, mb_strlen($useit)-1);
+	} else {
+		$options = mb_substr($useit, 1, mb_strlen($useit)-1);
+		$module_name = "";
+	}
 
 	// обнулили все опции
-	$titleshow = $media = $folder = $datashow = $tagdelete = $ipdatauser = $design = $open_all = $catshow = $main = $daleeshow = $openshow = $number = $add = $size = $papki_numbers = $zagolovokin = $menu = $noli = $html = $show_title = $random = $showlinks = $open_new_window = $shablon = $show_new_pages = $reload_link_show = $reload_link_time = 0;
+	$titleshow = $media = $folder = $datashow = $tagdelete = $ipdatauser = $design = $open_all = $catshow = $main = $daleeshow = $openshow = $number = $add = $size = $papki_numbers = $zagolovokin = $menu = $noli = $html = $show_title = $random = $showlinks = $open_new_window = $shablon = $show_new_pages = $reload_link_show = $reload_link_time = $reload_link_on_start = 0;
 	$opros_type = $limkol = $pageshow = $only_question = $opros_result = $foto_gallery_type = $re_menu = $notitlelink = $foto_num = 1;
 	$col_bukv = 50;
 	$img_width = 0;
@@ -1390,6 +1393,11 @@ function edit_main($id) {
 
 	if ($name == 3) {
 	echo "<tr>
+	<td>Дополнительное обновление блока сразу после загрузки (нужно для исправления загрузки некоторых JS-скриптов, к примеру опросов Вконтакте):</td>
+	<td>".select("options[reload_link_on_start]", "1,0", "ДА,НЕТ", $reload_link_on_start)."</td>
+	</tr>";
+
+	echo "<tr>
 	<td>Время автоматического обновления блока:</td>
 	<td>".select("options[reload_link_time]", "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,25,30,50,60,120,180,240,300,600", "ВЫКЛЮЧЕНО,1 сек.,2,3,4,5 сек.,6,7,8,9,10 сек.,11,12,13,14,15 сек.,16,17,18,19,20 сек.,25,30,50 сек.,1 мин.,2 мин.,3 мин.,4 мин.,5 мин.,10 мин.", $reload_link_time)."</td>
 	</tr>";
@@ -1405,12 +1413,12 @@ function edit_main($id) {
 	</tr>";
 	}
 
-	if ($name == 0 or $name == 1 or $name == 9) {
+	//if ($name==0 or $name==1 or $name==2 or $name==4 or $name==6 or $name==8 or $name==9) {
 	echo "<tr>
 	<td>Назначить <b>CSS-класс</b> для блока. Прописать настройки класса можно в Главном (или другом) стиле CSS.</td>
 	<td>".input("options[class]", $class)."</td>
 	</tr>";
-	}
+	//}
 
 	if ($name == 0 or $name == 8) {
 	echo "<tr>
@@ -2173,12 +2181,15 @@ function mainpage_save($id=0, $type, $namo, $title, $text, $useit, $shablon, $de
 		}
 		if ($type!=2) $text = $module_name."|".implode("&",$text);
 		else $text = "pages|".implode("&",$text);
+
+		$text = str_replace("\\","",$text);
+
 		// Обновление
 		global $siteurl;
 		if ($type!=2) {
-			$db->sql_query("UPDATE ".$prefix."_mainpage SET `useit`='".$text."', `tables`='pages' WHERE `id`='".$id."';") or die('Не удалось обновить содержание.');
+			$db->sql_query("UPDATE ".$prefix."_mainpage SET `useit`='".mysql_real_escape_string($text)."', `tables`='pages' WHERE `id`='".$id."';") or die('Не удалось обновить содержание.');
 		} else {
-			$db->sql_query("UPDATE ".$prefix."_mainpage SET `text`='".$text."', `tables`='pages' WHERE `id`='".$id."';") or die('Не удалось обновить содержание.');
+			$db->sql_query("UPDATE ".$prefix."_mainpage SET `text`='".mysql_real_escape_string($text)."', `tables`='pages' WHERE `id`='".$id."';") or die('Не удалось обновить содержание.');
 		}
 		if ($op == "mainpage_save_ayax") { echo "Сохранил"; exit; }
 		elseif ($type == 3) Header("Location: sys.php?op=mainpage&type=element");
@@ -2198,16 +2209,18 @@ function mainpage_save($id=0, $type, $namo, $title, $text, $useit, $shablon, $de
 				","",$text);
 	}
 
-	$text = str_replace("<P>&nbsp;</P>"," ", str_replace("  "," ", str_replace("   "," ", trim($text))));
-	$namo = mysql_real_escape_string($namo);
-	$text = mysql_real_escape_string($text);
-	$useit = mysql_real_escape_string($useit);
-	$descriptionX = mysql_real_escape_string($descriptionX);
-	$keywordsX = mysql_real_escape_string($keywordsX);
+	// в php 5.4 это уже не нужно :)
+	$text = str_replace("\\","",str_replace("  "," ", str_replace("   "," ", trim($text))));
+	$namo = str_replace("\\","",trim($namo));
+	$title = str_replace("\\","",trim($title));
+	$useit = str_replace("\\","",trim($useit));
+	$shablon = str_replace("\\","",trim($shablon));
+	$descriptionX = str_replace("\\","",trim($descriptionX));
+	$keywordsX = str_replace("\\","",trim($keywordsX));
 
 	// Обратное преобразование textarea (замена на англ. букву e, костыль для текстового редактора)
-	//$text = str_replace("tеxtarea","textarea",$text); // ireplace
-	//$useit = str_replace("tеxtarea","textarea",$useit); // ireplace
+	$text = str_replace("tеxtarea","textarea",$text); // ireplace
+	$useit = str_replace("tеxtarea","textarea",$useit); // ireplace
 
 	$sql = "SELECT `text` FROM ".$prefix."_mainpage where `tables`='pages' and id='".$id."'";
 	$result = $db->sql_query($sql);
@@ -2215,7 +2228,7 @@ function mainpage_save($id=0, $type, $namo, $title, $text, $useit, $shablon, $de
 	if ($numrows = $db->sql_numrows($result) > 0) {
 		// Обновление
 		if ($type==3 && $namo == 7) $text = str_replace("<? ", "", str_replace(" ?>", "", $text));
-		$db->sql_query("UPDATE ".$prefix."_mainpage SET `name`='".$namo."', `title`='".$title."', `text`='".$text."', `useit`='".$useit."', `shablon`='".$shablon."', `tables`='pages', `description`='".$descriptionX."', `keywords`='".$keywordsX."' WHERE `id`='".$id."';") or die('Не удалось обновить содержание. Попробуйте нажать в Редакторе на кнопку "Чистка HTML"');
+		$db->sql_query("UPDATE ".$prefix."_mainpage SET `name`='".mysql_real_escape_string($namo)."', `title`='".mysql_real_escape_string($title)."', `text`='".mysql_real_escape_string($text)."', `useit`='".mysql_real_escape_string($useit)."', `shablon`='".mysql_real_escape_string($shablon)."', `tables`='pages', `description`='".mysql_real_escape_string($descriptionX)."', `keywords`='".mysql_real_escape_string($keywordsX)."' WHERE `id`='".$id."';") or die('Не удалось обновить содержание. Попробуйте нажать в Редакторе на кнопку "Чистка HTML"');
 
 		if ($op == "mainpage_save_ayax") { echo "Сохранил"; exit; }
 		elseif ($type == 2) Header("Location: sys.php");
@@ -2239,7 +2252,7 @@ function mainpage_save($id=0, $type, $namo, $title, $text, $useit, $shablon, $de
 			if ($n > 0 and ($s_tip==0 || $s_tip==7)) {
 				for ($x=0; $x < $n; $x++) {
 					$element = str_replace("  "," ",trim($elements[$x]));
-					if ($element != "") $db->sql_query("INSERT INTO ".$prefix."_spiski (`id`, `type`, `name`, `opis`, `sort`, `pages`, `parent`) VALUES (NULL, '".$namo."', '".$element."', '', '0', '', '0');") or die('Не удалось создать поле.');
+					if ($element != "") $db->sql_query("INSERT INTO ".$prefix."_spiski (`id`, `type`, `name`, `opis`, `sort`, `pages`, `parent`) VALUES (NULL, '".mysql_real_escape_string($namo)."', '".mysql_real_escape_string($element)."', '', '0', '', '0');") or die('Не удалось создать поле.');
 				}
 			}
 			$and = ""; 
@@ -2331,7 +2344,7 @@ function mainpage_save($id=0, $type, $namo, $title, $text, $useit, $shablon, $de
   		$text = str_replace("tеxtarea","textarea",$text); // ireplace
   		$useit = str_replace("tеxtarea","textarea",$useit); // ireplace
   		$shablon = str_replace("tеxtarea","textarea",$shablon); // ireplace
-		$db->sql_query("INSERT INTO ".$prefix."_mainpage (`id`, `type`, `name`, `title`, `text`, `useit`, `shablon`, `counter`, `tables`, `color`, `description`, `keywords`) VALUES (NULL, '".$type."', '".$namo."', '".$title."', '".$text."', '".$useit."', '".$shablon."', '0', 'pages', '0', '', '');") or die('Не удалось создать. Попробуйте еще раз и в случае неудачи обратитесь к разработчику.');
+		$db->sql_query("INSERT INTO ".$prefix."_mainpage (`id`, `type`, `name`, `title`, `text`, `useit`, `shablon`, `counter`, `tables`, `color`, `description`, `keywords`) VALUES (NULL, '".mysql_real_escape_string($type)."', '".mysql_real_escape_string($namo)."', '".mysql_real_escape_string($title)."', '".mysql_real_escape_string($text)."', '".mysql_real_escape_string($useit)."', '".mysql_real_escape_string($shablon)."', '0', 'pages', '0', '', '');") or die('Не удалось создать. Попробуйте еще раз и в случае неудачи обратитесь к разработчику.');
 	}
 
 	// узнаем id
@@ -2346,9 +2359,9 @@ function mainpage_save($id=0, $type, $namo, $title, $text, $useit, $shablon, $de
 	  		$text2 = str_replace("tеxtarea","textarea",$text2); // ireplace
 	  		$useit2 = str_replace("tеxtarea","textarea",$useit2); // ireplace
 	  		$shablon = str_replace("tеxtarea","textarea",$shablon); // ireplace
-			$db->sql_query("INSERT INTO ".$prefix."_mainpage (`id`, `type`, `name`, `title`, `text`, `useit`, `shablon`, `counter`, `tables`, `color`, `description`, `keywords`) VALUES (NULL, '2', '".$namo."', '".$title."', '".$text2."', '".$useit2."', '".$shablon."', '0', 'pages', '0', '', '');") or die('Не удалось создать раздел для БД. Попробуйте еще раз и в случае неудачи обратитесь к разработчику.');
+			$db->sql_query("INSERT INTO ".$prefix."_mainpage (`id`, `type`, `name`, `title`, `text`, `useit`, `shablon`, `counter`, `tables`, `color`, `description`, `keywords`) VALUES (NULL, '2', '".mysql_real_escape_string($namo)."', '".mysql_real_escape_string($title)."', '".mysql_real_escape_string($text2)."', '".mysql_real_escape_string($useit2)."', '".mysql_real_escape_string($shablon)."', '0', 'pages', '0', '', '');") or die('Не удалось создать раздел для БД. Попробуйте еще раз и в случае неудачи обратитесь к разработчику.');
 			// узнаем id папки для БД, чтобы перейти к ее настройке
-			$row2 = $db->sql_fetchrow($db->sql_query("SELECT `id` FROM ".$prefix."_mainpage where `tables`='pages' and `type`='2' and `name`='".$namo."' and `title`='".$title."' and `text`='".$text2."' and `useit`='".$useit2."'")) or die("SQL: select `id` from ".$prefix."_mainpage where `tables`='pages' and `type`='2' and `name`='".$namo."' and `title`='".$title."' and `text`='".$text2."' and `useit`='".$useit2."'");
+			$row2 = $db->sql_fetchrow($db->sql_query("SELECT `id` FROM ".$prefix."_mainpage where `tables`='pages' and `type`='2' and `name`='".mysql_real_escape_string($namo)."' and `title`='".mysql_real_escape_string($title)."' and `text`='".mysql_real_escape_string($text2)."' and `useit`='".mysql_real_escape_string($useit2)."'")) or die("SQL: select `id` from ".$prefix."_mainpage where `tables`='pages' and `type`='2' and `name`='".$namo."' and `title`='".$title."' and `text`='".$text2."' and `useit`='".$useit2."'");
 		}
 		// после сохранения откроем настройку раздела или блока 
 		Header("Location: sys.php?op=mainpage&id=".$row2['id']."&nastroi=1");
@@ -2433,7 +2446,7 @@ function mainpage_create_block($title, $name, $text, $modul, $useit, $design) {
 	$text = str_replace("tеxtarea","textarea",$text); // ireplace
 	$useit = str_replace("tеxtarea","textarea",$useit); // ireplace
 	$shablon = str_replace("tеxtarea","textarea",$shablon); // ireplace
-	$db->sql_query("INSERT INTO ".$prefix."_mainpage VALUES (NULL, '3', '".$name."', '".$title."', '".$text."', '".$useit."', '".$shablon."', '0', 'pages', '0', '', '')") or die("Не удалось создать блок. INSERT INTO ".$prefix."_mainpage VALUES (NULL, '3', '".$name."', '".$title."', '".$text."', '', '".$useit."', '".$shablon."', '0', 'pages', '0', '', '') ");
+	$db->sql_query("INSERT INTO ".$prefix."_mainpage VALUES (NULL, '3', '".mysql_real_escape_string($name)."', '".$title."', '".$text."', '".$useit."', '".$shablon."', '0', 'pages', '0', '', '')") or die("Не удалось создать блок. INSERT INTO ".$prefix."_mainpage VALUES (NULL, '3', '".$name."', '".$title."', '".$text."', '', '".$useit."', '".$shablon."', '0', 'pages', '0', '', '') ");
 	// узнаем id
 	$row = $db->sql_fetchrow($db->sql_query("SELECT `id` FROM ".$prefix."_mainpage where `tables`='pages' and `type`='3' and `name`='".$name."' and `title`='".$title."' and `text`='".$text."' and `useit`='".$useit."' limit 1"));
 	if ($name != 31) Header("Location: sys.php?op=".$admintip."&type=3&id=".$row['id']."&nastroi=1");

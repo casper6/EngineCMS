@@ -5,7 +5,7 @@ define ('ROOT_DIR', dirname ( __FILE__ ) ); // доработать!
 
 session_start(); // Для капчи (проверочный код-картинка от спама) // проверить вызов
 require_once("mainfile.php");
-global $strelka, $siteurl, $prefix, $name, $db, $admin, $sitename, $pagetitle, $pagetitle2, $registr, $pogoda, $flash, $keywords, $description, $counter, $startdate, $adminmail, $keywords2, $description2, $stopcopy, $nocash, $blocks, $http_siteurl, $display_errors, $gallery_css3, $gallery_lightbox, $gallery_carusel, $gallery_sly, $deviceType;
+global $strelka, $siteurl, $prefix, $name, $db, $admin, $sitename, $pagetitle, $pagetitle2, $registr, $pogoda, $flash, $keywords, $description, $counter, $startdate, $adminmail, $keywords2, $description2, $stopcopy, $nocash, $blocks, $http_siteurl, $display_errors, $gallery_css3, $gallery_lightbox, $gallery_carusel, $gallery_sly, $deviceType, $scrollyeah, $lightload, $spin;
 $nocash = $gallery_css3 = $gallery_lightbox = $gallery_carusel = $gallery_sly = $gallery_sly_full = $mp3_player = false;
 if ($name == "") $name = "index";
 $index_ok = true; // индексирование поисковиками
@@ -29,7 +29,7 @@ if (isset($pagetitles[$name])) {
     list($block, $stil) = include('page/'.substr($name, 1).'.php'); 
     $pagetitle = $pagetitles[$name];
 } else {
-	global $title_razdels, $txt_razdels, $useit_razdels, $pid, $class;
+	global $title_razdels, $txt_razdels, $useit_razdels, $pid;
 
 	// Настройки раздела по-умолчанию
 	$designpages = 0; // т.е. дизайн для страниц = дизайну разделов
@@ -264,6 +264,8 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 	}
 	parse_str($useitY);
 	
+	$class = stripslashes($class);
+
 	$show_in_razdel_array = explode(",", $show_in_razdel);
 	$no_show_in_razdel_array = explode(",", $no_show_in_razdel);
 
@@ -289,7 +291,7 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 		if ($useitX != aa("все") and $nameX != 2 and $useitX != "" and $razdel_open_name != "" and $razdel_open_name != "no") $block_title2 .= "<span class='open_all_small'> &nbsp; &#124; &nbsp; </span> <a href=-".$useitX." title=\"".$razdel_open_name."\" class='open_all_small'><u>".$razdel_open_name."</u></a>";
 		}
 	/////////////////////////////////////
-		$design_open = "<div class='".$shablonX."'>".$design[0]; 
+		$design_open = "<div class='".$shablonX." ".$class."'>".$design[0]; 
 		if ($titleshow != 0 and $titleshow != 3) {
 			if (($nameX==0 or $nameX==1 or $nameX==4 or $nameX==6 or $nameX==8 or $nameX==9) and $notitlelink==0) {
 				$design_open .= "<h3 class=\"h3_block_title class_".$class."\"><a href=".$alternative_title_link." title=\"".$block_title."\" class=\"h3_block_title class_".$class."\">".$block_title."</a>".$block_title2."</h3><div class=polosa></div>";
@@ -301,7 +303,7 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 		$design_close = $design[1]."</div>";
 	/////////////////////////////////////
 	} else {
-		$design_open = "<div class='".$shablonX."'>"; 
+		$design_open = "<div class='".$shablonX." ".$class."'>"; 
 		if ($titleshow != 0 and $titleshow != 3) {
 			if (($nameX==0 or $nameX==1 or $nameX==4 or $nameX==6 or $nameX==8 or $nameX==9) and $notitlelink==0) {
 				$design_open .= "<h3 class=\"".$shablonX." h3_block_title class_".$class."\"><a href=".$alternative_title_link." title=\"".$block_title."\" class=\"h3_block_title class_".$class."\">".$block_title."</a>".$block_title2."</h3><div class=polosa></div>";
@@ -678,7 +680,8 @@ case "3": # Блок ротатор рекламы
 		  });  
 	  }
 	  $(showrotator".$idX."());";
-	  if ($reload_link_time > 0) { 
+	  if ($reload_link_on_start != 0) $textX .= "setTimeout(function() { $(showrotator".$idX."()); }, 1000);";
+	  if ($reload_link_time != 0) {
 	  	$reload_link_time = $reload_link_time * 1000;
 	  	$textX .= "setInterval(function() { $(showrotator".$idX."()); }, ".$reload_link_time.");";
 	  }
@@ -1678,6 +1681,9 @@ case "31": # Блок JS
 	if ($year != $startdate) $god .= "—".$year;
 	$block = str_replace(aa("[год]"), "© ".$god, $block); // Промежуток лет ставится в дизайн
 
+	// Символ рубля
+	$block=str_replace(aa("[руб]"), "<span class='rur'>p<span>уб.</span></span>", $block); 
+
 	// Ставим статистику
 	$block=str_replace(aa("[статистика]"), $counter, $block); 
 
@@ -2144,6 +2150,10 @@ if ($gallery_sly == true) echo "<script src='includes/sly.min.js'></script><link
 if ($gallery_sly_full == true) echo "<script src='includes/sly.min.js'></script><link rel='stylesheet' href='includes/sly_full.css' media='screen' />";
 
 if ($js != "" && $js != "no") echo "<script src='js_".$js.".js'></script>";
+
+if ($lightload != 0) echo "<script src='includes/lightload.js'></script>";
+if ($spin != 0) echo "<script src='includes/spin.js'></script>";
+if ($scrollyeah != 0) echo "<script src='includes/scrollyeah.js'></script><link rel='stylesheet' href='includes/scrollyeah.css' />";
 
 echo "<link rel='alternate' href='/rss/' title='".$project_name." RSS' />
 <link rel='stylesheet' href='".$stil.".css' />";

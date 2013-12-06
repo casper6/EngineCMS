@@ -11,6 +11,7 @@ if ($realadmin==1) {
 
   function stat_main() {
     global $prefix, $db, $statlink;
+    $stat_razdel = $stat_page = "";
     $sql = "SELECT `name`, `title`, `counter` FROM ".$prefix."_mainpage where `tables`='pages' and `type`='2' order by `counter` desc";
     $result = $db->sql_query($sql) or die('Ошибка при попытке прочитать посещаемость разделов');
     while ($row = $db->sql_fetchrow($result)) {

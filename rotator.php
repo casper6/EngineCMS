@@ -1,9 +1,4 @@
 <?php
-header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
-header("Cache-Control: post-check=0, pre-check=0", false);
-header("Pragma: no-cache"); // HTTP/1.0
 header("Content-Type: text/html; charset=utf-8");
 require_once("mainfile.php");
 global $prefix, $db;
@@ -12,4 +7,7 @@ $row = $db->sql_fetchrow($db->sql_query("select `text` from ".$prefix."_mainpage
 $lines = explode("|", $row['text']);
 $i = array_rand($lines, 1);
 echo $lines[$i];
+
+//$lines = str_replace("\"","'",$row['text']);
+//echo $lines;
 ?>

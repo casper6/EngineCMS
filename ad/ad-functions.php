@@ -560,7 +560,7 @@ function redactor2($type, $txt, $name, $style="html") {
   return $echo;
 }
 ##########################################################################################
-function button_resize_red($redactor, $savebutton=false, $redactor_id) {
+function button_resize_red($redactor, $savebutton=false) { // redactor_id
   if ($redactor == 2) {
     if ($savebutton == true) { 
       $add = " $(\"#button_save\").show();"; 

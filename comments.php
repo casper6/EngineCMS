@@ -24,8 +24,16 @@ if ($comments_desc == 1) $dat = " desc"; else $dat = "";
   $result = $db->sql_query($sql_comm);
   $numrows = $db->sql_numrows($result);
   $nu = 0;
-  // Получаем шаблон
-  $sha = shablon_show("comments", $comment_shablon);
+
+  if ($comment_shablon < 20) // Получаем шаблон
+    $sha = shablon_show("comments", $comment_shablon);
+  else {
+    // Доступ к шаблону
+    $sql2 = "select `text` from ".$prefix."_mainpage where `tables`='pages' and `id`='".mysql_real_escape_string($comment_shablon)."' and `type`='6'";
+    $result2 = $db->sql_query($sql2);
+    $row2 = $db->sql_fetchrow($result2);
+    $sha = $row2['text'];
+  }
   $p_id = $avtor = $text = $date1 = $date2 = $ip = $drevo = $mail = $adres = $tel = $ava = array();
 
   $date_now = date("d m Y");

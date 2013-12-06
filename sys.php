@@ -81,23 +81,6 @@ $pagetitle = "- ".aa("Администрирование");
 // Стирание кеша главной страницы
 if (is_admin($admin)) recash("/");
 
-global $razdel_sort, $razdel_sort_set, $hide_top;
-
-if (isset($_COOKIE["razdel_sort"])) $razdel_sort = intval($_COOKIE["razdel_sort"]);
-else $razdel_sort = 0;
-if ($razdel_sort_set == 1 || $razdel_sort_set == 2 || $razdel_sort_set == 0) {
-	setcookie("razdel_sort", intval($razdel_sort_set), time()+60*60*24*360);
-	$razdel_sort = intval($razdel_sort_set);
-}
-//$razdel_sort = intval($razdel_sort); // Сортировка разделов в Содержании
-
-/*
-$razdel_sort = 0;
-if (!isset($_COOKIE["razdel_sort"])) { 
-	setcookie("razdel_sort", "0", time()+60*60*24*360); 
-} else $razdel_sort = intval($_COOKIE["razdel_sort"]);
-*/
-
 // Вход в Админку
 function login() {
 	global $admin_file, $lang_admin;
@@ -134,7 +117,7 @@ echo "<title>".aa("Вход в Администрирование")."</title>
 }
 
 function GraphicAdmin() {
-	global $aid, $admin, $prefix, $db, $counter, $admin_file, $show_comments, $show_userposts, $razdel_sort, $hide_top, $registr, $show_page;
+	global $aid, $admin, $prefix, $db, $counter, $admin_file, $show_comments, $show_userposts, $razdel_sort, $registr, $show_page, $show_reserv;
 	//$row = $db->sql_fetchrow($db->sql_query("SELECT `realadmin` FROM ".$prefix."_authors WHERE `aid`='".$aid."'"));
 	//$realadmin = intval($row['realadmin']);
 	$inf_base = "";
@@ -193,17 +176,7 @@ function GraphicAdmin() {
 
 	$soderganie_menu .= " <button id='mainrazdel3' class='nothing dark_pole2' onclick=\"oformlenie_show('блок','3','block','/sys.php?op=mainpage&name=block&type=3'); $('#razdels').hide('slow')\" title='".aa("Резервные копии созданных ранее страниц")."'><span class=\"icon gray small\" data-icon=\"R\"></span>".$buttons[4]."</button> ";
 
-	
-
 	echo "<table cellspacing=0 cellpadding=0 class='light_fon w100 pm0 mw800'><tr valign=top><td id='razdel_td' class='pm0 nothing'><div id='razdels' style='min-width:400px;'>";
-
-	// Сортировка разделов: 0 - цвет, 1 - алфавит, 2 - посещаемость
-	$razdel_sort_name = array("<a href='red?razdel_sort_set=0'>".aa("цвету")."</a>", "<a href='red?razdel_sort_set=1'>".aa("названию")."</a>", "<a href='red?razdel_sort_set=2'>".aa("посещаемости")."</a>");
-	$razdel_sort_name[$razdel_sort] = "<span class='dark_pole3 white radius'>".$razdel_sort_name[$razdel_sort]."</span>";
-	if ($razdel_sort != 1) $razdel_sort = "color desc, title";
-	elseif ($razdel_sort == 1) $razdel_sort = "title";
-	elseif ($razdel_sort == 2) $razdel_sort = "counter desc";
-	else $razdel_sort = "color, title";
 
 	$subg = "";
 	$sql = "select * from ".$prefix."_mainpage where `tables`!='del' and type='2' order by ".mysql_real_escape_string($razdel_sort);
@@ -218,20 +191,15 @@ function GraphicAdmin() {
 	if ($registr=='1') echo "&nbsp;&nbsp;&nbsp;<a href='".$admin_file.".php?op=MainUser'>".aa("Пользователи")."</a> <a href=".$admin_file.".php?op=sortuser>".aa("Список")."</a>";
 
 	echo "<div class='curved-vt-2 hide' style='margin-left:-350px; width: 700px; top: 10px;' id='add'></div>
-
-	<div class='black_grad'><button id='new_razdel_button' title='".aa("Сортировка разделов")."' class='small black' onclick=\"$('#add').show().html( $('#sortirovka').html() )\" style='float:left; margin-left:3px;margin-top:3px;'><img src='images/sortirovka.png'></button>
-
+	<div class='black_grad'>
 	<button id='new_razdel_button' title='".aa("Добавить раздел...")."' class='small right3' onclick=\"openbox('10','', 'add'); $('.dark_pole2sel').attr('class', 'dark_pole2');\"><span class=\"mr-2 icon darkgrey small\" data-icon=\"+\"></span></button>
-
 	<span class='h1'>".aa("Разделы:")."</span>
 		</div>".$razdel_txt."
-		<div id='sortirovka' class='hide'>
-		".close_button('add')."<h1>".aa("Сортировать разделы по:")."</h1><h2>".$razdel_sort_name[0].", ".$razdel_sort_name[1]." ".aa("или")." ".$razdel_sort_name[2]."</h2></div>
 		<div style='max-height:700px;'>";
 
 	$icon_size = "large";
-	if ($num_razdel > 5) $icon_size = "medium"; 
-	if ($num_razdel > 10) $icon_size = "small"; 
+	if ($num_razdel > 10) $icon_size = "medium"; 
+	//if ($num_razdel > 10) $icon_size = "small"; 
 
     while ($row = $db->sql_fetchrow($result)) {
 	    $id = $row['id'];
@@ -305,7 +273,7 @@ function GraphicAdmin() {
 			$ico = ",";
 			$reaction = "razdel_show(\"\", ".$id.", \"".$nam."\", \"".$text."\");";
 		} else { // не содержит страниц
-			$title = aa("стр.")." ".aa("«").trim($title).aa("»");
+			$title = trim($title)." (".aa("стр.").")";
 			$right = "<a class='button small ml5' href='sys.php?op=mainpage&type=2&id=".$id."#1' title='".aa("Редактировать страницу раздела")."'><span class='icon small' data-icon='7'></span></a>";
 			$ico = ".";
 			$reaction = "razdel_show(\"\", ".$id.", \"".$nam."\", \"page\");";

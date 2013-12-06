@@ -1,5 +1,5 @@
 <?php
-$ver = '1.18'; // Версия CMS «ДвижОк»
+$ver = '1.19'; // Версия CMS «ДвижОк»
 header ("Content-Type: text/html; charset=utf-8");
 // Получение списка БД
 if (isset($_REQUEST['db'])) {
@@ -112,6 +112,7 @@ $lang 				= "'.$lang.'"; // Язык сайта
 $display_errors 	= false; # Отладочная опция - показ ошибок (и запросов к БД и их количества) = true
 $ipban 				= '.$ipban.'; # Админ-опция - включение блокировки по IP = true, отключение = false
 $site_cash    		= '.$site_cash.'; # Система кеширования: false - отключена, file - кеширование в файлы, base - кеширование в БД
+$style_disable		= false; # true = отключение дополнительных встроенных стилей css, остаются только необходимые
 // date_default_timezone_set(\'Europe/Moscow\'); # Может не работать на вашем сервере, позволяет настроить сайт на нужную временную зону
 ################### Проверка безопасности
 if (stristr(htmlentities($_SERVER[\'PHP_SELF\']), "config.php")) { Header("Location: index.php"); die(); }
@@ -330,7 +331,7 @@ if (stristr(htmlentities($_SERVER[\'PHP_SELF\']), "config.php")) { Header("Locat
 // Проверка версии PHP
 $phpversion = preg_replace('/[a-z-]/', '', phpversion());
 if ($phpversion{0}<4) die ('Версия PHP ниже плинтуса. Где же ты нарыл такое старьё?! 0_о');
-if ($phpversion{0}==4) die ('Версия PHP — 4. Попросите хостинг-компанию установить PHP как минимум версии 5.2.1');
+if ($phpversion{0}==4) die ('Версия PHP — 4. Попросите хостинг-компанию установить PHP как минимум версии 5.2.1, желательно 5.4.10');
 
 function removeDirectory($dir) { // Удаляем папку с файлами (install)
     if ($objs = glob($dir."/*")) {
@@ -572,8 +573,8 @@ if (!isset($_REQUEST['lang'])) {
 			<button type="submit" id="submit" style="float:right; margin-left: 30px; display:none;"><h3>Установить →</h3></button>
 			<hr>
 			<?
-			if ($phpversion{0}==5 && $phpversion{2}<2) echo "<p><b style='color:red;'>Версия PHP — 5.".$phpversion{2}.". Рекомендуется использовать PHP как минимум версии 5.2.1";
-			if ( ( $phpversion{0}==5 && $phpversion{2}>3 ) || $phpversion{0}>5) echo "<p style='color:red;'>На версии PHP 5.4 (и выше) CMS не тестировалась — вы можете сообщить разработчику обо всех ошибках на почту 13i@list.ru";
+			if ($phpversion{0}==5 && $phpversion{2}<2) echo "<p><b style='color:red;'>Версия PHP — 5.".$phpversion{2}.". Рекомендуется использовать PHP как минимум версии 5.2.1, желательно 5.4.10";
+			if ( ( $phpversion{0}==5 && $phpversion{2}>4 ) || $phpversion{0}>5) echo "<p style='color:red;'>На версии PHP 5.5 (и выше) CMS не тестировалась — вы можете сообщить разработчику обо всех ошибках на почту 13i@list.ru";
 			if (!function_exists('curl_init')) echo "<p style='color:red;'>Желательно включить поддержку cURL на вашем хостинге.";
 			if (!extension_loaded('imagick') || !class_exists("Imagick")) echo "<p style='color:red;'>Библиотека Imagick не установлена – придется  уменьшать размер больших фотографий (более 1000 пикселей по ширине) перед вставкой в редактор. Советуем перейти на другой хостинг с поддержкой этой библиотеки или договориться с текущим хостингом о её подключении. На виртуальном локальном сервере чаще всего эта библиотека не работает.";
 			?>

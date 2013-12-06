@@ -420,7 +420,7 @@ function my_calendar($fill='', $modul, $showdate='') { // Функция выв�
   return $calendar;
 }
 ////////////////////////////////////////////////////////////
-function select($name,$vars,$vars_name,$znachenie,$add='') { // генерация SELECT элемента формы
+function select($name,$vars,$vars_name,$znachenie,$add='',$class='left3') { // генерация SELECT элемента формы
   // $add - добавление, например id или onchange...
   if ( ($vars == "0,1" || $vars == "1,0") && ($vars_name == "ДА,НЕТ" || $vars_name == "НЕТ,ДА" || $vars_name == "НЕТ,ЕСТЬ")) {
     $add .= " class='hide'";
@@ -428,7 +428,7 @@ function select($name,$vars,$vars_name,$znachenie,$add='') { // генераци
     if ($znachenie == "1") $style1 = "style='display:none;'"; 
     else $style2 = "style='display:none;'";
     $id = md5($name);
-    $button = "<a title='".ss("Выключено")."' class='button red white small punkt' id=on_".$id." onclick='$(\"#".$id." [value=1]\").attr(\"selected\", \"selected\"); $(\"#on_".$id."\").hide().next().show();'".$style1."><span class=\"icon white small\" data-icon=\"Q\"></span></a><a title='".ss("Включено")."' class='button green small punkt' id=off_".$id." onclick='$(\"#".$id." [value=0]\").attr(\"selected\", \"selected\"); $(\"#off_".$id."\").hide().prev().show();'".$style2."><span class=\"icon white small\" data-icon=\"`\"></span></a>";
+    $button = "<a title='".ss("Выключено")."' class='".$class." button red white small punkt' id=on_".$id." onclick='$(\"#".$id." [value=1]\").attr(\"selected\", \"selected\"); $(\"#on_".$id."\").hide().next().show();'".$style1."><span class=\"icon white small\" data-icon=\"Q\"></span></a><a title='".ss("Включено")."' class='".$class." button green small punkt' id=off_".$id." onclick='$(\"#".$id." [value=0]\").attr(\"selected\", \"selected\"); $(\"#off_".$id."\").hide().prev().show();'".$style2."><span class=\"icon white small\" data-icon=\"`\"></span></a>";
   } else { 
     $button = "";
     $id = $name;

@@ -287,7 +287,8 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
       $bgcolor = "#FFeecc"; //FFddaa
 
        if ($nu == "-") $block = "<tr valign=top id='block_".$row['id']."'><td class='padleft30".$class_disable."'>"; 
-       else $block = "<tr valign=top><td style='background:white;'><br><h2>".$block_names[$nu]." &darr;</h2></td></tr><tr id='block_".$row['id']."'><td class='padleft30".$class_disable."'>";
+       else $block = "<tr valign=top><td style='background:white;'><br><h2>".$block_names[$nu]."</h2></td></tr>
+       <tr id='block_".$row['id']."'><td class='padleft30".$class_disable."'>";
       $title = $block.$title;
       $blocks_ok = $title."<div style='margin-left:20px; display: inline; float:right;'>
        <a href='sys.php?op=mainpage&type=3&id=".$row['id']."&red=2' title='Редактировать в HTML'>".icon('black small','7')."</a> 

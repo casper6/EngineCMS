@@ -2,7 +2,7 @@
 if (stristr(htmlentities($_SERVER['PHP_SELF']), "ad-header.php")) {
 	Header("Location: index.php"); die();
 }
-global $deviceType, $postlink, $name, $sitename, $op, $type, $red, $prefix, $db, $id, $nastroi, $lang_admin, $siteurl, $op, $ad_fon, $hide_top;
+global $deviceType, $postlink, $name, $sitename, $op, $type, $red, $prefix, $db, $id, $nastroi, $lang_admin, $siteurl, $op, $ad_fon, $show_admin_top;
 if ($postlink != "") $post = "<button class='small' onclick='location.href=\"".$postlink."\"' title='".aa("Открыть почтовый сайт...")."'><span class='icon small black' data-icon='@'></span> ".aa("Почта")."</button> "; else $post="";
 
 // Определяем заголовок страницы (title) и цвета кнопок главного меню (какой раздел администрирования выбран)
@@ -67,7 +67,7 @@ echo "<script src='ed2/redactor.js'></script>
 <script src='ed2/fontsize.js'></script>
 <script src='ed2/fontfamily.js'></script>";
 
-echo "\n</head>\n<body style=\"background-color: ".$ad_fon.";\"><div class='light_fon radius'>";
+echo "\n</head>\n<body style=\"background-color: ".$ad_fon.";\"><div class=' radius'>";
 $url = getenv("REQUEST_URI");
 $url = str_replace("http://".$siteurl,"",$url);
 $url2 = explode("_",$url);
@@ -76,8 +76,10 @@ $url2 = $url2[0];
 
 $lang_logo = "";
 if ($lang_admin != "ru" && $lang_admin != "ua") $lang_logo = "_en";
-if ($hide_top == 1) $hide = " hide"; else $hide = "";
-echo "<table class='mw800 w100 m0".$hide."'><tr><td class=center width=170><a title='".aa("Перейти в Содержание")."' href='sys.php' class='nothing'><img src='images/logo_admin".$lang_logo.".png'></a></td><td class=mp0><div class='nothing noprint'><div style='margin: 0 0 5px 0;'>";
+
+if ($show_admin_top == 0) echo "<div class='mw800 w100 m0 h15 center' id='admin_top_line' onmousemove=' $(\"#admin_top_line\").hide(); $(\"#admin_top\").show();'><img height=15 align=left src='images/logo_admin".$lang_logo.".png'>".aa("Главное меню")."</div><table class='mw800 hide w100 m0 fixed z1000 l0 t0 shadow' id='admin_top' style='background-color: ".$ad_fon.";'>";
+else echo "<table class='mw800 w100 m0'>";
+echo "<tr><td class=center width=170><a title='".aa("Перейти в Содержание")."' href='sys.php' class='nothing'><img src='images/logo_admin".$lang_logo.".png'></a></td><td class=mp0><div class='nothing noprint'><div style='margin: 5px 5px 5px 0;'>";
 //if($detect->isiOS())
 //if($detect->isAndroidOS())
 global $buttons;
@@ -89,7 +91,7 @@ echo "<nobr>
 <form method=post name=search action='search' style='display:inline;' class='nothing'><input type='search' placeholder='".aa("Поиск по сайту")."' name='slovo' class='w25'></form>
 ".$post."
 </nobr></div>
-<a class='in_r button small' title='".aa("Выход из администрирования\n(мера безопасности)")."' href='sys.php?op=logout'><span class='icon small' data-icon='Q'></span></a>
+<a class='in_r button small' style='margin: 0 5px 0 0;' title='".aa("Выход из администрирования\n(мера безопасности)")."' href='sys.php?op=logout'><span class='icon small' data-icon='Q'></span></a>
 
 <ul class='button-bar'>
 <li class='first ".$color1."'><a title='".aa("Содержание сайта: разделы, папки, страницы и комментарии")."' href='sys.php'><span class='icon gray small' data-icon=','></span>".$buttons[0]."</a></li>";
@@ -100,7 +102,6 @@ if ($editor_style == false) {
 }
 echo "<li class='last ".$color4."'><a title='".aa("Открыть статистику сайта")."' href='sys.php?op=stat_main'><span class='icon gray small' data-icon='j'></span>".$buttons[3]."</a></li>
 </ul>
-</div></td></tr>
-<tr><td colspan=2 class='black_polosa h2 mp0'>
-</td></tr></table><a name='top'></a>";
+</div></td></tr></table>
+<a name='top'></a><div onmousemove='$(\"#admin_top\").hide(\"fast\"); $(\"#admin_top_line\").show();'>";
 ?>

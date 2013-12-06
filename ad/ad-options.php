@@ -101,7 +101,7 @@ if ($row['realadmin'] == 1) {
 		include ("ad/ad-header.php");
 		$ok = intval($ok);
 		// Получаем настройки из mainfile
-		global $sitename, $startdate, $adminmail, $keywords, $description, $counter, $statlink, $postlink, $stopcopy, $registr, $pogoda, $flash, $sgatie, $ht_backup, $captcha_ok, $xnocashe, $jqueryui, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $comment_send, $company_name, $company_fullname, $company_address, $company_time, $company_tel, $company_sot, $company_fax, $company_email, $company_map, $company_people, $search_design, $tag_design, $add_fonts, $site_cash, $normalize, $project_logotip, $project_name, $geo, $kolkey, $add_clips, $add_mail_shablons, $sortable, $color_tema_html, $color_tema_css, $color_tema_js, $color_tema_php, $tab_obzor, $tab_show, $shop_text_val1, $shop_text_val2, $shop_text_itogo, $shop_text_oformit, $shop_text_korzina, $shop_text_delete, $shop_pole, $shop_admin_mail, $shop_text_after_mail,$shop_spisok_pole, $shop_shablon_form_order, $shop_shablon_mail_client, $shop_shablon_mail_admin, $head_insert, $filter_name, $filter_show_all, $gravatar, $strelka, $smile_icons, $avtor_comments, $search_in_pages, $search_in_papka, $search_in_razdel, $newsmail_design, $search_col_razdel, $search_col_papka, $search_col_page, $search_col_showall;
+		global $sitename, $startdate, $adminmail, $keywords, $description, $counter, $statlink, $postlink, $stopcopy, $registr, $pogoda, $flash, $sgatie, $ht_backup, $captcha_ok, $xnocashe, $jqueryui, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $comment_send, $company_name, $company_fullname, $company_address, $company_time, $company_tel, $company_sot, $company_fax, $company_email, $company_map, $company_people, $search_design, $tag_design, $add_fonts, $site_cash, $normalize, $project_logotip, $project_name, $geo, $kolkey, $add_clips, $add_mail_shablons, $sortable, $color_tema_html, $color_tema_css, $color_tema_js, $color_tema_php, $tab_obzor, $tab_show, $shop_text_val1, $shop_text_val2, $shop_text_itogo, $shop_text_oformit, $shop_text_korzina, $shop_text_delete, $shop_pole, $shop_admin_mail, $shop_text_after_mail,$shop_spisok_pole, $shop_shablon_form_order, $shop_shablon_mail_client, $shop_shablon_mail_admin, $head_insert, $filter_name, $filter_show_all, $gravatar, $strelka, $smile_icons, $avtor_comments, $search_in_pages, $search_in_papka, $search_in_razdel, $newsmail_design, $search_col_razdel, $search_col_papka, $search_col_page, $search_col_showall, $scrollyeah, $lightload, $spin, $razdel_sort, $show_admin_top;
 		
 		$fon_colors = array('#ffffff','#e1e1e1','#cccccc','#b3b3b3','#9a9a9a','#666666','#333333','#000000','#d8f8c4','#ccf4b4','#c4fccc','#c4fccc','#fcfcac','#fcfca4','#fcf9c7','#fce4ac','#fce4d4','#fcccbc','#fcd4dc','#fcccd4','#ddf3fe','#cdeeff','#defff8','#cafff3','#dcdcfc','#ccccfc','#ecdcfc','#ecccfc','#82317a');
 		$ad_fon_option = ""; // Выбор фоновок для админки
@@ -130,7 +130,7 @@ echo "<table class='w100 mw800 pm0 block_back'><tr valign=top><td id='razdel_td'
 	echo "<div id='mainrazdel1' class='dark_pole2'><a class='base_page' onclick=\"options_show('1','show_options_company')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='Y'></span><span class='plus20'>Карточка компании (мини блоки)</span></div></a></div>";
 	echo "<div id='mainrazdel3' class='dark_pole2'><a class='base_page' onclick=\"options_show('3','show_options_adspeed')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='z'></span><span class='plus20'>Администрирование</span></div></a></div>";
 	echo "<div id='mainrazdel5' class='dark_pole2'><a class='base_page' onclick=\"options_show('5','show_options_zagotovka')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='7'></span><span class='plus20'>Редактор</span></div></a></div>";
-	echo "<div id='mainrazdel15' class='dark_pole2'><a class='base_page' onclick=\"options_show('15','show_options_comments')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon=\"'\"></span><span class='plus20'>Комментарии</span></div></a></div>";
+	echo "<div id='mainrazdel15' class='dark_pole2'>".select("options[show_comments]", "0,1", "НЕТ,ДА", $show_comments,'','right3')."<a class='base_page' onclick=\"options_show('15','show_options_comments')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon=\"'\"></span><span class='plus20'>Комментарии</span> </div></a></div>";
 	echo "<div id='mainrazdel12' class='dark_pole2'><a class='base_page' onclick=\"options_show('12','show_options_fonts')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='i'></span><span class='plus20'>Шрифты</span></div></a></div>";
 	echo "<div id='mainrazdel13' class='dark_pole2'><a class='base_page' onclick=\"options_show('13','show_shop')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='$'></span><span class='plus20'>Магазин</span></div></a></div>";
 	echo "<br>";
@@ -154,11 +154,11 @@ echo "<div class='black_grad p0'>
 
 $phpversion = preg_replace('/[a-z-]/', '', phpversion());
 if ($phpversion{0}<4) die ('Версия PHP ниже плинтуса. Где же ты нарыл такое старьё?! 0_о');
-if ($phpversion{0}==4) die ('Версия PHP — 4. Попросите хостинг-компанию установить PHP как минимум версии 5.2.1');
-if ($phpversion{0}==5 && $phpversion{2}<2) 
-	echo "<p><b style='color:red;'>Версия PHP — 5.".$phpversion{2}.". Рекомендуется использовать PHP как минимум версии 5.2.1";
-if ( ( $phpversion{0}==5 && $phpversion{2}>3 ) || $phpversion{0}>5) 
-	echo "<p style='color:red;'>Версия PHP — 5.".$phpversion{2}.".<br>На 5.4 (и выше) CMS полноценно не тестировалась — вы можете попробовать и передать разработчику все возникшие ошибки или замечания.";
+if ($phpversion{0}==4) die ('Версия PHP — 4. Попросите хостинг-компанию установить PHP как минимум версии 5.2.1, желательно 5.4.10');
+if ($phpversion{0}==5 && $phpversion{2}<4) 
+	echo "<p style='color:red;'>Версия PHP — 5.".$phpversion{2}.". Рекомендуется использовать PHP версии 5.4.10, минимум — 5.2.1";
+if ( ( $phpversion{0}==5 && $phpversion{2}>4 ) || $phpversion{0}>5) 
+	echo "<p style='color:red;'>Версия PHP — 5.".$phpversion{2}.".<br>На 5.5 (и выше) CMS полноценно не тестировалась — вы можете попробовать и передать разработчику все возникшие ошибки или замечания.";
 if (!function_exists('curl_init')) 
 	echo "<p style='color:red;'>Желательно включить поддержку cURL на вашем хостинге.";
 if (!extension_loaded('imagick') || !class_exists("Imagick")) 
@@ -169,7 +169,7 @@ echo "<li><a href='http://hotel-s.ru' target='_blank'>Официальный с�
 <li><a href='http://uptolike.ru' target='_blank'>Большие удобные настраиваемые социальные кнопки</a>
 
 
-<h2>Внутреннее устройство CMS «ДвижОк»<h2>
+<h2>Внутреннее устройство CMS «ДвижОк»</h2>
 <a title='Нажмите для увеличения' href='images/shema.jpg' target='_blank'><img src='images/shema.jpg' width=90%></a>
 </div>	
 
@@ -178,7 +178,7 @@ echo "<li><a href='http://hotel-s.ru' target='_blank'>Официальный с�
 echo "<table class='table_light'>
 <tr valign='top'><td style='min-width:250px;'>
 Включить <a href='http://necolas.github.com/normalize.css/' target='_blank'>normalize.css</a>:</td><td class='small'>
-".select("options[normalize]", "0,1", "НЕТ,ДА", $normalize)."<br>
+".select("options[normalize]", "0,1", "НЕТ,ДА", $normalize)."
 Нормализация отличается от подхода reset.css тем, что выравнивает различия стандартных стилей разных браузеров и пытается нейтрализовать баги, не сбрасывая при этом самих стандартных стилей.
 </td></tr>
 
@@ -226,44 +226,191 @@ if ($kickstart != 0) echo " <a target='_blank' class='button small' href='".$kic
 echo "</td><td class=small>
 ".select("options[kickstart]", "0,1,2,3,4,5,6,7,8,9,10,11", "- НЕТ -,KickStart,CSSframework,Skeleton,Kube,Bootstrap,1140 Grid,Toast,Blueprint,YUI CSS Grids,960gs (12 и/или 16 колонок),960gs (24 колонки)", $kickstart, ' id=kickstart onchange="if ( $(\'#kickstart\').val() == 1) $(\'#frame1\').show(); else $(\'#frame1\').hide(); if ( $(\'#kickstart\').val() == 6) $(\'#frame6\').show(); else $(\'#frame6\').hide(); "')."
 <br>Ссылка на сайт фреймворка (для просмотра правил оформления CSS и HTML) появится слева после сохранения.
-
 <pre id='frame1' style='display:none;'>
 LightBox отключен, включен FancyBox, входящий в состав KickStart
 </pre>
-
 <pre id='frame6' style='display:none;'>
 Вставьте в Главный стиль:
 /* Для обычной версии сайта */
 body {}
-
 /* Для мобильной версии */
 @media handheld, only screen and (max-width: 767px) {
-
 }
-
 /* Для более высокого разрешения iPhone 4 */
 @media only screen and (-webkit-min-device-pixel-ratio: 2) {
-
-}
-</pre>
-
+}</pre>
 <br>См. также <a href='http://csstemplater.com' target='_blank'>Генератор HTML+CSS шаблонов</a>
 </td></tr>
 
 <tr valign=top><td style='min-width:250px;'>
 <b>Включить <a href='http://jqueryui.com' target='_blank'>jQuery UI</a></b>:</td><td class=small>
-".select("options[jqueryui]", "0,1", "НЕТ,ДА", $jqueryui)."<br>Используется для вкладок (табов). При использовании css-фреймворка Cube или KickStart вкладки будут работать и при отключенном jQuery UI.
+".select("options[jqueryui]", "0,1", "НЕТ,ДА", $jqueryui)."Используется для вкладок (табов). При использовании css-фреймворка Cube или KickStart вкладки будут работать и при отключенном jQuery UI.
+</td></tr>
+
+<tr valign=top><td style='min-width:250px;'>
+Включить <a href='https://github.com/artpolikarpov/scrollyeah' target='_blank'>ScrollYeah</a>:</td><td class=small>
+".select("options[scrollyeah]", "0,1", "НЕТ,ДА", $scrollyeah)."Используется для создания полосы из DIV-элементов с прокруткой перетаскиванием мышкой или пальцем на сенсорных экранах. <a class='punkt' onclick=\"$('#scrollyeah').toggle('slow');\">Пример</a>.
+<div id=scrollyeah style='display:none;'>".close_button('scrollyeah')."
+<pre>
+&lt;div class='scrollyeah'&gt; ... &lt;/div&gt;
+Опции можно добавить через атрибуты типа data-optionName, где optionName — это:
+shadows — включает тени
+maxWidth - стоит увеличить, если ваш контент больше 999999px.
+disableIfFit — отключает перетаскивание, если контент не выходит за границы основного DIV
+centerIfFit — центрирует основной DIV, если ширина контента меньше ширины основного DIV
+triggerScrollyeah — включает триггер событий на элементе
+
+Настройки по-умолчанию:
+  maxWidth: 999999
+  shadows: true
+  disableIfFit: true
+  centerIfFit: false
+  triggerScrollyeah: false
+
+Параллакс-эффект:
+&lt;div class='scrollyeah'&gt;
+  &lt;div class='scrollyeah__parallax' data-parallaxRate='-.3'&gt;
+    &lt;!-- Контент для параллакса, например какой-то фон --&gt;
+  &lt;/div&gt;
+  &lt;!-- DIV'ы --&gt;
+&lt;/div&gt;
+</pre>
+</div>
+</td></tr>
+
+<tr valign=top><td style='min-width:250px;'>
+Включить LightLoad:</td><td class=small>
+".select("options[lightload]", "0,1", "НЕТ,ДА", $lightload)."Используется для управляемой загрузки элементов страницы. Для каждого элемента прописывается желаемое поведение. <a class='punkt' onclick=\"$('#lightload').toggle('slow');\">Подробная инструкция</a>.
+<div id=lightload style='display:none;'>".close_button('lightload')."
+<pre>
+<h2>&lt;div class='lightload'&gt; ... &lt;/div&gt;</h2>
+— появится только после того, как всё содержимое будет загружено
+
+Атрибуты для добавления эффектов:
+<b>data-spin-parent='true'</b> 
+— покажет Spin в родительском элементе, пока не загрузится
+
+<b>data-effect='slide'</b> 
+— выбор эффекта появления: relax, slide, zoom или screw.
+См. пример:
+data-effect='slide' data-up='100px' 
+— появится, пролетев снизу вверх 100 пикселей
+data-effect='relax' data-scale='.5' data-origin='bottom'
+— будет вертикально расти, появившись в половину своей высоты
+
+<b>data-duration='500'</b> 
+— продолжительность анимации в миллисекундах, по-умолчанию = 500.
+
+<b>data-up='20px'</b> или <b>data-down='5em'</b> 
+— применяется для slide-эффекта, элемент пролетит снизу 
+или сверху на указанное расстояние. 
+Одновременное использование data-up и data-down не имеет смысла.
+
+<b>data-left='10%'</b> или <b>data-right='5cm'</b>
+— применяется для slide-эффекта, элемент пролетит справа или слева 
+на указанное расстояние. 
+По-умолчанию = 0, т.е. без горизонтального смещения. 
+Одновременное использование data-up и data-down не имеет смысла.
+
+<b>data-scale='0.5'</b> 
+Увеличение для эффектов relax, zoom и screw. 
+По-умолчанию: для relax — 0.92, для zoom и screw — 0.5.
+
+<b>data-angle='180'</b> 
+Для screw-эффекта, наклон в градусах. По-умолчанию: 90˚. 
+Для изменения направления используйте минусовые значения.
+
+<b>data-origin='top'</b> 
+Для relax, zoom и screw эффектов, начальная точка трансформации. 
+По-умолчанию: «top» для relax и «center center» для zoom и screw.
+
+<b>data-opaque='true'</b> 
+— Включает плавный переход от полной прозрачности к видимости.
+
+<b>data-style-1</b> и <b>data-style-2</b>
+Создание эффектов вручную с помощью CSS-анимации. 
+Эти атрибуты будут игнорированы, если будут использованы data-эффекты. 
+См. пример:
+data-opaque='true'
+data-style-1='-webkit-transform: rotate3d(1,1,0,90deg)'
+data-style-2='-webkit-transform: rotate3d(0,0,0,0);
+    transition: opacity .5s ease-out,
+    -webkit-transform 2s cubic-bezier(0.0, 0.0, 0.001, 1.0)'
+Невероятный эффект!
+
+
+Порядок загрузки и задержка по времени
+Иной раз нужно подождать, прежде чем загрузиться 
+один элемент до того, как показывать следующий.
+
+<b>data-await='element-id'</b>
+Ожидание элемента с id='element-id' (но не окончание анимации). 
+Ожидаемый элемент также должен иметь class='lightload', 
+иначе он будет проигнорирован. Здесь можно указать только один элемент, 
+зато он может ожидать какой-то другой элемент 
+— получается последовательная цепочка ожидания.
+
+<b>data-continue='true'</b> 
+Ожидание предыдущего обозначенного классом элемента.
+Если указано data-await — этот атрибут не сработает.
+
+<b>data-hold='500'</b>
+Ожидание в миллисекундах
+
+Примеры:
+
+&lt;div class='lightload'&gt;
+  ... Эй...
+&lt;/div&gt;
+&lt;div class='lightload' data-continue='true'&gt;
+  ... Ожидаем загрузки предыдущего элемента с lightload ...
+&lt;/div&gt;
+
+&lt;div class='lightload' data-await='thing' data-hold='500'&gt;
+  ... Ожидаем элемент с id=thing, затем ждем 500 ms и показываем ...
+&lt;/div&gt;
+&lt;div class='lightload' id='thing'&gt;
+  ... Этот элемент грузится первым ...
+&lt;/div&gt;
+
+Для одновременной загрузки элементов не важно, 
+какой будет грузиться первым — настройте их ожидать друг друга:
+&lt;div class='lightload' id='one' data-await='two'&gt;
+  ...
+&lt;/div&gt;
+&lt;div class='lightload' id='two' data-await='one'&gt;
+  ...
+&lt;/div&gt;
+
+
+Добавление индикатора загрузки
+<b>data-spin='true'</b>
+— Добавляет индикатор, если включен Spin в Настройках
+
+
+Вставка анимации загрузки в блоки
+осуществляется за счет поля Класс CSS в их Настройках.
+Туда можно прописать просто «lightload»
+Или использовать эффекты и настройки, не забыв в конце
+lightload поставить «'», а в конце всех настроек «'» не ставить.
+Пример: lightload' data-spin='true
+
+</pre></div>
+<p>".select("options[spin]", "0,1", "НЕТ,ДА", $spin)."<a href='http://fgnass.github.io/spin.js/' target='_blank'>Spin</a>, используется для создания вращающегося индикатора активности, применяется для LightLoad.
+</td></tr>
+
+<tr valign=top><td style='min-width:250px;'>
+Включить 
 </td></tr>
 
 <tr valign=top><td style='min-width:250px;'>
 Включить вкладки («табы»):</td><td class=small>
-".select("options[tab_show]", "0,1", "НЕТ,ДА", $tab_show)."<br>Вкладки будут работать только при включенном jQuery UI или использовании css-фреймворка Cube или KickStart.<br><br>Название первой вкладки по-умолчанию (если вкладки начинаются с текста):<br>".input("options[tab_obzor]", $tab_obzor, "100%")."
+".select("options[tab_show]", "0,1", "НЕТ,ДА", $tab_show)."Вкладки будут работать только при включенном jQuery UI или использовании css-фреймворка Cube или KickStart.<br>Название первой вкладки по-умолчанию (если вкладки начинаются с текста):<br>".input("options[tab_obzor]", $tab_obzor, "100%")."
 </td></tr>
 
 <tr valign=top><td style='min-width:250px;'>
 Включить <a href='http://tinysort.sjeiti.com' target='_blank'>сортировку TinySort</a>:</td><td class=small>
-".select("options[sortable]", "0,1", "НЕТ,ДА", $sortable)."<br>
-Позволяет сортировать любые элементы, обращаясь к ним через jQuery. <a class='punkt' onclick=\"$('#sortable').toggle('slow');\">Пример</a>.
+".select("options[sortable]", "0,1", "НЕТ,ДА", $sortable)."Позволяет сортировать любые элементы, обращаясь к ним через jQuery. <a class='punkt' onclick=\"$('#sortable').toggle('slow');\">Пример</a>.
 <div id=sortable style='display:none;'>".close_button('sortable')."
 <pre>
 &lt;div id=sorter style='display:none;'&gt;Сортировка:
@@ -321,8 +468,7 @@ body {}
 	
 	<tr valign=top class=hide><td>
 	Регистрация:</td><td class=small>
-	".select("options[registr]", "0,1", "НЕТ,ЕСТЬ", $registr)."
-	<br>Вкл./Откл. Регистрацию и Вход пользователей на сайт.  Не работает</td></tr>
+	".select("options[registr]", "0,1", "НЕТ,ЕСТЬ", $registr)."Вкл./Откл. Регистрацию и Вход пользователей на сайт.  Не работает</td></tr>
 
 	<tr valign=top class=p3><td>
 	Анимация:</td><td class=small>
@@ -331,14 +477,12 @@ body {}
 
 	<tr valign=top class=p3><td>
 	Полная поддержка Flash:</td><td class=small>
-	".select("options[flash]", "0,1", "НЕТ,ЕСТЬ", $flash)."
-	<br>Включать ТОЛЬКО при проблемах отображения SWF-файлов, FLA-видео и Flash-анимации на сайте.
+	".select("options[flash]", "0,1", "НЕТ,ЕСТЬ", $flash)."Включать ТОЛЬКО при проблемах отображения SWF-файлов, FLA-видео и Flash-анимации на сайте.
 	</td></tr>
 
 	<tr valign=top class=p3><td>
 	Простая защита от копирования: </td><td class=small>
-	".select("options[stopcopy]", "0,1", "НЕТ,ЕСТЬ", $stopcopy)."
-	<br>Препятствует массовому копированию статей на чужие сайты глупыми злоумышленниками. Невозможность выделить/скопировать текст и нажать правую кнопку мыши. </td></tr>
+	".select("options[stopcopy]", "0,1", "НЕТ,ЕСТЬ", $stopcopy)."Препятствует массовому копированию статей на чужие сайты глупыми злоумышленниками. Невозможность выделить/скопировать текст и нажать правую кнопку мыши. </td></tr>
 
 	<tr valign=top class=p4><td>
 	Год основания сайта:</td><td class=small>
@@ -662,37 +806,44 @@ body {}
 	<tr valign=top><td>
 	<b>Создание резервной копии:</b><br>
 	<a class='button' href='sys.php?op=backup' target='_blank'>Создать сейчас</a></td><td class=small>
-	".select("options[show_reserv]", "0,1", "НЕТ,ДА", $show_reserv)."
-	<br>Каждый день, при посещении администратором главной страницы администрирования, создается резервная копия всего содержания сайта, кроме файлов (документы, архивы, фотографии), закачанных на сервер. Если это большой портал на скромном хостинге, создание копии можно отключить для экономии файлового места.
+	".select("options[show_reserv]", "0,1", "НЕТ,ДА", $show_reserv)."Каждый день, при посещении администратором главной страницы администрирования, создается резервная копия всего содержания сайта, кроме файлов (документы, архивы, фотографии), закачанных на сервер. Если это большой портал на скромном хостинге, создание копии можно отключить для экономии файлового места.
+	</td></tr>
+
+
+	<tr valign=top><td>
+	Показывать «шапку»:</td><td class=small>
+	".select("options[show_admin_top]", "0,1", "НЕТ,ДА", $show_admin_top)."При отключении «шапка» (верхняя часть администрирования с главным меню) будет автоматически скрыта и снова показана при наведении.
 	</td></tr>
 
 	<tr valign=top><td>
 	Отображать количество страниц в разделах (на вкладке Содержание):</td><td class=small>
-	".select("options[show_page]", "0,1", "НЕТ,ДА", $show_page)."
-	<br>Отключать его имеет смысл, если создано очень много страниц (более 20 тысяч) и хочется ускорить загрузку вкладки Содержание на 1-2 секунды.
+	".select("options[show_page]", "0,1", "НЕТ,ДА", $show_page)."Отключать его имеет смысл, если создано очень много страниц (более 20 тысяч) и хочется ускорить загрузку вкладки Содержание на 1-2 секунды.
 	</td></tr>
 
 	<tr valign=top><td>
-	Показывать в администрировании страницы, добавленные посетителями:</td><td class=small>
+	Показывать добавленные посетителями страницы:</td><td class=small>
 	".select("options[show_userposts]", "0,1", "НЕТ,ДА", $show_userposts)."
 	</td></tr>
 
 	<tr valign=top><td>
 	Преобразование {Название раздела} и {Название страницы} в ссылки на эти раздел и страницу, соответственно:</td><td class=small>
-	".select("options[show_page_links]", "0,1", "НЕТ,ДА", $show_page_links)." 
-	<br>По-умолчанию отключено. Если вы создаете сайт с большим количеством страниц (более 500) — желательно отключить. В случае отключения останется возможность преобразования названий разделов.
+	".select("options[show_page_links]", "0,1", "НЕТ,ДА", $show_page_links)."По-умолчанию отключено. Если вы создаете сайт с большим количеством страниц (более 500) — желательно отключить. В случае отключения останется возможность преобразования названий разделов.
 	</td></tr>
 	
 	<tr valign=top><td>
 	Включить ускорение вывода блоков (на вкладке Оформление):</td><td class=small>
-	".select("options[uskorenie_blokov]", "0,1", "НЕТ,ДА", $uskorenie_blokov)."
-	<br>Отключать его имеет смысл, если создано много блоков и  страница с ними долго загружается. Ускорение убирает информацию об использовании блоков. 
+	".select("options[uskorenie_blokov]", "0,1", "НЕТ,ДА", $uskorenie_blokov)."Отключать его имеет смысл, если создано много блоков и  страница с ними долго загружается. Ускорение убирает информацию об использовании блоков. 
 	</td></tr>
 
 	<tr valign=top><td>
 	Файл с резервной копией .htaccess:</td><td class=small>
 	".input("options[ht_backup]", $ht_backup, "100%")."
 	<br>Для автовосстановления в случае поражения «вирусом».
+	</td></tr>
+
+	<tr valign=top><td>
+	Сортировка разделов во вкладке Содержание:</td><td class=small>
+	".select("options[razdel_sort]", "color desc[|] title,title,counter desc[|] title", "по цвету и алфавиту,по алфавиту,по посещаемости", $razdel_sort)."
 	</td></tr>
 
 	<tr valign=top class='hide'><td>
@@ -715,6 +866,7 @@ body {}
 
 
 echo "<div id='show_options_comments' class='show_pole pl10' style='display:none;'>
+	<p>Комментарии можно вывести и в тексте страницы (если она сделана по сложному шаблону), для этого нужно использовать блок [комментарии] — в этом случае комментарии не будут отображаться на своем месте по-умолчанию.
 	<table class='table_light'>
 
 	<tr valign=top><td>
@@ -723,18 +875,11 @@ echo "<div id='show_options_comments' class='show_pole pl10' style='display:none
 
 	<tr valign=top><td>
 	Отключить защиту комментариев: </td><td class=small>
-	".select("options[captcha_ok]", "0,1", "НЕТ,ЕСТЬ", $captcha_ok)."
-	<br>По умолчанию - выкл. При отключении можно не вводить проверочный код или вводить его неправильно — он не будет проверяться. </td></tr>
+	".select("options[captcha_ok]", "0,1", "НЕТ,ЕСТЬ", $captcha_ok)."По умолчанию - выкл. При отключении можно не вводить проверочный код или вводить его неправильно — он не будет проверяться. </td></tr>
 
 	<tr valign=top><td>
 	Получать письма о новых комментариях:</td><td class=small>
-	".select("options[comment_send]", "0,1", "НЕТ,ДА", $comment_send)."
-	<br>Отправка уведомлений о новых комментариях на почту администратора.
-	</td></tr>
-
-	<tr valign=top><td>
-	Показывать комментарии в администрировании:</td><td class=small>
-	".select("options[show_comments]", "0,1", "НЕТ,ДА", $show_comments)."
+	".select("options[comment_send]", "0,1", "НЕТ,ДА", $comment_send)."Отправка уведомлений о новых комментариях на почту администратора.
 	</td></tr>
 
 	<tr valign=top><td>
@@ -886,7 +1031,7 @@ echo "
 ".input('options[ed2_button_fontfamily]','1','','checkbox',$ed2_button_fontfamily)." Шрифт текста (нежелательно!)<br>
 Высота поля редактора: ".input('options[ed2_minHeight]',$ed2_minHeight, "10")."<br>
 Направление текста: ".select('options[ed2_direction]','ltl,rtl','слева направо,справа налево (по-арабски)',$ed2_direction)."<br>
-Конвертировать DIV в P: ".select('options[ed2_div_convert]','0,1','НЕТ,ДА',$ed2_div_convert)."<br>
+Конвертировать DIV в P".select('options[ed2_div_convert]','0,1','НЕТ,ДА',$ed2_div_convert)."<br>
 	</td></tr>
 	</table>
 
@@ -1095,7 +1240,7 @@ echo "
 
 			$ed2_buttons = $options['ed2_button_html']."|".$options['ed2_button_formatting']."|".$options['ed2_button_bold']."|".$options['ed2_button_italic']."|".$options['ed2_button_deleted']."|".$options['ed2_button_underline']."|".$options['ed2_button_unorderedlist']."|".$options['ed2_button_orderedlist']."|".$options['ed2_button_outdent']."|".$options['ed2_button_indent']."|".$options['ed2_button_image']."|".$options['ed2_button_video']."|".$options['ed2_button_file']."|".$options['ed2_button_table']."|".$options['ed2_button_link']."|".$options['ed2_button_alignment']."|".$options['ed2_button_horizontalrule']."|".$options['ed2_button_more']."|".$options['ed2_button_link2']."|".$options['ed2_button_block']."|".$options['ed2_button_pre']."|".$options['ed2_button_fullscreen']."|".$options['ed2_button_clips']."|".$options['ed2_button_fontcolor']."|".$options['ed2_button_fontsize']."|".$options['ed2_button_fontfamily']."|".$options['ed2_minHeight']."|".$options['ed2_direction'];
 
-			$advanced = $options['jqueryui']."|".$options['show_comments']."|".$options['show_userposts']."|".$options['show_page']."|".$options['show_reserv']."|".$options['uskorenie_blokov']."|".$options['kickstart']."|".$options['show_page_links']."|".$options['ad_fon']."|".$options['search_design']."|".$options['tag_design']."|".$options['add_fonts']."|".$options['normalize']."|".$options['project_logotip']."|".$options['project_name']."|".$options['geo']."|".$options['kolkey']."|".$options['add_clips']."|".$options['sortable']."|".$options['color_tema_html']."|".$options['color_tema_css']."|".$options['color_tema_js']."|".$options['color_tema_php']."|".$options['tab_obzor']."|".$options['tab_show']."|".$options['shop_text_val1']."|".$options['shop_text_val2']."|".$options['shop_text_itogo']."|".$options['shop_text_oformit']."|".$options['shop_text_korzina']."|".$options['shop_text_delete']."|".$options['shop_pole']."|".$options['shop_admin_mail']."|".$options['shop_text_after_mail']."|".$options['shop_spisok_pole']."|".$options['shop_shablon_form_order']."|".$options['shop_shablon_mail_client']."|".$options['shop_shablon_mail_admin']."|".$ed2_buttons."|".$options['head_insert']."|".$options['filter_name']."|".$options['filter_show_all']."|".$options['gravatar']."|".$options['ed2_div_convert']."|".$options['strelka']."|".$options['smile_icons']."|".$options['add_mail_shablons']."|".$options['avtor_comments']."|".$options['search_in_pages']."|".$options['search_in_papka']."|".$options['search_in_razdel']."|".$options['newsmail_design']."|".$options['search_col_razdel']."|".$options['search_col_papka']."|".$options['search_col_page']."|".$options['search_col_showall'];
+			$advanced = $options['jqueryui']."|".$options['show_comments']."|".$options['show_userposts']."|".$options['show_page']."|".$options['show_reserv']."|".$options['uskorenie_blokov']."|".$options['kickstart']."|".$options['show_page_links']."|".$options['ad_fon']."|".$options['search_design']."|".$options['tag_design']."|".$options['add_fonts']."|".$options['normalize']."|".$options['project_logotip']."|".$options['project_name']."|".$options['geo']."|".$options['kolkey']."|".$options['add_clips']."|".$options['sortable']."|".$options['color_tema_html']."|".$options['color_tema_css']."|".$options['color_tema_js']."|".$options['color_tema_php']."|".$options['tab_obzor']."|".$options['tab_show']."|".$options['shop_text_val1']."|".$options['shop_text_val2']."|".$options['shop_text_itogo']."|".$options['shop_text_oformit']."|".$options['shop_text_korzina']."|".$options['shop_text_delete']."|".$options['shop_pole']."|".$options['shop_admin_mail']."|".$options['shop_text_after_mail']."|".$options['shop_spisok_pole']."|".$options['shop_shablon_form_order']."|".$options['shop_shablon_mail_client']."|".$options['shop_shablon_mail_admin']."|".$ed2_buttons."|".$options['head_insert']."|".$options['filter_name']."|".$options['filter_show_all']."|".$options['gravatar']."|".$options['ed2_div_convert']."|".$options['strelka']."|".$options['smile_icons']."|".$options['add_mail_shablons']."|".$options['avtor_comments']."|".$options['search_in_pages']."|".$options['search_in_papka']."|".$options['search_in_razdel']."|".$options['newsmail_design']."|".$options['search_col_razdel']."|".$options['search_col_papka']."|".$options['search_col_page']."|".$options['search_col_showall']."|".$options['scrollyeah']."|".$options['lightload']."|".$options['spin']."|".$options['razdel_sort']."|".$options['show_admin_top'];
 			// sitename	startdate	adminmail	keywords	description	counter	statlink	postlink	registr	pogoda	flash	sgatie	stopcopy	nocashe	adminmes	red	comment	captcha_ok	ht_backup
 			$db->sql_query("UPDATE `".$prefix."_config` SET 
 				`sitename` = '".mysql_real_escape_string($options['sitename'])."',

@@ -2,7 +2,9 @@
   @require_once("config.php"); // Настройки сайта
   @require_once("includes/db.php"); // База данных (функции для работы)
   @require_once("includes/sql_layer.php");
-  global $prefix, $db; 
+  global $prefix, $db, $style_disable; 
+
+if (!isset($style_disable)) $style_disable = false;
 
 if (isset($_GET['add'])) $add = $_GET['add']; else $add = "";
 $name = explode("-", $_GET['files']);
@@ -17,6 +19,10 @@ if ($add != "") {
 
 // это будет добавлено к любому CSS
 $contents = "
+span.rur { text-transform: uppercase;} 
+span.rur span { position: absolute; overflow: hidden; width: .45em; height: 1em; margin: .2ex 0 0 -.55em;}
+span.rur span:before { content: '—'; }
+
 .filter_name {font-size: 20px;}
 
 .another_links {margin: 5px 0 30px;}
@@ -83,9 +89,6 @@ $contents = "
 
 .align_center {text-align:center;}
 
-.block_title {display:block; margin-top:20px;}
-.block_open_text {display:block;}
-
 .editor_file_link {
 	padding-left: 20px;
 }
@@ -137,18 +140,6 @@ div.raspisanie { height:15px; width:100%; min-width:5px; border-left: 1px solid 
 .shop_card_itogo, .shop_card_itogo_price {margin-top:10px; margin-bottom:20px; height: 25px;}
 .shop_form_input {width:98%;}
 
-input {
-  transition: all 0.30s ease-in-out;
-  -webkit-transition: all 0.30s ease-in-out;
-  -moz-transition: all 0.30s ease-in-out;
-  outline:none;
-}
-input:focus {
-  border:#35a5e5 1px solid;
-  box-shadow: 0 0 5px rgba(81, 203, 238, 1);
-  -webkit-box-shadow: 0 0 5px rgba(81, 203, 238, 1);
-  -moz-box-shadow: 0 0 5px rgba(81, 203, 238, 1);
-}
 
 .radius {
 	border: 1px solid #cccccc;
@@ -157,7 +148,6 @@ input:focus {
 	-webkit-border-radius: 10px;
 }
 
-.cat_page_comments {margin-right: 10px;}
 
 a img {border:0;}
 
@@ -186,6 +176,7 @@ a img {border:0;}
   color: black;
   background-color: pink;  
 }
+
 .pages_links {color: black; display:inline; margin:0;padding:0;}
 .pages_links a {color: black; border:1px solid #dddddd; padding:5px;}
 .pages_links a:hover {color: black; background: #dddddd; padding:5px;}
@@ -266,65 +257,12 @@ table.table_light tbody tr:hover th, table.table_light tbody tr.odd:hover th { b
 .img_left {float: left; margin-right: 10px; margin-bottom: 10px;}
 .img_right {float: right; margin-left: 10px; margin-bottom: 10px;}
 
-.table_left {float: left; margin-right: 10px; width: 10%; border:0;}
-.table_right {float: right; margin-left: 10px; width: 20%; border:0;}
-table[align=left] {margin-right: 10px;}
-table[align=right] {margin-left: 10px;}
-
-/* =========================================== */
-/* Предустановки - перенос стилей из php */
-
-.all_width, .main_mail_input {width:100%;}
-.main_mail_form, .main_search_form, .add, .main_search_form {display:inline;}
-
-.show_block { border: 2px dotted green; padding:1px;  border-radius: 5px;  -moz-border-radius: 5px;  -webkit-border-radius: 5px;}
-.show_block_title {background: #efefef; color: black; padding:2px; padding-left:5px; border: 0;}
-
-input[type=radio] {
-  margin-right:10px;
-  margin-left:5px;
-  margin-top: 0 !important;
-  padding-top: 0 !important;
-}
-
-input[type=search] {
-  -webkit-appearance: textfield;
-  -webkit-box-sizing: content-box;
-  font-family: inherit;
-  font-size: 100%;
-}
-input::-webkit-search-decoration,
-input::-webkit-search-cancel-button {
-  display: none;
-}
-input[type=search] {
-  background: #ededed url(images/view.gif) no-repeat 3px center;
-  border: solid 1px #ccc;
-  padding: 2px 3px 2px 20px;
-  width: 80px; /* Ширина по умолчанию */
-  -webkit-border-radius: 10em;
-  -moz-border-radius: 10em;
-  border-radius: 10em;
-  -webkit-transition: all .5s;
-  -moz-transition: all .5s;
-  transition: all .5s;
-}
-input[type=search]:focus {
-  width: 150px; /* Ширина при наличии фокуса ввода */
-  background-color: #fff;
-  border-color: #6dcff6;
-  -webkit-box-shadow: 0 0 5px rgba(109,207,246,.5);
-  -moz-box-shadow: 0 0 5px rgba(109,207,246,.5);
-  box-shadow: 0 0 5px rgba(109,207,246,.5); /* Эффект свечения */
-}
-.main_search_button {display:none !important;}
-
 .comm_label_textarea {padding-top:10px;}
 
 .button {cursor:pointer; text-decoration: underline;}
 
-a.search_razdel_link, a.search_papka_link {color:gray !important;}
-a.search_page_link {font-size:20px !important;}
+.show_block { border: 2px dotted green; padding:1px;  border-radius: 5px;  -moz-border-radius: 5px;  -webkit-border-radius: 5px;}
+.show_block_title {background: #efefef; color: black; padding:2px; padding-left:5px; border: 0;}
 
 .ad_button {width:100px; display:block; text-align:center; float:left; margin:5px; line-height:1em !important; font-size:12px !important;}
 .ad_icon {height:32px; display:block; margin: 0 auto;}
@@ -336,7 +274,6 @@ ul.tabs li {background:none !important; padding: 0 !important; margin: 0 !import
 .nav-tabs, .nav-tabs ul {height:32px !important; }
 .nav-tabs {width:100% !important;}
 .ui-widget-header, ul.tabs li.current {border-bottom:0 !important;}
-
 
 span.golos {background: url(/images/sys/082.png) no-repeat left top; padding-left:20px; margin-left:5px;}
 span.golos_user {background: url(/images/sys/007.png) no-repeat left top; padding-left:20px; margin-left:5px;}
@@ -392,8 +329,80 @@ span.golos_user {background: url(/images/sys/007.png) no-repeat left top; paddin
 .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {text-align: center; border-radius: 10px; border: 1px solid white;}
 .ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight {border: 1px solid green;}
 .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {background: green !important; color: white !important;}
+";
 
-".$sha;
+
+if ($style_disable == false) $contents .= "
+/* Предустановки */
+
+.block_title {display:block; margin-top:20px;}
+.block_open_text {display:block;}
+
+.cat_page_comments {margin-right: 10px;}
+
+.table_left {float: left; margin-right: 10px; width: 10%; border:0;}
+.table_right {float: right; margin-left: 10px; width: 20%; border:0;}
+table[align=left] {margin-right: 10px;}
+table[align=right] {margin-left: 10px;}
+
+.all_width, .main_mail_input {width:100%;}
+.main_mail_form, .main_search_form, .add, .main_search_form {display:inline;}
+
+input {
+  transition: all 0.30s ease-in-out;
+  -webkit-transition: all 0.30s ease-in-out;
+  -moz-transition: all 0.30s ease-in-out;
+  outline:none;
+}
+input:focus {
+  border:#35a5e5 1px solid;
+  box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+  -webkit-box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+  -moz-box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+}
+input[type=radio] {
+  margin-right:10px;
+  margin-left:5px;
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+input[type=search] {
+  -webkit-appearance: textfield;
+  -webkit-box-sizing: content-box;
+  font-family: inherit;
+  font-size: 100%;
+}
+input::-webkit-search-decoration,
+input::-webkit-search-cancel-button {
+  display: none;
+}
+input[type=search] {
+  background: #ededed url(images/view.gif) no-repeat 3px center;
+  border: solid 1px #ccc;
+  padding: 2px 3px 2px 20px;
+  width: 80px; /* Ширина по умолчанию */
+  -webkit-border-radius: 10em;
+  -moz-border-radius: 10em;
+  border-radius: 10em;
+  -webkit-transition: all .5s;
+  -moz-transition: all .5s;
+  transition: all .5s;
+}
+input[type=search]:focus {
+  width: 150px; /* Ширина при наличии фокуса ввода */
+  background-color: #fff;
+  border-color: #6dcff6;
+  -webkit-box-shadow: 0 0 5px rgba(109,207,246,.5);
+  -moz-box-shadow: 0 0 5px rgba(109,207,246,.5);
+  box-shadow: 0 0 5px rgba(109,207,246,.5); /* Эффект свечения */
+}
+.main_search_button {display:none !important;}
+a.search_razdel_link, a.search_papka_link {color:gray !important;}
+a.search_page_link {font-size:20px !important;}
+";
+
+
+$contents .= $sha;
 
 $n = count($name);
 if ($n > 0) {

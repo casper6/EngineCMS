@@ -9,7 +9,8 @@ body {
 	background-position: top top;
 	background-attachment: fixed;
 	background-repeat: repeat-y;
-	margin: 5px 15px 0 15px;
+	/* margin: 5px 15px 0 15px; */
+	margin: 0;
 }
 @media (max-width: 1920px) { body { background-size: 1920px auto; -webkit-background-size: 1920px auto; -o-background-size: 1920px auto; -moz-background-size: 1920px auto; } }
 @media (max-width: 1680px) { body { background-size: 1680px auto; -webkit-background-size: 1680px auto; -o-background-size: 1680px auto; -moz-background-size: 1680px auto; } }
@@ -17,6 +18,11 @@ body {
 @media (max-width: 1280px) { body { background-size: 1280px auto; -webkit-background-size: 1280px auto; -o-background-size: 1280px auto; -moz-background-size: 1280px auto; } }
 @media (max-width: 1024px) { body { background-size: 1024px auto; -webkit-background-size: 1024px auto; -o-background-size: 1024px auto; -moz-background-size: 1024px auto; } }
 
+.shadow {
+	box-shadow: 0 0 25px #333;
+	-webkit-box-shadow: 0 0 25px #333;
+	-moz-box-shadow: 0 0 25px #333;
+}
 body, td {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: 14px;
@@ -51,7 +57,7 @@ input#redactorSaveBtn {background:green; color:white;}
 .razdels {background:#e7e9ec;}
 .block_back {width:100%; margin-top:5px; padding:0; background: url('/images/fon.png');}
 .right3 {float:right !important; margin:3px !important;}
-.left3 {float:left; margin:3px;}
+.left3 {float:left; margin:3px; margin-right:10px !important;}
 .mr-2 {margin-right: -2px;}
 .close_button {font-size:12pt; width:20px; height: 20px; color: white; text-align:center; float:right; margin:5px; margin-bottom:0; background: #bbbbbb;}
 .m5 {margin:5px;}
@@ -103,6 +109,7 @@ input#redactorSaveBtn {background:green; color:white;}
 .fixed {position: fixed;}
 .absolute {position: absolute;}
 .z10000 {z-index:10000;}
+.z1000 {z-index:1000;}
 .bb1 {border-bottom: 1px solid #aaaaaa;}
 .parent{ padding:3px; width:150px; float:left; margin-right:12px;}
 .both{ float:left; margin:0 0px 0 0; padding:0px;}

@@ -15,7 +15,7 @@ global $strelka, $go, $cid, $pid, $all, $avtor, $to, $info, $num, $ip, $golos, $
 
 ########################################### проверить и возможно убрать кусок
 // настройки раздела из БД
-global $post, $comments, $datashow, $sort, $lim, $foto, $view, $search, $search_papka, $tema, $tema_name, $tema_title, $tema_opis, $menushow, $design; 
+global $post, $comments, $datashow, $sort, $lim, $foto, $view, $search, $search_papka, $tema, $tema_name, $tema_title, $tema_opis, $menushow, $design, $show_comments; 
 
 $media = $folder = $col = $view = $golos = $golosrazdel = $post = $comments = $datashow = $favorites = $socialnetwork = $search = $search_papka = $put_in_blog = $base = $vetki = $citata = $media_comment = $no_html_in_opentext = $no_html_in_text = $show_add_post_on_first_page = $media_post = $razdel_shablon = $page_shablon = $comments_all = $comments_num = $comments_mail = $comments_adres = $comments_tel = $comments_desc = $golostype = $pagenumbers = $comments_main = $tags_type = $tema_zapret_comm = $pagekol = $table_light = $designpages = $comments_add = $div_or_table = $papka_show = $add_post_to_mainpage = $design_tablet = $designpages_tablet = $design_phone = $designpages_phone = $show_tags_pages = 0;
 $menushow = $titleshow = $razdeltitleshow = $razdel_link = $peopleshow = $design = $tags = $podrobno = $podrazdel_active_show = $podrazdel_show = $tipograf = $limkol = $tags_show = $tema_zapret = $opentextshow = $maintextshow = $papka_tags_pages = $razdel_tags_pages = 1;
@@ -258,7 +258,7 @@ function showdate($showdate) {
   $showdate = explode("-",$showdate);
   	$showdate = intval($showdate[0])."-".(intval($showdate[1]) < 10 ? '0'.intval($showdate[1]) : $showdate[1])."-".(intval($showdate[2]) < 10 ? '0'.intval($showdate[2]) : $showdate[2]);
   	
-  global $strelka, $soderganie, $soderganie2, $DBName, $db, $prefix, $module_name, $admin, $name, $pagetitle;
+  global $strelka, $soderganie, $soderganie2, $DBName, $db, $prefix, $module_name, $admin, $name, $pagetitle, $show_comments;
   global $golos, $post, $comments, $datashow, $sort, $folder, $media, $view, $col, $search, $search_papka, $tema, $tema_name, $tema_title, $tema_opis, $menushow, $where, $order, $peopleshow, $calendar, $comments_1; // настройки из БД
   $ANDDATA="";
 
@@ -305,7 +305,7 @@ function showdate($showdate) {
     $result2 = $db->sql_query($sql2);
     $soderganieALL .= "";
 
-    if ($comments==1) $colspan=4;
+    if ($comments==1 && $show_comments==1) $colspan=4;
     else $colspan=3;
     while ($row2 = $db->sql_fetchrow($result2)) {
       $p_pid = $row2['pid'];
@@ -338,7 +338,7 @@ function showdate($showdate) {
         $soderganieALL .= "<td class='cat_page_title'><a href=-".$DBName."_page_".$p_pid.">".$title."</a></td>";
         $soderganieALL .= "<td class='cat_page_date'><nobr>".$p_date."</nobr></td>";
         $soderganieALL .= "<td class='cat_page_date'>".ss("читали:")."&nbsp;".$p_counter."</td>";
-        if ($comments==1) {
+        if ($comments==1 && $show_comments==1) {
           if ($p_comm>0) $soderganieALL .= "<td class='cat_page_commnum'>".$p_comm." ".ss("комм.")."</td>";
           else $soderganieALL .= "<td class='cat_page_commnum'><a href='-".$DBName."_page_".$p_pid."'>".ss("Добавить комментарий")."</a></td>";
         }
@@ -365,7 +365,7 @@ function showdate($showdate) {
 }
 ######################################################################################
 function showcat($cid=0, $pag=0, $slovo="") {
-  global $strelka, $soderganie, $soderganie2, $DBName, $db, $prefix, $module_name, $admin, $name, $pagetitle, $keywords2, $description2;
+  global $strelka, $soderganie, $soderganie2, $DBName, $db, $prefix, $module_name, $admin, $name, $pagetitle, $keywords2, $description2, $show_comments;
   global $golos, $golosrazdel, $golostype, $post, $comments, $datashow, $sort, $lim, $folder, $media, $view, $col, $search, $search_papka, $tema, $tema_name, $tema_title, $tema_opis, $menushow, $base, $where, $order, $peopleshow, $show_add_post_on_first_page, $razdel_shablon, $comments_1, $comments_main, $limkol, $tags, $tag_text_show, $tags_type, $tags_show, $pagenumbers, $div_or_table, $show_read_all, $read_all, $reclama, $papka_show; // настройки из БД
   $DBName = mysql_real_escape_string($DBName);
   $sort = mysql_real_escape_string($sort);
@@ -517,7 +517,8 @@ function showcat($cid=0, $pag=0, $slovo="") {
 
     global $tema_name, $tema_title;
     $p_pid_last = 0; // последняя категория (для форума)
-    if ($comments == 1) $colspan = 4; else $colspan = 3; // количество ячеек таблицы (для форума)
+    if ($comments == 1 && $show_comments==1) $colspan = 4; 
+    else $colspan = 3; // количество ячеек таблицы (для форума)
 
     if ($nu >0 and $view==4 and $cid != 0) {
       $soderganieALL = "<div class='venzel'></div>
@@ -722,29 +723,29 @@ function showcat($cid=0, $pag=0, $slovo="") {
             $minus_golos = $db->sql_numrows($db->sql_query("SELECT `cid` FROM ".$prefix."_pages_comments WHERE `num`='".$p_pid."' and `golos`='1' and `active`='1'"));
           }
 
-          if ($view==1) { // ФОРУМ //////////////
+          if ($view == 1) { // ФОРУМ //////////////
             if ($p_pid_last != $pсid and $pсid != 0) { 
               $sha_first = "<tr valign='top'><td colspan='".$colspan."' class='cat_page_forum'>".$p_name."</td></tr><tr valign='top'>";
               $p_pid_last = $pсid; 
             } else $sha_first = "";
-            if ($comments==1) {
+            if ($comments==1 && $show_comments==1) {
               if ($p_comm>0) $p_comm = "".$p_comm." ".ss("комм.");
               else $p_comm = "<a href='-".$DBName."_page_".$p_pid."#comm'>".ss("Добавить комментарий")."</a>";
             } else $p_comm = "";
           } elseif ($view!=4) { /////////////////////////////////	<div class=cat_page></div>
             if (trim($open_text)!="" and $tema_title != "no") $open_text = "<div class='cat_page_text'>".$open_text."</div>"; else $open_text = "";
-            if ($pсid>0 and $c_name[$pсid]!="") $all_cat_link = "<nobr><img width='16' src='/images/sys/papka.png' align='bottom' title='".ss("Раздел:")."' style='padding-right:5px;'><A href='-".$DBName."_cat_".$pсid."'><b>".$c_name[$pсid]."</b></a></nobr> "; else $all_cat_link = "";
+            if ($pсid > 0 and $c_name[$pсid] != "") $all_cat_link = "<nobr><img width='16' src='/images/sys/papka.png' align='bottom' title='".ss("Раздел:")."' style='padding-right:5px;'><A href='-".$DBName."_cat_".$pсid."'><b>".$c_name[$pсid]."</b></a></nobr> "; else $all_cat_link = "";
             if ($peopleshow==1) $all_page_counter = " <nobr><img width='16' src='/images/sys/magnify.png' align='bottom' title='".ss("Просмотры:")."' style='padding-right:5px; padding-left:15px;'><b>".$p_counter."</b></nobr>";
             else $all_page_counter = "";
             if ($datashow==1) $all_page_data = " <div class='cat_page_date'><nobr><img width='16' src='/images/calendar.png' align='bottom' title='".ss("Дата:")."' style='padding-right:5px;'>".$p_date."</nobr></div>";
             else $all_page_data = "";
-            if ($p_comm>0) $all_page_comments = " <div class='cat_page_comments'><nobr><a title='".ss("раскрыть")." ".$comments_1."' href='-".$DBName."_page_".$p_pid."_comm#comm'><img width='16' src='/images/sys/028.png' align='bottom' title='".$comments_1.":' style='padding-right:5px;'><b>".$p_comm."</b></a></nobr></div>";
+            if ($p_comm> 0 && $comments_main==1 && $show_comments==1) $all_page_comments = " <div class='cat_page_comments'><nobr><a title='".ss("раскрыть")." ".$comments_1."' href='-".$DBName."_page_".$p_pid."_comm#comm'><img width='16' src='/images/sys/028.png' align='bottom' title='".$comments_1.":' style='padding-right:5px;'><b>".$p_comm."</b></a></nobr></div>";
             else $all_page_comments = "";
           }
 
           $pagelink = "-".$DBName."_page_".$p_pid;
           $pagelinktitle = "<A href='".$pagelink."'><h1 class='cat_page_title'>".$title."</h1></A>";
-          if (strlen($text) < 10 and $comments != 1) {
+          if (strlen($text) < 10 && ($comments_main == 0 || $show_comments==0)) {
             $pagelink = "#";
             $pagelinktitle = "<h1 class='cat_page_title'>".$title."</h1>";
           }
@@ -760,7 +761,7 @@ function showcat($cid=0, $pag=0, $slovo="") {
           // ВЕЗДЕ - 3, в разделе и папках - 2, в разделе - 5, в разделе и на страницах - 6, 
           // в папках - 4, в папках и на страницах - 7, на страницах - 1,НИГДЕ - 0
           
-          if ((($tags == 2 or $tags == 3) or $razdel_shablon != 0) and trim($search) != "") {
+          if ((($tags == 2 || $tags == 3) || $razdel_shablon != 0) && trim($search) != "") {
             $searches = array();
             $search2 = explode(" ",trim(strtolow($search)));
             $search_num = count($search2);
@@ -887,11 +888,12 @@ function showcat($cid=0, $pag=0, $slovo="") {
     }
   }
   ###############################################################################################
-  if (($comments_main == 1 and $cid == 0) or ($comments_main == 2 and $cid != 0) or ($comments_main == 3)) {
+  if ( $show_comments==1 && 
+    (($comments_main == 1 && $cid == 0) || ($comments_main == 2 && $cid != 0) || ($comments_main == 3)) ) {
     // Комментарии
     
     // Форма комментариев
-    $soderganieALL .= "".addcomm("0");
+    $soderganieALL .= addcomm("0");
   }
   if (($post!=0 and $cid!=0) or ($cid == 0 and $show_add_post_on_first_page==1)) $soderganieALL .= addpost($cid); // Форма добавления страницы
   //////////////////////////////////////////////////////////////////////
@@ -1071,7 +1073,7 @@ function showcat($cid=0, $pag=0, $slovo="") {
 }
 ##############################    страницы    ###############################
 function page($pid, $all) {
-  global $strelka, $soderganie, $soderganie2, $DBName, $db, $prefix, $module_name, $admin, $pagetitle, $pagetitle2, $ModuleName, $print, $siteurl, $keywords2, $description2, $data_page;
+  global $strelka, $soderganie, $soderganie2, $DBName, $db, $prefix, $module_name, $admin, $pagetitle, $pagetitle2, $ModuleName, $print, $siteurl, $keywords2, $description2, $data_page, $show_comments;
   // настройки модуля из БД
   global $golos, $golostype, $post, $comments, $datashow, $sort, $tags, $lim, $folder, $view, $col, $menushow, $favorites, $socialnetwork, $name, $put_in_blog, $base, $titleshow, $razdeltitleshow, $comments_add, $add_css, $comment_shablon, $page_shablon, $comments_all, $comments_num, $comments_mail, $comments_adres, $comments_tel, $vetki, $comments_all, $comments_num, $comments_desc, $comments_1, $comments_2, $comments_3, $comments_4, $comments_5, $comments_6, $comments_7, $comments_8, $tag_text_show, $opentextshow, $maintextshow, $show_tags_pages, $col_tags_pages, $papka_tags_pages, $razdel_tags_pages, $text_tags_pages;
   $pid = mysql_real_escape_string(intval($pid));
@@ -1264,14 +1266,13 @@ function page($pid, $all) {
     $url = urlencode($http_siteurl.$url);
     $tit3 = urlencode($pagetitle.$sitename); 
     $page_favorites = "<div id=\"favorites\" class=\"favorites\">".ss("Cохраните в закладках:")." <br>
-    <a target='_blank' href='http://twitter.com/home?status=".$tit3.",%20".$url."'><img width='16' height='16' title=\"Twitter\" style=\"background-image: url(/images/favorit.gif); background-position: -80px 0px;\" src='/images/pixel.gif'></a> 
-    <a target='_blank' href='http://www.google.com/bookmarks/mark?op=add&amp;bkmk=".$url."&amp;title=".$tit3."'><img width='16' height='16' title=\"Google\" style=\"background-image: url(/images/favorit.gif); background-position: -40px 0px; \" src='/images/pixel.gif'></a> ";
+    <a target='_blank' href='http://www.google.com/bookmarks/mark?op=add&amp;bkmk=".$url."&amp;title=".$tit3."' title=\"Google\"><span style='background-position: -40px 0px !important; width:16px !important; display:inline-block !important; height:16px !important; background-image: url(/images/favorit.gif) !important;'></span></a> ";
     // Добавить закладки для других языков
-    if ($lang == "ru") $page_favorites .= "<a target='_blank' href='http://zakladki.yandex.ru/userarea/links/addfromfav.asp?bAddLink_x=1&amp;lurl=".$url."&amp;lname=".$tit3."'><img width='16' height='16' title=\"Яндекс.Закладки\" style=\"background-image: url(/images/favorit.gif); background-position: -60px 0px; \" src='/images/pixel.gif'></a> 
-    <a target='_blank' href='http://news2.ru/add_story.php?url=".$url."'><img width='16' height='16' title=\"News2\" style=\"background-image: url(/images/favorit.gif); background-position: -140px 0px; \" src='/images/pixel.gif'></a> 
-    <a target='_blank' href='http://memori.ru/link/?sm=1&amp;u_data[url]=".$url."&amp;u_data[name]=".$tit3."'><img width='16' height='16' title=\"Memori\" style=\"background-image: url(/images/favorit.gif); background-position: 0px 0px; \" src='/images/pixel.gif'></a> 
-    <a target='_blank' href='http://bobrdobr.ru/addext.html?url=".$url."&amp;title=".$tit3."'><img width='16' height='16' title=\"БобрДобр\" style=\"background-image: url(/images/favorit.gif); background-position: -20px 0px; \" src='/images/pixel.gif'></a> 
-    <a target='_blank' href='http://moemesto.ru/post.php?url=".$url."&amp;title=".$tit3."'><img width='15' height='16' title=\"МоёМесто\" style=\"background-image: url(/images/favorit.gif); background-position: -180px 0px; \" src='/images/pixel.gif'></a> ";
+    if ($lang == "ru") $page_favorites .= "
+    <a target='_blank' href='http://news2.ru/add_story.php?url=".$url."' title=\"News2\"><span style='background-position: -140px 0px !important; width:16px !important; display:inline-block !important; height:16px !important; background-image: url(/images/favorit.gif) !important;'></span></a> 
+    <a target='_blank' href='http://memori.ru/link/?sm=1&amp;u_data[url]=".$url."&amp;u_data[name]=".$tit3."' title=\"Memori\"><span style='background-position: 0px 0px !important; width:16px !important; display:inline-block !important; height:16px !important; background-image: url(/images/favorit.gif) !important;'></span></a> 
+    <a target='_blank' href='http://bobrdobr.ru/addext.html?url=".$url."&amp;title=".$tit3."' title=\"БобрДобр\"><span style='background-position: -20px 0px !important; width:16px !important; display:inline-block !important; height:16px !important; background-image: url(/images/favorit.gif) !important;'></span></a> 
+    <a target='_blank' href='http://moemesto.ru/post.php?url=".$url."&amp;title=".$tit3."' title=\"МоёМесто\"><span style='background-position: -180px 0px !important; width:15px !important; display:inline-block !important; height:16px !important; background-image: url(/images/favorit.gif) !important;'></span></a> ";
     $page_favorites .= "</div>";
   } else $page_favorites = "";
 
@@ -1314,13 +1315,11 @@ function page($pid, $all) {
     $page_reiting = golos_show($pid, $golostype, $gol); // (страница, тип рейтинга, кол-во рейтинга для типов 1, 2 и 3)
   } else $page_reiting = ""; // END OF Рейтинг #######################################
 
-  global $comments;
-
   // Комментарии #######################################
-  if ($comments>0 and $view!=4 and $nocomm == 0) {
-    if (is_admin($admin)) { $adm = 1; } else { $adm = 0; }
+  if ($comments==1 && $show_comments==1 && $view!=4 && $nocomm == 0) {
+    if (is_admin($admin)) $adm = 1; else $adm = 0;
     $add_css .= " comments_".$comment_shablon;
-    $page_comments = "<div class=page_comm><a name=comm id=comm></a>".$comments_1."</div>
+    $page_comments = "<div class='page_comm'><a name='comm' id='comm'></a>".$comments_1."</div>
     <script>function showcomm(){
       $.get('comments.php', { p_id: '".$pid."', desc: '".$comments_desc."', sha: '".$comment_shablon."', vetki: '".$vetki."', num: '".$comments_num."', all: '".$comments_all."', mail: '".$comments_mail."', adres: '".$comments_adres."', tel: '".$comments_tel."' }, function(data) { 
       $('#page_comments').html( data );
@@ -1329,18 +1328,18 @@ function page($pid, $all) {
     $(showcomm());</script><div id='page_comments'></div>";
 
     // Ссылка «Раскрыть все» // $all_numrows > $comments_num and  and $comments_num > 0
-    if ($comments_all == 1) $page_comments .= "</div><br><a href=#comm id='allcomm_show' onclick=\"show('allcomm'); show('allcomm_show');\">".$comments_8."</a>";
+    if ($comments_all == 1) $page_comments .= "</div><br><a href='#comm' id='allcomm_show' onclick=\"show('allcomm'); show('allcomm_show');\">".$comments_8."</a>";
     // END OF Комментарии ################################
 
     $page_add_comments = "";
-    if ( $comments_add > 0) {
+    if ( $comments_add > 0 ) {
       $page_add_comments = addcomm($pid); // Форма добавления комментариев
-      if ( $comments_add == 2 ) $page_add_comments .= "<br>".ss("<b>Внимание!</b> Информация будет добавлена на сайт после проверки администратором.");
+      if ( $comments_add == 2 ) $page_add_comments .= "<div class='comm_info_check_by_admin'>".ss("<b>Внимание!</b> Информация будет добавлена на сайт после проверки администратором.")."</div>";
     }
   } else $page_comments = "";
 
   /////////////////////////////////////// рейтинги
-  if ($view==4) {
+  if ($view==4 && $show_comments==1) {
     $page_comments = "";
     global $com;
     $com = mysql_real_escape_string(intval($com));
