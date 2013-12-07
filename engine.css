@@ -143,7 +143,7 @@ a.base_page:hover {background:#FFFFFF;}
 
 a.bigicon {margin:0; margin-right: 5px; margin-bottom: 5px; width:250px; height:135px; display:inline-block; text-decoration:none; border-radius: 5px; -moz-border-radius: 5; -webkit-border-radius: 5; border:1px solid #bbbbbb; float:left;}
 a.bigicon:hover {background: #b580b0; border:1px solid #333333; color:white; border:1px solid #b580b0;}
-img.bigicon {margin-bottom: 5px; width:128px; height:128px; border:0; float:left;}
+span.bigicon {margin-bottom: 5px; width:128px; height:128px; border:0; float:left;}
 .bi0 {background: url('/images/bigicons.png'); }
 .bi1 {background: url('/images/bigicons.png') -128px; }
 .bi2 {background: url('/images/bigicons.png') -256px; }
@@ -174,52 +174,6 @@ ul li .icon span, .dark_pole2 .icon span, .dark_pole2sel .icon span { top: -6px 
 
 .icon2 {margin:0; padding:0; margin-right: 2px; width:16px; height:16px; border:0; cursor:pointer;}
 .icon3 {margin:0; padding:0; margin-right: 1px; width:8px; height:8px; border:0; cursor:pointer;}
-.i1 {background: url('/images/icons.png'); }
-.i2 {background: url('/images/icons.png') -16px; }
-.i3 {background: url('/images/icons.png') -32px; }
-.i4 {background: url('/images/icons.png') -48px; }
-.i5 {background: url('/images/icons.png') -64px; }
-.i6 {background: url('/images/icons.png') -80px; }
-.i7 {background: url('/images/icons.png') -96px; }
-.i8 {background: url('/images/icons.png') -112px; }
-.i9 {background: url('/images/icons.png') -128px; }
-.i10 {background: url('/images/icons.png') -144px; }
-.i11 {background: url('/images/icons.png') -160px; }
-.i12 {background: url('/images/icons.png') -176px; }
-.i13 {background: url('/images/icons.png') -192px; }
-.i14 {background: url('/images/icons.png') -208px; }
-.i15 {background: url('/images/icons.png') -224px; }
-.i16 {background: url('/images/icons.png') -240px; }
-.i17 {background: url('/images/icons.png') -256px; }
-.i18 {background: url('/images/icons.png') -272px; }
-.i19 {background: url('/images/icons.png') -288px; }
-.i20 {background: url('/images/icons.png') -304px; }
-.i21 {background: url('/images/icons.png') -320px; }
-.i22 {background: url('/images/icons.png') -336px; }
-.i23 {background: url('/images/icons.png') -352px; }
-.i24 {background: url('/images/icons.png') -368px; }
-.i25 {background: url('/images/icons.png') -384px; }
-.i26 {background: url('/images/icons.png') -400px; }
-.i27 {background: url('/images/icons.png') -416px; }
-.i28 {background: url('/images/icons.png') -432px; }
-.i29 {background: url('/images/icons.png') -448px; }
-.i30 {background: url('/images/icons.png') -464px; }
-.i31 {background: url('/images/icons.png') -480px; }
-.i32 {background: url('/images/icons.png') -496px; }
-.i33 {background: url('/images/icons.png') -512px; }
-.i34 {background: url('/images/icons.png') -528px; }
-.i35 {background: url('/images/icons.png') -544px; }
-.i36 {background: url('/images/icons.png') -560px; }
-.i37 {background: url('/images/icons.png') -576px; }
-.i38 {background: url('/images/icons.png') -592px; }
-.i39 {background: url('/images/icons.png') -608px; }
-.i40 {background: url('/images/icons.png') -624px; }
-.i41 {background: url('/images/icons.png') -640px; }
-.i42 {background: url('/images/icons.png') -656px; }
-.i43 {background: url('/images/icons.png') -672px; }
-.i44 {background: url('/images/icons.png') -688px; }
-.i45 {background: url('/images/icons.png') -704px; }
-.i46 {background: url('/images/icons.png') -720px; }
 
 .colonki1 {
 	-webkit-column-count: 1;

@@ -217,7 +217,7 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
     $new_pid = $row['pid'];
     if ( $new > 0 ) echo "<div class='notice success mw700'><a target='_blank' class='green' href=/-".$module."_page_".$pid.">Страница</a> отредактирована. "; 
     else echo "<div class='notice warning mw700'>Открыть страницу <a target='_blank' class='green' href=/-".$module."_page_".$pid.">на сайте</a>. ";
-    if ( $new_pid != 0 ) echo "Есть предыдущая версия: <button title='Заменить этой копией оригинал...' onclick='resetpage(".$new_pid."); setTimeout(\"location.reload()\", 2000);' class='small'><img class='icon2 i24' src='/images/1.gif'>Заменить на последнюю резервную копию</button>";
+    if ( $new_pid != 0 ) echo "Есть предыдущая версия: <button title='Заменить этой копией оригинал...' onclick='resetpage(".$new_pid."); setTimeout(\"location.reload()\", 2000);' class='small'>Заменить на последнюю резервную копию</button>";
     else echo "Предыдущей версии нет.";
     echo "</div>";
 
@@ -245,7 +245,7 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
       $result = $db->sql_query($sql);
       $row = $db->sql_fetchrow($result);
       $new_title = $row['title'];
-      echo "<div class='notice success mw700'>Страница «<a target='_blank' class='green' href=/-".$name."_page_".$pid.">".$new_title."</a>» добавлена. <a href=/sys.php?op=base_pages_edit_page&name=".$name."&pid=".$pid."><img class='icon2 i35' src='/images/1.gif'>Редактировать</a>. <b>Добавим еще одну страницу?</b></div>";
+      echo "<div class='notice success mw700'>Страница «<a target='_blank' class='green' href=/-".$name."_page_".$pid.">".$new_title."</a>» добавлена. <a href=/sys.php?op=base_pages_edit_page&name=".$name."&pid=".$pid."><span class=\"icon orange small\" data-icon=\"7\"></span>Редактировать</a>. <b>Добавим еще одну страницу?</b></div>";
     }
     // Получаем шаблон
     $sql = "select id, title, shablon from ".$prefix."_mainpage where name='".$name."' and `tables`='pages' and type='2'";

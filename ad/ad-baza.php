@@ -102,11 +102,11 @@ function base_base($name) {
 
 
     if ($doc=="") echo "<div class='noprint radius' style='float:right; background: #dddddd; padding:5px;'>
-    <a href=# onclick='print()' title='Распечатать (выберайте альбомный формат)' class='punkt noprint'><img class='icon2 i17' src='/images/1.gif' align=bottom>Распечатать</a><br><br>
+    <a href=# onclick='print()' title='Распечатать (выберайте альбомный формат)' class='punkt noprint'><span class=\"icon gray small\" data-icon=\"P\"></span> Распечатать</a><br><br>
 
-    <a href=".getenv("REQUEST_URI")."&doc=true title='Сохранить как документ Word' class='punkt noprint'><img class='icon2 i22' src='/images/1.gif' align=bottom>Сохранить</a><br><br>
+    <a href=".getenv("REQUEST_URI")."&doc=true title='Сохранить как документ Word' class='punkt noprint'><span class=\"icon gray small\" data-icon=\"w\"></span> Сохранить</a><br><br>
 
-    <a href='/sys.php?op=mainpage&id=".$base."' target='_blank' title='Настроить базу данных (только для администратора!)' class='punkt noprint'><img class='icon2 i38' src='/images/1.gif' align=bottom>Настройки</a>
+    <a href='/sys.php?op=mainpage&id=".$base."' target='_blank' title='Настроить базу данных (только для администратора!)' class='punkt noprint'><span class=\"icon gray small\" data-icon=\"=\"></span> Настройки</a>
     </div>
     <h1 class='noprint'><a href=/sys.php?op=base_base&name=".$name.">".$module_title."</a>, база данных. <a href=/sys.php?op=base_base_create_base&base=$baza_name&name=$name&red=1 class='punkt radius' style='margin:5px; padding-left:5px; padding-right:5px; background:green; color:white; font-size: 16pt;'>+ Добавить строку</a></h1>
     ";
@@ -132,10 +132,10 @@ function base_base($name) {
                 $info = $row['info'];
                 $pause = $row['pause'];
                 $color = "white";
-                if ($pause == 1) { $color="pink"; $pause = "<a href=/sys.php?op=base_base_pause_pass&id=".$id."&pause=0&cat=$name title='Возобновить'><img class='icon2 i44' src='/images/1.gif' align=bottom></a>"; 
-                } else $pause = "<a href=/sys.php?op=base_base_pause_pass&id=".$id."&pause=1&cat=$name title='Отключить'><img class='icon2 i43' src='/images/1.gif' align=bottom></a>";
-                $passwords .= "<tr bgcolor=$color><td>".$data."</td><td>".$user."</td><td>".$pass."</td><td>".$info."</td><td>
-                $pause <a href=/sys.php?op=base_base_pause_pass&id=$id&pause=3&cat=$name title='Удалить'><img class=\"icon2 i33\" src=/images/1.gif></a> 
+                if ($pause == 1) { $color="pink"; $pause = "<a href=sys.php?op=base_base_pause_pass&id=".$id."&pause=0&cat=$name title='Возобновить'><span class=\"icon gray small\" data-icon=\"2\"></span></a>"; 
+                } else $pause = "<a href=sys.php?op=base_base_pause_pass&id=".$id."&pause=1&cat=$name title='Отключить'><span class=\"icon red small\" data-icon=\"Q\"></span></a>";
+                $passwords .= "<tr bgcolor='".$color."'><td>".$data."</td><td>".$user."</td><td>".$pass."</td><td>".$info."</td><td>
+                $pause <a href=sys.php?op=base_base_pause_pass&id=$id&pause=3&cat=$name title='Удалить'><span class=\"icon red small\" data-icon=\"T\"></span></a> 
                 </td></tr>";
             }
             echo "<a class=punkt onclick=\"show('passwords');\"><strong>Список паролей</strong></a>
@@ -171,12 +171,12 @@ function base_base($name) {
         $names[] = $option[0];
 
         if ($doc=="") {
-            $link = "<a href='sys.php?op=base_base&name=".$name."&p=".$p."&sortir=".$xx."_0".$data_sort.$data_sort2.$men_sort.$interval_sort.$search_sort.$firm_sort."' title=\"".$opisanie."\" class='noprint'><img class='icon2 i25' src='/images/1.gif' align=bottom></a>";
+            $link = "<a href='sys.php?op=base_base&name=".$name."&p=".$p."&sortir=".$xx."_0".$data_sort.$data_sort2.$men_sort.$interval_sort.$search_sort.$firm_sort."' title=\"".$opisanie."\" class='noprint'>↓</a>";
             if ($sortir == $xx) {
                 if ($sort_way == " desc") {
-                    $link = "<a href='sys.php?op=base_base&name=".$name."&p=".$p."&sortir=".$xx."_0".$data_sort.$data_sort2.$interval_sort.$men_sort.$search_sort.$firm_sort."' title=\"".$opisanie."\" class='noprint'><img class='icon2 i27' src='/images/1.gif' align=bottom></a>";
+                    $link = "<a href='sys.php?op=base_base&name=".$name."&p=".$p."&sortir=".$xx."_0".$data_sort.$data_sort2.$interval_sort.$men_sort.$search_sort.$firm_sort."' title=\"".$opisanie."\" class='noprint'>↑↑</a>";
                 } else {
-                    $link = "<a href='sys.php?op=base_base&name=".$name."&p=".$p."&sortir=".$xx."_1".$data_sort.$data_sort2.$interval_sort.$men_sort.$search_sort.$firm_sort."' title=\"".$opisanie."\" class='noprint'><img class='icon2 i26' src='/images/1.gif' align=bottom></a>";
+                    $link = "<a href='sys.php?op=base_base&name=".$name."&p=".$p."&sortir=".$xx."_1".$data_sort.$data_sort2.$interval_sort.$men_sort.$search_sort.$firm_sort."' title=\"".$opisanie."\" class='noprint'>↓↓</a>";
                 }
             }
         } else $link = "";
@@ -201,20 +201,20 @@ function base_base($name) {
     $names["-2"] = "active";
 
     if ($doc=="") {
-        $link_id = "<a href='sys.php?op=base_base&name=".$name."&p=".$p."&sortir=-1_0".$data_sort.$data_sort2.$men_sort.$interval_sort.$search_sort.$firm_sort."' title=\"".$opisanie."\" class='noprint'><img class='icon2 i25' src='/images/1.gif' align=bottom></a>";
+        $link_id = "<a href='sys.php?op=base_base&name=".$name."&p=".$p."&sortir=-1_0".$data_sort.$data_sort2.$men_sort.$interval_sort.$search_sort.$firm_sort."' title=\"".$opisanie."\" class='noprint'>↓</a>";
         if ($sortir == "-1") {
             if ($sort_way == " desc") {
-            $link_id = "<a href='sys.php?op=base_base&name=".$name."&p=".$p."&sortir=-1_0".$data_sort.$data_sort2.$men_sort.$interval_sort.$search_sort.$firm_sort."' title=\"".$opisanie."\" class='noprint'><img class='icon2 i27' src='/images/1.gif' align=bottom></a>";
+            $link_id = "<a href='sys.php?op=base_base&name=".$name."&p=".$p."&sortir=-1_0".$data_sort.$data_sort2.$men_sort.$interval_sort.$search_sort.$firm_sort."' title=\"".$opisanie."\" class='noprint'>↑↑</a>";
             } else {
-            $link_id = "<a href='sys.php?op=base_base&name=".$name."&p=".$p."&sortir=-1_1".$data_sort.$data_sort2.$men_sort.$interval_sort.$search_sort.$firm_sort."' title=\"".$opisanie."\" class='noprint'><img class='icon2 i26' src='/images/1.gif' align=bottom></a>";
+            $link_id = "<a href='sys.php?op=base_base&name=".$name."&p=".$p."&sortir=-1_1".$data_sort.$data_sort2.$men_sort.$interval_sort.$search_sort.$firm_sort."' title=\"".$opisanie."\" class='noprint'>↓↓</a>";
             }
         }
-        $link_active = "<a href='sys.php?op=base_base&name=".$name."&p=".$p."&sortir=-2_0".$data_sort.$data_sort2.$men_sort.$interval_sort.$search_sort.$firm_sort."' title=\"".$opisanie."\" class='noprint'><img class='icon2 i25' src='/images/1.gif' align=bottom></a>";
+        $link_active = "<a href='sys.php?op=base_base&name=".$name."&p=".$p."&sortir=-2_0".$data_sort.$data_sort2.$men_sort.$interval_sort.$search_sort.$firm_sort."' title=\"".$opisanie."\" class='noprint'>↓</a>";
         if ($sortir == "-2") {
             if ($sort_way == " desc") {
-            $link_active = "<a href='sys.php?op=base_base&name=".$name."&p=".$p."&sortir=-2_0".$data_sort.$data_sort2.$men_sort.$interval_sort.$search_sort.$firm_sort."' title=\"".$opisanie."\" class='noprint'><img class='icon2 i27' src='/images/1.gif' align=bottom></a>";
+            $link_active = "<a href='sys.php?op=base_base&name=".$name."&p=".$p."&sortir=-2_0".$data_sort.$data_sort2.$men_sort.$interval_sort.$search_sort.$firm_sort."' title=\"".$opisanie."\" class='noprint'>↑↑</a>";
             } else {
-            $link_active = "<a href='sys.php?op=base_base&name=".$name."&p=".$p."&sortir=-2_1".$data_sort.$data_sort2.$men_sort.$interval_sort.$search_sort.$firm_sort."' title=\"".$opisanie."\" class='noprint'><img class='icon2 i26' src='/images/1.gif' align=bottom></a>";
+            $link_active = "<a href='sys.php?op=base_base&name=".$name."&p=".$p."&sortir=-2_1".$data_sort.$data_sort2.$men_sort.$interval_sort.$search_sort.$firm_sort."' title=\"".$opisanie."\" class='noprint'>↓↓</a>";
             }
         }
     } else { $link_id = ""; $link_active = ""; }
@@ -325,7 +325,7 @@ function base_base($name) {
 
     echo "<div style='width:100%; height:17px;'></div>
     <div class='radius_top' style='background:#BFFFBF; width:100%; height:10px;'></div>
-    <table width=100% border=0 cellspacing=0 cellpadding=3 class=table_light><tr valign=top bgcolor='#BFFFBF'><td class='noprint'><img title='Статус/Активность' class='icon2 i42' src='/images/1.gif'><br>".$link_active."</td><td>№".$link_id."</td><td>".$rus_names."</td>";
+    <table width=100% border=0 cellspacing=0 cellpadding=3 class=table_light><tr valign=top bgcolor='#BFFFBF'><td class='noprint' title='Статус/Активность'><span class=\"icon gray small\" data-icon=\"W\"></span><br>".$link_active."</td><td>№".$link_id."</td><td>".$rus_names."</td>";
             //$sql3 = "SHOW columns from ".$prefix."_base_".$baza_name."";
             //$result3 = $db->sql_query($sql3);
             foreach ($names as $row3) {
@@ -341,7 +341,7 @@ function base_base($name) {
                     }
                 }
             }
-    if ($doc=="") echo "<td class='noprint'><img title='Действия над строками' class='icon2 i46' src='/images/1.gif'></td></tr>";
+    if ($doc=="") echo "<td class='noprint' title='Действия над строками'><span class=\"icon gray small\" data-icon=\"R\"></span></td></tr>";
 
     	$sql = "SELECT * FROM ".$prefix."_base_".$baza_name." ".$where."".$order." limit $offset,".$lim;
     	$result = $db->sql_query($sql) or die("SELECT * FROM ".$prefix."_base_".$baza_name." ".$where."".$order." limit $offset,".$lim);
@@ -351,10 +351,10 @@ function base_base($name) {
     	
     	$base_id = $row['id'];
     	switch ($row['active']) {
-    case "0": $base_active="<img title='Отключено' class='icon2 i43' src='/images/1.gif' align=bottom>"; $color="#FCCCD7"; break;
-    case "1": $base_active="<a href=/sys.php?op=base_base_edit_base&name=".$name."&base=".$baza_name."&red=1&id=".$base_id."><img title='Закрыто (нельзя редактировать)' class='icon2 i33' src='/images/1.gif' align=bottom></a>"; $color="#dddddd"; break;
-    case "2": $base_active="<img title='Ожидает проверки!' class='icon2 i20' src='/images/1.gif' align=bottom>"; $color="#eeeeee"; break;
-    case "3": $base_active="<img title='Открыто' class='icon2 i23' src='/images/1.gif' align=bottom>"; $color="#ffffff"; break;
+    case "0": $base_active="<span title='Отключено' class=\"icon red small\" data-icon=\"Q\"></span>"; $color="#FCCCD7"; break;
+    case "1": $base_active="<a href=sys.php?op=base_base_edit_base&name=".$name."&base=".$baza_name."&red=1&id=".$base_id."><span title='Закрыто (нельзя редактировать)' class=\"icon gray small\" data-icon=\"X\"></span></a>"; $color="#dddddd"; break;
+    case "2": $base_active="<span title='Ожидает проверки!' class=\"icon gray small\" data-icon=\"?\"></span>"; $color="#eeeeee"; break;
+    case "3": $base_active="<span title='Открыто' class=\"icon gray small\" data-icon=\"c\"></span>"; $color="#ffffff"; break;
     	}
 
     	echo "<tr bgcolor=".$color." class='tr_hover tr".$base_id."'><td class='noprint'>
@@ -380,14 +380,12 @@ function base_base($name) {
       
         if ($doc=="" and $row['active'] != 1) {
             echo "<td class='noprint'>";
-            if ($edit_stroka == 1) echo "<a href=/sys.php?op=base_base_edit_base&name=".$name."&base=".$baza_name."&red=1&id=".$base_id."><img class=\"icon2 i34\" src=/images/1.gif title=\"Редактировать\"></a> ";
-            if ($del_stroka == 1) echo "<a href=/sys.php?op=base_base_delit_base&name=".$name."&base=".$baza_name."&id=".$base_id."><img class=\"icon2 i33\" src=/images/1.gif title=\"Удалить с подтверждением\"></a>";
+            if ($edit_stroka == 1) echo "<a href=/sys.php?op=base_base_edit_base&name=".$name."&base=".$baza_name."&red=1&id=".$base_id."><span class=\"icon gray small\" data-icon=\"7\" title=\"Редактировать\"></span></a> ";
+            if ($del_stroka == 1) echo "<a href=/sys.php?op=base_base_delit_base&name=".$name."&base=".$baza_name."&id=".$base_id."><span class=\"icon gray small\" data-icon=\"T\" title=\"Удалить с подтверждением\"></span></a>";
             echo "</td>";
-        } else echo "<td class='noprint'><img class=\"icon2 i34\" src=/images/1.gif title=\"Нельзя удалять и редактировать! Информация закрыта\"></td>";
-        
+        } else echo "<td class='noprint'><span class=\"icon gray small\" data-icon=\"X\" title=\"Нельзя удалять и редактировать! Информация закрыта\"></span></td>";
         echo "</tr>";
         
-        // <a href=/sys.php?op=base_base_delit_base&name=".$name."&base=".$baza_name."&id=".$base_id."&ok=1><img src=images/sys/minus.png title=\"Удалить моментально без подтверждения\"></a>
     	}
     	echo "</table>
     <div class='radius_bottom' style='background:#BFFFBF; width:100%; height:10px;'></div>";

@@ -8,7 +8,7 @@ function golos_show($pid, $golostype, $gol) {
     while($row2 = $db->sql_fetchrow($result2)) { $golo[] = $row2['golos']; }
     $golos_user = count($golo);
     
-	$echo = "<div id='golos".$pid."' class='golosa'>";
+	$echo = "<div id='golos".$pid."' class='page_rating'>";
     switch ($golostype) {
 		case 0:
 		if ($golos_user == 0) $proc = 0;
@@ -17,28 +17,28 @@ function golos_show($pid, $golostype, $gol) {
 	    $stars0 = number_format( $stars );
 	    $golos_checked = array("","","","","");
 	    $golos_checked[$stars0-1] = " checked";
-	    $echo .= "<span class='star-rating star-rating".$pid."'>
-	      <input type='radio' name='rating".$pid."' value='1'".$golos_checked[0]."><i></i>
-	      <input type='radio' name='rating".$pid."' value='2'".$golos_checked[1]."><i></i>
-	      <input type='radio' name='rating".$pid."' value='3'".$golos_checked[2]."><i></i>
-	      <input type='radio' name='rating".$pid."' value='4'".$golos_checked[3]."><i></i>
-	      <input type='radio' name='rating".$pid."' value='5'".$golos_checked[4]."><i></i>
-	    </span>
+	    $echo .= "<div class='back_icon2'><span class='star-rating star-rating".$pid."'>
+	      <input type='radio' name='rating".$pid."' title='".ss("Ужасно")."' value='1'".$golos_checked[0]."><i></i>
+	      <input type='radio' name='rating".$pid."' title='".ss("Плохо")."' value='2'".$golos_checked[1]."><i></i>
+	      <input type='radio' name='rating".$pid."' title='".ss("Удовлетворительно")."' value='3'".$golos_checked[2]."><i></i>
+	      <input type='radio' name='rating".$pid."' title='".ss("Хорошо")."' value='4'".$golos_checked[3]."><i></i>
+	      <input type='radio' name='rating".$pid."' title='".ss("Отлично")."' value='5'".$golos_checked[4]."><i></i>
+	    </span></div>
 	    <script>$('.star-rating".$pid." :radio').click( function(){ page_golos(".$pid.",'".$DBName."',this.value,".$golostype.") } )</script>";
 	    if ($golos_user > 0) 
-	    	$echo .= "<span class='golos' title='".ss("Оценка:")."' />".$stars." ".ss("из 5")."</span><span class='golos_user' title='".ss("Голосовали:")."' />".$golos_user."</span>";
+	    	$echo .= "<div class='ico_rating back_icon' title='".ss("Оценка")."'>".$stars." ".ss("из 5")."</div><div class='ico_user back_icon' title='".ss("Количество проголосовавших")."'>".$golos_user."</div>";
 		else 
-			$echo .= "<span class='golos_user' title='".ss("Голосовали:")."' />".ss("Никто не голосовал")."</span>";
+			$echo .= "<div class='ico_rating back_icon' title='".ss("Количество проголосовавших")."'>".ss("Никто не голосовал")."</div>";
 		break;
 
 	    case 1:
-	    $echo .= "<a onclick=\"page_golos(".$pid.",'".$DBName."',1,".$golostype.")\" title='".ss("Проголосовать")."' style='cursor:pointer;'><img src=\"/images/sys/102.png\" width=16 style='margin-right:3px;' /><u>".ss("Проголосовать")."</u></a> <img src=\"/images/sys/082.png\" width=16 style='margin-right:3px;' title='".ss("Голоса:")."' /><b>".$gol."</b></nobr>"; break;
+	    $echo .= "<div class='ico_like back_icon' title='".ss("Проголосовать")."'><a onclick=\"page_golos(".$pid.",'".$DBName."',1,".$golostype.")\" title='".ss("Проголосовать")."' class='pointer'>".ss("Проголосовать")."</a></div><div class='ico_rating back_icon' title='".ss("Количество проголосовавших")."'>".$gol."</div>"; break;
 
 	    case 2: 
-	    $echo .= "<a onclick=\"page_golos(".$pid.",'".$DBName."',1,".$golostype.")\" title='+1' style='cursor:pointer;'><img src=\"/images/sys/add_2.png\" width=16 style='margin-right:5px;' /></a> <a onclick=\"page_golos(".$pid.",'".$DBName."',0,".$golostype.")\" title='-1' style='cursor:pointer;'><img src=\"/images/sys/minus.png\" width=16 style='margin-right:3px;' /></a> <img src=\"/images/sys/082.png\" width=16 style='margin-right:5px;' title='".ss("Рейтинг:")."' /><b>".$gol."</b> <img src=\"/images/sys/007.png\" width=16 style='margin-right:3px;' title='".ss("Голосовали:")."' /><b>".$golos_user."</b>"; break;
+	    $echo .= "<div class='back_icon2'><a onclick=\"page_golos(".$pid.",'".$DBName."',1,".$golostype.")\" title='".ss("Проголосовать")." ".ss("ЗА")."' class='pointer'><span class='i16 ico_plus'></span></a> <a onclick=\"page_golos(".$pid.",'".$DBName."',0,".$golostype.")\" title='".ss("Проголосовать")." ".ss("ПРОТИВ")."' class='pointer'><span class='i16 ico_minus'></span></a></div> <div class='ico_rating back_icon' title='".ss("Рейтинг")."'>".$gol."</div> <div class='ico_user back_icon' title='".ss("Количество проголосовавших")."'>".$golos_user."</div>"; break;
 
 	    case 3: 
-	    $echo .= "<a onclick=\"page_golos(".$pid.",'".$DBName."',1,".$golostype.")\" title='".ss("Мне понравилось")."' style='cursor:pointer; margin-right:10px;'><img src=\"/images/icon_yes.png\" width=16 style='margin-right:3px;' /></a> <a onclick=\"page_golos(".$pid.",'".$DBName."',0,".$golostype.")\" title='".ss("Мне не понравилось")."' style='cursor:pointer;'><img src=\"/images/icon_no.png\" width=16 style='margin-right:10px;' /></a> <img src=\"/images/sys/082.png\" width=16 style='margin-right:3px;' title='".ss("Рейтинг:")."' /><b>".$gol."</b> <img src=\"/images/sys/007.png\" width=16 style='margin-right:3px;' title='".ss("Голосовали:")."' /><b>".$golos_user."</b>"; break;
+	    $echo .= "<div class='back_icon2'><a onclick=\"page_golos(".$pid.",'".$DBName."',1,".$golostype.")\" title='".ss("Мне понравилось")."' class='pointer'><span class='i16 ico_like'></span></a> <a onclick=\"page_golos(".$pid.",'".$DBName."',0,".$golostype.")\" title='".ss("Мне не понравилось")."' class='pointer'><span class='i16 ico_like rotate180'></span></a></div> <div class='ico_rating back_icon' title='".ss("Рейтинг")."'>".$gol."</div> <div class='ico_user back_icon' title='".ss("Количество проголосовавших")."'>".$golos_user."</div>"; break;
 	}
 	return $echo."</div>";
 }

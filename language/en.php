@@ -166,7 +166,7 @@ return array(
 "Нажмите для сортировки" => "Click for sorting",
 "Запрос к базе данных неудачен: " => "Query for the database failed:",
 "Подробнее..." => "More...",
-"<img src=/images/icon_no.png> <b>Запрашиваемая страница не существует.</b><br>Она была удалена, отключена или никогда и не создавалась.<br><br>Вы имеете право сохранять молчание и перейти на <a href=/>Главную страницу</a> <br>или попробовать найти нужную информацию на сайте с помощью быстрого поиска:" => "<img src=/images/icon_no.png> <b>The requested page does not exist.</b><br>It was deleted, disabled, or never created.<br><br>You have the right to remain silent and go to the <a href=/>Main page</a> <br>or try to find the information on the site with a quick search:",
+"<b>Запрашиваемая страница не существует.</b><br>Она была удалена, отключена или никогда и не создавалась.<br><br>Вы имеете право сохранять молчание и перейти на <a href=/>Главную страницу</a> <br>или попробовать найти нужную информацию на сайте с помощью быстрого поиска:" => "<b>The requested page does not exist.</b><br>It was deleted, disabled, or never created.<br><br>You have the right to remain silent and go to the <a href=/>Main page</a> <br>or try to find the information on the site with a quick search:",
 "Добавьте в социальные сети:" => "Add in the social network",
 "Cохраните в закладках:" => "Save in bookmarks:",
 "Разместите в своем блоге" => "Put on your blog:",

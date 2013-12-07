@@ -40,13 +40,11 @@ function shablon_show($shablon_type, $shablon_id) {
 				<td class=reiting_golos align=center style='background: rgb(241, 241, 148);'>[neo_golos]</td>
 				<td class=reiting_golos align=center style='background: rgb(252, 192, 198);'>[minus_golos]"; break;
 				############################################################################################
-				default: return "<div class=page_link_title>[page_link_title]</div>
-				<div class=page_open_text>[page_open_text][all_page_link][page_tags]</div>
-				<div class=page_nums>
-				<div class=cat_page_counter>[all_cat_link] [all_page_counter]</div>
-				<div class=all_page_data>[all_page_data]</div>
-				<div class=all_page_comments>[all_page_comments]</div>
-				<div class=cat_golos>[cat_golos]</div>
+				default: return "<h2 class='page_link_title'>[page_link_title]</h2>
+				<div class='page_open_text'>[page_open_text][all_page_link][page_tags]</div>
+				<div class='page_nums'>
+				[all_cat_link] [all_page_counter][all_page_data][all_page_comments]
+				<div class='cat_golos'>[cat_golos]</div>
 				</div>"; break;
 				############################################################################################
 			}
@@ -67,14 +65,14 @@ function shablon_show($shablon_type, $shablon_id) {
 				[page_title]
 				[page_opentext]
 				[page_text]
-				[page_date]<br>
-				[page_tags]<br>
-				[page_socialnetwork]<br>
-				[page_favorites]<br>
+				[page_date]
+				[page_tags]
+				[page_socialnetwork]
+				[page_favorites]
 				[page_blog]
 				[page_search_news]
 				[page_reiting]
-				[page_comments]<br>
+				[page_comments]
 				[page_add_comments]
 				"; break;
 				############################################################################################
@@ -83,14 +81,14 @@ function shablon_show($shablon_type, $shablon_id) {
 				[page_title]
 				[page_opentext]
 				[page_text]
-				[page_date]<br>
-				[page_tags]<br>
-				[page_socialnetwork]<br>
-				[page_favorites]<br>
+				[page_date]
+				[page_tags]
+				[page_socialnetwork]
+				[page_favorites]
 				[page_blog]
 				[page_search_news]
 				[page_reiting]
-				[page_comments]<br>
+				[page_comments]
 				[page_add_comments]
 				"; break;
 			}

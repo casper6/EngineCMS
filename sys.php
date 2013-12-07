@@ -210,7 +210,7 @@ function GraphicAdmin() {
 		$type_opisX = "";
 		if ($size < 1) $size = ""; 
 		if ($size_off < 1) $size_off = ""; else $size_off = "&nbsp;<span class='red' title='".aa("Отключенные страницы")."'>-".$size_off."</span>";
-		$type_opisX = "<span class='f14 pr10 pl10'><span class='green' title='".aa("Включенные страницы")."'>".$size."</span>".$size_off."</span>";
+		$type_opisX = "<span class='f14 pr10 pl10'><span class='black' title='".aa("Включенные страницы")."'>".$size."</span>".$size_off."</span>";
 		if ($size < 1 and $size_off < 1) $type_opisX = "";
 		if ($current_type != $type) $current_type = $type;
 		$text = explode("|",$text); 
@@ -372,7 +372,7 @@ function red_vybor() { // Выбор редактора
   <button id='rerurn' class='small orange' type=button onclick=\"show('red_vybor');\" style='float:right;margin:3px;'><span style='margin-right: -2px;' class=\"icon white medium\" data-icon=\"7\"></span> ".aa("Редактор")."</button>
 
   <div id='red_vybor' style='position: absolute; z-index:666; right:5px; top:5px; padding:5px; width:647px; background:white; display:none; border:solid 10px gray;' class=radius>
-  <a onclick=show('red_vybor') style='cursor:pointer; float:right;' title='Закрыть'><img class='icon2 i33' src='/images/1.gif'></a>
+  <a onclick=show('red_vybor') style='cursor:pointer; float:right;' title='Закрыть'><div class='close_button radius'>x</div></a>
   <h1>".aa("Выбор редактора")."</h1>
 
 <a href='".$link."&red=3' class='dark_pole3'>

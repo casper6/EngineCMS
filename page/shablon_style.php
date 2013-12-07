@@ -42,7 +42,7 @@ function shablon_style_show ($shablon_type, $shablon_id) {
 		.comm_razdel .info {position:relative;}
 		.comm_razdel:hover > .comment_body .info > .folding-dot-holder{display:block;}
 		.comm_razdel .info .folding-dot-holder{display:none;position:absolute;top:0;left:0;width:1px;height:1px;}
-		.comm_razdel .info .folding-dot{width:500px;height:5px;background:red;right:1px;top:9px;position:absolute;background: url(images/bg-folding-dot-light.png) repeat-x 100% 0;}
+		.comm_razdel .info .folding-dot{width:500px;height:5px;background:red;right:1px;top:9px;position:absolute;background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAFCAIAAADKYVtkAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAFFJREFUeNpi/P//PwMDw88/f9lZmBlIBCxAvPfa46tPX2tLizpryZKkmQlo59UnrwW5OYDk15+/SdMMdK22rOj7Lz+AJDc7K0maGSnxM0CAAQBHCiEG+qfxeAAAAABJRU5ErkJggg==) repeat-x 100% 0;}
 		#page_comments .comm_otvet, #page_comments .comm_razdel{margin-top:20px;}
 		#page_comments .comm_otvet .comment_item{margin-left:20px;}";
 		break;
@@ -56,7 +56,7 @@ function shablon_style_show ($shablon_type, $shablon_id) {
 		a.comm_write:hover {color:red;}
 		.comment_text {margin-top:10px;}
 		.comment_avtor {font-size: 16px; font-weight:bold; color:#999999;}
-		.comm_otvet {background: url(images/commotvet.gif) no-repeat;}";
+		.comm_otvet {background: url(data:image/gif;base64,R0lGODlhEAAoAIABAMjIyAAAACH5BAEAAAEALAAAAAAQACgAAAIyjI+py+2vADxygmvxu9xOU3lfCJHbF5iO2rCMu8ARKic1clP0PvLiX/IFe0TgqVjiKAsAOw==) no-repeat;}";
 		break;	
 		case "1": return "
 		#comments_1_commentbubble {margin-top:18px;font-family:Geneva, Arial, Helvetica, sans-serif;font-size:12px;}

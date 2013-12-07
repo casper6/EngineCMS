@@ -749,7 +749,7 @@ case "4": # Блок папок раздела
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 case "5": # Блок голосования
 	$textX = "<script>$(showopros(".$idX.", 1, 0));</script>
-	<div id='show_opros".$idX."'><img src='images/loading.gif'></div>";
+	<div id='show_opros".$idX."'><span class='ico_loading i16'></span>";
 	$block = str_replace("[".$titleX."]", $design_open.$textX.$design_close, $block);
 	$type = ""; break; 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -829,7 +829,7 @@ case "8": # Блок папок ОТКРЫТОГО раздела
 		$shablon_razdelitel = "";
 		$shablon_main = "<ul class='block_li_title'>".aa("[содержание]")."</ul>";
 		$shablon_active = $strelka." ";
-		$shablon_active2 = "<img align='left' width='10' height='10' src='images/pixel.gif'>".$strelka." ";
+		$shablon_active2 = "<div style='float:left; width:10px; height:10px;'></div>".$strelka." ";
 	}
 	$block_title = "";
 	if ($titleshow != 2 and $titleshow != 3) $block_title .= "<h3 class='h3_block_title'>".$ModuleName."</h3><div class='polosa'></div>";
@@ -883,7 +883,7 @@ case "8": # Блок папок ОТКРЫТОГО раздела
 					$p_id = $row['cid'];
 					$p_title = $row['title'];
 					if ($cid==$p_id) $podthisis = "".$shablon_active2.""; 
-					else $podthisis = "<img align=left width=30 height=10 src=images/pixel.gif>";
+					else $podthisis = "<div style='float:left; width:30px; height:10px;'></div>";
 					//$podpapki .= "<li class=\"podpapki block_li_title\">[стрелка]<a href=[ссылка]>[название]</a></li>";
 					$tr = array(
 					"[cat_id]"=>$p_id,
@@ -1979,15 +1979,8 @@ case "31": # Блок JS
 	}
 
 	// Ставим RSS
-	if (strpos(" ".$block, "[rss")) {
-		$rss_text = "<a href='rss.php' title='".ss("Подпишись на наши новости по RSS!")."' class='rss'><img src='images/";
-		$block=str_replace("[rss]", $rss_text."rss_16.png'></a>", $block);
-		$block=str_replace("[rss32]", $rss_text."rss_32.gif'></a>", $block);
-		$block=str_replace("[rss50]", $rss_text."rss_50.gif'></a>", $block);
-		$block=str_replace("[rss100]", $rss_text."rss_100.gif'></a>", $block);
-		$block=str_replace("[rss128]", $rss_text."rss_128.png'></a>", $block);
-		$block=str_replace("[rss150]", $rss_text."rss_150.gif'></a>", $block);
-	}
+	if (strpos(" ".$block, "[rss"))
+		$block=str_replace("[rss]", "<a href='rss.php' title='".ss("Подпишись на наши новости по RSS!")."' class='rss'><span class='ico_rss i16'></span></a>", $block);
 
 	// MP3-плеер
 	if (strpos(" ".$block, ".mp3\"")) {

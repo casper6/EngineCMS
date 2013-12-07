@@ -279,17 +279,15 @@ function showdate($showdate) {
     $c_name[$x_cid] = $row['title'];
   }
 
-  $showdate = mysql_real_escape_string($showdate);
-  $calendar = mysql_real_escape_string($calendar);
   // списки
   if (trim($calendar) != "") {
-    $sql2 = "SELECT pages FROM ".$prefix."_spiski where `name`='".$showdate."' AND `type`='".$calendar."'";
+    $sql2 = "SELECT pages FROM ".$prefix."_spiski where `name`='".mysql_real_escape_string($showdate)."' AND `type`='".mysql_real_escape_string($calendar)."'";
     $result2 = $db->sql_query($sql2) or die(ss("Не удалось собрать списки"));
     $row = $db->sql_fetchrow($result2);
     $datavybor = $row['pages'];
     $datavybor = trim(str_replace("   "," ",str_replace("  "," ",$datavybor)));
     $datavybor = " and (`pid`='".str_replace(" ","' or `pid`='",$datavybor)."')";
-  } else $datavybor = " and `date` like '".$showdate." %'";
+  } else $datavybor = " and `date` like '".mysql_real_escape_string($showdate)." %'";
 
   $sql2 = "SELECT `pid` FROM ".$prefix."_pages where `tables`='pages' and (`copy`='0' or `copy`=pid) and `module`='".$DBName."' AND `active`='1'".$datavybor;
   $result2 = $db->sql_query($sql2) or die(ss("Не удалось определить кол-во страниц"));
@@ -361,12 +359,12 @@ function showdate($showdate) {
 
         <div class='page_link_title'><h1 class='cat_page_title'>".$a_open.$title.$a_close."</h1></div>";
         if (trim($text)!="") $soderganieALL .= "<div class='cat_page_text'>".$text."</div>";
-        $soderganieALL .= "<div class='cat_page_counter'>";
-        if ($pсid>0 and $c_name[$pсid]!="") $soderganieALL .= "<img width='16' src='images/sys/papka.png' align='bottom' title='".ss("Раздел:")."' style='padding-right:5px;'><A href='-".$DBName."_cat_".$pсid."' class='page_razdel_link'>".$c_name[$pсid]."</a> &nbsp; ";
-        if ($peopleshow==1) $soderganieALL .= "<img width='16' src='images/sys/magnify.png' align='bottom' title='".ss("Просмотры:")."' style='padding-right:5px; padding-left:15px;'><b>".$p_counter."</b>";
-        $soderganieALL .= "</div>";
-        if ($datashow==1) $soderganieALL .= "<div class='cat_page_date'><img width='16' src='images/calendar.png' align='bottom' title='".ss("Дата:")."' style='padding-right:5px;'>".$p_date."</div>"; // Отображение даты
-        if ($p_comm>0) $soderganieALL .= "<div class='cat_page_comments'>".$a_open_comm.$comments_1.": ".$p_comm.$a_close."</div>"; // Отображение комментариев
+        //$soderganieALL .= "<div class='cat_page_counter'>";
+        if ($pсid>0 and $c_name[$pсid]!="") $soderganieALL .= "<div class='cat_page_folder ico_folder back_icon' title='".ss("Папка")."'><A href='-".$DBName."_cat_".$pсid."' class='page_razdel_link'>".$c_name[$pсid]."</a></div>";
+        if ($peopleshow==1) $soderganieALL .= "<div class='cat_page_folder ico_eye back_icon' title='".ss("Просмотры")."'>".$p_counter."</div>";
+        //$soderganieALL .= "</div>";
+        if ($datashow==1) $soderganieALL .= "<div class='cat_page_date calendar back_icon'>".$p_date."</div>"; // Отображение даты
+        if ($p_comm>0) $soderganieALL .= "<div class='cat_page_comments ico_comment back_icon'>".$a_open_comm.$comments_1.": ".$p_comm.$a_close."</div>"; // Отображение комментариев
         $soderganieALL .= "</td></tr>";
     	} ////////////////////////////////////////////////////////
     }
@@ -760,12 +758,12 @@ function showcat($cid=0, $pag=0, $slovo="") {
             } else $p_comm = "";
           } elseif ($view!=4) { /////////////////////////////////	<div class=cat_page></div>
             if (trim($open_text)!="" and $tema_title != "no") $open_text = "<div class='cat_page_text'>".$open_text."</div>"; else $open_text = "";
-            if ($pсid > 0 and $c_name[$pсid] != "") $all_cat_link = "<nobr><img width='16' src='/images/sys/papka.png' align='bottom' title='".ss("Раздел:")."' style='padding-right:5px;'><A href='-".$DBName."_cat_".$pсid."'><b>".$c_name[$pсid]."</b></a></nobr> "; else $all_cat_link = "";
-            if ($peopleshow==1) $all_page_counter = " <nobr><img width='16' src='/images/sys/magnify.png' align='bottom' title='".ss("Просмотры:")."' style='padding-right:5px; padding-left:15px;'><b>".$p_counter."</b></nobr>";
+            if ($pсid > 0 and $c_name[$pсid] != "") $all_cat_link = "<div class='cat_page_folder ico_folder back_icon' title='".ss("Папка")."'><A href='-".$DBName."_cat_".$pсid."'>".$c_name[$pсid]."</a></div> "; else $all_cat_link = "";
+            if ($peopleshow==1) $all_page_counter = " <div class='cat_page_folder ico_eye back_icon' title='".ss("Просмотры")."'>".$p_counter."</div>";
             else $all_page_counter = "";
-            if ($datashow==1) $all_page_data = " <div class='cat_page_date'><nobr><img width='16' src='/images/calendar.png' align='bottom' title='".ss("Дата:")."' style='padding-right:5px;'>".$p_date."</nobr></div>";
+            if ($datashow==1) $all_page_data = " <div class='cat_page_date ico_calendar back_icon' title='".ss("Дата публикации")."'>".$p_date."</div>";
             else $all_page_data = "";
-            if ($p_comm> 0 && $comments_main==1 && $show_comments==1) $all_page_comments = " <div class='cat_page_comments'>".$a_open_comm."<img width='16' src='/images/sys/028.png' align='bottom' title='".$comments_1.":' style='padding-right:5px;'>".$p_comm.$a_close."</div>";
+            if ($p_comm> 0 && $comments_main==1 && $show_comments==1) $all_page_comments = " <div class='cat_page_comments ico_comment back_icon' title='".$comments_1."'>".$a_open_comm.$p_comm.$a_close."</div>";
             else $all_page_comments = "";
           }
 
@@ -781,10 +779,8 @@ function showcat($cid=0, $pag=0, $slovo="") {
           }
       
           $page_tags = "";
-          
           // ВЕЗДЕ - 3, в разделе и папках - 2, в разделе - 5, в разделе и на страницах - 6, 
           // в папках - 4, в папках и на страницах - 7, на страницах - 1,НИГДЕ - 0
-          
           if ((($tags == 2 || $tags == 3) || $razdel_shablon != 0) && trim($search) != "") {
             $searches = array();
             $search2 = explode(" ",trim(strtolow($search)));
@@ -792,16 +788,16 @@ function showcat($cid=0, $pag=0, $slovo="") {
             for ($x=0; $x < $search_num; $x++) {
               $searches[] = "<a class='slovo' href='slovo_".str_replace( "%","-", urlencode( $search2[$x] ) )."'>".str_replace("+","&nbsp;",$search2[$x])."</a>";
             }
-            $page_tags .= "<br>".$tag_text_show." ".implode(" | ", $searches)."";
+            $page_tags .= "<div class='page_tags'>".$tag_text_show." ".implode(" | ", $searches)."</div>";
           }
 
           $open_text = str_replace("<cut></cut>","<cut>",$open_text);
           $all_page_link = "";
           if ($show_read_all == "1") {
-            $all_page_link = "<div class='read_all_link'>".$a_open.$read_all.$a_close."</div>";
+            $all_page_link = "<div class='read_all_link ico_readall back_icon3'>".$a_open.$read_all.$a_close."</div>";
             $open_text = str_replace('<cut>','',str_replace('<!--more-->','',str_replace('[ссылка]','',str_replace('-ссылка]','',str_replace('[ссылка-','',str_replace('<hr class="editor_cut">','',$open_text))))));
             // добавить другие типы псевдо ссылок
-          } $open_text = str_replace('<cut>',"<div class='read_all_link'>".$a_open.$read_all.$a_close."</div>",str_replace('<!--more-->',"<div class='read_all_link'>".$a_open.$read_all.$a_close."</div>",str_replace('[ссылка]',"<div class='read_all_link'>".$a_open.$read_all.$a_close."</div>",str_replace('<hr class="editor_cut">',"<div class='read_all_link'>".$a_open.$read_all.$a_close."</div>",$open_text))));
+          } $open_text = str_replace('<cut>',"<div class='read_all_link ico_readall back_icon3'>".$a_open.$read_all.$a_close."</div>",str_replace('<!--more-->',"<div class='read_all_link ico_readall back_icon3'>".$a_open.$read_all.$a_close."</div>",str_replace('[ссылка]',"<div class='read_all_link ico_readall back_icon3'>".$a_open.$read_all.$a_close."</div>",str_replace('<hr class="editor_cut">',"<div class='read_all_link ico_readall back_icon3'>".$a_open.$read_all.$a_close."</div>",$open_text))));
 
           // Дополнение - преобразователь ссылок. //////////////////////
           /*
@@ -1116,14 +1112,6 @@ function page($pid, $all) {
     $page_on_mainpage = "";
     if ($row['mainpage'] == "1") $page_on_mainpage = " page_favourite"; // класс для страниц, выбранных для главной
 
-    if ($cid=="") { // or ($active != 1 and !is_admin($admin))
-      header("HTTP/1.0 404 Not Found");
-      echo "<center style='margin-top:40px;'>".ss("<img src=/images/icon_no.png> <b>Запрашиваемая страница не существует.</b><br>Она была удалена, отключена или никогда и не создавалась.<br><br>Вы имеете право сохранять молчание и перейти на <a href=/>Главную страницу</a> <br>или попробовать найти нужную информацию на сайте с помощью быстрого поиска:")." <form method=POST action=\"search\" style='display:inline;' class=main_search_form>
-      <input type=search name=slovo class=main_search_input><input type='submit' name='ok' value='".ss("Найти")."' class='main_search_button'>
-      </form></center>";
-      exit;
-    }
-    
     global $titl; // для передачи заголовка в php-скрипт
     $p_pid = $pid;
     $search = trim(str_replace("  "," ",$row['search']));
@@ -1276,31 +1264,31 @@ function page($pid, $all) {
     for ($x=0; $x < $search_num; $x++) {
       $searches[] = "<a class='slovo' href='slovo_".str_replace( "%","-", urlencode( $search2[$x] ) )."'>".str_replace("+","&nbsp;",$search2[$x])."</a>";
     }
-    $page_tags .= $tag_text_show." ".implode(" | ", $searches)."";
+    $page_tags .= "<div class='page_tags'>".$tag_text_show." ".implode(" | ", $searches)."</div>";
   }
 
   $page_socialnetwork = "";
   if ($socialnetwork == 1) {
-    $page_socialnetwork .= "<div id=\"socialnetwork\" class=\"socialnetwork\"><script src=\"//yandex.st/share/share.js\" charset=\"utf-8\"></script>".ss("Добавьте в социальные сети:")." <div class=\"yashare-auto-init\" data-yashareL10n=\"ru\" data-yashareType=\"none\" data-yashareQuickServices=\"yaru,vkontakte,facebook,twitter,odnoklassniki,moimir,lj,moikrug,gplus\"></div></div>";
+    $page_socialnetwork .= "<div class='page_socialnetwork'><script src='//yandex.st/share/share.js' charset='utf-8'></script>".ss("Добавьте в соц. сети:")." <div class='yashare-auto-init' data-yashareL10n='ru' data-yashareType='none' data-yashareQuickServices='yaru,vkontakte,facebook,twitter,odnoklassniki,moimir,lj,moikrug,gplus'></div></div>";
   }
 
   if ($favorites == 1) {
     global $http_siteurl, $sitename, $url, $lang;
     $url = urlencode($http_siteurl.$url);
     $tit3 = urlencode($pagetitle.$sitename); 
-    $page_favorites = "<div id=\"favorites\" class=\"favorites\">".ss("Cохраните в закладках:")." <br>
-    <a target='_blank' href='http://www.google.com/bookmarks/mark?op=add&amp;bkmk=".$url."&amp;title=".$tit3."' title=\"Google\"><span style='background-position: -40px 0px !important; width:16px !important; display:inline-block !important; height:16px !important; background-image: url(/images/favorit.gif) !important;'></span></a> ";
+    $page_favorites = "<div id='favorites' class='favorites'>".ss("Cохраните в закладках:")." 
+    <a target='_blank' href='http://www.google.com/bookmarks/mark?op=add&amp;bkmk=".$url."&amp;title=".$tit3."' title='Google'><span class='favorites_ico' style='background-position: -40px 0px !important;'></span></a> ";
     // Добавить закладки для других языков
     if ($lang == "ru") $page_favorites .= "
-    <a target='_blank' href='http://news2.ru/add_story.php?url=".$url."' title=\"News2\"><span style='background-position: -140px 0px !important; width:16px !important; display:inline-block !important; height:16px !important; background-image: url(/images/favorit.gif) !important;'></span></a> 
-    <a target='_blank' href='http://memori.ru/link/?sm=1&amp;u_data[url]=".$url."&amp;u_data[name]=".$tit3."' title=\"Memori\"><span style='background-position: 0px 0px !important; width:16px !important; display:inline-block !important; height:16px !important; background-image: url(/images/favorit.gif) !important;'></span></a> 
-    <a target='_blank' href='http://bobrdobr.ru/addext.html?url=".$url."&amp;title=".$tit3."' title=\"БобрДобр\"><span style='background-position: -20px 0px !important; width:16px !important; display:inline-block !important; height:16px !important; background-image: url(/images/favorit.gif) !important;'></span></a> 
-    <a target='_blank' href='http://moemesto.ru/post.php?url=".$url."&amp;title=".$tit3."' title=\"МоёМесто\"><span style='background-position: -180px 0px !important; width:15px !important; display:inline-block !important; height:16px !important; background-image: url(/images/favorit.gif) !important;'></span></a> ";
+    <a target='_blank' href='http://news2.ru/add_story.php?url=".$url."' title='News2'><span class='favorites_ico' style='background-position: -140px 0px !important;'></span></a> 
+    <a target='_blank' href='http://memori.ru/link/?sm=1&amp;u_data[url]=".$url."&amp;u_data[name]=".$tit3."' title='Memori'><span class='favorites_ico' style='background-position: 0px 0px !important;'></span></a> 
+    <a target='_blank' href='http://bobrdobr.ru/addext.html?url=".$url."&amp;title=".$tit3."' title='БобрДобр'><span class='favorites_ico' style='background-position: -20px 0px !important;'></span></a> 
+    <a target='_blank' href='http://moemesto.ru/post.php?url=".$url."&amp;title=".$tit3."' title='МоёМесто'><span class='favorites_ico' style='background-position: -180px 0px !important; width:15px !important;'></span></a> ";
     $page_favorites .= "</div>";
   } else $page_favorites = "";
 
   if ($put_in_blog>0) {
-    $page_blog = "<div id=\"put_in_blog\" class=\"put_in_blog\" OnClick=\"$('#onoffputinblog').toggle();\" style=\"cursor: pointer;\"><b style=\"border-bottom:1px dotted #999999;\">".ss("Разместите в своем блоге")."</b></div><div id=\"onoffputinblog\" class=\"editor\" style=\"display:none;\"><br>".ss("Код для вставки в блог:")."<br><div style=\"height:150px;overflow:scroll;background-color:#F5F5F5; padding-top:10px;\">";
+    $page_blog = "<div id='put_in_blog' class='put_in_blog' OnClick='$(\"#onoffputinblog\").toggle();' style='cursor: pointer;'><b style='border-bottom:1px dotted #999999;'>".ss("Разместите в своем блоге")."</b></div><div id='onoffputinblog' class='editor' style='display:none;'><br>".ss("Код для вставки в блог:")."<br><div style='height:150px;overflow:scroll;background-color:#F5F5F5; padding-top:10px;'>";
     if ($put_in_blog==2) {
       $page_blog .= "&lt;table width='75%' border='' cellspacing='0' cellpadding='0' style=&quot;border: 1px solid #dfdfdf; background-color:#f1edd3; color: #333333;&quot;&gt;&lt;tr&gt; &lt;td valign=bottom&gt; &lt;div style=&quot;width: 95%;font-size:16px; font-weight:bold;padding: 5px 10px 5px 5px;&quot;&gt;&lt;img src=&quot;".$logo_link."&quot; width=&quot;102&quot; height=&quot;41&quot; align=&quot;left&quot; /&gt; &lt;a href=".$link." target=_blank style=&quot;text-decoration:none; color: #2e64c8;&quot;&gt; &nbsp;".$title_blog." &lt;/a&gt; &lt;/div&gt;&lt;/td&gt;&lt;/tr&gt; &lt;tr&gt; &lt;td align=left valign=top style=&quot;padding: 0 10px 0 10px; font-size:11px;&quot;&gt; ".$opentext_blog." &lt;/td&gt; &lt;/tr&gt; &lt;tr align=right&gt; &lt;td style=&quot;padding:5px 10px 0 10px&quot;&gt;&lt;div style=&quot;border-top: 1px solid #dfdfdf; padding-top: 10px; padding:5px 0 5px 0; font-size: 11px;&quot;&gt;&lt;a href=".$link." target=_blank style=&quot;color: #2e64c8;&quot;&gt;".ss("читать полностью")."&lt;/a&gt;&lt;/div&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;";
     } elseif ($put_in_blog==1) {
@@ -1684,7 +1672,7 @@ function addcomm($pid) {
     $smile_icon = explode(",", $smile_icons);
     $smile = "";
     foreach ($smile_icon as $sm)
-      $smile .= "<img src=\"/images/smilies/".$sm."\" onClick=\"clc_name(' **".$sm."');\"> "; 
+      $smile .= "<img src=\"images/smilies/".$sm."\" onClick=\"clc_name(' **".$sm."');\"> "; 
 
     $ret .= "<div id=\"cont\" class=\"editorbutton but_smile\" OnClick=\"show('onoffsmilies0');\" style=\"cursor: pointer;\" title=\"".ss("Показать смайлы")."\">: )</div></td></tr></table><textarea id=area rows=7 style='font-size:18px;' name=info></textarea>".$kcaptcha."<div id=\"onoffsmilies0\" class=\"editor\" style=\"display:none;\"><br><div class=\"editorbutton\">".$smile." <div onclick='show(\"onoffsmilies0\");' class='editorbutton bb1gray'>".ss("Закрыть")."</div></div><br></div>";
   }
@@ -1711,12 +1699,12 @@ function addbase($base,$name,$spa=0) {
   # Настройка
   $soderganie .= ss("<h3>Добавление информации в базу данных</h3>");
   // Заменить календарь!!!
-  $soderganie .= "<!-- calendar -->
-  <LINK rel=\"stylesheet\" type=\"text/css\" media=\"all\" href=/includes/calendar/calendar-win2k-cold-1.css title=\"win2k-cold-1\"> 
-  <SCRIPT src=/includes/calendar/calendar.js></SCRIPT> 
-  <SCRIPT src=/includes/calendar/calendar-en.js></SCRIPT> 
-  <SCRIPT src=/includes/calendar/calendar-setup.js></SCRIPT>
-  <!-- / calendar -->";
+  /*
+  $soderganie .= "<LINK rel=\"stylesheet\" type=\"text/css\" media=\"all\" href=includes/calendar/calendar-win2k-cold-1.css title=\"win2k-cold-1\"> 
+  <SCRIPT src=includes/calendar/calendar.js></SCRIPT> 
+  <SCRIPT src=includes/calendar/calendar-en.js></SCRIPT> 
+  <SCRIPT src=includes/calendar/calendar-setup.js></SCRIPT>";
+  */
   $soderganie .= "<form method=\"POST\" action=\"-".$DBName."\" enctype=\"multipart/form-data\">
   <table width=100%><tr valign=top><td>";
 
@@ -1767,11 +1755,11 @@ function addbase($base,$name,$spa=0) {
 
         case aa("дата"): 
           $soderganie .= "<p><b>".$one[1].":</b><br>
-          <TABLE cellspacing=0 cellpadding=0 style=\"border-collapse: collapse\"><TBODY><TR valign=top> 
-           <TD><INPUT type=text name=\"text[".$one[0]."]\" id=\"f_date_c[".$one[0]."]\" readonly=1 size=15></TD> 
-           <TD><IMG src=/images/calendar.png id=\"f_trigger_c[".$one[0]."]\" title=\"Выбор даты\" onmouseover=\"this.style.background=&#39;red&#39;;\" onmouseout=\"this.style.background=&#39;&#39;\">".ss(" (выберите дату из меню)")."</TD> 
-          </TR></TBODY></TABLE>
-          <SCRIPT> 
+          <table cellspacing=0 cellpadding=0 style=\"border-collapse: collapse\"><tbody><tr valign=top> 
+           <td><input type=text name=\"text[".$one[0]."]\" id=\"f_date_c[".$one[0]."]\" readonly=1 size=15></td> 
+           <td><span class='calendar i16' id=\"f_trigger_c[".$one[0]."]\" title=\"Выбор даты\" onmouseover=\"this.style.background=&#39;red&#39;;\" onmouseout=\"this.style.background=&#39;&#39;\"></span>".ss(" (выберите дату из меню)")."</td> 
+          </tr></tbody></table>
+          <script> 
               Calendar.setup({
                   inputField     :    \"f_date_c[".$one[0]."]\",     // id of the input field
                   ifFormat       :    \"%e %B %Y\",      // format of the input field
@@ -1779,7 +1767,7 @@ function addbase($base,$name,$spa=0) {
                   align          :    \"Tl\",           // alignment (defaults to \"Bl\")
                   singleClick    :    true
               });
-          </SCRIPT><input type=hidden name=\"type[".$one[0]."]\" value=\"".aa("дата")."\"></p>"; 
+          </script><input type=hidden name=\"type[".$one[0]."]\" value=\"".aa("дата")."\"></p>"; 
           break;
 
         case aa("датавремя"): 
@@ -1922,10 +1910,10 @@ function addpost($cid) {
           $ret .=  "<br><br><b>".$s_title.":</b> ".ss("(выберите даты из меню, кликнув по значкам)")."<br>
           <table cellspacing=0 cellpadding=0 style=\"border-collapse: collapse\"><tbody><tr valign=top> 
           <td><input type=text name=\"text[".$s_name."]\" id=\"f_date_c[".$s_name."]\" value=\"\" onchange=\"document.getElementById('add[".$s_name."]').value=document.getElementById('f_date_c[".$s_name."]').value+'|'+document.getElementById('f_date_c2[".$s_name."]').value\" readonly=1 size=15></TD>
-          <td><img src=/images/calendar.png id=\"f_trigger_c[".$s_name."]\" title=\"".ss("Выбор даты")."\" onmouseover=\"this.style.background=&#39;red&#39;;\" onmouseout=\"this.style.background=&#39;&#39;\"></td>
+          <td><span class='calendar i16' id=\"f_trigger_c[".$s_name."]\" title=\"".ss("Выбор даты")."\" onmouseover=\"this.style.background=&#39;red&#39;;\" onmouseout=\"this.style.background=&#39;&#39;\"></span></td>
           <td width=20 align=center> - </td>
           <td><input type=text name=\"text[".$s_name."]\" id=\"f_date_c2[".$s_name."]\" value=\"\" onchange=\"document.getElementById('add[".$s_name."]').value=document.getElementById('f_date_c[".$s_name."]').value+'|'+document.getElementById('f_date_c2[".$s_name."]').value\" readonly=1 size=15></td> 
-          <td><img src=/images/calendar.png id=\"f_trigger_c2[".$s_name."]\" title=\"".ss("Выбор даты")."\" onmouseover=\"this.style.background=&#39;red&#39;;\" onmouseout=\"this.style.background=&#39;&#39;\"></td>
+          <td><span class='calendar i16' id=\"f_trigger_c2[".$s_name."]\" title=\"".ss("Выбор даты")."\" onmouseover=\"this.style.background=&#39;red&#39;;\" onmouseout=\"this.style.background=&#39;&#39;\"></span></td>
           </tr></tbody></table>
           <script> 
               Calendar.setup({

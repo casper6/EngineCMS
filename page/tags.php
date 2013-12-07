@@ -42,7 +42,7 @@
       $p_cid = $row['cid'];
       $soderganie .= "<li><a href=-".$p_module.">".$m_title[$p_module]."</a> ".$strelka." <a href=-".$p_module."_page_".$p_pid.">".$p_title."</a>";
     
-      if (is_admin($admin)) $soderganie .= "&nbsp; <a href='sys.php?op=".$admintip."_edit_page&name=".$p_module."&pid=".$p_pid."' title=\"".aa("Изменить страницу в Редакторе")."\"><img src='images/sys/edit_1.png' title=\"".aa("Изменить страницу в Редакторе")."\"></a>&nbsp; <a href='sys.php?op=".$admintip."_edit_page&name=".$p_module."&pid=".$p_pid."&red=1' title=\"".aa("Изменить страницу (быстрый HTML режим)")."\"><img src='images/sys/edit_0.png' title=\"".aa("Изменить страницу (быстрый HTML режим)")."\"></a>";
+      if (is_admin($admin)) $soderganie .= "&nbsp; <a href='sys.php?op=".$admintip."_edit_page&name=".$p_module."&pid=".$p_pid."' title=\"".aa("Редактировать страницу")."\">".aa("Редактировать страницу")."</a>";
       // Заносим в список
       $pids[] = $p_pid;
     }

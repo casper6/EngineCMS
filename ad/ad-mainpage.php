@@ -30,17 +30,17 @@ function mainpage($name="") {
 		echo "<div class='curved-vt-2 hide' style='margin-left:-265px; width: 530px; top: 80px;' id='add'>
 		<a title='Закрыть это окно' class=punkt onclick=\"$('#add').hide();\"><div class='radius close_button'>&nbsp;x&nbsp;</div></a>
 			<h1>Вы решили добавить:</h1>
-			<a href='sys.php?op=mainpage&amp;name=design&amp;type=0&amp;red=1#1' class='bigicon'><img class='bigicon bi0' src='/images/1.gif'><b>Дизайн</b><br>
+			<a href='sys.php?op=mainpage&amp;name=design&amp;type=0&amp;red=1#1' class='bigicon'><span class='bigicon bi0'></span><b>Дизайн</b><br>
 			Аналог темы, обрамление разделов или блоков</a>
-			<a href='sys.php?op=mainpage&amp;name=css&amp;type=1#1' class='bigicon'><img class='bigicon bi1' src='/images/1.gif'><b>Стиль CSS</b><br>
+			<a href='sys.php?op=mainpage&amp;name=css&amp;type=1#1' class='bigicon'><span class='bigicon bi1'></span><b>Стиль CSS</b><br>
 			Редактируемый онлайн, для подключения к дизайнам</a>
-			<a href='sys.php?op=mainpage&amp;name=block&amp;type=3#1' class='bigicon'><img class='bigicon bi3' src='/images/1.gif'><b>Блок</b><br>
+			<a href='sys.php?op=mainpage&amp;name=block&amp;type=3#1' class='bigicon'><span class='bigicon bi3'></span><b>Блок</b><br>
 			Настраиваемые элементы для вывода различной информации</a>
-			<a href='sys.php?op=mainpage&amp;name=shablon&amp;type=6&amp;red=1#1' class='bigicon'><img class='bigicon bi6' src='/images/1.gif'><b>Шаблон</b><br>
+			<a href='sys.php?op=mainpage&amp;name=shablon&amp;type=6&amp;red=1#1' class='bigicon'><span class='bigicon bi6'></span><b>Шаблон</b><br>
 			Замена настроек на ручной выбор выводимой информации</a>
-			<a href='sys.php?op=mainpage&amp;name=spisok&amp;type=4#1' class='bigicon'><img class='bigicon bi4' src='/images/1.gif'><b>Поле</b><br>
+			<a href='sys.php?op=mainpage&amp;name=spisok&amp;type=4#1' class='bigicon'><span class='bigicon bi4'></span><b>Поле</b><br>
 			для страниц (аналог таксономии, для фильтров и доп. информации)</a>
-			<a href='sys.php?op=mainpage&amp;name=base&amp;type=5#1' class='bigicon'><img class='bigicon bi5' src='/images/1.gif'><b>Базу данных</b><br>
+			<a href='sys.php?op=mainpage&amp;name=base&amp;type=5#1' class='bigicon'><span class='bigicon bi5'></span><b>Базу данных</b><br>
 			Таблица с поиском и фильтрами для внутреннего или открытого использования</a>
 			</div>
 
@@ -950,7 +950,7 @@ function edit_main($id) {
 	</tr>
 	<tr>
 	<td><strong>Тип голосования</strong>, по умолчанию: оценка (макс. 5 баллов)</td>
-	<td>".select("options[golostype]", "0,1,2,3", "Оценка (макс. 5 баллов),Кнопка «Проголосовать»,Рейтинг (кнопки + и -),Рейтинг («Мне понравилось»)", $golostype)."</td>
+	<td>".select("options[golostype]", "0,1,2,3", "Оценка (5 звезд),Кнопка «Проголосовать»,Рейтинг (кнопки + и -),Рейтинг (понравилось/не понравилось)", $golostype)."</td>
 	</tr>
 	</table>
 	</div>
@@ -1000,7 +1000,7 @@ function edit_main($id) {
 	<td>".select("options[show_tags_pages]", "0,1", "НЕТ,ДА", $show_tags_pages)."</td>
 	</tr>
 	<tr>
-	<td><strong>Показывать Добавление страниц в Интернет-закладки</strong> <img src=/images/favorit.gif align=bottom></td>
+	<td><strong>Показывать Добавление страниц в Интернет-закладки</strong></td>
 	<td>".select("options[favorites]", "1,0", "ДА,НЕТ", $favorites)."</td>
 	</tr>
 	<tr>
@@ -1213,7 +1213,8 @@ function edit_main($id) {
 		echo "<input type='hidden' name='text' value='".$text."'>";
 		if ($id != 24) {
 			echo "<tr><td colspan='2'>
-			<a class='dark_pole' onClick='$(\"#shablon_show\").toggle(\"slow\")'><img class='icon2 i26' src='/images/1.gif'>Предисловие и Содержание страниц по-умолчанию. Заготовка, предлагаемая при создании страницы</a>
+			<a class='dark_pole' onClick='$(\"#shablon_show\").toggle(\"slow\")'><span class=\"icon gray small\" data-icon=\"p\"></span>
+			Предисловие и Содержание страниц по-умолчанию. Заготовка, предлагаемая при создании страницы</a>
 
 			<div id='shablon_show' class='hide'>".close_button("shablon_show")."Если у большинства страниц раздела особенный дизайн или какое-то первоначальное содержание для всех страниц раздела одинаково — его можно прописать ниже как заготовку для страниц. Сначала идет заготовка для Предисловия страниц, затем — для Содержания, разделяются они служебным словом [следующий]. Если нужна только заготовка для Предисловия - слово [следующий] можно вообще не писать, а если нужна только заготовка для Содержания - слово [следующий] надо написать перед ней.<br>Пример: 111[следующий]222 — при создании страницы вы увидите в её Предисловии текст 111, а в Содержании — 222.";
 			echo redactor2($red, $sha, 'shablon');
@@ -2037,14 +2038,14 @@ function edit_main($id) {
 		}
 
 		echo "</table>
-		<div class='dark_pole' onclick=\"show('nastroi')\"><img class='icon2 i26' src='/images/1.gif'>Настройки (для импорта/экспорта)</div>
+		<div class='dark_pole' onclick=\"show('nastroi')\"><span class=\"icon gray small\" data-icon=\"p\"></span> Настройки (для импорта/экспорта)</div>
 		<div id='nastroi' style='display: none;'>
 		<br><span class=f12><a target='_blank' href='sys.php?op=mainpage&amp;type=3&amp;id=".$id."&nastroi=1'>Перейти к визуальной настройке</a> &rarr;</span><br>
 		<textarea class='f12 w100' name='useit' rows='2' cols='10'>".str_replace("&","&amp;",$useit)."</textarea></div>";
 
 
 		if ($name == 10 && $re_menu == 0) echo "<div class='dark_pole' style='float:right;' onclick=\"show('primer')\">
-		    <img class='icon2 i26' src='/images/1.gif'>Пример построения меню сайта (справка)</div>
+		    <span class=\"icon gray small\" data-icon=\"?\"></span> Пример построения меню сайта</div>
 		    <div id='primer' style='display: none;'><pre>
 		# - это ссылки на страницы.
 

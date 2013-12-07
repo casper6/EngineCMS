@@ -41,9 +41,9 @@ echo "<div id='show_first' class='show_pole'>
 			if ($id != '') $titles[] = $title_razdels_by_id[$id]; // заменить на html ???
 		}
 		echo implode(", ",$titles).'</h3></td><td>
-		<a href="sys.php?op=edit_group&amp;id='.$gid.'" title="Настроить"><img class="icon2 i38" src="/images/1.gif"></a>
-		<a href="sys.php?op=html_group&amp;id='.$gid.'" title="Шаблон страницы пользователя"><img class="icon2 i34" src="/images/1.gif"></a>
-		<a href="sys.php?op=del_group2&amp;id='.$gid.'" title="Удалить"><img class="icon2 i21" src="/images/1.gif"></a></td></tr>';
+		<a href="sys.php?op=edit_group&amp;id='.$gid.'" title="Настроить">Настроить</a>
+		<a href="sys.php?op=html_group&amp;id='.$gid.'" title="Шаблон страницы пользователя">Шаблон</a>
+		<a href="sys.php?op=del_group2&amp;id='.$gid.'" title="Удалить">Удалить</a></td></tr>';
 	}
 	echo "</table></div><div id='show_recent' class='show_pole' style='display:none;'>";
 	$result2 = $db->sql_query("select * from ".$prefix."_mainpage where `type`='10' and `name`='config'");

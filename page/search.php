@@ -149,7 +149,7 @@ else {
     foreach ($pids as $p_pid) {
       $p_title = $rr_title[$p_pid];
       $soderganie .= "<li>".ss("раздел")." <a class='search_page_link' href='/-".$rr_name[$p_pid]."'>".$p_title."</a>";
-      if (is_admin($admin)) $soderganie .= "&nbsp; <a href='sys.php?op=mainpage&type=2&id=".$p_pid."' title='".ss("Изменить раздел в Редакторе")."'><img src=images/sys/edit_1.png></a><a href='sys.php?op=mainpage&type=2&id=".$p_pid."&red=1' title='".ss("Изменить раздел (быстрый HTML режим)")."'><img src='images/sys/edit_0.png'></a>";
+      if (is_admin($admin)) $soderganie .= "&nbsp; <a href='sys.php?op=mainpage&type=2&id=".$p_pid."' title='".ss("Редактировать раздел")."'>".ss("Редактировать раздел")."</a>";
       foreach ($slovo as $s_line) {
         $txt = strchop(strip_tags(str_replace("&nbsp;"," ",str_replace("".aa("[содержание]").""," ",str_replace("".aa("[следующий]").""," ",str_replace("".aa("[название]").""," ",str_replace("".aa("[страницы]").""," ",str_replace("<br>"," ",str_replace("<p>"," ",$rr_useit[$p_pid])))))))),$s_line,100);
         if ($txt != "......" and $txt != false) $soderganie .= "<blockquote>".$txt."</blockquote>";
@@ -184,7 +184,7 @@ else {
 
     foreach ($pids as $p_cid) {
       $soderganie .= "<li>".ss("папка")." <a class='search_page_link' href='/-".$rr_module[$p_cid]."_cat_".$p_cid."'>".$rr_title[$p_cid]."</a>";
-      if (is_admin($admin)) $soderganie .= "&nbsp; <a href='sys.php?op=edit_base_pages_category&cid=".$p_cid."' title='".ss("Изменить папку в Редакторе")."'><img src=images/sys/edit_1.png></a><a href='sys.php?op=edit_base_pages_category&cid=".$p_cid."&red=1' title='".ss("Изменить папку (быстрый HTML режим)")."'><img src='images/sys/edit_0.png'></a>";
+      if (is_admin($admin)) $soderganie .= "&nbsp; <a href='sys.php?op=edit_base_pages_category&cid=".$p_cid."' title='".ss("Редактировать папку")."'>".ss("Редактировать папку")."</a>";
       foreach ($slovo as $s_line) {
         $txt = strchop(strip_tags(str_replace("&nbsp;"," ",str_replace("<br>"," ",str_replace("<p>"," ",$rr_description[$p_cid])))),$s_line,100);
         if ($txt != "......" and $txt != false) $soderganie .= "<blockquote>".$txt."</blockquote>";
@@ -250,7 +250,7 @@ else {
       $soderganie .= "<li>".ss("стр.")." <a class='search_page_link' href='/-".$p_module."_page_".$p_pid."'>".$p_title."</a> <span class='search_page_date'>".$p_date[$p_pid]."</span>";
       
       if (is_admin($admin)) 
-        $soderganie .= "&nbsp; <a href='sys.php?op=".$admintip."_edit_page&name=".$p_module."&pid=".$p_pid."' title='".aa("Изменить страницу в Редакторе")."'><img src='images/sys/edit_1.png'></a><a href='sys.php?op=".$admintip."_edit_page&name=".$p_module."&pid=".$p_pid."&red=1' title='".aa("Изменить страницу (быстрый HTML режим)")."'><img src='images/sys/edit_0.png'></a>";
+        $soderganie .= "&nbsp; <a href='sys.php?op=".$admintip."_edit_page&name=".$p_module."&pid=".$p_pid."' title='".aa("Редактировать страницу")."'>".aa("Редактировать страницу")."</a>";
       
       if ($showall == 0) { // если показать ограниченное кол-во
         $soderganie .= "<br><a class='search_razdel_link' href='/-".$p_module."'>".$title_razdels[$p_module]."</a> ".$cat;
