@@ -1049,7 +1049,9 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
 
   } elseif ($id == 5) { // НОВОЕ
     $pageslistdel .= "<table width=100% class=table_light><thead><tr><th>Дата последнего изменения</th><th>Раздел </th><th class='gray'>Включение</th><th>Страница</th></tr></thead><tbody>";
-    $result6 = $db->sql_query("SELECT `pid`, `module`, `title`, `active`, `date`, `redate` from ".$prefix."_pages where `tables`='pages' order by `redate` desc limit 0,1000");
+    $result6 = $db->sql_query("SELECT `pid`, `module`, `cid`, `title`, `active`, `date`, `redate` from ".$prefix."_pages where `tables`='pages' order by `redate` desc limit 0,1000");
+    // Получаем список всех папок
+    $titles_papka = titles_papka(0,1);
     while ($row6 = $db->sql_fetchrow($result6)) {
         $pid = $row6['pid'];
         $title = strip_tags($row6['title'], '<b><strong><em><i>');
@@ -1058,9 +1060,13 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
         $date = date2normal_view(str_replace(".","-",$row6['redate']), 2, 1);
         $gray_date = " gray";
         if (date2normal_view(str_replace(".","-",$row6['redate'])) == date2normal_view(str_replace(".","-",$row6['date']))) $gray_date = "";
-        if (!isset($module)) $title_razdel_and_bd[$module] = "РАЗДЕЛ УДАЛЁН! &rarr; $module";
-        $m_title = $title_razdel_and_bd[$module];
-
+        if (!isset($title_razdel_and_bd[$module])) $m_title = "РАЗДЕЛ УДАЛЁН! &rarr; $module";
+        else {
+          $cid = $row6['cid'];
+          if ($cid != 0) $title_papka = " &rarr; папка «".$titles_papka[$cid]."»"; 
+          else $title_papka = "";
+          $m_title = $title_razdel_and_bd[$module].$title_papka;
+        }
         if ($row6['active'] == 1) { $p_active_color = ""; $vkl_title = ""; }
         else {
           $p_active_color = " bgcolor='#dddddd'";
@@ -1075,17 +1081,25 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
 
   } elseif ($id == 4) { // ДОБАВЛЕННОЕ ПОСЕТИТЕЛЯМИ
     $pageslistdel .= "<table width=100% class=table_light><thead><tr><th class='gray'>Дата создания</th><th class='gray'>Раздел </th><th class='gray'>Проверка</th><th class='gray'>Страница</th></tr></thead><tbody>";
-    $result7 = $db->sql_query("SELECT `pid`, `module`, `title`, `date` from ".$prefix."_pages where (`active`='2' or `active`='3') and `tables`!='del' order by `date` desc limit 0,10000");
+    $result7 = $db->sql_query("SELECT `pid`, `module`, `cid`, `title`, `date` from ".$prefix."_pages where (`active`='2' or `active`='3') and `tables`!='del' order by `date` desc limit 0,10000");
+    // Получаем список всех папок
+    $titles_papka = titles_papka(0,1);
     while ($row7 = $db->sql_fetchrow($result7)) {
       $pid = $row7['pid'];
       $title = strip_tags($row7['title'], '<b><strong><em><i>');
       if (trim($title) == "") $title = "< страница без названия >";
       $module = $row7['module'];
-      if (!isset($module)) $title_razdel_and_bd[$module] = "РАЗДЕЛ УДАЛЁН! &rarr; $module";
+      if (!isset($module)) $m_title = "РАЗДЕЛ УДАЛЁН! &rarr; $module";
+      else {
+        $cid = $row7['cid'];
+        if ($cid != 0) $title_papka = " &rarr; папка «".$titles_papka[$cid]."»"; 
+        else $title_papka = "";
+        $m_title = $title_razdel_and_bd[$module].$title_papka;
+      }
       $date = date2normal_view(str_replace(".","-",$row7['date']), 2, 1);
-      $pageslistdel .= "<tr id='1page".$pid."' class='tr_hover'><td class='gray'><nobr>".$date."</nobr></td><td class='gray'>".$title_razdel_and_bd[$module]."</td><td><a onclick='offpage(".$pid.",1)' class='button small' title='Включение страницы'>".icon('white small','`')."Включить</a></td><td><a title='Удалить страницу в Удаленные' onclick='delpage(".$pid.")' class='pointer' style='float:right;'>".icon('red small','T')."</a><a title='Изменить страницу в Редакторе' href='sys.php?op=base_pages_edit_page&name=".$module."&pid=".$pid."'>".icon('orange small','7')."</a><a title='Открыть страницу на сайте' target='_blank' href='-".$module."_page_".$pid."'>".$title."</a>&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>";
+      $pageslistdel .= "<tr id='1page".$pid."' class='tr_hover'><td class='gray'><nobr>".$date."</nobr></td><td class='gray'>".$m_title."</td><td><a onclick='offpage(".$pid.",1)' class='button small' title='Включение страницы'>".icon('white small','`')."Включить</a></td><td><a title='Удалить страницу в Удаленные' onclick='delpage(".$pid.")' class='pointer' style='float:right;'>".icon('red small','T')."</a><a title='Изменить страницу в Редакторе' href='sys.php?op=base_pages_edit_page&name=".$module."&pid=".$pid."'>".icon('orange small','7')."</a><a title='Открыть страницу на сайте' target='_blank' href='-".$module."_page_".$pid."'>".$title."</a>&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>";
     }
-  $pageslistdel .= "</tbody></table><i>Максимум отображения: 10.000 страниц.</i>";
+  $pageslistdel .= "</tbody></table>";
 
   } elseif ($id == 3 or $id == 6 or $id == 7) { // КОММЕНТАРИИ
     $limit = 100;
@@ -1113,28 +1127,30 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
     $line_id = "";
     $sql5 = "SELECT `cid`, `num`, `avtor`, `mail`, `text`, `data`, `drevo`, `tel`, `active` from ".$prefix."_pages_comments where `tables`='pages'".$line_id.$and." order by `data` desc limit 0,".$limit;
     $result5 = $db->sql_query($sql5);
-
+    // Получаем список всех папок
+    $titles_papka = titles_papka(0,1);
     while ($row5 = $db->sql_fetchrow($result5)) {
       $cid = $row5['cid'];
       $num = $row5['num'];
       $txt = $row5['text'];
       $otvet = $row5['drevo'];
-      $avtor = strip_tags($row5['avtor']);
+      $avtor = trim(strip_tags($row5['avtor']));
       $mails = trim(str_replace(" ","",strip_tags($row5['mail']))); 
       $tel = trim(strip_tags($row5['tel'])); 
       $data = date2normal_view(str_replace(".","-",$row5['data']), 2, 1);
-      if (strpos($mails, "@")) { $mail = $mails; $mails = "<br>Email: <a href='mailto:".$mails."'>".$mails."</a>"; } else { $mail = ""; $mails = ""; }
+      if (strpos($mails, "@")) { $mail = $mails; $mails = "<br>Почта: <a href='mailto:".$mails."'>".$mails."</a>"; } else { $mail = ""; $mails = ""; }
       if ($tel != "") $tel = "<br>Телефон: ".$tel;
        
-      $sql4 = "SELECT `title`, `module` from ".$prefix."_pages where `pid` = '$num'";
+      $sql4 = "SELECT `title`, `module`, `cid` from ".$prefix."_pages where `pid` = '".$num."'";
       $result4 = $db->sql_query($sql4);
       $row4 = $db->sql_fetchrow($result4);
       $module = $row4['module'];
       $titles = $row4['title'];
+      $p_cid = $row4['cid'];
 
       $pishet = "пишет в";
       if ($otvet != 0) {
-        $otvet = "<p>Является ответом на <a target='_blank' href='/sys.php?op=base_comments&name=".$module."&pid=".$num."#".$otvet."'>комм. №".$otvet."</a>.";
+        $otvet = "<p>Является ответом на <a target='_blank' href='sys.php?op=base_comments&name=".$module."&pid=".$num."#".$otvet."'>комм. №".$otvet."</a>.";
         $pishet = "отвечает в";
       }
       else $otvet = "";
@@ -1148,8 +1164,10 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
       $textline = mb_substr(strip_tags($txt), 0, 45, 'UTF-8');
       if (strlen($textline)<strlen($txt)) $textline .= "...";
 
-      if ($avtor == "Администратор") $avtor2 = "<span class=red>".$avtor."</span>";
-      else $avtor2 = $avtor;
+      if ($avtor == "Администратор") $avtor2 = "<span class='red'>".$avtor."</span>";
+      elseif ($avtor == "Редактор") $avtor2 = "<span class='green'>".$avtor."</span>";
+      elseif ($avtor == "Модератор") $avtor2 = "<span class='blue'>".$avtor."</span>";
+      else $avtor2 = trim($avtor);
       if ($num != 0) {
         global $avtor_comments;
         $avtor_comment = explode(",", $avtor_comments);
@@ -1159,8 +1177,12 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
           $add_option[] = trim($a_comm);
         }
         $add_option = implode(",", $add_option);
-        if (!isset($module)) $titl_mainpage = "РАЗДЕЛ УДАЛЁН! &rarr; $module";
-        else $titl_mainpage = trim($title_razdel_and_bd[$module]);
+        if (!isset($title_razdel_and_bd[$module])) $titl_mainpage = "РАЗДЕЛ УДАЛЁН! &rarr; $module";
+        else {
+          if ($p_cid != 0) $title_papka = " &rarr; папка «".$titles_papka[$p_cid]."»"; 
+          else $title_papka = "";
+          $titl_mainpage = $title_razdel_and_bd[$module].$title_papka;
+        }
         $del = "";
         $pageslistdel .= "<tr onclick='show(\"comm".$cid."\")' title='Показать комментарий...' valign='top' style='cursor:pointer;' class='tr_hover' id='1comm".$cid."'".$bgcolor."><td class='gray'><nobr>".$data."</nobr></td><td>".$del."<a onclick='offcomm(".$cid.")' class='punkt'>".$vkl."</a>
 
@@ -1206,20 +1228,28 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
     $numrows = $db->sql_fetchrow( $db->sql_query($sql) );
     $numrows = $numrows[0];
 
-    $sql6 = "SELECT `pid`, `module`, `title`, `redate` from ".$prefix."_pages where `tables`='".$deistvo."' order by `redate` desc limit 500";
+    $sql6 = "SELECT `pid`, `module`, `cid`, `title`, `redate` from ".$prefix."_pages where `tables`='".$deistvo."' order by `redate` desc limit 500";
     $iid = $deistvo."page";
     $result6 = $db->sql_query($sql6);
     $pageslistdel .= "<h2>Страницы (".$numrows."):</h2><table width=100% class=table_light><thead><tr><th>".$slovo."</th><th>Раздел </th><th>Страница</th></tr></thead><tbody>";
+    // Получаем список всех папок
+    $titles_papka = titles_papka(0,1);
     while ($row6 = $db->sql_fetchrow($result6)) {
       $pid = $row6['pid'];
+      $cid = $row6['cid'];
       $title = strip_tags($row6['title'], '<b><strong><em><i>');
       if (trim($title) == "") $title = "< страница без названия >";
       $module = $row6['module'];
-      if (!isset($title_razdel_and_bd[$module])) $title_razdel_and_bd[$module] = "РАЗДЕЛ УДАЛЁН &rarr; $module";
+      if (!isset($title_razdel_and_bd[$module])) $titl_mainpage = "РАЗДЕЛ УДАЛЁН! &rarr; $module";
+        else {
+          if ($cid != 0) $title_papka = " &rarr; папка «".$titles_papka[$cid]."»"; 
+          else $title_papka = "";
+          $titl_mainpage = $title_razdel_and_bd[$module].$title_papka;
+        }
       $date = date2normal_view(str_replace(".","-",$row6['redate']), 2, 1);
       if ($id == 1) $recreate = "<a title='Восстановить страницу...\nЕсли её раздел или папка удалены, сначала отредактируйте и восстановите из резервных копий!' onclick=resetpage(".$pid.") style=\"cursor:pointer;\">".icon('green small',';')."</a>";
       if ($id == 2) $recreate = "<a title='Заменить этой копией оригинал...\nПодумайте, прежде чем нажимать!' onclick=resetpage(".$pid.") style=\"cursor:pointer;\">".icon('green small',';')."</a>";
-      $pageslistdel .= "<tr valign=top id=".$iid.$pid."><td><nobr>".$date."</nobr></td><td>".$title_razdel_and_bd[$module]."</td><td><a title='Удалить страницу (без возможности восстановления)' onclick=deletepage(".$pid.") class='pointer' style='float:right;'>".icon('red small','F')."</a>     
+      $pageslistdel .= "<tr valign=top id=".$iid.$pid."><td><nobr>".$date."</nobr></td><td>".$titl_mainpage."</td><td><a title='Удалить страницу (без возможности восстановления)' onclick=deletepage(".$pid.") class='pointer' style='float:right;'>".icon('red small','F')."</a>     
       <a target='_blank' title='Изменить страницу' href='sys.php?op=base_pages_edit_page&name=".$module."&pid=".$pid."'>".icon('orange small','7')."</a><a target=_blank title='Изменить страницу в HTML' href='sys.php?op=base_pages_edit_page&name=".$module."&pid=".$pid."&red=1'>".icon('black small','7')."</a>
      ".$title."&nbsp;&nbsp;".$recreate."</td></tr>";
     }

@@ -192,7 +192,7 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 		$block_color = $block_colorYYY[$idX];
 
 	// обнулили все опции блоков от греха подальше
-	$titleshow = $media = $folder = $datashow = $tagdelete = $ipdatauser = $design = $open_all = $catshow = $main = $daleeshow = $openshow = $number = $add = $size = $papki_numbers = $zagolovokin = $menu = $noli = $html = $show_title = $random = $showlinks = $open_new_window = $shablon = $show_new_pages = $reload_link_show = $reload_link_time = $re_menu = 0;
+	$titleshow = $reload_one_by_one = $folder = $datashow = $tagdelete = $ipdatauser = $design = $open_all = $catshow = $main = $daleeshow = $openshow = $number = $add = $size = $papki_numbers = $zagolovokin = $menu = $noli = $html = $show_title = $random = $showlinks = $open_new_window = $shablon = $show_new_pages = $reload_link_show = $reload_link_time = $re_menu = 0;
 	$opros_type = $limkol = $pageshow = $only_question = $opros_result = $foto_gallery_type = $notitlelink = $foto_num = 1;
 	$shablon = $class = $alternative_title_link = $cid_open = $no_show_in_razdel = $watermark = $show_in_papka = "";
 	$addtitle = ss("Добавить статью");
@@ -672,18 +672,23 @@ case "2": # Блок текста
 	break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 case "3": # Блок ротатор рекламы
-	$reload_link = "<a style='cursor:pointer;' onclick='$(showrotator".$idX."())'>".$reload_link_text."</a>";
+	$reload_link = "<a style='cursor:pointer;' onclick='$(showrotator".$idX."(0))'>".$reload_link_text."</a>";
 	$textX = "<script>
-	  function showrotator".$idX."() {
-          $.get('rotator.php', { num: '".$idX."' }, function(data) { 
-			  $('#show_rotator".$idX."').html( data );
-		  });  
-	  }
-	  $(showrotator".$idX."());";
-	  if ($reload_link_on_start != 0) $textX .= "setTimeout(function() { $(showrotator".$idX."()); }, 1000);";
+	function showrotator".$idX."(timer){
+		$.get('rotator.php',{num:'".$idX."', timer: timer},
+			function(data){ $('#show_rotator".$idX."').html(data);});}
+	  $(showrotator".$idX."(".$reload_one_by_one."));";
+	  if ($reload_link_on_start != 0) $textX .= "setTimeout(function() { $(showrotator".$idX."(".$reload_one_by_one.")); }, 1000);";
 	  if ($reload_link_time != 0) {
+	  	$row = $db->sql_fetchrow($db->sql_query("select `text` from ".$prefix."_mainpage where `type`='3' and `name`='3' and `id`='".$idX."'"));
+		$showrotator_max = count(explode("|", $row['text']));
 	  	$reload_link_time = $reload_link_time * 1000;
-	  	$textX .= "setInterval(function() { $(showrotator".$idX."()); }, ".$reload_link_time.");";
+	  	// включение последовательного показа блоков
+		if ($reload_one_by_one == 1) $and = "\nshowrotator_timer=showrotator_timer+1; 
+		if (showrotator_timer > showrotator_max) showrotator_timer = 1;"; 
+		else $and = "";
+	  	$textX .= "\nvar showrotator_timer=".$reload_one_by_one.";\nvar showrotator_max=".$showrotator_max.";
+	  	setInterval( function(){ $( showrotator".$idX."(showrotator_timer) ); ".$and." }, ".$reload_link_time.");";
 	  }
 	  $textX .= "</script>";
 	  if ($reload_link_show == "1") $textX .= $reload_link;

@@ -2,9 +2,7 @@
 require_once("mainfile.php");
 require_once("shablon.php");
 global $prefix, $db, $admin;
-
 if (is_admin($admin)) $admin_ok = 1; else $admin_ok = 0;
-
 if (isset($_GET['p_id'])) $pid = intval($_GET['p_id']); 
 else die(ss("Комментариев нет."));
 $comments_desc = intval($_GET['desc']);
@@ -18,13 +16,17 @@ $comments_tel = intval($_GET['tel']);
 $url = getenv("REQUEST_URI"); // запросить
 
 $lim = ""; // доделать на аяксе
-if ($comments_desc == 1) $dat = " desc"; else $dat = "";
 
-  $sql_comm = "SELECT `cid`,`avtor`,`ava`,`mail`,`text`,`ip`,`data`,`drevo`,`adres`,`tel` FROM ".$prefix."_pages_comments WHERE `num`='".$pid."' and `active`='1' order by drevo, data".$dat.$lim;
-  $result = $db->sql_query($sql_comm);
-  $numrows = $db->sql_numrows($result);
-  $nu = 0;
-
+if ($comments_desc == 1) $dat = " desc"; 
+else $dat = "";
+$sql_comm = "SELECT `cid`,`avtor`,`ava`,`mail`,`text`,`ip`,`data`,`drevo`,`adres`,`tel` FROM ".$prefix."_pages_comments WHERE `num`='".$pid."' and `active`='1' order by drevo, data".$dat.$lim;
+$result = $db->sql_query($sql_comm);
+$numrows = $db->sql_numrows($result);
+$nu = 0;
+header ("Content-Type: text/html; charset=utf-8");
+if ($numrows == 0) {
+  echo ss("В ожидании вашего комментария...");
+} else {
   if ($comment_shablon < 20) // Получаем шаблон
     $sha = shablon_show("comments", $comment_shablon);
   else {
@@ -39,8 +41,7 @@ if ($comments_desc == 1) $dat = " desc"; else $dat = "";
   $date_now = date("d m Y");
   $date_now2 = date("d m Y",time()-86400);
   $date_now3 = date("d m Y",time()-172800);
-  $c_id = 0;
-  $comm = ss("В ожидании вашего комментария...");
+  //$c_id = 0;
   while ($row = $db->sql_fetchrow($result)) { // заменить на функцию даты !!!
     $c_id = $row['cid'];
     $p_id[$c_id] = $pid;
@@ -63,11 +64,8 @@ if ($comments_desc == 1) $dat = " desc"; else $dat = "";
     $adres[$c_id] = $row['adres'];
     $tel[$c_id] = $row['tel'];
   }
-  if (count($p_id) > 0 and $c_id != 0) $comm = generate_comm($admin_ok, $p_id, $avtor, $text, $mail, $adres, $tel, $date1, $date2, $ip, $drevo, $sha, "0", "", $vetki, $comments_num, $comments_all, $comments_mail, $comments_adres, $comments_tel, $ava);
-  header ("Content-Type: text/html; charset=utf-8");
-  echo $comm;
-//}
-
+  echo generate_comm($admin_ok, $p_id, $avtor, $text, $mail, $adres, $tel, $date1, $date2, $ip, $drevo, $sha, "0", "", $vetki, $comments_num, $comments_all, $comments_mail, $comments_adres, $comments_tel, $ava)."<div id='comments_refresh' title='".ss("Обновить комментарии")."'><a onclick='showcomm()' class='refresh'></a><a href='#new' class='new'>0</a></div>";
+}
 /////////////////////////////////////////////////////
 function generate_comm($admin_ok, $p_id, $avtor, $text, $mail, $adres, $tel, $date1, $date2, $ip, $drevo, $sha, $position, $numb="", $vetki, $comments_num, $comments_all, $comments_mail, $comments_adres, $comments_tel, $ava) {
   $sha3 = "";
@@ -108,7 +106,7 @@ function generate_comm($admin_ok, $p_id, $avtor, $text, $mail, $adres, $tel, $da
 
       $avtor_type = ss("Гость");
 
-      if ($admin_ok==1) $comment_admin = "<a href=/sys.php?op=base_comments_edit_comments&cid=".$comm_cid."&red=1 title='".aa("Изменить в HTML")."'><img src='/images/sys/edit_0.png' align=bottom width=16></a> <a href=/sys.php?op=base_pages_delit_comm&cid=".$comm_cid."&ok=ok&pid=".$pid." title='".aa("Удалить")."'><img align=bottom src=/images/sys/del.png width=16></a> "; else $comment_admin = "";
+      if ($admin_ok==1) $comment_admin = "<a href='sys.php?op=base_comments_edit_comments&cid=".$comm_cid."&red=1' class='edit_link'>".aa("Редактировать")."</a> <a href='sys.php?op=base_pages_delit_comm&cid=".$comm_cid."&ok=ok&pid=".$pid."' class='delete_link'>".aa("Удалить")."</a> "; else $comment_admin = "";
 
       if (strpos($sha,"[comment_ipbox]")) {
         if ($avtor[$comm_cid] == aa("Администратор") or $avtor[$comm_cid] == aa("Админ") or $avtor[$comm_cid] == aa("админ")) { 
@@ -126,9 +124,9 @@ function generate_comm($admin_ok, $p_id, $avtor, $text, $mail, $adres, $tel, $da
                 if ($avatar == "") $avatar = validate_gravatar($mail[$comm_cid], $comm_cid);
                 if ($avatar == "no") $avatar = "";
           } else $avatar = "";
-          if ($avatar != "") $comm_ipbox = "<a title='".ss("Вы всегда можете поменять свой аватар")."' href='http://ru.gravatar.com/site/login/' target='_blank' rel='nofollow'><img src='".$avatar."?s=35' style='margin-right:10px; float:left; border:0; width:35px; height:35px;'></a>";
-          else $comm_ipbox = "<div style='margin-right:10px; float:left; border:0; background: rgb(".$ipbox[0].", ".$ipbox[1].", ".$ipbox[2]."); width:35px; height:35px;'><a title='".ss("Чтобы изменить аватар, нажмите здесь и зарегистрируйтесь, введя адрес email")."' href='http://ru.gravatar.com/site/signup/' target='_blank' rel='nofollow'><img title='#".$comm_cid." ip:".$ip[$comm_cid]."' src=/images/avatar_new.png></a></div>";
-        } else $comm_ipbox = "<div style='margin-right:10px; float:left; border:0; background: rgb(".$ipbox[0].", ".$ipbox[1].", ".$ipbox[2]."); width:35px; height:35px;'><img title='#".$comm_cid." ip:".$ip[$comm_cid]."' src=/images/avatar_new.png></div>";
+          if ($avatar != "") $comm_ipbox = "<a title='".ss("Вы всегда можете поменять свой аватар")."' href='http://ru.gravatar.com/site/login/' target='_blank' rel='nofollow' class='avatar'><img src='".$avatar."?s=35' style='margin-right:10px; float:left; border:0; width:35px; height:35px;'></a>";
+          else $comm_ipbox = "<div style='margin-right:10px; float:left; border:0; background: rgb(".$ipbox[0].", ".$ipbox[1].", ".$ipbox[2]."); width:35px; height:35px;'><a title='".ss("Чтобы изменить аватар, нажмите здесь и зарегистрируйтесь, введя адрес email")."' href='http://ru.gravatar.com/site/signup/' target='_blank' rel='nofollow' class='avatar'><img title='#".$comm_cid." ip:".$ip[$comm_cid]."' src='images/avatar_new.png'></a></div>";
+        } else $comm_ipbox = "<div style='margin-right:10px; float:left; border:0; background: rgb(".$ipbox[0].", ".$ipbox[1].", ".$ipbox[2]."); width:35px; height:35px;' class='avatar'><img title='#".$comm_cid." ip:".$ip[$comm_cid]."' src='images/avatar_new.png'></div>";
 
       } else $comm_ipbox = "";
 

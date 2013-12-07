@@ -316,9 +316,9 @@ function showdate($showdate) {
       ///////////////////////////
       $text = str_replace(aa("[заголовок]"),"",$text); // Убираем Заголовок, использованный в блоке!
       ///////////////////////////
-      $p_comm = $row2['comm'];
+      $p_comm = $row2['comm']; 
       $p_counter = $row2['counter'];
-      $dat = explode(" ",$row2['date']);
+      $dat = explode(" ",$row2['date']); // заменить
       $dat = explode("-",$dat[0]);
       $p_date = intval($dat[2])." ".findMonthName($dat[1])." ".$dat[0];
       $p_date_1 = $dat[2]." ".$dat[1]." ".$dat[0];
@@ -329,31 +329,44 @@ function showdate($showdate) {
       if ($date_now2 == $p_date_1) $p_date = ss("Вчера");
       if ($date_now3 == $p_date_1) $p_date = ss("Позавчера");
 
-    	if ($view == 1) { // ФОРУМ //////////////////////////////////////////////////////
+      if ($row2['copy']==0) {
+        $a_open = "<a href='-".$DBName."_page_".$p_pid."'>";
+        $a_open_comm = "<a href='-".$DBName."_page_".$p_pid."_comm#comm'>";
+        $a_close = "</a>";
+      } else {
+        $a_open = "<noindex><a rel='nofollow' href='-".$DBName."_page_".$p_pid."'>";
+        $a_open_comm = "<noindex><a rel='nofollow' href='-".$DBName."_page_".$p_pid."_comm#comm'>";
+        $a_close = "</a></noindex>";
+      }
+
+    	if ($view == 1) { // ФОРУМ
+
         $soderganieALL .= "<tr valign=top>";
         if ($p_pid_last != $pсid) { 
           $p_pid_last = $pсid;
           $soderganieALL .= "<td colspan=".$colspan." class='cat_page_forum'>".$p_name."</td></tr><tr valign='top'>"; 
         }
-        $soderganieALL .= "<td class='cat_page_title'><a href=-".$DBName."_page_".$p_pid.">".$title."</a></td>";
+
+        $soderganieALL .= "<td class='cat_page_title'>".$a_open.$title.$a_close."</td>";
+        
         $soderganieALL .= "<td class='cat_page_date'><nobr>".$p_date."</nobr></td>";
         $soderganieALL .= "<td class='cat_page_date'>".ss("читали:")."&nbsp;".$p_counter."</td>";
         if ($comments==1 && $show_comments==1) {
-          if ($p_comm>0) $soderganieALL .= "<td class='cat_page_commnum'>".$p_comm." ".ss("комм.")."</td>";
-          else $soderganieALL .= "<td class='cat_page_commnum'><a href='-".$DBName."_page_".$p_pid."'>".ss("Добавить комментарий")."</a></td>";
+          if ($p_comm>0) $soderganieALL .= "<td class='cat_page_commnum'>".$a_open.$p_comm." ".ss("комм.").$a_close."</td>";
+          else $soderganieALL .= "<td class='cat_page_commnum'>".$a_open.ss("Добавить комментарий").$a_close."</a></td>";
         }
         $soderganieALL .= "</tr>";
     	} else { ////////////////////////////////////////////////////////	<div class=cat_page></div>
         $soderganieALL .= "<tr valign='top'><td>
 
-        <div class='page_link_title'><A href='-".$DBName."_page_".$p_pid."'><h1 class='cat_page_title'>".$title."</h1></A></div>";
+        <div class='page_link_title'><h1 class='cat_page_title'>".$a_open.$title.$a_close."</h1></div>";
         if (trim($text)!="") $soderganieALL .= "<div class='cat_page_text'>".$text."</div>";
         $soderganieALL .= "<div class='cat_page_counter'>";
-        if ($pсid>0 and $c_name[$pсid]!="") $soderganieALL .= "<img width='16' src='/images/sys/papka.png' align='bottom' title='".ss("Раздел:")."' style='padding-right:5px;'><A href='-".$DBName."_cat_".$pсid."'><b>".$c_name[$pсid]."</b></a> &nbsp; ";
-        if ($peopleshow==1) $soderganieALL .= "<img width='16' src='/images/sys/magnify.png' align='bottom' title='".ss("Просмотры:")."' style='padding-right:5px; padding-left:15px;'><b>".$p_counter."</b>";
+        if ($pсid>0 and $c_name[$pсid]!="") $soderganieALL .= "<img width='16' src='images/sys/papka.png' align='bottom' title='".ss("Раздел:")."' style='padding-right:5px;'><A href='-".$DBName."_cat_".$pсid."' class='page_razdel_link'>".$c_name[$pсid]."</a> &nbsp; ";
+        if ($peopleshow==1) $soderganieALL .= "<img width='16' src='images/sys/magnify.png' align='bottom' title='".ss("Просмотры:")."' style='padding-right:5px; padding-left:15px;'><b>".$p_counter."</b>";
         $soderganieALL .= "</div>";
-        if ($datashow==1) $soderganieALL .= "<div class='cat_page_date'><img width='16' src='/images/calendar.png' align='bottom' title='".ss("Дата:")."' style='padding-right:5px;'>".$p_date."</div>"; // Отображение даты
-        if ($p_comm>0) $soderganieALL .= "<div class='cat_page_comments'><a title='".ss("раскрыть")." ".$comments_1."' href='-".$DBName."_page_".$p_pid."_comm#comm'>".$comments_1.": <b>".$p_comm."</b></a></div>"; // Отображение комментариев
+        if ($datashow==1) $soderganieALL .= "<div class='cat_page_date'><img width='16' src='images/calendar.png' align='bottom' title='".ss("Дата:")."' style='padding-right:5px;'>".$p_date."</div>"; // Отображение даты
+        if ($p_comm>0) $soderganieALL .= "<div class='cat_page_comments'>".$a_open_comm.$comments_1.": ".$p_comm.$a_close."</div>"; // Отображение комментариев
         $soderganieALL .= "</td></tr>";
     	} ////////////////////////////////////////////////////////
     }
@@ -723,6 +736,19 @@ function showcat($cid=0, $pag=0, $slovo="") {
             $minus_golos = $db->sql_numrows($db->sql_query("SELECT `cid` FROM ".$prefix."_pages_comments WHERE `num`='".$p_pid."' and `golos`='1' and `active`='1'"));
           }
 
+
+          if ($row2['copy']==0) {
+            $a_open = "<a href='-".$DBName."_page_".$p_pid."'>";
+            $a_open_comm = "<a href='-".$DBName."_page_".$p_pid."_comm#comm'>";
+            $a_open_comm2 = "<a href='-".$DBName."_page_".$p_pid."#comm'>";
+            $a_close = "</a>";
+          } else {
+            $a_open = "<noindex><a rel='nofollow' href='-".$DBName."_page_".$p_pid."'>";
+            $a_open_comm = "<noindex><a rel='nofollow' href='-".$DBName."_page_".$p_pid."_comm#comm'>";
+            $a_open_comm2 = "<noindex><a rel='nofollow' href='-".$DBName."_page_".$p_pid."#comm'>";
+            $a_close = "</a></noindex>";
+          }
+
           if ($view == 1) { // ФОРУМ //////////////
             if ($p_pid_last != $pсid and $pсid != 0) { 
               $sha_first = "<tr valign='top'><td colspan='".$colspan."' class='cat_page_forum'>".$p_name."</td></tr><tr valign='top'>";
@@ -730,7 +756,7 @@ function showcat($cid=0, $pag=0, $slovo="") {
             } else $sha_first = "";
             if ($comments==1 && $show_comments==1) {
               if ($p_comm>0) $p_comm = "".$p_comm." ".ss("комм.");
-              else $p_comm = "<a href='-".$DBName."_page_".$p_pid."#comm'>".ss("Добавить комментарий")."</a>";
+              else $p_comm = $a_open_comm2.ss("Добавить комментарий").$a_close;
             } else $p_comm = "";
           } elseif ($view!=4) { /////////////////////////////////	<div class=cat_page></div>
             if (trim($open_text)!="" and $tema_title != "no") $open_text = "<div class='cat_page_text'>".$open_text."</div>"; else $open_text = "";
@@ -739,16 +765,14 @@ function showcat($cid=0, $pag=0, $slovo="") {
             else $all_page_counter = "";
             if ($datashow==1) $all_page_data = " <div class='cat_page_date'><nobr><img width='16' src='/images/calendar.png' align='bottom' title='".ss("Дата:")."' style='padding-right:5px;'>".$p_date."</nobr></div>";
             else $all_page_data = "";
-            if ($p_comm> 0 && $comments_main==1 && $show_comments==1) $all_page_comments = " <div class='cat_page_comments'><nobr><a title='".ss("раскрыть")." ".$comments_1."' href='-".$DBName."_page_".$p_pid."_comm#comm'><img width='16' src='/images/sys/028.png' align='bottom' title='".$comments_1.":' style='padding-right:5px;'><b>".$p_comm."</b></a></nobr></div>";
+            if ($p_comm> 0 && $comments_main==1 && $show_comments==1) $all_page_comments = " <div class='cat_page_comments'>".$a_open_comm."<img width='16' src='/images/sys/028.png' align='bottom' title='".$comments_1.":' style='padding-right:5px;'>".$p_comm.$a_close."</div>";
             else $all_page_comments = "";
           }
 
-          $pagelink = "-".$DBName."_page_".$p_pid;
-          $pagelinktitle = "<A href='".$pagelink."'><h1 class='cat_page_title'>".$title."</h1></A>";
-          if (strlen($text) < 10 && ($comments_main == 0 || $show_comments==0)) {
-            $pagelink = "#";
-            $pagelinktitle = "<h1 class='cat_page_title'>".$title."</h1>";
-          }
+          if (strlen($text) < 10 && ($comments_main == 0 || $show_comments==0))
+            $pagelinktitle = "<h2 class='cat_page_title'>".$title."</h2>";
+          else 
+            $pagelinktitle = "<h2 class='cat_page_title'>".$a_open.$title.$a_close."</h2>";
 
           $golosraz = "";
           if ($golosrazdel != 0) {
@@ -771,11 +795,13 @@ function showcat($cid=0, $pag=0, $slovo="") {
             $page_tags .= "<br>".$tag_text_show." ".implode(" | ", $searches)."";
           }
 
+          $open_text = str_replace("<cut></cut>","<cut>",$open_text);
           $all_page_link = "";
           if ($show_read_all == "1") {
-            $all_page_link = " <A href='-".$DBName."_page_".$p_pid."'>".$read_all."</a>";
-            $open_text = str_replace('<hr class="editor_cut">','',$open_text);
-          }
+            $all_page_link = "<div class='read_all_link'>".$a_open.$read_all.$a_close."</div>";
+            $open_text = str_replace('<cut>','',str_replace('<!--more-->','',str_replace('[ссылка]','',str_replace('-ссылка]','',str_replace('[ссылка-','',str_replace('<hr class="editor_cut">','',$open_text))))));
+            // добавить другие типы псевдо ссылок
+          } $open_text = str_replace('<cut>',"<div class='read_all_link'>".$a_open.$read_all.$a_close."</div>",str_replace('<!--more-->',"<div class='read_all_link'>".$a_open.$read_all.$a_close."</div>",str_replace('[ссылка]',"<div class='read_all_link'>".$a_open.$read_all.$a_close."</div>",str_replace('<hr class="editor_cut">',"<div class='read_all_link'>".$a_open.$read_all.$a_close."</div>",$open_text))));
 
           // Дополнение - преобразователь ссылок. //////////////////////
           /*
@@ -878,9 +904,9 @@ function showcat($cid=0, $pag=0, $slovo="") {
 
   if ($view!=4) {
     // Нумерация страниц
-    if ($pagenumbers == 0) $soderganieALL .= "<div class=venzel></div>".topic_links($nu, $pag, "-".$DBName."_cat_".$cid."_page_", $lim*$limkol)."";
+    if ($pagenumbers == 0) $soderganieALL .= "".topic_links($nu, $pag, "-".$DBName."_cat_".$cid."_page_", $lim*$limkol)."";
 
-    if ($pagenumbers == 1) $soderganieALL = "".topic_links($nu, $pag, "-".$DBName."_cat_".$cid."_page_", $lim*$limkol)."<div class=venzel></div>".$soderganieALL;
+    if ($pagenumbers == 1) $soderganieALL = "".topic_links($nu, $pag, "-".$DBName."_cat_".$cid."_page_", $lim*$limkol)."".$soderganieALL;
 
     if ($pagenumbers == 2) {
       global $topic_links_global;
@@ -1012,7 +1038,7 @@ function showcat($cid=0, $pag=0, $slovo="") {
     if ($order != "") $order = " ORDER ".stripcslashes($order).""; // сортировка
     else $order = " ORDER BY `".$zapros_names[$s]."` ".$desc.", `active` desc";
 
-    if ($razdel_shablon == 0) $soderganieALL .= "<div class=venzel></div>
+    if ($razdel_shablon == 0) $soderganieALL .= "
     <table width=100% cellspacing=1 cellpadding=1 class=main_base_table><tr valign=top>".$rus_names_ok.$pod."</tr>";
 
     $where = mysql_real_escape_string($where);
@@ -1050,8 +1076,8 @@ function showcat($cid=0, $pag=0, $slovo="") {
   	if ($razdel_shablon == 0) $soderganieALL .= "</table>";
 
     // Нумерация страниц
-    if ($pagenumbers == 0) $soderganieALL .= "<div class=venzel></div>".topic_links($nu, $pag, "-".$DBName."_cat_".$cid."_page_", $lim)."";
-    if ($pagenumbers == 1) $soderganieALL = "".topic_links($nu, $pag, "-".$DBName."_cat_".$cid."_page_", $lim)."<div class=venzel></div>".$soderganieALL;
+    if ($pagenumbers == 0) $soderganieALL .= "".topic_links($nu, $pag, "-".$DBName."_cat_".$cid."_page_", $lim)."";
+    if ($pagenumbers == 1) $soderganieALL = "".topic_links($nu, $pag, "-".$DBName."_cat_".$cid."_page_", $lim)."".$soderganieALL;
     if ($pagenumbers == 2) {
       global $topic_links_global;
       $topic_links_global = "".topic_links($nu, $pag, "-".$DBName."_cat_".$cid."_page_", $lim)."";
@@ -1106,14 +1132,11 @@ function page($pid, $all) {
     $title = str_replace("<p>","",str_replace("</p>","",filter($row['title'])));
     $titl = str_replace("\"","",$title); 
 
-    $opentext = str_replace("jpg\"><img ","jpg\" class=\"lightbox\" rel=\"page\"><img ", str_replace("<img ","<img title='$titl' ", filter($row['open_text'])));
-    $bodytext = str_replace("jpg\"><img ","jpg\" class=\"lightbox\" rel=\"page\"><img ", str_replace("<img ","<img title='$titl' ", filter($row['main_text'])));
+    $opentext = str_replace("jpg\"><img ","jpg\" class=\"lightbox\" rel=\"page\"><img ", str_replace("<img ","<img title='".$titl."' ", filter($row['open_text'])));
+    $bodytext = str_replace("jpg\"><img ","jpg\" class=\"lightbox\" rel=\"page\"><img ", str_replace("<img ","<img title='".$titl."' ", filter($row['main_text'])));
     $nocomm = $row['nocomm'];
     // Вырезание авто-ссылок
-    //$opentext = preg_replace('/[ссылка-.*-ссылка]/Uis', '', $opentext);
-    //$opentext = preg_replace("/[".aa("ссылка")."-.*-".aa("ссылка")."]/Uis", "", $opentext);
-    //$opentext = str_replace("[".aa("ссылка")."]", "", $opentext);
-    $opentext = str_replace('<hr class="editor_cut">', '', $opentext);
+    $opentext = str_replace('</cut>','',str_replace('<cut>','',str_replace('<!--more-->','',str_replace('[ссылка]','',str_replace('-ссылка]','',str_replace('[ссылка-','',str_replace('<hr class="editor_cut">','',$opentext)))))));
     
     global $table_light;
     if ($table_light == "1") {
@@ -1287,21 +1310,28 @@ function page($pid, $all) {
   } else $page_blog = "";
 
   $page_search_news = "";
-  if ($search != "" && $show_tags_pages == 1) { // Похожие новости // добавить настройку вкл/выкл
+  if ($search != "" && $show_tags_pages == 1) { // Похожие новости
     $and1 = $and2 = "";
     if ($papka_tags_pages == 1) $and2 = " and `cid`='".$cid."'";
     if ($razdel_tags_pages == 1) $and1 = " and `module`='".$module."'";
-    $result = $db->sql_query("SELECT `pid`, `title`, `date` FROM ".$prefix."_pages WHERE `tables`='pages'".$and1." and (`active`='1' or `active`='2') and `pid`!='".$pid."'".$and2.$search_keys." order by `date` desc limit 0,".$col_tags_pages);
+    $result = $db->sql_query("SELECT `pid`, `title`, `date`, `copy` FROM ".$prefix."_pages WHERE `tables`='pages'".$and1." and (`active`='1' or `active`='2') and `pid`!='".$pid."'".$and2.$search_keys." order by `date` desc limit 0,".$col_tags_pages);
     $numrows = $db->sql_numrows($result);
     if ($numrows > 0 and $search_num > 0) {
-      $page_search_news = "<br><div class='page_another'>".$text_tags_pages."</div><div class='another_links'>";
+      $page_search_news = "<div class='page_another'>".$text_tags_pages."</div><div class='another_links'>";
       while($row = $db->sql_fetchrow($result)) {
         $p_pid = $row['pid'];
         $p_title = $row['title'];
         $dat2 = explode(" ",$row['date']);
         $dat2 = explode("-",$dat2[0]);
         $p_p_date = intval($dat2[2])." ".findMonthName($dat2[1])." ".$dat2[0];
-        $page_search_news .= "<div class='another_link'><a href='-".$DBName."_page_".$p_pid."'>".$p_title."</a>";
+          if ($row['copy']==0) {
+            $a_open = "<a href='-".$DBName."_page_".$p_pid."'>";
+            $a_close = "</a>";
+          } else {
+            $a_open = "<noindex><a rel='nofollow' href='-".$DBName."_page_".$p_pid."'>";
+            $a_close = "</a></noindex>";
+          }
+        $page_search_news .= "<div class='another_link'>".$a_open.$p_title.$a_close."</a>";
         if ($datashow==1) $page_search_news .= "<div class='another_link_date'>".$p_p_date."</div>";
         $page_search_news .= "</div> ";
       }
@@ -1349,17 +1379,17 @@ function page($pid, $all) {
       $row = $db->sql_fetchrow($result);
       $avtor = $row['avtor'];
       $text = explode("|&|",$row['text']);
-      $page_comments .= "<table width='100%' border='' cellpadding='5'>
-      <tr width=50% valign=top><td align=right><u><b>".ss("Автор:")."</b></u></td><td width=50%><u>".$avtor."</u></td></tr></table>".$text[1];
+      $page_comments .= "<table width='100%' border='0' cellpadding='5'>
+      <tr width='50%' valign='top'><td align='right'><u><b>".ss("Автор:")."</b></u></td><td width='50%'><u>".$avtor."</u></td></tr></table>".$text[1];
     } else { //////////////////////////////////// Вывод всех комментов
        // (".$comm.")
-      $page_comments .= "<div class=page_comm><a name=comm></a>".ss("Отзывы")."</div>";
+      $page_comments .= "<div class='page_comm'><a name='comm'></a>".ss("Отзывы")."</div>";
       if ($comm > 0) {
         $sql = "SELECT * FROM ".$prefix."_pages_comments WHERE `num`='".$pid."' and `active`='1' order by `data` desc";
         $result = $db->sql_query($sql);
         $numrows = $db->sql_numrows($result);
         if ($numrows > 0) {
-          $page_comments .= "<table width='100%' border='' cellpadding='5'><tr valign=top><td align=center><b>".ss("Оценка")."</b></td><td align=center><b>".ss("Дата")."</b></td><td><b>".ss("Комментарий")."</b></td></tr>";
+          $page_comments .= "<table width='100%' border='0' cellpadding='5'><tr valign='top'><td align='center'><b>".ss("Оценка")."</b></td><td align='center'><b>".ss("Дата")."</b></td><td><b>".ss("Комментарий")."</b></td></tr>";
           $color = 1;
           while($row = $db->sql_fetchrow($result)) {
             $comm_cid = $row['cid'];
@@ -1368,10 +1398,10 @@ function page($pid, $all) {
             //$text = $text[0];
             $gol = $row['golos'];
             switch($gol) {
-              case "1": $gol = "<font color=red>".ss("плохо")."</font>"; break;
-              case "3": $gol = "<font color=darkblue>".ss("средне")."</font>"; break;
-              case "5": $gol = "<font color=darkgreen>".ss("отлично")."</font>"; break;
-              default: $gol = "<font color=darkblue>".ss("средне")."</font>"; break;
+              case "1": $gol = "<font color='red'>".ss("плохо")."</font>"; break;
+              case "3": $gol = "<font color='darkblue'>".ss("средне")."</font>"; break;
+              case "5": $gol = "<font color='darkgreen'>".ss("отлично")."</font>"; break;
+              default: $gol = "<font color='darkblue'>".ss("средне")."</font>"; break;
             }
             $ip = $row['ip']; //ip
             $date = str_replace(".","-",str_replace(" ","-",str_replace(":","-",$row['data'])));
@@ -1384,12 +1414,11 @@ function page($pid, $all) {
               $active_color = " style='background-color: white;'"; $color = 1;
             }
             // № оценка дата автор комментарий
-            $page_comments .= "<tr valign=top".$active_color."><td class=page_comm_golos' align=center><b>".$gol."</b></td>
-            <td align=center>".$datax1."</td><td>".$text."";
+            $page_comments .= "<tr valign='top'".$active_color."><td class='page_comm_golos' align='center'><b>".$gol."</b></td>
+            <td align='center'>".$datax1."</td><td>".$text."";
             $page_comments .= "</td></tr>";
           }
           $page_comments .= "</table>";
-          $page_comments .= "<div class=venzel></div>";
         }
       // END OF Комментарии ################################
       }
@@ -1462,7 +1491,7 @@ function page($pid, $all) {
     if (!isset($order)) $order = "";
 
     if ($order != "") $order = " order ".stripcslashes($order).""; // сортировка
-    $page_opentext .= "<div class=venzel></div>
+    $page_opentext .= "
     <table width=100% cellspacing=0 cellpadding=5 class=main_base_table>";
 
     $zapros_names = mysql_real_escape_string($zapros_names);
@@ -1579,6 +1608,7 @@ function page($pid, $all) {
       
   $soderganie = str_replace("[menushow]",$main_titleX,$sha2); // что это? :)
   $soderganie2 = str_replace("[menushow]","",$sha2);
+
 }
 ###################################################################
 // Добавление комментария

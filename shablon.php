@@ -47,7 +47,6 @@ function shablon_show($shablon_type, $shablon_id) {
 				<div class=all_page_data>[all_page_data]</div>
 				<div class=all_page_comments>[all_page_comments]</div>
 				<div class=cat_golos>[cat_golos]</div>
-				<div class=cat_razdel></div>
 				</div>"; break;
 				############################################################################################
 			}
@@ -64,7 +63,6 @@ function shablon_show($shablon_type, $shablon_id) {
 		case "page":
 			switch ($shablon_id) {
 				case "1": return "
-
 				[main_title]
 				[page_title]
 				[page_opentext]
@@ -74,16 +72,13 @@ function shablon_show($shablon_type, $shablon_id) {
 				[page_socialnetwork]<br>
 				[page_favorites]<br>
 				[page_blog]
-				[venzel]
 				[page_search_news]
 				[page_reiting]
 				[page_comments]<br>
 				[page_add_comments]
-
 				"; break;
 				############################################################################################
 				default: return "
-
 				[main_title]
 				[page_title]
 				[page_opentext]
@@ -93,12 +88,10 @@ function shablon_show($shablon_type, $shablon_id) {
 				[page_socialnetwork]<br>
 				[page_favorites]<br>
 				[page_blog]
-				[venzel]
 				[page_search_news]
 				[page_reiting]
 				[page_comments]<br>
 				[page_add_comments]
-
 				"; break;
 			}
 		break;
@@ -110,50 +103,48 @@ function shablon_show($shablon_type, $shablon_id) {
 				
 ############################################################################################
 // Диалоговые комментарии аля Joomla
-case "1": return "<DIV id=comments_1_commentbubble> 
-<TABLE border=0 cellpadding=0 cellspacing=0 width=100%> 
-<TBODY><TR> 
-<TD width=24><IMG src=/images/shablon_comments/ang_h_g2.gif width=24 height=28></TD> 
-<TD colspan=2 background=/images/shablon_comments/top_center2.gif> 
-<DIV id=comments_1_commentheader><DIV> 
-<SPAN class=comments_1_commentnumber><A id=comment_[comment_id] name=comment_[comment_id]></A>
-[comment_num]. </SPAN>[comment_data] ".ss("в")." [comment_time]
-</DIV></DIV></TD> 
-<TD width=24><IMG src=/images/shablon_comments/ang_h_d2.gif width=24 height=28></TD> 
-</TR> 
-<TR> 
-<TD background=/images/shablon_comments/left2.gif>&nbsp;</TD> 
-<TD colspan=2> 
-<DIV id=comments_1_commentbody2><img src=/images/user.png align=bottom> <SPAN class=comment_avtor>[comment_avtor]</SPAN></DIV>
-<DIV id=comments_1_comment class=comment_text>[comment_text]<br>
+case "1": return "<div id=comments_1_commentbubble> 
+<table border=0 cellpadding=0 cellspacing=0 width=100%> 
+<tbody><tr> 
+<td width=24><img src=images/shablon_comments/ang_h_g2.gif width=24 height=28></td> 
+<td colspan=2 background=images/shablon_comments/top_center2.gif> 
+<div id=comments_1_commentheader><div> 
+<span class=comments_1_commentnumber><a id=comment_[comment_id] name=comment_[comment_id]></a>
+[comment_num]. </span>[comment_data] ".ss("в")." [comment_time]
+</div></div></td> 
+<td width=24><img src='images/shablon_comments/ang_h_d2.gif' width=24 height=28></td> 
+</tr> 
+<tr> 
+<td background='images/shablon_comments/left2.gif'>&nbsp;</td> 
+<td colspan=2> 
+<div id=comments_1_commentbody2><img src=/images/user.png align=bottom> <span class=comment_avtor>[comment_avtor]</span></div>
+<div id=comments_1_comment class=comment_text>[comment_text]<br>
 [comment_otvet]<span style='margin-left:10px;'>[comment_otvet_show]</span> [comment_admin]
-</DIV> 
-<DIV id=comments_1_commentusertype>[comment_avtor_type]</DIV> 
-</TD> 
-<TD background=/images/shablon_comments/right2.gif>&nbsp;</TD> 
-</TR> 
-</TBODY></TABLE> 
-<TABLE border=0 cellpadding=0 cellspacing=0 width=100%> 
-<TBODY><TR valign=top> 
-<TD width=24><IMG src=/images/shablon_comments/ang_b_g2.gif></TD> 
-<TD background=/images/shablon_comments/bottom_center2.gif>&nbsp;</TD> 
-<TD width=24><IMG src=/images/shablon_comments/ang_b_d2.gif></TD> 
-</TR> 
-</TBODY></TABLE> 
-</DIV>"; break;
+</div> 
+<div id=comments_1_commentusertype>[comment_avtor_type]</div> 
+</td> 
+<td background='images/shablon_comments/right2.gif'>&nbsp;</td> 
+</tr> 
+</tbody></table> 
+<table border=0 cellpadding=0 cellspacing=0 width=100%> 
+<tbody><tr valign=top> 
+<td width=24><img src=images/shablon_comments/ang_b_g2.gif></td> 
+<td background=images/shablon_comments/bottom_center2.gif>&nbsp;</td> 
+<td width=24><img src=images/shablon_comments/ang_b_d2.gif></td> 
+</tr> 
+</tbody></table> 
+</div>"; break;
 // Диалоговые комментарии ArtistStyle
-case "2": return "<DIV id=comments_1_commentbubble><div class='comm_polosa'></div>
-<A name=comment_[comment_id]></A><SPAN class=comment_avtor>[comment_ipbox] [comment_avtor]</SPAN> <SPAN class=comments_1_data>[comment_data] ".ss("в")." [comment_time]</SPAN> [comment_admin]
-<DIV id=comments_1_comment class='comment_text'>[comment_text]</DIV>
-<DIV class='comment_otvet'>[comment_otvet] [comment_otvet_show]</DIV>
-</DIV>"; break;
+case "2": return "<div id='comments_1_commentbubble'><div class='comm_polosa'></div><a name='comment_[comment_id]'></a><span class='comment_avtor'>[comment_ipbox] [comment_avtor]</span> <span class='comments_1_data'>[comment_data] ".ss("в")." [comment_time]</span> [comment_admin]<div id='comments_1_comment' class='comment_text'>[comment_text]</div><div class='comment_otvet'>[comment_otvet] [comment_otvet_show]</div></div>"; break;
+
+// <span class="to_chidren"><a href="#comment_7070750" data-id="7070664" data-parent_id="7070750" class="to_parent back_to_children">↓</a></span>
+// <span class="parent_id" data-parent_id="0"></span>
+
+// Комментарии аля Habrahabr.ru
+case "3": return '<a name="comment_[comment_id]"></a><div class="comment_body"><div class="info"><div class="folding-dot-holder"><div class="folding-dot"></div></div>[comment_ipbox] <span class="username">[comment_avtor]</span><span class="comma">,</span><time> [comment_data] '.ss("в").' [comment_time]</time><a href="#comment_[comment_id]" class="link_to_comment">#</a><div class="clear"></div></div><div class="message">[comment_text]</div><div class="reply">[comment_otvet] [comment_otvet_show] [comment_admin]</div></div>';
+
 // Стандартные комментарии
-default: return "<A name=comment_[comment_id]></A><SPAN class=comments_1_commentnumber>[comment_num]. </SPAN> <img src=/images/user.png align=bottom class=comments_1_commentavatar> <SPAN class=comment_avtor>[comment_avtor]</SPAN><SPAN style='margin-left:15px;' class=comment_data>[comment_data] ".ss("в")." [comment_time]</SPAN><br>
-				<div class=comment_mail>[comment_mail]</div>
-				<div class=comment_adres>[comment_adres]</div>
-				<div class=comment_tel>[comment_tel]</div>
-				<div class=page_comm_text>[comment_text]</div><div class=page_comm_otvet>[comment_otvet_show] <span style='margin-left:10px;'>[comment_otvet]</span></div> [comment_admin]
-<div class=razdel></div><br>"; 
+default: return "<a name='comment_[comment_id]'></a><span class='comments_1_commentnumber'>[comment_num]. </span> <img src='images/user.png' align='bottom' class='comments_1_commentavatar'> <span class='comment_avtor'>[comment_avtor]</span><span style='margin-left:15px;' class='comment_data'>[comment_data] ".ss("в")." [comment_time]</span><br><div class='comment_mail'>[comment_mail]</div><div class='comment_adres'>[comment_adres]</div><div class='comment_tel'>[comment_tel]</div><div class='page_comm_text'>[comment_text]</div><div class='page_comm_otvet'>[comment_otvet_show] <span style='margin-left:10px;'>[comment_otvet]</span></div> [comment_admin]<br>"; 
 break;
 				############################################################################################
 			}

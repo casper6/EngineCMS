@@ -118,22 +118,7 @@ echo "<title>".aa("Вход в Администрирование")."</title>
 
 function GraphicAdmin() {
 	global $aid, $admin, $prefix, $db, $counter, $admin_file, $show_comments, $show_userposts, $razdel_sort, $registr, $show_page, $show_reserv;
-	//$row = $db->sql_fetchrow($db->sql_query("SELECT `realadmin` FROM ".$prefix."_authors WHERE `aid`='".$aid."'"));
-	//$realadmin = intval($row['realadmin']);
 	$inf_base = "";
-	if (file_exists("map.xml")) {
-		if (date("Y-m-d", filectime("map.xml")) != date("Y-m-d")) {
-			// Починка БД (раз в день)
-			$result = $db->sql_query('SHOW TABLE STATUS');
-			if ($db->sql_numrows($result)) {
-				$local_query = array();
-				while ($row = $db->sql_fetchrow($result)) {
-					if (strpos(" ".$row[0]." ",$prefix)) $local_query[] = $row[0];
-				}
-				$db->sql_query('REPAIR TABLE '.implode(", ",$local_query));
-			}
-		}
-	}
 	// Показываем основные возможности - ред. разделов.
 	// Комментарии
 	$comments = "";
@@ -149,8 +134,6 @@ function GraphicAdmin() {
 	if ($show_userposts != 0) {
 		$num_add_pages = $db->sql_numrows($db->sql_query("SELECT `pid` FROM ".$prefix."_pages where (`active`='2' or `active`='3') and `tables`!='del'"));
 	}
-
-	//$soderganie_menu = "<button id='new_razdel_button' title='".aa("Добавить страницу...")."' class='small green nothing left3' onclick='location.href=\"/sys.php?op=base_pages_add_page#1\"'><span class=\"icon white small\" data-icon=\"+\"></span></button>";
  	
  	$soderganie_menu = "";
  	global $deviceType;
@@ -313,54 +296,57 @@ function GraphicAdmin() {
 	global $siteurl, $display_errors;
 	if ($display_errors == true) print("<!-- ".aa("запросов:")." $db->num_queries \n $db->num_q -->");
 
-	// Генерация XML-карты сайта
+	// Раз в день при первом посещении администрирования
 	$map = false;
 	if (file_exists("map.xml")) if (date("Y-m-d", filectime("map.xml")) == date("Y-m-d")) $map = true;
 	if ($map == false) {
-		$output = "";
-				$sql = "SELECT `pid`, `module`, `date` FROM ".$prefix."_pages where `tables`='pages' and `active`='1' order by `date` desc limit 0,40000";
-				$result = $db->sql_query($sql) or die(aa("Не могу добавить в карту сайта страницы. Обратитесь к разработчику."));
-				while ($row = $db->sql_fetchrow($result)) {
-					$pid = $row['pid'];
-					$module = $row['module'];
-					$dat = explode(" ",$row['date']);
-					$dat = $dat[0];
-					// Добавление страниц
-					$output .= "<url><loc>http://".$siteurl."/-".$module."_page_".$pid."</loc>\n<lastmod>".$dat."</lastmod>\n</url>\n"; // <priority>0.7</priority>\n
-					// Добавление страниц с комментариями дополнительно
-					//if ($comm > 0) $output .= "<url>\n<loc>http://".$siteurl."/-".$module."_page_".$pid."_comm</loc>\n<lastmod>".$dat."</lastmod>\n<priority>0.6</priority>\n</url>\n";
-				}
-				// Добавление разделов
-				$sql = "SELECT `name` FROM ".$prefix."_mainpage where `tables`='pages' and `name`!='index' and `type`='2'";
-				$result = $db->sql_query($sql) or die(aa("Ошибка: Не получается добавить разделы в карту сайта. Обратитесь к разработчику."));
-				while ($row = $db->sql_fetchrow($result)) {
-					$module = $row['name'];
-					if (strpos($module, "\n")) { // заменяем имя запароленного раздела
-						$module = explode("\n", str_replace("\r", "", $module));
-						$module = trim($module[0]);
-					}
-					$output .= "<url>\n<loc>http://".$siteurl."/-".$module."</loc>\n<changefreq>weekly</changefreq>\n<priority>0.5</priority>\n</url>\n";
-				}
-			// Добавление тегов
-			$tags = array();
-			$sql = "SELECT `search` FROM ".$prefix."_pages where `tables`='pages' and `active`='1' limit 0,500";
-			$result = $db->sql_query($sql);
+		// Починка БД (раз в день)
+		$result = $db->sql_query('SHOW TABLE STATUS');
+		if ($db->sql_numrows($result)) {
+			$local_query = array();
 			while ($row = $db->sql_fetchrow($result)) {
-				if (trim($row['search']) != "") {
-				$tag = array();
-				$tag = explode(" ",trim(str_replace("  "," ",$row['search'])));
-					foreach ($tag as $tag1) {
-						if (trim($tag1) != "" and strlen($tag1)>2 ) $tags[] = trim($tag1);
-					}
+				if (strpos(" ".$row[0]." ",$prefix)) $local_query[] = $row[0];
+			}
+			$db->sql_query('REPAIR TABLE '.implode(", ",$local_query));
+		}
+
+		// Генерация XML-карты сайта
+		$output = "";
+		$sql = "SELECT `pid`, `module`, `date` FROM ".$prefix."_pages where `tables`='pages' and `active`='1' and `copy`='0' order by `date` desc limit 0,40000";
+		$result = $db->sql_query($sql) or die(aa("Не могу добавить в карту сайта страницы. Обратитесь к разработчику."));
+		while ($row = $db->sql_fetchrow($result)) {
+			$dat = explode(" ",$row['date']);
+			// Добавление страниц
+			$output .= "<url><loc>http://".$siteurl."/-".$row['name']."_page_".$row['pid']."</loc>\n<lastmod>".$dat[0]."</lastmod>\n</url>\n"; // <priority>0.7</priority>\n
+			// Добавление страниц с комментариями дополнительно
+			//if ($comm > 0) $output .= "<url>\n<loc>http://".$siteurl."/-".$module."_page_".$pid."_comm</loc>\n<lastmod>".$dat."</lastmod>\n<priority>0.6</priority>\n</url>\n"; // доделать
+		}
+		// Добавление разделов
+		$sql = "SELECT `name` FROM ".$prefix."_mainpage where `tables`='pages' and `name`!='index' and `name` not like '%\n%' and `type`='2'";
+		$result = $db->sql_query($sql) or die(aa("Ошибка: Не получается добавить разделы в карту сайта. Обратитесь к разработчику."));
+		while ($row = $db->sql_fetchrow($result)) {
+			$output .= "<url>\n<loc>http://".$siteurl."/-".$row['name']."</loc>\n<changefreq>weekly</changefreq>\n<priority>0.5</priority>\n</url>\n";
+		}
+		// Добавление тегов
+		$tags = array();
+		$sql = "SELECT `search` FROM ".$prefix."_pages where `tables`='pages' and `active`='1' and `copy`='0' limit 0,500";
+		$result = $db->sql_query($sql);
+		while ($row = $db->sql_fetchrow($result)) {
+			if (trim($row['search']) != "") {
+			$tag = array();
+			$tag = explode(" ",trim(str_replace("  "," ",$row['search'])));
+				foreach ($tag as $tag1) {
+					if (trim($tag1) != "" and strlen($tag1)>2 ) $tags[] = trim($tag1);
 				}
 			}
-			$tags = array_count_values($tags);
-			$tags = array_unique($tags);
-			if (count($tags) > 0) {
-				foreach( $tags as $tag_key => $tag_name ) {
-					$output .= "<url>\n<loc>http://".$siteurl."/slovo_".str_replace( "%","-", urlencode( $tag_name ) )."</loc>\n<changefreq>weekly</changefreq>\n<priority>0.4</priority>\n</url>\n";
-				}
+		}
+		$tags = array_count_values($tags);
+		$tags = array_unique($tags);
+		if (count($tags) > 0) {
+			foreach( $tags as $tag_key => $tag_name ) {
+				$output .= "<url>\n<loc>http://".$siteurl."/slovo_".str_replace( "%","-", urlencode( $tag_name ) )."</loc>\n<changefreq>weekly</changefreq>\n<priority>0.4</priority>\n</url>\n";
 			}
+		}
 		// Сборка карты сайта
 		$date_now = date("Y-m-d");
 		$output = '<?xml version="1.0" encoding="UTF-8"?>
@@ -371,12 +357,10 @@ function GraphicAdmin() {
 		<changefreq>daily</changefreq>
 		<priority>0.9</priority>
 		</url>'.$output.'</urlset>';
-
 		$file = fopen("map.xml","wt");
 		fputs($file, $output);
 		fclose($file);
-
-		if ($show_reserv == 1) echo "<iframe src=sys.php?op=backup style='display:none;'></iframe>";
+		if ($show_reserv == 1) echo "<iframe src='sys.php?op=backup' style='display:none;'></iframe>";
 	}
 	echo "<br></div>\n</body>\n</html>";
 }

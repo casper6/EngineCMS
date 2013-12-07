@@ -491,8 +491,9 @@ a.punkt:hover, a.punkt:hover span, .punkt:hover a {color: black; cursor:pointer;
 
 .small {font-size: 0.7em;}
 img, table {border:0;}
-.b {}
-.red {color: red !important; display:inline;}
+.red {color: red; display:inline;}
+.green {color: green; display:inline;}
+.blue {color: blue; display:inline;}
 .black {color: black !important; }
 .white {color: white !important; display:inline;}
 .green2 {color: white; background: lightgreen; display:inline;}

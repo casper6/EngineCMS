@@ -267,7 +267,7 @@ triggerScrollyeah — включает триггер событий на эле
   centerIfFit: false
   triggerScrollyeah: false
 
-Параллакс-эффект:
+Параллакс-эффект (см. <a href='http://artpolikarpov.github.io/scrollyeah/examples/parallax.html' target='_blank'>пример</a>):
 &lt;div class='scrollyeah'&gt;
   &lt;div class='scrollyeah__parallax' data-parallaxRate='-.3'&gt;
     &lt;!-- Контент для параллакса, например какой-то фон --&gt;

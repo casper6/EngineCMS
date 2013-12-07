@@ -19,6 +19,15 @@ if ($add != "") {
 
 // это будет добавлено к любому CSS
 $contents = "
+.clear {clear:both;}
+
+#comments_refresh {width:32px;position:fixed;top:50%;opacity:0.5;right:2px;}
+#comments_refresh:hover {opacity:1;cursor:pointer;}
+#comments_refresh .change {color:#666;font-size:12px;text-decoration:none;padding:0px 10px;position:absolute;left:0;top:-15px}
+#comments_refresh .refresh {display:block;background:url('images/refresh.png') no-repeat left top;width:32px;margin:2px;height:32px;}
+#comments_refresh .refresh.loading {background:url('images/timer.gif') no-repeat left top;}
+#comments_refresh .new {text-decoration:none;display:none;color:#000;font-size:12px;padding:0;padding-top:4px;padding-bottom:6px;width:34px;text-align:center; text-shadow: 0 0 5px #fff;}
+
 span.rur { text-transform: uppercase;} 
 span.rur span { position: absolute; overflow: hidden; width: .45em; height: 1em; margin: .2ex 0 0 -.55em;}
 span.rur span:before { content: '—'; }
@@ -88,26 +97,6 @@ span.rur span:before { content: '—'; }
 }
 
 .align_center {text-align:center;}
-
-.editor_file_link {
-	padding-left: 20px;
-}
-.editor_file_ico_avi 	{ background: url(ed/js/editor/i/fileicons/avi.png) no-repeat; }
-.editor_file_ico_csv 	{ background: url(ed/js/editor/i/fileicons/csv.png) no-repeat; }
-.editor_file_ico_doc 	{ background: url(ed/js/editor/i/fileicons/doc.png) no-repeat; }
-.editor_file_ico_gif 	{ background: url(ed/js/editor/i/fileicons/gif.png) no-repeat; }
-.editor_file_ico_html 	{ background: url(ed/js/editor/i/fileicons/html.png) no-repeat; }
-.editor_file_ico_jpg 	{ background: url(ed/js/editor/i/fileicons/jpg.png) no-repeat; }
-.editor_file_ico_mov	{ background: url(ed/js/editor/i/fileicons/mov.png) no-repeat; }
-.editor_file_ico_other 	{ background: url(ed/js/editor/i/fileicons/other.png) no-repeat; }
-.editor_file_ico_pdf 	{ background: url(ed/js/editor/i/fileicons/pdf.png) no-repeat; }
-.editor_file_ico_png 	{ background: url(ed/js/editor/i/fileicons/png.png) no-repeat; }
-.editor_file_ico_ppt 	{ background: url(ed/js/editor/i/fileicons/ppt.png) no-repeat; }
-.editor_file_ico_rar 	{ background: url(ed/js/editor/i/fileicons/rar.png) no-repeat; }
-.editor_file_ico_rtf 	{ background: url(ed/js/editor/i/fileicons/rtf.png) no-repeat; }
-.editor_file_ico_txt 	{ background: url(ed/js/editor/i/fileicons/txt.png) no-repeat; }
-.editor_file_ico_xls 	{ background: url(ed/js/editor/i/fileicons/xls.png) no-repeat; }
-.editor_file_ico_zip 	{ background: url(ed/js/editor/i/fileicons/zip.png) no-repeat; }
 
 td.raspisanie {background: lightgreen; min-width:5px; padding:0;}
 td.raspisanie a:hover div {background: green;}
@@ -264,8 +253,9 @@ table.table_light tbody tr:hover th, table.table_light tbody tr.odd:hover th { b
 .show_block { border: 2px dotted green; padding:1px;  border-radius: 5px;  -moz-border-radius: 5px;  -webkit-border-radius: 5px;}
 .show_block_title {background: #efefef; color: black; padding:2px; padding-left:5px; border: 0;}
 
-.ad_button {width:100px; display:block; text-align:center; float:left; margin:5px; line-height:1em !important; font-size:12px !important;}
-.ad_icon {height:32px; display:block; margin: 0 auto;}
+.ad_button {width:320px; height:22px; display:block; vertical-align:center; margin:5px; line-height:1em !important; font-size:14px !important; padding-top:10px; text-decoration:none; color: black; font-weight:normal;}
+.ad_button:hover {background: #ddd; color: black; font-weight:bold; border-radius:10px;}
+.ad_icon {height:32px; display:block; float:left; margin-top:-10px; margin-right:5px;}
 
 .nav-tabs ul li, .tabs ul li {background:none !important; padding: 0 !important;}
 ul.tabs {margin:10px 0 -1px 0 !important; padding: 0 !important;}

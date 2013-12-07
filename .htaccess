@@ -1,3 +1,7 @@
+# Запрет «волшебных» кавычек
+php_flag magic_quotes_gpc 0
+php_flag magic_quotes_runtime 0
+
 # закрываем доступ к .htaccess
 <files .htaccess="">
 order allow,deny
