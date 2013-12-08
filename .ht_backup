@@ -37,7 +37,7 @@ RewriteRule ^red sys.php
 RewriteRule ^rss rss.php
 
 RewriteRule ^login header.php?name=-login
-RewriteRule ^tags_([а-яА-Яa-zA-Z0-9%+-]*) header.php?name=-tags&tags=$1
+RewriteRule ^slovo_([а-яА-Яa-zA-Z0-9%+-]*) header.php?name=-tags&tags=$1
 RewriteRule ^search header.php?name=-search
 RewriteRule ^email header.php?name=-email
 RewriteRule ^adduser_([0-9]*)_([а-яА-Яa-zA-Z0-9_-]*) header.php?name=-adduser&group=$1&id=$2

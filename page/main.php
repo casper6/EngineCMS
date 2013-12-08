@@ -413,7 +413,7 @@ function showcat($cid=0, $pag=0, $slovo="") {
         while ($row = $db->sql_fetchrow($result)) {
           if (trim($row['search']) != "") {
           $tag = array();
-          $tag = explode(" ",trim(str_replace("  "," ",$row['search'])));
+          $tag = explode(",",trim($row['search']));
             foreach ($tag as $tag1) {
               if (trim($tag1) != "" and strlen($tag1)>2 ) {
                 $tagss[] = trim($tag1);
@@ -441,8 +441,8 @@ function showcat($cid=0, $pag=0, $slovo="") {
             else $tagcloud = "<a onclick=\"show('tags')\" style=\"cursor:pointer;\"><u>".$tag_text_show."</u></a><br><div id='tags' style='display:none;'>";
             $tag_kol = 0;
             foreach ($tagss as $tag_name => $tag_col) {
-              if ($tags3[$tag_col] != "1") {
-                $tagcloud .= "<a class='slovo' href='".$link_tag.str_replace( "%","-", urlencode( $tag_name ) )."' style='color:".$tags4[$tag_col]."; font-size: ".$tags3[$tag_col]."pt;'>".str_replace("+","&nbsp;",$tag_name)."</a> "; //  class='slovo' title='$tag_col темы' rel=\"tag nofollow\"
+              if ($tags3[$tag_col] != "9") {
+                $tagcloud .= "<a class='slovo' href='".$link_tag.$tag_name."' style='color:".$tags4[$tag_col]."; font-size: ".$tags3[$tag_col]."pt;'>".str_replace("+","&nbsp;",$tag_name)."</a> "; //  class='slovo' title='$tag_col темы' rel=\"tag nofollow\"
                 $tag_kol++;
               }
             }
@@ -781,15 +781,8 @@ function showcat($cid=0, $pag=0, $slovo="") {
           $page_tags = "";
           // ВЕЗДЕ - 3, в разделе и папках - 2, в разделе - 5, в разделе и на страницах - 6, 
           // в папках - 4, в папках и на страницах - 7, на страницах - 1,НИГДЕ - 0
-          if ((($tags == 2 || $tags == 3) || $razdel_shablon != 0) && trim($search) != "") {
-            $searches = array();
-            $search2 = explode(" ",trim(strtolow($search)));
-            $search_num = count($search2);
-            for ($x=0; $x < $search_num; $x++) {
-              $searches[] = "<a class='slovo' href='slovo_".str_replace( "%","-", urlencode( $search2[$x] ) )."'>".str_replace("+","&nbsp;",$search2[$x])."</a>";
-            }
-            $page_tags .= "<div class='page_tags'>".$tag_text_show." ".implode(" | ", $searches)."</div>";
-          }
+          if ((($tags == 2 || $tags == 3) || $razdel_shablon != 0) && trim($search) != "")
+            $page_tags .= "<div class='page_tags'>".$tag_text_show." ".tags_generate($search)."</div>";
 
           $open_text = str_replace("<cut></cut>","<cut>",$open_text);
           $all_page_link = "";
@@ -1258,14 +1251,8 @@ function page($pid, $all) {
   $page_data .= $p_date;
 
   $page_tags = "";
-  if (($tags == 1 or $tags == 3) and trim($search) != "") {
-    $searches = array();
-    $search2 = explode(" ",$search);
-    for ($x=0; $x < $search_num; $x++) {
-      $searches[] = "<a class='slovo' href='slovo_".str_replace( "%","-", urlencode( $search2[$x] ) )."'>".str_replace("+","&nbsp;",$search2[$x])."</a>";
-    }
-    $page_tags .= "<div class='page_tags'>".$tag_text_show." ".implode(" | ", $searches)."</div>";
-  }
+  if (($tags == 1 or $tags == 3) and trim($search) != "")
+    $page_tags .= "<div class='page_tags'>".$tag_text_show." ".tags_generate($search)."</div>";
 
   $page_socialnetwork = "";
   if ($socialnetwork == 1) {

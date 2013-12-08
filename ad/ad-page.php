@@ -358,9 +358,39 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
     seo(true);
   } else seo();
 
-  echo "<h3>Тэги (слова для похожих по тематике страниц): <a onclick=\"show('help12')\" class='help'>?</a></h3> <textarea name='search' class='big w100' rows='1' cols='10'>".$search."</textarea>
-  <br><div id='help12' style='display:none;'><span class=small>Разделять пробелами, а слова в словосочетаниях символом + <br>
-  Писать только существительные! НИКАКИХ ПРЕДЛОГОВ! Максимум неограничен. Разделять слова необходимо пробелом. Разделять слова в словосочетаниях символом +, например: игра+разума игротека game. Писать желательно в единственном числе и именительном падеже. Можно создать Блок «Облако тегов». Теги также могут выводиться на страницах (в настройках Раздела).</span><br></div>
+
+  $tags = array();
+  $sql = "select `search` from ".$prefix."_pages where `tables`='pages' and `active`='1' and `copy` ='0'";
+  $result = $db->sql_query($sql);
+  while ($row = $db->sql_fetchrow($result)) {
+    if (trim($row['search']) != "") {
+      $tag = array();
+      $tag = explode(",",$row['search']);
+      foreach ($tag as $tag1) {
+        $tag1 = trim($tag1);
+        if ($tag1 != "") $tags[] = $tag1;
+      }
+    }
+  }
+  $tags = implode("','", array_unique($tags));
+
+  echo "<h3>Тэги (слова для похожих по тематике страниц): <a onclick=\"show('help12')\" class='help'>?</a></h3> 
+  <input name='search' id='question_tags' class='big w100' value='".$search."'>
+
+<script>
+$(function() {
+$('#question_tags').tagit({
+    removeConfirmation: true,
+    allowSpaces: true,
+    tabIndex: 3,
+    autocomplete: {delay: 0, minLength: 1},
+    availableTags: ['".$tags."']
+    });
+});
+</script>
+
+  <br><div id='help12' style='display:none;'><span class=small>Разделять запятыми, можно писать словосочетания.<br>
+  Можно создать Блок «Облако тегов». Теги также могут выводиться на страницах и облаком тегов в начале раздела (см. в настройках Раздела).</span><br></div>
 
   <table class='w100 f12'><tr><td>
   <label><input type='checkbox' name='mainpage' value='1'".$check4."> На главную страницу</label> <a onclick=\"show('help_mainpage')\" class='help'>?</a>
@@ -429,12 +459,10 @@ function base_pages_save_page($cid, $module, $title, $open_text, $main_text, $fo
   // это магазин?
   $price=intval($price);
 
-  $search = str_replace(", "," ",$search);
-  $search = str_replace(","," ",$search);
-  $search = str_replace(". "," ",$search);
-  $search = str_replace("."," ",$search);
+  $search = trim(str_replace(",",", ",$search));
+  $search = str_replace(".",", ",$search);
+  $search = str_replace("   "," ",$search);
   $search = str_replace("  "," ",$search);
-  $search = " ".trim($search)." "; //strtolow(
   # pid module cid title open_text main_text date counter active golos comm foto search mainpage
   if ($open_text == " <br><br>") $open_text = "";
   if ($main_text == " <br><br>") $main_text = "";
@@ -771,12 +799,10 @@ function base_pages_edit_sv_page($pid, $module, $cid, $title, $open_text, $main_
   list($p_module,$p_cid,$p_title,$p_open_text,$p_main_text,$p_date,$p_counter,$p_active,$p_golos,$p_comm,$p_foto,$p_search,$p_mainpage,$p_rss,$p_price,$p_description,$p_keywords,$p_sort,$p_nocomm) = $db->sql_fetchrow($result);
   $foto = "";
   $price = intval($price); // это магазин? убрать/доработать
-  $search = str_replace(", "," ",$search);
-  $search = str_replace(","," ",$search);
-  $search = str_replace(". "," ",$search);
-  $search = str_replace("."," ",$search);
+  $search = trim(str_replace(",",", ",$search));
+  $search = str_replace(".",", ",$search);
+  $search = str_replace("   "," ",$search);
   $search = str_replace("  "," ",$search);
-  $search = " ".trim($search)." "; // strtolow(
   if ($mainpage == "") $mainpage = 0;
   $sor = intval($sor);
   $rss = intval($rss);

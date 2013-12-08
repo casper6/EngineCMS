@@ -1,5 +1,16 @@
 <?php
 /////////////////////////////////////////////////////////
+function tags_generate($tags) { // Тэги
+  $searches = array();
+  $search2 = explode(",",$tags);
+  $tags_num = count($search2);
+  for ($x=0; $x < $tags_num; $x++) {
+    $search2[$x] = trim($search2[$x]);
+    $searches[] = "<a class='slovo' href='slovo_".$search2[$x]."'>".str_replace("+","&nbsp;",$search2[$x])."</a>";
+  }
+  return implode(", ", $searches);
+}
+/////////////////////////////////////////////////////////
 function is_admin($admin) { // Проверка админа
   global $adminSave;
   if (!$admin) { return 0; }

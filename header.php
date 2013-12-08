@@ -1320,14 +1320,15 @@ Email|Email|email|100|1
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 case "13": # ОБЛАКО ТЕГОВ
 	$tags = array();
-	$sql = "select `search` from ".$prefix."_pages where `tables`='pages' and `active`='1'";
+	$sql = "select `search` from ".$prefix."_pages where `tables`='pages' and `active`='1' and `copy` ='0'";
 	$result = $db->sql_query($sql);
 	while ($row = $db->sql_fetchrow($result)) {
 		if (trim($row['search']) != "") {
 			$tag = array();
-			$tag = explode(" ",trim(str_replace("  "," ",$row['search'])));
+			$tag = explode(",",$row['search']);
 			foreach ($tag as $tag1) {
-				if (trim($tag1) != "" and mb_strlen($tag1)>2 ) $tags[] = trim($tag1);
+				$tag1 = trim($tag1);
+				if ($tag1!="" && mb_strlen($tag1)>2) $tags[] = $tag1;
 			}
 		}
 	}
@@ -1338,18 +1339,18 @@ case "13": # ОБЛАКО ТЕГОВ
 	$tags3 = array();
 	$tags4 = array();
 	foreach ($tags2 as $tag1) {
-		if ($razmer == 0) { $tags3[$tag1] = "20"; $tags4[$tag1] = "red"; }
-		if ($razmer == 1) { $tags3[$tag1] = "17.75"; $tags4[$tag1] = "orange"; }
-		if ($razmer == 2) { $tags3[$tag1] = "15.5"; $tags4[$tag1] = "blue"; }
-		if ($razmer == 3) { $tags3[$tag1] = "13.25"; $tags4[$tag1] = "green"; }
-		if ($razmer > 3) { $tags3[$tag1] = "11"; $tags4[$tag1] = "gray"; }
-		if ($razmer > 10) $tags3[$tag1] = "1";
+          if ($razmer == 0) { $tags3[$tag1] = "14"; $tags4[$tag1] = "#000000"; }
+          if ($razmer == 1) { $tags3[$tag1] = "13"; $tags4[$tag1] = "#363636"; }
+          if ($razmer == 2) { $tags3[$tag1] = "12"; $tags4[$tag1] = "#555555"; }
+          if ($razmer == 3) { $tags3[$tag1] = "11"; $tags4[$tag1] = "#707070"; }
+          if ($razmer > 3) { $tags3[$tag1] = "10"; $tags4[$tag1] = "#898989"; }
+          if ($razmer > 4) { $tags3[$tag1] = "9"; $tags4[$tag1] = "#a1a1a1"; }
 		$razmer++;
 	}
 	$tagcloud = "";
 	foreach ($tags as $tag_name => $tag_col) {
-		if ($tags3[$tag_col] != "1") {
-			$tagcloud .= "<noindex><a class='slovo' href='slovo_".$tag_name."' style='color:".$tags4[$tag_col]."; font-size: ".$tags3[$tag_col]."pх;' rel='nofollow'>".$tag_name."</a></noindex> ";
+		if ($tags3[$tag_col] != "9") {
+			$tagcloud .= "<noindex><a class='slovo' href='slovo_".$tag_name."' style='color:".$tags4[$tag_col]."; font-size: ".$tags3[$tag_col]."pt;' rel='nofollow'>".$tag_name."</a></noindex> ";
 		}
 	}
 	$textX .= $tagcloud;

@@ -43,6 +43,10 @@ echo "<!doctype html>
 <script src='includes/jquery-ui.min.js'></script>
 <script src='includes/jquery-ui-i18n.min.js'></script> 
 <script src='includes/jquery.innerfade.js'></script>
+
+<script src='includes/jquery.tag-it.min.js'></script>
+<link rel='stylesheet' href='includes/jquery.tagit.css'>
+
 <link rel='stylesheet' href='includes/jquery-ui.css'>
 <!--[if lt IE 9]><script src='includes/html5.js'></script><![endif]-->
 <link rel='stylesheet' href='engine.css'>
