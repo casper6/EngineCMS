@@ -666,7 +666,7 @@ function save_spiski ($add, $page_id) {
       case "1": // текст
       case "4": // строка
       case "5": // число
-        if ($type == "5") $elements = filter_var($elements, FILTER_SANITIZE_NUMBER_FLOAT);
+        if ($type == "5") $elements = filter_var(str_replace(",", ".", $elements), FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
         // Проверяем наличие подобного элемента
         $sql = "SELECT `name`, `pages` FROM ".$prefix."_spiski WHERE `type`='".$name."' and `pages` like '% ".$page_id." %'";
         $result = $db->sql_query($sql);

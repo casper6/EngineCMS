@@ -146,7 +146,7 @@ function GraphicAdmin() {
 	$soderganie_menu .= " <button id='openbox5' class='nothing dark_pole2' onclick=\"openbox('5','".aa("Новое и отредактированное")."'); $('#razdels').hide('slow')\" title='".aa("Новые и отредактированные страницы, свежие изменения")."'><span class=\"icon gray small\" data-icon=\"M\"></span>".$buttons[0]."</button>";
 	if (!isset($num_add_pages)) $num_add_pages = 0;
 
-	if ($num_add_pages > 0 and $show_userposts != 0) $soderganie_menu .= "<button id='openbox4' class='nothing dark_pole2 orange' style='color: red;' onclick=\"openbox('4','".aa("Добавленное посетителями")."'); $('#razdels').hide('slow')\"><span class=\"icon gray small\" data-icon=\"u\"></span><nobr>".$buttons[1]."<strong>".$num_add_pages."</strong></nobr></button>";
+	if ($num_add_pages > 0 and $show_userposts != 0) $soderganie_menu .= "<button id='openbox4' class='nothing dark_pole2 orange red2' onclick=\"openbox('4','".aa("Добавленное посетителями")."'); $('#razdels').hide('slow')\"><span class=\"icon gray small\" data-icon=\"u\"></span><nobr>".$buttons[1]."<strong>".$num_add_pages."</strong></nobr></button>";
 
 	$del_page = $db->sql_numrows($db->sql_query("SELECT `pid` FROM ".$prefix."_".$pages." where `tables`='del' limit 0,1"));
 	$del_razdel = $db->sql_numrows($db->sql_query("SELECT `id` FROM ".$prefix."_mainpage where `type`='2' and `tables`='del' limit 0,1"));
@@ -169,7 +169,7 @@ function GraphicAdmin() {
 	$num_razdel = $db->sql_numrows($db->sql_query("SELECT `id` FROM ".$prefix."_mainpage where `type`='2' and `name`!='index' and `tables`!='del'"));
 
 	$razdel_txt = "";
-	if ($num_razdel == 0) $razdel_txt = "<div style='padding-left:5px; color: red;'>".aa("Разделов пока нет. Добавьте, нажав на кнопку +. Если вам нужен одностраничный сайт — нажмите по кнопке «Главная страница» для её редактирования.")."</div>";
+	if ($num_razdel == 0) $razdel_txt = "<div class='pl5 red2'>".aa("Разделов пока нет. Добавьте, нажав на кнопку +. Если вам нужен одностраничный сайт — нажмите по кнопке «Главная страница» для её редактирования.")."</div>";
 
 	if ($registr=='1') echo "&nbsp;&nbsp;&nbsp;<a href='".$admin_file.".php?op=MainUser'>".aa("Пользователи")."</a> <a href=".$admin_file.".php?op=sortuser>".aa("Список")."</a>";
 
@@ -209,7 +209,7 @@ function GraphicAdmin() {
 
 		$type_opisX = "";
 		if ($size < 1) $size = ""; 
-		if ($size_off < 1) $size_off = ""; else $size_off = "&nbsp;<span class='red' title='".aa("Отключенные страницы")."'>-".$size_off."</span>";
+		if ($size_off < 1) $size_off = ""; else $size_off = "&nbsp;<span class='red2' title='".aa("Отключенные страницы")."'>-".$size_off."</span>";
 		$type_opisX = "<span class='f14 pr10 pl10'><span class='black' title='".aa("Включенные страницы")."'>".$size."</span>".$size_off."</span>";
 		if ($size < 1 and $size_off < 1) $type_opisX = "";
 		if ($current_type != $type) $current_type = $type;
@@ -317,7 +317,7 @@ function GraphicAdmin() {
 		while ($row = $db->sql_fetchrow($result)) {
 			$dat = explode(" ",$row['date']);
 			// Добавление страниц
-			$output .= "<url><loc>http://".$siteurl."/-".$row['name']."_page_".$row['pid']."</loc>\n<lastmod>".$dat[0]."</lastmod>\n</url>\n"; // <priority>0.7</priority>\n
+			$output .= "<url><loc>http://".$siteurl."/-".$row['module']."_page_".$row['pid']."</loc>\n<lastmod>".$dat[0]."</lastmod>\n</url>\n"; // <priority>0.7</priority>\n
 			// Добавление страниц с комментариями дополнительно
 			//if ($comm > 0) $output .= "<url>\n<loc>http://".$siteurl."/-".$module."_page_".$pid."_comm</loc>\n<lastmod>".$dat."</lastmod>\n<priority>0.6</priority>\n</url>\n"; // доделать
 		}

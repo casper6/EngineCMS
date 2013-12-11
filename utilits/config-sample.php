@@ -23,6 +23,7 @@ $lang 				= "ru"; // Язык сайта
 $display_errors 	= false; # Отладочная опция - показ ошибок (и запросов к БД и их количества) = true
 $ipban 				= false; # Админ-опция - включение блокировки по IP = true, отключение = false
 $site_cash    		= false; # Система кеширования: false - отключена, file - кеширование в файлы, base - кеширование в БД
+$style_disable		= false; # true = отключение дополнительных встроенных стилей css, остаются только необходимые
 // date_default_timezone_set('Europe/Moscow'); # Может не работать на вашем сервере, позволяет настроить сайт на нужную временную зону
 ################### Проверка безопасности
 if (stristr(htmlentities($_SERVER['PHP_SELF']), "config.php")) { Header("Location: index.php"); die(); }

@@ -218,7 +218,7 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
         $numrows2 = $db->sql_numrows($result2);
         if ($numrows2 == 0) $diz = "";
         else {
-          $diz = "<span class='green'> &rarr; используется в дизайнах: |";
+          $diz = "<span class='green2'> &rarr; используется в дизайнах: |";
           while ($row2 = $db->sql_fetchrow($result2)) {
             $diz .= " ".$row2['title']." |";
           }
@@ -231,7 +231,7 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
         if ($numrows2 == 0) $razr = "";
         else {
           if ($diz != "") $diz .= "<br>";
-          $razr = "<span class='green'> &rarr; используется в разделах: ";
+          $razr = "<span class='green2'> &rarr; используется в разделах: ";
           while ($row2 = $db->sql_fetchrow($result2)) {
             $name2 = $row2['name'];
             if (strpos($name2, "\n")) { // заменяем имя запароленного раздела
@@ -250,7 +250,7 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
         if ($numrows2 == 0) $bloc = "";
         else {
           if ($razr != "") $razr .= "<br>";
-          $bloc = "<span class='green'> &rarr; используется в блоках: ";
+          $bloc = "<span class='green2'> &rarr; используется в блоках: ";
           while ($row2 = $db->sql_fetchrow($result2)) {
             //$id = $row2['id'];
             $bloc .= "[".$row2['title']."] ";
@@ -264,7 +264,7 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
         if ($numrows2 == 0) $stri = "";
         else {
           if ($bloc != "") $bloc .= "<br>";
-          $stri = "<span class='green'> &rarr; используется в страницах: ";
+          $stri = "<span class='green2'> &rarr; используется в страницах: ";
           if ($numrows2 < 6) {
             while ($row2 = $db->sql_fetchrow($result2)) {
               $stri .= "<a href='/-".$row2['module']."_page_".$row2['pid']."' target='_blank' class='gray'>".$row2['title']."</a> ";
@@ -281,7 +281,7 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
       if ($row['color'] != "1") {
         $icon_disable = "red"; $text_disable = "Отключить блок"; $class_disable = "";
       } else {
-        $icon_disable = "green"; $text_disable = "Включить блок"; $class_disable = " bggray";
+        $icon_disable = "green2"; $text_disable = "Включить блок"; $class_disable = " bggray";
       }
       if ($n == $row['name']) $nu = "-";  else { $n = $row['name']; $nu = $row['name']; }
       $bgcolor = "#FFeecc"; //FFddaa
@@ -627,7 +627,7 @@ if ($func == "show_pole") { // Ответ на комментарий из ад�
       ///////////////////
       case "5": // число
         if ($page_id > 0) $shablon = spisok_name($s_name,$page_id);
-        $info .= "<p><b>".$s_title.":</b><br><INPUT name='add[".$s_name."]' type='number' value='".$shablon."' class='w45'>";
+        $info .= "<p><b>".$s_title.":</b><br><INPUT name='add[".$s_name."]' type='number' value='".$shablon."' min='0' class='w45'>";
       break;
       ///////////////////
       case "6": // регион
@@ -812,7 +812,7 @@ if ($func == "addpages") { // Добавляем страницы
 ######################################################################################
 if ($func == "offpage") { // вкл./выкл. страницы
   $color = " class='pointer no'";
-  $nowork = icon('white small','.')." ";
+  $nowork = icon('black small','.')." ";
   $active = $db->sql_fetchrow($db->sql_query("SELECT `pid`, `cid`, `module`, `title`, `active` FROM ".$prefix."_pages where `pid`='".$id."'"));
   if ($active['active'] == 1) { 
     $act = 0; 
@@ -1164,9 +1164,9 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
       $textline = mb_substr(strip_tags($txt), 0, 45, 'UTF-8');
       if (strlen($textline)<strlen($txt)) $textline .= "...";
 
-      if ($avtor == "Администратор") $avtor2 = "<span class='red'>".$avtor."</span>";
-      elseif ($avtor == "Редактор") $avtor2 = "<span class='green'>".$avtor."</span>";
-      elseif ($avtor == "Модератор") $avtor2 = "<span class='blue'>".$avtor."</span>";
+      if ($avtor == "Администратор") $avtor2 = "<span class='red2'>".$avtor."</span>";
+      elseif ($avtor == "Редактор") $avtor2 = "<span class='green2'>".$avtor."</span>";
+      elseif ($avtor == "Модератор") $avtor2 = "<span class='blue2'>".$avtor."</span>";
       else $avtor2 = trim($avtor);
       if ($num != 0) {
         global $avtor_comments;
@@ -1199,11 +1199,11 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
         </div>
         </td></tr>";
       } else {
-        if ($mail != "") $pageslistdel .= "<tr valign='top' id='1comm".$cid."'".$bgcolor."'><td class='gray'><nobr>".$data."</nobr></td><td><a title='Удалить подписку' onclick='delcomm(".$cid.")' class='pointer'>".icon('red small','F')."</a><a style='float:right;' title='Изменить подписку' href='sys.php?op=base_comments_edit_comments&cid=".$cid."'>".icon('orange small','7')."</a> <span class='green'>Подписка на рассылку</span>, ".$avtor." &rarr; ".$mail."</td></tr>";
+        if ($mail != "") $pageslistdel .= "<tr valign='top' id='1comm".$cid."'".$bgcolor."'><td class='gray'><nobr>".$data."</nobr></td><td><a title='Удалить подписку' onclick='delcomm(".$cid.")' class='pointer'>".icon('red small','F')."</a><a style='float:right;' title='Изменить подписку' href='sys.php?op=base_comments_edit_comments&cid=".$cid."'>".icon('orange small','7')."</a> <span class='green2'>Подписка на рассылку</span>, ".$avtor." &rarr; ".$mail."</td></tr>";
         else {
           // Преобразование адреса URL в ссылку (с учетом тире)
           $txt = preg_replace('@(https?://([-\w\.]+)+(:\d+)?(/([-\w/_\.]*(\?\S+)?)?)?)@', '<a href="$1" target="_blank">$1</a>', $txt);
-          $pageslistdel .= "<tr valign=top id='1comm".$cid."'".$bgcolor."'><td class='gray'><nobr>".$data."</nobr></td><td><a style='float:right;' title='Удалить сообщение' onclick='delcomm(".$cid.")' class='pointer'>".icon('red small','F')."</a> <span class='green'>".$avtor."</span> &rarr; ".$txt."</td></tr>";
+          $pageslistdel .= "<tr valign=top id='1comm".$cid."'".$bgcolor."'><td class='gray'><nobr>".$data."</nobr></td><td><a style='float:right;' title='Удалить сообщение' onclick='delcomm(".$cid.")' class='pointer'>".icon('red small','F')."</a> <span class='green2'>".$avtor."</span> &rarr; ".$txt."</td></tr>";
         }
       }
     }
@@ -1406,10 +1406,10 @@ if ($func == "papka") { // Папка
       while ($rows = $db->sql_fetchrow($result)) {
         $с_cid = $rows['cid'];
         $name_cid = strip_tags($rows['title'], '<b><i>');
-        $cid_pages = $db->sql_numrows($db->sql_query("select pid from ".$prefix."_pages where `tables`='pages' and module='$name_raz' and cid='$с_cid'"));
-        if (trim($name_cid) == "") $name_cid = "<span class=red>Эта страница без Названия. Отредактируйте!</span>";
-        $cid_papki = $db->sql_numrows($db->sql_query("select cid from ".$prefix."_pages_categories where `tables`='pages' and module='$name_raz' and parent_id='$с_cid'"));
-        if ($cid_pages == 0 and $cid_papki == 0) $pusto = "<span class='small red'>— пустая папка</span>";
+        $cid_pages = $db->sql_numrows($db->sql_query("select pid from ".$prefix."_pages where `tables`='pages' and module='".$name_raz."' and cid='$с_cid'"));
+        if (trim($name_cid) == "") $name_cid = "<span class='red2'>Эта страница без Названия. Отредактируйте!</span>";
+        $cid_papki = $db->sql_numrows($db->sql_query("select cid from ".$prefix."_pages_categories where `tables`='pages' and module='".$name_raz."' and parent_id='$с_cid'"));
+        if ($cid_pages == 0 and $cid_papki == 0) $pusto = "<span class='small red2'>— пустая папка</span>";
         if ($cid_pages > 0) $pusto = "<span class='small'>содержит ".$cid_pages." ".num_ending($cid_pages, Array(aa("страниц"),aa("страницу"),aa("страницы")))."</span>";
         if ($cid_papki > 0) $pusto = "<span class='small'>содержит ".$cid_papki." ".num_ending($cid_papki, Array(aa("папок"),aa("папку"),aa("папки")))."</span>";
         if ($cid_pages > 0 and $cid_papki > 0) $pusto = "<span class='small'>содержит ".$cid_papki." ".num_ending($cid_papki, Array('папок','папку','папки'))." и ".$cid_pages." ".num_ending($cid_pages, Array(aa("страниц"),aa("страницу"),aa("страницы")))."</span>";
@@ -1442,7 +1442,7 @@ if ($func == "papka") { // Папка
         $name = $rows['module'];
         $title = strip_tags($rows['title'], '<b><i>');
         $active = $rows['active'];
-        if (trim($title) == "") $title = "<span class=red>Страница без Названия. Отредактируйте или удалите!</span>";
+        if (trim($title) == "") $title = "<span class='red2'>Страница без Названия. Отредактируйте или удалите!</span>";
         $counter = intval($rows['counter']);
         $comm = intval($rows['comm']);
         $mainpage = intval($rows['mainpage']);
@@ -1450,22 +1450,22 @@ if ($func == "papka") { // Папка
         $description = trim($rows['description']);
         $keywords = trim($rows['keywords']);
         $copy = $rows['copy'];
-        if ($copy == $pid) $copy = " <span class='green'>(оригинал)</span>"; 
-          elseif ($copy != '0') $copy = " <span class='red'>(копия)</span>";
+        if ($copy == $pid) $copy = " <span class='green2'>(оригинал)</span>"; 
+          elseif ($copy != '0') $copy = " <span class='red2'>(копия)</span>";
           else $copy = "";
         $keydes = "";
-        if ($keywords == "") $keydes = "<span class=red title='Нет ключевых слов'>*</span>"; 
-        if ($description == "") $keydes = "<span class=red title='Нет описания'>*</span>"; 
-        if ($keywords == "" and $description == "") $keydes = "<span class=red title='Нет описания и ключевых слов'>**</span>"; 
+        if ($keywords == "") $keydes = "<span class='red2' title='Нет ключевых слов'>*</span>"; 
+        if ($description == "") $keydes = "<span class='red2' title='Нет описания'>*</span>"; 
+        if ($keywords == "" and $description == "") $keydes = "<span class='red2' title='Нет описания и ключевых слов'>**</span>"; 
         if ($comm != 0) $keydes .= " ".icon('gray small','\'').$comm." "; 
         if ($counter != 0) $keydes .= " ".icon('gray small','s').$counter." "; 
-        if ($mainpage == 1) $keydes .= "<span class=green title='Страница отмечена для Главной страницы'>*</span> "; 
-        if ($rss == 0) $keydes .= " <span class=rss title='Отключен RSS'>rss</span> "; 
+        if ($mainpage == 1) $keydes .= "<span class='green2' title='Страница отмечена для Главной страницы'>*</span> "; 
+        if ($rss == 0) $keydes .= " <span class='rss radius' title='Отключен RSS'>rss</span> "; 
         global $deviceType;
         if ($deviceType != 'computer') $copy = $date = $keydes = "";
         $ver = mt_rand(10000, 99999); // получили случайное число
         $color=" class='pointer'"; 
-        $nowork = icon('white small','.')." ";
+        $nowork = icon('black small','.')." ";
         if ($active == 0) { 
           $color=" class='pointer noact'"; 
           $nowork = icon('red small','Q');
@@ -1521,9 +1521,9 @@ if ($func == "razdel") { // Раздел
       $с_cid = $rows['cid'];
       $name_cid = strip_tags($rows['title'], '<b><i>');
       $cid_pages = $db->sql_numrows($db->sql_query("select `pid` from ".$prefix."_pages where `tables`='pages' and `module`='".$name_raz."' and `cid`='".$с_cid."'"));
-      if (trim($name_cid) == "") $name_cid = "<span class=red>Папка без Названия. Отредактируйте!</span>";
+      if (trim($name_cid) == "") $name_cid = "<span class='red2'>Папка без Названия. Отредактируйте!</span>";
       $cid_papki = $db->sql_numrows($db->sql_query("select `cid` from ".$prefix."_pages_categories where `tables`='pages' and `module`='".$name_raz."' and `parent_id`='".$с_cid."'"));
-      if ($cid_pages == 0 and $cid_papki == 0) $pusto = "<span class='small red'>— пустая папка</span>";
+      if ($cid_pages == 0 and $cid_papki == 0) $pusto = "<span class='small red2'>— пустая папка</span>";
       if ($cid_pages > 0) $pusto = "<span class='small'>содержит ".$cid_pages." ".num_ending($cid_pages, Array(aa("страниц"),aa("страницу"),aa("страницы")))."</span>";
       if ($cid_papki > 0) $pusto = "<span class='small'>содержит ".$cid_papki." ".num_ending($cid_papki, Array(aa("папок"),aa("папку"),aa("папки")))."</span>";
       if ($cid_pages > 0 and $cid_papki > 0) $pusto = "<span class='small'>содержит ".$cid_papki." ".num_ending($cid_papki, Array('папок','папку','папки'))." и ".$cid_pages." ".num_ending($cid_pages, Array(aa("страниц"),aa("страницу"),aa("страницы")))."</span>";
@@ -1553,7 +1553,7 @@ if ($func == "razdel") { // Раздел
       $date = str_replace(" ".date("Y"),"",$date);
       $title = strip_tags($rows['title'], '<b><i>');
       $active = $rows['active'];
-      if (trim($title) == "") $title = "<span class=red>Страница без Названия. Отредактируйте!</span>";
+      if (trim($title) == "") $title = "<span class='red2'>Страница без Названия. Отредактируйте!</span>";
       $counter = intval($rows['counter']);
       $comm = intval($rows['comm']);
       $mainpage = intval($rows['mainpage']);
@@ -1561,20 +1561,20 @@ if ($func == "razdel") { // Раздел
       $description = trim($rows['description']);
       $keywords = trim($rows['keywords']);
       $copy = $rows['copy'];
-      if ($copy == $pid) $copy = " <span class='green'>(оригинал)</span>"; 
-        elseif ($copy != '0') $copy = " <span class='red'>(копия)</span>";
+      if ($copy == $pid) $copy = " <span class='green2'>(оригинал)</span>"; 
+        elseif ($copy != '0') $copy = " <span class='red2'>(копия)</span>";
         else $copy = "";
       $keydes = "";
-      if ($keywords == "") $keydes = "<span class=red title='Нет ключевых слов'>*</span>"; 
-      if ($description == "") $keydes = "<span class=red title='Нет описания'>*</span>"; 
-      if ($keywords == "" and $description == "") $keydes = "<span class=red title='Нет описания и ключевых слов'>**</span>";
+      if ($keywords == "") $keydes = "<span class='red2' title='Нет ключевых слов'>*</span>"; 
+      if ($description == "") $keydes = "<span class='red2' title='Нет описания'>*</span>"; 
+      if ($keywords == "" and $description == "") $keydes = "<span class='red2' title='Нет описания и ключевых слов'>**</span>";
       if ($comm != 0) $keydes .= " ".icon('gray small','\'').$comm." "; 
       if ($counter != 0) $keydes .= " ".icon('gray small','s').$counter." "; 
-      if ($mainpage == 1) $keydes .= "<span class=green title='Страница отмечена для Главной страницы'>*</span> "; 
-      if ($rss == 0) $keydes .= " <span class=rss title='Отключен RSS'>rss</span> ";  
+      if ($mainpage == 1) $keydes .= "<span class='green2' title='Страница отмечена для Главной страницы'>*</span> "; 
+      if ($rss == 0) $keydes .= " <span class='rss radius' title='Отключен RSS'>rss</span> ";  
       $ver = mt_rand(10000, 99999); // получили случайное число
       $color=" class='pointer'"; 
-      $nowork = icon('white small','.')." ";
+      $nowork = icon('black small','.')." ";
       global $deviceType;
       if ($deviceType != 'computer') $copy = $date = $keydes = "";
       if ($active == 0) { 

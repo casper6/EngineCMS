@@ -230,32 +230,12 @@ if ($func == "shop_del_tovar") {
 		else $tovars = "";
 	setcookie ('shop_tovar', $tovars, time()+60*60*24*60); // список товаров|id страницы товара$стоимость товара
 }
-///////////////////////////////////
-if ($func == "shop_del_tovar") {
-	$tovars = "";
-	$info = array();
-	if (isset($_COOKIE['shop_tovar'])) if ($_COOKIE['shop_tovar'] != "") $tovars = $_COOKIE['shop_tovar']."|";
-	$tovars = explode("|", $_COOKIE['shop_tovar']);
-		foreach ($tovars as $tovar) {
-			$t = explode("$", $tovar);
-			if (intval($t[0]) != 0) {
-				if (intval($id) != intval($t[0])) $info[] = $tovar;
-				elseif (intval($t[5]) > 1) {
-					$count = intval($t[5]);
-					$count--;
-					if ($count == 1) $count = 0;
-					$info[] = $t[0]."$".$t[1]."$".$t[2]."$".$t[3]."$".$t[4]."$".$count;
-				}
-			}
-		}
-		if (count($info) > 0) $tovars = implode("|",$info);
-		else $tovars = "";
-	setcookie ('shop_tovar', $tovars, time()+60*60*24*60); // список товаров|id страницы товара$стоимость товара
-}
 /////////////////////////////////////
 if ($func == "shop_add_tovar") {
+	list($price, $count) = explode("*@%", $string);
+	$price = floatval(str_replace(",", ".", $price));
 	$tovars = "";
-	$count = 0;
+	$count = intval($count);
 	$update = false;
 	$info = array();
 	if (isset($_COOKIE['shop_tovar'])) if ($_COOKIE['shop_tovar'] != "") $tovars = $_COOKIE['shop_tovar']."|";
@@ -269,18 +249,18 @@ if ($func == "shop_add_tovar") {
 			$t = explode("$", $tovar);
 			if ($id == intval($t[0])) {
 				$update = true;
-				$count = intval($t[5]);
-				if ($count == 0) $count++;
-				$count++;
+				$count = $count + intval($t[5]);
+				//if ($count == 0) $count++;
+				//$count++;
 				$info[] = $t[0]."$".$t[1]."$".$t[2]."$".$t[3]."$".$t[4]."$".$count;
 			} elseif (intval($id) != intval($t[0])) $info[] = $tovar;
 		}
-		if ($update == false) {
+		if ($update == false) { // первый товар в Корзине
 			$razdel = $row['module'];
 			$open_text = $row['open_text'];
 			if (preg_match_all('/<img(?:\\s[^<>]*?)?\\bsrc\\s*=\\s*(?|"([^"]*)"|\'([^\']*)\'|([^<>\'"\\s]*))[^<>]*>/i', $open_text, $m)) $pic = $m[1][0]; else $pic = "";
-			setcookie ('shop_tovar', $tovars.$id."$".$string."$".$title."$".$pic."$".$razdel."$".$count);
-		} else {
+			setcookie ('shop_tovar', $tovars.$id."$".$price."$".$title."$".$pic."$".$razdel."$".$count);
+		} else { // последующие товары в Корзине
 			$tovars = implode("|",$info);
 			setcookie ('shop_tovar', $tovars, time()+60*60*24*60); // хранится 2 месяца
 		}
@@ -321,9 +301,9 @@ if ($func == "shop_send_order") {
 				$count = intval($tovar[5]);
 				if ($count == 0) {
 					$count = "";
-					$itogo += intval($tovar[1]);
+					$itogo += floatval($tovar[1]);
 				} else {
-					$itogo += intval($tovar[1]) * $count;
+					$itogo += floatval($tovar[1]) * $count;
 					$count = " x ".$count;
 				}
 				$order .= "<br>".aa("Товар")." ".$tovar[2]."<br>
@@ -412,9 +392,9 @@ if ($func == "shop_show_card") {
 				$count = intval($tovar[5]);
 				if ($count == 0) {
 					$count = "";
-					$itogo += intval($tovar[1]);
+					$itogo += floatval($tovar[1]);
 				} else {
-					$itogo += intval($tovar[1]) * $count;
+					$itogo += floatval($tovar[1]) * $count;
 					$count = " x ".$count;
 				}
 				if ($pic != "") $pic = "<a href='".$tovar[3]."' title='".$tovar[2]."' class='lightbox' rel='group'><div class='shop_card_minifoto' style='background:url(\"includes/php_thumb/php_thumb.php?src=".$tovar[3]."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0\") center center no-repeat;'></div></a>";

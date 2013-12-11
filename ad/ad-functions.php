@@ -284,14 +284,15 @@ function help_shablon() {
 ##########################################################################################
 function add_file_upload_form($textarea="textarea", $textarea_show="textarea", $spisok_show = true, $redactor_id = "", $css = false) {
   $txt = "<form id='fileupload' action='includes/upload/server/php/' method='POST' enctype='multipart/form-data'>
-  <label for='show_oldnames'><input type='checkbox' id='show_oldnames' checked> <b>Добавлять имя файла</b> фотографии как её описание (<i>подходит для осмысленных названий</i>)</label><br><div class='notice warning green'><span class='icon green medium' data-icon='('></span>Фотографии можно перенести из любой папки вашего компьютера, даже не нажимая кнопку «Добавить файлы...»</div>
+  <label for='show_oldnames'><input type='checkbox' id='show_oldnames' checked> <b>Добавлять имя файла</b> фотографии как её описание (<i>подходит для осмысленных названий</i>)</label>
+  <div class='notice warning green'>Фотографии можно перенести из любой папки вашего компьютера, даже не нажимая кнопку «Добавить файлы...»</div>
   <div style='padding:10px; padding-left:30px; margin-bottom:30px;'>
                   <span class='btn btn-success fileinput-button' style='position: relative;  overflow: hidden;  float: left;  margin-right: 5px;'>
                       <a class='button'>Добавить файлы...</a>
                       <input id='fileupload' type='file' name='files[]' style='position: absolute;  top: 0;  right: 0;  margin: 0;  opacity: 0;  filter: alpha(opacity=0);  transform: translate(-300px, 0) scale(4);  font-size: 23px;  direction: ltr;  cursor: pointer;' data-url='server/php/' multiple>";
                       if ($spisok_show == true) $txt .= "<a class='button small' onclick='$(\"#".$textarea_show."\").toggle();'>Показать список</a>";
-                  $txt .= "</span>
-              </div>
+  $txt .= "</span>
+  </div>
 <div id='progress'><div class='bar' style='width: 0%;height: 18px;background: green;'></div></div>
 <script src='includes/upload/js/jquery.ui.widget.js'></script>
 <script src='includes/upload/js/jquery.iframe-transport.js'></script>
@@ -305,7 +306,6 @@ $(function () {
       done: function (e, data) {";
         if ($redactor_id == "") $txt .= "
           $('#textarea').hide();
-        /* $('#".$textarea_show."').show(); */
         ";
         $txt .= "$.each(data.result.files, function (index, file) {";
           if ($redactor_id == "") $txt .= "

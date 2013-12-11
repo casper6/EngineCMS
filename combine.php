@@ -351,6 +351,7 @@ if ($style_disable == false) $contents .= "
 /* Предустановки */
 
 .block_title {display:block; margin-top:20px;}
+a.block_title {margin-top:0;}
 .block_open_text {display:block;}
 
 .cat_page_comments {margin-right: 10px;}

@@ -463,6 +463,7 @@ function showcat($cid=0, $pag=0, $slovo="") {
     }
 
     if (!isset($soderganieALL)) $soderganieALL = "";
+    $soderganieMENU = "";
     //////////////////////////////////////////////////////
     if ($cid == 0 and $view!=2) {
       if ($menushow != 0) $soderganieMENU = top_menu($cid, 0);

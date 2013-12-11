@@ -202,7 +202,7 @@
   if ($shop_text_itogo == "") $shop_text_itogo = ss("Итого:");
   if ($shop_text_oformit == "") $shop_text_oformit = ss("Оформить покупку");
   if ($shop_text_korzina == "") $shop_text_korzina = ss("Ваша Корзина пуста.");
-  if ($shop_text_delete == "") $shop_text_delete = "×";
+  if ($shop_text_delete == "") $shop_text_delete = "x";
   if ($shop_pole == "") $shop_pole = "";
   if ($shop_admin_mail == "") $shop_admin_mail = $adminmail;
   if ($shop_text_after_mail == "") $shop_text_after_mail = "<h1>".ss("Спасибо!")."</h1><h3>".ss("Ваш заказ успешно отправлен. В ближайшее время мы вам позвоним.")."</h3>";

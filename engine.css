@@ -73,6 +73,7 @@ input#redactorSaveBtn {background:green; color:white;}
 .w10 {width:10%;}
 .pr10 {padding-right:10px;}
 .pl10 {padding-left:10px;}
+.pl5 {padding-left:5px;}
 .pt5 {padding-top:5px;}
 .pt10 {padding-top:10px;}
 .mi50ma80 {min-width:50%; max-width:80%;}
@@ -445,13 +446,13 @@ a.punkt:hover, a.punkt:hover span, .punkt:hover a {color: black; cursor:pointer;
 
 .small {font-size: 0.7em;}
 img, table {border:0;}
-.red {color: red; display:inline;}
-.green {color: green; display:inline;}
-.blue {color: blue; display:inline;}
+.red2 {color: red; display:inline;}
+.green2 {color: green; display:inline;}
+.blue2 {color: blue; display:inline;}
 .black {color: black !important; }
 .white {color: white !important; display:inline;}
-.green2 {color: white; background: lightgreen; display:inline;}
-.red2 {color: white; background: red; display:inline;}
+.green_back {color: white; background: lightgreen; display:inline;}
+.red_back {color: white; background: red; display:inline;}
 .noact {color:red;}
 .deact {color:gray;}
 p {margin-top: 15px;margin-left: 5px;}
