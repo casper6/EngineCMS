@@ -511,7 +511,7 @@ if ($func == "show_pole") { // Ответ на комментарий из ад�
       ///////////////////
       case "7": // список слов (множественный выбор)
         if ($page_id > 0) $sp_names = spisok_name($s_name,$page_id,1);
-        $info .= "<p><b>".$s_title.":</b><br>";
+        $info .= "<p>".$s_title."<br>";
         $sql2 = "select * from ".$prefix."_spiski where type='".$s_name."' order by parent,id";
         $result2 = $db->sql_query($sql2);
         $info .= "<select size=10 class='f12' multiple=multiple name='add[".$s_name."][]'>";
@@ -532,7 +532,7 @@ if ($func == "show_pole") { // Ответ на комментарий из ад�
 
       case "0": // список слов (единичный выбор)
         if ($page_id > 0) $sp_names = spisok_name($s_name,$page_id,1);
-        $info .= "<p><b>".$s_title.":</b><br>";
+        $info .= "<p>".$s_title." ";
         $sql2 = "select * from ".$prefix."_spiski where type='".$s_name."' order by parent,id";
         $result2 = $db->sql_query($sql2);
         $info .= "<select class='f12' name='add[".$s_name."]'><option value=0>ничего не выбрано</option>";
@@ -552,7 +552,7 @@ if ($func == "show_pole") { // Ответ на комментарий из ад�
       ///////////////////
       case "1": // текст
         if ($page_id > 0) $shablon = spisok_name($s_name,$page_id);
-        $info .= "<p><b>".$s_title.":</b><br>".redactor(4, $shablon, "add[".$s_name."]");
+        $info .= "<p>".$s_title."<br>".redactor(4, $shablon, "add[".$s_name."]");
         //<textarea name='add[".$s_name."]' rows='4' cols='60' class='w100'>".$shablon."</textarea>";
       break;
       ///////////////////
@@ -584,7 +584,7 @@ if ($func == "show_pole") { // Ответ на комментарий из ад�
           $date1 = $date2 = "";
           $data3 = "дата";
         }
-        $info .= "<p><b>".$s_title.":</b> (выберите даты из меню, кликнув по значкам)<br>
+        $info .= "<p>".$s_title." (выберите даты из меню, кликнув по значкам)<br>
         <TABLE cellspacing=0 cellpadding=0 style='border-collapse: collapse'><TBODY><TR> 
         <TD><INPUT type=text name='text[".$s_name."]' id='f_date_c[".$s_name."]' value='".$date1."' onchange=\"document.getElementById('add[".$s_name."]').value=document.getElementById('f_date_c[".$s_name."]').value+'|'+document.getElementById('f_date_c2[".$s_name."]').value\" readonly=1 size=15></TD>
         <TD><IMG src=/images/calendar.png id='f_trigger_c[".$s_name."]' title='Выбор даты'></TD>
@@ -615,19 +615,19 @@ if ($func == "show_pole") { // Ответ на комментарий из ад�
       ///////////////////
       case "4": // строка
         if ($page_id > 0) $shablon = spisok_name($s_name,$page_id);
-        $info .= "<p><b>".$s_title.":</b><br><INPUT name='add[".$s_name."]' id='".$s_name."' type=text value='".$shablon."' class='w45'>";
+        $info .= "<p>".$s_title."<br><INPUT name='add[".$s_name."]' id='".$s_name."' type=text value='".$shablon."' class='w45'>";
         
         $result1 = $db->sql_query("select `name` from ".$prefix."_spiski where type='".$s_name."' order by id desc limit 100");
         $opt = "";
         while ($row1 = $db->sql_fetchrow($result1)) {
           if ($row1['name'] != $shablon) $opt .= "<option value=\"".$row1['name']."\">".$row1['name']."</option>";
         }
-        if ($opt != "") $info .= "<select onchange=\"$('#".$s_name."').val(this.value);\" class='w45'><option value=\"\" style=\"background:#dddddd;\">".aa("варианты...")."</option>".$opt."</select>";
+        if ($opt != "") $info .= "<select onchange=\"$('#".$s_name."').val(this.value);\" class='w25'><option value=\"\" style=\"background:#dddddd;\">".aa("варианты...")."</option>".$opt."</select>";
       break;
       ///////////////////
       case "5": // число
         if ($page_id > 0) $shablon = spisok_name($s_name,$page_id);
-        $info .= "<p><b>".$s_title.":</b><br><INPUT name='add[".$s_name."]' type='number' value='".$shablon."' min='0' class='w45'>";
+        $info .= "<p>".$s_title." <INPUT name='add[".$s_name."]' type='number' value='".$shablon."' min='0' class='w45'>";
       break;
       ///////////////////
       case "6": // регион
@@ -639,7 +639,7 @@ if ($func == "show_pole") { // Ответ на комментарий из ад�
           $namereg = "";
           $sp_name = "Выберите область...";
         }
-        $info .= "<p><b>".$s_title.":</b><br><script type='text/javascript' src='includes/regions/jquery.livequery.js'></script>
+        $info .= "<p>".$s_title."<br><script type='text/javascript' src='includes/regions/jquery.livequery.js'></script>
         <script type='text/javascript'>
         $(document).ready(function() {
             //$('#loader').hide();

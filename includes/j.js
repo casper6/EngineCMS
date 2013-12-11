@@ -153,9 +153,9 @@ function save_raspisanie() {
     });
 }
 
-function shop_add_tovar(id,price,count) {
+function shop_add_tovar(id,price,count,price_pole) {
 	$.ajax({ url: 'ajax.php', cache: false, dataType : "html",
-	    data: {'func': 'shop_add_tovar', 'id': id, 'string': price+'*@%'+count},
+	    data: {'func': 'shop_add_tovar', 'id': id, 'string': price+'*@%'+count+'*@%'+price_pole},
 	    success: function(data){ shop_show_card(); }
 	});
 }

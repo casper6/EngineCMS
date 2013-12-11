@@ -421,11 +421,12 @@ $('#question_tags').tagit({
   echo "</div>
 
   <div id='main'>
-  <span class='h2'>Название страницы (заголовок)</span><br>
+  <h2>Название страницы (заголовок)</h2>
   <textarea class='f16 w100 h40' name=title rows=1 cols=10>".$titl."</textarea>
-  <br><span class='h2'>Предисловие (начальный текст)</span><br>";
+  <div class='right3'>Проверка текста: <a href='http://orthography.morphology.ru' target='_blank' class='button small blue'>орфография</a> и <a href='http://test-the-text.ru' target='_blank' class='button small blue'>информационный стиль</a></div>
+  <h2>Предисловие</h2>";
   echo redactor($red, $shablon1, 'open_text', 'main_text'); // редактор: тип редактора, редактируемое поле
-  echo "<br><span class='h2'>Содержание (основной текст)</span><br>";
+  echo "<h2>Содержание (основной текст)</h2>";
   echo redactor2($red, $shablon2, 'main_text');
 
   echo "<br><input type='hidden' name='foto' value=''>";

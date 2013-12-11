@@ -143,6 +143,7 @@ div.raspisanie { height:15px; width:100%; min-width:5px; border-left: 1px solid 
 .comm_form #avtory, .comm_form #maily, .comm_form #adres, .comm_form #tel, .comm_form #area {width: 99%;}
 
 /* Магазин */
+.shop_cards {margin-bottom: 10px;}
 .shop_card_minifoto {border-radius: 5px; -moz-border-radius: 5; -webkit-border-radius: 5; border:1px solid #bbbbbb; float:left; margin-right: 5px; width: 30px; height: 30px;}
 .shop_card_price {float:right; margin-left: 5px; text-align:right; max-height: 40px;}
 .shop_card { padding-top:10px; padding-bottom:10px; min-height: 55px !important;}
@@ -281,7 +282,9 @@ table.table_light tbody tr:hover th, table.table_light tbody tr.odd:hover th { b
 .show_block { border: 2px dotted green; padding:1px;  border-radius: 5px;  -moz-border-radius: 5px;  -webkit-border-radius: 5px;}
 .show_block_title {background: #efefef; color: black; padding:2px; padding-left:5px; border: 0;}
 
-.ad_button {width:320px; height:22px; display:block; vertical-align:center; margin:5px; line-height:1em !important; font-size:14px !important; padding-top:10px; text-decoration:none; color: black; font-weight:normal;}
+#redact {position:fixed; background: white; top:5px; display:none; floaf:right; right:5px; z-index:3000; width:330px;}
+#redact_show {position:fixed; top:10px; floaf:right; right:25px; z-index:3000; width:18px;}
+.ad_button {width:320px; height:32px; display:block; vertical-align:center; margin:5px; line-height:1em !important; font-size:14px !important; padding-top:10px; text-decoration:none; color: black; font-weight:normal;}
 .ad_button:hover {background: #ddd; color: black; font-weight:bold; border-radius:10px;}
 .ad_icon {height:32px; display:block; float:left; margin-top:-10px; margin-right:5px;}
 
