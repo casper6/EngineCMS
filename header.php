@@ -275,12 +275,13 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 	if ($cid_open==aa("все") or $cid_open=="") {} else {$alternative_title_link = "/-".$useitX."_cat_".$cid_open;}
 
 	// Определение дизайна блоков
-	$design_open=""; $design_close="";
+	$design_open = "<div class='".$shablonX." ".$class."'>";
+	$design_close = "</div>";
 
 	$block_title = $titleX;
 	$block_title2 = "";
 	/////////////////////////////////////
-	if ($design != 0) {
+	if ($design != 0) { // Если выбран дизайн для блока
 		$row7 = $db->sql_fetchrow($db->sql_query("select `text`, `useit` from ".$prefix."_mainpage where `id`='".$design."' and type='0' and `tables`='pages'"));
 		$design = explode(aa("[содержание]"), $row7['text']);
 		$stile = $row7['useit'];
@@ -290,28 +291,21 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 		if ($nameX == 0) {
 		if ($useitX != aa("все") and $nameX != 2 and $useitX != "" and $razdel_open_name != "" and $razdel_open_name != "no") $block_title2 .= "<span class='open_all_small'> &nbsp; &#124; &nbsp; </span> <a href=-".$useitX." title=\"".$razdel_open_name."\" class='open_all_small'><u>".$razdel_open_name."</u></a>";
 		}
-	/////////////////////////////////////
 		$design_open = "<div class='".$shablonX." ".$class."'>".$design[0]; 
-		if ($titleshow != 0 and $titleshow != 3) {
-			if (($nameX==0 or $nameX==1 or $nameX==4 or $nameX==6 or $nameX==8 or $nameX==9) and $notitlelink==0) {
-				$design_open .= "<h3 class=\"h3_block_title class_".$class."\"><a href=".$alternative_title_link." title=\"".$block_title."\" class=\"h3_block_title class_".$class."\">".$block_title."</a>".$block_title2."</h3><div class=polosa></div>";
-			} else {
-				if ($titleshow != 2) $design_open .= "<h3 class=\"h3_block_title class_".$class."\">".$block_title."</h3><div class='polosa'></div>";
+		if (isset($design[1])) $design_close = $design[1]."</div>";
+	}
+
+	if ($titleshow != 0) {
+		if (($nameX==0 or $nameX==1 or $nameX==4 or $nameX==6 or $nameX==8 or $nameX==9) and $notitlelink==0) {
+			$link_block_title = "<a href=".$alternative_title_link." title=\"".$block_title."\" class=\"h3_block_title class_".$class."\">";
+			if ($titleshow == 3) {
+				$link_block_title = "<a onclick=\"$('#block_".$idX."').toggle('slow');\" title=\"".ss('Развернуть')."\" class=\"spoiler_link h3_block_title class_".$class."\">";
+				$design_close = "</div>".$design_close;
 			}
-		} 
-		if (!isset($design[1])) $design[1] = "";
-		$design_close = $design[1]."</div>";
-	/////////////////////////////////////
-	} else {
-		$design_open = "<div class='".$shablonX." ".$class."'>"; 
-		if ($titleshow != 0 and $titleshow != 3) {
-			if (($nameX==0 or $nameX==1 or $nameX==4 or $nameX==6 or $nameX==8 or $nameX==9) and $notitlelink==0) {
-				$design_open .= "<h3 class=\"".$shablonX." h3_block_title class_".$class."\"><a href=".$alternative_title_link." title=\"".$block_title."\" class=\"h3_block_title class_".$class."\">".$block_title."</a>".$block_title2."</h3><div class=polosa></div>";
-			} else {
-				if ($titleshow != 2) $design_open .= "<h3 class=\"".$shablonX." h3_block_title class_".$class."\">".$block_title."</h3><div class='polosa'></div>";
-			}
-		}
-	$design_close = "</div>";
+			$design_open .= "<h3 class=\"".$shablonX." h3_block_title class_".$class."\">".$link_block_title.$block_title."</a>".$block_title2."</h3><div class=polosa></div>";
+			if ($titleshow == 3) $design_open .= "<div id='block_".$idX."' style='display:none;'>";
+		} else if ($titleshow != 2) // проверить
+			$design_open .= "<h3 class=\"".$shablonX." h3_block_title class_".$class."\">".$block_title."</h3><div class='polosa'></div>";
 	}
 
 	if ($html == 1) { $design_close = ""; $design_open = ""; $block_title = ""; $block_title2 = ""; }
@@ -648,7 +642,7 @@ case "1": # Блок комментариев раздела
 			$cid = $row['cid'];
 			$num = $row['num'];
 			$avtor = $row['avtor'];
-			$text = strip_tags(mb_substr($row['text'], 0, $col_bukv), '<b><i><img><a><strong><em>');
+			$text = strip_tags(mb_substr($row['text'], 0, $col_bukv));
 			if (mb_strlen($row['text']) > $col_bukv) $text .= "...";
 			$data = $row['data'];
 			$data = date2normal_view(str_replace(".","-",$data), 2, 1);
@@ -1728,11 +1722,15 @@ case "31": # Блок JS
 			}
 		}
 	}
-	if (strpos(" ".$block, aa("[корзина]"))) {
+	if (strpos(" ".$block, aa("[корзина"))) {
 		// Ставим ajax-блок Корзины
-		$sent = "<script>$(function() {	shop_show_card(); });</script><div id='shop_card'></div>";
-		$soderganie = str_replace(aa("[корзина]"), $sent, $soderganie);  // проверить soderganie и block
-		$block = str_replace(aa("[корзина]"), $sent, $block);
+		$basket_types = array("card" => "", "price" => "_итого", "count" => "_количество");
+		foreach ($basket_types as $key => $value) {
+			if ($key == "card") $and="' id='shop_card"; else $and = "";
+			$sent = "<script>$(function() {	shop_show_card('".$key."'); });</script><div class='shop_".$key.$and."'></div>";
+			$soderganie = str_replace(aa("[корзина".$value."]"), $sent, $soderganie);  // проверить soderganie и block
+			$block = str_replace(aa("[корзина".$value."]"), $sent, $block);
+		}
 	}
 
 	// Ставим почту

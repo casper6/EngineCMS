@@ -140,6 +140,7 @@
       }
     }
     foreach ($_POST as $secvalue) {
+      if (is_array($secvalue)) $secvalue = implode(" ", $secvalue);
       $secvalue = str_replace("(", "&#040;", str_replace(")", "&#041;", $secvalue));
       if ( (preg_match("/<[^>]*script*\"?[^>]*>/i", $secvalue)) ||
       (preg_match("/<[^>]*applet*\"?[^>]*>/i", $secvalue)) ||

@@ -21,7 +21,7 @@ global $adminmail;
 </td> 
 <tr><td colspan=2>Также вы можете воспользоваться вашей обычной почтовой программой или сайтом (например, для отправки фотографий или других файлов) - пишите на <? echo $adminmail; ?></td></tr> 
 </tr><tr><td colspan=2>
-<center><input value="Отправить" type="button" onClick=" al=''; if (document.formsend.mail_subject.value=='') al = al + 'Вы не заполнили поле &quot;Ваши Ф.И.О.&quot;. '; if (document.formsend.mail_to.value=='') al = al + 'Вы не заполнили поле &quot;Эл. почта&quot;. '; if (document.formsend.mail_tel.value=='') al = al + 'Вы не заполнили поле &quot;Телефон&quot;. '; if (document.formsend.mail_msg.value=='') al = al + 'Вы не заполнили поле &quot;Сообщение&quot;. '; if (al) alert(al); else submit();" style="width:180px; height: 50px;"></center>
+<center><input value="Отправить" type="button" onClick=" al=''; if (document.formsend.mail_subject.value=='') al = al + 'Вы не заполнили поле &quot;Ваши Ф.И.О.&quot;. '; if (document.formsend.mail_to.value=='' && document.formsend.mail_tel.value=='') al = al + 'Вы не заполнили поле &quot;Эл. почта&quot; или &quot;Телефон&quot;.';  if (document.formsend.mail_msg.value=='') al = al + 'Вы не заполнили поле &quot;Сообщение&quot;. '; if (al) alert(al); else submit();" style="width:180px; height: 50px;"></center>
 </td></tr> 
 </form> 
 </table>Все поля обязательны к заполнению. Если у вас нет электронной почты, вы можете указать только телефон.

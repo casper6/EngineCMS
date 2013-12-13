@@ -106,6 +106,14 @@ function AjaxFormRequest(result_id,form_id,url) {
  	}); 
 }
 
+function show_raspisanie(id, string) {
+	$.ajax({ url: 'ajax.php', cache: false, dataType : "html",
+data: {'func': 'show_raspisanie', 'id': id, 'string': string},
+beforeSend: function(){ $('#show_raspisanie'+id).html('<img src="images/loading.gif">'); },
+	    success: function(data){ $('#show_raspisanie'+id).html(data); }
+	});
+}
+
 function page_golos(id,name,gol,type) {
 	if (type == 0) { if (gol != 1 & gol != 2 & gol != 3 & gol != 4 & gol != 5 & gol != 6 ) gol = 1; }
 	if (type == 1) { if (gol != 6 ) gol = 1; }
@@ -126,19 +134,11 @@ function shop_show_order() {
 	});
 }
 
-function shop_show_card() {
+function shop_show_card(basket) {
 	$.ajax({ url: 'ajax.php', cache: false, dataType : "html",
-	    data: {'func': 'shop_show_card' },
-	    beforeSend: function(){ $('#shop_card').html('<img src="images/loading.gif">'); },
-	    success: function(data){ $('#shop_card').html(data); }
-	});
-}
-
-function show_raspisanie(id, string) {
-	$.ajax({ url: 'ajax.php', cache: false, dataType : "html",
-data: {'func': 'show_raspisanie', 'id': id, 'string': string},
-beforeSend: function(){ $('#show_raspisanie'+id).html('<img src="images/loading.gif">'); },
-	    success: function(data){ $('#show_raspisanie'+id).html(data); }
+	    data: {'func': 'shop_show_card', 'string': basket },
+	    beforeSend: function(){ $('.shop_' + basket).html('<img src="images/loading.gif">'); },
+	    success: function(data){ $('.shop_' + basket).html(data); }
 	});
 }
 
@@ -154,16 +154,23 @@ function save_raspisanie() {
 }
 
 function shop_add_tovar(id,price,count,price_pole) {
-	$.ajax({ url: 'ajax.php', cache: false, dataType : "html",
-	    data: {'func': 'shop_add_tovar', 'id': id, 'string': price+'*@%'+count+'*@%'+price_pole},
-	    success: function(data){ shop_show_card(); }
-	});
+	if (count == null) count = 1;
+	if (price_pole == null) price_pole = '';
+	if (price == 0 || price == null) alert ('Error: NO Price!');
+	else if (id == 0 || id == null) alert ('Error: NO product ID!');
+		else {
+			$.ajax({ url: 'ajax.php', cache: false, dataType : "html",
+		    data: {'func': 'shop_add_tovar', 'id': id, 'string': price+'*@%'+count+'*@%'+price_pole},
+		    success: function(data){ shop_show_card('price'); shop_show_card('count'); shop_show_card('card'); }
+			});
+			$('#shop_card_window').show();
+		}
 }
 
 function shop_del_tovar(id) {
 	$.ajax({ url: 'ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'shop_del_tovar', 'id': id},
-	    success: function(data){ shop_show_card(); }
+	    success: function(data){ shop_show_card('price'); shop_show_card('count'); shop_show_card('card'); }
 	});
 }
 

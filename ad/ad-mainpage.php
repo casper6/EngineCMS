@@ -1373,9 +1373,8 @@ function edit_main($id) {
 	</tr>";
 	echo "<tr>
 	<td><b>Заголовок блока</b></td>
-	<td>".select("options[titleshow]", "2,1,0", "внутри предисловия как блок [заголовок],показывать,не показывать", $titleshow)."</td>
+	<td>".select("options[titleshow]", "3,2,1,0", "спойлер (блок свернут до заголовка),внутри предисловия как блок [заголовок],показывать,не показывать", $titleshow)."</td>
 	</tr>";
-
 	if ($name==0 || $name==1 || $name==3 || $name==4 || $name==5 || $name==6 || $name==8 || $name==9 || $name==10 || $name==11 || $name==13 || $name==14 || $name==15 || $name==30) 
 		echo "</table><h2 class='black_polosa'>Настройки данного типа блока:</h2><table class='w100 mw800 table_light'>";
 	

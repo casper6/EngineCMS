@@ -292,6 +292,7 @@ if ($func == "shop_send_order") {
 	foreach ($string as $key => $value) {
 		$order .= str_replace("mail_", "", $key).": ".$value."<br>";
 	}
+	$itogo = 0;
 	// Список товаров
 	if (isset($_COOKIE['shop_tovar'])) {
 		$tovars = explode("|", $_COOKIE['shop_tovar']);
@@ -305,7 +306,7 @@ if ($func == "shop_send_order") {
 					$count = "";
 					$itogo += floatval($tovar[1]);
 				} else {
-					$itogo += floatval($tovar[1]) * $count;
+					$itogo += floatval($tovar[1]) * intval($count);
 					$count = " x ".$count;
 				}
 				$order .= "<br>".aa("Товар")." ".$tovar[2]."<br>
@@ -368,7 +369,7 @@ if ($func == "shop_show_order") {
 		".$pole."
 		<p><input type='button' value='".ss("Отправить")."' onClick=\"AjaxFormRequest('shop_card', 'order_form', 'ajax.php');\" />";
 	if ($onclick != "") $info .= "<p>".ss("Поля, помеченные")." <sup class='red'>*</sup> ".ss("обязательны к заполнению.");
-	$info .= "<div class='shop_card_oformlenie'><a onclick='shop_show_card()'>".$shop_text_return."</a></div>
+	$info .= "<div class='shop_card_oformlenie'><a onclick='shop_show_card(\"card\")'>".$shop_text_return."</a></div>
 	<input name='func' value='shop_send_order' type='hidden'>
 	</form>";
 	echo $info;
@@ -377,11 +378,15 @@ if ($func == "shop_show_order") {
 ///////////////////////////////////////////////////////////
 if ($func == "shop_show_card") {
 	// global $title_razdels;
+	$shop_tovarov = "товаров,товар,товара";
+	$shop_for_summa = "на сумму";
 	global $shop_text_val1, $shop_text_val2, $shop_text_itogo, $shop_text_oformit, $shop_text_korzina, $shop_text_delete;
 	$info = "";
 	$itogo = 0;
+	$all_count = 0;
+	// $string - тип корзины
 	$img_width = $img_height = 30;
-	if (!isset($_COOKIE['shop_tovar'])) $info = $shop_text_korzina;
+	if (!isset($_COOKIE['shop_tovar'])) { if ($string != "price") $info = $shop_text_korzina; }
 	else {
 		$tovars = explode("|", $rest = $_COOKIE['shop_tovar']);
 		foreach ($tovars as $tovar) {
@@ -399,25 +404,33 @@ if ($func == "shop_show_card") {
 				$count = intval($tovar[5]);
 				if ($count == 1) {
 					$count = "";
+					$all_count++;
 					$itogo += floatval($price);
 				} else {
 					$itogo += floatval($price) * $count;
+					$all_count += $count;
 					$count = " x ".$count;
 				}
-				if ($pic != "") $pic = "<a href='".$tovar[3]."' title='".$tovar[2]."' class='lightbox' rel='group'><div class='shop_card_minifoto' style='background:url(\"includes/php_thumb/php_thumb.php?src=".$tovar[3]."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0\") center center no-repeat;'></div></a>";
-				$info .= "<div class='shop_card'>
-				<div class='shop_card_price'><b>".$shop_text_val1.$price.$shop_text_val2.$count."</b>
-				<a class='shop_card_del' onclick='shop_del_tovar(".$id_page.")'>".$shop_text_delete."</a></div>
-				".$pic."<a target='_blank' href='-".$name_razdel."_page_".$id_page."'>".$tovar[2]."</a>
-				</div>"; 
+				if ($string == "card") {
+					if ($pic != "") $pic = "<a href='".$tovar[3]."' title='".$tovar[2]."' class='lightbox' rel='group'><div class='shop_card_minifoto' style='background:url(\"includes/php_thumb/php_thumb.php?src=".$tovar[3]."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0\") center center no-repeat;'></div></a>";
+					$info .= "<div class='shop_card'>
+					<div class='shop_card_price'><b>".$shop_text_val1.$price.$shop_text_val2.$count."</b>
+					<a class='shop_card_del' onclick='shop_del_tovar(".$id_page.")'>".$shop_text_delete."</a></div>
+					".$pic."<a target='_blank' href='-".$name_razdel."_page_".$id_page."'>".$tovar[2]."</a>
+					</div>";
+				}
 			}
 		}
-		$info .= "
-		<div class='shop_card_price shop_card_itogo_price'><b>".$shop_text_val1.$itogo.$shop_text_val2."</b></div>
-		<div class='shop_card_itogo'>".$shop_text_itogo."</div>
-		<div class='shop_card_oformlenie'><a onclick='shop_show_order()'>".$shop_text_oformit."</a></div>";
+		if ($string == "price") $info = $itogo;
+		if ($string == "count") $info = $all_count;
+		if ($string == "card") {
+			$info .= "<div class='shop_card_price shop_card_itogo_price'><b>".$shop_text_val1.$itogo.$shop_text_val2."</b></div>
+			<div class='shop_card_itogo'>".$shop_text_itogo." ".$all_count." ".num_ending($all_count, explode(",", $shop_tovarov))."</div>
+			<div class='shop_card_oformlenie'><a onclick='shop_show_order()'>".$shop_text_oformit."</a></div>";
+			$info = "<div class='shop_cards'>".$info."</div>";
+		}
 	}
-	echo "<div class='shop_cards'>".$info."</div>";
+	echo $info;
 	exit();
 }
 ///////////////////////////////////////////////////////////

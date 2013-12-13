@@ -277,7 +277,7 @@ table.table_light tbody tr:hover th, table.table_light tbody tr.odd:hover th { b
 
 .comm_label_textarea {padding-top:10px;}
 
-.button {cursor:pointer; text-decoration: underline;}
+.button, .spoiler_link {cursor:pointer; text-decoration: underline;}
 
 .show_block { border: 2px dotted green; padding:1px;  border-radius: 5px;  -moz-border-radius: 5px;  -webkit-border-radius: 5px;}
 .show_block_title {background: #efefef; color: black; padding:2px; padding-left:5px; border: 0;}

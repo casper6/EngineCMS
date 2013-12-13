@@ -34,8 +34,11 @@ function sho(pid,name,act,id_razdel,cid,edit_pole) {
 	else add_pole = '';
 	if (act == 1) active = 'Выключить страницу">' + icon('red small','Q')+'</a>';
 	else active = 'Включить страницу">' + icon('green small','Q')+'</a>';
-	if (document.getElementById('pid'+pid).innerHTML=='') document.getElementById('pid'+pid).innerHTML = '<br><ul class="button-bar"><li class="first"><a href=-'+name+'_page_'+pid+' target=_blank title="Открыть страницу на сайте">'+icon('blue small','s')+' Открыть</a></li><li><a target=_blank href="sys.php?op=base_pages_edit_page&pid='+pid+'#1" title="Редактировать страницу">'+icon('orange small','7')+' Редактировать</a></li><li class="punkt"><a onclick=replace("'+pid+'") title="Копировать/Переместить/Создать ярлык">'+icon('blue small','^')+'</a></li><li class="punkt"><a onclick=offpage('+pid+',0) title="'+active+'</li><li class="last punkt"><a onclick=delpage("'+pid+'") title="Удалить страницу">'+icon('red small','F')+'</a></li></ul>'+add_pole;
-	else document.getElementById('pid'+pid).innerHTML = '';
+	if (document.getElementById('pid'+pid).innerHTML=='') {
+		$(".pid").html(""); 
+		document.getElementById('pid'+pid).innerHTML = ' <ul class="button-bar"><li class="first"><a href=-'+name+'_page_'+pid+' target=_blank title="Открыть страницу на сайте">'+icon('blue small','s')+'</a></li><li><a target=_blank href="sys.php?op=base_pages_edit_page&pid='+pid+'#1" title="Редактировать страницу">'+icon('orange small','7')+'</a></li><li class="punkt"><a onclick=replace("'+pid+'") title="Копировать/Переместить/Создать ярлык">'+icon('blue small','^')+'</a></li><li class="punkt"><a onclick=offpage('+pid+',0) title="'+active+'</li><li class="last punkt"><a onclick=delpage("'+pid+'") title="Удалить страницу">'+icon('red small','F')+'</a></li></ul>'+add_pole;
+	}
+	//else document.getElementById('pid'+pid).innerHTML = '';
 	if (edit_pole == "1") {
 		var x = '$(function() { show_pole(' + id_razdel + ',' + pid + ',\'' + name + '\',' + cid + '); });';
 		var y = document.createElement ('script'); //Создаём новый тег <SCRIPT> 

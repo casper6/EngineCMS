@@ -329,7 +329,7 @@ div.b8f4f2 {background: #b8f4f2; border:1px solid gray;}
 	min-height: 20px;
 	padding: 2px;
 }
-
+.openpapka:hover .openpage .pointer {color:white;}
 
 .zagolovok { font-size: 14pt; }
 
@@ -501,7 +501,7 @@ p {margin-top: 15px;margin-left: 5px;}
 
 .sho_page a:hover { min-height:18px;}
 
-.openpapka:hover a.pointer, .openpapka:hover span.small+.red, .openpage:hover a.pointer, .dark_pole2sel, .dark_pole2sel span.plus20, .dark_pole2:hover span.plus20, .dark_pole2sel span.green, .dark_pole2:hover span.green, .dark_pole2sel span.gray, .dark_pole2:hover span.gray, .dark_pole2:hover { color: white !important; max-height:44px; overflow:hidden; }
+.openpapka:hover a.pointer, .openpapka:hover span.small+.red, .openpage:hover span.pointer, .openpage:hover a.pointer, .dark_pole2sel, .dark_pole2sel span.plus20, .dark_pole2:hover span.plus20, .dark_pole2sel span.green, .dark_pole2:hover span.green, .dark_pole2sel span.gray, .dark_pole2:hover span.gray, .dark_pole2:hover { color: white !important; max-height:44px; overflow:hidden; }
 .dark_pole2,
 .dark_pole2sel span.icon span, .dark_pole2:hover span.icon span {  }
 .dark_pole2sel .f14, .dark_pole2:hover .f14 { color: #058bf5 !important; }

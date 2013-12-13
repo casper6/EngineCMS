@@ -828,7 +828,7 @@ if ($func == "offpage") { // вкл./выкл. страницы
   parse_str($options);
   if (!isset($edit_pole)) $edit_pole = "";
   $db->sql_query("UPDATE ".$prefix."_pages SET `active`='$act' WHERE pid='$id'"); 
-  echo "<div id=\"page".$active['pid']."\"><a href=#".mt_rand(10000, 99999).$active['pid']." onclick='sho(".$active['pid'].", \"".$active['module']."\",".$act.",".$id_razdel.",".$active['cid'].",\"".$edit_pole."\");'".$color.">".$nowork."".$active['title']."</a><div id='pid".$active['pid']."' class='pid'></div></div>"; exit;
+  echo "<div id=\"page".$active['pid']."\"><a href=#".mt_rand(10000, 99999).$active['pid']." onmouseover='sho(".$active['pid'].", \"".$active['module']."\",".$act.",".$id_razdel.",".$active['cid'].",\"".$edit_pole."\");'".$color.">".$nowork."".$active['title']."</a><div id='pid".$active['pid']."' class='pid'></div></div>"; exit;
 }
 ######################################################################################
 if ($func == "delrazdel") { // Удаление раздела
@@ -1177,18 +1177,18 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
           $add_option[] = trim($a_comm);
         }
         $add_option = implode(",", $add_option);
-        if (!isset($title_razdel_and_bd[$module])) $titl_mainpage = "РАЗДЕЛ УДАЛЁН! &rarr; $module";
+        if (!isset($title_razdel_and_bd[$module])) $titl_mainpage = "РАЗДЕЛ УДАЛЁН (".$module.")";
         else {
-          if ($p_cid != 0) $title_papka = " &rarr; папка «".$titles_papka[$p_cid]."»"; 
+          if ($p_cid != 0) $title_papka = " &rarr; папка «".trim($titles_papka[$p_cid])."»"; 
           else $title_papka = "";
-          $titl_mainpage = $title_razdel_and_bd[$module].$title_papka;
+          $titl_mainpage = "«".trim($title_razdel_and_bd[$module])."»".$title_papka;
         }
         $del = "";
         $pageslistdel .= "<tr onclick='show(\"comm".$cid."\")' title='Показать комментарий...' valign='top' style='cursor:pointer;' class='tr_hover' id='1comm".$cid."'".$bgcolor."><td class='gray'><nobr>".$data."</nobr></td><td>".$del."<a onclick='offcomm(".$cid.")' class='punkt'>".$vkl."</a>
 
         <a style='float:right;' title='Изменить комментарий' href='sys.php?op=base_comments_edit_comments&cid=".$cid."'>".icon('orange small','7')."</a>
 
-        <i>".$avtor2."</i><span class='gray'> ".$pishet." разделе «".$titl_mainpage."» на странице </span><a title='Открыть на сайте...' target=_blank href='-".$module."_page_".$num."#comm_".$cid."'>".$titles."</a>: <span class='gray'>".$textline."</span></td></tr>
+        <i>".$avtor2."</i><span class='gray'> ".$pishet." разделе ".$titl_mainpage." на странице </span><a title='Открыть на сайте...' target=_blank href='-".$module."_page_".$num."#comm_".$cid."'>".$titles."</a>: <span class='gray'>".$textline."</span></td></tr>
         <tr><td colspan='2' style='padding:0; margin:0;'>
         <div style='display:none;' id=comm".$cid.">
         ".$otvet.$mails.$tel."<br><br>
@@ -1203,7 +1203,10 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
         else {
           // Преобразование адреса URL в ссылку (с учетом тире)
           $txt = preg_replace('@(https?://([-\w\.]+)+(:\d+)?(/([-\w/_\.]*(\?\S+)?)?)?)@', '<a href="$1" target="_blank">$1</a>', $txt);
-          $pageslistdel .= "<tr valign=top id='1comm".$cid."'".$bgcolor."'><td class='gray'><nobr>".$data."</nobr></td><td><a style='float:right;' title='Удалить сообщение' onclick='delcomm(".$cid.")' class='pointer'>".icon('red small','F')."</a> <span class='green2'>".$avtor."</span> &rarr; ".$txt."</td></tr>";
+          $pageslistdel .= "<tr valign=top id='1comm".$cid."'".$bgcolor."'><td class='gray'><nobr>".$data."</nobr></td><td>
+          <a title='Удалить сообщение' onclick='delcomm(".$cid.")' class='button red white small right3'>Удалить</a>";
+          if ($row5['active'] == 1) $pageslistdel .= "<a onclick='offcomm(".$cid.")' class='button medium right3'>Прочитано</a>";
+          $pageslistdel .= "<span class='green2'>".$avtor."</span> &rarr; ".$txt."</td></tr>";
         }
       }
     }
@@ -1457,8 +1460,8 @@ if ($func == "papka") { // Папка
         if ($keywords == "") $keydes = "<span class='red2' title='Нет ключевых слов'>*</span>"; 
         if ($description == "") $keydes = "<span class='red2' title='Нет описания'>*</span>"; 
         if ($keywords == "" and $description == "") $keydes = "<span class='red2' title='Нет описания и ключевых слов'>**</span>"; 
-        if ($comm != 0) $keydes .= " ".icon('gray small','\'').$comm." "; 
-        if ($counter != 0) $keydes .= " ".icon('gray small','s').$counter." "; 
+        if ($comm != 0) $keydes .= " ".icon('black small','\'').$comm." "; 
+        if ($counter != 0) $keydes .= " ".icon('black small','s').$counter." "; 
         if ($mainpage == 1) $keydes .= "<span class='green2' title='Страница отмечена для Главной страницы'>*</span> "; 
         if ($rss == 0) $keydes .= " <span class='rss radius' title='Отключен RSS'>rss</span> "; 
         global $deviceType;
@@ -1475,7 +1478,7 @@ if ($func == "papka") { // Папка
           $nowork = icon('red small','!');;
         }
 
-        $pg = "<div id='page".$pid."' class='gray openpage'><a href='#".$ver.$pid."' onclick='sho(".$pid.", \"".$name."\", ".$active.",".$id_razdel.",".$cid.",\"".$edit_pole."\");'".$color.">".$nowork.$title.$copy." — ".$date."</a> ".$keydes." <div id='pid".$pid."' class='pid'></div></div>";
+        $pg = "<div id='page".$pid."' class='openpage' onmouseover='sho(".$pid.", \"".$name."\", ".$active.",".$id_razdel.",".$cid.",\"".$edit_pole."\");'><span".$color.">".$nowork.$title.$copy." — ".$date."</span> ".$keydes." <div id='pid".$pid."' class='pid'></div></div>";
         if ($no_pages < $granica+1) $list .= $pg; 
         if ($no_pages > $granica) $dop_list .= $pg;
         $no_pages++;
@@ -1586,7 +1589,7 @@ if ($func == "razdel") { // Раздел
         $nowork=icon('red small','!')." ";
       }
 
-      $pg = "<div id='page".$pid."' class='gray openpage'><a href='#".$ver.$pid."' onclick='sho(".$pid.", \"".$name_raz."\", ".$active.",".$id_razdel.",".$cid.",\"".$edit_pole."\");'".$color.">".$nowork.$title.$copy." — ".$date."</a> ".$keydes." <div id='pid".$pid."' class='pid'></div></div>";
+      $pg = "<div id='page".$pid."' class='openpage'><a href='#".$ver.$pid."' onmouseover='sho(".$pid.", \"".$name_raz."\", ".$active.",".$id_razdel.",".$cid.",\"".$edit_pole."\");'".$color.">".$nowork.$title.$copy." — ".$date."</a> ".$keydes." <div id='pid".$pid."' class='pid'></div></div>";
       if ($no_pages < $granica+1) $list .= $pg; 
       if ($no_pages > $granica) $dop_list .= $pg;
       $no_pages++;
