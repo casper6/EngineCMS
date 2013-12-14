@@ -60,6 +60,22 @@ input#redactorSaveBtn {background:green; color:white;}
 .redactor_toolbar li a.redactor_btn_button_link {background: url(images/brackets2.png) no-repeat;}
 .redactor_toolbar li a.redactor_btn_button_more {background: url(images/more.png) no-repeat;}
 
+.redactor_editor,
+.redactor_editor:focus {
+	position: relative;
+	overflow: scroll;
+	margin: 0 !important;
+	padding: 10px;
+	padding-bottom: 5px;
+	outline: none;
+	background: none;
+	background: #fff !important;
+	box-shadow: none !important;
+	white-space: normal;
+	min-height: 200px;
+	max-height: 600px;
+}
+
 #razdels { min-width:300px; padding-bottom:20px; overflow:auto;}
 .razdels {background:#e7e9ec;}
 .block_back {width:100%; margin-top:5px; padding:0; background: url('/images/fon.png');}

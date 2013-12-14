@@ -183,10 +183,39 @@ function create_main($type) {
 				if ($id_design != 1) $styles .= "<option value='".$id_design."'>".$title_design."</option>";
 			}
 
+	// Получим список названий блоков
+	$sql2 = "select `title` from ".$prefix."_mainpage where `type`='3' and `tables`='pages'"; 
+	$result2 = $db->sql_query($sql2);
+	$titles_block = array();
+	while ($row2 = $db->sql_fetchrow($result2)) {
+		$titles_block[] = trim($row2['title']);
+	}
+	$titles_block = implode("','", $titles_block);
 	$create = "<div id=about class=block style='display:none;'>Блок — это дополнительный элемент сайта, который может быть вставлен в любом его месте. Блоки бывают автоматические (заранее заданные системой), полуавтоматические (создаваемые с последующей настройкой того, что будет в них отображаться) и ручные (текст, HTML, JavaScript или PHP-код).<br></div>
 	<table class='w100 mw800'><tr valign=bottom><td width=50%>
-	<span class=h2>Название блока:</span><br><input type='text' name='title' value='' size=60 class='w100 h40 f16' autofocus></td><td>
-	<span class=h3>Дизайн блока:</span><br><select name=design><option value=0>выбирать необязательно</option>".$styles."</select><br>Не стоит использовать дизайн для раздела!
+	<span class=h2>Название блока:</span><br><input id='block_name' type='text' name='title' value='' size=60 class='w100 h40 f16'>
+	<div id='block_name_correction'></div>
+	<script>
+	function in_array(needle, haystack, strict) {
+		var found = false, key, strict = !!strict;
+		for (key in haystack) {
+			if ((strict && haystack[key] === needle) || (!strict && haystack[key] == needle)) {
+				found = true;
+				break;
+			}
+		}
+		return found;
+	}
+	$('#block_name').blur(function () {
+	  if ($('#block_name').val() != '') {
+	  	if (in_array($('#block_name').val(), ['".$titles_block."'])) alert('Такое название блока уже есть! Используйте более подробное название.');
+	  } else {
+	  	alert('Название блока не должно быть пустым!');
+	  }
+	});
+	</script>
+	</td><td>
+	<span class=h3>Дизайн блока:</span><br><select name='design'><option value='0'>выбирать необязательно</option>".$styles."</select><br>Не стоит использовать дизайн для раздела!
 	</td></tr><tr><td colspan=2>
 	<span class=h2>Выберите тип блока:</span> (справа увидите его параметры (не у всех блоков), а снизу — описание)
 	<table class='w100 mw800' cellspacing=0 cellpadding=0><tr valign=top><td class='pr10'>
