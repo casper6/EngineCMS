@@ -192,7 +192,7 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 		$block_color = $block_colorYYY[$idX];
 
 	// обнулили все опции блоков от греха подальше
-	$titleshow = $reload_one_by_one = $folder = $datashow = $tagdelete = $ipdatauser = $design = $open_all = $catshow = $main = $daleeshow = $openshow = $number = $add = $size = $papki_numbers = $zagolovokin = $menu = $noli = $html = $show_title = $random = $showlinks = $open_new_window = $shablon = $show_new_pages = $reload_link_show = $reload_link_time = $re_menu = 0;
+	$titleshow = $reload_one_by_one = $folder = $datashow = $tagdelete = $ipdatauser = $design = $open_all = $catshow = $main = $daleeshow = $openshow = $number = $add = $size = $papki_numbers = $zagolovokin = $menu = $noli = $html = $show_title = $random = $showlinks = $open_new_window = $shablon = $show_new_pages = $reload_link_show = $reload_link_time = $re_menu = $show_pages_from = 0;
 	$opros_type = $limkol = $pageshow = $only_question = $opros_result = $foto_gallery_type = $notitlelink = $foto_num = 1;
 	$shablon = $class = $alternative_title_link = $cid_open = $no_show_in_razdel = $watermark = $show_in_papka = "";
 	$addtitle = ss("Добавить статью");
@@ -343,38 +343,33 @@ case "0": # Блок страниц раздела
 	$text_old = $textX;
 	$textX = ""; // В эту переменную входит содержание блока
 
-	$and = "";
-	if ($main==1) $and = " and mainpage='1'";
-	if ($main==2) $and = " and mainpage!='1'";
+	$and=$and2=$and3=$and4=$and5="";
+	if ($main==1) $and = " and `mainpage`='1'";
+	if ($main==2) $and = " and `mainpage`!='1'";
 	if ($text_old != "") $and .= " and ".stripcslashes($text_old)."";
 
-
 	if ($useitX=="open_razdel") { // Показывать ВСЕ разделы или выбранный
-		//if ($name == "index") {
-			//$block = str_replace("[".$titleX."]", "", $block);
-			//break 1;
-		//} else {
-			$and2 = " and module='".$name."'";
-		//}
+		$and2 = " and `module`='".$name."'";
 	} elseif ($useitX==aa("все") or $useitX=="") { // Показывать ВСЕ разделы или выбранный
-		$and2 = ""; 
 	} elseif ( strpos($useitX, ",") ) { // Показывать определенные разделы, через «,»
 		$a = array();
 		$use = explode(",",$useitX);
 		foreach ($use as $value) {
-			if ($value != "") $a[] = "module='".$value."'";
+			if ($value != "") $a[] = "`module`='".$value."'";
 		}
 		$and2 = " and (".implode(" or ",$a).")";
-	} else $and2 = " and module='".$useitX."'";
+	} else $and2 = " and `module`='".$useitX."'";
 
 	if ($cid_open==aa("все") or $cid_open=="") { // Показывать ВСЕ папки или выбранную
-		$and3 = "";
 		$cid_open2 = "";
 	} else {
-		$and2 = " and cid='".$cid_open."'";
+		$and2 = " and `cid`='".$cid_open."'";
 		$cid_open2 = "_cat_".$cid_open;
 	}
 	
+	if ($show_pages_from == 1) $and5 = " and `cid`='0'"; //только страницы из «корня» раздела
+	if ($show_pages_from == 2) $and5 = " and `cid`!='0'"; //только страницы из папок
+
 	if (isset($size)) $limit = " limit ".$number.",".$size; // $lim2 = size - убрано
 	
 	if ($shablon != "") {
@@ -404,7 +399,6 @@ case "0": # Блок страниц раздела
 
 	} else $sel = "`pid`, `module`, `cid`, `title`, `open_text`, `main_text`, `date`, `mainpage`"; 
 	
-	$and4 = '';
 	// Если в настройках блока указано отображать только последние страницы
 	if ($show_new_pages == 1) {
 		global $_COOKIE; // Получаем дату куки
@@ -431,7 +425,7 @@ case "0": # Блок страниц раздела
 		}
 	}
 
-	$sql = "SELECT ".$sel." from ".$prefix."_pages where `tables`='pages' and `active`='1'".$and.$and2.$and3.$and4." order by ".$sort."".$limit."";
+	$sql = "SELECT ".$sel." from ".$prefix."_pages where `tables`='pages' and `active`='1'".$and.$and2.$and3.$and4.$and5." order by ".$sort."".$limit."";
 	$result = $db->sql_query($sql);
 
 	if ($shablon == "")

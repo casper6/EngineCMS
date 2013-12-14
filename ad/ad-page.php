@@ -256,13 +256,13 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
     $shablon = trim($row['shablon']);
     $shablon2 = "";
     if ($shablon=="") { 
-      if ($red != 3 and $red != 4) { $shablon1 = "<p>"; $shablon2 = "<p>"; }
+      if ($red != 3 and $red != 4) { $shablon1 = ""; $shablon2 = ""; }
     } else { 
       $shablon = explode("[следующий]",$shablon);
       $shablon1 = $shablon[0];
       $shablon2 = $shablon[1];
     }
-    if ($shablon2=="") $shablon2 = "<p>&nbsp;</p>";
+    if ($shablon2=="") $shablon2 = "";
     if (!isset($shablon1)) $shablon1="";
     if (!isset($shablon2)) $shablon2="";
 

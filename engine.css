@@ -53,6 +53,13 @@ input, textarea, select {
 button, a.btn, a.btn:visited, a.button, a.button:visited, input[type="submit"], input[type="reset"], input[type="button"] { text-shadow: none !important; }
 input#redactorSaveBtn {background:green; color:white;}
 
+.redactor_toolbar li a.redactor_btn_superscript {background: url(images/superscript.png) no-repeat;}
+.redactor_toolbar li a.redactor_btn_subscript {background: url(images/subscript.png) no-repeat;}
+.redactor_toolbar li a.redactor_btn_pre {background: url(images/pre.png) no-repeat !important;}
+.redactor_toolbar li a.redactor_btn_button_block {background: url(images/brackets1.png) no-repeat;}
+.redactor_toolbar li a.redactor_btn_button_link {background: url(images/brackets2.png) no-repeat;}
+.redactor_toolbar li a.redactor_btn_button_more {background: url(images/more.png) no-repeat;}
+
 #razdels { min-width:300px; padding-bottom:20px; overflow:auto;}
 .razdels {background:#e7e9ec;}
 .block_back {width:100%; margin-top:5px; padding:0; background: url('/images/fon.png');}
@@ -457,7 +464,7 @@ img, table {border:0;}
 .deact {color:gray;}
 p {margin-top: 15px;margin-left: 5px;}
 .gray {color:#555; font-size: 0.9em;}
-.bggray {padding: 5px; font-style: italic; background-color:#eeeeee; color:black; font-size: 1.1em;}
+.bggray {padding: 5px; background-color:#ddd; color:black; font-size: 1.1em;}
 .no {margin-bottom: 10px; padding: 0px; display:inline; text-decoration:none;}
 
 .skin_texture {

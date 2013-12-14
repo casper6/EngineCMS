@@ -508,6 +508,11 @@ lightload поставить «'», а в конце всех настроек �
 	<br>По-умолчанию, стрелка &rarr;
 	</td></tr>
 
+	<tr valign=top><td>
+	Преобразование {Название раздела} и {Название страницы} в ссылки на эти раздел и страницу, соответственно:</td><td class=small>
+	".select("options[show_page_links]", "0,1", "НЕТ,ДА", $show_page_links)."По-умолчанию отключено. Если вы создаете сайт с большим количеством страниц (более 500) — желательно отключить. В случае отключения останется возможность преобразования названий разделов.
+	</td></tr>
+	
 	<tr valign=top><td colspan='2' class='black_grad'>
 	<h2>Поиск по сайту поставить на сайт можно автоматическим блоком [поиск]</h2>
 	</td></tr>
@@ -868,11 +873,6 @@ class='page_shop_count onchange=\"$('#count_[page_id]').val( $('#range_[page_id]
 	Показывать добавленные посетителями страницы:</td><td class=small>
 	".select("options[show_userposts]", "0,1", "НЕТ,ДА", $show_userposts)."
 	</td></tr>
-
-	<tr valign=top><td>
-	Преобразование {Название раздела} и {Название страницы} в ссылки на эти раздел и страницу, соответственно:</td><td class=small>
-	".select("options[show_page_links]", "0,1", "НЕТ,ДА", $show_page_links)."По-умолчанию отключено. Если вы создаете сайт с большим количеством страниц (более 500) — желательно отключить. В случае отключения останется возможность преобразования названий разделов.
-	</td></tr>
 	
 	<tr valign=top><td>
 	Включить ускорение вывода блоков (на вкладке Оформление):</td><td class=small>
@@ -1013,7 +1013,7 @@ echo "<div id='show_options_zagotovka' class='show_pole pl10' style='display:non
 	<tr valign=top><td style='max-width:150px;'>
 	Выберите кнопки редактора:</td><td class=small>";
 
-global $ed2_button_html, $ed2_button_formatting, $ed2_button_bold, $ed2_button_italic, $ed2_button_deleted, $ed2_button_underline, $ed2_button_unorderedlist, $ed2_button_orderedlist, $ed2_button_outdent, $ed2_button_indent, $ed2_button_image, $ed2_button_video, $ed2_button_file, $ed2_button_table, $ed2_button_link, $ed2_button_alignment, $ed2_button_horizontalrule, $ed2_button_more, $ed2_button_link2, $ed2_button_block, $ed2_button_pre, $ed2_button_fullscreen, $ed2_button_clips, $ed2_button_fontcolor, $ed2_button_fontsize, $ed2_button_fontfamily, $ed2_minHeight, $ed2_direction, $ed2_div_convert;
+global $ed2_button_html, $ed2_button_formatting, $ed2_button_bold, $ed2_button_italic, $ed2_button_deleted, $ed2_button_underline, $ed2_button_unorderedlist, $ed2_button_orderedlist, $ed2_button_outdent, $ed2_button_indent, $ed2_button_image, $ed2_button_video, $ed2_button_file, $ed2_button_table, $ed2_button_link, $ed2_button_alignment, $ed2_button_horizontalrule, $ed2_button_more, $ed2_button_link2, $ed2_button_block, $ed2_button_pre, $ed2_button_fullscreen, $ed2_button_clips, $ed2_button_fontcolor, $ed2_button_fontsize, $ed2_button_fontfamily, $ed2_minHeight, $ed2_direction, $ed2_div_convert, $ed2_paragraphy, $ed2_button_superscript;
 if ($ed2_button_html == "" && $ed2_button_bold == "" && $ed2_button_link == "") $ed2_button_html = $ed2_button_formatting = $ed2_button_bold = $ed2_button_italic = $ed2_button_deleted = $ed2_button_unorderedlist = $ed2_button_orderedlist = $ed2_button_image = $ed2_button_video = $ed2_button_file = $ed2_button_table = $ed2_button_link = $ed2_button_alignment = $ed2_button_horizontalrule = $ed2_button_fullscreen = $ed2_button_clips = " checked";
 if ($ed2_direction == "") $ed2_direction = "ltl";
 if ($ed2_div_convert != "1") $ed2_div_convert = "0";
@@ -1044,6 +1044,8 @@ if ($ed2_button_clips == "1") $ed2_button_clips = " checked";
 if ($ed2_button_fontcolor == "1") $ed2_button_fontcolor = " checked";
 if ($ed2_button_fontsize == "1") $ed2_button_fontsize = " checked";
 if ($ed2_button_fontfamily == "1") $ed2_button_fontfamily = " checked";
+if ($ed2_paragraphy == "1") $ed2_paragraphy = " checked";
+if ($ed2_button_superscript == "1") $ed2_button_superscript = " checked";
 
 echo "
 ".input('options[ed2_button_html]','1','','checkbox',$ed2_button_html)." Код (режим просмотра HTML)<br>
@@ -1073,9 +1075,11 @@ echo "
 ".input('options[ed2_button_fontcolor]','1','','checkbox',$ed2_button_fontcolor)." Цвет текста и заливки (фона) текста<br>
 ".input('options[ed2_button_fontsize]','1','','checkbox',$ed2_button_fontsize)." Размер текста (нежелательно!)<br>
 ".input('options[ed2_button_fontfamily]','1','','checkbox',$ed2_button_fontfamily)." Шрифт текста (нежелательно!)<br>
+".input('options[ed2_button_superscript]','1','','checkbox',$ed2_button_superscript)." Нижний и верхний индекс<br>
 Высота поля редактора: ".input('options[ed2_minHeight]',$ed2_minHeight, "10")."<br>
-Направление текста: ".select('options[ed2_direction]','ltl,rtl','слева направо,справа налево (по-арабски)',$ed2_direction)."<br>
-Конвертировать DIV в P".select('options[ed2_div_convert]','0,1','НЕТ,ДА',$ed2_div_convert)."<br>
+Направление текста: ".select('options[ed2_direction]','ltl,rtl','слева направо,справа налево (по-арабски)',$ed2_direction)."<p>
+Конвертировать тэги DIV в P".select('options[ed2_div_convert]','0,1','НЕТ,ДА',$ed2_div_convert)."<p>
+Запретить автоматическую вставку тэга P (будет использован BR)".select('options[ed2_paragraphy]','0,1','НЕТ,ДА',$ed2_paragraphy)."
 	</td></tr>
 	</table>
 
@@ -1282,7 +1286,7 @@ echo "
 			global $prefix, $db, $options;
 			$mini_blocks = $options['company_name']."|||||".$options['company_fullname']."|||||".$options['company_address']."|||||".$options['company_time']."|||||".$options['company_tel']."|||||".$options['company_sot']."|||||".$options['company_fax']."|||||".$options['company_email']."|||||".$options['company_map']."|||||".$options['company_people'];
 
-			$ed2_buttons = $options['ed2_button_html']."|".$options['ed2_button_formatting']."|".$options['ed2_button_bold']."|".$options['ed2_button_italic']."|".$options['ed2_button_deleted']."|".$options['ed2_button_underline']."|".$options['ed2_button_unorderedlist']."|".$options['ed2_button_orderedlist']."|".$options['ed2_button_outdent']."|".$options['ed2_button_indent']."|".$options['ed2_button_image']."|".$options['ed2_button_video']."|".$options['ed2_button_file']."|".$options['ed2_button_table']."|".$options['ed2_button_link']."|".$options['ed2_button_alignment']."|".$options['ed2_button_horizontalrule']."|".$options['ed2_button_more']."|".$options['ed2_button_link2']."|".$options['ed2_button_block']."|".$options['ed2_button_pre']."|".$options['ed2_button_fullscreen']."|".$options['ed2_button_clips']."|".$options['ed2_button_fontcolor']."|".$options['ed2_button_fontsize']."|".$options['ed2_button_fontfamily']."|".$options['ed2_minHeight']."|".$options['ed2_direction'];
+			$ed2_buttons = $options['ed2_button_html']."|".$options['ed2_button_formatting']."|".$options['ed2_button_bold']."|".$options['ed2_button_italic']."|".$options['ed2_button_deleted']."|".$options['ed2_button_underline']."|".$options['ed2_button_unorderedlist']."|".$options['ed2_button_orderedlist']."|".$options['ed2_button_outdent']."|".$options['ed2_button_indent']."|".$options['ed2_button_image']."|".$options['ed2_button_video']."|".$options['ed2_button_file']."|".$options['ed2_button_table']."|".$options['ed2_button_link']."|".$options['ed2_button_alignment']."|".$options['ed2_button_horizontalrule']."|".$options['ed2_button_more']."|".$options['ed2_button_link2']."|".$options['ed2_button_block']."|".$options['ed2_button_pre']."|".$options['ed2_button_fullscreen']."|".$options['ed2_button_clips']."|".$options['ed2_button_fontcolor']."|".$options['ed2_button_fontsize']."|".$options['ed2_button_fontfamily']."|".$options['ed2_minHeight']."|".$options['ed2_direction']."|".$options['ed2_paragraphy']."|".$options['ed2_button_superscript'];
 
 			$advanced = $options['jqueryui']."|".$options['show_comments']."|".$options['show_userposts']."|".$options['show_page']."|".$options['show_reserv']."|".$options['uskorenie_blokov']."|".$options['kickstart']."|".$options['show_page_links']."|".$options['ad_fon']."|".$options['search_design']."|".$options['tag_design']."|".$options['add_fonts']."|".$options['normalize']."|".$options['project_logotip']."|".$options['project_name']."|".$options['geo']."|".$options['kolkey']."|".$options['add_clips']."|".$options['sortable']."|".$options['color_tema_html']."|".$options['color_tema_css']."|".$options['color_tema_js']."|".$options['color_tema_php']."|".$options['tab_obzor']."|".$options['tab_show']."|".$options['shop_text_val1']."|".$options['shop_text_val2']."|".$options['shop_text_itogo']."|".$options['shop_text_oformit']."|".$options['shop_text_korzina']."|".$options['shop_text_delete']."|".$options['shop_pole']."|".$options['shop_admin_mail']."|".$options['shop_text_after_mail']."|".$options['shop_spisok_pole']."|".$options['shop_shablon_form_order']."|".$options['shop_shablon_mail_client']."|".$options['shop_shablon_mail_admin']."|".$ed2_buttons."|".$options['head_insert']."|".$options['filter_name']."|".$options['filter_show_all']."|".$options['gravatar']."|".$options['ed2_div_convert']."|".$options['strelka']."|".$options['smile_icons']."|".$options['add_mail_shablons']."|".$options['avtor_comments']."|".$options['search_in_pages']."|".$options['search_in_papka']."|".$options['search_in_razdel']."|".$options['newsmail_design']."|".$options['search_col_razdel']."|".$options['search_col_papka']."|".$options['search_col_page']."|".$options['search_col_showall']."|".$options['scrollyeah']."|".$options['lightload']."|".$options['spin']."|".$options['razdel_sort']."|".$options['show_admin_top'];
 			// sitename	startdate	adminmail	keywords	description	counter	statlink	postlink	registr	pogoda	flash	sgatie	stopcopy	nocashe	adminmes	red	comment	captcha_ok	ht_backup

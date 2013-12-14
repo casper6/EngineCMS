@@ -90,6 +90,9 @@ else {
   if (count($slovo)==2) {
     $search_line[] = $slovo[1]."%".$slovo[0];
   }
+  if (count($slovo)==1) {
+    $search_line[] = $slovo[0];
+  }
 
   $add_pages = $add_razdel = $add_papka = array();
 

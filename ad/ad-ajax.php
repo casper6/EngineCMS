@@ -281,7 +281,7 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
       if ($row['color'] != "1") {
         $icon_disable = "red"; $text_disable = "Отключить блок"; $class_disable = "";
       } else {
-        $icon_disable = "green2"; $text_disable = "Включить блок"; $class_disable = " bggray";
+        $icon_disable = "green"; $text_disable = "Включить блок"; $class_disable = " bggray";
       }
       if ($n == $row['name']) $nu = "-";  else { $n = $row['name']; $nu = $row['name']; }
       $bgcolor = "#FFeecc"; //FFddaa

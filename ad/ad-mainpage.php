@@ -1246,7 +1246,7 @@ function edit_main($id) {
 	}
 
 	// обнулили все опции
-	$titleshow = $reload_one_by_one = $folder = $datashow = $tagdelete = $ipdatauser = $design = $open_all = $catshow = $main = $daleeshow = $openshow = $number = $add = $size = $papki_numbers = $zagolovokin = $menu = $noli = $html = $show_title = $random = $showlinks = $open_new_window = $shablon = $show_new_pages = $reload_link_show = $reload_link_time = $reload_link_on_start = 0;
+	$titleshow = $reload_one_by_one = $folder = $datashow = $tagdelete = $ipdatauser = $design = $open_all = $catshow = $main = $daleeshow = $openshow = $number = $add = $size = $papki_numbers = $zagolovokin = $menu = $noli = $html = $show_title = $random = $showlinks = $open_new_window = $shablon = $show_new_pages = $reload_link_show = $reload_link_time = $reload_link_on_start = $show_pages_from = 0;
 	$opros_type = $limkol = $pageshow = $only_question = $opros_result = $foto_gallery_type = $re_menu = $notitlelink = $foto_num = 1;
 	$col_bukv = 50;
 	$img_width = 0;
@@ -1653,7 +1653,14 @@ function edit_main($id) {
 	</tr>";
 	}
 
-	if ($name == 0 or $name == 9) {
+	if ($name == 0) { // доработать блок мини-фото на работу с этими настройками
+		echo "<tr>
+		<td>Показывать страницы... (из «корня» раздела или только из его папок)</td>
+		<td>".select("options[show_pages_from]", "0,1,2", "показывать все страницы,только страницы из «корня» раздела,только страницы из папок", $show_pages_from)."</td>
+		</tr>";
+	}
+
+	if ($name == 0 or $name == 9) { // доработать блок мини-фото на работу с этими настройками
 	echo "<tr>
 	<td>Показывать страницы не из всего раздела, а только из одной определенной папки: указать номер папки. Чтобы узнать номер папки — откройте ее на сайте, в строке адреса страницы — это последний номер. По умолчанию параметр равен пустоте.</td>
 	<td>".input("options[cid_open]", $cid_open)."</td>

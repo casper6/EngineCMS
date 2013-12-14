@@ -441,12 +441,12 @@ function redactor($type, $txt, $name, $name2="", $style="html") {
     </script><textarea id='".$name."' name='".$name."' style='width: 100%; height: 220px;'>".$txt."</textarea>";
   } elseif ($type=="4") {
     // Настройки второго редактора
-    global $ed2_button_html, $ed2_button_formatting, $ed2_button_bold, $ed2_button_italic, $ed2_button_deleted, $ed2_button_underline, $ed2_button_unorderedlist, $ed2_button_orderedlist, $ed2_button_outdent, $ed2_button_indent, $ed2_button_image, $ed2_button_video, $ed2_button_file, $ed2_button_table, $ed2_button_link, $ed2_button_alignment, $ed2_button_horizontalrule, $ed2_button_more, $ed2_button_link2, $ed2_button_block, $ed2_button_pre, $ed2_button_fullscreen, $ed2_button_clips, $ed2_button_fontcolor, $ed2_button_fontsize, $ed2_button_fontfamily, $ed2_minHeight, $ed2_direction, $ed2_div_convert;
+    global $ed2_button_html, $ed2_button_formatting, $ed2_button_bold, $ed2_button_italic, $ed2_button_deleted, $ed2_button_underline, $ed2_button_unorderedlist, $ed2_button_orderedlist, $ed2_button_outdent, $ed2_button_indent, $ed2_button_image, $ed2_button_video, $ed2_button_file, $ed2_button_table, $ed2_button_link, $ed2_button_alignment, $ed2_button_horizontalrule, $ed2_button_more, $ed2_button_link2, $ed2_button_block, $ed2_button_pre, $ed2_button_fullscreen, $ed2_button_clips, $ed2_button_fontcolor, $ed2_button_fontsize, $ed2_button_fontfamily, $ed2_minHeight, $ed2_direction, $ed2_div_convert, $ed2_paragraphy, $ed2_button_superscript;
     if ($ed2_button_html == "" && $ed2_button_bold == "" && $ed2_button_link == "") $ed2_button_html = $ed2_button_formatting = $ed2_button_bold = $ed2_button_italic = $ed2_button_deleted = $ed2_button_unorderedlist = $ed2_button_orderedlist = $ed2_button_image = $ed2_button_video = $ed2_button_file = $ed2_button_table = $ed2_button_link = $ed2_button_alignment = $ed2_button_horizontalrule = $ed2_button_fullscreen = $ed2_button_clips = " checked";
     if ($ed2_direction == "") $ed2_direction = "ltl";
     if ($ed2_div_convert == "1") $ed2_div_convert = "true"; else $ed2_div_convert = "false";
     if ($ed2_minHeight == "") $ed2_minHeight = "300";
-    $ed2_html=$ed2_formatting=$ed2_bold=$ed2_italic=$ed2_deleted=$ed2_underline=$ed2_unorderedlist=$ed2_orderedlist=$ed2_outdent=$ed2_indent=$ed2_image=$ed2_video=$ed2_file=$ed2_table=$ed2_link=$ed2_alignment=$ed2_horizontalrule=$ed2_more=$ed2_link2=$ed2_block=$ed2_pre=$ed2_fullscreen=$ed2_clips=$ed2_fontcolor=$ed2_fontsize=$ed2_fontfamily="";
+    $ed2_html=$ed2_formatting=$ed2_bold=$ed2_italic=$ed2_deleted=$ed2_underline=$ed2_unorderedlist=$ed2_orderedlist=$ed2_outdent=$ed2_indent=$ed2_image=$ed2_video=$ed2_file=$ed2_table=$ed2_link=$ed2_alignment=$ed2_horizontalrule=$ed2_more=$ed2_link2=$ed2_block=$ed2_pre=$ed2_fullscreen=$ed2_clips=$ed2_fontcolor=$ed2_fontsize=$ed2_fontfamily=$ed2_paragraph=$ed2_superscript="";
     if ($ed2_button_html == "1") $ed2_html = "'html', ";
     if ($ed2_button_formatting == "1") $ed2_formatting = "'|', 'formatting', ";
     if ($ed2_button_bold == "1") $ed2_bold = "'|', 'bold',";
@@ -473,23 +473,26 @@ function redactor($type, $txt, $name, $name2="", $style="html") {
     if ($ed2_button_fontcolor == "1") $ed2_fontcolor = "'fontcolor',";
     if ($ed2_button_fontsize == "1") $ed2_fontsize = "'fontsize',";
     if ($ed2_button_fontfamily == "1") $ed2_fontfamily = "'fontfamily'";
+    if ($ed2_paragraphy == "1") $ed2_paragraph = "paragraphy: false,";
+    if ($ed2_button_superscript == "1") $ed2_superscript = "initCallback: function(){this.buttonAdd('superscript', 'Верхний индекс', function(){this.execCommand('superscript');});this.buttonAdd('subscript', 'Нижний индекс', function(){this.execCommand('subscript');});},";
     // iframe: true, css: 'css_20.css',
     $echo .= "<script>
     $(document).ready(function() { 
-      $('.redactor').redactor({ 
+      $('.redactor').redactor({
+        ".$ed2_superscript."
         buttons: [".$ed2_html.$ed2_formatting.$ed2_bold.$ed2_italic.$ed2_deleted.$ed2_underline.$ed2_unorderedlist.$ed2_orderedlist.$ed2_outdent.$ed2_indent.$ed2_image.$ed2_video.$ed2_file.$ed2_table.$ed2_link.$ed2_alignment.$ed2_horizontalrule.$ed2_more.$ed2_link2.$ed2_block.$ed2_pre."], 
         buttonsCustom: {
-            button_more: {title: 'Вставка ссылки на полное содержание (для предисловия)',callback: function (){ this.insertHtml('<!--more-->'); }},
-            button_link: {title: '[] — Вставка блока (например, галереи фотографий)',callback: function (){ this.insertHtml('[Название блока]'); }},
-            button_block: {title: '{} — Вставка быстрой ссылки на страницу или раздел',callback: function (){ this.insertHtml('{Название страницы или раздела}'); }},
-            pre: {title: '<PRE>', callback: function(){ this.formatBlocks('pre'); }}
+            button_more: {title: 'Вставка ссылки на полное содержание (для предисловия)',callback: function (){ this.insertHtml('[ссылка]'); }},
+            button_link: {title: '[] — Вставка блока (например, галереи фотографий)',callback: function (){ this.insertHtml('[НазваниеБлока]'); }},
+            button_block: {title: '{} — Вставка быстрой ссылки на страницу или раздел',callback: function (){ this.insertHtml('{НазваниеСтраницыИЛИраздела}'); }},
+            pre: {title: '<PRE> Форматированный текст', callback: function(){ this.formatBlocks('pre'); }}
           }, 
           mobile: true, 
           observeImages: true, 
           observeLinks: true, 
           convertVideoLinks: true, 
           convertImageLinks: true,
-          tabSpaces: 4, 
+          tabSpaces: 4, ".$ed2_paragraph."
           boldTag: 'b',
           italicTag: 'i',
           deniedTags: ['html', 'head', 'body', 'meta', 'applet'],
