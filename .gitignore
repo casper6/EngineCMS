@@ -3,4 +3,5 @@ cashe/
 config.php
 includes/phpThumb/cache/
 img/
+map.xml
 language/shablon_*

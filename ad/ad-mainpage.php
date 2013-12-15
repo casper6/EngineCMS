@@ -966,20 +966,24 @@ function edit_main($id) {
 	</div>
 
 
-	<a class='dark_pole align_center' onclick=\"show_animate('block7');\"><h2>Голосование</h2>
+	<a class='dark_pole align_center' onclick=\"show_animate('block7');\"><h2>Рейтинг</h2>
 	</a><div id=block7 style='display: none;'>
 	<table  class='w100 mw800 table_light'>
 	<tr>
-	<td><strong>Показывать голосование на страницах</strong></td>
+	<td><strong>Показывать рейтинг на страницах</strong></td>
 	<td>".select("options[golos]", "1,0", "ДА,НЕТ", $golos)."</td>
 	</tr>
 	<tr>
-	<td><strong>Показывать голосование в разделе</strong> (в списке страниц)<strong></strong></td>
+	<td><strong>Показывать рейтинг в разделе</strong> (в списке страниц)<strong></strong></td>
 	<td>".select("options[golosrazdel]", "1,0", "ДА,НЕТ", $golosrazdel)."</td>
 	</tr>
 	<tr>
-	<td><strong>Тип голосования</strong>, по умолчанию: оценка (макс. 5 баллов)</td>
+	<td><strong>Тип рейтинга</strong>, по умолчанию: оценка (макс. 5 баллов)</td>
 	<td>".select("options[golostype]", "0,1,2,3", "Оценка (5 звезд),Кнопка «Проголосовать»,Рейтинг (кнопки + и -),Рейтинг (понравилось/не понравилось)", $golostype)."</td>
+	</tr>
+	<tr>
+	<td><strong>Рейтинг редактирует Администратор</strong> (посетители сайта не могут влиять на рейтинг)<strong></strong></td>
+	<td>".select("options[golos_admin]", "1,0", "ДА,НЕТ", $golos_admin)."</td>
 	</tr>
 	</table>
 	</div>
@@ -1023,7 +1027,7 @@ function edit_main($id) {
 	<tr>
 	<td>Показывать похожие страницы ".input("options[text_tags_pages]", $text_tags_pages, 40)." <p>
 	Количество страниц ".input("options[col_tags_pages]", $col_tags_pages, 3).".<p>
-	Вывод страниц основан на одинаковых тегах (ключевых словах).<p>
+	<b>Вывод страниц основан на одинаковых тегах</b> (ключевых словах). Включать их отображение на странице необязательно, но заполнять данные поля в дополнительных настройках при редактировании страницы обязательно.<p>
 	Показывать похожие страницы только из этой же папки (если нет — со всего раздела) ".select("options[papka_tags_pages]", "0,1", "НЕТ,ДА", $papka_tags_pages)."<p>
 	Показывать похожие страницы только из этого раздела (если нет — со всех разделов) ".select("options[razdel_tags_pages]", "0,1", "НЕТ,ДА", $razdel_tags_pages)."</td>
 	<td>".select("options[show_tags_pages]", "0,1", "НЕТ,ДА", $show_tags_pages)."</td>

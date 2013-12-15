@@ -827,7 +827,7 @@ if ($func == "offpage") { // вкл./выкл. страницы
   $options = str_replace("pages|","",$row['text']);
   parse_str($options);
   if (!isset($edit_pole)) $edit_pole = "";
-  $db->sql_query("UPDATE ".$prefix."_pages SET `active`='$act' WHERE pid='$id'"); 
+  $db->sql_query("UPDATE ".$prefix."_pages SET `active`='".$act."' WHERE pid='".$id."'"); 
   echo "<div id=\"page".$active['pid']."\"><a href=#".mt_rand(10000, 99999).$active['pid']." onmouseover='sho(".$active['pid'].", \"".$active['module']."\",".$act.",".$id_razdel.",".$active['cid'].",\"".$edit_pole."\");'".$color.">".$nowork."".$active['title']."</a><div id='pid".$active['pid']."' class='pid'></div></div>"; exit;
 }
 ######################################################################################
@@ -1478,7 +1478,7 @@ if ($func == "papka") { // Папка
           $nowork = icon('red small','!');;
         }
 
-        $pg = "<div id='page".$pid."' class='openpage' onmouseover='sho(".$pid.", \"".$name."\", ".$active.",".$id_razdel.",".$cid.",\"".$edit_pole."\");'><span".$color.">".$nowork.$title.$copy." — ".$date."</span> ".$keydes." <div id='pid".$pid."' class='pid'></div></div>";
+        $pg = "<div id='page".$pid."' class='openpage' onmouseover='sho(".$pid.", \"".$name."\", ".$active.",".$id_razdel.",".$cid.",\"".$edit_pole."\");'><a href='sys.php?op=base_pages_edit_page&pid=".$pid."#1' target='_blank'".$color.">".$nowork.$title.$copy." — ".$date."</a> ".$keydes." <div id='pid".$pid."' class='pid'></div></div>";
         if ($no_pages < $granica+1) $list .= $pg; 
         if ($no_pages > $granica) $dop_list .= $pg;
         $no_pages++;
@@ -1589,7 +1589,7 @@ if ($func == "razdel") { // Раздел
         $nowork=icon('red small','!')." ";
       }
 
-      $pg = "<div id='page".$pid."' class='openpage'><a href='#".$ver.$pid."' onmouseover='sho(".$pid.", \"".$name_raz."\", ".$active.",".$id_razdel.",".$cid.",\"".$edit_pole."\");'".$color.">".$nowork.$title.$copy." — ".$date."</a> ".$keydes." <div id='pid".$pid."' class='pid'></div></div>";
+      $pg = "<div id='page".$pid."' class='openpage'><a href='sys.php?op=base_pages_edit_page&pid=".$pid."#1' target='_blank' onmouseover='sho(".$pid.", \"".$name_raz."\", ".$active.",".$id_razdel.",".$cid.",\"".$edit_pole."\");'".$color.">".$nowork.$title.$copy." — ".$date."</a> ".$keydes." <div id='pid".$pid."' class='pid'></div></div>";
       if ($no_pages < $granica+1) $list .= $pg; 
       if ($no_pages > $granica) $dop_list .= $pg;
       $no_pages++;

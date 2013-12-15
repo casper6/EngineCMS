@@ -163,7 +163,7 @@
   //if ($add_fonts != "") $add_fonts = explode(".",$add_fonts);
   $project_name = filter($project_name);
   // Основные настройки
-  if ($show_admin_top == "") $show_admin_top = "1";
+  if ($show_admin_top != "0") $show_admin_top = "1";
   if ($razdel_sort == "") $razdel_sort = "color desc, title";
   if ($smile_icons == "") // получаем список файлов смайлов
     $smile_icons = str_replace("images/smilies/","",implode(",", glob("images/smilies/{*.gif,*.png,*.jpg,*.jpeg}",GLOB_BRACE)));
