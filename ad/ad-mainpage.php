@@ -429,7 +429,7 @@ function create_main($type) {
 			   $modules .= "<option value='".$id."'>Группа пользователей: ".$title_group."</option>";
 			}
 			// Добавлены пользователи USERAD
-	$create.="<div id=about class=block style='display:none;'>В Разделах сайта есть папки, в папках лежат страницы (статьи, новости и т.д.). У каждой страницы несколько полей для хранения информации: название, дата, предисловие, содержание и т.д. Если вдруг для какого либо раздела (или для всех разделов) не хватает подобного поля - его можно добавить. Примеры использования полей: отдельное поле для ввода автора (для статей), поле для загрузки фотографии (для фотогалереи), выбор из раскрывающегося списка определенного населенного пункта (для каталога предприятий), период времени (для афиши) и т.д. А для того, чтобы поля начали отображаться на страницах - есть произвольные шаблоны, которые можно создать и подключить к любому разделу (См. в настройках раздела - Шаблон для всего раздела или Шаблон для страницы).<br><b>Поле может принадлежать или какому-то одному разделу или сразу всем разделам.</b><br></div>
+	$create.="<div id=about class=block style='display:none;'>В Разделах сайта есть папки, в папках лежат страницы (статьи, новости и т.д.). У каждой страницы несколько полей для хранения информации: название, дата, предисловие, содержание и т.д. Если вдруг для какого либо раздела (или для всех разделов) не хватает подобного поля - его можно добавить. Примеры использования полей: отдельное поле для ввода автора (для статей), поле для загрузки фотографии (для фотогалереи), выбор из раскрывающегося списка определенного населенного пункта (для каталога предприятий), период времени (для афиши) и т.д. А для того, чтобы поля начали отображаться на страницах - есть произвольные шаблоны, которые можно создать и подключить к любому разделу (См. в настройках раздела - Шаблон для списка страниц или Шаблон для страницы).<br><b>Поле может принадлежать или какому-то одному разделу или сразу всем разделам.</b><br></div>
 	<table class='w100 mw800'><tr valign=top><td width=50%>
 	<input type=hidden name=type value='4'>
 	<h2>Название поля</h2><input type=text name=title size=40 class='w100 h40 f16' autofocus><br>(рус.)</td><td>
@@ -794,7 +794,7 @@ function edit_main($id) {
 	$options = str_replace($module_name."|","",$text);
 
 	// обнулили все опции
-	$media = $folder = $col = $view = $golos = $golosrazdel = $post = $comments = $datashow = $favorites = $socialnetwork = $search = $search_papka = $put_in_blog = $base = $vetki = $citata = $media_comment = $no_html_in_opentext = $no_html_in_text = $show_add_post_on_first_page = $media_post = $razdel_shablon = $page_shablon = $comments_all = $comments_num = $comments_mail = $comments_adres = $comments_tel = $comments_desc = $golostype = $pagenumbers = $comments_main = $tags_type = $pagekol = $table_light = $designpages = $comments_add = $div_or_table = $papka_show = $add_post_to_mainpage = $design_tablet = $designpages_tablet = $design_phone = $designpages_phone = $edit_pole = $show_tags_pages = 0;
+	$media = $folder = $col = $view = $golos = $golosrazdel = $post = $comments = $datashow = $favorites = $socialnetwork = $search = $search_papka = $put_in_blog = $base = $vetki = $citata = $media_comment = $no_html_in_opentext = $no_html_in_text = $show_add_post_on_first_page = $media_post = $razdel_shablon = $page_shablon = $comments_all = $comments_num = $comments_mail = $comments_adres = $comments_tel = $comments_desc = $golostype = $pagenumbers = $comments_main = $tags_type = $pagekol = $table_light = $designpages = $comments_add = $div_or_table = $papka_show = $add_post_to_mainpage = $design_tablet = $designpages_tablet = $design_phone = $designpages_phone = $edit_pole = $show_tags_pages = $golos_admin = 0;
 	$menushow = $titleshow = $razdeltitleshow = $razdel_link = $peopleshow = $design = $tags = $podrobno = $podrazdel_active_show = $podrazdel_show = $tipograf = $limkol = $tags_show = $tema_zapret = $tema_zapret_comm = $show_read_all = $opentextshow = $maintextshow = $papka_tags_pages = $razdel_tags_pages = 1;
 	$comment_shablon = 2;
 	$col_tags_pages = 5;
@@ -863,7 +863,7 @@ function edit_main($id) {
 	<table  class='w100 mw800 table_light'>
 	<tr>
 	<tr>
-	<td><b>Шаблон для всего раздела</b> (вывод заголовков страниц и т.д.)</td>
+	<td><b>Шаблон для списка страниц</b> (вывод заголовков страниц и т.д.)</td>
 	<td>".select("options[razdel_shablon]", $shablon_var."0", $shablon_names."без шаблона", $razdel_shablon)."</td>
 	</tr>
 	<tr>
@@ -970,19 +970,19 @@ function edit_main($id) {
 	</a><div id=block7 style='display: none;'>
 	<table  class='w100 mw800 table_light'>
 	<tr>
-	<td><strong>Показывать рейтинг на страницах</strong></td>
+	<td>Показывать рейтинг на страницах</td>
 	<td>".select("options[golos]", "1,0", "ДА,НЕТ", $golos)."</td>
 	</tr>
 	<tr>
-	<td><strong>Показывать рейтинг в разделе</strong> (в списке страниц)<strong></strong></td>
+	<td>Показывать рейтинг в разделе (в списке страниц)</td>
 	<td>".select("options[golosrazdel]", "1,0", "ДА,НЕТ", $golosrazdel)."</td>
 	</tr>
 	<tr>
-	<td><strong>Тип рейтинга</strong>, по умолчанию: оценка (макс. 5 баллов)</td>
-	<td>".select("options[golostype]", "0,1,2,3", "Оценка (5 звезд),Кнопка «Проголосовать»,Рейтинг (кнопки + и -),Рейтинг (понравилось/не понравилось)", $golostype)."</td>
+	<td><strong>Тип рейтинга</strong></td>
+	<td>".select("options[golostype]", "4,5,6,0,1,2,3", "Оценка (3 балла),Оценка (5 баллов),Оценка (10 баллов),Оценка (5 звезд),Кнопка «Проголосовать»,Рейтинг (кнопки + и -),Рейтинг (понравилось/не понравилось)", $golostype)."</td>
 	</tr>
 	<tr>
-	<td><strong>Рейтинг редактирует Администратор</strong> (посетители сайта не могут влиять на рейтинг)<strong></strong></td>
+	<td>Рейтинг редактирует Администратор, т.е. посетители сайта не могут влиять на рейтинг. Если ранее рейтинг был включен без этой опции — все набранные посетителями значения будут обнулены и всем страницам нужно будет заново проставить рейтинг, поэтому обычно эту опцию следует включать для только что созданных разделов.</td>
 	<td>".select("options[golos_admin]", "1,0", "ДА,НЕТ", $golos_admin)."</td>
 	</tr>
 	</table>

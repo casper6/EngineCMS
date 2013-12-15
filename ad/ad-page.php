@@ -181,7 +181,7 @@ function delete_all($del="del") {
 
 # СТРАНИЦЫ =================
 function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pid=0) {
-  global $module, $prefix, $db, $red, $new, $pid, $redaktor, $toolbars, $kolkey, $title_razdel_and_bd, $siteurl, $golos_admin;
+  global $module, $prefix, $db, $red, $new, $pid, $redaktor, $toolbars, $kolkey, $title_razdel_and_bd, $siteurl, $txt_razdels;
   include("ad/ad-header.php");
   $id = intval ($id);
   $cid = $golos = 0;
@@ -200,7 +200,7 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
     $counter = $row['counter'];
     $active = $row['active'];
     $comm = $row['comm'];
-    $golos = $row['golos'];
+    $golos_reiting = $row['golos'];
     $mainpage = $row['mainpage'];
     $rss = $row['rss'];
     $nocomm = $row['nocomm'];
@@ -290,12 +290,13 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
   <span class='h1 pt10'>".$main_title."</span>";
   if ($nastroi != 1) red_vybor();
   echo "</div>
-  <table width=100%><tr valign=top><td width=250 id='razdels' style='background:#e7e9ec;'>
-  <label class='darkgreen b'><input type=checkbox name=active value=1".$check."> Включить страницу</label> <a onclick=\"show('help3')\" class=help>?</a><br><div id='help3' style='display:none;'><br>Если поставить эту галочку — ссылка на эту страницу будет видна в автоматическом списке страниц данного раздела, а также в блоках, которые выводят страницы данного раздела (если они созданы). Если галочку убрать — на эту страницу все равно можно поставить ссылку из любого места на сайте или с другого сайта и страница будет видна тем, кто перейдет по этой вручную созданной ссылке. Если вы хотите, чтобы в общем списке страниц данная страница не отображалась, а раскрывала более подробную информацию при переходе с другой страницы — отключите ее и сделайте на нее ссылку вручную.<br></div>";
+  <table width=100%><tr valign=top><td width=250 id='razdels' style='background:#e7e9ec;'><p>
+  <label class='darkgreen b'><input type=checkbox name=active value=1".$check."> Включить страницу</label> <a onclick=\"show('help3')\" class=help>?</a><div id='help3' style='display:none;'>Если поставить эту галочку — ссылка на эту страницу будет видна в автоматическом списке страниц данного раздела, а также в блоках, которые выводят страницы данного раздела (если они созданы). Если галочку убрать — на эту страницу все равно можно поставить ссылку из любого места на сайте или с другого сайта и страница будет видна тем, кто перейдет по этой вручную созданной ссылке. Если вы хотите, чтобы в общем списке страниц данная страница не отображалась, а раскрывала более подробную информацию при переходе с другой страницы — отключите ее и сделайте на нее ссылку вручную.<br></div></p>";
 
+  parse_str(str_replace("pages|", "", $txt_razdels[$name]));
   // голосование
-  if ($golos_admin == 1) echo "<p><b>Рейтинг:</b> <input size='3' value='".$golos."'></p>";
-  else echo "<input value='".$golos."' type='hidden'>";
+  if ($golos_admin == 1) echo "<p><b>Рейтинг:</b> <input name='golos_reiting' size='3' value='".$golos_reiting."'></p>";
+  else echo "<input name='golos_reiting' value='".$golos_reiting."' type='hidden'>";
   // 0,1,2,3", "Оценка (5 звезд),Кнопка «Проголосовать»,Рейтинг (кнопки + и -),Рейтинг (понравилось/не понравилось)
 
   echo "<span class='h2 darkgreen'>Раздел:</span><br>";
@@ -438,10 +439,10 @@ $('#question_tags').tagit({
   echo "<br><input type='hidden' name='foto' value=''>";
   echo "<input type='hidden' name='price' value=''>";
 
-  $sql = "select `text` from ".$prefix."_mainpage where (`name` = '".$name."' or `name` like '".$name." %') and `type`='2'";
-  $result = $db->sql_query($sql);
-  $row = $db->sql_fetchrow($result);
-  $tex = $row['text'];
+  //$sql = "select `text` from ".$prefix."_mainpage where (`name` = '".$name."' or `name` like '".$name." %') and `type`='2'";
+  //$result = $db->sql_query($sql);
+  //$row = $db->sql_fetchrow($result);
+  //$tex = $row['text'];
 
   // Подсоединие списков ////////////////////////////////
   if ($page_id > 0) {
@@ -460,7 +461,7 @@ $('#question_tags').tagit({
 
 
 ####################################################################################
-function base_pages_save_page($cid, $module, $title, $open_text, $main_text, $foto, $link_foto, $search, $active, $mainpage, $rss, $golos, $nocomm, $price, $add, $data1, $data2, $data3, $data4, $keywords2, $description2, $sor, $open_text_mysor, $main_text_mysor) {
+function base_pages_save_page($cid, $module, $title, $open_text, $main_text, $foto, $link_foto, $search, $active, $mainpage, $rss, $golos_reiting, $nocomm, $price, $add, $data1, $data2, $data3, $data4, $keywords2, $description2, $sor, $open_text_mysor, $main_text_mysor) {
   global $red, $prefix, $db, $admin_file, $now;
   $foto="";
   // это магазин?
@@ -478,7 +479,7 @@ function base_pages_save_page($cid, $module, $title, $open_text, $main_text, $fo
   $sor = intval($sor);
   $rss = intval($rss);
   $nocomm = intval($nocomm);
-  $golos = intval($golos);
+  $golos_reiting = intval($golos_reiting);
 
   $open_text = mysql_real_escape_string(form($module, $open_text, "open"));
   $main_text = mysql_real_escape_string(form($module, $main_text, "main"));
@@ -492,7 +493,7 @@ function base_pages_save_page($cid, $module, $title, $open_text, $main_text, $fo
 
   $data = date2normal_view($data1, 1)." $data2:$data3:$data4";
   $data2 = $now;
-  $sql = "INSERT INTO ".$prefix."_pages VALUES (NULL, '".$module."', '".$cid."', '".$title."', '".$open_text."', '".$main_text."', '".$data."', '".$data2."', '0', '".$active."', '".$golos."', '0', '".$foto."', '".$search."', '".$mainpage."', '".$rss."', '".$price."', '".$description2."', '".$keywords2."', 'pages', '0','".$sor."', '".$nocomm."');";
+  $sql = "INSERT INTO ".$prefix."_pages VALUES (NULL, '".$module."', '".$cid."', '".$title."', '".$open_text."', '".$main_text."', '".$data."', '".$data2."', '0', '".$active."', '".$golos_reiting."', '0', '".$foto."', '".$search."', '".$mainpage."', '".$rss."', '".$price."', '".$description2."', '".$keywords2."', 'pages', '0','".$sor."', '".$nocomm."');";
   $db->sql_query($sql) or die ("Не удалось сохранить страницу. Попробуйте нажать в Редакторе на кнопку Чистка HTML в Редакторе. Если всё равно появится эта ошибка - сообщите разработчику нижеследующее:".$sql);
   // Узнаем получившийся номер страницы ID
   $sql = "select pid from ".$prefix."_pages where title='".$title."' and date='".$data."'";
@@ -799,7 +800,7 @@ function save_spiski ($add, $page_id) {
   }
 }
 ###################################################################################
-function base_pages_edit_sv_page($pid, $module, $cid, $title, $open_text, $main_text, $foto, $link_foto, $search, $active, $mainpage, $rss, $golos, $nocomm, $price, $add, $data1, $data2, $data3, $data4, $keywords2, $description2, $com, $cop, $count, $sor, $open_text_mysor, $main_text_mysor) {
+function base_pages_edit_sv_page($pid, $module, $cid, $title, $open_text, $main_text, $foto, $link_foto, $search, $active, $mainpage, $rss, $golos_reiting, $nocomm, $price, $add, $data1, $data2, $data3, $data4, $keywords2, $description2, $com, $cop, $count, $sor, $open_text_mysor, $main_text_mysor) {
   global $prefix, $db, $now;
   // Делаем резервную копию!
   $sql = "SELECT `module`,`cid`,`title`,`open_text`,`main_text`,`date`,`counter`,`active`,`golos`,`comm`,`foto`,`search`,`mainpage`,`rss`,`price`,`description`,`keywords`,`copy`,`sort`,`nocomm` FROM ".$prefix."_pages WHERE `pid`='".$pid."'";
@@ -815,7 +816,7 @@ function base_pages_edit_sv_page($pid, $module, $cid, $title, $open_text, $main_
   $sor = intval($sor);
   $rss = intval($rss);
   $nocomm = intval($nocomm);
-  $golos = intval($golos);
+  $golos_reiting = intval($golos_reiting);
 
   $keywords2 = trim(str_replace("  "," ",str_replace("   "," ",str_replace(" ,",", ",$keywords2))));
   $description2 = trim($description2);
@@ -834,7 +835,7 @@ function base_pages_edit_sv_page($pid, $module, $cid, $title, $open_text, $main_
   $data = date2normal_view($data1, 1)." $data2:$data3:$data4";
   $data2 = $now;
 
-  $sql = "UPDATE ".$prefix."_pages SET module='$module', cid='$cid', title='$title', open_text='$open_text', main_text='$main_text', date='$data', redate='$data2', counter='$count', active='$active', golos='$golos', comm='$com', foto='$foto', search='$search', mainpage='$mainpage', rss='$rss', price='$price', description='$description2', keywords='$keywords2', copy='$cop', sort='$sor', nocomm='$nocomm' WHERE pid='".$pid."';";
+  $sql = "UPDATE ".$prefix."_pages SET module='$module', cid='$cid', title='$title', open_text='$open_text', main_text='$main_text', date='$data', redate='$data2', counter='$count', active='$active', golos='$golos_reiting', comm='$com', foto='$foto', search='$search', mainpage='$mainpage', rss='$rss', price='$price', description='$description2', keywords='$keywords2', copy='$cop', sort='$sor', nocomm='$nocomm' WHERE pid='".$pid."';";
   $db->sql_query($sql) or die('Не удалось сохранить изменения... Передайте нижеследующий текст разработчику:<br>'.$sql);
 
   // Делаем резервную копию
@@ -853,7 +854,7 @@ function base_pages_edit_sv_page($pid, $module, $cid, $title, $open_text, $main_
       if (function_exists('recash')) recash("/-".$module."_page_".$pidX, 0); // Обновление кеша ##
     }
     $and_copy = implode(" or ",$and_copy);
-    $db->sql_query("UPDATE ".$prefix."_pages SET title='$title', open_text='$open_text', main_text='$main_text', date='$data', redate='$data2', counter='$count', active='$active', golos='$golos', comm='$com', foto='$foto', search='$search', mainpage='$mainpage', rss='$rss', price='$price', description='$description2', keywords='$keywords2', sort='$sor' WHERE ".$and_copy.";");
+    $db->sql_query("UPDATE ".$prefix."_pages SET title='$title', open_text='$open_text', main_text='$main_text', date='$data', redate='$data2', counter='$count', active='$active', golos='$golos_reiting', comm='$com', foto='$foto', search='$search', mainpage='$mainpage', rss='$rss', price='$price', description='$description2', keywords='$keywords2', sort='$sor' WHERE ".$and_copy.";");
   }
 
   global $siteurl;
@@ -948,7 +949,7 @@ function base_pages_re($link) {
       if (!isset($add)) $add = "";
       if (!isset($open_text_mysor)) $open_text_mysor = "";
       if (!isset($main_text_mysor)) $main_text_mysor = "";
-      base_pages_save_page($cid, $module, $title, $open_text, $main_text, $foto, $link_foto, $search, $active, $mainpage, $rss, $golos, $nocomm, $price, $add, $data1, $data2, $data3, $data4, $keywords2, $description2, $sor, $open_text_mysor, $main_text_mysor);
+      base_pages_save_page($cid, $module, $title, $open_text, $main_text, $foto, $link_foto, $search, $active, $mainpage, $rss, $golos_reiting, $nocomm, $price, $add, $data1, $data2, $data3, $data4, $keywords2, $description2, $sor, $open_text_mysor, $main_text_mysor);
       break;
 
       case "base_pages_edit_page":
@@ -963,7 +964,7 @@ function base_pages_re($link) {
       if (!isset($nocomm)) $nocomm = "";
       if (!isset($open_text_mysor)) $open_text_mysor = "";
       if (!isset($main_text_mysor)) $main_text_mysor = "";
-          base_pages_edit_sv_page($pid, $module, $cid, $title, $open_text, $main_text, $foto, $link_foto, $search, $active, $mainpage, $rss, $golos, $nocomm, $price, $add, $data1, $data2, $data3, $data4, $keywords2, $description2, $com, $cop, $count, $sor, $open_text_mysor, $main_text_mysor);
+          base_pages_edit_sv_page($pid, $module, $cid, $title, $open_text, $main_text, $foto, $link_foto, $search, $active, $mainpage, $rss, $golos_reiting, $nocomm, $price, $add, $data1, $data2, $data3, $data4, $keywords2, $description2, $com, $cop, $count, $sor, $open_text_mysor, $main_text_mysor);
       break;
 
       case "base_pages_delit_page":

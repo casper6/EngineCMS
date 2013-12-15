@@ -461,62 +461,56 @@ if ($func == "registration_form") {
 }
 ///////////////////////////////////////////////////////////
 if ($func == "savegolos") { // Сохраняем голосование
-	$spasibo = " <b class=green>".ss("Спасибо за ваше неравнодушие!")."</b>";
-	$golosovali = "<b class=red>".ss("Вы уже голосовали!")."</b>";
-	$udaleny = ss("Голоса удалены.");
-	$info = "";
-	if (isset($golos_id) and isset($GLOBALS[$golos_id])) $tmp = $GLOBALS[$golos_id]; else $tmp = ""; // поставлено от голосования
-	list($name, $gol) = explode("*@%", $string);
-		$type = intval($type);
+	if ($type == 0 || $type == 1 || $type == 2 || $type == 3 || $type == 4 || $type == 5 || $type == 6) {
+		$spasibo = " <b class='green'>".ss("Спасибо за ваше неравнодушие!")."</b>";
+		$golosovali = "<b class='red'>".ss("Вы уже голосовали!")."</b>";
+		$udaleny = ss("Голоса удалены.");
+		$info = "";
+		$golos_id = $prefix.'golos'.$id;
+		if (isset($GLOBALS[$golos_id])) $tmp = $GLOBALS[$golos_id]; else $tmp = "";
+		list($name, $gol) = explode("*@%", $string);
+		//echo $gol;
+		$gol = intval($gol);
+		if ($type == 0 || $type == 5) if ($gol < 1 || $gol > 5) $gol = 1;
+		if ($type == 1) $gol = 1;
+		if ($type == 2 || $type == 3) if ($gol != 1) $gol = -1; // 0
+		if ($type == 4) if ($gol < 1 || $gol > 3) $gol = 1;
+		if ($type == 6) if ($gol < 1 || $gol > 10) $gol = 1;
 		$ip = getenv("REMOTE_ADDR"); // IP
+		/*
 		if ($gol == 6 and is_admin($admin)) { // Доделать
 			$db->sql_query("UPDATE ".$prefix."_pages SET golos='0' WHERE pid='".$id."';");
 			$db->sql_query("DELETE from ".$prefix."_pages_golos WHERE num='".$id."';");
 			$info = $udaleny;
 			echo $info;	exit;
 		}
-		if ($gol > 5) $gol=1; 
-		if ($gol < 0) $gol=1;
-		if ($type != 2 and $type != 3) $gol = intval($gol);
+		*/
 		$dat = date("Y.m.d H:i:s");
-		$golos_id = $prefix.'golos'.$id;
-		if ($type == 0) if ($gol != 1 and $gol != 2 and $gol != 3 and $gol != 4 and $gol != 5 ) $gol = 5;
-		if ($type == 1) $gol = 1;
-		if ($type == 2 or $type == 3) if ($gol != 1) $gol = -1;
-		if ($type != 0) {
-			$sql = "SELECT `golos` FROM ".$prefix."_pages where `pid`='".$id."'";
-			$row2 = $db->sql_fetchrow($db->sql_query($sql));
-			$resnum = $db->sql_query($sql);
-			$numrows = $db->sql_numrows($resnum);
-			if (($numrows > 0 and $tmp == $golos_id) or $id==0) {
+		if ($type != 0 && $type != 4 && $type != 5 && $type != 6) {
+			$sql = "SELECT `golos` FROM ".$prefix."_pages where `pid`='".$id."' and `ip`='".$ip."'";
+			$num = $db->sql_query($sql);
+			if (($db->sql_numrows($num) > 0 || $tmp==$golos_id) || $id<1) {
 				$info = $golosovali;
 			} else {
+				$row2 = $db->sql_fetchrow($db->sql_query($sql));
 				$golos = $row2['golos'] + $gol;
 				$db->sql_query("UPDATE ".$prefix."_pages SET `golos`='".$golos."' WHERE `pid`='".$id."';");
 				$db->sql_query("INSERT INTO ".$prefix."_pages_golos (`gid`, `ip`, `golos`, `num`, `data`) VALUES ('', '$ip', '$gol', '$id', '$dat')");
 				setcookie ($golos_id, $golos_id,time()+2678400,"/");
 			}
-		} else {
-			$sql = "SELECT `data` FROM ".$prefix."_pages_golos WHERE `ip`='$ip' AND `num`='".$id."'";
-			$resnum = $db->sql_query($sql);
-			$row = $db->sql_fetchrow($result);
-			$date = $row['data'];
-			$date2 = dateresize($date);
-			$date = dateresize($dat);
-			$numrows = $db->sql_numrows($resnum);
-			if ($numrows > 0 or $tmp==$golos_id or $id==0) {
+		} else { // тип - оценка (5 звезд)
+			global $now;
+			$num = $db->sql_query("SELECT `data` FROM ".$prefix."_pages_golos WHERE `ip`='".$ip."' AND `num`='".$id."'");
+			if ($db->sql_numrows($num) > 0 || $tmp==$golos_id || $id<1) {
 				$info = $golosovali;
 			} else {
-				$db->sql_query("INSERT INTO ".$prefix."_pages_golos (`gid`, `ip`, `golos`, `num`, `data`) VALUES ('', '$ip', '$gol', '$id', '$dat')");
+				$db->sql_query("INSERT INTO ".$prefix."_pages_golos (`gid`, `ip`, `golos`, `num`, `data`) VALUES ('', '$ip', '$gol', '$id', '".$now."')");
 				setcookie ($golos_id, $golos_id,time()+2678400,"/");
 			}
 		}
-		$sqlX = "SELECT `module` from ".$prefix."_pages where `pid`='".$id."'";
-		$resultX = $db->sql_query($sqlX);
-		$rowX = $db->sql_fetchrow($resultX);
-		$mod = $rowX['module'];
-		recash("/-".$mod."_page_".$id); // Обновление кеша
 		if ($info != $golosovali) $info .= $spasibo;
-	echo $info; exit();
+		echo $info; 
+	}
+	exit();
 }
 ?>

@@ -17,7 +17,7 @@ global $strelka, $go, $cid, $pid, $all, $avtor, $to, $info, $num, $ip, $golos, $
 // настройки раздела из БД
 global $post, $comments, $datashow, $sort, $lim, $foto, $view, $search, $search_papka, $tema, $tema_name, $tema_title, $tema_opis, $menushow, $design, $show_comments; 
 
-$media = $folder = $col = $view = $golos = $golosrazdel = $post = $comments = $datashow = $favorites = $socialnetwork = $search = $search_papka = $put_in_blog = $base = $vetki = $citata = $media_comment = $no_html_in_opentext = $no_html_in_text = $show_add_post_on_first_page = $media_post = $razdel_shablon = $page_shablon = $comments_all = $comments_num = $comments_mail = $comments_adres = $comments_tel = $comments_desc = $golostype = $pagenumbers = $comments_main = $tags_type = $tema_zapret_comm = $pagekol = $table_light = $designpages = $comments_add = $div_or_table = $papka_show = $add_post_to_mainpage = $design_tablet = $designpages_tablet = $design_phone = $designpages_phone = $show_tags_pages = 0;
+$media = $folder = $col = $view = $golos = $golosrazdel = $post = $comments = $datashow = $favorites = $socialnetwork = $search = $search_papka = $put_in_blog = $base = $vetki = $citata = $media_comment = $no_html_in_opentext = $no_html_in_text = $show_add_post_on_first_page = $media_post = $razdel_shablon = $page_shablon = $comments_all = $comments_num = $comments_mail = $comments_adres = $comments_tel = $comments_desc = $golostype = $pagenumbers = $comments_main = $tags_type = $tema_zapret_comm = $pagekol = $table_light = $designpages = $comments_add = $div_or_table = $papka_show = $add_post_to_mainpage = $design_tablet = $designpages_tablet = $design_phone = $designpages_phone = $show_tags_pages = $golos_admin = 0;
 $menushow = $titleshow = $razdeltitleshow = $razdel_link = $peopleshow = $design = $tags = $podrobno = $podrazdel_active_show = $podrazdel_show = $tipograf = $limkol = $tags_show = $tema_zapret = $opentextshow = $maintextshow = $papka_tags_pages = $razdel_tags_pages = 1;
 $col_tags_pages = 5;
 $comment_shablon = 2;
@@ -49,7 +49,7 @@ $getparent_cash = array();
 function top_menu($cid, $page) {
   $ret = "";
   global $strelka, $soderganie, $soderganie2, $DBName, $prefix, $db, $module_name, $ModuleName, $go, $pagetitle;
-  global $golos, $post, $comments, $datashow, $sort, $lim, $folder, $media, $view, $search, $razdel_link, $podrazdel_active_show, $podrazdel_show, $reclama, $tema, $pagekol; // настройки модуля из БД
+  global $post, $comments, $datashow, $sort, $lim, $folder, $media, $view, $search, $razdel_link, $podrazdel_active_show, $podrazdel_show, $reclama, $tema, $pagekol; // настройки модуля из БД
   $cid = mysql_real_escape_string($cid);
   $DBName = mysql_real_escape_string($DBName);
   $searchline1 = "";
@@ -103,7 +103,7 @@ function top_menu($cid, $page) {
     if ($razdel_link==1) $ret .= "<h1 class='cat_categorii_link'><A href='-".$DBName."'>".$ModuleName."</a></h1>";
     else $ret .= "<h1 class='cat_categorii_link'>".$ModuleName."</h1>";
     
-  //if (trim($reclama) == "" and ($cid > 0)) 
+  if (!isset($c_description[$cid])) $c_description[$cid] = ""; 
     $reclama = $reclama.$c_description[$cid];
   if (trim($reclama) != "" and $view!=4) $ret .= "<div class='cat_description'>".$reclama."</div>";
 
@@ -259,7 +259,7 @@ function showdate($showdate) {
   	$showdate = intval($showdate[0])."-".(intval($showdate[1]) < 10 ? '0'.intval($showdate[1]) : $showdate[1])."-".(intval($showdate[2]) < 10 ? '0'.intval($showdate[2]) : $showdate[2]);
   	
   global $strelka, $soderganie, $soderganie2, $DBName, $db, $prefix, $module_name, $admin, $name, $pagetitle, $show_comments;
-  global $golos, $post, $comments, $datashow, $sort, $folder, $media, $view, $col, $search, $search_papka, $tema, $tema_name, $tema_title, $tema_opis, $menushow, $where, $order, $peopleshow, $calendar, $comments_1; // настройки из БД
+  global $post, $comments, $datashow, $sort, $folder, $media, $view, $col, $search, $search_papka, $tema, $tema_name, $tema_title, $tema_opis, $menushow, $where, $order, $peopleshow, $calendar, $comments_1; // настройки из БД
   $ANDDATA="";
 
   $p_pid_last = 1; // последняя категория (для форума)
@@ -377,7 +377,7 @@ function showdate($showdate) {
 ######################################################################################
 function showcat($cid=0, $pag=0, $slovo="") {
   global $strelka, $soderganie, $soderganie2, $DBName, $db, $prefix, $module_name, $admin, $name, $pagetitle, $keywords2, $description2, $show_comments;
-  global $golos, $golosrazdel, $golostype, $post, $comments, $datashow, $sort, $lim, $folder, $media, $view, $col, $search, $search_papka, $tema, $tema_name, $tema_title, $tema_opis, $menushow, $base, $where, $order, $peopleshow, $show_add_post_on_first_page, $razdel_shablon, $comments_1, $comments_main, $limkol, $tags, $tag_text_show, $tags_type, $tags_show, $pagenumbers, $div_or_table, $show_read_all, $read_all, $reclama, $papka_show; // настройки из БД
+  global $golos_admin, $golos, $golosrazdel, $golostype, $post, $comments, $datashow, $sort, $lim, $folder, $media, $view, $col, $search, $search_papka, $tema, $tema_name, $tema_title, $tema_opis, $menushow, $base, $where, $order, $peopleshow, $show_add_post_on_first_page, $razdel_shablon, $comments_1, $comments_main, $limkol, $tags, $tag_text_show, $tags_type, $tags_show, $pagenumbers, $div_or_table, $show_read_all, $read_all, $reclama, $papka_show; // настройки из БД
   $DBName = mysql_real_escape_string($DBName);
   $sort = mysql_real_escape_string($sort);
   $cid = intval($cid);
@@ -698,7 +698,7 @@ function showcat($cid=0, $pag=0, $slovo="") {
               $page_on_mainpage = " page_favourite";
             
           $golos = $foto_adres = $foto = $price = $rss = ""; // обнуление
-          if ($golostype != 0) $golos = $row2['golos'];
+          if ($golostype != 0 || $golos_admin == 1) $golos = $row2['golos'];
           if ($razdel_shablon > 0) {
             switch ($p_active) {
               case "1": $active = ss("Открытая информация");	break;
@@ -776,7 +776,7 @@ function showcat($cid=0, $pag=0, $slovo="") {
           $golosraz = "";
           if ($golosrazdel != 0) {
             require_once ("golos.php");
-            $golosraz = golos_show($p_pid, $golostype, $golos); // (страница, тип рейтинга, кол-во рейтинга для типов 1, 2 и 3)
+            $golosraz = golos_show($p_pid, $golostype, $golos, $golos_admin); // (страница, тип рейтинга, кол-во рейтинга для типов 1, 2 и 3)
           }
       
           $page_tags = "";
@@ -1091,7 +1091,7 @@ function showcat($cid=0, $pag=0, $slovo="") {
 function page($pid, $all) {
   global $strelka, $soderganie, $soderganie2, $DBName, $db, $prefix, $module_name, $admin, $pagetitle, $pagetitle2, $ModuleName, $print, $siteurl, $keywords2, $description2, $data_page, $show_comments;
   // настройки модуля из БД
-  global $golos, $golostype, $post, $comments, $datashow, $sort, $tags, $lim, $folder, $view, $col, $menushow, $favorites, $socialnetwork, $name, $put_in_blog, $base, $titleshow, $razdeltitleshow, $comments_add, $add_css, $comment_shablon, $page_shablon, $comments_all, $comments_num, $comments_mail, $comments_adres, $comments_tel, $vetki, $comments_all, $comments_num, $comments_desc, $comments_1, $comments_2, $comments_3, $comments_4, $comments_5, $comments_6, $comments_7, $comments_8, $tag_text_show, $opentextshow, $maintextshow, $show_tags_pages, $col_tags_pages, $papka_tags_pages, $razdel_tags_pages, $text_tags_pages;
+  global $golos_admin, $golos, $golostype, $post, $comments, $datashow, $sort, $tags, $lim, $folder, $view, $col, $menushow, $favorites, $socialnetwork, $name, $put_in_blog, $base, $titleshow, $razdeltitleshow, $comments_add, $add_css, $comment_shablon, $page_shablon, $comments_all, $comments_num, $comments_mail, $comments_adres, $comments_tel, $vetki, $comments_all, $comments_num, $comments_desc, $comments_1, $comments_2, $comments_3, $comments_4, $comments_5, $comments_6, $comments_7, $comments_8, $tag_text_show, $opentextshow, $maintextshow, $show_tags_pages, $col_tags_pages, $papka_tags_pages, $razdel_tags_pages, $text_tags_pages;
   $pid = mysql_real_escape_string(intval($pid));
 
   if ($base=="") { // Если это не база данных
@@ -1318,7 +1318,7 @@ function page($pid, $all) {
   // Рейтинг #######################################
   if ($golos==1 and $view!=4) {
     require_once ("golos.php");
-    $page_reiting = golos_show($pid, $golostype, $gol); // (страница, тип рейтинга, кол-во рейтинга для типов 1, 2 и 3)
+    $page_reiting = golos_show($pid, $golostype, $gol, $golos_admin); // (страница, тип рейтинга, кол-во рейтинга для типов 1, 2 и 3)
   } else $page_reiting = ""; // END OF Рейтинг #######################################
 
   // Комментарии #######################################

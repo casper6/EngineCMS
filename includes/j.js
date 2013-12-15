@@ -115,10 +115,6 @@ beforeSend: function(){ $('#show_raspisanie'+id).html('<img src="images/loading.
 }
 
 function page_golos(id,name,gol,type) {
-	if (type == 0) { if (gol != 1 & gol != 2 & gol != 3 & gol != 4 & gol != 5 & gol != 6 ) gol = 1; }
-	if (type == 1) { if (gol != 6 ) gol = 1; }
-	if (type == 2) { if (gol != 1 & gol != 6) gol = 0;}
-	if (type == 3) { if (gol != 1 & gol != 6) gol = 0;}
 	$.ajax({ url: 'ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'savegolos', 'type': type, 'id': id, 'string': name+'*@%'+gol},
 	    beforeSend: function(){ $('#golos'+id).html('<img src="images/loading.gif">'); },
