@@ -181,7 +181,8 @@ a img {border:0;}
 .black, .black a {color:black;}
 .bold, .bold a {color:white; background:red;}
 .select, .select a {color:black; font-weight:bold; background:#dddddd;}
-.calendar {padding:5px;}
+.calendar_cell {text-align: center; padding:5px; width: 16%; height:30px; float: left; border-radius: 10px;-moz-border-radius: 10px;-webkit-border-radius: 10px;}
+.calendar {width:100%;}
 
 .pl20 {padding-left: 20px}
 

@@ -308,8 +308,16 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 			$design_open .= "<h3 class=\"".$shablonX." h3_block_title class_".$class."\">".$block_title."</h3><div class='polosa'></div>";
 	}
 
-	if ($html == 1) { $design_close = ""; $design_open = ""; $block_title = ""; $block_title2 = ""; }
-	if ($blocks == 1) { $design_close .= "</div>"; $design_open = "<div class='show_block'><div class='show_block_title'><a href='sys.php?op=mainpage&id=".$idX."&red=1' title='".ss("Редактировать")."'>".$titleX."</a> (<a href='sys.php?op=mainpage&id=".$idX."&nastroi=1' title='".ss("Настроить блок")."'>настроить</a>)</div>".$design_open; }
+	if ($html == 1) { 
+		$design_close = ""; 
+		$design_open = ""; 
+		$block_title = ""; 
+		$block_title2 = ""; 
+	}
+	if ($blocks == 1) { 
+		$design_close .= "</div>"; 
+		$design_open = "<div class='show_block'><div class='show_block_title'><a href='sys.php?op=mainpage&id=".$idX."&red=1' title='".ss("Редактировать")."'>".$titleX."</a> (<a href='sys.php?op=mainpage&id=".$idX."&nastroi=1' title='".ss("Настроить блок")."'>настроить</a>)</div>".$design_open; 
+	}
 
 	// Определяем наличие шаблонов
 	if (trim($shablon) != "") {
@@ -680,7 +688,7 @@ case "3": # Блок ротатор рекламы
 	  }
 	  $textX .= "</script>";
 	  if ($reload_link_show == "1") $textX .= $reload_link;
-	  $textX .= "<div id='show_rotator".$idX."'>".ss("Загружается...")."</div>";
+	  $textX .= "<div id='show_rotator".$idX."'><span class='ico_loading i16'></span></div>";
 	  if ($reload_link_show == "2") $textX .= $reload_link;
 	$block = str_replace("[".$titleX."]", $design_open.$textX.$design_close, $block);
 	$type = ""; break;
@@ -736,10 +744,10 @@ case "4": # Блок папок раздела
 	$type = ""; break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 case "5": # Блок голосования
-	$textX = "<script>$(showopros(".$idX.", 1, 0));</script>
-	<div id='show_opros".$idX."'><span class='ico_loading i16'></span>";
+	$textX = "<script>$(show_opros(".$idX.", 1, 0));</script>
+	<div id='show_opros".$idX."'><span class='ico_loading i16'></span></div>";
 	$block = str_replace("[".$titleX."]", $design_open.$textX.$design_close, $block);
-	$type = ""; break; 
+	$type = ""; break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 case "6": # Фотогалерея
 	global $siteurl;
@@ -1201,26 +1209,14 @@ case "10": # Блок меню
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 case "11": # КАЛЕНДАРЬ
 	global $showdate; // проверить
-	if (trim($showdate) != "0-00-00" and trim($showdate) != "") {
-		$showdate = explode("-",$showdate);
-		$showdate = intval($showdate[0])."-".(intval($showdate[1]) < 10 ? '0'.intval($showdate[1]) : $showdate[1])."-".(intval($showdate[2]) < 10 ? '0'.intval($showdate[2]) : $showdate[2]);
-	}
-	$calendar_dates = array();
-	if ($calendar == "") {
-		$sql = "select date from ".$prefix."_pages where `tables`='pages' and module='".$useitX."' and active!='0' order by date";
-		$result = $db->sql_query($sql);
-		while ($row = $db->sql_fetchrow($result)) {
-			$dates = explode(" ",$row['date']);
-			$calendar_dates[] = $dates[0];
+	if (isset($showdate)) {
+		if (trim($showdate) != "0-00-00" and trim($showdate) != "") {
+			$showdate = explode("-",$showdate);
+			$showdate = intval($showdate[0])."-".(intval($showdate[1]) < 10 ? '0'.intval($showdate[1]) : $showdate[1])."-".(intval($showdate[2]) < 10 ? '0'.intval($showdate[2]) : $showdate[2]);
 		}
-	} else {
-		$sql = "select name from ".$prefix."_spiski where type='".$calendar."' and pages!='' order by name";
-		$result = $db->sql_query($sql);
-		while ($row = $db->sql_fetchrow($result)) {
-			$calendar_dates[] = $row['name'];
-		}	
-	}
-	$textX .= "".my_calendar($calendar_dates, $useitX, $showdate); 
+	} else $showdate = "";
+	$textX = "<script>$(show_calendar(".$idX.", 'calendar=".$calendar."&useitX=".$useitX."&showdate=".$showdate."'));</script>
+	<div id='show_calendar".$idX."'><span class='ico_loading i16'></span></div>";
 	$block = str_replace("[".$titleX."]", $design_open.$textX.$design_close, $block);
 	$type = ""; break;
 //////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -256,23 +256,24 @@ function top_menu($cid, $page) {
 function showdate($showdate) {
   // проверка даты
   $showdate = explode("-",$showdate);
-  	$showdate = intval($showdate[0])."-".(intval($showdate[1]) < 10 ? '0'.intval($showdate[1]) : $showdate[1])."-".(intval($showdate[2]) < 10 ? '0'.intval($showdate[2]) : $showdate[2]);
+  $showdate = intval($showdate[0])."-".(intval($showdate[1]) < 10 ? '0'.intval($showdate[1]) : $showdate[1])."-".(intval($showdate[2]) < 10 ? '0'.intval($showdate[2]) : $showdate[2]);
   	
   global $strelka, $soderganie, $soderganie2, $DBName, $db, $prefix, $module_name, $admin, $name, $pagetitle, $show_comments;
-  global $post, $comments, $datashow, $sort, $folder, $media, $view, $col, $search, $search_papka, $tema, $tema_name, $tema_title, $tema_opis, $menushow, $where, $order, $peopleshow, $calendar, $comments_1; // настройки из БД
-  $ANDDATA="";
+  global $post, $comments, $datashow, $sort, $folder, $media, $view, $col, $search, $search_papka, $tema, $tema_name, $tema_title, $tema_opis, $menushow, $where, $order, $peopleshow, $calendar, $comments_1, $div_or_table; // настройки из БД
+  
+  $ANDDATA = "";
 
   $p_pid_last = 1; // последняя категория (для форума)
 
   $soderganieOPEN = "";
   //$soderganieOPEN = "<table class='all_page' width='100%'><tr valign='top'><td>";
-  $soderganieMENU = top_menu(0,0);
-  $soderganieALL = "<center><div class='polosa'></div></center>";
-  $soderganieALL .= "на ".date2normal_view($showdate);
+  $soderganieMENU = ""; // top_menu(-1,0);
+  //$soderganieALL = "<center><div class='polosa'></div></center>";
+  $soderganieALL = ss("Найдено на")." ".date2normal_view($showdate);
 
   // Список всех папок (массив)
   $c_name = array();
-  $sql = "SELECT `cid`, `title` FROM ".$prefix."_pages_categories where `module`='".$DBName."' and `tables`='pages'";
+  $sql = "SELECT `cid`, `title` FROM ".$prefix."_pages_categories where `tables`='pages'";
   $result = $db->sql_query($sql) or die(ss("Не удалось собрать список всех папок"));
   while ($row = $db->sql_fetchrow($result)) {
     $x_cid = $row['cid'];
@@ -289,9 +290,11 @@ function showdate($showdate) {
     $datavybor = " and (`pid`='".str_replace(" ","' or `pid`='",$datavybor)."')";
   } else $datavybor = " and `date` like '".mysql_real_escape_string($showdate)." %'";
 
-  $sql2 = "SELECT `pid` FROM ".$prefix."_pages where `tables`='pages' and (`copy`='0' or `copy`=pid) and `module`='".$DBName."' AND `active`='1'".$datavybor;
+  $sql2 = "SELECT `pid` FROM ".$prefix."_pages where `tables`='pages' and (`copy`='0' or `copy`=pid) and `active`='1'".$datavybor;
+
   $result2 = $db->sql_query($sql2) or die(ss("Не удалось определить кол-во страниц"));
   $nu = $db->sql_numrows($result2);
+
   $soderganieALL .= ", всего: ".$nu;
   if ($nu > 0 and $view!=4) {
      # Если не выбран ни один каталог
@@ -299,7 +302,7 @@ function showdate($showdate) {
       if ($view==1) $soderganieALL .= "<table cellspacing=0 cellpadding=3 width=100%>";
       else $soderganieALL .= "<table cellspacing=0 cellpadding=3 width=100%>";
     }
-    $sql2 = "SELECT * FROM ".$prefix."_pages where `tables`='pages' and (`copy`='0' or `copy`=pid) and `module`='".$DBName."' AND `active`='1'".$datavybor." order by ".mysql_real_escape_string($sort);
+    $sql2 = "SELECT * FROM ".$prefix."_pages where `tables`='pages' and (`copy`='0' or `copy`=pid) and `active`='1'".$datavybor." order by ".mysql_real_escape_string($sort);
     $result2 = $db->sql_query($sql2);
     $soderganieALL .= "";
 

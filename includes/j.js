@@ -5,18 +5,23 @@
       else return " [ Error: no translate for: "+t+" ] ";
   } 
 }
-
 /* Проверка формы голосования */
 var valueOpros = '-1';
 function CheckForm(opros_num){
   if(valueOpros == '-1') alert('?');
-  else $(showopros(opros_num,2,valueOpros));
+  else $(show_opros(opros_num,2,valueOpros));
 }
-/* Отображение голосования */
-function showopros(id, res, golos) { 
+/* Отображение блока голосования */
+function show_opros(id, res, golos) { 
 	$.get('opros.php', { num: id, res: res, golos: golos }, function(data) { $('#show_opros'+id).html( data ); }); 
 }
-
+/* Отображение блока календаря */
+function show_calendar(id, string) {
+	$.ajax({ url: 'ajax.php', cache: false, dataType : "html",
+		data: {'func': 'show_calendar', 'string': string},
+	    success: function(data){ $('#show_calendar'+id).html(data); }
+	});
+}
 /* Изменение размеров ПРОВЕРИТЬ! */
 function resize(obj, width1, width2, height1, height2) { 
 	with (document.getElementById(obj).style) {
@@ -26,7 +31,6 @@ function resize(obj, width1, width2, height1, height2) {
 	   else height = height1;
 	}
 }
-
 /* Функции для работы текст. редактора комментариев */
 function clc_bbcode(t,nu){
 	var el = document.getElementById("area"),
@@ -114,6 +118,17 @@ beforeSend: function(){ $('#show_raspisanie'+id).html('<img src="images/loading.
 	});
 }
 
+function save_raspisanie() {
+	var msg = $('form#zapis').serialize();
+    $.ajax({
+      type: 'POST',
+      url: 'ajax.php',
+      data: {'func': 'save_raspisanie', 'string': msg },
+	  beforeSend: function(){ $('#zapis_dialog').html('<img src=images/loading.gif> Отправляю...'); },
+      success: function(data) { $('#zapis_dialog').html(data); }
+    });
+}
+
 function page_golos(id,name,gol,type) {
 	$.ajax({ url: 'ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'savegolos', 'type': type, 'id': id, 'string': name+'*@%'+gol},
@@ -138,25 +153,16 @@ function shop_show_card(basket) {
 	});
 }
 
-function save_raspisanie() {
-	var msg = $('form#zapis').serialize();
-    $.ajax({
-      type: 'POST',
-      url: 'ajax.php',
-      data: {'func': 'save_raspisanie', 'string': msg },
-	  beforeSend: function(){ $('#zapis_dialog').html('<img src=images/loading.gif> Отправляю...'); },
-      success: function(data) { $('#zapis_dialog').html(data); }
-    });
-}
-
-function shop_add_tovar(id,price,count,price_pole) {
+function shop_add_tovar(id,price,count,price_pole,price_replace,replace_type) {
 	if (count == null) count = 1;
 	if (price_pole == null) price_pole = '';
+	if (price_replace == null) price_replace = '';
+	if (replace_type == null) replace_type = 1;
 	if (price == 0 || price == null) alert ('Error: NO Price!');
 	else if (id == 0 || id == null) alert ('Error: NO product ID!');
 		else {
 			$.ajax({ url: 'ajax.php', cache: false, dataType : "html",
-		    data: {'func': 'shop_add_tovar', 'id': id, 'string': price+'*@%'+count+'*@%'+price_pole},
+		    data: {'func': 'shop_add_tovar', 'id': id, 'string': price+'*@%'+count+'*@%'+price_pole+'*@%'+price_replace+'*@%'+replace_type},
 		    success: function(data){ shop_show_card('price'); shop_show_card('count'); shop_show_card('card'); }
 			});
 			$('#shop_card_window').show();

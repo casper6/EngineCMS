@@ -69,7 +69,7 @@
     $url_link = "-index";
   } else {
     if ($go == 'addbase') $url_link = "-".$name."_addbase_".$spa;
-    if ($go == 'showdate') $url_link = "-".$name."_date_".$showdate;
+    if ($go == 'showdate') $url_link = "date_".$showdate;
     if ($go == 'showcat') {
       if (isset($first) && isset($second)) $url_link = "-".$name."_first_".$first."_second_".$second;
       if (isset($first) && isset($option)) $url_link = "-".$name."_first_".$first."_opt_".$option;

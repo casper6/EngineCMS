@@ -1,6 +1,6 @@
-# Запрет «волшебных» кавычек
-php_flag magic_quotes_gpc 0
-php_flag magic_quotes_runtime 0
+# Запрет «волшебных» кавычек - если выдает ошибку 500 - убрать следующие две строки
+php_flag magic_quotes_gpc off
+php_flag magic_quotes_runtime off
 
 # закрываем доступ к .htaccess
 <files .htaccess="">
@@ -35,11 +35,12 @@ RewriteRule ^control sys.php
 RewriteRule ^red sys.php
 
 RewriteRule ^rss rss.php
-
-RewriteRule ^login header.php?name=-login
 RewriteRule ^slovo_([а-яА-Яa-zA-Z0-9%+-]*) header.php?name=-tags&tags=$1
+RewriteRule ^date_([0-9-]*) header.php?go=showdate&showdate=$1
 RewriteRule ^search header.php?name=-search
 RewriteRule ^email header.php?name=-email
+
+RewriteRule ^login header.php?name=-login
 RewriteRule ^adduser_([0-9]*)_([а-яА-Яa-zA-Z0-9_-]*) header.php?name=-adduser&group=$1&id=$2
 RewriteRule ^users_([0-9]*) header.php?name=-users&user=$1
 RewriteRule ^edituser_([0-9]*) header.php?name=-edituser&user=$1
@@ -50,7 +51,7 @@ RewriteRule ^register header.php?name=-register
 RewriteRule ^-([a-zA-Z0-9_-]*)_addbase_([0-9]*) header.php?go=addbase&name=$1&spa=$2
 RewriteRule ^-([a-zA-Z0-9_-]*)_first_([A-F0-9+_|-]*)_second_([A-F0-9+_|-]*)_opt_([0-9]*) header.php?name=$1&go=showcat&first=$2&second=$3&option=$4
 RewriteRule ^-([a-zA-Z0-9_-]*)_first_([A-F0-9+_|-]*)_opt_([0-9]*) header.php?name=$1&go=showcat&first=$2&option=$3
-RewriteRule ^-([a-zA-Z0-9_-]*)_date_([0-9-]*) header.php?name=$1&go=showdate&showdate=$2
+
 RewriteRule ^-([a-zA-Z0-9_-]*)_cat_([0-9]*)_tags_([a-zA-Z0-9%+-]*) header.php?name=$1&go=showcat&cid=$2&tags=$3
 RewriteRule ^-([a-zA-Z0-9_-]*)_cat_([0-9]*)_page_([0-9]*) header.php?name=$1&go=showcat&cid=$2&pag=$3
 RewriteRule ^-([a-zA-Z0-9_-]*)_cat_([0-9]*) header.php?name=$1&go=showcat&cid=$2

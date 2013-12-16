@@ -7,6 +7,28 @@ if (isset($_REQUEST['type']))   $type = $_REQUEST['type']; else $type = 0;
 if (isset($_REQUEST['id']))     $id = intval($_REQUEST['id']); else $id = 0;
 if (isset($_REQUEST['string'])) $string = $_REQUEST['string']; else $string = "";
 ///////////////////////////////////////////////////////////
+if ($func == "show_calendar") {
+	parse_str($string);
+	$calendar_dates = array();
+	if ($calendar == "") {
+		$sql = "select date from ".$prefix."_pages where `tables`='pages' and module='".$useitX."' and active!='0' order by date";
+		$result = $db->sql_query($sql);
+		while ($row = $db->sql_fetchrow($result)) {
+			$dates = explode(" ",$row['date']);
+			$calendar_dates[] = $dates[0];
+		}
+	} else {
+		$sql = "select name from ".$prefix."_spiski where type='".$calendar."' and pages!='' order by name";
+		$result = $db->sql_query($sql);
+		while ($row = $db->sql_fetchrow($result)) {
+			$calendar_dates[] = $row['name'];
+		}	
+	}
+	require_once("page/functions.php");
+	echo my_calendar($calendar_dates, $useitX, $showdate);
+	exit();
+}
+///////////////////////////////////
 if ($func == "save_raspisanie") {
 	global $adminmail;
 	parse_str($string);
@@ -222,7 +244,7 @@ if ($func == "shop_del_tovar") {
 					$count = intval($t[5]);
 					$count--;
 					//if ($count == 1) $count = 0;
-					if ($count != 0) $info[] = $t[0]."$".$t[1]."$".$t[2]."$".$t[3]."$".$t[4]."$".$count."$".$t[6];
+					if ($count != 0) $info[] = $t[0]."$".$t[1]."$".$t[2]."$".$t[3]."$".$t[4]."$".$count."$".$t[6]."$".$t[7]."$".$t[8];
 				}
 			}
 		}
@@ -232,7 +254,7 @@ if ($func == "shop_del_tovar") {
 }
 /////////////////////////////////////
 if ($func == "shop_add_tovar") {
-	list($price, $count, $pole) = explode("*@%", $string);
+	list($price, $count, $pole, $price_replace, $replace_type) = explode("*@%", $string);
 	$price = floatval(str_replace(",", ".", $price));
 	$tovars = "";
 	$count = intval($count);
@@ -252,7 +274,7 @@ if ($func == "shop_add_tovar") {
 				$count = $count + intval($t[5]);
 				//if ($count == 0) $count++;
 				//$count++;
-				if ($count != 0) $info[] = $t[0]."$".$t[1]."$".$t[2]."$".$t[3]."$".$t[4]."$".$count."$".$pole;
+				if ($count != 0) $info[] = $t[0]."$".$t[1]."$".$t[2]."$".$t[3]."$".$t[4]."$".$count."$".$pole."$".$price_replace."$".$replace_type;
 			} elseif (intval($id) != intval($t[0])) $info[] = $tovar;
 		}
 		if ($update == false) { // первый товар в Корзине
@@ -261,7 +283,7 @@ if ($func == "shop_add_tovar") {
 			if (preg_match_all('/<img(?:\\s[^<>]*?)?\\bsrc\\s*=\\s*(?|"([^"]*)"|\'([^\']*)\'|([^<>\'"\\s]*))[^<>]*>/i', $open_text, $m)) 
 				$pic = $m[1][0]; else $pic = "";
 			if ($tovars != "") $tovars .= "|";
-			setcookie ('shop_tovar', $tovars.$id."$".$price."$".$title."$".$pic."$".$razdel."$".$count."$".$pole);
+			setcookie ('shop_tovar', $tovars.$id."$".$price."$".$title."$".$pic."$".$razdel."$".$count."$".$pole."$".$price_replace."$".$replace_type);
 		} else { // последующие товары в Корзине
 			$tovars = implode("|",$info);
 			setcookie ('shop_tovar', $tovars, time()+5184000); // хранится 60*60*24*60 - 2 месяца
@@ -392,8 +414,10 @@ if ($func == "shop_show_card") {
 		foreach ($tovars as $tovar) {
 			$tovar = explode("$", $tovar);
 			$price = $tovar[1];
+			if (isset($tovar[7])) $price_replace = $tovar[7]; else $price_replace = "";
+			if (isset($tovar[8])) $replace_type = $tovar[8]; else $replace_type = 1;
 			// Проверка изменившейся цены
-			if ($tovar[6] != "") {
+			if (isset($tovar[6])) if ($tovar[6] != "") {
 				$row = $db->sql_fetchrow($db->sql_query("SELECT `name` from ".$prefix."_spiski where `type`='".htmlspecialchars($tovar[6],ENT_QUOTES)."' and `pages` like '% ".$tovar[0]." %'"));
 				if ($row['name'] != $price) $price = floatval($row['name']);
 			}
@@ -407,6 +431,18 @@ if ($func == "shop_show_card") {
 					$all_count++;
 					$itogo += floatval($price);
 				} else {
+					// Подключаем обработку цены
+					if ($price_replace != "") {
+						$price_replace = explode(",", $price_replace);
+						foreach ($price_replace as $value) {
+							$price_key = explode("=", $value);
+							if ($count > $price_key[0]) {
+								if ($replace_type == 1) $price = $price_key[1]; // 1 тип замены цены: цены просто меняется
+								if ($replace_type == 2) $price = floatval($price / 100 * (100 - $price_key[1])); // 2 тип замены цены: от цены отнимается процент скидки
+							}
+						}
+					}
+
 					$itogo += floatval($price) * $count;
 					$all_count += $count;
 					$count = " x ".$count;

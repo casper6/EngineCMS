@@ -185,6 +185,7 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
   include("ad/ad-header.php");
   $id = intval ($id);
   $cid = $golos = 0;
+  $search_tags = '';
   if ( $page_id > 0 ) { // Если это редактирование
     $sql = "SELECT * FROM ".$prefix."_pages WHERE pid='".$pid."' limit 1";
     $result = $db->sql_query($sql);
@@ -195,7 +196,7 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
     $shablon2 = $main_text = stripcslashes($row['main_text']);
     $module = $row['module'];
     //$foto = $row['foto'];
-    $search = $row['search'];
+    $search_tags = $row['search'];
     $data = $row['date'];
     $counter = $row['counter'];
     $active = $row['active'];
@@ -382,7 +383,7 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
   $tags = implode("','", array_unique($tags));
 
   echo "<h3>Тэги (слова для похожих по тематике страниц): <a onclick=\"show('help12')\" class='help'>?</a></h3> 
-  <input name='search' id='question_tags' class='big w100' value='".$search."'>
+  <input name='search' id='question_tags' class='big w100' value='".$search_tags."'>
 
 <script>
 $(function() {

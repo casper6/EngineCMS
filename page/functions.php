@@ -408,26 +408,26 @@ function my_calendar($fill='', $modul, $showdate='') { // Функция выв�
     if($day_count > $dayofmonth) break;
   }
   // Выводим содержимое массива $week в виде календаря. Выводим таблицу
-  $calendar .= "<table cellspacing=0 cellpadding=0 border=0>";
+  $calendar .= "<div class='calendar'>";
   for($j = 0; $j < 7; $j++) {
-    $calendar .= "<tr align=center>";
+    //$calendar .= "<tr align=center>";
     for($i = 0; $i < count($week); $i++) {
       if(!empty($week[$i][$j])) {
         // Если имеем дело с субботой и воскресеньем — подсвечиваем их
         $class = "";
         if ($week[$i][$j]<10) $den = "0".$week[$i][$j]; else $den = $week[$i][$j];
-        
         if ($week[$i][$j] == $daynow) $class = "bold";
         if ($monthandyear.(intval($week[$i][$j]) < 10 ? '0'.intval($week[$i][$j]) : $week[$i][$j]) == $showdate) $class = "select";
         if($j == 5 || $j == 6) $class .= " red"; else $class .= " black";
-        if (in_array($monthandyear.$den,$fill)) $calendar .= "<td class='calendar ".trim($class)."'><a href=/-".$modul."_date_".$monthandyear.(intval($week[$i][$j]) < 10 ? '0'.intval($week[$i][$j]) : $week[$i][$j]).">".$week[$i][$j]."</a></td>";
-        else $calendar .= "<td class='calendar ".trim($class)."'>".$week[$i][$j]."</td>";
-      } else $calendar .= "<td>&nbsp;</td>";
+        if (in_array($monthandyear.$den,$fill)) $calendar .= "<div class='calendar_cell ".trim($class)."'><a href=/-".$modul."_date_".$monthandyear.(intval($week[$i][$j]) < 10 ? '0'.intval($week[$i][$j]) : $week[$i][$j]).">".$week[$i][$j]."</a></div>";
+        else $calendar .= "<div class='calendar_cell ".trim($class)."'>".$week[$i][$j]."</div>";
+      } else $calendar .= "<div class='calendar_cell'></div>";
     }
-    $calendar .= "</tr>";
+    $calendar .= "<div class='clear'></div>";
   } 
-  $calendar .= "</table><font class='small black'>".ss("Сегодня: ").date2normal_view($monthandyear.$daynow)."</font>";
-  if (trim($showdate) != "0-00-00" and trim($showdate) != "" and $showdate != $monthandyear.$daynow) $calendar .= "<br><font class='small red'>".ss("Выбрано: ").date2normal_view($showdate)."</font>";
+  $calendar .= "</div>";
+  $calendar .= "<p class='small red'>".ss("Сегодня: ").date2normal_view($monthandyear.$daynow)."</p>";
+  if (trim($showdate) != "0-00-00" and trim($showdate) != "" and $showdate != $monthandyear.$daynow) $calendar .= "<p class='small black'>".ss("Выбрано: ").date2normal_view($showdate)."</p>";
   return $calendar;
 }
 ////////////////////////////////////////////////////////////
