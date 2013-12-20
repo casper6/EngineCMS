@@ -169,9 +169,16 @@ function shop_add_tovar(id,price,count,price_pole,price_replace,replace_type) {
 		}
 }
 
-function shop_del_tovar(id) {
+function shop_delete() {
 	$.ajax({ url: 'ajax.php', cache: false, dataType : "html",
-	    data: {'func': 'shop_del_tovar', 'id': id},
+	    data: {'func': 'shop_delete'},
+	    success: function(data){ shop_show_card('price'); shop_show_card('count'); shop_show_card('card'); }
+	});
+}
+
+function shop_del_tovar(id,all) {
+	$.ajax({ url: 'ajax.php', cache: false, dataType : "html",
+	    data: {'func': 'shop_del_tovar', 'id': id, 'string': all},
 	    success: function(data){ shop_show_card('price'); shop_show_card('count'); shop_show_card('card'); }
 	});
 }

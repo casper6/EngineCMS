@@ -108,7 +108,7 @@ function base_base($name) {
 
     <a href='/sys.php?op=mainpage&id=".$base."' target='_blank' title='Настроить базу данных (только для администратора!)' class='punkt noprint'><span class=\"icon gray small\" data-icon=\"=\"></span> Настройки</a>
     </div>
-    <h1 class='noprint'><a href=/sys.php?op=base_base&name=".$name.">".$module_title."</a>, база данных. <a href=/sys.php?op=base_base_create_base&base=$baza_name&name=$name&red=1 class='punkt radius' style='margin:5px; padding-left:5px; padding-right:5px; background:green; color:white; font-size: 16pt;'>+ Добавить строку</a></h1>
+    <h1 class='noprint'><a href=/sys.php?op=base_base&name=".$name.">".$module_title."</a>, база данных. <a href=/sys.php?op=base_base_create_base&base=$baza_name&name=$name&red=1 class='button green'>+ Добавить строку</a></h1>
     ";
     /*
     if ($name == "zam") {
@@ -171,12 +171,12 @@ function base_base($name) {
         $names[] = $option[0];
 
         if ($doc=="") {
-            $link = "<a href='sys.php?op=base_base&name=".$name."&p=".$p."&sortir=".$xx."_0".$data_sort.$data_sort2.$men_sort.$interval_sort.$search_sort.$firm_sort."' title=\"".$opisanie."\" class='noprint'>↓</a>";
+            $link = " <a href='sys.php?op=base_base&name=".$name."&p=".$p."&sortir=".$xx."_0".$data_sort.$data_sort2.$men_sort.$interval_sort.$search_sort.$firm_sort."' title=\"".$opisanie."\" class='noprint button small'>↓</a>";
             if ($sortir == $xx) {
                 if ($sort_way == " desc") {
-                    $link = "<a href='sys.php?op=base_base&name=".$name."&p=".$p."&sortir=".$xx."_0".$data_sort.$data_sort2.$interval_sort.$men_sort.$search_sort.$firm_sort."' title=\"".$opisanie."\" class='noprint'>↑↑</a>";
+                    $link = " <a href='sys.php?op=base_base&name=".$name."&p=".$p."&sortir=".$xx."_0".$data_sort.$data_sort2.$interval_sort.$men_sort.$search_sort.$firm_sort."' title=\"".$opisanie."\" class='noprint button small'>↑↑</a>";
                 } else {
-                    $link = "<a href='sys.php?op=base_base&name=".$name."&p=".$p."&sortir=".$xx."_1".$data_sort.$data_sort2.$interval_sort.$men_sort.$search_sort.$firm_sort."' title=\"".$opisanie."\" class='noprint'>↓↓</a>";
+                    $link = " <a href='sys.php?op=base_base&name=".$name."&p=".$p."&sortir=".$xx."_1".$data_sort.$data_sort2.$interval_sort.$men_sort.$search_sort.$firm_sort."' title=\"".$opisanie."\" class='noprint button small'>↓↓</a>";
                 }
             }
         } else $link = "";
@@ -201,20 +201,20 @@ function base_base($name) {
     $names["-2"] = "active";
 
     if ($doc=="") {
-        $link_id = "<a href='sys.php?op=base_base&name=".$name."&p=".$p."&sortir=-1_0".$data_sort.$data_sort2.$men_sort.$interval_sort.$search_sort.$firm_sort."' title=\"".$opisanie."\" class='noprint'>↓</a>";
+        $link_id = " <a href='sys.php?op=base_base&name=".$name."&p=".$p."&sortir=-1_0".$data_sort.$data_sort2.$men_sort.$interval_sort.$search_sort.$firm_sort."' title=\"".$opisanie."\" class='noprint button small'>↓</a>";
         if ($sortir == "-1") {
             if ($sort_way == " desc") {
-            $link_id = "<a href='sys.php?op=base_base&name=".$name."&p=".$p."&sortir=-1_0".$data_sort.$data_sort2.$men_sort.$interval_sort.$search_sort.$firm_sort."' title=\"".$opisanie."\" class='noprint'>↑↑</a>";
+            $link_id = " <a href='sys.php?op=base_base&name=".$name."&p=".$p."&sortir=-1_0".$data_sort.$data_sort2.$men_sort.$interval_sort.$search_sort.$firm_sort."' title=\"".$opisanie."\" class='noprint button small'>↑↑</a>";
             } else {
-            $link_id = "<a href='sys.php?op=base_base&name=".$name."&p=".$p."&sortir=-1_1".$data_sort.$data_sort2.$men_sort.$interval_sort.$search_sort.$firm_sort."' title=\"".$opisanie."\" class='noprint'>↓↓</a>";
+            $link_id = " <a href='sys.php?op=base_base&name=".$name."&p=".$p."&sortir=-1_1".$data_sort.$data_sort2.$men_sort.$interval_sort.$search_sort.$firm_sort."' title=\"".$opisanie."\" class='noprint button small'>↓↓</a>";
             }
         }
-        $link_active = "<a href='sys.php?op=base_base&name=".$name."&p=".$p."&sortir=-2_0".$data_sort.$data_sort2.$men_sort.$interval_sort.$search_sort.$firm_sort."' title=\"".$opisanie."\" class='noprint'>↓</a>";
+        $link_active = " <a href='sys.php?op=base_base&name=".$name."&p=".$p."&sortir=-2_0".$data_sort.$data_sort2.$men_sort.$interval_sort.$search_sort.$firm_sort."' title=\"".$opisanie."\" class='noprint button small'>↓</a>";
         if ($sortir == "-2") {
             if ($sort_way == " desc") {
-            $link_active = "<a href='sys.php?op=base_base&name=".$name."&p=".$p."&sortir=-2_0".$data_sort.$data_sort2.$men_sort.$interval_sort.$search_sort.$firm_sort."' title=\"".$opisanie."\" class='noprint'>↑↑</a>";
+            $link_active = " <a href='sys.php?op=base_base&name=".$name."&p=".$p."&sortir=-2_0".$data_sort.$data_sort2.$men_sort.$interval_sort.$search_sort.$firm_sort."' title=\"".$opisanie."\" class='noprint button small'>↑↑</a>";
             } else {
-            $link_active = "<a href='sys.php?op=base_base&name=".$name."&p=".$p."&sortir=-2_1".$data_sort.$data_sort2.$men_sort.$interval_sort.$search_sort.$firm_sort."' title=\"".$opisanie."\" class='noprint'>↓↓</a>";
+            $link_active = " <a href='sys.php?op=base_base&name=".$name."&p=".$p."&sortir=-2_1".$data_sort.$data_sort2.$men_sort.$interval_sort.$search_sort.$firm_sort."' title=\"".$opisanie."\" class='noprint button small'>↓↓</a>";
             }
         }
     } else { $link_id = ""; $link_active = ""; }
@@ -252,11 +252,9 @@ function base_base($name) {
 
     if ($doc=="") {
         echo "<TABLE cellspacing=0 cellpadding=0 class='noprint'><TBODY><TR>
-        <td width=140 align=right><h1 style='color:darkgreen'>Поиск:&nbsp;</h1></TD><TD>
-        <input type=text id=\"f_search\" name=\"search_sort\" value=\"".$search_sort2."\" placeholder='".$search_sort3."' size=50></TD> 
-        <TD>&nbsp;<a style='background:#dddddd; padding-left:5px; padding-right:5px;' class='radius' href='#' onClick=\"location='sys.php?op=base_base&name=".$name.$data_sort.$data_sort2.$firm_sort.$interval_sort.$men_sort."&search_sort=' + document.getElementById('f_search').value\">Найти</a></td>
-        <td width=100></td>
-        <td><img src='\images\hide_print.gif' align=left> — при нажатии данная строка не будет выведена при печати. Если не сработало (не стало серым после нажатия) - обновите страницу.</td>
+        <td width=140 align=right><h1 style='color:darkgreen'>Поиск:&nbsp;</h1></TD><TD width=300>
+        <input type=text id=\"f_search\" name=\"search_sort\" value=\"".$search_sort2."\" placeholder='".$search_sort3."' size=30><a class='button small' href='#' onClick=\"location='sys.php?op=base_base&name=".$name.$data_sort.$data_sort2.$firm_sort.$interval_sort.$men_sort."&search_sort=' + document.getElementById('f_search').value\">Найти</a></td>
+        <td width=100><a class='button small' href='#' onClick=\"location='sys.php?op=base_base&name=".$name."'\">Показать все</a></td>
         </TR></TBODY></TABLE>";
 
         if ( in_array("data",$names) ) { // Выбор по дате, если есть такое поле
@@ -266,33 +264,32 @@ function base_base($name) {
             $date_now4 = date("Y-m-d",time()-86400); // вчера
             echo "<script>$(function() { $.datepicker.setDefaults( $.datepicker.regional[ \"ru\" ] ); $( \"#f_date\" ).datepicker({ numberOfMonths: 1, changeMonth: true, changeYear: true, dateFormat: \"d MM yy\", showAnim: 'slide' }); });</script>
             <TABLE cellspacing=0 cellpadding=0 class='noprint'><TBODY><TR>
-            <TD width=140 align=right><strong>Дата:&nbsp;</strong></TD><TD><INPUT type=text name=\"text\" id=\"f_date\" value='".$data_sortX."' readonly=1 size=15 onmouseover=\"this.style.background=&#39;#dddddd&#39;\" onmouseout=\"this.style.background=&#39;&#39;\" style='cursor:pointer; width:130px;'></TD> <TD>&nbsp;<a style='background:#dddddd; padding-left:5px; padding-right:5px;' class='radius' href='#' onClick=\"location='sys.php?op=base_base&name=".$name.$firm_sort.$men_sort.$data_sort2.$search_sort.$interval_sort."&data_sort=' + document.getElementById('f_date').value\">Показать</a>&nbsp;</TD>
-            <TD width=20></TD><TD>&nbsp;<a style='background:#dddddd; padding-left:5px; padding-right:5px;' class='radius' href='#' onClick=\"location='sys.php?op=base_base&name=".$name."'\">Показать все</a>&nbsp;</TD></TR></TBODY></TABLE>";
+            <TD width=140 align=right><strong>Дата:&nbsp;</strong></TD><TD><INPUT type=text name=\"text\" id=\"f_date\" value='".$data_sortX."' readonly=1 size=15 onmouseover=\"this.style.background=&#39;#dddddd&#39;\" onmouseout=\"this.style.background=&#39;&#39;\" style='cursor:pointer; width:130px;'></TD> <TD>&nbsp;<a class='button small' href='#' onClick=\"location='sys.php?op=base_base&name=".$name.$firm_sort.$men_sort.$data_sort2.$search_sort.$interval_sort."&data_sort=' + document.getElementById('f_date').value\">Показать</a></TD></TR></TBODY></TABLE>";
         }
 
         if ( in_array("data2",$names) ) { // Выбор по дате, если есть такое поле
             echo "<script>$(function() { $.datepicker.setDefaults( $.datepicker.regional[ \"ru\" ] ); $( \"#f_date2\" ).datepicker({ numberOfMonths: 1, changeMonth: true, changeYear: true, dateFormat: \"d MM yy\", showAnim: 'slide' }); });</script>
             <TABLE cellspacing=0 cellpadding=0 class='noprint'><TBODY><TR>
-            <TD width=140 align=right><strong>Дата 2:&nbsp;</strong></TD><TD><INPUT type=text name=\"text\" id=\"f_date2\" value='".$data_sortX2."' readonly=1 size=15 onmouseover=\"this.style.background=&#39;#dddddd&#39;\" onmouseout=\"this.style.background=&#39;&#39;\" style='cursor:pointer; width:130px;'></TD> <TD>&nbsp;<a style='background:#dddddd; padding-left:5px; padding-right:5px;' class='radius' href='#' onClick=\"location='sys.php?op=base_base&name=".$name.$firm_sort.$men_sort.$data_sort.$search_sort.$interval_sort."&data_sort2=' + document.getElementById('f_date2').value\">Показать</a>&nbsp;</TD></TR></TBODY></TABLE>";
+            <TD width=140 align=right><strong>Дата 2:&nbsp;</strong></TD><TD><INPUT type=text name=\"text\" id=\"f_date2\" value='".$data_sortX2."' readonly=1 size=15 onmouseover=\"this.style.background=&#39;#dddddd&#39;\" onmouseout=\"this.style.background=&#39;&#39;\" style='cursor:pointer; width:130px;'></TD> <TD>&nbsp;<a class='button small' href='#' onClick=\"location='sys.php?op=base_base&name=".$name.$firm_sort.$men_sort.$data_sort.$search_sort.$interval_sort."&data_sort2=' + document.getElementById('f_date2').value\">Показать</a>&nbsp;</TD></TR></TBODY></TABLE>";
         }
 
         if ( in_array("men",$names) ) {
             echo "<TABLE cellspacing=0 cellpadding=0 class='noprint'><TBODY><TR>
             <td width=140 align=right><strong>Человек:&nbsp;</strong></TD><TD>".vybor_stroka($baza_name, "f_men", "men", $men_sort2, "150")."</TD> 
-            <TD>&nbsp;<a style='background:#dddddd; padding-left:5px; padding-right:5px;' class='radius' href='#' onClick=\"location='sys.php?op=base_base&name=".$name.$data_sort.$data_sort2.$search_sort.$firm_sort.$interval_sort."&men_sort=' + document.getElementById('f_men').value\">Показать</a>&nbsp;</td></TR></TBODY></TABLE>";
+            <TD>&nbsp;<a class='button small' href='#' onClick=\"location='sys.php?op=base_base&name=".$name.$data_sort.$data_sort2.$search_sort.$firm_sort.$interval_sort."&men_sort=' + document.getElementById('f_men').value\">Показать</a>&nbsp;</td></TR></TBODY></TABLE>";
         }
 
         if ( in_array("company",$names) ) {
             echo "<TABLE cellspacing=0 cellpadding=0 class='noprint'><TBODY><TR>
             <td width=140 align=right><strong>Компания:&nbsp;</strong></TD><TD>".vybor_stroka($baza_name, "f_company", "company", $firm_sort2, "150")."</TD> 
-            <TD>&nbsp;<a style='background:#dddddd; padding-left:5px; padding-right:5px;' class='radius' href='#' onClick=\"location='sys.php?op=base_base&name=".$name.$data_sort.$data_sort2.$search_sort.$men_sort.$interval_sort."&firm_sort=' + document.getElementById('f_company').value\">Показать</a>&nbsp;</td>
+            <TD>&nbsp;<a class='button small' href='#' onClick=\"location='sys.php?op=base_base&name=".$name.$data_sort.$data_sort2.$search_sort.$men_sort.$interval_sort."&firm_sort=' + document.getElementById('f_company').value\">Показать</a>&nbsp;</td>
             </TR></TBODY></TABLE>";
         }
 
         echo "<TABLE cellspacing=0 cellpadding=0 class='noprint'><TBODY><TR>
         <td width=140 align=right><strong style='color:darkgreen'>Интервал&nbsp;(№):&nbsp;</strong></TD><TD>
     <input type=text id=\"f_interval\" name=\"interval_sort\" value=\"".$interval_sort2."\" placeholder='".$interval_sort3."' size=6></TD> 
-        <TD>&nbsp;<a style='background:#dddddd; padding-left:5px; padding-right:5px;' class='radius' href='#' onClick=\"location='sys.php?op=base_base&name=".$name.$data_sort.$data_sort2.$firm_sort.$search_sort.$men_sort."&interval_sort=' + document.getElementById('f_interval').value\">Показать</a>&nbsp; Пример: «23-45» или «34» (если от цифры до конца)</td>
+        <TD>&nbsp;<a class='button small' href='#' onClick=\"location='sys.php?op=base_base&name=".$name.$data_sort.$data_sort2.$firm_sort.$search_sort.$men_sort."&interval_sort=' + document.getElementById('f_interval').value\">Показать</a>&nbsp; Пример: «23-45» или «34» (если от цифры до конца)</td>
         </TR></TBODY></TABLE>";
 
 
@@ -317,15 +314,13 @@ function base_base($name) {
     }
 
 
-    $url = "/sys.php?op=base_base&name=$name"; // getenv("REQUEST_URI");
+    $url = "sys.php?op=base_base&name=".$name; // getenv("REQUEST_URI");
     if ($sort_way == " desc") $sort_way = 1; else $sort_way = 0;
 
     if ($doc=="") echo "<div class='radius_top noprint' style='float:left;min-width:500;background:#9FDF9F;text-align:center; height:17px; margin-left:50px; overflow:hidden;'>".base_links($numrows,$p,$url."&sortir=".$sortir."_".$sort_way.$data_sort.$data_sort2.$men_sort.$interval_sort.$search_sort.$firm_sort."&p=",$lim,"top")."</div>";
 
 
-    echo "<div style='width:100%; height:17px;'></div>
-    <div class='radius_top' style='background:#BFFFBF; width:100%; height:10px;'></div>
-    <table width=100% border=0 cellspacing=0 cellpadding=3 class=table_light><tr valign=top bgcolor='#BFFFBF'><td class='noprint' title='Статус/Активность'><span class=\"icon gray small\" data-icon=\"W\"></span><br>".$link_active."</td><td>№".$link_id."</td><td>".$rus_names."</td>";
+    echo "<table class='table_light w100'><tr valign=top class='black_grad'><td class='noprint' title='Статус (Активность)' width=60><span class=\"icon gray small\" data-icon=\"W\"></span> ".$link_active."</td><td>№".$link_id."</td><td>".$rus_names."</td>";
             //$sql3 = "SHOW columns from ".$prefix."_base_".$baza_name."";
             //$result3 = $db->sql_query($sql3);
             foreach ($names as $row3) {
@@ -341,25 +336,35 @@ function base_base($name) {
                     }
                 }
             }
-    if ($doc=="") echo "<td class='noprint' title='Действия над строками'><span class=\"icon gray small\" data-icon=\"R\"></span></td></tr>";
+    if ($doc=="") echo "<td class='noprint' width=80>Действия</td></tr>";
+
+    $another_tables = array();
+    foreach ($type_names as $type_name) {
+        if (strpos(" ".$type_name, "table|")) {
+            // Получаем все поля колонки другой таблицы
+            $baza_name2 = explode("|",str_replace("table|","",$type_name));
+            $sql = "SELECT `id`,`".$baza_name2[1]."` FROM ".$prefix."_base_".$baza_name2[0]." where `active`!='0'";
+            $result = $db->sql_query($sql);
+            while ($row = $db->sql_fetchrow($result)) {
+                $id = $row['id'];
+                $another_tables[$type_name][$id] = $row[ $baza_name2[1] ];
+            }
+        }
+    }
 
     	$sql = "SELECT * FROM ".$prefix."_base_".$baza_name." ".$where."".$order." limit $offset,".$lim;
     	$result = $db->sql_query($sql) or die("SELECT * FROM ".$prefix."_base_".$baza_name." ".$where."".$order." limit $offset,".$lim);
     	while ($row = $db->sql_fetchrow($result)) {
-        //print_r($row);
-    	
-    	
+
     	$base_id = $row['id'];
     	switch ($row['active']) {
-    case "0": $base_active="<span title='Отключено' class=\"icon red small\" data-icon=\"Q\"></span>"; $color="#FCCCD7"; break;
-    case "1": $base_active="<a href=sys.php?op=base_base_edit_base&name=".$name."&base=".$baza_name."&red=1&id=".$base_id."><span title='Закрыто (нельзя редактировать)' class=\"icon gray small\" data-icon=\"X\"></span></a>"; $color="#dddddd"; break;
-    case "2": $base_active="<span title='Ожидает проверки!' class=\"icon gray small\" data-icon=\"?\"></span>"; $color="#eeeeee"; break;
-    case "3": $base_active="<span title='Открыто' class=\"icon gray small\" data-icon=\"c\"></span>"; $color="#ffffff"; break;
+            case "0": $base_active="<span title='Отключено' class=\"icon red small\" data-icon=\"Q\"></span>"; $color="#FCCCD7"; break;
+            case "1": $base_active="<a href=sys.php?op=base_base_edit_base&name=".$name."&base=".$baza_name."&red=1&id=".$base_id."><span title='Закрыто (нельзя редактировать)' class=\"icon gray small\" data-icon=\"X\"></span></a>"; $color="#dddddd"; break;
+            case "2": $base_active="<span title='Ожидает проверки!' class=\"icon orange small\" data-icon=\"?\"></span>"; $color="#eeeeee"; break;
+            case "3": $base_active="<span title='Открыто' class=\"icon green small\" data-icon=\"c\"></span>"; $color="#ffffff"; break;
     	}
 
-    	echo "<tr bgcolor=".$color." class='tr_hover tr".$base_id."'><td class='noprint'>
-    <a style='cursor:pointer; float:left;' onclick=\"$('.tr".$base_id."').addClass('tr_hide noprint');\"><img src='\images\hide_print.gif'></a>
-        ".$base_active."</td>";
+    	echo "<tr bgcolor=".$color." class='tr_hover tr".$base_id."'><td class='noprint'><a style='cursor:pointer; float:left;' onclick=\"$('.tr".$base_id."').addClass('tr_hide noprint');\"><span class=\"icon black small left3\" data-icon=\"x\"></span></a>".$base_active."</td>";
     	for ($x=0; $x < $pass_num+1; $x++) {
             if ($x !=0 and $type_names[$x-1]=="дата") {
                 $tr = array(" Январь"=>" Янв"," Февраль"=>" Фев"," Март"=>" Март"," Апрель"=>" Апр"," Май"=>" Май"," Июнь"=>" Июнь"," Июль"=>" Июль"," Август"=>" Авг"," Сентябрь"=>" Сен"," Октябрь"=>" Окт"," Ноябрь"=>" Ноя"," Декабрь"=>" Дек");
@@ -368,6 +373,10 @@ function base_base($name) {
 
             $row[$x] = trim(str_replace("&nbsp;"," ",str_replace(",",", ",str_replace(".",". ",str_replace("/","/ ",strip_tags($row[$x]))))));
             $pag_line = $row[$x];
+            if ($x !=0 and strpos(" ".$type_names[$x-1], "table|")) {
+                $pole_name = $type_names[$x-1];
+                $pag_line = $another_tables[$pole_name][$pag_line];
+            }
             //$pag_line = substr($row[$x], 0, 120); // остается x символов
             //if (strlen($pag_line) < strlen($row[$x])) $pag_line .= "<a href=/sys.php?op=base_base_edit_base&name=".$name."&base=".$baza_name."&id=".$base_id.">...</a>";
 
@@ -375,20 +384,22 @@ function base_base($name) {
             elseif ( in_array(intval($x), $noprint_pole_index) ) $nop = "f12 noprint";
             else $nop = "f12"; 
             if ( in_array(intval($x), $zero_pole_index) ) echo "<td class='f12 print'></td>";
-            else echo "<td class='".$nop."'>".$pag_line."</td>";
+            else {
+                echo "<td class='".$nop."'>".$pag_line."</td>";
+            }
     	}
       
         if ($doc=="" and $row['active'] != 1) {
             echo "<td class='noprint'>";
-            if ($edit_stroka == 1) echo "<a href=/sys.php?op=base_base_edit_base&name=".$name."&base=".$baza_name."&red=1&id=".$base_id."><span class=\"icon gray small\" data-icon=\"7\" title=\"Редактировать\"></span></a> ";
-            if ($del_stroka == 1) echo "<a href=/sys.php?op=base_base_delit_base&name=".$name."&base=".$baza_name."&id=".$base_id."><span class=\"icon gray small\" data-icon=\"T\" title=\"Удалить с подтверждением\"></span></a>";
+            if ($edit_stroka == 1) echo "<a href=/sys.php?op=base_base_edit_base&name=".$name."&base=".$baza_name."&red=1&id=".$base_id."><span class=\"icon blue small\" data-icon=\"7\" title=\"Редактировать\"></span></a> &nbsp; ";
+            if ($del_stroka == 1) echo "<a href=/sys.php?op=base_base_delit_base&name=".$name."&base=".$baza_name."&id=".$base_id."><span class=\"icon red small\" data-icon=\"T\" title=\"Удалить с подтверждением\"></span></a>";
             echo "</td>";
         } else echo "<td class='noprint'><span class=\"icon gray small\" data-icon=\"X\" title=\"Нельзя удалять и редактировать! Информация закрыта\"></span></td>";
         echo "</tr>";
         
     	}
     	echo "</table>
-    <div class='radius_bottom' style='background:#BFFFBF; width:100%; height:10px;'></div>";
+        <p><span class=\"icon black small left3\" data-icon=\"x\"></span> — при нажатии строка не будет выведена при печати. Если не сработало или для отмены - обновите страницу.";
 
 
     if ($doc=="") echo "<div class='radius_bottom noprint' style='min-width:500px;margin-right:50px;background:#9FDF9F;float:right;text-align:center;'>".base_links($numrows,$p,$url."&sortir=".$sortir."_".$sort_way.$data_sort.$data_sort2.$men_sort.$interval_sort.$search_sort.$firm_sort."&p=",$lim,"bottom")."</div><br>";
@@ -418,7 +429,7 @@ function base_base_edit_base($id, $base, $name, $red=0) {
 
     // Верстаем данные, которые заносятся в таблицу
     $text = explode("|",$row2['text']); 
-    $text = $text[1]; 
+    $text = str_replace($text[0]."|", "", $row2['text']);
     $message = "";
     parse_str($text);
     $options = explode("/!/",$options); // $!$  ранее *
@@ -522,6 +533,23 @@ function base_base_edit_base($id, $base, $name, $red=0) {
                 echo "<p><b>".$one[1].":</b><br><input type=text name=\"text[".$one[0]."]\" value=\"".$row[$x+1]."\" size=17>
                 <input type=hidden name=\"type[".$one[0]."]\" value=\"датавремя\"></p>"; 
             break;
+
+
+            default:
+                echo "<p><b>".$one[1].":</b> "; // Добавляем выбор вариантов
+                $opt = "";
+                $all = explode("|",$one[2]);
+                $sql2 = "select `id`, `".$all[2]."` from ".$prefix."_base_".$all[1]." where `active`!='0' order by `".$all[2]."`";
+                $result2 = $db->sql_query($sql2);
+                while ($row2 = $db->sql_fetchrow($result2)) {
+                    $title = $row2[ $all[2] ];
+                    $sel = "";
+                    if ($row2['id'] == $row[$x+1]) $sel = " selected";
+                    $opt .= "<option value='".$row2['id']."'".$sel.">".$title."</option>";
+                }
+                echo "<select id='".$one[0]."' name='text[".$one[0]."]'>".$opt."</select>
+                <input type=hidden name='type[".$one[0]."]' value='список'></p>";
+            break;
             }
         }
 
@@ -606,7 +634,7 @@ function base_base_create_base($base, $name, $red=0) {
     
     // Верстаем данные, которые заносятся в таблицу
     $text = explode("|",$row2['text']); 
-    $text = $text[1]; 
+    $text = str_replace($text[0]."|", "", $row2['text']); 
     $message = "";
     parse_str($text);
     $options = explode("/!/",$options); // $!$  ранее *
@@ -665,7 +693,8 @@ function base_base_create_base($base, $name, $red=0) {
                     foreach ($rows as $r) {
                         $opt .= "<option value=\"".$r."\">".$r."</option>";
                     }
-                    if ($one[4] == 0 or $one[4] == 2) echo "<select name=vybor[".$one[0]."] onchange=\"document.getElementById('".$one[0]."').value = this.value;\" style='width:110px;'><option value=\"\">варианты...</option>".$opt."</select>
+                    //if ($one[4] == 0 or $one[4] == 2) 
+                        echo "<select name=vybor[".$one[0]."] onchange=\"document.getElementById('".$one[0]."').value = this.value;\" style='width:110px;'><option value=\"\">варианты...</option>".$opt."</select>
                     <input type=hidden name=\"type[".$one[0]."]\" value=\"строка\"></p>"; 
                     if ($one[3] == 3 or $one[3] == 2 or $one[3] == 1 or $one[3] == 7) $alerts .= "if (document.getElementById('".$one[0]."').value=='') al = al + 'Не заполнено поле «".$one[1]."». \\r\\n';";
                 break;
@@ -717,6 +746,22 @@ function base_base_create_base($base, $name, $red=0) {
                     echo "<p><b>".$one[1].":</b><br><input type=text id=\"".$one[0]."\" name=\"text[".$one[0]."]\" value=\"\" size=17>
                     <input type=hidden name=\"type[".$one[0]."]\" value=\"датавремя\"></p>"; 
                     if ($one[3] == 3 or $one[3] == 2 or $one[3] == 1 or $one[3] == 7) $alerts .= "if (document.getElementById('".$one[0]."').value=='') al = al + 'Не заполнено поле «".$one[1]."». \\r\\n';";
+                break;
+
+
+                default:
+                    echo "<p><b>".$one[1].":</b> "; // Добавляем выбор вариантов
+                    $opt = "";
+                    $all = explode("|",$one[2]);
+                    $sql2 = "select `id`, `".$all[2]."` from ".$prefix."_base_".$all[1]." where `active`!='0' order by `".$all[2]."`";
+                    $result2 = $db->sql_query($sql2);
+                    while ($row2 = $db->sql_fetchrow($result2)) {
+                        $title = $row2[ $all[2] ];
+                        $opt .= "<option value='".$row2['id']."'>".$title."</option>";
+                    }
+                    echo "<select id='".$one[0]."' name='text[".$one[0]."]'><option value=''>&rarr; выберите вариант &larr;</option>".$opt."</select>
+                    <input type=hidden name='type[".$one[0]."]' value='список'></p>"; 
+                    if ($one[3] == 3 or $one[3] == 2 or $one[3] == 1 or $one[3] == 7) $alerts .= "if (document.getElementById('".$one[0]."').value=='выберите вариант') al = al + 'Не заполнено поле «".$one[1]."». \\r\\n';";
                 break;
             }
         }

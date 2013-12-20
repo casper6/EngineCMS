@@ -9,9 +9,11 @@ if (isset($_REQUEST['string'])) $string = $_REQUEST['string']; else $string = ""
 ///////////////////////////////////////////////////////////
 if ($func == "show_calendar") {
 	parse_str($string);
+	$and = "";
+	//$and = " and module='".$useitX."'";
 	$calendar_dates = array();
 	if ($calendar == "") {
-		$sql = "select date from ".$prefix."_pages where `tables`='pages' and module='".$useitX."' and active!='0' order by date";
+		$sql = "select date from ".$prefix."_pages where `tables`='pages'".$and." and active!='0' order by date";
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result)) {
 			$dates = explode(" ",$row['date']);
@@ -231,6 +233,10 @@ if ($func == "show_raspisanie") {
 	exit();
 }
 ///////////////////////////////////
+if ($func == "shop_delete") {
+	setcookie ('shop_tovar', '');
+}
+///////////////////////////////////
 if ($func == "shop_del_tovar") {
 	$tovars = "";
 	$info = array();
@@ -242,7 +248,8 @@ if ($func == "shop_del_tovar") {
 				if (intval($id) != intval($t[0])) $info[] = $tovar;
 				elseif (intval($t[5]) > 1) {
 					$count = intval($t[5]);
-					$count--;
+					if ($string == 0) $count--;
+					else $count = 0;
 					//if ($count == 1) $count = 0;
 					if ($count != 0) $info[] = $t[0]."$".$t[1]."$".$t[2]."$".$t[3]."$".$t[4]."$".$count."$".$t[6]."$".$t[7]."$".$t[8];
 				}
@@ -294,16 +301,6 @@ if ($func == "shop_add_tovar") {
 ///////////////////////////////////////////////////////////
 if ($func == "shop_send_order") {
 	global $now, $shop_pole, $shop_text_mail, $shop_text_after_mail, $shop_admin_mail, $shop_spisok_pole, $shop_text_val1, $shop_text_val2, $siteurl; // ;
-	// Настройки магазина
-	if ($shop_text_val2 == "") $shop_text_val2 = ss(" руб.");
-	if ($shop_text_itogo == "") $shop_text_itogo = ss("Итого:");
-	if ($shop_text_oformit == "") $shop_text_oformit = ss("Оформить покупку");
-	if ($shop_text_korzina == "") $shop_text_korzina = ss("Ваша Корзина пуста.");
-	if ($shop_text_delete == "") $shop_text_delete = "×";
-	if ($shop_pole == "") $shop_pole = "";
-	if ($shop_admin_mail == "") $shop_admin_mail = $adminmail;
-	if ($shop_text_after_mail == "") $shop_text_after_mail = ss("<h1>Спасибо!</h1><h3>Ваш заказ успешно отправлен. В ближайшее время мы вам позвоним.</h3>");
-	if ($shop_spisok_pole == "") $shop_spisok_pole = ss("Ф.И.О.:*\nТелефон:*\nEmail:\nАдрес:\nДополнительная информация:");
 	//if ($shop_shablon_form_order == "") $shop_shablon_form_order = "";
 	//if ($shop_shablon_mail_client == "") $shop_shablon_mail_client = "";
 	//if ($shop_shablon_mail_admin == "") $shop_shablon_mail_admin = "";
@@ -402,7 +399,7 @@ if ($func == "shop_show_card") {
 	// global $title_razdels;
 	$shop_tovarov = "товаров,товар,товара";
 	$shop_for_summa = "на сумму";
-	global $shop_text_val1, $shop_text_val2, $shop_text_itogo, $shop_text_oformit, $shop_text_korzina, $shop_text_delete;
+	global $shop_text_val1, $shop_text_val2, $shop_text_itogo, $shop_text_oformit, $shop_text_korzina, $shop_text_delete, $shop_text_ochistit, $shop_text_delete_all;
 	$info = "";
 	$itogo = 0;
 	$all_count = 0;
@@ -426,6 +423,7 @@ if ($func == "shop_show_card") {
 				$name_razdel = $tovar[4];
 				$pic = $tovar[3];
 				$count = intval($tovar[5]);
+				$del_all = "";
 				if ($count == 1) {
 					$count = "";
 					$all_count++;
@@ -445,13 +443,14 @@ if ($func == "shop_show_card") {
 
 					$itogo += floatval($price) * $count;
 					$all_count += $count;
+					if ($count > 1) $del_all = " <a class='shop_card_del' onclick='shop_del_tovar(".$id_page.",1)'>".$shop_text_delete_all."</a>";
 					$count = " x ".$count;
 				}
 				if ($string == "card") {
 					if ($pic != "") $pic = "<a href='".$tovar[3]."' title='".$tovar[2]."' class='lightbox' rel='group'><div class='shop_card_minifoto' style='background:url(\"includes/php_thumb/php_thumb.php?src=".$tovar[3]."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0\") center center no-repeat;'></div></a>";
 					$info .= "<div class='shop_card'>
 					<div class='shop_card_price'><b>".$shop_text_val1.$price.$shop_text_val2.$count."</b>
-					<a class='shop_card_del' onclick='shop_del_tovar(".$id_page.")'>".$shop_text_delete."</a></div>
+					<a class='shop_card_del' onclick='shop_del_tovar(".$id_page.",0)'>".$shop_text_delete."</a>".$del_all."</div>
 					".$pic."<a target='_blank' href='-".$name_razdel."_page_".$id_page."'>".$tovar[2]."</a>
 					</div>";
 				}
@@ -462,7 +461,7 @@ if ($func == "shop_show_card") {
 		if ($string == "card") {
 			$info .= "<div class='shop_card_price shop_card_itogo_price'><b>".$shop_text_val1.$itogo.$shop_text_val2."</b></div>
 			<div class='shop_card_itogo'>".$shop_text_itogo." ".$all_count." ".num_ending($all_count, explode(",", $shop_tovarov))."</div>
-			<div class='shop_card_oformlenie'><a onclick='shop_show_order()'>".$shop_text_oformit."</a></div>";
+			<div class='shop_card_oformlenie'><a onclick='shop_show_order()'>".$shop_text_oformit."</a> <a class='shop_card_delete' onclick='shop_delete()'>".$shop_text_ochistit."</a></div>";
 			$info = "<div class='shop_cards'>".$info."</div>";
 		}
 	}

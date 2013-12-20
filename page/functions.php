@@ -419,7 +419,7 @@ function my_calendar($fill='', $modul, $showdate='') { // Функция выв�
         if ($week[$i][$j] == $daynow) $class = "bold";
         if ($monthandyear.(intval($week[$i][$j]) < 10 ? '0'.intval($week[$i][$j]) : $week[$i][$j]) == $showdate) $class = "select";
         if($j == 5 || $j == 6) $class .= " red"; else $class .= " black";
-        if (in_array($monthandyear.$den,$fill)) $calendar .= "<div class='calendar_cell ".trim($class)."'><a href=/-".$modul."_date_".$monthandyear.(intval($week[$i][$j]) < 10 ? '0'.intval($week[$i][$j]) : $week[$i][$j]).">".$week[$i][$j]."</a></div>";
+        if (in_array($monthandyear.$den,$fill)) $calendar .= "<div class='calendar_cell ".trim($class)."'><a href='date_".$monthandyear.(intval($week[$i][$j]) < 10 ? '0'.intval($week[$i][$j]) : $week[$i][$j])."'>".$week[$i][$j]."</a></div>";
         else $calendar .= "<div class='calendar_cell ".trim($class)."'>".$week[$i][$j]."</div>";
       } else $calendar .= "<div class='calendar_cell'></div>";
     }

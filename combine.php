@@ -143,18 +143,18 @@ div.raspisanie { height:15px; width:100%; min-width:5px; border-left: 1px solid 
 .comm_form #avtory, .comm_form #maily, .comm_form #adres, .comm_form #tel, .comm_form #area {width: 99%;}
 
 /* Магазин */
-.shop_cards {margin-bottom: 10px;}
+.shop_cards {margin-bottom: 10px; padding: 0 5px 0 5px;}
 .shop_card_minifoto {border-radius: 5px; -moz-border-radius: 5; -webkit-border-radius: 5; border:1px solid #bbbbbb; float:left; margin-right: 5px; width: 30px; height: 30px;}
 .shop_card_price {float:right; margin-left: 5px; text-align:right; max-height: 40px;}
 .shop_card { padding-top:10px; padding-bottom:10px; min-height: 55px !important;}
 .shop_card_oformlenie {margin-top:10px;}
-.shop_card_oformlenie a { width:100%; background: #d0e087; color: #4b6028; border-radius: 5px; -moz-border-radius: 5; -webkit-border-radius: 5; border-bottom:2px solid #bdc9a2; padding:7px; cursor:pointer; text-decoration:none;}
-.shop_card_oformlenie a:hover {background: #bdc9a2; color: #333; border-bottom:2px solid #666;}
+.shop_card_oformlenie a { width:100%; background: #d0e087; color: black; border-radius: 5px; -moz-border-radius: 5; -webkit-border-radius: 5; border-bottom:2px solid #bdc9a2; padding:7px; cursor:pointer; text-decoration:none;}
+.shop_card_oformlenie a:hover {background: green; color: white; border-bottom:2px solid #666;}
+a.shop_card_delete {background: #e09487; color: white; border-bottom:2px solid #c9ada2;}
 .shop_card {border-bottom: 1px dotted #333;}
-.shop_card:hover {background:#eee;}
 .shop_card_price b {display:block; margin-bottom:5px;}
-.shop_card_del {cursor:pointer; background:darkred; border-radius: 5px; -moz-border-radius: 5; -webkit-border-radius: 5; padding:1px 5px 1px; cursor:pointer; text-decoration:none; color: white;}
-.shop_card_del:hover {background:red; color: white;}
+.shop_card_del {cursor:pointer; background: #e09487; border-radius: 5px; -moz-border-radius: 5; -webkit-border-radius: 5; padding:1px 5px 1px; cursor:pointer; text-decoration:none; color: white;}
+.shop_card_del:hover, a.shop_card_delete:hover {background:darkred; color: white;}
 .shop_card_itogo, .shop_card_itogo_price {margin-top:10px; margin-bottom:20px; height: 25px;}
 .shop_form_input {width:98%;}
 

@@ -480,6 +480,26 @@ function create_main($type) {
 	########################################################
 	case "base": $type_opis = "базы данных (таблица)";
 	global $lang;
+	$another_table_list = "";
+	$sql2 = "select `name`,`title`,`text` from ".$prefix."_mainpage where `type`='5' and `tables`='pages'";
+	$result2 = $db->sql_query($sql2);
+	while ($row2 = $db->sql_fetchrow($result2)) {
+		$title = $row2['title'];
+		$name = $row2['name'];
+		$text = explode("|",$row2['text']); 
+	    $text = str_replace($text[0]."|", "", $row2['text']); 
+	    parse_str($text);
+	    $options = explode("/!/",$options);
+	    $n = count($options);
+	    $another_table_list .= "<option value='table|".$name."|id'>".$title." &rarr; № (".aa('номер').")</option>";
+	    for ($x=0; $x < $n; $x++) {
+    		$one = explode("#!#",$options[$x]);
+    		$another_table_list .= "<option value='table|".$name."|".$one[0]."'>".$title." &rarr; ".$one[1]."</option>";
+    	}
+    	$another_table_list .= "<option value='' disabled>———</option>";
+		// men#!#фамилии#!#строкабезвариантов#!#1#!#1#!#
+		// imena#!#имена#!#строкабезвариантов#!#0#!#1#!#
+	}
 	$create.="<div id=about class=block style='display:none;'>База данных — это таблица с удобным редактированием (по типу БД, а не электронных таблиц), поиском и фильтрами. Таблица может содержать любые поля и выводиться на страницы сайта или использоваться для внутреннего документооборота компании (доступно через администрирование).</b><br></div>
 	
 	<input type='hidden' name='type' value='5'>
@@ -497,27 +517,34 @@ function create_main($type) {
 	<select name='delete_table' class='hide'><option value='1' selected>да</option><option value='0'>нет</option></select>
 
 	<p><span class=h3>База данных будет подключена к одноименному разделу, ...</span><br>
-	<select name='s_tip' class='w100 f16'><option value='1' selected>доступному на сайте</option><option value='2'>доступному только администратору</option></select>
+	<select name='s_tip' class='w100 f16' onchange='if (this.value==1) { $(\"#table\").find(\".pole_open\").removeClass(\"hide\"); } else { $(\"#table\").find(\".pole_open\").addClass(\"hide\"); }'><option value='1'>доступному на сайте</option><option value='2' selected>доступному только администратору</option></select>
 
-	<div style='float:right;'><a class='button green small' id=add_pole><span class=\"icon white medium\" data-icon=\"p\"></span> Добавить колонку</a></div>
+	<div style='float:right;'><a class='button green small' id=add_pole><span class=\"icon white medium\" data-icon=\"+\"></span> Добавить колонку</a></div>
 	
 	<p><span class=h2>Поля базы данных (названия колонок):</span><br>
 	<a name=pole></a>
-	<table id=table  class='w100 mw800 table_light'>
+	<table id='table' class='w100 mw800 table_light'>
 	  <tr valign=bottom>
 		<td width=40%>Название поля</td>
 		<td width=10%>Тип данных</td>
 		<td width=10%>Важность<sup>1</sup></td>
-		<td width=15%>Видимость <nobr>на сайте</nobr></td>
+		<td width=15% class='pole_open hide'>Видимость <nobr>на сайте</nobr></td>
 		<td width=15%>Замена информации<sup>2</sup></td>
 		<td width=5%>Фильтр</td>
 		<td width=5%>Убрать</td>
 	  </tr>
 	<tr id=pole_0><td>
-	<input type=text name=pole_rusname[] size=15 class='w100' /><a class=punkt onclick='show_eng(this)'>Псевдоним (будет создан автоматически)</a><span class='eng hide'>:<br><input type=text name=pole_name[] size=15 class='w100' /></span>
-	</td><td><select name=pole_tip[] class='w100'><option value='строка' selected=selected>Строка с выбором предыдущих значений (до 250 символов)</option><option value='строкабезвариантов'>Строка без выбора предыдущих значений (до 250 символов)</option><option value='число'>Число</option><option value='список'>Список (в поле «Замена информации» — слова через запятую)</option><option value='текст'>Текст</option><option value='дата'>Дата</option><option value='датавремя'>Дата/Время</option><option value='фото'>Фото</option><option value='минифото'>МиниФото</option><option value='файл' disabled>Файл</option><option value='ссылка'>Ссылка</option></select></td><td><select name=pole_main[] class='w100'><option value=0>не важно</option><option value=1>1. основная категория</option><option value=2>2. вторичная категория</option><option value=3>обязательно заполнять</option><option value=4>не важно и не печатать</option><option value=6>не важно, не печатать и не показывать</option><option value=7>обязательно, не печатать и не показывать</option><option value=5>пустая для печати</option></select></td><td><select name=pole_open[] class='w100'><option value=0 selected=selected>видно в таблице и на странице «Подробнее»</option><option value=2>видно после нажатия «Подробнее»</option><option value=1>не видно нигде</option></select></td><td><input type=text name=pole_rename[] size=15 class='w100' /></td><td>
-	".select("pole_filter[]", "0,1", "НЕТ,ДА", "0")."</td><td>
-	<a class='button small red white' onclick='del_pole(this)'><span class=\"icon  small\" data-icon=\"X\"></span></a></td></tr>
+	<input type=text name=pole_rusname[] size=15 class='w100' /><a class=punkt onclick='show_eng(this)'>Псевдоним</a> (англ., будет создан автоматически)<span class='eng hide'>:<br><input type=text name=pole_name[] size=15 class='w100' /></span>
+	</td><td>
+	<select name=pole_tip[] class='w100'><option value='строка'>Строка с выбором предыдущих значений (до 5000 символов)</option><option value='строкабезвариантов' selected>Строка (до 5000 символов)</option><option value='число'>Число</option><option value='список'>Список (в поле «Замена информации» — слова через запятую)</option><option value='текст'>Текст</option><option value='дата'>Дата</option><option value='датавремя'>Дата/Время</option><option value='фото'>Фото</option><option value='минифото'>МиниФото</option><option value='файл' disabled>Файл</option><option value='ссылка'>Ссылка</option><option value='' disabled>——— Списки из колонок других таблиц ———</option>".$another_table_list."</select></td><td>
+	<select name=pole_main[] class='w100'><option value=0>не важно</option><option value=1>1. основная категория</option><option value=2>2. вторичная категория</option><option value=3>обязательно заполнять</option><option value=4>не важно и не печатать</option><option value=6>не важно, не печатать и не показывать</option><option value=7>обязательно, не печатать и не показывать</option><option value=5>пустая для печати</option></select></td>
+	<td class='pole_open hide'>
+	<select name=pole_open[] class='w100'><option value=1 selected>не видно нигде</option><option value=0>видно в таблице и на странице «Подробнее»</option><option value=2>видно после нажатия «Подробнее»</option></select></td><td>
+	<input type=text name='pole_rename[]' size=15 class='w100' /></td><td>
+
+	<select class='pole_filter hide' name='pole_filter[]'><option value='0'>нет</option><option value='1'>да</option></select>
+	<a class='button small red white pole_filter_button' onclick='pole_filter(this)'><span class=\"icon  small\" data-icon=\"Q\"></span></a></td><td>
+	<a class='button small red white' onclick='del_pole(this)'><span class=\"icon  small\" data-icon=\"F\"></span></a></td></tr>
 	</table>
 	<div id=id0></div>
 
@@ -526,13 +553,20 @@ function create_main($type) {
 	$(function(){
 		$('#add_pole').click(function(){
 		  $('#pole_0').clone().attr('id', 'pole_'+id).appendTo('#table');
-		  //$('#pole_'+id).closestattr('id', 'eng_pole_'+id)
 		  id = id + 1;
 		});
 	});
+	function pole_filter(x) {
+		if ($(x).parents('tr').find('.pole_filter').val() == '0') {
+			$(x).parents('tr').find('.pole_filter').val('1');
+			$(x).parents('tr').find('.pole_filter_button').removeClass('red').addClass('green');
+		} else {
+			$(x).parents('tr').find('.pole_filter').val('0');
+			$(x).parents('tr').find('.pole_filter_button').removeClass('green').addClass('red');
+		}
+	}
 	function show_eng(x) {
 		$(x).parents('tr').find('.eng').toggle(); 
-		//$(x).parents('.eng').hide();
 	}
 	function del_pole(x) {
 		if ($(x).parents('tr').attr('id') != 'pole_0') $(x).parents('tr').empty(); 
@@ -540,13 +574,13 @@ function create_main($type) {
 	}
 	</script>
 
-	<table><tr valign=top><td><span class=h3>Добавить поля:</span></td><td>
+	<table class='hide'><tr valign=top><td><span class=h3>Добавить поля:</span></td><td>
 	</td><td>«Голосование» ".select("add_pole_golos", "0,1", "НЕТ,ДА", "0")."
 	</td><td>«Комментарии» ".select("add_pole_comm", "0,1", "НЕТ,ДА", "0")."
 	</td><td>«Количество проданного товара» ".select("add_pole_kol", "0,1", "НЕТ,ДА", "0")."
 	</td></tr></table>
 
-	<p><a onclick=\"show_animate('excel')\" class='button small blue'><span class=\"icon black medium\" data-icon=\"(\"></span> Загрузить готовую таблицу (необязательно)</a></p>
+	<p><a onclick=\"$('#excel').toggle();\" class='button small'>Загрузить готовую таблицу (необязательно)</a></p>
 	<div style='display:none;' id=excel><div class=block_white2>
 	<b>Файл CSV</b> (в формат .CSV можно сохранить таблицу Excel или экспортировать из 1С, формат - utf-8) <br>
 	Если файл не выбран - будет создана пустая структура базы данных на основании Названий полей<br>
@@ -2336,23 +2370,25 @@ function mainpage_save($id=0, $type, $namo, $title, $text, $useit, $shablon, $de
 			$sql2 = array();
 			for ($x=0; $x < $n; $x++) {
 				$one = explode("#!#",$text[$x]);
-				//if ($x < $n-1) $zap = ", "; else $zap = "";
 				switch ($one[2]) {
 					case "текст": $sql2[] = "`$one[0]` TEXT NOT NULL"; break;
-					case "строка": $sql2[] = "`$one[0]` VARCHAR( 255 ) NOT NULL"; break;
-					case "строкабезвариантов": $sql2[] = "`$one[0]` VARCHAR( 255 ) NOT NULL"; break;
-					case "список": $sql2[] = "`$one[0]` VARCHAR( 255 ) NOT NULL"; break;
-					case "ссылка": $sql2[] = "`$one[0]` VARCHAR( 255 ) NOT NULL"; break;
+					case "строка": $sql2[] = "`$one[0]` VARCHAR( 5000 ) NOT NULL"; break;
+					case "строкабезвариантов": $sql2[] = "`$one[0]` VARCHAR( 5000 ) NOT NULL"; break;
+					case "список": $sql2[] = "`$one[0]` VARCHAR( 5000 ) NOT NULL"; break;
+					case "ссылка": $sql2[] = "`$one[0]` VARCHAR( 5000 ) NOT NULL"; break;
 					case "фото": $sql2[] = "`$one[0]` TEXT NOT NULL"; break;
 					case "минифото": $sql2[] = "`$one[0]` TEXT NOT NULL"; break;
 					case "файл": $sql2[] = "`$one[0]` TEXT NOT NULL"; break;
 					case "число": $sql2[] = "`$one[0]` INT( 10 ) NOT NULL"; break;
 					case "дата": $sql2[] = "`$one[0]` DATE NOT NULL"; break;
 					case "датавремя": $sql2[] = "`$one[0]` DATETIME NOT NULL"; break;
+					default: 
+						if (strpos(" ".$one[2], "table|")) $sql2[] = "`$one[0]` INT( 10 ) NOT NULL";
+						else $sql2[] = "`$one[0]` VARCHAR( 5000 ) NOT NULL"; break;
 				}
 				$all[] = trim($one[0]);
 			}
-			$sql .= implode(",",$sql2).");";
+			$sql .= implode(",",$sql2).") DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;";
 			$all = implode(",",$all);
 			if ($delete_stroka == 1) $del_stroka = " IGNORE 1 LINES"; else $del_stroka = ""; //  ($all)
 

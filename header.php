@@ -15,18 +15,20 @@ $index_ok = true; // индексирование поисковиками
 	$block = ""; // Определение раздела
 
 $pagetitles = array(
-	"-email" => ss("Подписка на рассылку новостей сайта")." — ",
-	"-search" => ss("Поиск")." — ",
-	"-tags" => ss("Тэги")." — ",
-	"-register" => ss("Регистрация")." — ",
-	"-login" => ss("Вход")." — ",
-	"-user" => ss("Страница пользователя"),
-	"-users" => ss("Личная анкета")." — ",
-	"-adduser" => ss("Добавление публикации")." — ",
-	"-edituser" => ss("Редактирование личной анкеты")." — ",
-	"-logout" => ss("Вы вышли")." — ");
+	"email" => ss("Подписка на рассылку новостей сайта")." — ",
+	"search" => ss("Поиск")." — ",
+	"tags" => ss("Тэги")." — ",
+	"showdate" => ss("Поиск по дате")." — ",
+	"register" => ss("Регистрация")." — ",
+	"login" => ss("Вход")." — ",
+	"user" => ss("Страница пользователя"),
+	"users" => ss("Личная анкета")." — ",
+	"adduser" => ss("Добавление публикации")." — ",
+	"edituser" => ss("Редактирование личной анкеты")." — ",
+	"logout" => ss("Вы вышли")." — ");
 if (isset($pagetitles[$name])) {
-    list($block, $stil) = include('page/'.substr($name, 1).'.php'); 
+	if (!file_exists('page/'.$name.'.php')) die('NO FILE: page/'.$name.'.php');
+    list($block, $stil) = include('page/'.$name.'.php'); 
     $pagetitle = $pagetitles[$name];
 } else {
 	global $title_razdels, $txt_razdels, $useit_razdels, $pid;
@@ -2064,20 +2066,19 @@ header("Pragma: no-cache"); // HTTP/1.0
 
 
 header ("Content-Type: text/html; charset=utf-8");
-echo "<!doctype html>\n
+echo "<!doctype html>
 <!--[if lt IE 7 ]><html class='ie ie6 no-js lt-ie9 lt-ie8 lt-ie7' lang='".$lang."'> <![endif]-->
 <!--[if IE 7 ]><html class='ie ie7 no-js lt-ie9 lt-ie8' lang='".$lang."'> <![endif]-->
 <!--[if IE 8 ]><html class='ie ie8 no-js lt-ie9' lang='".$lang."'> <![endif]-->
 <!--[if (gte IE 9)|!(IE)]><!--><html lang='".$lang."' dir='ltr' class='no-js'> <!--<![endif]-->
-\n<head>";
+<head>
+<title>".$pagetit.$sitename."</title>";
 if (file_exists("favicon.png"))  echo "<link rel='shortcut icon' href='favicon.png' />";
 else echo "<link rel='shortcut icon' href='favicon.ico' />";
 // <meta http-equiv='Content-language' content='".$lang."'> 
 // <meta name='copyright' content='".str_replace("'","",$sitename)."'>
 if (isset($pass_name) || $index_ok == false) echo "<meta content='noindex, nofollow' name='robots' />";
-else echo "<meta content='index, follow' name='robots' />";
-echo "<title>".$pagetit.$sitename."</title>
-<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
+echo "<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
 <meta name='keywords' content='".str_replace("'","",$keywords2)."'>
 <meta name='description' content='".str_replace("'","",$description2)."'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0'>
@@ -2213,7 +2214,7 @@ if (mb_strlen($add_fonts)>1) {
 				if ($url_link == '/' || $url_link == '') $url_link = "-index";
 					if (file_exists("cashe/".$url_link)) $numrows = 1;
 			}
-		    if ($numrows == 0 && $url_link != "-search" && $url_link != "savecomm" && $url_link != "savepost") {
+		    if ($numrows == 0 && $url_link != "search" && $url_link != "savecomm" && $url_link != "savepost") {
 				// Добавление в кеш
 				if ($site_cash == "base") // если кеш в БД
 					$db->sql_query("INSERT INTO `".$prefix."_cash` (`id`, `url`, `data`, `text`) VALUES (NULL, '".$url_link."', '".$now."', '".$txt."');") or die (ss("Обновите страницу, (нажав F5)."));

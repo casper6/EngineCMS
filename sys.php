@@ -235,8 +235,12 @@ function GraphicAdmin() {
 		$doping = "";
 		if (strpos($options,"base=")) {
 			$title = "БД «".trim($title)."»";
-			$baza_name  = $nam; // Название таблицы БД 
-			$type_opisX = "<nobr><span class='f14 radius bb1 pr10 pl10'><span class='green' title='".aa("Записи в базе данных")."'>".$db->sql_numrows($db->sql_query("SELECT `id` FROM ".$prefix."_base_".$nam))."</span></span> 
+			$baza_name  = $nam; // Название таблицы БД
+			$plus = $db->sql_numrows($db->sql_query("SELECT `id` FROM ".$prefix."_base_".$nam." where `active`!='0'"));
+			if ($plus < 1) $plus = "";
+			$minus = $db->sql_numrows($db->sql_query("SELECT `id` FROM ".$prefix."_base_".$nam." where `active`='0'"));
+			if ($minus < 1) $minus = ""; else $minus = "-".$minus;
+			$type_opisX = "<nobr><span title='".aa("Записи в базе данных")."'>".$plus."</span> <span class='red2' title='".aa("Отключенные записи")."'>".$minus."</span>
 			<a class='button small ml10' href='sys.php?op=base_base&name=".$nam."' title='".aa("Открыть базу данных")."'><span class='icon small' data-icon='s'></span></a>
 			<a class='button small ml5' href='sys.php?op=base_base_create_base&base=".$baza_name."&name=".$nam."&amp;red=1#1' title='".aa("Добавить строку в базу данных")."'><span class='icon small' data-icon='+'></span></a></nobr>";
 		}

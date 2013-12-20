@@ -78,7 +78,7 @@ if (isset($_REQUEST['ipban'])) {
 	input {width:100%;}
 	</style>
 </head>
-<body style="background:url('images/adfon/22.png')">
+<body style="background: #fefefe;">
 	<div class="del">
 <?
 	echo "Началась установка.<br>";
