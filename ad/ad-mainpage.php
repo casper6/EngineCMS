@@ -834,6 +834,8 @@ function edit_main($id) {
 	$col_tags_pages = 5;
 	$lim = 20;
 	$where = $order = $calendar = $reclama = "";
+	$comm_show_one_more = 3;
+    $comm_show_one_more_text = "Показать еще";
 	$sort = "date desc";
 	$tema = "Открыть новую тему";
 	$tema_name = "Ваше имя";
@@ -1138,14 +1140,6 @@ function edit_main($id) {
 	<td>".select("options[comments_tel]", "3,2,1,0", "везде,на странице в комментариях,в форме добавления комментария,НЕТ", $comments_tel)."</td>
 	</tr>
 	<tr>
-	<td>Количество выводимых комментариев</td>
-	<td>".select("options[comments_num]", "0,1,2,3,4,5,10,15,20,25,30,50,75,100,200,500,1000", "выводить все,1,2,3,4,5,10,15,20,25,30,50,75,100,200,500,1000", $comments_num)."</td>
-	</tr>
-	<tr>
-	<td>Показывать кнопку ".input("options[comments_8]", $comments_8)." (если выводятся не все комментарии)</td>
-	<td>".select("options[comments_all]", "1,0", "ДА,НЕТ", $comments_all)."</td>
-	</tr>
-	<tr>
 	<td><b>Включить визуальный редактор</b> в форме добавления комментария.
 	<br>Кнопки редактора: жирность, наклон, зачеркнуто, добавить картинку, видео, файл и ссылку.
 	<br>Запрешенные форматы файлов: exe, php, js, html и xml</td>
@@ -1170,6 +1164,21 @@ function edit_main($id) {
 	<tr>
 	<td>Если выбран тип раздела «Анкеты-рейтинги» Дата написания отзыва (пример: для отзывов о роддомах - дата родов, дата посещения и т.д.):</td>
 	<td>".input("options[reiting_data]", $reiting_data)."</td>
+	</tr>
+	<tr>
+	<td>Количество выводимых комментариев</td>
+	<td>".select("options[comments_num]", "0,1,2,3,4,5,10,15,20,25,30,50,75,100,200,500,1000", "выводить все,1,2,3,4,5,10,15,20,25,30,50,75,100,200,500,1000", $comments_num)."</td>
+	</tr>
+	<tr>
+	<td colspan='2'><h3>Если выводятся не все комментарии:</h3></td>
+	</tr>
+	<tr>
+	<td>Показывать кнопку ".input("options[comments_8]", $comments_8)."</td>
+	<td>".select("options[comments_all]", "1,0", "ДА,НЕТ", $comments_all)."</td>
+	</tr>
+	<tr>
+	<td>Показывать кнопку ".input("options[comm_show_one_more_text]", $comm_show_one_more_text)." или ссылки на страницы с комментариями</td>
+	<td>".select("options[comm_show_one_more]", "0,1,2,3", "ничего не показывать,«Показать еще» — откроются под предыдущими комментариями,«Показать еще» — откроются вместо предыдущих комментариев,ссылки на страницы с комментариями 1 2 3 4 >", $comm_show_one_more)."</td>
 	</tr>
 	</table>
 	</div>

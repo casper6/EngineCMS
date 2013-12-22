@@ -22,6 +22,8 @@ $menushow = $titleshow = $razdeltitleshow = $razdel_link = $peopleshow = $design
 $col_tags_pages = 5;
 $comment_shablon = 2;
 $lim = 20;
+$comm_show_one_more = 3;
+$comm_show_one_more_text = "Показать еще";
 $where = $order = $calendar = $reclama = "";
 $sort = "date desc";
 $tema = ss("Открыть новую тему");
@@ -1217,9 +1219,11 @@ function page($pid, $all) {
     global $id_razdel_and_bd;
     $id_module = $id_razdel_and_bd[$module];
     $page_comments = "<div class='page_comm'><a name='comm' id='comm'></a>".$comments_1."</div>
-    <script>function showcomm(start, num){
-      $.get('comments.php', { p_id: '".$pid."', id_module: '".$id_module."', start: start, num: num }, function(data) { 
-      $('#page_comments').html( data );
+    <script>function showcomm(start, num, add){
+      if (add == null) add = 0;
+      $.get('comments.php', { p_id: '".$pid."', id_module: '".$id_module."', start: start, num: num, add: add }, function(data) { 
+      if (add == 0) $('#page_comments').html( data );
+      else $('#page_comments'+add).html( data );
       });
     }
     $(showcomm(0,0));</script><div id='page_comments'></div>";
@@ -2538,20 +2542,17 @@ function bbcode($text, $nolink=1) {
 }
 ##############################################################
 // Строчка выбора страниц < 1 2 3 >
-function topic_links($records,$r_start=0,$URL,$inpage=20,$type=0,$names=0) {
+function topic_links($records,$r_start=0,$URL,$inpage=20) {
 //$records - всего записей 
 //$r_start - текущая страница 
 //$URL - адрес, заканчивающийся на "=" 
 //$inpage - записей на страницу
-//$type - вид строки выбора
-//$names - вариант именований
     $str="";
     if ($records<=$inpage) return;
-
-        $str.="<div class=pages_links>";
+        $str.="<div class='pages_links'>";
     if ($r_start!=0 and $r_start > 5) {
-        $str.="<a class=pages_links href=".$URL.($r_start-1)." title=\"".ss("предыдущая страница")."\"><</a>";
-        $str.=" <a href=".$URL."0 title=\"".ss("первая страница")."\"><B>1</B></a>";
+        $str.="<a class='pages_links' href='".$URL.($r_start-1)."' title='".ss("предыдущая страница")."'><</a>";
+        $str.=" <a href='".$URL."0' title='".ss("первая страница")."'><B>1</B></a>";
         }
     if ($r_start==0) {$sstart=$r_start-0; $send=$r_start+10;}   if ($r_start==1) {$sstart=$r_start-1; $send=$r_start+9;}
     if ($r_start==2) {$sstart=$r_start-2; $send=$r_start+8;}    if ($r_start==3) {$sstart=$r_start-3; $send=$r_start+7;}
@@ -2561,14 +2562,14 @@ function topic_links($records,$r_start=0,$URL,$inpage=20,$type=0,$names=0) {
     if ($records%$inpage==0) $add=0; else $add=1;
     for ($i=$sstart; $i<$send; $i++) {
         if ($i==$r_start) $str.=" <B>".($i+1)."</B>";
-        else $str.=" <a href=".$URL.$i." title=\"".ss("Перейти к странице")." ".($i+1)."\"><B>".($i+1)."</B></a>";
+        else $str.=" <a href='".$URL.$i."' title='".ss("Перейти к странице")." ".($i+1)."'><B>".($i+1)."</B></a>";
         }
         $send=$records/$inpage;
         $send2 = intval($records/$inpage);
         if ($send2 != $send) $send2++;
     if ($r_start+(1-$add)<intval($records/$inpage) and $r_start < $send2-5) {
-        $str.=" <a class=pages_links href=".$URL.($r_start+1)." title=\"".ss("следующая страница")."\">></a>";
-        if ( ($r_start==0 and $send2<10) or ($i-1 == intval($records/$inpage)-(1-$add)) ) {} else $str.=" <a href=".$URL.(intval($records/$inpage)-(1-$add))." title=\"".ss("последняя страница")."\"><B>".$send2."</B></a>";
+        $str.=" <a class='pages_links' href='".$URL.($r_start+1)."' title='".ss("следующая страница")."'>></a>";
+        if ( ($r_start==0 and $send2<10) or ($i-1 == intval($records/$inpage)-(1-$add)) ) {} else $str.=" <a href='".$URL.(intval($records/$inpage)-(1-$add))."' title='".ss("последняя страница")."'><B>".$send2."</B></a>";
         }
         $str.="</div>";
     return($str);
