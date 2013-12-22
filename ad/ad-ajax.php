@@ -646,7 +646,7 @@ if ($func == "show_pole") { // Ответ на комментарий из ад�
             $('.parent').livequery('change', function() {
               $(this).nextAll('.parent').remove();
               $(this).nextAll('label').remove();
-              $('#show_sub_categories').append('<img src=\"images/loading.gif\" class=\"left3\" id=\"loader\" />');
+              $('#show_sub_categories').append('Загружаю...');
               $.post(\"get_child_categories.php\", {
                 parent_id: $(this).val(),
               }, function(response){
@@ -1245,7 +1245,7 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
       $module = $row6['module'];
       if (!isset($title_razdel_and_bd[$module])) $titl_mainpage = "РАЗДЕЛ УДАЛЁН! &rarr; $module";
         else {
-          if ($cid != 0) $title_papka = " &rarr; папка «".$titles_papka[$cid]."»"; 
+          if ($cid != 0 && isset($titles_papka[$cid])) $title_papka = " &rarr; папка «".$titles_papka[$cid]."»"; 
           else $title_papka = "";
           $titl_mainpage = $title_razdel_and_bd[$module].$title_papka;
         }

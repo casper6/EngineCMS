@@ -19,6 +19,7 @@ function show_opros(id, res, golos) {
 function show_comment(id) {
 	$.ajax({ url: 'ajax.php', cache: false, dataType : "html",
 		data: {'func': 'show_comment', 'id': id},
+		beforeSend: function(){ new Spinner().spin( document.getElementById('comm_'+id) ); },
 	    success: function(data){ $('#comm_'+id).html(data); }
 	});
 }
@@ -120,7 +121,7 @@ function AjaxFormRequest(result_id,form_id,url) {
 function show_raspisanie(id, string) {
 	$.ajax({ url: 'ajax.php', cache: false, dataType : "html",
 data: {'func': 'show_raspisanie', 'id': id, 'string': string},
-beforeSend: function(){ $('#show_raspisanie'+id).html('<img src="images/loading.gif">'); },
+beforeSend: function(){ new Spinner().spin( document.getElementById('show_raspisanie'+id) ); },
 	    success: function(data){ $('#show_raspisanie'+id).html(data); }
 	});
 }
@@ -131,7 +132,7 @@ function save_raspisanie() {
       type: 'POST',
       url: 'ajax.php',
       data: {'func': 'save_raspisanie', 'string': msg },
-	  beforeSend: function(){ $('#zapis_dialog').html('<img src=images/loading.gif> Отправляю...'); },
+      beforeSend: function(){ new Spinner().spin( document.getElementById('zapis_dialog') ); },
       success: function(data) { $('#zapis_dialog').html(data); }
     });
 }
@@ -139,7 +140,7 @@ function save_raspisanie() {
 function page_golos(id,name,gol,type) {
 	$.ajax({ url: 'ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'savegolos', 'type': type, 'id': id, 'string': name+'*@%'+gol},
-	    beforeSend: function(){ $('#golos'+id).html('<img src="images/loading.gif">'); },
+	    beforeSend: function(){ new Spinner().spin( document.getElementById('golos'+id) ); },
 	    success: function(data){ $('#golos'+id).html(data); }
 	});
 }
@@ -147,7 +148,7 @@ function page_golos(id,name,gol,type) {
 function shop_show_order() {
 	$.ajax({ url: 'ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'shop_show_order' },
-	    beforeSend: function(){ $('#shop_card').html('<img src="images/loading.gif">'); },
+	    beforeSend: function(){ new Spinner().spin( document.getElementById('shop_card') ); },
 	    success: function(data){ $('#shop_card').html(data); }
 	});
 }
@@ -155,7 +156,7 @@ function shop_show_order() {
 function shop_show_card(basket) {
 	$.ajax({ url: 'ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'shop_show_card', 'string': basket },
-	    beforeSend: function(){ $('.shop_' + basket).html('<img src="images/loading.gif">'); },
+	    beforeSend: function(){ $('.shop_' + basket).html('...'); },
 	    success: function(data){ $('.shop_' + basket).html(data); }
 	});
 }

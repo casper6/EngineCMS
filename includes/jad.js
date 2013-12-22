@@ -60,14 +60,14 @@ function papka_show(cid, name, sort, id, xxx) {
 function papka(cid, sort, id, xxx) {
 	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'papka', 'id': id, 'string': cid+'*@%'+sort},
-	    beforeSend: function(){ $('#podpapka'+cid).html('<br><img src=images/loading.gif> Загрузка страниц и подпапок...'); },
+	    beforeSend: function(){ new Spinner().spin( document.getElementById('podpapka'+cid) ); },
 	    success: function(data){ $('#podpapka'+cid).html(data); }
 	});
 }
 function show_pole(id, page_id, razdel, cid) {
 	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'show_pole', 'id': id, 'string': razdel+'*@%'+page_id+'*@%'+cid},
-	    beforeSend: function(){ $('#pole'+page_id).html('<br><img src=images/loading.gif> Загрузка...'); },
+	    beforeSend: function(){ new Spinner().spin( document.getElementById('pole'+page_id) ); },
 	    success: function(data){ $('#pole'+page_id).html(data); }
 	});
 }
@@ -79,7 +79,7 @@ function save_main(url, op, id, id2) {
       type: 'POST',
       url: url,
       data: {'op': op, 'string': msg },
-	  beforeSend: function(){ $(id2).html('<img src=images/loading.gif> Сохраняю...'); },
+	  beforeSend: function(){ $(id2).html('Сохраняю...'); },
       success: function(data) { $(id2).html(data); if (id2 != '#save_main') $(id2).html(icon('green small','*')); },
       /* error: function(xhr, str) { alert('Возникла ошибка: ' + xhr.responseCode ); } */
     });
@@ -109,21 +109,21 @@ function show_otvet_comm(cid, name, mail, mod, shablon, main_nick, all_nicks) {
 function new_otvet(type, id, sender, info, mail, mod) {
 	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'comm_otvet', 'id': id, 'type': type, 'string': sender+'*@%'+info+'*@%'+mail+'*@%'+mod},
-	    beforeSend: function(){ $('#otvet_send'+id).html('<img src=images/loading.gif> Отправляю ответ...'); },
+	    beforeSend: function(){ $('#otvet_send'+id).html('Отправляю ответ...'); },
 	    success: function(data){ $('#otvet_send'+id).html('<span class=h1>'+icon('green medium','c')+data+'</span>'); }
 	});
 }
 function trash_pics() {
 	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'trash_pics'},
-	    beforeSend: function(){ $('#show_options_oldfotos').html('<br><img src=images/loading.gif> Загружаю список фотографий...'); },
+	    beforeSend: function(){ new Spinner().spin( document.getElementById('show_options_oldfotos') ); },
 	    success: function(data){ $('#show_options_oldfotos').html(data); }
 	});
 }
 function replace(id) {
 	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'replace', 'id': id},
-	    beforeSend: function(){ $('#pid'+id).html('<br><img src=images/loading.gif> Загрузка функций копирования/перемещения и создания ярлыков...'); },
+	    beforeSend: function(){ new Spinner().spin( document.getElementById('pid'+id) ); },
 	    success: function(data){ $('#pid'+id).html(data); }
 	});
 }
@@ -144,7 +144,7 @@ function save_spisok() {
       type: 'POST',
       url: 'ad/ad-ajax.php',
       data: {'func': 'save_spisok', 'string': msg },
-	  beforeSend: function(){ $('#add_spisok').html('<img src=images/loading.gif> Сохраняю...'); },
+	  beforeSend: function(){ $('#add_spisok').html('Сохраняю...'); },
       success: function(data) { $('#add_spisok').hide('slow'); 
       /*spiski_show(global_spisok_name, global_spisok_title); */
   }
@@ -163,7 +163,7 @@ function spiski_show(name, title) {
 	txt = '<span class=h2>Редактирование значений поля «'+title+'»</span><p>При удалении значения также удаляется информация из связанных с ним страниц.<br>Пример: Создав поле «Цена» (prise, число) и выставив для страницы его значение, например 1000, мы создали значение prise = 1000. Здесь мы можем его удалить также, как если бы отредактировали страницу и стерли 1000 в поле Цена.</p><a class="button green" style="margin-top:4px;margin-bottom:10px;" target="_blank" onclick="add_spisok(\'0\', \''+name+'\', \'\', \'\', \'\', \'0\', \'0\')"> '+icon('white small','+')+' Добавить значение поля</a>';
 	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'spiski_show', 'type': name },
-	    beforeSend: function(){ $('#podrazdel').html( txt + '<p><img src=images/loading.gif> Загрузка...' ); },
+	    beforeSend: function(){ new Spinner().spin( document.getElementById('podrazdel') ); },
 	    success: function(data){ $('#podrazdel').html( txt + data ); }
 	});
 }
@@ -173,7 +173,7 @@ function oformlenie_show(title,id,type,link) {
 	if (id==2) txt = '<p>При удалении объекта оформления, он попадает в «Удаленное оформление» для окончательного удаления или восстановления.<p>'+icon('red small','F')+' <a href=sys.php?op=delete_all&del=design>Очистить Удаленное</a>';
 	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'oformlenie_show', 'type': type },
-	    beforeSend: function(){ $('#podrazdel').html( txt + '<p><img src=images/loading.gif> Загрузка...' ); },
+	    beforeSend: function(){ new Spinner().spin( document.getElementById('podrazdel') ); },
 	    success: function(data){ $('#podrazdel').html( txt + data ); }
 	});
 }
@@ -203,7 +203,7 @@ function icon(classes,data) {
 function razdel(id, sort, re, txt) {
 	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'razdel', 'id': id, 'string': re+'*@%'+sort},
-	    beforeSend: function(){ $('#podrazdel').html('<p><img src=images/loading.gif> Загрузка страниц и папок раздела...'); },
+	    beforeSend: function(){ new Spinner().spin( document.getElementById('podrazdel') ); },
 	    success: function(data){ $('#podrazdel').html(txt + data + '<hr>'); }
 	});
 }
@@ -211,7 +211,7 @@ function add_papka(id,pages) {
 	if (pages==0) pages = 'add_papka'; else pages = 'add_pages';
 	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': pages, 'id': id},
-	    beforeSend: function(){ $('#add').show(); $('#add').html('<p><img src=images/loading.gif> Загрузка списка папок раздела...'); },
+	    beforeSend: function(){ new Spinner().spin( document.getElementById('add') ); },
 	    success: function(data){ $('#add').html(data); }
 	});
 }
@@ -246,21 +246,21 @@ function openbox(id,name,type) {
 	if (type != 'add') type = 'podrazdel';
 	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'opengarbage', 'id': id},
-	    beforeSend: function(){ $('#'+type).html('<h1><img src=images/loading.gif> Загружаю...</h1>'); },
+	    beforeSend: function(){ new Spinner().spin( document.getElementById(type) ); },
 	    success: function(data){ $('#'+type).html('<h1>'+name+'</h1>'+add+data); $('#'+type).show(); }
 	});
 }
 function delslovo(id) {
 	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'delslovo', 'id': id},
-	    beforeSend: function(){ $('#s_'+id).html(' <img src="images/loading.gif"> Удаляю...'); },
+	    beforeSend: function(){ new Spinner().spin( document.getElementById('s_'+id) ); },
 	    success: function(data){ $('#s_'+id).html(' <b class="green">Удалено</b>'); }
 	});
 }
 function del_csv(id) {
 	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'del_csv', 'id': id},
-	    beforeSend: function(){ $('#id_'+id).html('<td colspan="4"></td><td><img src="images/loading.gif"> Удаляю...</td>'); },
+	    beforeSend: function(){ $('#id_'+id).html('<td colspan="4"></td><td>Удаляю...</td>'); },
 	    success: function(data){ $('#id_'+id).html('<td colspan="5"><div class="notice error">Файл удален</div></td>'); }
 	});
 }
@@ -295,7 +295,7 @@ function delcomm(id) {
 function del_file(file, id) {
 	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'delfile', 'type': file },
-	    beforeSend: function(){ $('#file'+id).html(' <img src=images/loading.gif> Удаляю...'); },
+	    beforeSend: function(){ $('#file'+id).html(' Удаляю...'); },
 	    success: function(data){ $('#file'+id).hide(); }
 	});
 }
@@ -331,7 +331,7 @@ function delrazdel(id) {
 function rep(id,type,razdel,papka) {
 	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'rep', 'type': type, 'id': id, 'string': papka+'*@%'+razdel },
-	    beforeSend: function(){ $('#rep'+id).html(' <img src=images/loading.gif> Секундочку...'); },
+	    beforeSend: function(){ new Spinner().spin( document.getElementById('rep'+id) ); },
 	    success: function(data){ $('#rep'+id).html(data); if (type == 3) $('#page'+id).hide('slow'); }
 	});
 }
@@ -341,7 +341,7 @@ function clo(pid) {
 function izmenapapka(select,papka,this_cid,id,type) {
 	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'izmenapapka', 'id': id, 'type': type, 'string': select+'*@%'+papka+'*@%'+this_cid },
-	    beforeSend: function(){ $('#izmenapapka'+id).html(' <img src=images/loading.gif> Загружаю...'); },
+	    beforeSend: function(){ new Spinner().spin( document.getElementById('izmenapapka'+id) ); },
 	    success: function(data){ $('#izmenapapka'+id).html(data); }
 	});
 }

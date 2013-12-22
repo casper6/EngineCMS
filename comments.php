@@ -240,12 +240,13 @@ function comm_links($records,$starting=0,$inpage=10) {
 //$records - всего записей 
 //$starting - текущая страница 
 //$inpage - записей на страницу
+  $starting = intval($starting / $inpage);
     $str="";
     if ($records<=$inpage) return;
         $str.="<div class='comm_links'>";
     if ($starting!=0 and $starting > 5) {
-        $str.="<a class='no pointer bb1gray' onclick='showcomm(".($starting-1).",".$inpage.",0);' title='".ss("предыдущая страница")."'><</a>";
-        $str.=" <a class='no pointer bb1gray' onclick='showcomm(0,".$inpage.",0);' title='".ss("первая страница")."'>1</a>";
+        $str.="<a href='#comm' class='no pointer bb1gray' onclick='showcomm(".(($starting-1) * $inpage).",".$inpage.",0);' title='".ss("предыдущая страница")."'><</a>";
+        $str.=" <a href='#comm' class='no pointer bb1gray' onclick='showcomm(0,".$inpage.",0);' title='".ss("первая страница")."'>1</a>";
         }
     if ($starting==0) {$sstart=$starting-0; $send=$starting+10;}   if ($starting==1) {$sstart=$starting-1; $send=$starting+9;}
     if ($starting==2) {$sstart=$starting-2; $send=$starting+8;}    if ($starting==3) {$sstart=$starting-3; $send=$starting+7;}
@@ -255,16 +256,16 @@ function comm_links($records,$starting=0,$inpage=10) {
     if ($records%$inpage==0) $add=0; else $add=1;
     for ($i=$sstart; $i<$send; $i++) {
         if ($i==$starting) $str.=" <B>".($i+1)."</B>";
-        else $str.=" <a class='no pointer bb1gray' onclick='showcomm(".$i.",".$inpage.",0);' title='".ss("Перейти к странице")." ".($i+1)."'>".($i+1)."</a>";
+        else $str.=" <a href='#comm' class='no pointer bb1gray' onclick='showcomm(".($i * $inpage).",".$inpage.",0);' title='".ss("Перейти к странице")." ".($i+1)."'>".($i+1)."</a>";
         }
         $send=$records/$inpage;
         $send2 = intval($records/$inpage);
         if ($send2 != $send) $send2++;
     if ($starting+(1-$add)<intval($records/$inpage) and $starting < $send2-5) {
-        $str.=" <a class='no pointer bb1gray' onclick='showcomm(".($starting+1).",".$inpage.",0);' title='".ss("следующая страница")."'>></a>";
+        $str.=" <a href='#comm' class='no pointer bb1gray' onclick='showcomm(".(($starting+1) * $inpage).",".$inpage.",0);' title='".ss("следующая страница")."'>></a>";
         if ( ($starting==0 and $send2<10) or ($i-1 == intval($records/$inpage)-(1-$add)) ) {} else {
-          $last = intval($records/$inpage)-(1-$add);
-          $str.=" <a class='no pointer bb1gray' onclick='showcomm(".$last.",".$inpage.",0);' title='".ss("последняя страница")."'><B>".$send2."</B></a>";
+          $last = intval(($records/$inpage - (1 - $add)) * $inpage);
+          $str.=" <a href='#comm' class='no pointer bb1gray' onclick='showcomm(".$last.",".$inpage.",0);' title='".ss("последняя страница")."'><B>".$send2."</B></a>";
         }
         }
         $str.="</div>";

@@ -5,7 +5,7 @@ define ('ROOT_DIR', dirname ( __FILE__ ) ); // доработать!
 
 session_start(); // Для капчи (проверочный код-картинка от спама) // проверить вызов
 require_once("mainfile.php");
-global $strelka, $siteurl, $prefix, $name, $db, $admin, $sitename, $pagetitle, $pagetitle2, $registr, $pogoda, $flash, $keywords, $description, $counter, $startdate, $adminmail, $keywords2, $description2, $stopcopy, $nocash, $blocks, $http_siteurl, $display_errors, $gallery_css3, $gallery_lightbox, $gallery_carusel, $gallery_sly, $deviceType, $scrollyeah, $lightload, $spin;
+global $strelka, $siteurl, $prefix, $name, $db, $admin, $sitename, $pagetitle, $pagetitle2, $registr, $pogoda, $flash, $keywords, $description, $counter, $startdate, $adminmail, $keywords2, $description2, $stopcopy, $nocash, $blocks, $http_siteurl, $display_errors, $gallery_css3, $gallery_lightbox, $gallery_carusel, $gallery_sly, $deviceType, $scrollyeah, $lightload;
 $nocash = $gallery_css3 = $gallery_lightbox = $gallery_carusel = $gallery_sly = $gallery_sly_full = $mp3_player = false;
 if ($name == "") $name = "index";
 $index_ok = true; // индексирование поисковиками
@@ -2140,7 +2140,7 @@ if ($gallery_sly_full == true) echo "<script src='includes/sly.min.js'></script>
 if ($js != "" && $js != "no") echo "<script src='js_".$js.".js'></script>";
 
 if ($lightload != 0) echo "<script src='includes/lightload.js'></script>";
-if ($spin != 0) echo "<script src='includes/spin.js'></script>";
+echo "<script src='includes/spin.js'></script>";
 if ($scrollyeah != 0) echo "<script src='includes/scrollyeah.js'></script><link rel='stylesheet' href='includes/scrollyeah.css' />";
 
 echo "<link rel='alternate' href='/rss/' title='".$project_name." RSS' />

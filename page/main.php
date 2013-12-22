@@ -1224,6 +1224,7 @@ function page($pid, $all) {
     <script>function showcomm(start, num, add){
       if (add == null) add = 0;
       $.get('comments.php', { p_id: '".$pid."', id_module: '".$id_module."', start: start, num: num, add: add }, function(data) { 
+      new Spinner().spin( document.getElementById('page_comments') );
       if (add == 0) $('#page_comments').html( data );
       else $('#page_comments'+add).html( data );
       });

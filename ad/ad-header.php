@@ -61,7 +61,8 @@ if ($lang_admin != 'ru') echo "<script src='language/adm_".$lang_admin.".js'></s
 if ($red==3) echo "<script src='ed/js/editor/editor.js'></script> 
 <link rel='stylesheet' href='ed/js/editor/css/editor.css' media='screen, projection' /> ";
 
-echo "<script src='ed2/redactor.js'></script>
+echo "<script src='includes/spin.js'></script>
+<script src='ed2/redactor.js'></script>
 <link rel='stylesheet' href='ed2/redactor.css' />
 <script src='ed2/".$lang_admin.".js'></script>
 <script src='ed2/clips.js'></script>
