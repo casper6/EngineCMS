@@ -148,8 +148,13 @@ div.raspisanie { height:15px; width:100%; min-width:5px; border-left: 1px solid 
 .shop_card_price {float:right; margin-left: 5px; text-align:right; max-height: 40px;}
 .shop_card { padding-top:10px; padding-bottom:10px; min-height: 55px !important;}
 .shop_card_oformlenie {margin-top:10px;}
+
 .shop_card_oformlenie a { width:100%; background: #d0e087; color: black; border-radius: 5px; -moz-border-radius: 5; -webkit-border-radius: 5; border-bottom:2px solid #bdc9a2; padding:7px; cursor:pointer; text-decoration:none;}
 .shop_card_oformlenie a:hover {background: green; color: white; border-bottom:2px solid #666;}
+
+.shop_card_oformlenie a.disable { background: #bbb; color: white; cursor:default;}
+.shop_card_oformlenie a.disable:hover {background: #aaa; color: white; border-bottom:2px solid #bdc9a2;}
+
 a.shop_card_delete {background: #e09487; color: white; border-bottom:2px solid #c9ada2;}
 .shop_card {border-bottom: 1px dotted #333;}
 .shop_card_price b {display:block; margin-bottom:5px;}
@@ -157,7 +162,7 @@ a.shop_card_delete {background: #e09487; color: white; border-bottom:2px solid #
 .shop_card_del:hover, a.shop_card_delete:hover {background:darkred; color: white;}
 .shop_card_itogo, .shop_card_itogo_price {margin-top:10px; margin-bottom:20px; height: 25px;}
 .shop_form_input {width:98%;}
-
+.shop_minimal_itogo_text {margin-top:10px; margin-bottom:20px;}
 
 .radius {
   border: 1px solid #cccccc;

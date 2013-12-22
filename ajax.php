@@ -399,7 +399,7 @@ if ($func == "shop_show_card") {
 	// global $title_razdels;
 	$shop_tovarov = "товаров,товар,товара";
 	$shop_for_summa = "на сумму";
-	global $shop_text_val1, $shop_text_val2, $shop_text_itogo, $shop_text_oformit, $shop_text_korzina, $shop_text_delete, $shop_text_ochistit, $shop_text_delete_all;
+	global $shop_text_val1, $shop_text_val2, $shop_text_itogo, $shop_text_oformit, $shop_text_korzina, $shop_text_delete, $shop_text_ochistit, $shop_text_delete_all, $shop_minimal_itogo, $shop_minimal_itogo_text;
 	$info = "";
 	$itogo = 0;
 	$all_count = 0;
@@ -458,11 +458,19 @@ if ($func == "shop_show_card") {
 		}
 		if ($string == "price") $info = $itogo;
 		if ($string == "count") $info = $all_count;
+        if ($itogo <= $shop_minimal_itogo && $shop_minimal_itogo != 0) {
+        	$shop_oformit_link = "class='disable' title='".$shop_minimal_itogo_text."'";
+        	$shop_minimal_text = "<div class='shop_minimal_itogo_text'>".$shop_minimal_itogo_text."</div>";
+        } else { 
+        	$shop_oformit_link ="onclick='shop_show_order()'";
+        	$shop_minimal_text = "";
+        }
+
 		if ($string == "card") {
 			$info .= "<div class='shop_card_price shop_card_itogo_price'><b>".$shop_text_val1.$itogo.$shop_text_val2."</b></div>
 			<div class='shop_card_itogo'>".$shop_text_itogo." ".$all_count." ".num_ending($all_count, explode(",", $shop_tovarov))."</div>
-			<div class='shop_card_oformlenie'><a onclick='shop_show_order()'>".$shop_text_oformit."</a> <a class='shop_card_delete' onclick='shop_delete()'>".$shop_text_ochistit."</a></div>";
-			$info = "<div class='shop_cards'>".$info."</div>";
+			<div class='shop_card_oformlenie'><a ".$shop_oformit_link.">".$shop_text_oformit."</a> <a class='shop_card_delete' onclick='shop_delete()'>".$shop_text_ochistit."</a></div>";
+			$info = "<div class='shop_cards'>".$info.$shop_minimal_text."</div>";
 		}
 	}
 	echo $info;

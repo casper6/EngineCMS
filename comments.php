@@ -5,23 +5,35 @@ global $prefix, $db, $admin;
 if (is_admin($admin)) $admin_ok = 1; else $admin_ok = 0;
 if (isset($_GET['p_id'])) $pid = intval($_GET['p_id']); 
 else die(ss("Комментариев нет."));
-$comments_desc = intval($_GET['desc']);
-$comment_shablon = intval($_GET['sha']);
-$vetki = intval($_GET['vetki']);
-$comments_num = intval($_GET['num']);
-$comments_all = intval($_GET['all']);
-$comments_mail = intval($_GET['mail']);
-$comments_adres = intval($_GET['adres']);
-$comments_tel = intval($_GET['tel']);
-$url = getenv("REQUEST_URI"); // запросить
+$id_module = intval($_GET['id_module']);
+$start = intval($_GET['start']);
+$num = intval($_GET['num']);
 
-$lim = ""; // доделать на аяксе
+// Получение настроек раздела
+$sql = "SELECT `name`,`title`,`text`,`useit`,`shablon`,`description`,`keywords` FROM ".$prefix."_mainpage where `id`='".$id_module."' and `type`='2'";
+$result = $db->sql_query($sql);
+$row = $db->sql_fetchrow($result);
+//$options = explode("|",$row['text']);
+//$module_name = $options[0];
+$options = str_replace("pages|","",$row['text']);
+parse_str($options);
+$url = getenv("REQUEST_URI"); // запросить
+if ($num != 0) $comments_num = $num;
+
+//if ($comments_num > 0) $lim = " limit ".$start.",".$comments_num;
+//else 
+$lim = "";
 
 if ($comments_desc == 1) $dat = " desc"; 
 else $dat = "";
-$sql_comm = "SELECT `cid`,`avtor`,`ava`,`mail`,`text`,`ip`,`data`,`drevo`,`adres`,`tel` FROM ".$prefix."_pages_comments WHERE `num`='".$pid."' and `active`='1' order by drevo, data".$dat.$lim;
+
+$sql_comm = "SELECT `cid` FROM ".$prefix."_pages_comments WHERE `num`='".$pid."' and `active`='1'";
 $result = $db->sql_query($sql_comm);
 $numrows = $db->sql_numrows($result);
+
+$sql_comm = "SELECT `cid`,`avtor`,`ava`,`mail`,`text`,`ip`,`data`,`drevo`,`adres`,`tel` FROM ".$prefix."_pages_comments WHERE `num`='".$pid."' and `active`='1' order by drevo, data".$dat.$lim;
+$result = $db->sql_query($sql_comm);
+
 $nu = 0;
 header ("Content-Type: text/html; charset=utf-8");
 if ($numrows == 0) {
@@ -37,11 +49,9 @@ if ($numrows == 0) {
     $sha = $row2['text'];
   }
   $p_id = $avtor = $text = $date1 = $date2 = $ip = $drevo = $mail = $adres = $tel = $ava = array();
-
   $date_now = date("d m Y");
   $date_now2 = date("d m Y",time()-86400);
   $date_now3 = date("d m Y",time()-172800);
-  //$c_id = 0;
   while ($row = $db->sql_fetchrow($result)) { // заменить на функцию даты !!!
     $c_id = $row['cid'];
     $p_id[$c_id] = $pid;
@@ -64,7 +74,9 @@ if ($numrows == 0) {
     $adres[$c_id] = $row['adres'];
     $tel[$c_id] = $row['tel'];
   }
-  echo generate_comm($admin_ok, $p_id, $avtor, $text, $mail, $adres, $tel, $date1, $date2, $ip, $drevo, $sha, "0", "", $vetki, $comments_num, $comments_all, $comments_mail, $comments_adres, $comments_tel, $ava)."<div id='comments_refresh' title='".ss("Обновить комментарии")."'><a onclick='showcomm()' class='refresh'></a><a href='#new' class='new'>0</a></div>";
+  echo generate_comm($admin_ok, $p_id, $avtor, $text, $mail, $adres, $tel, $date1, $date2, $ip, $drevo, $sha, "0", "", $vetki, $comments_num, $comments_all, $comments_mail, $comments_adres, $comments_tel, $ava)."<div id='comments_refresh' title='".ss("Обновить комментарии")."'><a onclick='showcomm(".$start.",".$num.")' class='refresh'></a><a href='#new' class='new'>0</a></div>";
+  // Ссылка «Раскрыть все» // $all_numrows > $comments_num and  and $comments_num > 0
+  if ($comments_all == 1 && $numrows > $comments_num && $comments_num != 0) echo "<div class='comm_all_show'><a href='#comm' id='allcomm_show' onclick=\"showcomm(0,1000000);\">".$comments_8."</a></div>";
 }
 /////////////////////////////////////////////////////
 function generate_comm($admin_ok, $p_id, $avtor, $text, $mail, $adres, $tel, $date1, $date2, $ip, $drevo, $sha, $position, $numb="", $vetki, $comments_num, $comments_all, $comments_mail, $comments_adres, $comments_tel, $ava) {
@@ -97,7 +109,7 @@ function generate_comm($admin_ok, $p_id, $avtor, $text, $mail, $adres, $tel, $da
 
       $otvets = generate_comm_num($p_id, $drevo, $comm_cid);
       if ($position==0 and $otvets > 0 and $vetki == 1) {
-        $comment_otvet_show = " <div style=\"display:inline;\" id=\"show_otvet".$nus."\"><a class=\"no\" title=\"".ss("Показать ответы на это сообщение")."\" href=\"#big_otvet".$ver."\" onclick='show(\"big_otvet".$nus."\"); show(\"show_otvet".$nus."\"); show(\"hide_otvet".$nus."\");'>+</a> <a class=\"no showotvet\" title=\"".ss("Показать ответы на это сообщение")."\" href=\"#big_otvet".$ver."\" onclick='show(\"big_otvet".$nus."\"); show(\"show_otvet".$nus."\"); show(\"hide_otvet".$nus."\");'>".ss("Раскрыть ответ")."</a></div><div style=\"display:none;\" id=\"hide_otvet".$nus."\"><a class=\"no showotvet\" title=\"".ss("Убрать ответы на это сообщение")."\" href=\"#big_otvet".$ver."\" onclick='show(\"big_otvet".$nus."\"); show(\"show_otvet".$nus."\"); show(\"hide_otvet".$nus."\");'>-</a> <a class=\"no\" title=\"".ss("Убрать ответы на это сообщение")."\" href=\"#big_otvet".$ver."\" onclick='show(\"big_otvet".$nus."\"); show(\"show_otvet".$nus."\"); show(\"hide_otvet".$nus."\");'>".ss("Скрыть ответ")."</a></div>"; 
+        $comment_otvet_show = " <div style=\"display:inline;\" id=\"show_otvet".$nus."\"><a class=\"no pointer bb1gray\" title=\"".ss("Показать ответы на это сообщение")."\" onclick='show(\"big_otvet".$nus."\"); show(\"show_otvet".$nus."\"); show(\"hide_otvet".$nus."\");'>+ ".ss("Раскрыть ответ")."</a></div><div style=\"display:none;\" id=\"hide_otvet".$nus."\"><a class=\"no showotvet pointer bb1gray\" title=\"".ss("Убрать ответы на это сообщение")."\" onclick='show(\"big_otvet".$nus."\"); show(\"show_otvet".$nus."\"); show(\"hide_otvet".$nus."\");'>- ".ss("Скрыть ответ")."</a></div>"; 
         $all_show .= "show(\"big_otvet".$nus."\"); show(\"show_otvet".$nus."\"); show(\"hide_otvet".$nus."\"); ";
         $all_hide .= "show(\"big_otvet".$nus."\"); show(\"show_otvet".$nus."\"); show(\"hide_otvet".$nus."\"); ";
       } else $comment_otvet_show = "";
@@ -142,7 +154,7 @@ function generate_comm($admin_ok, $p_id, $avtor, $text, $mail, $adres, $tel, $da
       "[comment_num]"=>$numb.$nu,
       "[comment_text]"=>$text2,
       "[comment_avtor_type]"=>$avtor_type,
-      "[comment_avtor]"=>"".$avtor2, //<a name=\"big_otvet".$nus."\"></a>
+      "[comment_avtor]"=>"".$avtor2,
       "[comment_data]"=>$date1[$comm_cid],
       "[comment_time]"=>$date2[$comm_cid],
       "[comment_admin]"=>$comment_admin,
@@ -166,9 +178,12 @@ function generate_comm($admin_ok, $p_id, $avtor, $text, $mail, $adres, $tel, $da
       $sha3 .= $sha2;
       $sha2 = "";
     } // end if
+    //$sha2 .= "$position  $nu $comments_num<br>";
+    if ($position == 0 && $nu == $comments_num && $comments_num != 0) break;
   } // end foreach
   $and = "";
-  if ( $position==0 && $vetki == 1) $and .= "<br><a class=\"no\" id=\"all_show\" title=\"".ss("Показать все ответы")."\" href=\"#comm\" onclick='".$all_show." show(\"all_hide\"); show(\"all_show\");'>+ ".ss("Показать все ответы")."</a><a class=\"no\" id=\"all_hide\" style='display:none;' title=\"".ss("Показать все ответы")."\" href=#comm onclick='".$all_hide." show(\"all_hide\"); show(\"all_show\");'>- ".ss("Скрыть все ответы")."</a>";
+  if ( $position==0 && $vetki == 1) $and .= "<br><a class=\"no pointer bb1gray\" id=\"all_show\" title=\"".ss("Показать все ответы")."\" onclick='".$all_show." show(\"all_hide\"); show(\"all_show\");'>+ ".ss("Показать все ответы")."</a><a class=\"no pointer bb1gray\" id=\"all_hide\" style='display:none;' title=\"".ss("Скрыть все ответы")."\" onclick='".$all_hide." show(\"all_hide\"); show(\"all_show\");'>- ".ss("Скрыть все ответы")."</a>";
+
   return $and.$sha3;
 }
 

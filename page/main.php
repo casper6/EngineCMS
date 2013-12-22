@@ -1020,6 +1020,8 @@ function page($pid, $all) {
     // ========================================================================================
 
     $module = $row['module'];
+    global $title_razdels;
+    $module_title = $title_razdels[$module]; // Название раздела
 
     // Список всех каталогов (массив)
     $c_name = "";
@@ -1212,22 +1214,22 @@ function page($pid, $all) {
   if ($comments==1 && $show_comments==1 && $view!=4 && $nocomm == 0) {
     if (is_admin($admin)) $adm = 1; else $adm = 0;
     $add_css .= " comments_".$comment_shablon;
+    global $id_razdel_and_bd;
+    $id_module = $id_razdel_and_bd[$module];
     $page_comments = "<div class='page_comm'><a name='comm' id='comm'></a>".$comments_1."</div>
-    <script>function showcomm(){
-      $.get('comments.php', { p_id: '".$pid."', desc: '".$comments_desc."', sha: '".$comment_shablon."', vetki: '".$vetki."', num: '".$comments_num."', all: '".$comments_all."', mail: '".$comments_mail."', adres: '".$comments_adres."', tel: '".$comments_tel."' }, function(data) { 
+    <script>function showcomm(start, num){
+      $.get('comments.php', { p_id: '".$pid."', id_module: '".$id_module."', start: start, num: num }, function(data) { 
       $('#page_comments').html( data );
       });
     }
-    $(showcomm());</script><div id='page_comments'></div>";
+    $(showcomm(0,0));</script><div id='page_comments'></div>";
 
-    // Ссылка «Раскрыть все» // $all_numrows > $comments_num and  and $comments_num > 0
-    if ($comments_all == 1) $page_comments .= "</div><br><a href='#comm' id='allcomm_show' onclick=\"show('allcomm'); show('allcomm_show');\">".$comments_8."</a>";
     // END OF Комментарии ################################
 
     $page_add_comments = "";
     if ( $comments_add > 0 ) {
       $page_add_comments = addcomm($pid); // Форма добавления комментариев
-      if ( $comments_add == 2 ) $page_add_comments .= "<div class='comm_info_check_by_admin'>".ss("<b>Внимание!</b> Информация будет добавлена на сайт после проверки администратором.")."</div>";
+      if ( $comments_add == 2 ) $page_add_comments .= "<div class='comm_info_check_by_admin'>".ss("Информация будет добавлена на сайт после проверки администратором.")."</div>";
     }
   } else $page_comments = "";
 
@@ -1307,7 +1309,6 @@ function page($pid, $all) {
     $sql = "SELECT `title`, `text` FROM ".$prefix."_mainpage where `tables`='pages' and `type`='2' and (`name` = '".mysql_real_escape_string($name)."' or `name` like '".mysql_real_escape_string($name)." %')";
     $result = $db->sql_query($sql);
     $row = $db->sql_fetchrow($result);
-    //$module_id = $row['id']; // номер раздела
     $module_title = $row['title']; // Название раздела
     $module_options = explode("|",$row['text']); $module_options = $module_options[1]; 
     $page_title = "<div class='cat_title'><h1 class='cat_categorii_link'><a href='-".$name."'>".$module_title."</a> ".$strelka." ".ss("Запись №").$pid."</h1></div>"; // Заголовок страницы
