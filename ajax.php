@@ -7,20 +7,27 @@ if (isset($_REQUEST['type']))   $type = $_REQUEST['type']; else $type = 0;
 if (isset($_REQUEST['id']))     $id = intval($_REQUEST['id']); else $id = 0;
 if (isset($_REQUEST['string'])) $string = $_REQUEST['string']; else $string = "";
 ///////////////////////////////////////////////////////////
+if ($func == "show_comment") {
+	$sql = "select `text` from ".$prefix."_pages_comments where `cid`='".$id."'";
+	$result = $db->sql_query($sql);
+	$row = $db->sql_fetchrow($result);
+	echo $row['text'];
+	exit();
+}///////////////////////////////////////////////////////////
 if ($func == "show_calendar") {
 	parse_str($string);
 	$and = "";
 	//$and = " and module='".$useitX."'";
 	$calendar_dates = array();
 	if ($calendar == "") {
-		$sql = "select date from ".$prefix."_pages where `tables`='pages'".$and." and active!='0' order by date";
+		$sql = "select `date` from ".$prefix."_pages where `tables`='pages'".$and." and `active`!='0' order by `date`";
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result)) {
 			$dates = explode(" ",$row['date']);
 			$calendar_dates[] = $dates[0];
 		}
 	} else {
-		$sql = "select name from ".$prefix."_spiski where type='".$calendar."' and pages!='' order by name";
+		$sql = "select `name` from ".$prefix."_spiski where `type`='".$calendar."' and `pages`!='' order by `name`";
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result)) {
 			$calendar_dates[] = $row['name'];

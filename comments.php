@@ -75,7 +75,7 @@ if ($numrows == 0) {
     $adres[$c_id] = $row['adres'];
     $tel[$c_id] = $row['tel'];
   }
-  echo generate_comm($add, $admin_ok, $p_id, $avtor, $text, $mail, $adres, $tel, $date1, $date2, $ip, $drevo, $sha, "0", "", $vetki, $comments_num, $comments_all, $comments_mail, $comments_adres, $comments_tel, $ava, $start);
+  echo generate_comm($add, $admin_ok, $p_id, $avtor, $text, $mail, $adres, $tel, $date1, $date2, $ip, $drevo, $sha, "0", "", $vetki, $comments_num, $comments_all, $comments_mail, $comments_adres, $comments_tel, $ava, $start, $comment_all_link_text, $comm_col_letters, $comment_all_link);
   if ($add == 0) echo "<div id='comments_refresh' title='".ss("Обновить комментарии")."'><a onclick='showcomm(".$start.",".$num.")' class='refresh'></a><a href='#new' class='new'>0</a></div>";
   // Ссылка «Раскрыть все» // $all_numrows > $comments_num and  and $comments_num > 0
   if ($numrows > $comments_num && $comments_num != 0) {
@@ -98,7 +98,7 @@ if ($numrows == 0) {
   }
 }
 /////////////////////////////////////////////////////
-function generate_comm($add, $admin_ok, $p_id, $avtor, $text, $mail, $adres, $tel, $date1, $date2, $ip, $drevo, $sha, $position, $numb="", $vetki, $comments_num, $comments_all, $comments_mail, $comments_adres, $comments_tel, $ava, $start) {
+function generate_comm($add, $admin_ok, $p_id, $avtor, $text, $mail, $adres, $tel, $date1, $date2, $ip, $drevo, $sha, $position, $numb="", $vetki, $comments_num, $comments_all, $comments_mail, $comments_adres, $comments_tel, $ava, $start, $comment_all_link_text, $comm_col_letters, $comment_all_link) {
   $sha3 = "";
   global $db, $prefix, $gravatar;
   $all_show = ""; $all_hide = ""; // список для "раскрыть все ответы"
@@ -120,8 +120,15 @@ function generate_comm($add, $admin_ok, $p_id, $avtor, $text, $mail, $adres, $te
       //$avtor2 = "<a href=\"#addcomm\" title='Вставить имя в ваш комментарий' onclick=\"clc_name(' ".$avtor[$comm_cid].", ')\">".$avtor[$comm_cid]."</a>";
       $text2 = str_replace(',', ', ', $text[$comm_cid]);
       //$text2 = str_replace(' ,', ',', $text2);
-      //$text2 = str_replace(' ...', '...', $text2);
       //$text2 = str_replace(' руб ', ' руб. ', $text2); $text2 = str_replace(' руб,', ' руб.,', $text2); $text2 = str_replace(' руб!', ' руб.!', $text2);
+
+
+      if ($comment_all_link == 1 && mb_strlen($text2) > $comm_col_letters + 100) {
+        $text2 = mb_substr($text2, 0, $comm_col_letters); // вырезаем нужное кол-во букв
+        $text3 = explode(" ", $text2); // разбиваем на слова
+        $text2 = str_replace(" ".$text3[ count($text3)-1 ]."!@#$%^&*()", "", $text2."!@#$%^&*()"); // вырезаем последнее слово
+        $text2 = $text2."</a></strike></s></u></b></strong></i></em></blockquote>... (<a class='no pointer bb1gray' onclick='show_comment(".$comm_cid.")'>".$comment_all_link_text."</a>)";
+      }
       $text2 = "<div id='comm_".$comm_cid."' class='comm_text'>".$text2."</div>";
 
       $ver = mt_rand(10000, 99999); // получили случайное число
@@ -194,12 +201,11 @@ function generate_comm($add, $admin_ok, $p_id, $avtor, $text, $mail, $adres, $te
       $sha2 .= "<div class='comm_razdel'".$width.">".strtr($sha,$sha_zamena);
       $number = $numb.$nu."_";
       if ($otvets > 0) // $otvets = generate_comm_num($p_id, $drevo, $comm_cid)
-        $sha2 .= "<div class='comm_otvet'".$display." id='big_otvet".$nus."'>".generate_comm($add, $admin_ok, $p_id, $avtor, $text, $mail, $adres, $tel, $date1, $date2, $ip, $drevo, $sha, $comm_cid, $number, $vetki, $comments_num, $comments_all, $comments_mail, $comments_adres, $comments_tel, $ava, $start)."</div>";
+        $sha2 .= "<div class='comm_otvet'".$display." id='big_otvet".$nus."'>".generate_comm($add, $admin_ok, $p_id, $avtor, $text, $mail, $adres, $tel, $date1, $date2, $ip, $drevo, $sha, $comm_cid, $number, $vetki, $comments_num, $comments_all, $comments_mail, $comments_adres, $comments_tel, $ava, $start, $comment_all_link_text, $comm_col_letters, $comment_all_link)."</div>";
       $sha2 .= "</div>";
       if ($comments_num>0 && $comments_all==1 && $numb.$nu == $comments_nu) $sha2 .= "</div>";
       $sha3 .= $sha2;
       $sha2 = "";
-
     }
     } // end if
     if ($position == 0 && $nu == $comments_num && $comments_num != 0) break;

@@ -828,8 +828,10 @@ function edit_main($id) {
 	$options = str_replace($module_name."|","",$text);
 
 	// обнулили все опции
-	$media = $folder = $col = $view = $golos = $golosrazdel = $post = $comments = $datashow = $favorites = $socialnetwork = $search = $search_papka = $put_in_blog = $base = $vetki = $citata = $media_comment = $no_html_in_opentext = $no_html_in_text = $show_add_post_on_first_page = $media_post = $razdel_shablon = $page_shablon = $comments_all = $comments_num = $comments_mail = $comments_adres = $comments_tel = $comments_desc = $golostype = $pagenumbers = $comments_main = $tags_type = $pagekol = $table_light = $designpages = $comments_add = $div_or_table = $papka_show = $add_post_to_mainpage = $design_tablet = $designpages_tablet = $design_phone = $designpages_phone = $edit_pole = $show_tags_pages = $golos_admin = 0;
+	$media = $folder = $col = $view = $golos = $golosrazdel = $post = $comments = $datashow = $favorites = $socialnetwork = $search = $search_papka = $put_in_blog = $base = $vetki = $citata = $media_comment = $no_html_in_opentext = $no_html_in_text = $show_add_post_on_first_page = $media_post = $razdel_shablon = $page_shablon = $comments_all = $comments_num = $comments_mail = $comments_adres = $comments_tel = $comments_desc = $golostype = $pagenumbers = $comments_main = $tags_type = $pagekol = $table_light = $designpages = $comments_add = $div_or_table = $papka_show = $add_post_to_mainpage = $design_tablet = $designpages_tablet = $design_phone = $designpages_phone = $edit_pole = $show_tags_pages = $golos_admin = $comment_all_link = 0;
 	$menushow = $titleshow = $razdeltitleshow = $razdel_link = $peopleshow = $design = $tags = $podrobno = $podrazdel_active_show = $podrazdel_show = $tipograf = $limkol = $tags_show = $tema_zapret = $tema_zapret_comm = $show_read_all = $opentextshow = $maintextshow = $papka_tags_pages = $razdel_tags_pages = 1;
+	$comment_all_link_text = "читать полностью";
+	$comm_col_letters = "1000";
 	$comment_shablon = 2;
 	$col_tags_pages = 5;
 	$lim = 20;
@@ -1131,6 +1133,12 @@ function edit_main($id) {
 	<td>Показывать поле ".input("options[comments_4]", $comments_4)." </td>
 	<td>".select("options[comments_mail]", "3,2,1,0", "везде,на странице в комментариях,в форме добавления комментария,НЕТ", $comments_mail)."</td>
 	</tr>
+	<tr>
+	<td>Показывать ссылку, разворачивающую полный текст комментария ".input("options[comment_all_link_text]", $comment_all_link_text)."<br>
+	Количество букв, до которых будет сокращен комментарий ".input("options[comm_col_letters]", $comm_col_letters, "7", "number")."</td>
+	<td>".select("options[comment_all_link]", "1,0", "ДА,НЕТ", $comment_all_link)."</td>
+	</tr>
+
 	<tr>
 	<td>Показывать поле ".input("options[comments_5]", $comments_5)." </td>
 	<td>".select("options[comments_adres]", "3,2,1,0", "везде,на странице в комментариях,в форме добавления комментария,НЕТ", $comments_adres)."</td>

@@ -15,6 +15,13 @@ function CheckForm(opros_num){
 function show_opros(id, res, golos) { 
 	$.get('opros.php', { num: id, res: res, golos: golos }, function(data) { $('#show_opros'+id).html( data ); }); 
 }
+/* Отображение комментария */
+function show_comment(id) {
+	$.ajax({ url: 'ajax.php', cache: false, dataType : "html",
+		data: {'func': 'show_comment', 'id': id},
+	    success: function(data){ $('#comm_'+id).html(data); }
+	});
+}
 /* Отображение блока календаря */
 function show_calendar(id, string) {
 	$.ajax({ url: 'ajax.php', cache: false, dataType : "html",
