@@ -6,7 +6,7 @@
   $showdate = intval($showdate[0])."-".(intval($showdate[1]) < 10 ? '0'.intval($showdate[1]) : $showdate[1])."-".(intval($showdate[2]) < 10 ? '0'.intval($showdate[2]) : $showdate[2]);
     
   global $strelka, $soderganie, $soderganie2, $db, $prefix, $admin, $name, $pagetitle, $show_comments;
-  global $post, $comments, $datashow, $folder, $media, $view, $col, $search, $search_papka, $tema, $tema_name, $tema_title, $tema_opis, $menushow, $where, $order, $peopleshow, $calendar, $comments_1, $div_or_table; // настройки из БД
+  global $post, $comments, $datashow, $folder, $media, $view, $col, $search, $search_papka, $tema, $tema_name, $tema_title, $tema_opis, $menushow, $where, $order, $peopleshow, $calendar, $div_or_table; // настройки из БД
   
   $ANDDATA = "";
 
@@ -81,23 +81,18 @@
       }
 
         $soderganie .= "<tr valign='top'><td>
-        <div class='page_link_title'><h1 class='cat_page_title'>".$a_open.$title.$a_close."</h1></div>";
-
+        <div class='page_link_title'><span class='page_title'>".$a_open.$title.$a_close."</span>";
         if (is_admin($admin)) $soderganie .= "&nbsp; (<a href='sys.php?op=base_pages_edit_page&name=".$module."&pid=".$p_pid."' title=\"".aa("Редактировать страницу")."\">".aa("редактировать")."</a>)";
-
+        $soderganie .= "</div>";
         if (trim($text)!="") $soderganie .= "<div class='cat_page_text'>".$text."</div>";
-        //$soderganie .= "<div class='cat_page_counter'>";
         if ($pсid>0 and $c_name[$pсid]!="") $soderganie .= "<div class='cat_page_folder ico_folder back_icon' title='".ss("Папка")."'><A href='-".$module."_cat_".$pсid."' class='page_razdel_link'>".$c_name[$pсid]."</a></div>";
-        if ($peopleshow==1) $soderganie .= "<div class='cat_page_folder ico_eye back_icon' title='".ss("Просмотры")."'>".$p_counter."</div>";
-        //$soderganie .= "</div>";
-        if ($datashow==1) $soderganie .= "<div class='cat_page_date calendar back_icon'>".$p_date."</div>"; // Отображение даты
-        if ($p_comm>0) $soderganie .= "<div class='cat_page_comments ico_comment back_icon'>".$a_open_comm.$comments_1.": ".$p_comm.$a_close."</div>"; // Отображение комментариев
+
         $soderganie .= "</td></tr>";
 
     }
     $soderganie .= "</table>";
   }
-  if (is_admin($admin)) $soderganie .= "<h2>".aa("Редактирование страниц доступно только администратору.")."</h2>";
+  if (is_admin($admin)) $soderganie .= "<b class='red'>".aa("Редактирование страниц доступно только администратору.")."</b>";
   // Получаем дизайн для поиска
   global $search_design;
   // Определение дизайна и использованных стилей в дизайне

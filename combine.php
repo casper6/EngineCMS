@@ -183,8 +183,9 @@ a img {border:0;}
 .black, .black a {color:black;}
 .bold, .bold a {color:white; background:red;}
 .select, .select a {color:black; font-weight:bold; background:#dddddd;}
-.calendar_cell {text-align: center; padding:5px; width: 16%; height:30px; float: left; border-radius: 10px;-moz-border-radius: 10px;-webkit-border-radius: 10px;}
-.calendar {width:100%;}
+.calendar_cell {text-align: center; padding:5px; width: 14%; height:30px; float: left; border-radius: 10px;-moz-border-radius: 10px;-webkit-border-radius: 10px;}
+.calendar, .calendar_month_year {width:100%;text-align: center; margin-bottom:10px;}
+.calendar_month, .calendar_year {display:inline;}
 
 .pl20 {padding-left: 20px}
 
@@ -324,6 +325,7 @@ ul.tabs li {background:none !important; padding: 0 !important; margin: 0 !import
   background-size: contain;
 }
 .star-rating input {
+  cursor:pointer;
   -moz-appearance: none;
   -webkit-appearance: none;
   opacity: 0;

@@ -36,7 +36,7 @@ else {
   if ($papka == 0) $papka = "";
   else $papka = " and `cid` = '".$papka."'";
 
-  if (is_admin($admin)) $soderganie .= "<h3>".ss("Редактирование страниц доступно только Администратору.")."</h3>";
+  if (is_admin($admin)) $soderganie .= "<b class='red'>".aa("Редактирование страниц доступно только администратору.")."</b>";
 
   //$search_line[] = str_replace(" ", "%", $slov); 
   if ($lang == 'ru') {
@@ -147,7 +147,7 @@ else {
     }
     $pids = array_merge($pids1,$pids2);
     $nu = count($pids);
-    if ($nu != 0) { $soderganie .= "<h2>".ss("В разделах:")." ".$nu."</h2>"; $allnum += $nu; }
+    if ($nu != 0) { $soderganie .= "<h3>".ss("В разделах:")." ".$nu."</h3>"; $allnum += $nu; }
 
     foreach ($pids as $p_pid) {
       $p_title = $rr_title[$p_pid];
@@ -183,7 +183,7 @@ else {
     }
     $pids = array_merge($pids1,$pids2);
     $nu = count($pids);
-    if ($nu != 0) { $soderganie .= "<h2>".ss("В подразделах:")." ".$nu."</h2>"; $allnum += $nu; }
+    if ($nu != 0) { $soderganie .= "<h3>".ss("В подразделах:")." ".$nu."</h3>"; $allnum += $nu; }
 
     foreach ($pids as $p_cid) {
       $soderganie .= "<li>".ss("папка")." <a class='search_page_link' href='/-".$rr_module[$p_cid]."_cat_".$p_cid."'>".$rr_title[$p_cid]."</a>";
@@ -237,9 +237,9 @@ else {
     }
 
     if ($nu == $search_col_page && $showall == 0) { 
-      $bolee = " ".ss("более")." "; $vse = ". <a class='search_showall' href='header.php?name=-search&slovo=".$slov."&showall=1'>".ss("Показать все")."</a>"; 
+      $bolee = " ".ss("более")." "; $vse = ". <a class='search_showall' href='header.php?name=search&slovo=".$slov."&showall=1'>".ss("Показать все")."</a>"; 
     } else $vse = $bolee = " "; 
-    if ($nu != 0) { $soderganie .= "<h2>".ss("В страницах:").$bolee.$nu.$vse."</h2>"; $allnum += $nu; }
+    if ($nu != 0) { $soderganie .= "<h3>".ss("В страницах:").$bolee.$nu.$vse."</h3>"; $allnum += $nu; }
 
     foreach ($pids as $p_pid) {
       $p_title = $pp_title[$p_pid];
@@ -311,7 +311,7 @@ function strchop($data,$word,$interval,$ci=true) {
     $len = $end_position - $start_position;
     $length = (mb_strlen($data) > $len) ? mb_strripos(mb_substr($data, 0, $len), ' ') : $len;
     //вернули результат #([А-я]*струя[а-я]*)#i
-    return preg_replace('#([А-я]*'.mb_convert_case($word, MB_CASE_UPPER).'[а-я]*)#uis', '<b class=red>$1</b>', preg_replace('#([А-я]*'.mb_convert_case($word, MB_CASE_TITLE).'[а-я]*)#uis', '<b class=red>$1</b>', preg_replace('#([А-я]*'.mb_convert_case($word, MB_CASE_LOWER).'[а-я]*)#uis', '<b class=red>$1</b>', '...'.mb_substr($data,$start_position,$length).'...')));
+    return preg_replace('#([А-я]*'.mb_convert_case($word, MB_CASE_UPPER).'[а-я]*)#uis', '<span class="red">$1</span>', preg_replace('#([А-я]*'.mb_convert_case($word, MB_CASE_TITLE).'[а-я]*)#uis', '<span class="red">$1</span>', preg_replace('#([А-я]*'.mb_convert_case($word, MB_CASE_LOWER).'[а-я]*)#uis', '<span class="red">$1</span>', '...'.mb_substr($data,$start_position,$length).'...')));
 }
 ///////////////////////////////////////////////////////////////
 function zamena_predlog($text) { # Замена предлогов

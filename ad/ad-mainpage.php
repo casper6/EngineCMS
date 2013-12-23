@@ -1330,7 +1330,7 @@ function edit_main($id) {
 	}
 
 	// обнулили все опции
-	$titleshow = $reload_one_by_one = $folder = $datashow = $tagdelete = $ipdatauser = $design = $open_all = $catshow = $main = $daleeshow = $openshow = $number = $add = $size = $papki_numbers = $zagolovokin = $menu = $noli = $html = $show_title = $random = $showlinks = $open_new_window = $shablon = $show_new_pages = $reload_link_show = $reload_link_time = $reload_link_on_start = $show_pages_from = 0;
+	$titleshow = $reload_one_by_one = $folder = $datashow = $tagdelete = $ipdatauser = $design = $open_all = $catshow = $main = $daleeshow = $openshow = $number = $add = $size = $papki_numbers = $zagolovokin = $menu = $noli = $html = $show_title = $random = $showlinks = $open_new_window = $shablon = $show_new_pages = $reload_link_show = $reload_link_time = $reload_link_on_start = $show_pages_from = $calendar_future = $calendar_years = 0;
 	$opros_type = $limkol = $pageshow = $only_question = $opros_result = $foto_gallery_type = $re_menu = $notitlelink = $foto_num = 1;
 	$col_bukv = 50;
 	$img_width = 0;
@@ -1478,6 +1478,17 @@ function edit_main($id) {
 		} else $('#add_razdel').val('');
 	}</script>
 		</td></tr>";
+	}
+
+	if ($name == 11) {
+	echo "<tr>
+	<td>Какое время показывать</td>
+	<td>".select("options[calendar_future]", "0,1,2", "будущее и прошлое,только прошлое,только будущее", $calendar_future)."</td>
+	</tr>";
+	echo "<tr>
+	<td>Глубина времени</td>
+	<td>".select("options[calendar_years]", "0,1,2,3,4,5,6,7,8,9,10", "текущий год,+1 год,+2 года,+3 года,+4 года,+5 лет,+6 лет,+7 лет,+8 лет,+9 лет,+10 лет,", $calendar_years)."</td>
+	</tr>";
 	}
 
 	if ($name == 3) {

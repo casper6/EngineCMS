@@ -19,13 +19,13 @@ global $post, $comments, $datashow, $sort, $lim, $foto, $view, $search, $search_
 
 $media = $folder = $col = $view = $golos = $golosrazdel = $post = $comments = $datashow = $favorites = $socialnetwork = $search = $search_papka = $put_in_blog = $base = $vetki = $citata = $media_comment = $no_html_in_opentext = $no_html_in_text = $show_add_post_on_first_page = $media_post = $razdel_shablon = $page_shablon = $comments_all = $comments_num = $comments_mail = $comments_adres = $comments_tel = $comments_desc = $golostype = $pagenumbers = $comments_main = $tags_type = $tema_zapret_comm = $pagekol = $table_light = $designpages = $comments_add = $div_or_table = $papka_show = $add_post_to_mainpage = $design_tablet = $designpages_tablet = $design_phone = $designpages_phone = $show_tags_pages = $golos_admin = $comment_all_link = 0;
 $menushow = $titleshow = $razdeltitleshow = $razdel_link = $peopleshow = $design = $tags = $podrobno = $podrazdel_active_show = $podrazdel_show = $tipograf = $limkol = $tags_show = $tema_zapret = $opentextshow = $maintextshow = $papka_tags_pages = $razdel_tags_pages = 1;
-$comment_all_link_text = "читать полностью";
+$comment_all_link_text = ss("читать полностью");
 $comm_col_letters = "1000";
 $col_tags_pages = 5;
 $comment_shablon = 2;
 $lim = 20;
 $comm_show_one_more = 3;
-$comm_show_one_more_text = "Показать еще";
+$comm_show_one_more_text = ss("Показать еще");
 $where = $order = $calendar = $reclama = "";
 $sort = "date desc";
 $tema = ss("Открыть новую тему");

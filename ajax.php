@@ -17,24 +17,75 @@ if ($func == "show_comment") {
 if ($func == "show_calendar") {
 	parse_str($string);
 	$and = "";
-	//$and = " and module='".$useitX."'";
+	$month = date('n');
+	if (isset($calendar_month)) $month = $calendar_month;
+	$year = date('Y');
+	if (isset($calendar_year)) $year = $calendar_year;
+
+	if (isset($module_name) && $module_name != "") $and .= " and `module`='".$module_name."'";
 	$calendar_dates = array();
+
+	if ($calendar_future == 2) $and .= " and `date` >= '".$year."-".date('m')."-".date('d')."'";
+	if ($calendar_future == 1) $and .= " and `date` <= '".$year."-".date('m')."-".date('d')."'";
+
 	if ($calendar == "") {
 		$sql = "select `date` from ".$prefix."_pages where `tables`='pages'".$and." and `active`!='0' order by `date`";
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result)) {
 			$dates = explode(" ",$row['date']);
-			$calendar_dates[] = $dates[0];
+			$calendar_dates[] = str_replace("-0","-",$dates[0]);
 		}
 	} else {
 		$sql = "select `name` from ".$prefix."_spiski where `type`='".$calendar."' and `pages`!='' order by `name`";
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result)) {
-			$calendar_dates[] = $row['name'];
+			$calendar_dates[] = str_replace("-0","-",$row['name']);
 		}	
 	}
+	$calendar_dates = array_unique($calendar_dates);
+	//print_r($calendar_dates);
 	require_once("page/functions.php");
-	echo my_calendar($calendar_dates, $useitX, $showdate);
+
+  	// исправление хака времени
+  	if ( ($calendar_future == 2 && $year==date('Y') && $month<date('n')) ||
+  		($calendar_future == 1 && $year==date('Y') && $month>date('n')) ) $month=$calendar_month=date('n');
+
+  	//if ($lang == 'ru') {
+  	$months = explode(",",",".ss("январь,февраль,март,апрель,май,июнь,июль,август,сентябрь,октябрь,ноябрь,декабрь"));
+  	//} else {
+  	//$months = explode(",",",January,February,March,April,May,June,July,August,September,October,November,December");
+  	//}
+  	echo "<script>function change_calendar() { show_calendar(".$idX.", 'idX=".$idX."&calendar=".$calendar."&module_name=".$module_name."&showdate=".$showdate."&calendar_future=".$calendar_future."&calendar_years=".$calendar_years."&calendar_month=' + $('#calendar_month').val() + '&calendar_year=' + $('#calendar_year').val() ); }</script>
+  	<div class='calendar_month_year'><div class='calendar_month'><select id='calendar_month' onchange='change_calendar()'>";
+  	foreach ($months as $key => $m) {
+  		if ($key > 0 ) {
+  			if ( ( ($calendar_future == 0 || $calendar_future == 1) && $key <= date('n') && $year==date('Y') ) || // прошлое и настоящее
+  			( ($calendar_future == 0 || $calendar_future == 2) && $key >= date('n') && $year==date('Y') ) || // будущее и настоящее
+  			 $year!=date('Y')) { // выбран не текущий год
+	  			if ($month == $key) $link = " selected"; else $link = "";
+	  			echo "<option value='".$key."'".$link.">".$m."</option>";
+	  		}
+  		}
+  	}
+  	echo "</select></div> <div class='calendar_year'><select id='calendar_year' onchange='change_calendar()'>";
+  	
+  	if ($calendar_future == 2) $open_year = date('Y');
+  	else $open_year = date('Y') - $calendar_years;
+  	if ($calendar_future == 1) $close_year = date('Y');
+  	else $close_year = date('Y') + $calendar_years;
+
+  	for ($key=$open_year; $key <= $close_year; $key++) {
+		if ( ( ($calendar_future == 0 || $calendar_future == 1) && $key <= date('Y') ) || // прошлое и настоящее
+		( ($calendar_future == 0 || $calendar_future == 2) && $key >= date('Y') ) ) { // выбран не текущий год
+			if ($year == $key) $link = " selected"; else $link = "";
+			echo "<option value='".$key."'".$link.">".$key."</option>";
+		}
+  	}
+  	echo "</select>
+
+  	</div></div>";
+	if (isset($calendar_year)) echo my_calendar($calendar_dates, $module_name, $showdate, $calendar_month, $calendar_year);
+	else echo my_calendar($calendar_dates, $module_name, $showdate);
 	exit();
 }
 ///////////////////////////////////

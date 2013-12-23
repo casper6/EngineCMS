@@ -294,8 +294,9 @@ function date2normal_view($dat, $r=0, $t=0, $eng=0) { // Функция для �
   //if ($lang != "ru-RU" && $lang != "ru") $eng = 1;
   if ($data_days == true) $r = 2;
   // "январь,февраль,март,апрель,май,июнь,июль,август,сентябрь,октябрь,ноябрь,декабрь"
-  if ($eng == 0) $months = explode(",", "?,".ss("января,февраля,марта,апреля,мая,июня,июля,августа,сентября,октября,ноября,декабря"));
-  else $months = array("?", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
+  //if ($lang == 'ru') 
+  $months = explode(",", "?,".ss("января,февраля,марта,апреля,мая,июня,июля,августа,сентября,октября,ноября,декабря"));
+  //else $months = array("?", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
   $year = date("Y");
   if ($t != 0) {
     $dat = explode(" ", trim($dat));
@@ -371,19 +372,28 @@ function period($dat1, $dat2) { // Функция вывода всех дат �
   return $period;
 }
 ///////////////////////////////////////////////////////////////
-function my_calendar($fill='', $modul, $showdate='') { // Функция вывода календаря
+function my_calendar($fill='', $modul, $showdate='', $month='', $year='') { // Функция вывода календаря
   $calendar = "";
-  // Вычисляем число дней в текущем месяце
-  $dayofmonth = date('t');
-  $daynow = date('d');
-  $monthandyear =date('Y-m-');
+  if ($month=='' && $year=='') {
+    $month = date('n'); // месяц
+    $year = date('Y');
+    $dayofmonth = date('t'); // Вычисляем число дней в текущем месяце
+    $daynow = date('j'); 
+  } else {
+    if ($month=='') $month = date('n');
+    if ($year=='') $year = date('Y');
+    $dayofmonth = date('t', mktime(0, 0, 0, $month, 13, $year)); 
+    $daynow = 0;
+    if ($month == date('n') && $year == date('Y')) $daynow = date('j');
+  }
+  $monthandyear = $year."-".$month."-";
   // Счётчик для дней месяца
   $day_count = 1;
   // 1. Первая неделя
   $num = 0;
   for($i = 0; $i < 7; $i++) {
     // Вычисляем номер дня недели для числа
-    $dayofweek = date('w', mktime(0, 0, 0, date('m'), $day_count, date('Y')));
+    $dayofweek = date('w', mktime(0, 0, 0, $month, $day_count, $year));
     // Приводим к числа к формату 1 - понедельник, ..., 6 - суббота
     $dayofweek = $dayofweek - 1;
     if($dayofweek == -1) $dayofweek = 6;
@@ -407,27 +417,33 @@ function my_calendar($fill='', $modul, $showdate='') { // Функция выв�
     // Если достигли конца месяца - выходим из цикла
     if($day_count > $dayofmonth) break;
   }
+  
+  $days = explode(",", ss("Пн,Вт,Ср,Чт,Пт,Сб,Вс"));
   // Выводим содержимое массива $week в виде календаря. Выводим таблицу
   $calendar .= "<div class='calendar'>";
   for($j = 0; $j < 7; $j++) {
     //$calendar .= "<tr align=center>";
+    if($j == 5 || $j == 6) $class = " red"; else $class = " black";
+    $calendar .= "<div class='calendar_cell".$class."'>".$days[$j]."</div>";
     for($i = 0; $i < count($week); $i++) {
       if(!empty($week[$i][$j])) {
         // Если имеем дело с субботой и воскресеньем — подсвечиваем их
-        $class = "";
-        if ($week[$i][$j]<10) $den = "0".$week[$i][$j]; else $den = $week[$i][$j];
-        if ($week[$i][$j] == $daynow) $class = "bold";
-        if ($monthandyear.(intval($week[$i][$j]) < 10 ? '0'.intval($week[$i][$j]) : $week[$i][$j]) == $showdate) $class = "select";
-        if($j == 5 || $j == 6) $class .= " red"; else $class .= " black";
-        if (in_array($monthandyear.$den,$fill)) $calendar .= "<div class='calendar_cell ".trim($class)."'><a href='date_".$monthandyear.(intval($week[$i][$j]) < 10 ? '0'.intval($week[$i][$j]) : $week[$i][$j])."'>".$week[$i][$j]."</a></div>";
-        else $calendar .= "<div class='calendar_cell ".trim($class)."'>".$week[$i][$j]."</div>";
+        if($j == 5 || $j == 6) $class = " red"; else $class = " black";
+        //if ($week[$i][$j]<10) $den = "0".$week[$i][$j]; else 
+        $den = $week[$i][$j];
+        if ($week[$i][$j] == $daynow) $class .= " bold";
+        if ($monthandyear.$week[$i][$j] == $showdate) $class .= " select";
+        // (intval($week[$i][$j]) < 10 ? '0'.intval($week[$i][$j]) : $week[$i][$j])
+        if (in_array($monthandyear.$den,$fill)) $calendar .= "<div class='calendar_cell".$class."'><a href='date_".$monthandyear.$week[$i][$j]."'>".$week[$i][$j]."</a></div>";
+        // (intval($week[$i][$j]) < 10 ? '0'.intval($week[$i][$j]) : $week[$i][$j])
+        else $calendar .= "<div class='calendar_cell".$class."'>".$week[$i][$j]."</div>";
       } else $calendar .= "<div class='calendar_cell'></div>";
     }
     $calendar .= "<div class='clear'></div>";
   } 
   $calendar .= "</div>";
-  $calendar .= "<p class='small red'>".ss("Сегодня: ").date2normal_view($monthandyear.$daynow)."</p>";
-  if (trim($showdate) != "0-00-00" and trim($showdate) != "" and $showdate != $monthandyear.$daynow) $calendar .= "<p class='small black'>".ss("Выбрано: ").date2normal_view($showdate)."</p>";
+  $calendar .= "<p class='small red'>".ss("Сегодня: ").date2normal_view(date('Y-m-d'))."</p>";
+  if (trim($showdate) != "" and $showdate != $monthandyear.$daynow) $calendar .= "<p class='small black'>".ss("Выбрано: ").date2normal_view($showdate)."</p>"; // trim($showdate) != "0-00-00" and 
   return $calendar;
 }
 ////////////////////////////////////////////////////////////

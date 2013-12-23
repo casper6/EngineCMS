@@ -194,7 +194,7 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 		$block_color = $block_colorYYY[$idX];
 
 	// обнулили все опции блоков от греха подальше
-	$titleshow = $reload_one_by_one = $folder = $datashow = $tagdelete = $ipdatauser = $design = $open_all = $catshow = $main = $daleeshow = $openshow = $number = $add = $size = $papki_numbers = $zagolovokin = $menu = $noli = $html = $show_title = $random = $showlinks = $open_new_window = $shablon = $show_new_pages = $reload_link_show = $reload_link_time = $re_menu = $show_pages_from = 0;
+	$titleshow = $reload_one_by_one = $folder = $datashow = $tagdelete = $ipdatauser = $design = $open_all = $catshow = $main = $daleeshow = $openshow = $number = $add = $size = $papki_numbers = $zagolovokin = $menu = $noli = $html = $show_title = $random = $showlinks = $open_new_window = $shablon = $show_new_pages = $reload_link_show = $reload_link_time = $re_menu = $show_pages_from = $calendar_future = $calendar_years = 0;
 	$opros_type = $limkol = $pageshow = $only_question = $opros_result = $foto_gallery_type = $notitlelink = $foto_num = 1;
 	$shablon = $class = $alternative_title_link = $cid_open = $no_show_in_razdel = $watermark = $show_in_papka = "";
 	$addtitle = ss("Добавить статью");
@@ -1212,12 +1212,12 @@ case "10": # Блок меню
 case "11": # КАЛЕНДАРЬ
 	global $showdate; // проверить
 	if (isset($showdate)) {
-		if (trim($showdate) != "0-00-00" and trim($showdate) != "") {
+		if (trim($showdate) != "") { // trim($showdate) != "0-00-00" and 
 			$showdate = explode("-",$showdate);
-			$showdate = intval($showdate[0])."-".(intval($showdate[1]) < 10 ? '0'.intval($showdate[1]) : $showdate[1])."-".(intval($showdate[2]) < 10 ? '0'.intval($showdate[2]) : $showdate[2]);
+			$showdate = intval($showdate[0])."-".intval($showdate[1])."-".intval($showdate[2])."&calendar_month=".intval($showdate[1])."&calendar_year=".intval($showdate[0]);
 		}
-	} else $showdate = "";
-	$textX = "<script>$(show_calendar(".$idX.", 'calendar=".$calendar."&useitX=".$useitX."&showdate=".$showdate."'));</script>
+	} else $showdate = ""; 
+	$textX = "<script>$(show_calendar(".$idX.", 'idX=".$idX."&calendar=".$calendar."&module_name=".$useitX."&showdate=".$showdate."&calendar_future=".$calendar_future."&calendar_years=".$calendar_years."'));</script>
 	<div id='show_calendar".$idX."'><span class='ico_loading i16'></span></div>";
 	$block = str_replace("[".$titleX."]", $design_open.$textX.$design_close, $block);
 	$type = ""; break;
