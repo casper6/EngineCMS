@@ -505,7 +505,7 @@ if ($func == "shop_show_card") {
 					$count = " x ".$count;
 				}
 				if ($string == "card") {
-					if ($pic != "") $pic = "<a href='".$tovar[3]."' title='".$tovar[2]."' class='lightbox' rel='group'><div class='shop_card_minifoto' style='background:url(\"includes/php_thumb/php_thumb.php?src=".$tovar[3]."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0\") center center no-repeat;'></div></a>";
+					if ($pic != "") $pic = "<a href='".$tovar[3]."' title='".$tovar[2]."' data-lightbox='shop'><div class='shop_card_minifoto' style='background:url(\"includes/php_thumb/php_thumb.php?src=".$tovar[3]."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0\") center center no-repeat;'></div></a>";
 					$info .= "<div class='shop_card'>
 					<div class='shop_card_price'><b>".$shop_text_val1.$price.$shop_text_val2.$count."</b>
 					<a class='shop_card_del' onclick='shop_del_tovar(".$id_page.",0)'>".$shop_text_delete."</a>".$del_all."</div>

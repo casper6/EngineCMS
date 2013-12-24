@@ -1872,6 +1872,7 @@ function addpost($cid) {
       }
     }
   } // end if ($view==4) {
+  shuffle($chars);
   $ret .= "<input type='hidden' name='keystring' value='".$chars[array_rand($chars)]."'>".$kcaptcha;
 
   if ($post==2) $ret .= "<br>".ss("Информация будет добавлена на сайт сразу после проверки администратором.");

@@ -770,18 +770,25 @@ case "6": # Фотогалерея
 		if (isset($link[0])) $link = $link[0]; else $link = "";
 		if ($watermark != "") $water = "includes/php_thumb/php_thumb.php?src=".$link."&fltr[]=wmi|".$watermark."|BR|100";	else $water = $link;
 		// foto_gallery_type: 1 - миниатюры, 0 - «карусель», 2 - описание в 3 строки, 3 - аля макос горизонтальная полоса прокрутки
-		if ($foto_gallery_type == 1) $textX .= "<span class='div_a_img_gallery'><a title='".$title."' href='".$water."' data-lightbox='light' rel='group'><img alt='".$title."' src='includes/php_thumb/php_thumb.php?src=".$link."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0' class='img_gallery'></a></span> ";
+		if ($foto_gallery_type == 1) $textX .= "<span class='div_a_img_gallery'><a title='".$title."' href='".$water."' data-lightbox='light'><img alt='".$title."' src='includes/php_thumb/php_thumb.php?src=".$link."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0' class='img_gallery'></a></span> ";
 		if ($foto_gallery_type == 0) $textX0 .= "<li><a href='".$water."'><img src='includes/php_thumb/php_thumb.php?src=".$link."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0' title='".$title."' alt='".$alt."' class='image".$i."'></a></li>";
-		if ($foto_gallery_type == 2) $textX0 .= "<li><a href='#image-".$i."'><img src='includes/php_thumb/php_thumb.php?src=".$link."&amp;fltr[]=crop|0|0|0|0.05&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0' alt='".$title."'><span>".$title."</span></a><div class='lb-overlay' id='image-".$i."'><img src='".$water."' alt='".$title." / ".$alt." / ".$alt2."' /><div><h3>".$title."<span>".$alt."</h3><p>".$alt2."</p></div><a href='#page' class='lb-close'>x Закрыть</a></div></li>";
-		if ($foto_gallery_type >= 3 && $foto_gallery_type <= 6) $textX0 .= "<li><a title='".$title."' href='".$water."' data-lightbox='light' rel='group'><img src='includes/php_thumb/php_thumb.php?src=".$link."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0' alt='".$alt."' class='img_gallery'></a></li>";
-		if ($foto_gallery_type == 7) $textX0 .= "<a title='".$title."' href='".$water."' data-lightbox='light' rel='group'><figure style=\"background-image: url('includes/php_thumb/php_thumb.php?src=".$link."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0')\"><figcaption><h4>".$title."</h4><p>".$alt."</p></figcaption></figure></a>";
-		if ($foto_gallery_type == 8) $textX0[] = "<a title='".$title."' href='".$water."' data-lightbox='light' rel='group'><img src='includes/php_thumb/php_thumb.php?src=".$link."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0' alt='".$alt."' class='img_gallery'></a>";
+
+		if ($foto_gallery_type == 2) {
+			if ($img_height >= $img_width) $img_wh="&amp;h=".$img_height;
+			elseif ($img_height < $img_width)  $img_wh="&amp;w=".$img_width;
+			$textX0 .= "<li><a href='#image-".$i."'><div style='background-image: url(\"includes/php_thumb/php_thumb.php?src=".$link."&amp;fltr[]=crop|0|0|0|0".$img_wh."&amp;q=0\"); width:".$img_width."px; height:".$img_height."px;'><span>".$title."</span></div></a><div class='lb-overlay' id='image-".$i."'><a href='#page' title='".ss("Закрыть")."'><img src='".$water."' alt='".$title." / ".$alt." / ".$alt2."' /></a><div><h3>".$title."<span>".$alt."</h3><p>".$alt2."</p></div><a href='#page' class='lb-close'>".ss("Закрыть")."</a></div></li>";
+		}
+
+		if ($foto_gallery_type >= 3 && $foto_gallery_type <= 6) $textX0 .= "<li><a title='".$title."' href='".$water."' data-lightbox='light'><img src='includes/php_thumb/php_thumb.php?src=".$link."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0' alt='".$alt."'></a></li>";
+		if ($foto_gallery_type == 7) $textX0 .= "<a title='".$title."' href='".$water."' data-lightbox='light'><figure style=\"background-image: url('includes/php_thumb/php_thumb.php?src=".$link."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0')\"><figcaption><h4>".$title."</h4><p>".$alt."</p></figcaption></figure></a>";
+		if ($foto_gallery_type == 8) $textX0[] = "<a title='".$title."' href='".$water."' data-lightbox='light'><img src='includes/php_thumb/php_thumb.php?src=".$link."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0' alt='".$alt."' class='img_gallery'></a>";
 	}
 	if ($foto_gallery_type == 8) {
+		if ($foto_num > count($textX0)) $foto_num = count($textX0);
+		shuffle($textX0);
 		$rand = array_rand($textX0, $foto_num);
-		foreach ($rand as $key) {
-			$textX .= $textX0[$key];
-		}
+		if ($foto_num < 2) $textX .= $textX0[$rand];
+		else foreach ($rand as $key) $textX .= $textX0[$key];
 	}
 	if ($foto_gallery_type >= 3 && $foto_gallery_type <= 7) {
 		// effects 3, basic 4, cycleitems 5, oneperframe 6, fullscreen 7
@@ -800,7 +807,7 @@ case "6": # Фотогалерея
 		if ($foto_gallery_type != 7) $textX .= "<style>.frame ul li {width: ".$img_width."px;}</style><div class='controls center'><button class='prev'> ← ".ss("предыдущая")." </button> <button class='next'> ".ss("следующая")." → </button></div>";
 		else $textX .= "<style>.images figure { padding-top: ".$img_height."px; width: ".$img_width."px; }</style>";
 	}
-	if ($foto_gallery_type == 2) { $gallery_css3 = true; $textX .= "<style>.lb-album li > a{width: ".$img_width."px;height: ".$img_height."px;line-height: ".$img_height."px;}.lb-album li > a span{width: ".$img_width."px;height: ".$img_height."px;line-height: ".$img_height."px;}</style><ul class='lb-album'>".$textX0."</ul>"; }	
+	if ($foto_gallery_type == 2) { $gallery_css3 = true; $textX .= "<style>.lb-album li > a{width: ".$img_width."px;height: ".$img_height."px;}.lb-album li > a span{width: ".$img_width."px;height: ".$img_height."px;}</style><ul class='lb-album'>".$textX0."</ul><div class='clear'></div>"; }	
 	if ($foto_gallery_type == 1 || $foto_gallery_type == 8) { $gallery_lightbox = true; }
 	if ($foto_gallery_type == 0) { $gallery_carusel = true; $textX .= "<div id='carusel-gallery' class='ad-gallery'><div class='ad-image-wrapper'></div><div class='ad-controls'></div><div class='ad-nav'><div class='ad-thumbs'><ul class='ad-thumb-list'>".$textX0."</ul></div></div></div>"; }
 	$block = str_replace("[".$titleX."]", $design_open.$textX.$design_close, $block);
@@ -2135,9 +2142,60 @@ if ($gallery_carusel == false) echo "<script src='includes/lightbox-2.6.min.js'>
 	/* ('.lightbox').lightbox({ fitToScreen: true, imageClickClose: false });  */
 	var galleries = $('.ad-gallery').adGallery(); $('#switch-effect').change( function() { galleries[0].settings.effect = $(this).val(); return false; } ); });</script>
 <link rel='stylesheet' href='includes/lightbox_new.css' media='screen' />"; // при включенном kickstart, lightbox не нужен, включается fancybox
-if ($gallery_carusel == true) echo "<script src='includes/lightbox-2.6.min.js'></script><script src='includes/jquery.ad-gallery.js'></script><script>function light_box(){ 
-	/* $('.lightbox').lightbox({ fitToScreen: true, imageClickClose: false } $(document).ready(light_box()); */
-	var galleries = $('.ad-gallery').adGallery(); $('#switch-effect').change( function() { galleries[0].settings.effect = $(this).val(); return false; } ); });</script><link rel='stylesheet' href='includes/carusel.css' media='screen' />";
+if ($gallery_carusel == true) {
+    if ($lang=="ru") $carusel_labels = "start_label: 'Старт', stop_label: 'Стоп',";
+    else $carusel_labels = "start_label: 'Start', stop_label: 'Stop',";
+    echo "
+	<script src='includes/jquery.ad-gallery.js'></script>
+	<script>$(document).ready(function(){ 
+	var galleries = $('.ad-gallery').adGallery({
+  loader_image: '',
+  // Width of the image, set to false and it will read the CSS width
+  width: false, 
+  // Height of the image, set to false and it will read the CSS height
+  height: false, 
+  // Opacity that the thumbs fades to/from, (1 removes fade effect)
+  // Note that this effect combined with other effects might be 
+  // resource intensive and make animations lag
+  thumb_opacity: 0.7,
+  start_at_index: 0, 
+  // Whether or not the url hash should be updated to the current image
+  update_window_hash: true, 
+  animate_first_image: true,
+  animation_speed: 300, 
+  display_next_and_prev: true, 
+  display_back_and_forward: true, 
+  // If 0, it jumps the width of the container
+  scroll_jump: 0, 
+  slideshow: {
+    enable: true,
+    autostart: true,
+    speed: 5000,".$carusel_labels."
+    stop_on_scroll: true, 
+    // Wrap around the countdown
+    countdown_prefix: '(', 
+    countdown_sufix: ')'
+  },
+  // or 'slide-vert', 'resize', 'fade', 'none' or false
+  effect: 'slide-hori', 
+  enable_keyboard_move: true, 
+  cycle: true, 
+  // All callbacks has the AdGallery objects as 'this' reference
+  callbacks: {
+    // Executes right after the internal init, can be used to choose which images
+    // you want to preload
+    init: function() {
+      // preloadAll uses recursion to preload each image right after one another
+      this.preloadAll();
+      // Or, just preload the first three
+      this.preloadImage(0);
+      this.preloadImage(1);
+      this.preloadImage(2);
+    },
+  }
+});
+});</script><link rel='stylesheet' href='includes/jquery.ad-gallery.css' media='screen' />";
+}
 if ($gallery_sly == true) echo "<script src='includes/sly.min.js'></script><link rel='stylesheet' href='includes/sly.css' media='screen' />";
 if ($gallery_sly_full == true) echo "<script src='includes/sly.min.js'></script><link rel='stylesheet' href='includes/sly_full.css' media='screen' />";
 

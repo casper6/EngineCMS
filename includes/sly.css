@@ -40,13 +40,13 @@ body { background: #e8e8e8; }
 .scrollbar {
   margin: 0 0 1em 0;
   height: 4px;
-  background: #ccc;
+  background: #eee;
   line-height: 0;
 }
 .scrollbar .handle {
   width: 100px;
   height: 100%;
-  background: #292a33;
+  background: #bbb;
   cursor: pointer;
 }
 .scrollbar .handle .mousearea {
@@ -89,7 +89,7 @@ body { background: #e8e8e8; }
 /* One Item Per Frame example*/
 .oneperframe { height: 300px; line-height: 300px; }
 .oneperframe ul li { width: 1140px; }
-.oneperframe ul li.active { background: #333; }
+.oneperframe ul li.active { /* background: #333; */ }
 
 /* Effects */
 .effects {
