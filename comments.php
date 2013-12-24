@@ -89,9 +89,9 @@ if ($numrows == 0) {
       }
       break;
     case "3": // Пагинация комментов
-      if ($numrows >= $start + $comments_num) { 
+      if ($numrows >= $start) { 
         echo "<div class='comm_num_links_show' id='page_comments'>".comm_links($numrows,$start,$comments_num)."</div>"; 
-      }// else echo "$numrows > $start + $comments_num";
+      } //else echo "$numrows > $start + $comments_num";
       break;
     }
     if ($comments_all == 1 && $add == 0) echo "<div class='comm_all_show'><a class='no pointer bb1gray' id='allcomm_show' onclick=\"showcomm(0,1000000);\">".$comments_8."</a></div>";
