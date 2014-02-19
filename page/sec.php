@@ -98,10 +98,11 @@
   $postString = "";
   foreach ($_POST as $postkey => $postvalue) {
     if ($postString > "") {
-     $postString .= "&".$postkey."=".$postvalue;
+      if (is_array($postvalue)) $postvalue = implode(" ", $postvalue);
+      $postString .= "&".$postkey."=".$postvalue;
     } else {
       if (is_array($postvalue)) $postvalue = implode(" ", $postvalue);
-     $postString .= $postkey."=".$postvalue;
+      $postString .= $postkey."=".$postvalue;
     }
   }
   $postString = strtolower(str_replace("%09", "%20", $postString));

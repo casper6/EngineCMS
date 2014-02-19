@@ -1,15 +1,11 @@
-# Запрет «волшебных» кавычек
-php_flag magic_quotes_gpc 0
-php_flag magic_quotes_runtime 0
+# Кодировка по-умолчанию (временно необходима)
+AddDefaultCharset utf-8
 
 # закрываем доступ к .htaccess
 <files .htaccess="">
 order allow,deny
 deny from all
 </files>
-
-# Кодировка по-умолчанию (временно необходима)
-AddDefaultCharset utf-8
 
 # Опция настройки страниц ошибок 401, 403, 404 и 500
 ErrorDocument 401 /error.php?code=401
@@ -19,10 +15,6 @@ ErrorDocument 500 /error.php?code=500
 
 RewriteEngine On
 RewriteBase /
-
-#RewriteRule ^index.php header.php
-#RewriteRule ^index.htm header.php
-#RewriteRule ^index.html header.php
 
 RewriteRule ^admin/ /
 RewriteRule ^red/ /
@@ -35,39 +27,36 @@ RewriteRule ^control sys.php
 RewriteRule ^red sys.php
 
 RewriteRule ^rss rss.php
+RewriteRule ^slovo_([а-яА-Яa-zA-Z0-9%+-]*) header.php?name=tags&tags=$1
+RewriteRule ^date_([0-9-]*) header.php?name=showdate&showdate=$1
+RewriteRule ^search header.php?name=search
+RewriteRule ^email header.php?name=email
 
-RewriteRule ^login header.php?name=-login
-RewriteRule ^slovo_([а-яА-Яa-zA-Z0-9%+-]*) header.php?name=-tags&tags=$1
-RewriteRule ^search header.php?name=-search
-RewriteRule ^email header.php?name=-email
-RewriteRule ^adduser_([0-9]*)_([а-яА-Яa-zA-Z0-9_-]*) header.php?name=-adduser&group=$1&id=$2
-RewriteRule ^users_([0-9]*) header.php?name=-users&user=$1
-RewriteRule ^edituser_([0-9]*) header.php?name=-edituser&user=$1
-RewriteRule ^user header.php?name=-user
-RewriteRule ^logout header.php?name=-logout
-RewriteRule ^register header.php?name=-register
+RewriteRule ^login header.php?name=login
+RewriteRule ^adduser_([0-9]*)_([а-яА-Яa-zA-Z0-9_-]*) header.php?name=adduser&group=$1&id=$2
+RewriteRule ^users_([0-9]*) header.php?name=users&user=$1
+RewriteRule ^edituser_([0-9]*) header.php?name=edituser&user=$1
+RewriteRule ^user header.php?name=user
+RewriteRule ^logout header.php?name=logout
+RewriteRule ^register header.php?name=register
 
-RewriteRule ^-([a-zA-Z0-9_-]*)_addbase_([0-9]*) header.php?go=addbase&name=$1&spa=$2
-RewriteRule ^-([a-zA-Z0-9_-]*)_first_([A-F0-9+_|-]*)_second_([A-F0-9+_|-]*)_opt_([0-9]*) header.php?name=$1&go=showcat&first=$2&second=$3&option=$4
-RewriteRule ^-([a-zA-Z0-9_-]*)_first_([A-F0-9+_|-]*)_opt_([0-9]*) header.php?name=$1&go=showcat&first=$2&option=$3
-RewriteRule ^-([a-zA-Z0-9_-]*)_date_([0-9-]*) header.php?name=$1&go=showdate&showdate=$2
-RewriteRule ^-([a-zA-Z0-9_-]*)_cat_([0-9]*)_tags_([a-zA-Z0-9%+-]*) header.php?name=$1&go=showcat&cid=$2&tags=$3
-RewriteRule ^-([a-zA-Z0-9_-]*)_cat_([0-9]*)_page_([0-9]*) header.php?name=$1&go=showcat&cid=$2&pag=$3
-RewriteRule ^-([a-zA-Z0-9_-]*)_cat_([0-9]*) header.php?name=$1&go=showcat&cid=$2
-RewriteRule ^-([a-zA-Z0-9_-]*)_page_([0-9]*)_com_([0-9]*) header.php?name=$1&go=page&pid=$2&com=$3
-RewriteRule ^-([a-zA-Z0-9_-]*)_page_([0-9]*)_comm header.php?name=$1&go=page&pid=$2&comm=ok
-RewriteRule ^-([a-zA-Z0-9_-]*)_page_([0-9]*) header.php?name=$1&go=page&pid=$2
-RewriteRule ^-([a-zA-Z0-9_-]*)_tags_([а-яА-Яa-zA-Z0-9%+-]*) header.php?name=$1&go=showcat&tags=$2
+RewriteRule ^-([^/]*)_addbase_([0-9]*) header.php?go=addbase&name=$1&spa=$2
+RewriteRule ^-([^/]*)_first_([A-F0-9+_|-]*)_second_([A-F0-9+_|-]*)_opt_([0-9]*) header.php?name=$1&go=showcat&first=$2&second=$3&option=$4
+RewriteRule ^-([^/]*)_first_([A-F0-9+_|-]*)_opt_([0-9]*) header.php?name=$1&go=showcat&first=$2&option=$3
+
+RewriteRule ^-([^/]*)_cat_([0-9]*)_tags_([a-zA-Z0-9%+-]*) header.php?name=$1&go=showcat&cid=$2&tags=$3
+RewriteRule ^-([^/]*)_cat_([0-9]*)_page_([0-9]*) header.php?name=$1&go=showcat&cid=$2&pag=$3
+RewriteRule ^-([^/]*)_cat_([0-9]*) header.php?name=$1&go=showcat&cid=$2
+RewriteRule ^-([^/]*)_page_([0-9]*)_com_([0-9]*) header.php?name=$1&go=page&pid=$2&com=$3
+RewriteRule ^-([^/]*)_page_([0-9]*)_comm header.php?name=$1&go=page&pid=$2&comm=ok
+RewriteRule ^-([^/]*)_page_([0-9]*) header.php?name=$1&go=page&pid=$2
+RewriteRule ^-([^/]*)_tags_([а-яА-Яa-zA-Z0-9%+-]*) header.php?name=$1&go=showcat&tags=$2
 RewriteRule ^-([a-zA-Z0-9_-]*) header.php?name=$1
 RewriteRule ^css_([0-9-]*)_add_([a-z0-9_-]*).css combine.php?type=css&files=$1&add=$2
 RewriteRule ^css_([0-9-]*).css combine.php?type=css&files=$1
 RewriteRule ^js_([0-9-]*).js combine.php?type=js&files=$1
 
-### Ассоциируем расширение .gz с gzip
-AddEncoding gzip .gz
-### Отдаём foo.bar.gz вместо файла foo.bar, если foo.bar.gz присутствует в той же директории,
-### что и foo.bar. Если браузер - Safari, отдаём foo.bar
-RewriteCond %{HTTP:Accept-encoding} gzip
-RewriteCond %{HTTP_USER_AGENT} !Safari
-RewriteCond %{REQUEST_FILENAME}.gz -f
-RewriteRule ^(.*)$ $1.gz [QSA,L]
+# ЧПУ
+RewriteRule ^([^/]*)\/$ clean_url.php [L,QSA]
+RewriteRule ^([^/]*)\/([^/]*)\/$ clean_url.php [L,QSA]
+RewriteRule ^([^/]*)\/([^/]*)\.html$ clean_url.php [L,QSA]

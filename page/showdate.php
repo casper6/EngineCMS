@@ -50,7 +50,7 @@
       $p_pid = $row2['pid'];
       $pсid = $row2['cid'];
       $module = $row2['module'];
-      if ($pсid != 0) $p_name = "<div class='cat_page_cattitle'><a href='-".$module."_cat_".$pсid."' class='cat_page_cattitle'>".$c_name[$pсid]."</a></div>"; 
+      if ($pсid != 0) $p_name = "<div class='cat_page_cattitle'><a href='".re_link("-".$module."_cat_".$pсid)."' class='cat_page_cattitle'>".$c_name[$pсid]."</a></div>"; 
       else $p_name = "";
       $title = $row2['title'];
       $text = $row2['open_text'];
@@ -71,12 +71,12 @@
       if ($date_now3 == $p_date_1) $p_date = ss("Позавчера");
 
       if ($row2['copy']==0) {
-        $a_open = "<a href='-".$module."_page_".$p_pid."'>";
-        $a_open_comm = "<a href='-".$module."_page_".$p_pid."_comm#comm'>";
+        $a_open = "<a href='".re_link("-".$module."_page_".$p_pid)."'>";
+        $a_open_comm = "<a href='-".$module."_page_".$p_pid."_comm#comm'>"; // заменить ?
         $a_close = "</a>";
       } else {
-        $a_open = "<noindex><a rel='nofollow' href='-".$module."_page_".$p_pid."'>";
-        $a_open_comm = "<noindex><a rel='nofollow' href='-".$module."_page_".$p_pid."_comm#comm'>";
+        $a_open = "<noindex><a rel='nofollow' href='".re_link("-".$module."_page_".$p_pid)."'>";
+        $a_open_comm = "<noindex><a rel='nofollow' href='-".$module."_page_".$p_pid."_comm#comm'>"; // заменить ?
         $a_close = "</a></noindex>";
       }
 
@@ -85,7 +85,7 @@
         if (is_admin($admin)) $soderganie .= "&nbsp; (<a href='sys.php?op=base_pages_edit_page&name=".$module."&pid=".$p_pid."' title=\"".aa("Редактировать страницу")."\">".aa("редактировать")."</a>)";
         $soderganie .= "</div>";
         if (trim($text)!="") $soderganie .= "<div class='cat_page_text'>".$text."</div>";
-        if ($pсid>0 and $c_name[$pсid]!="") $soderganie .= "<div class='cat_page_folder ico_folder back_icon' title='".ss("Папка")."'><A href='-".$module."_cat_".$pсid."' class='page_razdel_link'>".$c_name[$pсid]."</a></div>";
+        if ($pсid>0 and $c_name[$pсid]!="") $soderganie .= "<div class='cat_page_folder ico_folder back_icon' title='".ss("Папка")."'><A href='".re_link("-".$module."_cat_".$pсid)."' class='page_razdel_link'>".$c_name[$pсid]."</a></div>";
 
         $soderganie .= "</td></tr>";
 
@@ -97,7 +97,7 @@
   global $search_design;
   // Определение дизайна и использованных стилей в дизайне
   list($design_for_search, $stil) = design_and_style($search_design);
-  if ($design_for_search == "0") die(ss("Ошибка: «Адрес раздела»")." (".$name.") ".ss("введен неправильно. Перейдите на")." <a href=/>".ss("Главную страницу")."</a>.");
+  if ($design_for_search == "0") die(ss("Ошибка: «Адрес раздела»")." (".$name.") ".ss("введен неправильно. Перейдите на")." <a href='/'>".ss("Главную страницу")."</a>.");
   $block = str_replace(aa("[содержание]"), $soderganie, $design_for_search);
   return array($block, $stil);
 

@@ -4,7 +4,7 @@ if ($_REQUEST['op'] == "page_save_spiski") {
   global $prefix, $db, $red, $admin;
   if (is_admin($admin)) $realadmin = 1; else $realadmin = 0;
 } else {
-  if (strpos($_SERVER['PHP_SELF'], 'sys.php') === false) { die ("Доступ закрыт!"); }
+  if (mb_strpos($_SERVER['PHP_SELF'], 'sys.php') === false) { die ("Доступ закрыт!"); }
   $aid = trim($aid);
   global $prefix, $db, $red;
   $sql = "SELECT realadmin FROM ".$prefix."_authors where aid='".$aid."'";
@@ -58,7 +58,7 @@ function seo($edit=false){
 }
 
 function edit_base_pages_category($cid, $red=0) {
-  global $module, $name, $prefix, $db, $title_razdel_and_bd; //, $toolbars;
+  global $clean_urls, $module, $name, $prefix, $db, $title_razdel_and_bd, $new; //, $toolbars;
   include("ad/ad-header.php");
   $cid = intval($cid);
   $red = intval($red);
@@ -71,6 +71,14 @@ function edit_base_pages_category($cid, $red=0) {
   $desc = $row['description'];
   $sortirovka = $row['sort'];
   $parent_id = $row['parent_id'];
+  $clean_url = $row['clean_url'];
+  $meta_title = $row['meta_title'];
+  $keywords = $row['keywords'];
+  $description = $row['meta_description'];
+
+  if ( $new > 0 ) echo "<div class='notice success mw700'><a target='_blank' class='green' href='".re_link("/-".$module."_cat_".$cid)."'>Папка</a> отредактирована.</div>"; 
+    else echo "<div class='notice warning mw700'>Открыть папку <a target='_blank' class='green' href='".re_link("/-".$module."_cat_".$cid)."'>на сайте</a>.</div>";
+
   echo "<form action='sys.php' method='post'>
   <div class='fon w100 mw800'>
   <div class='black_grad' style='height:45px;'>
@@ -80,7 +88,7 @@ function edit_base_pages_category($cid, $red=0) {
   if (intval($nastroi) != 1) red_vybor();
   echo "</div>";
   # cid module title description pic sort counter parent_id
-  echo "<table width=100%><tr valign=top><td bgcolor=#eeeeee>
+  echo "<table class='w100'><tr valign='top'><td bgcolor='#eeeeee' width='250' id='razdels'>
   <h2>Раздел:</h2>";
   $sql = "select `name`, `title`, `color` from ".$prefix."_mainpage where `type`='2' and (`useit` like '%".aa("[страницы]")."%' or `useit` like '%".aa("[содержание]")."%') and `tables`='pages' order by `color` desc, `title`";
   $result = $db->sql_query($sql);
@@ -88,7 +96,7 @@ function edit_base_pages_category($cid, $red=0) {
   echo "<select name='module' id='to_razdel' class='w100' size='1' onChange=\"izmenapapka(document.getElementById('to_razdel').value, '', '','','editdir');\">";
   while ($row = $db->sql_fetchrow($result)) {
     $name2 = $row['name'];
-    if (strpos($name2, "\n")) { // заменяем имя запароленного раздела
+    if (mb_strpos($name2, "\n")) { // заменяем имя запароленного раздела
       $name2 = explode("\n", str_replace("\r", "", $name2));
       $name2 = trim($name2[0]);
     }
@@ -108,47 +116,73 @@ function edit_base_pages_category($cid, $red=0) {
     }
     if ($name == $name2) $sel = "selected"; else $sel = "";
 	   echo "<option style='background:".$color.";' value='$name2' ".$sel.">".$title2."</option>";
-    }
-    echo "</select><br>
-    <div style='display:inline; float:right;'><div id=showa style='display:inline; float:right;'><a style='cursor:pointer;' onclick=\"show('hidea'); show('showa'); $('#to_papka').width(500);\">развернуть &rarr;</a></div><div id=hidea style='display:none;'><a style='cursor:pointer;' onclick=\"show('showa'); show('hidea'); $('#to_papka').width(248);\">&larr; свернуть</a></div></div><h2>Папка:</h2>";
-    $sql = "select * from ".$prefix."_pages_categories where module='$name' and `tables`='pages' and cid != '$cid' order by parent_id,cid";
-    $result = $db->sql_query($sql);
-    echo "<div id='izmenapapka'><script>izmenapapka(document.getElementById('to_razdel').value, '$parent_id', '$cid','','editdir')</script></div><br><br>";
-    $sql3 = "select `text` from `".$prefix."_mainpage` where (`name` = '".$name."' or `name` like '".$name." %') and `type`='2'";
-    $result3 = $db->sql_query($sql3);
-    $row3 = $db->sql_fetchrow($result3);
-    if (trim($row3['text'])!="") {
-      $main_file = explode("|",$row3['text']);
-      $main_options = $main_file[1];
-      parse_str($main_options);
-    }
-    if ($view == 4) $blok = "<b>Шаблон для анкет рейтинга (только для этой папки!)</b><br>
-    Пример написания шаблона:<br>
-    Ваше Имя *: |строка<br>
-    Договаривались ли Вы заранее с врачом: |выбор|да|нет<br>
-    Отзыв о Вашем враче: |текст<br>";
-    else $blok = "<h2>Содержание папки (текст над списком страниц папки):</h2>";
+  }
+  echo "</select><br>
+  <div style='display:inline; float:right;'><div id=showa style='display:inline; float:right;'><a style='cursor:pointer;' onclick=\"show('hidea'); show('showa'); $('#to_papka').width(500);\">развернуть &rarr;</a></div><div id=hidea style='display:none;'><a style='cursor:pointer;' onclick=\"show('showa'); show('hidea'); $('#to_papka').width(300);\">&larr; свернуть</a></div></div><h2>Папка:</h2>";
+  $sql = "select * from ".$prefix."_pages_categories where module='$name' and `tables`='pages' and cid != '$cid' order by parent_id,cid";
+  $result = $db->sql_query($sql);
+  echo "<div id='izmenapapka'><script>izmenapapka(document.getElementById('to_razdel').value, '$parent_id', '$cid','','editdir')</script></div><br><br>";
+  $sql3 = "select `text` from `".$prefix."_mainpage` where (`name` = '".$name."' or `name` like '".$name." %') and `type`='2'";
+  $result3 = $db->sql_query($sql3);
+  $row3 = $db->sql_fetchrow($result3);
+  if (trim($row3['text'])!="") {
+    $main_file = explode("|",$row3['text']);
+    $main_options = $main_file[1];
+    parse_str($main_options);
+  }
+  if ($view == 4) $blok = "<p><b>Шаблон для анкет рейтинга (только для этой папки!)</b><br>
+  Пример написания шаблона:<br>
+  Ваше Имя *: |строка<br>
+  Договаривались ли Вы заранее с врачом: |выбор|да|нет<br>
+  Отзыв о Вашем враче: |текст<br>";
+  else $blok = "<h2>Содержание папки (текст над списком страниц папки):</h2>";
 
-    echo "</select>
-    </td><td>
-    <h2>Название папки:</h2>
-    <input type='text' name='title' value='$title' size='60'><br><br>
-    ".$blok."";
-    echo redactor($red, $desc, 'desc'); // редактор: типа редактора, редактируемое поле
+  echo "<div id='mainrazdel' class='dark_pole2'><a class='base_page' onclick=\"if ( $('#dop').is(':hidden') ) $('#mainrazdel').attr('class', 'dark_pole2sel'); else { $('#mainrazdel').attr('class', 'dark_pole2');} $('#main').toggle(); $('#dop').toggle('slow'); \"><div id='mainrazdel'><div style=\"float:right\"><span class=\"f16 gray\">></span></div><span class='icon gray large in_b' data-icon='z'><span aria-hidden='true'>z</span></span><span class='plus20'>Дополнительные настройки</span></div></a></div> ";
 
-    echo "<br><div style='float:left; '><h2>Сортировка:&nbsp;</h2></div> <input type='text' name='sortirovka' value='$sortirovka' size='3'><br><br><span class=small>Если вы решили отсортировать папки по-своему - лучше всего использовать десятичную разницу между числами сортировки для разных папок, например: 10, 20, 30, 40... Это нужно для того, чтобы в случае создания новой папки вы не изменяли сортировку для всех предыдущих, а легко присвоили ей следующий номер за сортировкой, стоящей перед ней папки, например: 11, 21, 31, 41... или 15, 25, 35 - чтобы можно было вклинить новые папки между ними.</span>
-      <input type='hidden' name='cid' value='$cid'>
-      <input type='hidden' name='op' value='base_pages_save_category'>
-      </table></div></form>";
+  echo "</td><td style='padding:0;'><a class='punkt' title='Свернуть/развернуть левую колонку' onclick='$(\"#razdels\").toggle(\"slow\");'><div class='polosa_razdelitel'><div id='rotateText'><nobr>↑ Сворачивает левую колонку ↑</nobr></div></div></a></td><td>";
+
+  echo "<div style='display:none' id='dop'><a title='Закрыть' class='punkt' onclick=\"if ( $('#dop').is(':hidden') ) $('#mainrazdel').attr('class', 'dark_pole2sel'); else $('#mainrazdel').attr('class', 'dark_pole2'); $('#main').toggle(); $('#dop').toggle('slow'); \"><div class='radius' style='font-size:12pt; width:20px; height: 20px; color: white; text-align:center; float:right; margin:5px; background: #bbbbbb;'>&nbsp;x&nbsp;</div></a>";
+
+  if ($clean_urls != 0) echo "<h3>Замена адреса папки (ссылки):</h3><textarea name='clean_url' id='clean_url' class='big w100' rows='2' cols='10'>".$clean_url."</textarea>";
+  else echo "<input name='clean_url' type='hidden' value='".$clean_url."'>";
+
+  echo "<div class='radius w100 p5' style='border: 1px solid #1D6DC1;'><h2 style='color: #1D6DC1;'>SEO настройки</h2>
+  <h3>Замена TITLE: <a onclick=\"show('help17')\" class='help'>?</a></h3><textarea name='meta_title' class='big w95' rows='2' cols='10'>".$meta_title."</textarea>
+  <br><div id='help17' style='display:none;'><span class=small>По-умолчанию — пустое поле и TITLE будет создан автоматически: «название папки — название раздела».</span><p></div>
+
+  <h3>Ключевые слова для поисковых систем: <a onclick=\"show('help10')\" class='help'>?</a></h3><textarea name='keywords2' class='big w95' rows='2' cols='10'>".$keywords."</textarea>
+  <br><div id='help10' style='display:none;'><span class=small>Максимум 500 символов. Разделять словосочетания желательно запятой. Если пусто - используются Ключевые словосочетания из <a href='/sys.php?op=options' target='_blank'>Настроек портала</a>).</span><p></div>
+
+  <h3>Описание для поисковых систем: <a onclick=\"show('help11')\" class='help'>?</a></h3><textarea name='description2' class='big w95' rows='4' cols='10'>".$description."</textarea>
+  <br><div id='help11' style='display:none;'><span class=small>Максимум 200 символов. Если пусто - используется <b>Название</b> папки.</span><p></div>
+  </div>";
+
+  // Замена ссылок (адрес страницы)
+  $trans_title = "";
+  if ($clean_urls == 1) // транслит
+    $trans_title = " onchange='$(\"textarea#clean_url\").val( translite( del_space( $(\"input#title\").val() ) ) );'";
+  if ($clean_urls == 2) // русские
+    $trans_title = " onchange='$(\"textarea#clean_url\").val( del_space( $(\"input#title\").val() ) );'";
+
+  echo "</div><div id='main'>
+  <h2>Название папки:</h2>
+  <input type='text' name='title' id='title' value='".$title."' size='60' class='w100'".$trans_title.">
+  ".$blok."";
+  echo redactor($red, $desc, 'desc'); // редактор: типа редактора, редактируемое поле
+
+  echo "<h2>Сортировка:</h2>
+  <input type='text' name='sortirovka' value='$sortirovka' size='3' style='float:left; margin-right:10px;'> Если нужно отсортировать папки в определенной последовательности - лучше указывать цифры в этом поле, использовать десятичную разницу между числами сортировки для разных папок, например: 10, 20, 30, 40... Это нужно для того, чтобы в случае создания новой папки вы не изменяли сортировку для всех предыдущих, а легко присвоили ей следующий номер за сортировкой, стоящей перед ней папки, например: 11, 21, 31, 41... или 15, 25, 35 - чтобы можно было вклинить новые папки между ними. <b>Пример:</b> для первой папки в поле Сортировка указать 10, для второй — 20 и так далее.
+  </div>
+    <input type='hidden' name='cid' value='$cid'>
+    <input type='hidden' name='op' value='base_pages_save_category'>
+    </table></div></form>";
   admin_footer();
 }
 
-function base_pages_save_category($cid, $module, $title, $desc, $sortirovka, $parent_id) {
+function base_pages_save_category($cid, $module, $title, $desc, $sortirovka, $parent_id, $description2, $keywords2, $meta_title, $clean_url) {
   global $prefix, $db;
-  $title = mysql_real_escape_string($title);
-  $desc = mysql_real_escape_string($desc);
-  $db->sql_query("UPDATE ".$prefix."_pages_categories SET module='$module', title='$title', description='$desc', sort='$sortirovka', parent_id='$parent_id', `tables`='pages' WHERE cid='$cid'");
-  Header("Location: sys.php");
+  $db->sql_query("UPDATE ".$prefix."_pages_categories SET `module`='".mysql_real_escape_string($module)."', `title`='".mysql_real_escape_string($title)."', `description`='".mysql_real_escape_string($desc)."', `sort`='".mysql_real_escape_string($sortirovka)."', `parent_id`='".mysql_real_escape_string($parent_id)."', `tables`='pages', `meta_description`='".mysql_real_escape_string($description2)."', `keywords`='".mysql_real_escape_string($keywords2)."', `meta_title`='".mysql_real_escape_string($meta_title)."', `clean_url`='".mysql_real_escape_string($clean_url)."' WHERE cid='$cid'") or die("не удалось обновить папку");
+  Header("Location: sys.php?op=edit_base_pages_category&cid=".$cid."&new=1#1");
 }
 
 function delete_razdel_base_pages($name) { 
@@ -181,7 +215,7 @@ function delete_all($del="del") {
 
 # СТРАНИЦЫ =================
 function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pid=0) {
-  global $module, $prefix, $db, $red, $new, $pid, $redaktor, $toolbars, $kolkey, $title_razdel_and_bd, $siteurl, $txt_razdels;
+  global $module, $prefix, $db, $red, $new, $pid, $redaktor, $toolbars, $kolkey, $title_razdel_and_bd, $siteurl, $txt_razdels, $clean_urls, $golos_admin;
   include("ad/ad-header.php");
   $id = intval ($id);
   $cid = $golos = 0;
@@ -208,17 +242,30 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
     $price = $row['price'];
     $description = $row['description'];
     $keywords = $row['keywords'];
+    $meta_title = $row['meta_title'];
+    $clean_url = $row['clean_url'];
     $copy = $row['copy'];
-    $sor = intval ($row['sort']); 
+    $sor = intval ($row['sort']);
 
+    
+    global $clean_urls;
+    switch($clean_urls) {
+      case 1: $chpu = "<b>ЧПУ: транслит названия страницы.</b> Ссылка на раздел: <a href='/".$name."/' target='_blank'>".$name."/</a>"; 
+      if ($clean_url == "") $clean_url = clean_url( translit_name($titl) );
+        break;
+      case 2: $chpu = "<b>ЧПУ: название страницы.</b> Ссылка на раздел: <a href='/".$name."/' target='_blank'>".$name."/</a>"; 
+      if ($clean_url == "") $clean_url = clean_url($titl);
+        break;
+      default: $chpu = "<b>ЧПУ выключено.</b> Ссылка на раздел: <a href='/-".$name."' target='_blank'>-".$name."</a>"; break;
+    }
     // узнаем номер последней резервной копии
     $new_pid = 0;
     $sql = "SELECT `pid` from ".$prefix."_pages where copy='".$pid."' order by redate desc limit 1"; // список всех категорий
     $result = $db->sql_query($sql);
     $row = $db->sql_fetchrow($result);
     $new_pid = $row['pid'];
-    if ( $new > 0 ) echo "<div class='notice success mw700'><a target='_blank' class='green' href=/-".$module."_page_".$pid.">Страница</a> отредактирована. "; 
-    else echo "<div class='notice warning mw700'>Открыть страницу <a target='_blank' class='green' href=/-".$module."_page_".$pid.">на сайте</a>. ";
+    if ( $new > 0 ) echo "<div class='notice success mw700'><a target='_blank' class='green' href='".re_link("/-".$module."_page_".$pid)."'>Страница</a> отредактирована. "; 
+    else echo "<div class='notice warning mw700'>Открыть страницу <a target='_blank' class='green' href='".re_link("/-".$module."_page_".$pid)."'>на сайте</a>. ";
     if ( $new_pid != 0 ) echo "Есть предыдущая версия: <button title='Заменить этой копией оригинал...' onclick='resetpage(".$new_pid."); setTimeout(\"location.reload()\", 2000);' class='small'>Заменить на последнюю резервную копию</button>";
     else echo "Предыдущей версии нет.";
     echo "</div>";
@@ -241,13 +288,14 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
     $saveme = "_edit_sv_page";
 
   } else { // Если это создание новой страницы
+    $golos_reiting = 0;
     if ( $pid > 0 ) { // Если только что добавили страницу
       // узнаем имя страницы
       $sql = "SELECT `title` from ".$prefix."_pages where pid='".$pid."'"; // список всех категорий
       $result = $db->sql_query($sql);
       $row = $db->sql_fetchrow($result);
       $new_title = $row['title'];
-      echo "<div class='notice success mw700'>Страница «<a target='_blank' class='green' href=/-".$name."_page_".$pid.">".$new_title."</a>» добавлена. <a href=/sys.php?op=base_pages_edit_page&name=".$name."&pid=".$pid."><span class=\"icon orange small\" data-icon=\"7\"></span>Редактировать</a>. <b>Добавим еще одну страницу?</b></div>";
+      echo "<div class='notice success mw700'>Страница «<a target='_blank' class='green' href='".re_link("/-".$name."_page_".$pid)."'>".$new_title."</a>» добавлена. <a href='/sys.php?op=base_pages_edit_page&name=".$name."&pid=".$pid."'><span class=\"icon orange small\" data-icon=\"7\"></span>Редактировать</a>. <b>Добавим еще одну страницу?</b></div>";
     }
     // Получаем шаблон
     $sql = "select id, title, shablon from ".$prefix."_mainpage where name='".$name."' and `tables`='pages' and type='2'";
@@ -270,7 +318,7 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
 
     // Подстройка создания
     $main_title = "Добавление страницы";
-    $description = $keywords = $search = "";
+    $description = $keywords = $search = $meta_title = $clean_url = "";
     $check= " checked"; // active
     $check2= " unchecked"; // nocomm
     $check3= " checked"; // rss
@@ -284,6 +332,12 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
     $titl = "";
     $saveme = "_save_page";
   }
+  // Замена ссылок (адрес страницы)
+  $trans_title = "";
+  if ($clean_urls == 1) // транслит
+    $trans_title = " onchange='$(\"textarea#clean_url2\").val( translite( del_space( $(\"textarea#title\").val() ) ) );'";
+  if ($clean_urls == 2) // русские
+    $trans_title = " onchange='$(\"textarea#clean_url2\").val( del_space( $(\"textarea#title\").val() ) );'";
 
   echo "<form action='sys.php' method='post' enctype='multipart/form-data'>
   <div class='fon w100 mw800'><div class='black_grad h40'>
@@ -318,7 +372,7 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
   $result = $db->sql_query($sql);
   while ($row = $db->sql_fetchrow($result)) {
     $name2 = $row['name'];
-    if (strpos($name2, "\n")) { // заменяем имя запароленного раздела
+    if (mb_strpos($name2, "\n")) { // заменяем имя запароленного раздела
       $name2 = explode("\n", str_replace("\r", "", $name2));
       $name2 = trim($name2[0]);
     }
@@ -344,7 +398,7 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
   
   echo "<div id='mainrazdel' class='dark_pole2'><a class='base_page' onclick=\"if ( $('#dop').is(':hidden') ) $('#mainrazdel').attr('class', 'dark_pole2sel'); else { $('#mainrazdel').attr('class', 'dark_pole2');} $('#main').toggle(); $('#dop').toggle('slow'); \"><div id='mainrazdel'><div style=\"float:right\"><span class=\"f16 gray\">></span></div><span class='icon gray large in_b' data-icon='z'><span aria-hidden='true'>z</span></span><span class='plus20'>Дополнительные настройки</span></div></a></div> ";
 
-  if ( $pid > 0 ) echo "<br><a class='button' onmousemove=\"$('#search_engines').show();\">Искать по названию в:</a><ul id='search_engines' class='hide'>
+  if ( $pid > 0 ) echo "<br><b>Искать по названию в:</b><ul>
 <li><a target='_blank' href='http://yandex.ru/yandsearch?text=".$titl."'>Яндексе</a>
 <li><a target='_blank' href='http://images.yandex.ru/yandsearch?text=".$titl."'>Яндекс.Картинках</a>
 <li><a target='_blank' href='http://market.yandex.ru/search.xml?text=".$titl."'>Яндекс.Маркете</a>
@@ -353,13 +407,20 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
 
   echo "</td><td style='padding:0;'><a class='punkt' title='Свернуть/развернуть левую колонку' onclick='$(\"#razdels\").toggle(\"slow\");'><div class='polosa_razdelitel'><div id='rotateText'><nobr>↑ Сворачивает левую колонку ↑</nobr></div></div></a></td><td>";
 
-  echo "<div style='display:none' id='dop'><a title='Закрыть' class='punkt' onclick=\"if ( $('#dop').is(':hidden') ) $('#mainrazdel').attr('class', 'dark_pole2sel'); else $('#mainrazdel').attr('class', 'dark_pole2'); $('#main').toggle(); $('#dop').toggle('slow'); \"><div class='radius' style='font-size:12pt; width:20px; height: 20px; color: white; text-align:center; float:right; margin:5px; background: #bbbbbb;'>&nbsp;x&nbsp;</div></a>
-  
-  <h3>Ключевые слова для поисковых систем: <a onclick=\"show('help10')\" class='help'>?</a></h3><textarea id=keywords2 name=keywords2 class='big w100' rows='2' cols='10'>".$keywords."</textarea>
-  <br><div id='help10' style='display:none;'><span class=small>Максимум 1000 символов. Разделять словосочетания желательно запятой. Если пусто - используются <b>Теги</b> (если и они пустые - используются Ключевые словосочетания из <a href='/sys.php?op=options' target='_blank'>Настроек портала</a>).</span><br></div>
+  echo "<div style='display:none' id='dop'><a title='Закрыть' class='punkt' onclick=\"if ( $('#dop').is(':hidden') ) $('#mainrazdel').attr('class', 'dark_pole2sel'); else $('#mainrazdel').attr('class', 'dark_pole2'); $('#main').toggle(); $('#dop').toggle('slow'); \"><div class='radius' style='font-size:12pt; width:20px; height: 20px; color: white; text-align:center; float:right; margin:5px; background: #bbbbbb;'>&nbsp;x&nbsp;</div></a>";
 
-  <h3>Описание для поисковых систем: <a onclick=\"show('help11')\" class='help'>?</a></h3><textarea id='description2' name='description2' class='big w100' rows='4' cols='10'>".$description."</textarea>
-  <br><div id='help11' style='display:none;'><span class=small>Максимум 200 символов. Если пусто - используется <b>Название</b> страницы.</span><br></div>";
+  if ($clean_urls != 0) echo "<h3>Замена адреса страницы (ссылки):</h3><textarea id='clean_url2' name='clean_url2' class='big w100' rows='2' cols='10'>".$clean_url."</textarea>";
+  else echo "<input name='clean_url2' type='hidden' value='".$clean_url."'>";
+
+  echo "<div class='radius w100 p5' style='border: 1px solid #1D6DC1;'><h2 style='color: #1D6DC1;'>SEO настройки</h2>
+  <h3>Замена TITLE: <a onclick=\"show('help17')\" class='help'>?</a></h3><textarea id='meta_title2' name='meta_title2' class='big w95' rows='2' cols='10'>".$meta_title."</textarea>
+  <br><div id='help17' style='display:none;'><span class=small>По-умолчанию — пустое поле и TITLE будет создан автоматически: «название страницы — название папки (если есть) — название раздела».</span><p></div>
+
+  <h3>Ключевые слова для поисковых систем: <a onclick=\"show('help10')\" class='help'>?</a></h3><textarea id='keywords2' name='keywords2' class='big w95' rows='2' cols='10'>".$keywords."</textarea>
+  <br><div id='help10' style='display:none;'><span class=small>Максимум 1000 символов. Разделять словосочетания желательно запятой. Если пусто - используются <b>Теги</b> (если и они пустые - используются Ключевые словосочетания из <a href='/sys.php?op=options' target='_blank'>Настроек портала</a>).</span><p></div>
+
+  <h3>Описание для поисковых систем: <a onclick=\"show('help11')\" class='help'>?</a></h3><textarea id='description2' name='description2' class='big w95' rows='4' cols='10'>".$description."</textarea>
+  <br><div id='help11' style='display:none;'><span class=small>Максимум 200 символов. Если пусто - используется <b>Название</b> страницы.</span><p></div>";
 
   if ($page_id > 0) {
     echo "<input type='hidden' name='pid' value='".$pid."'>";
@@ -382,22 +443,22 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
   }
   $tags = implode("','", array_unique($tags));
 
-  echo "<h3>Тэги (слова для похожих по тематике страниц): <a onclick=\"show('help12')\" class='help'>?</a></h3> 
+  echo "</div>
+
+  <h3>Тэги (слова для похожих по тематике страниц): <a onclick=\"show('help12')\" class='help'>?</a></h3> 
   <input name='search' id='question_tags' class='big w100' value='".$search_tags."'>
-
-<script>
-$(function() {
-$('#question_tags').tagit({
-    removeConfirmation: true,
-    allowSpaces: true,
-    tabIndex: 3,
-    autocomplete: {delay: 0, minLength: 1},
-    availableTags: ['".$tags."']
-    });
-});
-</script>
-
-  <br><div id='help12' style='display:none;'><span class=small>Разделять запятыми, можно писать словосочетания.<br>
+  <script>
+  $(function() {
+  $('#question_tags').tagit({
+      removeConfirmation: true,
+      allowSpaces: true,
+      tabIndex: 3,
+      autocomplete: {delay: 0, minLength: 1},
+      availableTags: ['".$tags."']
+      });
+  });
+  </script>
+<div id='help12' style='display:none;'><span class=small>Разделять запятыми, можно писать словосочетания.<br>
   Можно создать Блок «Облако тегов». Теги также могут выводиться на страницах и облаком тегов в начале раздела (см. в настройках Раздела).</span><br></div>
 
   <table class='w100 f12'><tr><td>
@@ -411,7 +472,7 @@ $('#question_tags').tagit({
   </td></tr></table>
 
   <div id='help_nocomm' style='display:none;'>Если в данном разделе разрешены комментарии — вы можете отключить их выборочно на данной странице, поставив галочку.<br><br></div>
-  <div id='help_rss' style='display:none;'>Технология RSS похожа на e-mail подписку на новости — в RSS-программу, сайт RSS-читалки или встроенную систему чтения RSS в браузере добавляется ссылка на данный сайт, после чего название и предисловие всех новых страниц, отмеченных данной галочкой, будут видны подписавшемуся человеку и он сможет быстро ознакомиться с их заголовками, не заходя на сайт. Если что-то ему понравится — он откроет сайт и прочитает подробности. RSS используется для постепенного увеличения количества посетителей сайта путем их возвращения на сайт за интересной информацией. <a href=http://yandex.ru/yandsearch?text=Что+такое+RSS%3F target=_blank>Подробнее о RSS?</a><br><br></div>
+  <div id='help_rss' style='display:none;'>Технология RSS похожа на e-mail подписку на новости — в RSS-программу, сайт RSS-читалки или встроенную систему чтения RSS в браузере добавляется ссылка на данный сайт, после чего название и предисловие всех новых страниц, отмеченных данной галочкой, будут видны подписавшемуся человеку и он сможет быстро ознакомиться с их заголовками, не заходя на сайт. Если что-то ему понравится — он откроет сайт и прочитает подробности. RSS используется для постепенного увеличения количества посетителей сайта путем их возвращения на сайт за интересной информацией. <a href='http://yandex.ru/yandsearch?text=Что+такое+RSS%3F' target=_blank>Подробнее о RSS?</a><br><br></div>
   <div id='help_mainpage' style='display:none;'>Если отметить эту галочку, данная страница будет отображаться в блоке, который настроен на отображение только помеченных этой галочкой страниц, или не будет отображаться в блоке, который настроен на показ всех неотмеченных галочкой страниц.<br><br></div>
   <div id='help_sor' style='display:none;'>Настраивается в настройках раздела. Может быть равна цифре. Применяется для ручной сортировки страниц. Лучше всего делать кратной 10, например 20, 30, 40 и т.д. для того, чтобы было удобно вставлять страницы между двумя другими. Если очередность у двух страниц совпадает, сортировка происходит по дате.<br><br></div>
 
@@ -430,7 +491,7 @@ $('#question_tags').tagit({
 
   <div id='main'>
   <h2>Название страницы (заголовок)</h2>
-  <textarea class='f16 w100 h40' name=title rows=1 cols=10>".$titl."</textarea>
+  <textarea class='f16 w100 h40' name=title id=title rows=1 cols=10".$trans_title.">".$titl."</textarea>
   <div class='right3'>Проверка текста: <a href='http://orthography.morphology.ru' target='_blank' class='button small blue'>орфография</a> и <a href='http://test-the-text.ru' target='_blank' class='button small blue'>информационный стиль</a></div>
   <h2>Предисловие</h2>";
   echo redactor($red, $shablon1, 'open_text', 'main_text'); // редактор: тип редактора, редактируемое поле
@@ -462,7 +523,7 @@ $('#question_tags').tagit({
 
 
 ####################################################################################
-function base_pages_save_page($cid, $module, $title, $open_text, $main_text, $foto, $link_foto, $search, $active, $mainpage, $rss, $golos_reiting, $nocomm, $price, $add, $data1, $data2, $data3, $data4, $keywords2, $description2, $sor, $open_text_mysor, $main_text_mysor) {
+function base_pages_save_page($cid, $module, $title, $open_text, $main_text, $foto, $link_foto, $search, $active, $mainpage, $rss, $golos_reiting, $nocomm, $price, $add, $data1, $data2, $data3, $data4, $meta_title2, $clean_url2, $keywords2, $description2, $sor, $open_text_mysor, $main_text_mysor) {
   global $red, $prefix, $db, $admin_file, $now;
   $foto="";
   // это магазин?
@@ -491,10 +552,15 @@ function base_pages_save_page($cid, $module, $title, $open_text, $main_text, $fo
 
   $keywords2 = trim(str_replace("  "," ",str_replace("   "," ",str_replace(" ,",", ",$keywords2))));
   $description2 = trim($description2);
+  $meta_title2 = trim($meta_title2);
+
+  if ($meta_title2 == 0) $meta_title2 = "";
+
+  $clean_url2 = strtr($clean_url2, array('____'=>'_', '___'=>'_', '__'=>'_', '*'=>'',':'=>'','('=>'',')'=>'','  '=>'',' '=>'', ' '=>'_', '.'=>'', ','=>'', '!'=>'', '?'=>'', '=>'=>'', ';'=>'', '&'=>'_and_', '%'=>'', '$'=>'', '#'=>'', '№'=>'', '@'=>'', '^'=>'', '='=>'', '\''=>'','"'=>'','«'=>'', '»'=>'', '____'=>'_', '___'=>'_', '__'=>'_'));
 
   $data = date2normal_view($data1, 1)." $data2:$data3:$data4";
   $data2 = $now;
-  $sql = "INSERT INTO ".$prefix."_pages VALUES (NULL, '".$module."', '".$cid."', '".$title."', '".$open_text."', '".$main_text."', '".$data."', '".$data2."', '0', '".$active."', '".$golos_reiting."', '0', '".$foto."', '".$search."', '".$mainpage."', '".$rss."', '".$price."', '".$description2."', '".$keywords2."', 'pages', '0','".$sor."', '".$nocomm."');";
+  $sql = "INSERT INTO ".$prefix."_pages VALUES (NULL, '".$module."', '".$cid."', '".$title."', '".$open_text."', '".$main_text."', '".$data."', '".$data2."', '0', '".$active."', '".$golos_reiting."', '0', '".$foto."', '".$search."', '".$mainpage."', '".$rss."', '".$price."', '".$description2."', '".$keywords2."', 'pages', '0','".$sor."', '".$nocomm."', '".$meta_title2."', '".$clean_url2."');";
   $db->sql_query($sql) or die ("Не удалось сохранить страницу. Попробуйте нажать в Редакторе на кнопку Чистка HTML в Редакторе. Если всё равно появится эта ошибка - сообщите разработчику нижеследующее:".$sql);
   // Узнаем получившийся номер страницы ID
   $sql = "select pid from ".$prefix."_pages where title='".$title."' and date='".$data."'";
@@ -605,7 +671,7 @@ function base_pages_save_page($cid, $module, $title, $open_text, $main_text, $fo
                 $result = $db->sql_query($sql);
                 $row = $db->sql_fetchrow($result);
                 $s_pages = $row['pages'];
-                if (strpos($s_pages," $page_id ") < 1) {
+                if (mb_strpos($s_pages," $page_id ") < 1) {
                   $s_pages .= " $page_id ";
                   $s_pages = str_replace("  "," ",$s_pages);
                   // теперь присвоем каждому из элементов списка id страницы, которую редактируем.
@@ -625,7 +691,7 @@ function base_pages_save_page($cid, $module, $title, $open_text, $main_text, $fo
                     $result = $db->sql_query($sql);
                     $row = $db->sql_fetchrow($result);
                     $s_pages = $row['pages'];
-                    if (strpos($s_pages," $page_id ") < 1) {
+                    if (mb_strpos($s_pages," $page_id ") < 1) {
                       $s_pages .= " $page_id ";
                       $s_pages = str_replace("  "," ",$s_pages);
                       // теперь присвоем каждому из элементов списка id страницы, которую редактируем.
@@ -640,6 +706,87 @@ function base_pages_save_page($cid, $module, $title, $open_text, $main_text, $fo
   $db->sql_query("DELETE FROM ".$prefix."_spiski WHERE name='-00-00'"); 
   // Удаление ошибок. Потом поправить, чтобы не было их!!!
   Header("Location: sys.php?op=base_pages_add_page&name=".$module."&razdel=".$cid."&red=".$red."&new=1&pid=".$page_id."#1");
+}
+###################################################################################
+function base_pages_edit_sv_page($pid, $module, $cid, $title, $open_text, $main_text, $foto, $link_foto, $search, $active, $mainpage, $rss, $golos_reiting, $nocomm, $price, $add, $data1, $data2, $data3, $data4, $meta_title2, $clean_url2, $keywords2, $description2, $com, $cop, $count, $sor, $open_text_mysor, $main_text_mysor) {
+  global $prefix, $db, $now;
+  // Делаем резервную копию!
+  $sql = "SELECT `module`,`cid`,`title`,`open_text`,`main_text`,`date`,`counter`,`active`,`golos`,`comm`,`foto`,`search`,`mainpage`,`rss`,`price`,`description`,`keywords`,`copy`,`sort`,`nocomm`,`meta_title`,`clean_url` FROM ".$prefix."_pages WHERE `pid`='".$pid."'";
+  $result = $db->sql_query($sql);
+  list($p_module, $p_cid, $p_title, $p_open_text, $p_main_text, $p_date, $p_counter, $p_active, $p_golos, $p_comm, $p_foto, $p_search, $p_mainpage, $p_rss, $p_price, $p_description, $p_keywords, $p_sort, $p_nocomm, $p_meta_title, $p_clean_url) = $db->sql_fetchrow($result);
+  $foto = "";
+  $price = intval($price); // это магазин? убрать/доработать
+  $search = trim(str_replace(",",", ",$search));
+  $search = str_replace(".",", ",$search);
+  $search = str_replace("   "," ",$search);
+  $search = str_replace("  "," ",$search);
+  if ($mainpage == "") $mainpage = 0;
+  $sor = intval($sor);
+  $rss = intval($rss);
+  $nocomm = intval($nocomm);
+  $golos_reiting = intval($golos_reiting);
+
+  $keywords2 = trim(str_replace("  "," ",str_replace("   "," ",str_replace(" ,",", ",$keywords2))));
+  $description2 = trim($description2);
+  $open_text = mysql_real_escape_string(form($module, $open_text, "open"));
+  $main_text = mysql_real_escape_string(form($module, $main_text, "main"));
+  $title = mysql_real_escape_string(form($module, $title, "title"));
+
+  // Обратное преобразование textarea (замена русской буквы е)
+  $main_text = str_replace("tеxtarea","textarea",$main_text); // ireplace
+  $open_text = str_replace("tеxtarea","textarea",$open_text); // ireplace
+
+  $p_open_text = mysql_real_escape_string(form($module, $p_open_text, "open"));
+  $p_main_text = mysql_real_escape_string(form($module, $p_main_text, "main"));
+  $p_title = mysql_real_escape_string(form($module, $p_title, "title"));
+
+  $data = date2normal_view($data1, 1)." $data2:$data3:$data4";
+  $data2 = $now;
+
+  $clean_url2 = strtr($clean_url2, array('____'=>'_', '___'=>'_', '__'=>'_', '*'=>'',':'=>'','('=>'',')'=>'','  '=>'',' '=>'', ' '=>'_', '.'=>'', ','=>'', '!'=>'', '?'=>'', '=>'=>'', ';'=>'', '&'=>'_and_', '%'=>'', '$'=>'', '#'=>'', '№'=>'', '@'=>'', '^'=>'', '='=>'', '\''=>'','"'=>'','«'=>'', '»'=>'', '____'=>'_', '___'=>'_', '__'=>'_'));
+
+  if ($meta_title2 == 0) $meta_title2 = "";
+
+  $sql = "UPDATE ".$prefix."_pages SET module='$module', cid='$cid', title='$title', open_text='$open_text', main_text='$main_text', date='$data', redate='$data2', counter='$count', active='$active', golos='$golos_reiting', comm='$com', foto='$foto', search='$search', mainpage='$mainpage', rss='$rss', price='$price', description='$description2', keywords='$keywords2', copy='$cop', sort='$sor', nocomm='$nocomm', meta_title='$meta_title2', clean_url='$clean_url2' WHERE pid='".$pid."';";
+  $db->sql_query($sql) or die('Не удалось сохранить изменения... Передайте нижеследующий текст разработчику:<br>'.$sql);
+
+  // Делаем резервную копию
+  if ($p_active != 3) // если это не добавленная пользователем страница
+  $db->sql_query("INSERT INTO ".$prefix."_pages VALUES (NULL, '$p_module', '$p_cid', '$p_title', '$p_open_text', '$p_main_text', '$p_date', '$now', '$p_counter', '$p_active', '$p_golos', '$p_comm', '$p_foto', '$p_search', '$p_mainpage', '$p_rss', '$p_price', '$p_description', '$p_keywords', 'backup', '$pid', '$p_sort', '$p_nocomm', '$p_meta_title', '$p_clean_url' );") or die("Резервная копия не создана...");
+
+  // Ярлык?
+  $and_copy = "";
+  if ($cop != 0) { // Узнаем наличие других копий
+    $sql = "select pid from ".$prefix."_pages where copy='".$cop."' and pid!='".$pid."'";
+    $result = $db->sql_query($sql);
+    $and_copy = array();
+    while ($row = $db->sql_fetchrow($result)) {
+      $pidX = $row['pid'];
+      $and_copy[] = "pid='".$pidX."'";
+      if (function_exists('recash')) recash("/-".$module."_page_".$pidX, 0); // Обновление кеша ##
+    }
+    $and_copy = implode(" or ",$and_copy);
+    $db->sql_query("UPDATE ".$prefix."_pages SET title='$title', open_text='$open_text', main_text='$main_text', date='$data', redate='$data2', counter='$count', active='$active', golos='$golos_reiting', comm='$com', foto='$foto', search='$search', mainpage='$mainpage', rss='$rss', price='$price', description='$description2', keywords='$keywords2', sort='$sor', meta_title='$meta_title2' WHERE ".$and_copy.";");
+  }
+
+  global $siteurl;
+  if (function_exists('recash') and $active == 1) {
+    recash("/-".$module."_page_".$pid); // Обновление кеша ##
+    recash("/-".$module."_cat_".$cid, 0); ####################
+    recash("/-".$module."_cat_".$cid."_page_0", 0); ##########
+    recash("/-".$module."_cat_".$cid."_page_1", 0); ##########
+    recash("/-".$module."",0); ###############################
+  }
+
+  // РАБОТА СО СПИСКАМИ
+  $page_id = $pid;
+  if (isset($cop)) if ($cop != 0) $page_id = $cop;
+  if (!isset($add) or $add == "") $add = array();
+
+  save_spiski($add, $page_id);
+
+  $db->sql_query("DELETE FROM ".$prefix."_spiski WHERE name='-00-00'"); // Удаление ошибок. Исправить!!!
+  Header("Location: sys.php?op=base_pages_edit_page&name=".$module."&new=1&pid=".$pid);
 }
 ###################################################################################
 function save_spiski ($add, $page_id) {
@@ -800,83 +947,6 @@ function save_spiski ($add, $page_id) {
     }
   }
 }
-###################################################################################
-function base_pages_edit_sv_page($pid, $module, $cid, $title, $open_text, $main_text, $foto, $link_foto, $search, $active, $mainpage, $rss, $golos_reiting, $nocomm, $price, $add, $data1, $data2, $data3, $data4, $keywords2, $description2, $com, $cop, $count, $sor, $open_text_mysor, $main_text_mysor) {
-  global $prefix, $db, $now;
-  // Делаем резервную копию!
-  $sql = "SELECT `module`,`cid`,`title`,`open_text`,`main_text`,`date`,`counter`,`active`,`golos`,`comm`,`foto`,`search`,`mainpage`,`rss`,`price`,`description`,`keywords`,`copy`,`sort`,`nocomm` FROM ".$prefix."_pages WHERE `pid`='".$pid."'";
-  $result = $db->sql_query($sql);
-  list($p_module,$p_cid,$p_title,$p_open_text,$p_main_text,$p_date,$p_counter,$p_active,$p_golos,$p_comm,$p_foto,$p_search,$p_mainpage,$p_rss,$p_price,$p_description,$p_keywords,$p_sort,$p_nocomm) = $db->sql_fetchrow($result);
-  $foto = "";
-  $price = intval($price); // это магазин? убрать/доработать
-  $search = trim(str_replace(",",", ",$search));
-  $search = str_replace(".",", ",$search);
-  $search = str_replace("   "," ",$search);
-  $search = str_replace("  "," ",$search);
-  if ($mainpage == "") $mainpage = 0;
-  $sor = intval($sor);
-  $rss = intval($rss);
-  $nocomm = intval($nocomm);
-  $golos_reiting = intval($golos_reiting);
-
-  $keywords2 = trim(str_replace("  "," ",str_replace("   "," ",str_replace(" ,",", ",$keywords2))));
-  $description2 = trim($description2);
-  $open_text = mysql_real_escape_string(form($module, $open_text, "open"));
-  $main_text = mysql_real_escape_string(form($module, $main_text, "main"));
-  $title = mysql_real_escape_string(form($module, $title, "title"));
-
-  // Обратное преобразование textarea (замена русской буквы е)
-  $main_text = str_replace("tеxtarea","textarea",$main_text); // ireplace
-  $open_text = str_replace("tеxtarea","textarea",$open_text); // ireplace
-
-  $p_open_text = mysql_real_escape_string(form($module, $p_open_text, "open"));
-  $p_main_text = mysql_real_escape_string(form($module, $p_main_text, "main"));
-  $p_title = mysql_real_escape_string(form($module, $p_title, "title"));
-
-  $data = date2normal_view($data1, 1)." $data2:$data3:$data4";
-  $data2 = $now;
-
-  $sql = "UPDATE ".$prefix."_pages SET module='$module', cid='$cid', title='$title', open_text='$open_text', main_text='$main_text', date='$data', redate='$data2', counter='$count', active='$active', golos='$golos_reiting', comm='$com', foto='$foto', search='$search', mainpage='$mainpage', rss='$rss', price='$price', description='$description2', keywords='$keywords2', copy='$cop', sort='$sor', nocomm='$nocomm' WHERE pid='".$pid."';";
-  $db->sql_query($sql) or die('Не удалось сохранить изменения... Передайте нижеследующий текст разработчику:<br>'.$sql);
-
-  // Делаем резервную копию
-  if ($p_active != 3) // если это не добавленная пользователем страница
-  $db->sql_query("INSERT INTO ".$prefix."_pages VALUES (NULL, '$p_module', '$p_cid', '$p_title', '$p_open_text', '$p_main_text', '$p_date', '$now', '$p_counter', '$p_active', '$p_golos', '$p_comm', '$p_foto', '$p_search', '$p_mainpage', '$p_rss', '$p_price', '$p_description', '$p_keywords', 'backup', '$pid', '$p_sort', '$p_nocomm' );") or die("Резервная копия не создана...");
-
-  // Ярлык?
-  $and_copy = "";
-  if ($cop != 0) { // Узнаем наличие других копий
-    $sql = "select pid from ".$prefix."_pages where copy='".$cop."' and pid!='".$pid."'";
-    $result = $db->sql_query($sql);
-    $and_copy = array();
-    while ($row = $db->sql_fetchrow($result)) {
-      $pidX = $row['pid'];
-      $and_copy[] = "pid='".$pidX."'";
-      if (function_exists('recash')) recash("/-".$module."_page_".$pidX, 0); // Обновление кеша ##
-    }
-    $and_copy = implode(" or ",$and_copy);
-    $db->sql_query("UPDATE ".$prefix."_pages SET title='$title', open_text='$open_text', main_text='$main_text', date='$data', redate='$data2', counter='$count', active='$active', golos='$golos_reiting', comm='$com', foto='$foto', search='$search', mainpage='$mainpage', rss='$rss', price='$price', description='$description2', keywords='$keywords2', sort='$sor' WHERE ".$and_copy.";");
-  }
-
-  global $siteurl;
-  if (function_exists('recash') and $active == 1) {
-    recash("/-".$module."_page_".$pid); // Обновление кеша ##
-    recash("/-".$module."_cat_".$cid, 0); ####################
-    recash("/-".$module."_cat_".$cid."_page_0", 0); ##########
-    recash("/-".$module."_cat_".$cid."_page_1", 0); ##########
-    recash("/-".$module."",0); ###############################
-  }
-
-  // РАБОТА СО СПИСКАМИ
-  $page_id = $pid;
-  if (isset($cop)) if ($cop != 0) $page_id = $cop;
-  if (!isset($add) or $add == "") $add = array();
-
-  save_spiski($add, $page_id);
-
-  $db->sql_query("DELETE FROM ".$prefix."_spiski WHERE name='-00-00'"); // Удаление ошибок. Исправить!!!
-  Header("Location: sys.php?op=base_pages_edit_page&name=".$module."&new=1&pid=".$pid);
-}
 #####################################################################################################################
 function base_pages_delit_page($name,$pid, $ok) {
     global $prefix, $db;
@@ -928,76 +998,67 @@ function base_pages_re($link) {
 }
 ###################################################################################
   switch ($op) {
-      case "edit_base_pages_category":
+    case "edit_base_pages_category":
       edit_base_pages_category($cid, $red);
       break;
-
-      case "base_pages_save_category":
-      base_pages_save_category($cid, $module, $title, $desc, $sortirovka, $parent_id);
+    case "base_pages_save_category":
+      if (file_exists($_SERVER["DOCUMENT_ROOT"].'/cashe/clean_url_categories'.$cid)) unlink ($_SERVER["DOCUMENT_ROOT"].'/cashe/clean_url_categories'.$cid);
+      base_pages_save_category($cid, $module, $title, $desc, $sortirovka, $parent_id, $description2, $keywords2, $meta_title, $clean_url);
       break;
-
-      case "base_pages_add_page":
+    case "base_pages_add_page":
       if (!isset($razdel)) $razdel = "";
       if (!isset($name)) $name = "";
       if (!isset($red)) $red = "3";
       base_pages_add_page(0, $red, $name, $razdel);
       break;
-
-      case "base_pages_save_page":
+    case "base_pages_save_page":
       if (!isset($foto)) $foto = "";
       if (!isset($link_foto)) $link_foto = "";
       if (!isset($mainpage)) $mainpage = "";
       if (!isset($add)) $add = "";
       if (!isset($open_text_mysor)) $open_text_mysor = "";
       if (!isset($main_text_mysor)) $main_text_mysor = "";
-      base_pages_save_page($cid, $module, $title, $open_text, $main_text, $foto, $link_foto, $search, $active, $mainpage, $rss, $golos_reiting, $nocomm, $price, $add, $data1, $data2, $data3, $data4, $keywords2, $description2, $sor, $open_text_mysor, $main_text_mysor);
+      if (file_exists($_SERVER["DOCUMENT_ROOT"].'/cashe/clean_url_pages'.$pid)) unlink ($_SERVER["DOCUMENT_ROOT"].'/cashe/clean_url_pages'.$pid);
+      base_pages_save_page($cid, $module, $title, $open_text, $main_text, $foto, $link_foto, $search, $active, $mainpage, $rss, $golos_reiting, $nocomm, $price, $add, $data1, $data2, $data3, $data4, $meta_title2, $clean_url2, $keywords2, $description2, $sor, $open_text_mysor, $main_text_mysor);
       break;
-
-      case "base_pages_edit_page":
+    case "base_pages_edit_page":
       if (!isset($red)) $red = 0;
       base_pages_add_page($pid, $red);
       break;
-
-      case "base_pages_edit_sv_page":
+    case "base_pages_edit_sv_page":
       if (!isset($link_foto)) $link_foto = "";
       if (!isset($mainpage)) $mainpage = "";
       if (!isset($add)) $add = "";
       if (!isset($nocomm)) $nocomm = "";
       if (!isset($open_text_mysor)) $open_text_mysor = "";
       if (!isset($main_text_mysor)) $main_text_mysor = "";
-          base_pages_edit_sv_page($pid, $module, $cid, $title, $open_text, $main_text, $foto, $link_foto, $search, $active, $mainpage, $rss, $golos_reiting, $nocomm, $price, $add, $data1, $data2, $data3, $data4, $keywords2, $description2, $com, $cop, $count, $sor, $open_text_mysor, $main_text_mysor);
+      if (file_exists($_SERVER["DOCUMENT_ROOT"].'/cashe/clean_url_pages'.$pid)) unlink ($_SERVER["DOCUMENT_ROOT"].'/cashe/clean_url_pages'.$pid);
+          base_pages_edit_sv_page($pid, $module, $cid, $title, $open_text, $main_text, $foto, $link_foto, $search, $active, $mainpage, $rss, $golos_reiting, $nocomm, $price, $add, $data1, $data2, $data3, $data4, $meta_title2, $clean_url2, $keywords2, $description2, $com, $cop, $count, $sor, $open_text_mysor, $main_text_mysor);
       break;
-
-      case "base_pages_delit_page":
-      if (!isset($ok)) $ok = 0; else $ok = 1;
+    case "base_pages_delit_page":
+      if (!isset($ok)) $ok = 0; 
+      else $ok = 1;
       base_pages_delit_page($name, $pid, $ok);
       break;
-
-      case "base_pages_delit_comm":
+    case "base_pages_delit_comm":
       base_pages_delit_comm($cid, $ok, $pid);
       break;
-
-      case "delete_noactive_comm":
+    case "delete_noactive_comm":
       base_delit_noactive_comm("noactive");
       break;
-
-      case "delete_system_comm":
+    case "delete_system_comm":
       base_delit_noactive_comm("system");
       break;
-
-      case "base_delit_comm":
+    case "base_delit_comm":
       base_delit_comm();
       break;
-      
-      case "delete_all":
+    case "delete_all":
       delete_all($del);
       break;
-      
-      case "base_pages_re":
+    case "base_pages_re":
       base_pages_re($link);
       break;
-
-      case "page_save_spiski":
+    case "page_save_spiski":
       parse_str($_REQUEST['string']);
       save_spiski($add, $page_id);
       break;

@@ -82,7 +82,7 @@ $db->sql_query("CREATE TABLE `".$prefix."_mainpage` (
  `tables` enum('pages','del','backup') DEFAULT 'pages' NOT NULL,
  `color` tinyint(1) DEFAULT '0' NOT NULL,
  `description` varchar(255) NOT NULL,
- `keywords` varchar(255) NOT NULL,
+ `keywords` varchar(500) NOT NULL,
  PRIMARY KEY (`id`) ) DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;");
 $db->sql_query("DROP TABLE IF EXISTS `".$prefix."_pages`;");
 $db->sql_query("CREATE TABLE `".$prefix."_pages` (
@@ -104,7 +104,7 @@ $db->sql_query("CREATE TABLE `".$prefix."_pages` (
  `rss` tinyint(1) NOT NULL,
  `price` decimal(10,2) NOT NULL,
  `description` varchar(200) NOT NULL,
- `keywords` mediumtext NOT NULL,
+ `keywords` varchar(500) NOT NULL,
  `tables` enum('pages','del','backup') DEFAULT 'pages' NOT NULL,
  `copy` int(10) DEFAULT '0' NOT NULL,
  `sort` smallint(5) NOT NULL,

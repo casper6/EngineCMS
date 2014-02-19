@@ -1,5 +1,6 @@
 <?php
 // Все «правила хорошего кода» написаны кровью, вытекшей из глаз программистов, читавших чужой код.
+if (file_exists('update.php')) include ('update.php');
 define('ADMIN_FILE', true);
 if(isset($aid)) {
   if(!empty($aid) AND (!isset($admin) OR empty($admin)) AND $op!='login') {
@@ -175,7 +176,7 @@ function GraphicAdmin() {
 
 	echo "<div class='curved-vt-2 hide' style='margin-left:-350px; width: 700px; top: 10px;' id='add'></div>
 	<div class='black_grad'>
-	<button id='new_razdel_button' title='".aa("Добавить раздел...")."' class='small right3' onclick=\"openbox('10','', 'add'); $('.dark_pole2sel').attr('class', 'dark_pole2');\"><span class=\"mr-2 icon darkgrey small\" data-icon=\"+\"></span></button>
+	<button id='new_razdel_button' title='".aa("Добавить раздел...")."' class='small right3' onclick=\"openbox('10','', 'add'); $('.dark_pole2sel').attr('class', 'dark_pole2');\"><span class=\"mr-2 icon darkgrey medium\" data-icon=\"+\"></span> Добавить раздел</button>
 	<span class='h1'>".aa("Разделы:")."</span>
 		</div>".$razdel_txt."
 		<div style='max-height:700px;'>";

@@ -32,7 +32,7 @@ if ($realadmin==1) {
     $stat_page .= "<tr valign=top><td class='polosa gray'><a target='_blank' href='/-".$row['module']."_page_".$row['pid']."'>".strip_tags($row['title'], '<b><i>')."</a></td><td align=center class='polosa gray'>".$row['counter']."</td></tr>";
     }
     $stat_page = "<a href='sys.php?op=stat_page' class='right3 button'>См. популярные &rarr;</a>
-    <h2>и страниц:</h2>
+    <h2><nobr>и страниц:</nobr></h2>
     <table class='w100 table_light'>".$stat_page."</table>";
     $user_name = array();
     $user_mail = array();
@@ -66,11 +66,14 @@ if ($realadmin==1) {
     } else $stat_search .= "<p>На сайте еще никто не пользовался поиском.
     <p>Поисковые запросы администратора не учитываются статистикой.";
 
-    if ($statlink != "") echo "<h2><span class=\"icon black medium\" data-icon=\"j\"></span> <a href=".$statlink." target=_blank>Сторонняя статистика</a></h2>"; 
-    else echo "<div class='notice warning mw800'>Сторонняя статистика не настроена. См. <a href='sys.php?op=options'>Настройки</a></div>";
-    echo "<h2><span class=\"icon gray medium\" data-icon=\"j\"></span> Встроенная статистика:</h2>
-    <table cellpadding=2 class='w100 mw800 light_fon radius'><tr valign=top><td width=25%>".$stat_razdel."</td><td width=30%>".$stat_page."</td><td>".$stat_search."</td></tr></table></div>
-    <br></div></body>
+    echo "<div class='black_grad'><span class='h1'>".aa("Статистика:")."</span> <div class='right3' style='width:50%; float:right; text-align:right;'>";
+
+    if ($statlink != "") echo "<a class='button right small' href=".$statlink." target='_blank'><span class=\"icon black medium\" data-icon=\"j\"></span> Сторонняя статистика</a>";
+    else echo "Ссылка на стороннюю статистику не <a href='sys.php?op=options'>настроена</a>.";
+    echo "</div></div>
+    <table cellpadding=2 class='w100 mw800 light_fon radius'><tr valign=top><td width=25%>".$stat_razdel."</td><td width=30%>".$stat_page."</td><td>".$stat_search."</td></tr></table>
+    </div>
+    </div></body>
     </html>";
     echo "<br></div></body></html>";
   }

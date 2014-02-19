@@ -12,12 +12,11 @@ if ($ModuleName=="") $ModuleName = ss("Содержание");
 ###########################################
 // передается из любой страницы по ссылке
 global $strelka, $go, $cid, $pid, $all, $avtor, $to, $info, $num, $ip, $golos, $getparent_cash;
-
 ########################################### проверить и возможно убрать кусок
 // настройки раздела из БД
 global $post, $comments, $datashow, $sort, $lim, $foto, $view, $search, $search_papka, $tema, $tema_name, $tema_title, $tema_opis, $menushow, $design, $show_comments; 
 
-$media = $folder = $col = $view = $golos = $golosrazdel = $post = $comments = $datashow = $favorites = $socialnetwork = $search = $search_papka = $put_in_blog = $base = $vetki = $citata = $media_comment = $no_html_in_opentext = $no_html_in_text = $show_add_post_on_first_page = $media_post = $razdel_shablon = $page_shablon = $comments_all = $comments_num = $comments_mail = $comments_adres = $comments_tel = $comments_desc = $golostype = $pagenumbers = $comments_main = $tags_type = $tema_zapret_comm = $pagekol = $table_light = $designpages = $comments_add = $div_or_table = $papka_show = $add_post_to_mainpage = $design_tablet = $designpages_tablet = $design_phone = $designpages_phone = $show_tags_pages = $golos_admin = $comment_all_link = 0;
+$media = $folder = $col = $view = $golos = $golosrazdel = $post = $comments = $datashow = $favorites = $socialnetwork = $search = $search_papka = $put_in_blog = $base = $vetki = $citata = $media_comment = $no_html_in_opentext = $no_html_in_text = $show_add_post_on_first_page = $media_post = $razdel_shablon = $page_shablon = $comments_all = $comments_num = $comments_mail = $comments_adres = $comments_tel = $comments_desc = $golostype = $pagenumbers = $comments_main = $tags_type = $tema_zapret_comm = $pagekol = $table_light = $designpages = $comments_add = $div_or_table = $papka_show = $add_post_to_mainpage = $design_tablet = $designpages_tablet = $design_phone = $designpages_phone = $show_tags_pages = $golos_admin = $comment_all_link = $show_read_all = 0;
 $menushow = $titleshow = $razdeltitleshow = $razdel_link = $peopleshow = $design = $tags = $podrobno = $podrazdel_active_show = $podrazdel_show = $tipograf = $limkol = $tags_show = $tema_zapret = $opentextshow = $maintextshow = $papka_tags_pages = $razdel_tags_pages = 1;
 $comment_all_link_text = ss("читать полностью");
 $comm_col_letters = "1000";
@@ -52,7 +51,7 @@ $getparent_cash = array();
 ###########################################
 function top_menu($cid, $page) {
   $ret = "";
-  global $strelka, $soderganie, $soderganie2, $DBName, $prefix, $db, $module_name, $ModuleName, $go, $pagetitle;
+  global $meta_title_razdels, $sitename, $strelka, $soderganie, $soderganie2, $DBName, $prefix, $db, $module_name, $ModuleName, $go, $pagetitle;
   global $post, $comments, $datashow, $sort, $lim, $folder, $media, $view, $search, $razdel_link, $podrazdel_active_show, $podrazdel_show, $reclama, $tema, $pagekol; // настройки модуля из БД
   $cid = mysql_real_escape_string($cid);
   $DBName = mysql_real_escape_string($DBName);
@@ -64,30 +63,35 @@ function top_menu($cid, $page) {
   $c_description = array();
   $c_parent = array();
   $c_title2 = array();
-    $sql = "SELECT `parent_id` FROM ".$prefix."_pages_categories where module='$DBName' and `tables`='pages' and `cid` = '$cid'";
-    $result = $db->sql_query($sql);
-    $row = $db->sql_fetchrow($result);
-    $c_cid_parent = $row['parent_id'];
-    
-    $orr = "";
-    if ( $c_cid_parent != 0 and $c_cid_parent != "" ) $orr .= " or `parent_id` = '".mysql_real_escape_string($c_cid_parent)."'";
-    if ( $cid != 0 and $cid != "" ) $orr .= " or `parent_id` = '".$cid."'";
 
-    $sql = "SELECT `cid`, `title`, `description`, `parent_id` FROM ".$prefix."_pages_categories where `module`='".$DBName."' and `tables`='pages' and (`parent_id`='0'".$orr.") order by `sort`, `title`";
-    $result = $db->sql_query($sql);
-    while ($row = $db->sql_fetchrow($result)) {
-      $c_cid = $row['cid'];
-      $c_title[$c_cid] = $row['title'];
-      $c_description[$c_cid] = $row['description'];
-      $c_parent[$c_cid] = $row['parent_id'];
-    }
-    
-    $sql = "SELECT `cid`, `title` FROM ".$prefix."_pages_categories where `module`='".$DBName."' and `tables`='pages' and `parent_id`='0' order by `sort`, `title`";
-    $result = $db->sql_query($sql);
-    while ($row = $db->sql_fetchrow($result)) {
-      $c_cid2 = $row['cid'];
-      $c_title2[$c_cid2] = $row['title'];
-    }
+
+
+  $sql = "SELECT `parent_id` FROM ".$prefix."_pages_categories where module='".$DBName."' and `tables`='pages' and `cid`='".$cid."'";
+  $result = $db->sql_query($sql);
+  $row = $db->sql_fetchrow($result);
+  $c_cid_parent = $row['parent_id'];
+  
+  $orr = "";
+  if ( $c_cid_parent != 0 and $c_cid_parent != "" ) $orr .= " or `parent_id` = '".mysql_real_escape_string($c_cid_parent)."'";
+  if ( $cid != 0 and $cid != "" ) $orr .= " or `parent_id` = '".$cid."'";
+
+  $sql = "SELECT `cid`, `title`, `description`, `parent_id` FROM ".$prefix."_pages_categories where `module`='".$DBName."' and `tables`='pages' and (`parent_id`='0'".$orr.") order by `sort`, `title`";
+  $result = $db->sql_query($sql);
+  while ($row = $db->sql_fetchrow($result)) {
+    $c_cid = $row['cid'];
+    $c_title[$c_cid] = $row['title'];
+    $c_description[$c_cid] = $row['description'];
+    $c_parent[$c_cid] = $row['parent_id'];
+  }
+  
+  $sql = "SELECT `cid`, `title` FROM ".$prefix."_pages_categories where `module`='".$DBName."' and `tables`='pages' and `parent_id`='0' order by `sort`, `title`";
+  $result = $db->sql_query($sql);
+  while ($row = $db->sql_fetchrow($result)) {
+    $c_cid2 = $row['cid'];
+    $c_title2[$c_cid2] = $row['title'];
+  }
+
+  
   // Кол-во страниц в папках
   if ($pagekol == 1) {
     $num = array();
@@ -104,7 +108,7 @@ function top_menu($cid, $page) {
 
     if ($cid > 0) $title = trim($c_title[$cid]); else $title = "";
     $ret .= "<div class='cat_title'>";
-    if ($razdel_link==1) $ret .= "<h1 class='cat_categorii_link'><A href='-".$DBName."'>".$ModuleName."</a></h1>";
+    if ($razdel_link==1) $ret .= "<h1 class='cat_categorii_link'><A href='".re_link("-".$DBName)."'>".$ModuleName."</a></h1>";
     else $ret .= "<h1 class='cat_categorii_link'>".$ModuleName."</h1>";
     
   if (!isset($c_description[$cid])) $c_description[$cid] = ""; 
@@ -123,14 +127,14 @@ function top_menu($cid, $page) {
         if (isset($num[$key])) { if ($num[$key] != "") $num[$key] = " (".$num[$key].")"; }
         else $num[$key] = '';
     
-        $links .= "<div class='cat_maincategorii_link'><a href=-".$DBName."_cat_".$key.">".$cid_title."</a>".$num[$key]."</div>";
+        $links .= "<div class='cat_maincategorii_link'><a href='".re_link("-".$DBName."_cat_".$key)."'>".$cid_title."</a>".$num[$key]."</div>";
 
         if (count($c_title) > 0 and ($podrazdel_show==3 or $podrazdel_show==1)) {
           $links2 = "";
           foreach ($c_title as $key2 => $cid_title2) {
             if ($c_parent[$key2]==$key) {
               $cid_title2 = str_replace(" ","&nbsp;",trim($cid_title2));
-              $links2 .= "<a href=-".$DBName."_cat_".$key2.">".$cid_title2."</a>   ";
+              $links2 .= "<a href='".re_link("-".$DBName."_cat_".$key2)."'>".$cid_title2."</a>   ";
             }
           }
           if ($links2 != "") {
@@ -142,7 +146,9 @@ function top_menu($cid, $page) {
     $ret .= $links." &nbsp;";
     // Поиск
     //if ($search == 2) $soderganie .= search_line($DBName, $cid);
-    $pagetitle = $ModuleName." — "; // $cat_title." — 
+    $pagetitle = $ModuleName." — ".$sitename;
+    if (isset($meta_title_razdels[$DBName])) 
+      if ($meta_title_razdels[$DBName] != "") $pagetitle = $meta_title_razdels[$DBName];
   #####################################################################
   } else { // Если отображение - не каталог
 
@@ -164,13 +170,12 @@ function top_menu($cid, $page) {
   $title = "<span class='cat_podcategorii_link'>".$title."</span>";
   $title = getparent_page($parent_id,$title,$cid,$page);
 
-  // <A class=cat_podcategorii_link href=\"\-".$DBName."_cat_".$cid."\">$title</a>
   if ($page == 1) $and = " ".$strelka." ".$title."";
-  if ($page == 2) $and = " ".$strelka." <A href=-".$DBName."_cat_".$cid.">".$title."</a>";
+  if ($page == 2) $and = " ".$strelka." <A href='".re_link("-".$DBName."_cat_".$cid)."'>".$title."</a>";
 
 
   $ret .= "<div class='cat_title'>";
-  if ($razdel_link==1) $ret .= "<h1 class='cat_categorii_link'><A href='-".$DBName."'>".$ModuleName."</a></h1>";
+  if ($razdel_link==1) $ret .= "<h1 class='cat_categorii_link'><A href='".re_link("-".$DBName)."'>".$ModuleName."</a></h1>";
   else $ret .= "<h1 class='cat_categorii_link'>".$ModuleName."</h1>";
   if ($podrazdel_active_show > 0) $ret .= $and;
   $ret .= "</div> ";
@@ -178,7 +183,7 @@ function top_menu($cid, $page) {
   if ($razdel_link==2) $ret = "";
   // Добавление табов
   global $include_tabs, $papka_show;
-  if (strpos(" ".$reclama, "{{")) {
+  if (mb_strpos(" ".$reclama, "{{")) {
     if ($include_tabs == false) { 
       include ('page/tabs.php'); 
       $include_tabs = true; 
@@ -202,12 +207,12 @@ function top_menu($cid, $page) {
       }
       if ($podrazdel_active_show == 2) {
         if ($cid != $key and $c_parent[$cid] != $key) 
-          $links2 .= "   <a href='-".$DBName."_cat_".$key."' class='no_active_podcategorii_link'>".$cid_title."</a>";
+          $links2 .= "   <a href='".re_link("-".$DBName."_cat_".$key)."' class='no_active_podcategorii_link'>".$cid_title."</a>";
         else 
-          $links2 .= "   <b><a href='-".$DBName."_cat_".$key."' class='active_podcategorii_link'>".$cid_title."</a></b>";
+          $links2 .= "   <b><a href='".re_link("-".$DBName."_cat_".$key)."' class='active_podcategorii_link'>".$cid_title."</a></b>";
       } elseif ($podrazdel_active_show == 3) {
         if ($cid == $key) $sel = " selected"; else $sel = "";
-        if ($key != 0) $links2 .= "<option value='".$key."'".$sel.">".$cid_title."</option>";
+        if ($key != 0) $links2 .= "<option value='".re_link("-".$DBName."_cat_".$key)."'".$sel.">".$cid_title."</option>";
       } else {
         if ($key == $cid and $cid_title != "") {
           // Показываем подразделы, если они есть
@@ -222,7 +227,7 @@ function top_menu($cid, $page) {
             if (isset($num[$c_cid4])) {if ($num[$c_cid4] != "") $num[$c_cid4] = " (".$num[$c_cid4].")";}
             else $num[$c_cid4] = "";
 
-            $links2 .= "   <a href=-".$DBName."_cat_".$c_cid4.">".$c_title4."</a>".$num[$c_cid4]."";
+            $links2 .= "   <a href='".re_link("-".$DBName."_cat_".$c_cid4)."'>".$c_title4."</a>".$num[$c_cid4]."";
           }
         }
       }
@@ -233,7 +238,7 @@ function top_menu($cid, $page) {
   /////////////////////////////////////
     if ($podrazdel_active_show == 3) {
       if ($cid == "0") $sel = " selected"; else $sel = "";
-      $links2 = "<select id='c_id' onchange=\"if (document.getElementById('c_id').value != '') location.href = '-".$DBName."_cat_' + document.getElementById('c_id').value;\"><option value=''>".ss("Выберите раздел")."</option>".$links2."</select>";
+      $links2 = "<select id='c_id' onchange=\"if (document.getElementById('c_id').value != '') location.href = document.getElementById('c_id').value;\"><option value=''>".ss("Выберите раздел")."</option>".$links2."</select>";
     }
     
   	if (trim($links2) != "" and trim($links2) != "<div class='main_cat_links'>   </div>") {
@@ -249,7 +254,9 @@ function top_menu($cid, $page) {
   	}
   }
 
-  $pagetitle = $ModuleName." — ";
+  $pagetitle = $ModuleName." — ".$sitename;
+  if (isset($meta_title_razdels[$DBName])) 
+    if ($meta_title_razdels[$DBName] != "") $pagetitle = $meta_title_razdels[$DBName];
   }
 
   if ($post!=0 and $page==0 and $cid!=0) $ret .= addpost($cid);
@@ -258,8 +265,8 @@ function top_menu($cid, $page) {
 }
 ######################################################################################
 function showcat($cid=0, $pag=0, $slovo="") {
-  global $strelka, $soderganie, $soderganie2, $DBName, $db, $prefix, $module_name, $admin, $name, $pagetitle, $keywords2, $description2, $show_comments;
-  global $golos_admin, $golos, $golosrazdel, $golostype, $post, $comments, $datashow, $sort, $lim, $folder, $media, $view, $col, $search, $search_papka, $tema, $tema_name, $tema_title, $tema_opis, $menushow, $base, $where, $order, $peopleshow, $show_add_post_on_first_page, $razdel_shablon, $comments_1, $comments_main, $limkol, $tags, $tag_text_show, $tags_type, $tags_show, $pagenumbers, $div_or_table, $show_read_all, $read_all, $reclama, $papka_show; // настройки из БД
+  global $strelka, $soderganie, $soderganie2, $DBName, $db, $prefix, $module_name, $admin, $name, $keywords2, $description2, $show_comments;
+  global $golos_admin, $golos, $golosrazdel, $golostype, $post, $comments, $datashow, $sort, $lim, $folder, $media, $view, $col, $search, $search_papka, $tema, $tema_name, $tema_title, $tema_opis, $menushow, $base, $where, $order, $peopleshow, $show_add_post_on_first_page, $razdel_shablon, $comments_1, $comments_main, $limkol, $tags, $tag_text_show, $tags_type, $tags_show, $pagenumbers, $div_or_table, $show_read_all, $read_all, $reclama, $papka_show, $razdeltitleshow; // настройки из БД
   $DBName = mysql_real_escape_string($DBName);
   $sort = mysql_real_escape_string($sort);
   $cid = intval($cid);
@@ -471,7 +478,7 @@ function showcat($cid=0, $pag=0, $slovo="") {
             // проверяем наличие имени поля в названии фильтра
             $min = array();
             foreach ($filter as $key => $value) {
-              if (strpos(" ".$key, $n)) { // нашли фильтр для текста
+              if (mb_strpos(" ".$key, $n)) { // нашли фильтр для текста
                 $search_pole = true;
                 $min[] = str_replace($n."_", "",$key);
               }
@@ -542,7 +549,7 @@ function showcat($cid=0, $pag=0, $slovo="") {
 
           $p_name = "";
           if ($pcid!=0 && $cid == 0) {
-            $p_name = "<div class='cat_page_cattitle'><a href='-".$DBName."_cat_".$pcid."' class='cat_page_cattitle'>".$c_name[$pcid]."</a></div>";
+            $p_name = "<div class='cat_page_cattitle'><a href='".re_link("-".$DBName."_cat_".$pcid)."' class='cat_page_cattitle'>".$c_name[$pcid]."</a></div>";
           }
           $title = stripcslashes($row2['title']);
           $open_text = stripcslashes($row2['open_text']);
@@ -551,13 +558,13 @@ function showcat($cid=0, $pag=0, $slovo="") {
           if (trim($text) == "<br><br>") $text = "";
           $open_text = str_replace(aa("[заголовок]"),"",$open_text); // Убираем Заголовок, использованный в блоке!
           // Добавление табов
-          if (strpos(" ".$open_text, "{{")) {
+          if (mb_strpos(" ".$open_text, "{{")) {
             global $include_tabs;
             if ($include_tabs == false) { 
               include ('page/tabs.php'); 
               $include_tabs = true;
             }
-            if (strpos(" ".$open_text, "{{")) $open_text = show_tabs($open_text);
+            if (mb_strpos(" ".$open_text, "{{")) $open_text = show_tabs($open_text);
           }
           $p_comm = $row2['comm'];
           $p_active = $row2['active'];
@@ -620,19 +627,19 @@ function showcat($cid=0, $pag=0, $slovo="") {
 
 
           if ($row2['copy']==0) {
-            $a_open = "<a href='-".$DBName."_page_".$p_pid."'>";
-            $a_open_comm = "<a href='-".$DBName."_page_".$p_pid."_comm#comm'>";
-            $a_open_comm2 = "<a href='-".$DBName."_page_".$p_pid."#comm'>";
+            $a_open = "<a href='".re_link("-".$DBName."_page_".$p_pid)."'>";
+            $a_open_comm = "<a href='".re_link("-".$DBName."_page_".$p_pid)."_comm#comm'>";
+            $a_open_comm2 = "<a href='".re_link("-".$DBName."_page_".$p_pid)."#comm'>";
             $a_close = "</a>";
           } else {
-            $a_open = "<noindex><a rel='nofollow' href='-".$DBName."_page_".$p_pid."'>";
-            $a_open_comm = "<noindex><a rel='nofollow' href='-".$DBName."_page_".$p_pid."_comm#comm'>";
-            $a_open_comm2 = "<noindex><a rel='nofollow' href='-".$DBName."_page_".$p_pid."#comm'>";
+            $a_open = "<noindex><a rel='nofollow' href='".re_link("-".$DBName."_page_".$p_pid)."'>";
+            $a_open_comm = "<noindex><a rel='nofollow' href='-".$DBName."_page_".$p_pid."_comm#comm'>"; // переделать ?
+            $a_open_comm2 = "<noindex><a rel='nofollow' href='".re_link("-".$DBName."_page_".$p_pid)."#comm'>";
             $a_close = "</a></noindex>";
           }
 
           if ($view == 1) { // ФОРУМ //////////////
-            if ($p_pid_last != $pcid and $pcid != 0) { 
+            if ($p_pid_last != $pcid && $pcid != 0) { 
               $sha_first = "<tr valign='top'><td colspan='".$colspan."' class='cat_page_forum'>".$p_name."</td></tr><tr valign='top'>";
               $p_pid_last = $pcid; 
             } else $sha_first = "";
@@ -641,8 +648,8 @@ function showcat($cid=0, $pag=0, $slovo="") {
               else $p_comm = $a_open_comm2.ss("Добавить комментарий").$a_close;
             } else $p_comm = "";
           } elseif ($view!=4) { /////////////////////////////////	<div class=cat_page></div>
-            if (trim($open_text)!="" and $tema_title != "no") $open_text = "<div class='cat_page_text'>".$open_text."</div>"; else $open_text = "";
-            if ($pcid > 0 and $c_name[$pcid] != "") $all_cat_link = "<div class='cat_page_folder ico_folder back_icon' title='".ss("Папка")."'><A href='-".$DBName."_cat_".$pcid."'>".$c_name[$pcid]."</a></div> "; else $all_cat_link = "";
+            if (trim($open_text)!="" && $tema_title != "no") $open_text = "<div class='cat_page_text'>".$open_text."</div>"; else $open_text = "";
+            if ($pcid > 0 && $c_name[$pcid] != "" && $razdeltitleshow == 1) $all_cat_link = "<div class='cat_page_folder ico_folder back_icon' title='".ss("Папка")."'><A href='".re_link("-".$DBName."_cat_".$pcid)."'>".$c_name[$pcid]."</a></div> "; else $all_cat_link = "";
             if ($peopleshow==1) $all_page_counter = " <div class='cat_page_folder ico_eye back_icon' title='".ss("Просмотры")."'>".$p_counter."</div>";
             else $all_page_counter = "";
             if ($datashow==1) $all_page_data = " <div class='cat_page_date ico_calendar back_icon' title='".ss("Дата публикации")."'>".$p_date."</div>";
@@ -700,8 +707,8 @@ function showcat($cid=0, $pag=0, $slovo="") {
           "[page_razdel]"=>$DBName,
           "[razdel_title]"=>$module_title,
           "[page_link_title_h1]"=>$pagelinktitle,
-          "[page_link_title]"=>"<a href='-".$DBName."_page_".$p_pid."'>".$title."</a>",
-          "[page_link]"=>"-".$DBName."_page_".$p_pid,
+          "[page_link_title]"=>"<a href='".re_link("-".$DBName."_page_".$p_pid)."'>".$title."</a>",
+          "[page_link]"=>re_link("-".$DBName."_page_".$p_pid),
           "[all_page_link]"=>$all_page_link,
           "[page_opentext]"=>$open_text,
           "[page_open_text]"=>$open_text, /* удалить позже */
@@ -716,7 +723,7 @@ function showcat($cid=0, $pag=0, $slovo="") {
           "[all_page_comments]"=>$all_page_comments,
           "[cat_id]"=>$pcid,
           "[cat_name]"=>$c_name[$pcid],
-          "[cat_link]"=>"-".$DBName."_cat_".$pcid,
+          "[cat_link]"=>re_link("-".$DBName."_cat_".$pcid),
           "[all_cat_link]"=>$all_cat_link,
           "[sred_golos]"=>$sred_golos,
           "[all_golos]"=>$all_golos,
@@ -899,7 +906,7 @@ function showcat($cid=0, $pag=0, $slovo="") {
       SetCookie($s,"");
     }
 
-    foreach( $rus_names as $key => $value ) {
+    foreach( $rus_names as $key => $value ) { // переделать на аякс ?
       if ($s == $key and $desc == "") $link = "<a href='page/set.php?name=sort_data_base&fill=".$key."_desc' title='".ss("Нажмите для сортировки")."' style='color:red;'>&darr;</a>";
       elseif ($s == $key and $desc == "desc") $link = "<a href='page/set.php?name=sort_data_base&fill=".$key."_' title='".ss("Нажмите для сортировки")."' style='color:green;'>&uarr;</a>";
      else $link = "<a href='page/set.php?name=sort_data_base&fill=".$key."_' title='".ss("Нажмите для сортировки")."'>&darr;</a>";
@@ -939,10 +946,10 @@ function showcat($cid=0, $pag=0, $slovo="") {
         if ($razdel_shablon == 0) $soderganieALL .= "</td>";
       }
         if ($razdel_shablon == 0) {
-          if ($podrobno == 1) $soderganieALL .= "<td><a href=-".$DBName."_page_".$row['id'].">".ss("Подробнее...")."</a></td>";
+          if ($podrobno == 1) $soderganieALL .= "<td><a href='".re_link("-".$DBName."_page_".$row['id'])."'>".ss("Подробнее...")."</a></td>";
           $soderganieALL .= "</tr>";
         } else {
-          $sha2 = str_replace(aa("[подробнее]"), "<a href=-".$DBName."_page_".$row['id'].">".ss("Подробнее...")."</a>", $sha2);
+          $sha2 = str_replace(aa("[подробнее]"), "<a href='".re_link("-".$DBName."_page_".$row['id'])."'>".ss("Подробнее...")."</a>", $sha2);
           $soderganieALL .= $sha2;
         }
   	}
@@ -956,7 +963,6 @@ function showcat($cid=0, $pag=0, $slovo="") {
       global $topic_links_global;
       $topic_links_global = "".topic_links($nu, $pag, "-".$DBName."_cat_".$cid."_page_", $lim)."";
     }
-
 
     if ($post!=0) { add_base($baza_name,$name); } // Форма добавления страницы
   }
@@ -973,7 +979,7 @@ function showcat($cid=0, $pag=0, $slovo="") {
 }
 ##############################    страницы    ###############################
 function page($pid, $all) {
-  global $strelka, $soderganie, $soderganie2, $DBName, $db, $prefix, $module_name, $admin, $pagetitle, $pagetitle2, $ModuleName, $print, $siteurl, $keywords2, $description2, $data_page, $show_comments;
+  global $strelka, $sitename, $soderganie, $soderganie2, $DBName, $db, $prefix, $module_name, $admin, $pagetitle, $ModuleName, $print, $siteurl, $keywords2, $description2, $data_page, $show_comments;
   // настройки модуля из БД
   global $golos_admin, $golos, $golostype, $post, $comments, $datashow, $sort, $tags, $lim, $folder, $view, $col, $menushow, $favorites, $socialnetwork, $name, $put_in_blog, $base, $titleshow, $razdeltitleshow, $comments_add, $add_css, $comment_shablon, $page_shablon, $comments_all, $comments_num, $comments_mail, $comments_adres, $comments_tel, $vetki, $comments_all, $comments_num, $comments_desc, $comments_1, $comments_2, $comments_3, $comments_4, $comments_5, $comments_6, $comments_7, $comments_8, $tag_text_show, $opentextshow, $maintextshow, $show_tags_pages, $col_tags_pages, $papka_tags_pages, $razdel_tags_pages, $text_tags_pages;
   $pid = mysql_real_escape_string(intval($pid));
@@ -995,6 +1001,8 @@ function page($pid, $all) {
     $search = trim(str_replace("  "," ",$row['search']));
     $keys = $row['keywords'];
     $desc = $row['description'];
+    $meta_title = $row['meta_title'];
+    $clean_url = $row['clean_url'];
     $title = str_replace("<p>","",str_replace("</p>","",filter($row['title'])));
     $titl = str_replace("\"","",$title); 
 
@@ -1013,13 +1021,13 @@ function page($pid, $all) {
     // ========================================================================================
     // Добавление табов
     global $include_tabs;
-    if (strpos(" ".$opentext, "{{")) {
+    if (mb_strpos(" ".$opentext, "{{")) {
       if ($include_tabs == false) { include ('page/tabs.php'); $include_tabs = true; }
-      if (strpos(" ".$opentext, "{{")) $opentext = show_tabs($opentext);
+      if (mb_strpos(" ".$opentext, "{{")) $opentext = show_tabs($opentext);
     }
-    if (strpos(" ".$bodytext, "{{")) {
+    if (mb_strpos(" ".$bodytext, "{{")) {
       if ($include_tabs == false) { include ('page/tabs.php'); $include_tabs = true; }
-      if (strpos(" ".$bodytext, "{{")) $bodytext = show_tabs($bodytext);
+      if (mb_strpos(" ".$bodytext, "{{")) $bodytext = show_tabs($bodytext);
     }
     // ========================================================================================
 
@@ -1047,7 +1055,7 @@ function page($pid, $all) {
     $opentext_blog = "";
     if ($put_in_blog > 0) {
       $title_blog = htmlspecialchars($title);
-      $link = "http://".$siteurl."/-".$DBName."_page_".$pid."";
+      $link = "http://".$siteurl.re_link("/-".$DBName."_page_".$pid)."";
       $logo_link = "http://".$siteurl."/small_logo.jpg";
       $opentext_blog = str_replace("/img/","http://".$siteurl."/img/",$opentext_blog);
       $opentext_blog = str_replace("/IMG/","http://".$siteurl."/img/",$opentext_blog);
@@ -1060,7 +1068,7 @@ function page($pid, $all) {
     $main_title = "[menushow]";
     if ($menushow != 0 && $razdeltitleshow == 1) {
       if ($cid != 0) $main_titleX = top_menu($cid, 2); 
-      else $main_titleX = "<div class='cat_title'><h2 class='cat_categorii_link'><a href=-".$DBName.">".$ModuleName."</a></h2></div>";
+      else $main_titleX = "<div class='cat_title'><h2 class='cat_categorii_link'><a href='".re_link("-".$DBName)."'>".$ModuleName."</a></h2></div>";
       if (!isset($venzel)) $venzel = "";
       $venzel .= "<div class='venzel'></div>";
     } else $main_titleX = "";
@@ -1070,13 +1078,11 @@ function page($pid, $all) {
       $sqlZ = "SELECT `title` FROM ".$prefix."_pages_categories WHERE `cid`='".mysql_real_escape_string($cid)."' and `tables`='pages'";
       $resultZ = $db->sql_query($sqlZ);
       $rowZ = $db->sql_fetchrow($resultZ);
-      if ($rowZ['title'] != "") $cat_title = $rowZ['title']." /";
+      if ($rowZ['title'] != "") $cat_title = $rowZ['title']." / ";
     }
     // Для TITLE
-    $pagetitle = $title." — ".$cat_title." ".$ModuleName." — ";
-    $pagetitle = str_replace("  "," ",$pagetitle);
-    $pagetitle = str_replace("— —","—",$pagetitle);
-    $pagetitle2 = $title." — ".$cat_title." ";
+    $pagetitle = $title." — ".$cat_title.$ModuleName." — ".$sitename;
+    if ($meta_title != "") $pagetitle = $meta_title;
 
     ############################3
       
@@ -1194,10 +1200,10 @@ function page($pid, $all) {
         $dat2 = explode("-",$dat2[0]);
         $p_p_date = intval($dat2[2])." ".findMonthName($dat2[1])." ".$dat2[0];
           if ($row['copy']==0) {
-            $a_open = "<a href='-".$DBName."_page_".$p_pid."'>";
+            $a_open = "<a href='".re_link("-".$DBName."_page_".$p_pid)."'>";
             $a_close = "</a>";
           } else {
-            $a_open = "<noindex><a rel='nofollow' href='-".$DBName."_page_".$p_pid."'>";
+            $a_open = "<noindex><a rel='nofollow' href='".re_link("-".$DBName."_page_".$p_pid)."'>";
             $a_close = "</a></noindex>";
           }
         $page_search_news .= "<div class='another_link'>".$a_open.$p_title.$a_close."</a>";
@@ -1304,7 +1310,7 @@ function page($pid, $all) {
   } else { // Если это база данных
     global $strelka;
 
-    $main_title = ""; //<br><a href=\"-".$name."\">Вернуться назад</a><br>";
+    $main_title = "";
     if (isset($cid)) {
       $main_title .= top_menu($cid, 0);
     } else {
@@ -1318,7 +1324,7 @@ function page($pid, $all) {
     $row = $db->sql_fetchrow($result);
     $module_title = $row['title']; // Название раздела
     $module_options = explode("|",$row['text']); $module_options = $module_options[1]; 
-    $page_title = "<div class='cat_title'><h1 class='cat_categorii_link'><a href='-".$name."'>".$module_title."</a> ".$strelka." ".ss("Запись №").$pid."</h1></div>"; // Заголовок страницы
+    $page_title = "<div class='cat_title'><h1 class='cat_categorii_link'><a href='".re_link("-".$name)."'>".$module_title."</a> ".$strelka." ".ss("Запись №").$pid."</h1></div>"; // Заголовок страницы
     $base = 0;
     parse_str($module_options); // Настройки раздела
 
@@ -1435,13 +1441,13 @@ function page($pid, $all) {
   }
   // Если в тексте обозначены комментарии - заменять их, а в самой странице - убрать.
   if (!isset($page_add_comments)) $page_add_comments = "";
-  if (strpos($page_text,aa("[комментарии]"))) {
+  if (mb_strpos($page_text,aa("[комментарии]"))) {
     $page_text = str_replace(aa("[комментарии]"), $page_comments."<br>".$page_add_comments, $page_text);
     $page_add_comments = "";
     $page_comments = "";
   }
 
-  if ($cid > 0 && $c_name != "") $all_cat_link = "<div class='cat_page_folder ico_folder back_icon' title='".ss("Папка")."'><A href='-".$module."_cat_".$cid."'>".$c_name."</a></div> "; else $all_cat_link = "";
+  if ($cid > 0 && $c_name != "") $all_cat_link = "<div class='cat_page_folder ico_folder back_icon' title='".ss("Папка")."'><A href='".re_link("-".$module."_cat_".$cid)."'>".$c_name."</a></div>"; else $all_cat_link = "";
 
   if (!isset($venzel)) $venzel = "";
   $sha_zamena = array(
@@ -1578,7 +1584,7 @@ function add_base($baza_name,$name) {
   # Настройка
   $usercomm=1; # писать неюзерам нельзя РЕАЛИЗОВАТЬ!!!
   global $soderganie, $DBName, $db, $prefix, $module_name, $admin, $tema, $tema_name, $tema_title, $tema_opis, $post;
-  $soderganie .= "<br><a href=-".$name."_addbase_".$baza_name."><b>".ss("Добавить в базу данных")."</b></a>";
+  $soderganie .= "<br><a href='-".$name."_addbase_".$baza_name."'><b>".ss("Добавить в базу данных")."</b></a>";
 }
 ###########################################################
 // Добавление строки в базу данных
@@ -1863,7 +1869,8 @@ function addpost($cid) {
             $s_title2 = $row2['name'];
             $s_opis = $row2['opis'];
             $s_parent = $row2['parent'];
-            $s_title2 = getparent_spiski($s_name,$s_parent,$s_title2);
+            if ($s_parent == 0) $s_title2 = "";
+            else $s_title2 = getparent_spiski($s_name,$s_parent,$s_title2);
             $sel = ""; //if ($razdel == $s_id2) $sel = " selected";
             $ret .=  "<option value=".$s_id2.$sel."> ".$s_title2."</option>";
           }
@@ -1883,9 +1890,8 @@ function addpost($cid) {
 ###########################################
 // Сохранение страницы, добавленной посетителем
 function savepost ($avtory, $avtor, $mail, $post_title, $info, $num, $cid, $add){
-  global $ip;
   $link = getenv("HTTP_REFERER");
-  global $_SESSION, $_POST, $soderganie, $lang, $media_post, $DBName, $now, $db, $prefix, $module_name, $post, $admin, $tema_zapret, $tema_zapret, $captcha_ok;
+  global $ip, $_SESSION, $_POST, $soderganie, $lang, $media_post, $DBName, $now, $db, $prefix, $module_name, $post, $admin, $tema_zapret, $tema_zapret, $captcha_ok;
   // Ввести проверку на активность - проверка постов администратором
 
   $active = 3;
@@ -1919,12 +1925,12 @@ function savepost ($avtory, $avtor, $mail, $post_title, $info, $num, $cid, $add)
     parse_str($main_options);
   }
   */
-  if (($tema_zapret == 1 || $tema_zapret == 2) and ( strpos(" ".$avtory.$info.$post_title, "://") or strpos(" ".$avtory.$info.$post_title, "www.") ) ) die(ss("Запрещено размещать информацию, содержащую ссылки. Это защита от спама. <br><b>Если ссылку разместить необходимо - пишите ее без http:// и www"));
+  if (($tema_zapret == 1 || $tema_zapret == 2) and ( mb_strpos(" ".$avtory.$info.$post_title, "://") or mb_strpos(" ".$avtory.$info.$post_title, "www.") ) ) die(ss("Запрещено размещать информацию, содержащую ссылки. Это защита от спама. <br><b>Если ссылку разместить необходимо - пишите ее без http:// и www"));
 
   if ($lang == "ru") 
       if ($avtor != "" || $mail != "" || 
         (!preg_match("#[а-яА-Я]#i",$info) && $media_post == 0) || 
-        (!preg_match("#[а-яА-Я]#i",$info) && $media_post == 1 && !strpos(" ".$info, 'a') && !strpos(" ".$info, 'img') && !strpos(" ".$info, 'iframe') && !strpos(" ".$info, 'object') ) ) die(ss("Запрещено размещать спам."));
+        (!preg_match("#[а-яА-Я]#i",$info) && $media_post == 1 && !mb_strpos(" ".$info, 'a') && !mb_strpos(" ".$info, 'img') && !mb_strpos(" ".$info, 'iframe') && !mb_strpos(" ".$info, 'object') ) ) die(ss("Запрещено размещать спам."));
 
   $addpost = false;
   if ($avtory != "" AND $info != "") {
@@ -1970,7 +1976,7 @@ function savepost ($avtory, $avtor, $mail, $post_title, $info, $num, $cid, $add)
                       $row = $db->sql_fetchrow($result);
                       $s_pages = $row['pages'];
                       $s_name = $row['name'];
-                          if (strpos($agent," ".$page_id." ") < 1 and $s_name == $elements) {
+                          if (mb_strpos($agent," ".$page_id." ") < 1 and $s_name == $elements) {
                               $s_pages .= " ".$page_id." ";
                               $s_pages = str_replace("  "," ",$s_pages);
                               $db->sql_query("UPDATE ".$prefix."_spiski SET `pages`='".$s_pages."' WHERE `type`='".mysql_real_escape_string($name)."' and `name`='".mysql_real_escape_string($elements)."'") or die (ss("Ошибка: Не удалось обновить список."));
@@ -2043,7 +2049,7 @@ function savepost ($avtory, $avtor, $mail, $post_title, $info, $num, $cid, $add)
                       $row = $db->sql_fetchrow($result);
                       $s_pages = $row['pages'];
                       $s_name = $row['name'];
-                          if (strpos($s_pages," $page_id ") < 1 and $s_name == $elements) {
+                          if (mb_strpos($s_pages," $page_id ") < 1 and $s_name == $elements) {
                               $s_pages .= " $page_id ";
                               $s_pages = str_replace("  "," ",$s_pages);
                               $db->sql_query("UPDATE ".$prefix."_spiski SET `pages`='".mysql_real_escape_string($s_pages)."' WHERE `type`='".mysql_real_escape_string($name)."' and `name`='".mysql_real_escape_string($elements)."'") or die ('Ошибка: Не удалось обновить списки.');
@@ -2068,7 +2074,7 @@ function savepost ($avtory, $avtor, $mail, $post_title, $info, $num, $cid, $add)
                       $result = $db->sql_query($sql);
                       $row = $db->sql_fetchrow($result);
                       $s_pages = $row['pages'];
-                      if (strpos($s_pages," ".$page_id." ") < 1) {
+                      if (mb_strpos($s_pages," ".$page_id." ") < 1) {
                         $s_pages .= " ".$page_id." ";
                         $s_pages = str_replace("  "," ",$s_pages);
                         // теперь присвоем каждому из элементов списка id страницы, которую редактируем.
@@ -2353,10 +2359,10 @@ function savecomm($avtor, $avtory, $info, $num, $comm_otvet, $maily, $mail, $adr
     $info = str_replace("!", "! ", str_replace(" !", "!", $info));
     $info = str_replace("! !", "!", str_replace("! ! !", "!!!", $info));
 
-    if (($tema_zapret_comm == 1 || $tema_zapret_comm == 2) and ( strpos(" ".$avtory.$info.$maily.$adres.$tel, "://") or strpos(" ".$avtory.$info.$maily.$adres.$tel, "www.") ) ) die(ss("Запрещено размещать информацию, содержащую ссылки. Это защита от спама. <br><b>Если ссылку разместить необходимо - пишите ее без http:// и www"));
+    if (($tema_zapret_comm == 1 || $tema_zapret_comm == 2) and ( mb_strpos(" ".$avtory.$info.$maily.$adres.$tel, "://") or mb_strpos(" ".$avtory.$info.$maily.$adres.$tel, "www.") ) ) die(ss("Запрещено размещать информацию, содержащую ссылки. Это защита от спама. <br><b>Если ссылку разместить необходимо - пишите ее без http:// и www"));
 
     if ($lang == "ru") 
-      if ($avtor != "" or $mail != "" or (!preg_match("#[а-яА-Я]#i",$info) && !strpos(" ".$info, 'a') && !strpos(" ".$info, 'img') && !strpos(" ".$info, 'iframe') && !strpos(" ".$info, 'object') ) ) die(ss("Запрещено размещать спам."));
+      if ($avtor != "" or $mail != "" or (!preg_match("#[а-яА-Я]#i",$info) && !mb_strpos(" ".$info, 'a') && !mb_strpos(" ".$info, 'img') && !mb_strpos(" ".$info, 'iframe') && !mb_strpos(" ".$info, 'object') ) ) die(ss("Запрещено размещать спам."));
 
     //$open_mails = array(".hu","quantumwise.com",".hu","insproiws.com",".br",".nl",".fr",".cn","usa.net","nasimke.com","ymail.com","mail.com","yahoo.com","hotmail.com","msn.com","yandex.com","gmx.com","i.ua","meta.ua","yandex.ua","ukr.net","bigmir.net");
     //$open_mails2 = array("hu","br","nl","fr","cn","com","net","ua","uk","nl","de","fd");
@@ -2383,7 +2389,7 @@ function savecomm($avtor, $avtory, $info, $num, $comm_otvet, $maily, $mail, $adr
     $addcomm = false;
 
     $ok_mail = true; // Запрет отправки комментариев с некоторых e-mail
-    if ( strpos(" ".$maily, ".tv") ) $ok_mail = false;
+    if ( mb_strpos(" ".$maily, ".tv") ) $ok_mail = false;
 
     if ($avtory != "" AND $info != "") {
       if( ( (isset($_SESSION['captcha_keystring']) && $_SESSION['captcha_keystring'] == $_POST['keystring']) or $captcha_ok == 1) and ($ok_mail == true) ){
@@ -2433,7 +2439,7 @@ function savecomm($avtor, $avtory, $info, $num, $comm_otvet, $maily, $mail, $adr
       $mail2 = $row['mail'];
       $text2 = $row['text'];
         if (trim($maily)=="") $maily = "e-mail не сообщил(а)";
-        if (trim($mail2)!="") mail($mail2, '=?utf-8?b?'.base64_encode($avtor2.ss(", получен ответ на ваш комментарий на сайте ").$siteurl).'?=', "<h3>".ss("Здравствуйте, ").$avtor2."!</h3><b>".ss("Вы писали:")."</b><br><br>".str_replace("\r\n","<br>",$text2)."<br><br><b>".ss("Вам ответил(а) ").$avtory.", ".$maily.":</b><br><br>".str_replace("\r\n","<br>",$info)."<br><br>".ss("Чтобы ответить на комментарий, перейдите на сайт по ")."<a href=http://".$siteurl."/-".$mod."_page_".$num."#comm_".$comm_otvet.">".ss("этой ссылке")."</a>.<br><br><br><br>".ss("Отвечать на это письмо не нужно - оно было создано сайтом автоматически!"), "Content-Type: text/html; charset=utf-8\r\nFrom: ".$maily."\r\n");
+        if (trim($mail2)!="") mail($mail2, '=?utf-8?b?'.base64_encode($avtor2.ss(", получен ответ на ваш комментарий на сайте ").$siteurl).'?=', "<h3>".ss("Здравствуйте, ").$avtor2."!</h3><b>".ss("Вы писали:")."</b><br><br>".str_replace("\r\n","<br>",$text2)."<br><br><b>".ss("Вам ответил(а) ").$avtory.", ".$maily.":</b><br><br>".str_replace("\r\n","<br>",$info)."<br><br>".ss("Чтобы ответить на комментарий, перейдите на сайт по ")."<a href=http://".$siteurl.re_link("/-".$mod."_page_".$num)."#comm_".$comm_otvet.">".ss("этой ссылке")."</a>.<br><br><br><br>".ss("Отвечать на это письмо не нужно - оно было создано сайтом автоматически!"), "Content-Type: text/html; charset=utf-8\r\nFrom: ".$maily."\r\n");
     }
 
     if ( $comment_send == 1 and $active != 0 ) { // отправка уведомления о комментарии администратору
@@ -2441,7 +2447,7 @@ function savecomm($avtor, $avtory, $info, $num, $comm_otvet, $maily, $mail, $adr
       $result = $db->sql_query($sql);
       $row = $db->sql_fetchrow($result);
       $cid_num = $row['cid'];
-      mail($adminmail, '=?utf-8?b?'.base64_encode(aa("Комментарий на ").$siteurl." [".$now."]").'?=', "<b>".aa("Написал(а) ").$avtory." <".$maily.">:</b><br><br>".str_replace("\r\n","<br>",$info)."<br><br>".aa("Чтобы ответить на комментарий, перейдите ")."<a href='http://".$siteurl."/-".$mod."_page_".$num."#comm_".$cid_num."'>".aa("на сайт")."</a>".aa(" или в его ")."<a href='http://".$siteurl."/red'>".aa("администрирование")."</a>.<br><br><br><br>".aa("Письмо создано сайтом автоматически."), "Content-Type: text/html; charset=utf-8\r\nFrom: ".$adminmail."\r\n");
+      mail($adminmail, '=?utf-8?b?'.base64_encode(aa("Комментарий на ").$siteurl." [".$now."]").'?=', "<b>".aa("Написал(а) ").$avtory." <".$maily.">:</b><br><br>".str_replace("\r\n","<br>",$info)."<br><br>".aa("Чтобы ответить на комментарий, перейдите ")."<a href='http://".$siteurl.re_link("/-".$mod."_page_".$num)."#comm_".$cid_num."'>".aa("на сайт")."</a>".aa(" или в его ")."<a href='http://".$siteurl."/red'>".aa("администрирование")."</a>.<br><br><br><br>".aa("Письмо создано сайтом автоматически."), "Content-Type: text/html; charset=utf-8\r\nFrom: ".$adminmail."\r\n");
     }
   } else die(ss("Размещать комментарии в этом разделе запрещено"));
 
@@ -2451,8 +2457,7 @@ function savecomm($avtor, $avtory, $info, $num, $comm_otvet, $maily, $mail, $adr
 ###########################################
 // Сохранение голосования
 function savegolos ($gol, $num){
-  global $soderganie, $DBName, $db, $prefix, $module_name, $ip, $commentagain, $admin, $bangolosdays;
-  global $siteurl;
+  global $soderganie, $DBName, $db, $prefix, $module_name, $ip, $commentagain, $admin, $bangolosdays, $siteurl;
   recash(str_replace("http://".$siteurl,"",getenv("HTTP_REFERER"))); // Обновление кеша ##
   recash(str_replace("http://".$siteurl,"",getenv("REQUEST_URI")),0);
   $num = mysql_real_escape_string(intval($num));
@@ -2555,8 +2560,8 @@ function topic_links($records,$r_start=0,$URL,$inpage=20) {
     if ($records<=$inpage) return;
         $str.="<div class='pages_links'>";
     if ($r_start!=0 and $r_start > 5) {
-        $str.="<a class='pages_links' href='".$URL.($r_start-1)."' title='".ss("предыдущая страница")."'><</a>";
-        $str.=" <a href='".$URL."0' title='".ss("первая страница")."'><B>1</B></a>";
+        $str.="<a class='pages_links' href='".re_link($URL.($r_start-1))."' title='".ss("предыдущая страница")."'><</a>";
+        $str.=" <a href='".re_link($URL."0")."' title='".ss("первая страница")."'><B>1</B></a>";
         }
     if ($r_start==0) {$sstart=$r_start-0; $send=$r_start+10;}   if ($r_start==1) {$sstart=$r_start-1; $send=$r_start+9;}
     if ($r_start==2) {$sstart=$r_start-2; $send=$r_start+8;}    if ($r_start==3) {$sstart=$r_start-3; $send=$r_start+7;}
@@ -2566,14 +2571,14 @@ function topic_links($records,$r_start=0,$URL,$inpage=20) {
     if ($records%$inpage==0) $add=0; else $add=1;
     for ($i=$sstart; $i<$send; $i++) {
         if ($i==$r_start) $str.=" <B>".($i+1)."</B>";
-        else $str.=" <a href='".$URL.$i."' title='".ss("Перейти к странице")." ".($i+1)."'><B>".($i+1)."</B></a>";
+        else $str.=" <a href='".re_link($URL.$i)."' title='".ss("Перейти к странице")." ".($i+1)."'><B>".($i+1)."</B></a>";
         }
         $send=$records/$inpage;
         $send2 = intval($records/$inpage);
         if ($send2 != $send) $send2++;
     if ($r_start+(1-$add)<intval($records/$inpage) and $r_start < $send2-5) {
-        $str.=" <a class='pages_links' href='".$URL.($r_start+1)."' title='".ss("следующая страница")."'>></a>";
-        if ( ($r_start==0 and $send2<10) or ($i-1 == intval($records/$inpage)-(1-$add)) ) {} else $str.=" <a href='".$URL.(intval($records/$inpage)-(1-$add))."' title='".ss("последняя страница")."'><B>".$send2."</B></a>";
+        $str.=" <a class='pages_links' href='".re_link($URL.($r_start+1))."' title='".ss("следующая страница")."'>></a>";
+        if ( ($r_start==0 and $send2<10) or ($i-1 == intval($records/$inpage)-(1-$add)) ) {} else $str.=" <a href='".re_link($URL.(intval($records/$inpage)-(1-$add)))."' title='".ss("последняя страница")."'><B>".$send2."</B></a>";
         }
         $str.="</div>";
     return($str);
@@ -2614,7 +2619,7 @@ function search($slovo="", $modul, $papka=0) {
   	while ($row = $db->sql_fetchrow($resultX)) {
     	$p_pid = $row['pid'];
     	$p_title = $row['title'];
-    	$soderganie .= "<li><a href=-".$modul."_page_".$p_pid.">".$p_title."</a>";
+    	$soderganie .= "<li><a href='".re_link("-".$modul."_page_".$p_pid)."'>".$p_title."</a>";
     	// Заносим в список
     	$pids[] = $p_pid;
   	}
@@ -2626,7 +2631,7 @@ function search($slovo="", $modul, $papka=0) {
   	while ($row = $db->sql_fetchrow($resultX)) {
     	$p_pid = $row['pid'];
     	$p_title = $row['title'];
-    	if (!in_array($p_pid,$pids)) $soderganie .= "<li><a href=-".$modul."_page_".$p_pid.">".$p_title."</a>";
+    	if (!in_array($p_pid,$pids)) $soderganie .= "<li><a href='".re_link("-".$modul."_page_".$p_pid)."'>".$p_title."</a>";
   	}
   	$soderganie .= "</ol><p>".ss("Одинаковые с совпадениями в названии не показываются.")."<hr noshade=noshade>";
   }
@@ -2645,9 +2650,9 @@ function getparent_page($parent_id,$title,$cid=0,$page=0) {
       $ptitle = strip_tags($row['title']);
       $pparent_id = $row['parent_id'];
     }
-    if ($page==2) $tit = "<A href=-".$DBName."_cat_".$cid." class='cat_podcategorii_link'>".$title."</a>"; 
+    if ($page==2) $tit = "<A href='".re_link("-".$DBName."_cat_".$cid)."' class='cat_podcategorii_link'>".$title."</a>"; 
     else $tit = $title;
-    if ($ptitle!="") $title = "<A href=-".$DBName."_cat_".$parent_id." class='cat_podcategorii_link'>".$ptitle."</a> ".$strelka." ".$tit;
+    if ($ptitle!="") $title = "<A href='".re_link("-".$DBName."_cat_".$parent_id)."' class='cat_podcategorii_link'>".$ptitle."</a> ".$strelka." ".$tit;
     if (intval($pparent_id)!=0) { $title=getparent_page($pparent_id,$title); }
     $getparent_cash[$cash] = $title;
     return $title;
@@ -2669,8 +2674,8 @@ function getparent_for_addpost($name, $parentid, $title) {
       $ptitle = strip_tags($row['title']);
       $pparent_id = $row['parent_id'];
     }
-    if ($ptitle!="") $title=$ptitle."/".$title;
-    if ($pparent_id != 0) { $title=getparent_for_addpost($name,$pparent_id,$title); }
+    if ($ptitle!="") $title = $ptitle."/".$title;
+    if ($pparent_id != 0) { $title = getparent_for_addpost($name,$pparent_id,$title); }
     $getparent_cash[$cash] = $title;
     return $title;
   } else {

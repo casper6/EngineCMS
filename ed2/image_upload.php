@@ -32,12 +32,12 @@ $_FILES['file']['name'] = basename($_FILES['file']['name']);
 
 if (!empty($_FILES['file']['name'])) {
   $type = str_replace("image/","",strtolower($_FILES['file']['type']));
-  if ($type == 'png' || $type == 'jpg' || $type == 'gif' || $type == 'jpeg' || $type == 'pjpeg') {
+  if ($type == 'png' || $type == 'jpg' || $type == 'gif' || $type == 'jpeg') {
     $foto =  md5(date('YmdHis')).'.'.$type;
     if (is_uploaded_file($_FILES['file']['tmp_name'])) {
       if (move_uploaded_file($_FILES['file']['tmp_name'], $folder.$foto)) {
         // Обработка фото (при наличии библиотеки Imagick)
-        if (extension_loaded('imagick') && class_exists("Imagick") && $imagick == true) {
+        if (extension_loaded('imagick') && class_exists("Imagick") && $imagick == true && $type != 'gif') {
           $image = new Imagick($folder.$foto);
           // сжатие
           list($width, $height, $type, $attr) = getimagesize($folder.$foto);

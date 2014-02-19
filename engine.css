@@ -10,7 +10,7 @@ body {
 	background-attachment: fixed;
 	background-repeat: repeat-y;
 	/* margin: 5px 15px 0 15px; */
-	margin: 0;
+	margin: 2px 2px 0 2px;;
 }
 @media (max-width: 1920px) { body { background-size: 1920px auto; -webkit-background-size: 1920px auto; -o-background-size: 1920px auto; -moz-background-size: 1920px auto; } }
 @media (max-width: 1680px) { body { background-size: 1680px auto; -webkit-background-size: 1680px auto; -o-background-size: 1680px auto; -moz-background-size: 1680px auto; } }
@@ -86,11 +86,13 @@ input#redactorSaveBtn {background:green; color:white;}
 .m5 {margin:5px;}
 .m0 {margin:0;}
 .p0 {padding:0;}
+.p5 {padding:5px;}
 .l0 {left:0;}
 .t0 {top:0;}
 .mp0, .pm0 {margin:0;padding:0;}
 .w100 {width:100%;}
 .w95 {width:95%;}
+.w60 {width:60%;}
 .w45 {width:45%;}
 .w25 {width:25%;}
 .w10 {width:10%;}
@@ -272,15 +274,14 @@ h2.spiski p {display: inline;}
 }
 .black_grad {
 	/* background: #f4f5f7; */
-
 	/* webkit example */
 	background-image: -webkit-gradient(
-	  linear, left top, left bottom, from(rgba(244,245,247,0.4)),
-	  to(rgba(168,172,184,0.7))
+	  linear, left top, left bottom, from(#f4f5f7),
+	  to(#a8acb8)
 	);
 	/* mozilla example - FF3.6+ */
 	background-image: -moz-linear-gradient(
-	  rgba(244,245,247, 0.4) 0%, rgba(168,172,184, 0.7) 95%
+	  #f4f5f7 0%, #a8acb8 95%
 	);
 	/* approximately a 33% opacity on blue */
 	filter: progid:DXImageTransform.Microsoft.gradient(
@@ -303,7 +304,8 @@ h2.spiski p {display: inline;}
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f4f5f7', endColorstr='#a8acb8',GradientType=0 );
 	*/
 	border-bottom:1px solid #80868f;
-	text-align:center;
+	/*text-align:center;*/
+	padding-left: 5px;
 	height: 42px;
 	min-width:290px;
 }
@@ -361,7 +363,7 @@ div.b8f4f2 {background: #b8f4f2; border:1px solid gray;}
 .nobr {	white-space: nowrap;}
 
 h1, h2, h3 {margin:0; padding:5px; font-weight: normal;}
-.h1 {font-size: 15pt; color: #717880;}
+.h1 {font-size: 22pt; color: #717880;}
 .h2 {font-size: 14pt; color: #333;}
 .h3 {font-size: 13pt; color: #333;}
 h1 {font-size: 21px;color:#333;}

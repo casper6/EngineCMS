@@ -165,6 +165,7 @@ if ($row['realadmin'] == 1) {
 			}
 			$gzip_contents .= "print (\"<center><h2>Обновление базы данных окончено!</h2><br>\");".$crlf."?>";
 		}
+		$gzip_contents = str_replace("<td>>","<td>",$gzip_contents );
 		$backup_file = str_replace(":", "_", "backup/".$url."_".$date_jour);
 		echo "Создаю файл... (если далее ничего нет - файл не создан, ошибка при записи файла)<br>";
 		fputs(fopen($backup_file.".txt","wb"), $gzip_contents );

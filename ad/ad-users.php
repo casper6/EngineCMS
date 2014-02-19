@@ -289,7 +289,7 @@ function adduser() {
 				$from = "Администратор";
 				$mail_body = "Вас приглашают на ".$sitename.".<br>Запомните и никому не передавайте ваш пароль<br>Пароль: ".$password."<br>Теперь вы можете войти на сайт<br>".$siteurl;
 				mail($email, "=?utf-8?b?" . base64_encode($sitename) . "?=", $mail_body, "MIME-Version: 1.0\r\nContent-type: text/html; charset=utf-8\r\nFrom: =?utf-8?b?" . base64_encode($from) . "?= <" . $adminmail . ">");
-				echo 'Пользователь '.$email.' добавленн, скоро он получит уведомление на почту';
+				echo 'Пользователь '.$email.' добавлен, уведомление на почту отправлено.';
 			}
 		}
 	} else echo 'ОШИБКА: email неверный';

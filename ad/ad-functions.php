@@ -5,26 +5,26 @@ function page_admin($txt, $pid) { // добавление функций адм�
   if ( $pid > 0 ) $red = "
 <script>
 function delpage(id) {
-  $.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : 'html',
+  $.ajax({ url: '/ad/ad-ajax.php', cache: false, dataType : 'html',
       data: {'func': 'delpage', 'id': id}
   });
   $('#redact').html('Страница удалена в Корзину.');
 }
 </script>
-<a class='ad_button' target='_blank' href='sys.php?op=base_pages_edit_page&amp;pid=".$pid."'><img class='ad_icon' src='images/editpage.png'>Редактировать страницу <nobr>в редакторе</nobr></a><a class='ad_button' target='_blank' href='javascript:delpage(".$pid.");'><img class='ad_icon' src='images/trash_fill.png'>Удалить страницу <nobr>в Корзину</nobr></a>"; 
+<a class='ad_button' target='_blank' href='/sys.php?op=base_pages_edit_page&amp;pid=".$pid."'><img class='ad_icon' src='/images/editpage.png'>Редактировать страницу <nobr>в редакторе</nobr></a><a class='ad_button' target='_blank' href='javascript:delpage(".$pid.");'><img class='ad_icon' src='/images/trash_fill.png'>Удалить страницу <nobr>в Корзину</nobr></a>"; 
   elseif ( $pid == 0 and $module_name != "" ) {
     // выяснить id
     $sql55="SELECT `id` from ".$prefix."_mainpage where `tables`='pages' and `type`='2' and (`name` = '".$name."' or `name` like '".$name." %')";
     $result55 = $db->sql_query($sql55);
     $row55 = $db->sql_fetchrow($result55);
     $name_id = $row55['id'];
-    $red = "<a class='ad_button' target='_blank' href='sys.php?op=mainpage&amp;id=".$name_id."'><img class='ad_icon' src='images/editpage.png'>Редактировать <nobr>главную стр.</nobr> раздела</a><a class='ad_button' target='_blank' href='sys.php?op=base_pages_add_page&amp;name=".$name."#1'><img class='ad_icon' src='images/pluspage.png'>Добавить <nobr>новую страницу</nobr> в раздел</a>";
+    $red = "<a class='ad_button' target='_blank' href='/sys.php?op=mainpage&amp;id=".$name_id."'><img class='ad_icon' src='/images/editpage.png'>Редактировать <nobr>главную стр.</nobr> раздела</a><a class='ad_button' target='_blank' href='/sys.php?op=base_pages_add_page&amp;name=".$name."#1'><img class='ad_icon' src='/images/pluspage.png'>Добавить <nobr>новую страницу</nobr> в раздел</a>";
   }
-  elseif ( $module_name == "" ) $red = "<a class='ad_button' target='_blank' href='/sys.php?op=mainpage&amp;id=24'><img class='ad_icon' src='images/editpage.png'>Редактировать Главную страницу</a><a class='ad_button' target='_blank' href='sys.php?op=base_pages_add_page#1'><img class='ad_icon' src='images/pluspage.png'>Добавить <nobr>новую страницу</nobr> на сайт</a>";
+  elseif ( $module_name == "" ) $red = "<a class='ad_button' target='_blank' href='/sys.php?op=mainpage&amp;id=24'><img class='ad_icon' src='/images/editpage.png'>Редактировать Главную страницу</a><a class='ad_button' target='_blank' href='/sys.php?op=base_pages_add_page#1'><img class='ad_icon' src='/images/pluspage.png'>Добавить <nobr>новую страницу</nobr> на сайт</a>";
   else $red = "";
   $url = getenv("REQUEST_URI");
-  $txt = str_replace("</body>","<div id='redact_show'><a title='Показать настройки администратора' style='cursor:pointer;' onclick=\"$('#redact').toggle(); $('#redact_show').toggle();\"><img src='images/adminconfig.png' width='32'></a></div>
-    <div id='redact' class='show_block'><a title='Скрыть настройки администратора' style='cursor:pointer; text-decoration:none;' onclick=\"$('#redact_show').toggle(); $('#redact').toggle();\"><div class='show_block_title'><div style='float:right'>x</div>Настройки администратора</div></a>".$red."<form method=post name=blocks_show action='".$url."' style='display:inline;'><input type='hidden' name=blocks value='1'><a class='ad_button' href='javascript:document.blocks_show.submit();' title='Показать редактирование блоков на странице'><img class='ad_icon' src='images/showblocks.png'>Показать блоки <nobr>на странице</nobr></a></form><a class='ad_button' href='/sys.php?op=base_pages_re&amp;link=".$url."'><img class='ad_icon' src='images/refresh.png'>Обновить (перезагрузить) страницу</a><a class='ad_button' target='_blank' href='/red'><img class='ad_icon' src='images/adminsite.png'>Открыть администрирование</a></div></body>",$txt);
+  $txt = str_replace("</body>","<div id='redact_show'><a title='Показать настройки администратора' style='cursor:pointer;' onclick=\"$('#redact').toggle(); $('#redact_show').toggle();\"><img src='/images/adminconfig.png' width='32'></a></div>
+    <div id='redact' class='show_block'><a title='Скрыть настройки администратора' style='cursor:pointer; text-decoration:none;' onclick=\"$('#redact_show').toggle(); $('#redact').toggle();\"><div class='show_block_title'><div style='float:right'>x</div>Настройки администратора</div></a>".$red."<form method=post name=blocks_show action='".$url."' style='display:inline;'><input type='hidden' name=blocks value='1'><a class='ad_button' href='javascript:document.blocks_show.submit();' title='Показать редактирование блоков на странице'><img class='ad_icon' src='/images/showblocks.png'>Показать блоки <nobr>на странице</nobr></a></form><a class='ad_button' href='/sys.php?op=base_pages_re&amp;link=".$url."'><img class='ad_icon' src='/images/refresh.png'>Обновить (перезагрузить) страницу</a><a class='ad_button' target='_blank' href='/red'><img class='ad_icon' src='/images/adminsite.png'>Открыть администрирование</a></div></body>",$txt);
   return $txt;
 }
 ///////////////////////////////////////////////////////////////
@@ -587,4 +587,7 @@ function button_resize_red($redactor, $savebutton=false) { // redactor_id
   return $txt;
 }
 ##########################################################################################
+function clean_url($url) {
+  return str_replace(" ", "_", str_replace("  ", " ", str_replace("   ", " ", trim( str_replace(",", "", str_replace(":", "", str_replace(";", "", str_replace("!", "", str_replace("?", "", str_replace("&", " ", str_replace("%", "", $url)))))))))));
+}
 ?>

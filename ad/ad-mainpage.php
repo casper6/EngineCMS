@@ -93,7 +93,7 @@ function create_main($type) {
 	global $tip, $admintip, $prefix, $db;
 	$create = ""; 
 	switch ($type) {
-	case "design": $type_opis = "дизайна (HTML-разметка, внешний вид сайта)";
+	case "design": $type_opis = "дизайна (HTML)";
 	$create.="<div id=about class=block style='display:none;'>Дизайн — это обрамление страниц сайта, всё, что окружает контент, содержание. В дизайне могут быть блоки, которые выводят необходимую информацию. Например созданный вами блок меню или автоматический блок [статистика], который выводит счетчик статистики из настроек сайта. В общем, дизайн — это весь html-код, от body до /body (невключительно), а сама страница заменена на служебное слово [содержание] - блок, который выводит содержание подключенных разделов и их страниц. После создания дизайна, откройте его редактирование и присвойте необходимые стили (css).<br></div>
 	<table class='w100 mw800'><tr><td>
 	<span class=h2>Название:</span> По-русски, можно с пробелами
@@ -115,7 +115,7 @@ function create_main($type) {
 	// [корзина] - общая корзина для всех разделов типа 'магазин'
 
 	break;
-	case "css": $type_opis = "стиля (CSS, настройка внешнего вида)";
+	case "css": $type_opis = "стиля (CSS)";
 	$create.="<div id=about class=block style='display:none;'>Стили - это CSS (каскадные таблицы стилей), описание оформления элементов сайта. Стили подключаются к дизайну (при его редактировании). В дизайне может быть использовано сразу несколько стилей. При подключении стилей они объединяются в один стиль и сжимаются.<br></div>
 	<div class='w95 mw800'>
 	<h2>Название: <span class='f12'>По-русски, можно с пробелами</span><br><input type='text' name='title' value='' size='40' class='w100 h40 f16' autofocus></h2>
@@ -184,16 +184,19 @@ function create_main($type) {
 			}
 
 	// Получим список названий блоков
-	$sql2 = "select `title` from ".$prefix."_mainpage where `type`='3' and `tables`='pages'"; 
+	$sql2 = "select `id`,`name`,`title` from ".$prefix."_mainpage where `type`='3' and `tables`='pages' order by `title`"; 
 	$result2 = $db->sql_query($sql2);
 	$titles_block = array();
+	$options_block2 = $options_block3 = "";
 	while ($row2 = $db->sql_fetchrow($result2)) {
 		$titles_block[] = trim($row2['title']);
+		if ($row2['name']=='2') $options_block2 .= "<option value='".$row2['id']."'>".$row2['title']."</option>"; // блоки текста
+		if ($row2['name']=='3') $options_block3 .= "<option value='".$row2['id']."'>".$row2['title']."</option>";// блоки-ротаторы
 	}
 	$titles_block = implode("','", $titles_block);
 	$create = "<div id=about class=block style='display:none;'>Блок — это дополнительный элемент сайта, который может быть вставлен в любом его месте. Блоки бывают автоматические (заранее заданные системой), полуавтоматические (создаваемые с последующей настройкой того, что будет в них отображаться) и ручные (текст, HTML, JavaScript или PHP-код).<br></div>
-	<table class='w100 mw800'><tr valign=bottom><td width=50%>
-	<span class=h2>Название блока:</span><br><input id='block_name' type='text' name='title' value='' size=60 class='w100 h40 f16'>
+
+	<p><span class=h2>Название:</span> <input id='block_name' type='text' name='title' value='' size=60 class='w60 f16'>
 	<div id='block_name_correction'></div>
 	<script>
 	function in_array(needle, haystack, strict) {
@@ -214,13 +217,29 @@ function create_main($type) {
 	  }
 	});
 	</script>
-	</td><td>
-	<span class=h3>Дизайн блока:</span><br><select name='design'><option value='0'>выбирать необязательно</option>".$styles."</select><br>Не стоит использовать дизайн для раздела!
-	</td></tr><tr><td colspan=2>
-	<span class=h2>Выберите тип блока:</span> (справа увидите его параметры (не у всех блоков), а снизу — описание)
-	<table class='w100 mw800' cellspacing=0 cellpadding=0><tr valign=top><td class='pr10'>
-	<select id=name size=18 name='name' class='w100 f14' onchange=\"
 
+	<p><span class='h3'>Дизайн:</span> <select name='design'><option value='0'>выбирать необязательно</option>".$styles."</select>
+
+
+
+
+
+
+
+
+
+<div class=hide>
+	<p><span class='h3'>Вызов в другой блок:</span> 
+	<select name='another_block'><option value='0'>не добавлять</option><option disabled>= текстовые блоки =</option>".$options_block2."<option disabled>= блоки-ротаторы =</option>".$options_block3."</select>, <nobr>позиция: 
+	<select name='another_block_position'><option value='0'>сверху</option><option value='1'>снизу</option><option value='2'>заменить!</option></select></nobr>
+</div>
+
+
+
+
+	<p><span class='h2'>Выберите тип блока:</span> (справа — его параметры, а зеленым цветом снизу — описание)
+	<table class='w100' cellspacing=0 cellpadding=0><tr valign=top><td class=''>
+	<select id=name size=18 name='name' class='w100 f14' onchange=\"
 	var arr = [ 'Блок выводит несколько страниц выбранного раздела или всех разделов. Вывод может настраиваться, возможно создание шаблонов. За счет блоков [фото] и [адрес фото] в шаблоне возможно создание блока, выводящего только по одной фотографии из предисловия страницы. А благодаря блоку [предисловие_без_фото] в шаблоне можно выводить предисловие страницы с вырезанными из него фотографиями, к примеру в узкую колонку новостей.', 'Блок выводит несколько комментариев со страниц выбранного раздела или всех разделов', 'В этом блоке можно написать любой текст, использовать HTML, а также другие созданные блоки', '«Ротатор» используется для показа блоков, текста или html.<br>При каждом обновлении страницы будет показан один из написанных элементов, разделение списка ротации — через символ «|» (вертикальная черта). Также возможна смена контента в блоке через определенное время и/или в определенной последовательности.<br>Примеры:<br>1 вариант - каждый раз при загрузке страницы грузит новую картинку или анекдот<br>2 вариант - то же самое с кнопкой «Хочу еще» (ее можно и по-другому обозвать) и обновлением<br>3 вариант - показывает что-то с периодичностью по времени (настраивается)<br>4 вариант - показывает что-то с определенной последовательностью, одно за другим', 'Блок выводит папки выбранного раздела или всех разделов', 'Блок выводит голосование (опрос). Название блока — это вопрос опроса, а список ответов — в Содержании блока, через «Enter».<br>После того, как на опрос кто-то ответит, после каждого ответа появится символ «|» и число проголосовавших.<br>Если нужно закрыть какой-то ответ для голосования (например, это больше не нужно или уже реализовано) — нужно после числа проголосовавших поставить еще один символ «|» и написать причину зыкрытия, например «готово» или «удалено», желательно кратко.', 'Блок «Фотогалерея» выводит фотографии в нужном месте сайта, для его создания используется список адресов закаченный фотографий, через «Enter».<br>А их описание ставится сразу после адреса через символ «|» (вертикальная черта), пример: /img/1.jpg|Фото 1. <br>— Имена файлов могут содержать любые символы. <br>— Загрузка автоматическая сразу после выбора файлов. <br>— Фотографии будут автоматически переименованы, развернуты в нужную сторону, сжаты и уменьшены по ширине до 1000 пикселей.<br><div class=red>— Если впоследствии вы захотите стереть какую-либо фотографию — просто удалите ее строчку из блока галереи (не забудьте сохранить блок), затем перейдите во вкладку «Настройки», откройте «Удаление неиспользуемых фотографий» и удалите эту фотографию.</div>', 'PHP-код пишется в Содержании блока.<br>PHP можно писать сразу, без начальных и конечных обозначений ( &lt; ?php ... ? &gt; ).<br>Вывод информации в блок производится через переменную <b>$"."txt</b>', 'Блок выводит папки открытого в данный момент раздела или ничего не выводит, если это Главная страница или папок в разделе не создано', 'Блок по-умолчанию может выводить первые фотографии из страниц выбранных разделов, но его можно настроить на вывод любой другой информации, помещенной в предисловие или содержание страницы (если информация не найдена в предисловии - будет найдена в содержании). Если в предисловии и содержании страницы не обнаружен обусловленная настройками информация, эта страница пропускается.', 'Меню сайта может настраиваться автоматически или вручную. Если выбран авто-режим — при редактировании блока можно будет выбрать разделы, папки и страницы сайта, а также их очередность. <br>В ручном режиме меню создается по простым правилам (для того, чтобы быть универсальным и легко переключать варианты отображения):<br>[элемент открыть][url=/]Главная[/url][элемент закрыть]<br>[элемент открыть][url=#]Пункт меню 1[/url][элемент закрыть]<br>[элемент открыть][url=#]Пункт меню 2[/url]<br>&nbsp;&nbsp;[уровень открыть]<br>&nbsp;&nbsp;[элемент открыть][url=#]Подпункт 1[/url][элемент закрыть]<br>&nbsp;&nbsp;[элемент открыть][url=#]Подпункт 2[/url][элемент закрыть]<br>&nbsp;&nbsp;[уровень закрыть]<br>[элемент закрыть]<br><i>где # - это ссылка на страницу.</i><br>В меню может быть до 3-х уровней вложенности', 'Календарь на текущем месяце показывает ссылками те даты, за которые созданы страницы в выбранном разделе (или всех разделах).<br>Также показывает текущую дату', 'В РАЗРАБОТКЕ!!!!!!!!! Контактная форма может применяться для создания страницы Контакты, а также для отправки разнообразных анкет, заявок, жалоб и т.д', 'Облако тегов — это вращающийся трехмерный шар, состоящий из ключевых слов, взятых из страниц выбранного раздела (или всех разделов). Под ним есть ссылка на альтернативный текстовый вариант облака', 'Блок расписания состоит из календаря для выбора даты записи и самого расписания работы отдельных специалистов, кабинетов или услуг. Структура содержания блока<ul><li>процедура, описание, сеанс процедуры XX минут, день-дни и время работы от-до. <li>или — специалист, специальность, время приема XX минут, день-дни и время работы от-до.</ul>Пример содержания блока:<br>Вардунас Валерий Аркадьевич, стоматолог, 60 минут, понедельник-вторник-среда-пятница 10:00-21:45, четверг-воскресенье 15:00-20:30, суббота 11:00-13:30<br>Васильченко Георгий Александрович, массажист, 30 минут, вторник 12:00-20:00, среда-четверг-пятница 15:00-20:15, суббота-воскресенье 15:00-18:30<br>Важно перечислять все дни, если время работы для них одно и то же. Т.е., если работаем с понедельника по пятницу — надо писать не понедельник-пятница, а понедельник-вторник-среда-четверг-пятница.', 'Блок карты основан на Яндекс.Картах, позволяет выводить один или несколько объектов с описанием, производить поиск по карте', '16', '17', '18', '19', 'База данных (количество по 1 колонке верт.)', 'База данных (количество по 1 колонке гор.)', 'База данных (количество по 2 колонкам)', 'База данных (список колонок)', '24', '25', '26', '27', '28', '29', 'Статистика раздела, выводит кол-во посещений выбранного раздела', 'JavaScript-блок автоматически встанет в HEAD и его не нужно где-либо специально размещать.', '32' ];
 
 	var add;
@@ -403,14 +422,15 @@ function create_main($type) {
 	При отсутствии английского названия, оно создается автоматически, транслитом русского.<br>
 	Не должно быть одинаковых английских названий!<br>
 	Кнопка «Отправить» обычно добавляется последней. Её можно и не добавлять, тогда она будет добавлена автоматически.
-	</td></tr></table>
-	<div id='opisanie_bloka' class='notice success black mw800'>
+		</td></tr>
+	</table>
+	<div id='opisanie_bloka' class='notice success black'>
 	В этом блоке можно написать любой текст, использовать HTML, а также другие созданные блоки.<br>После создания блока, необходимо его настроить — настройка откроется автоматически.
 	</div>
-	<br> <div class='notice warning black mw800'>Отдельно созданный дизайн для блока может использоваться для его обрамления, к примеру: в красивую рамку. Если выбран дизайн, в содержании дизайна обязательно должен быть блок [содержание] для вывода самого блока.</div></td></tr></table>";
+	<div class='notice warning black'>Отдельно созданный дизайн для блока может использоваться для его обрамления, к примеру: в красивую рамку. Если выбран дизайн, в содержании дизайна обязательно должен быть блок [содержание] для вывода самого блока.</div>";
 	break;
 	########################################################
-	case "spisok": $type_opis = "поля (дополнительное поле для страниц)";
+	case "spisok": $type_opis = "поля (для страниц)";
 		$create.="";
 			$modules = ""; // Выборка разделов заменить!
 			$sql2 = "SELECT `id`, `title` FROM ".$prefix."_mainpage WHERE `tables`='pages' and `type`='2' and `name`!='index'";
@@ -478,7 +498,7 @@ function create_main($type) {
 	// <option value='2' disabled>файл (указать какой, куда и что с ним делать)</option>
 	break;
 	########################################################
-	case "base": $type_opis = "базы данных (таблица)";
+	case "base": $type_opis = "базы данных (таблицы)";
 	global $lang;
 	$another_table_list = "";
 	$sql2 = "select `name`,`title`,`text` from ".$prefix."_mainpage where `type`='5' and `tables`='pages'";
@@ -606,7 +626,7 @@ function create_main($type) {
 	<input type=hidden name=op value=".$admintip."_save>";
 	break;
 	########################################################
-	case "shablon": $type_opis = "шаблона (оформление раздела или блока)";
+	case "shablon": $type_opis = "шаблона (оформление)";
 		$create.="<div id=about class=block style='display:none;'>Шаблоны используются для изменения внешнего вида разделов, страниц и блоков. Используются либо стандартные поля страниц, либо дополнительно созданные Поля. Для страниц можно использовать любой дизайн, блоки и разделы используют табличную основу — начало < table >, соответственно сами шаблоны должны начинаться с < tr > и заканчиваться на < /tr >. Для того, чтобы в шаблоне раздела предусмотреть возможность именования колонок таблицы, например: Дата, Название, Ссылка... после самого шаблона раздела нужна написать ключевое слово [следующий] и написать шаблон именования колонок, т.е. по сути скопировать шаблон строк раздела, но вместо заготовок автоматических вставок поставить в него названия соответствующих полей-колонок.<br></div>
 		<table class='w100 mw800'><tr><td width=50%>
 		<h2>Название шаблона</h2>
@@ -636,7 +656,7 @@ function create_main($type) {
 function edit_main($id) {
 	global $tip, $admintip, $prefix, $db, $red, $nastroi;
 	echo "<div id=podrazdel></div>";
-    $sql = "SELECT `type`,`name`,`title`,`text`,`useit`,`shablon`,`description`,`keywords` FROM ".$prefix."_mainpage where `id`='".$id."'";
+    $sql = "SELECT `type`,`name`,`title`,`text`,`useit`,`shablon`,`description`,`keywords`,`meta_title` FROM ".$prefix."_mainpage where `id`='".$id."'";
     // здесь учитываем и возможность редактирования удаленных и старых версий, поэтому нет «`tables`='pages'»
 	$result = $db->sql_query($sql);
 	$row = $db->sql_fetchrow($result);
@@ -652,6 +672,7 @@ function edit_main($id) {
 	$sha = $row['shablon'];
 	$descriptionX = $row['description'];
 	$keywordsX = $row['keywords'];
+	$meta_titleX = $row['meta_title'];
 	// Если это раздел
 	if ($type == "3") { 
 		$useit_module = explode("|",$useit); 
@@ -821,476 +842,490 @@ function edit_main($id) {
 
 	####################################################################
 	if ($nastroi == 1) { // начало редактирования настроек раздела
+		// выделим имени модуля раздела и настройки
+		$options = explode("|",$text);
+		$module_name = $options[0];
+		$options = str_replace($module_name."|","",$text);
+		// обнулили все опции
+		$media = $folder = $col = $view = $golos = $golosrazdel = $post = $comments = $datashow = $favorites = $socialnetwork = $search = $search_papka = $put_in_blog = $base = $vetki = $citata = $media_comment = $no_html_in_opentext = $no_html_in_text = $show_add_post_on_first_page = $media_post = $razdel_shablon = $page_shablon = $comments_all = $comments_num = $comments_mail = $comments_adres = $comments_tel = $comments_desc = $golostype = $pagenumbers = $comments_main = $tags_type = $pagekol = $table_light = $designpages = $comments_add = $div_or_table = $papka_show = $add_post_to_mainpage = $design_tablet = $designpages_tablet = $design_phone = $designpages_phone = $edit_pole = $show_tags_pages = $golos_admin = $comment_all_link = $show_read_all = 0;
+		$menushow = $titleshow = $razdeltitleshow = $razdel_link = $peopleshow = $design = $tags = $podrobno = $podrazdel_active_show = $podrazdel_show = $tipograf = $limkol = $tags_show = $tema_zapret = $tema_zapret_comm = $opentextshow = $maintextshow = $papka_tags_pages = $razdel_tags_pages = 1;
+		$comment_all_link_text = "читать полностью";
+		$comm_col_letters = "1000";
+		$comment_shablon = 2;
+		$col_tags_pages = 5;
+		$lim = 20;
+		$where = $order = $calendar = $reclama = "";
+		$comm_show_one_more = 3;
+	    $comm_show_one_more_text = "Показать еще";
+		$sort = "date desc";
+		$tema = "Открыть новую тему";
+		$tema_name = "Ваше имя";
+		$tema_title = "Название темы";
+		$tema_opis = "Подробнее (содержание темы)";
+		$comments_1 = "Комментарии";
+		$comments_2 = "Оставьте ваш вопрос или комментарий:";
+		$comments_3 = "Ваше имя:";
+		$comments_4 = "Ваш email:";
+		$comments_5 = "Ваш адрес:";
+		$comments_6 = "Ваш телефон:";
+		$comments_7 = "Ваш вопрос или комментарий:";
+		$comments_8 = "Показать все";
+		$tag_text_show = "Ключевые слова";
+		$read_all = "Читать далее...";
+		$reiting_data = "Дата написания отзыва";
+		$text_tags_pages = "См. также:";
 
-	// выделим имени модуля раздела и настройки
-	$options = explode("|",$text);
-	$module_name = $options[0];
-	$options = str_replace($module_name."|","",$text);
+		parse_str($options); // раскладка всех настроек раздела
 
-	// обнулили все опции
-	$media = $folder = $col = $view = $golos = $golosrazdel = $post = $comments = $datashow = $favorites = $socialnetwork = $search = $search_papka = $put_in_blog = $base = $vetki = $citata = $media_comment = $no_html_in_opentext = $no_html_in_text = $show_add_post_on_first_page = $media_post = $razdel_shablon = $page_shablon = $comments_all = $comments_num = $comments_mail = $comments_adres = $comments_tel = $comments_desc = $golostype = $pagenumbers = $comments_main = $tags_type = $pagekol = $table_light = $designpages = $comments_add = $div_or_table = $papka_show = $add_post_to_mainpage = $design_tablet = $designpages_tablet = $design_phone = $designpages_phone = $edit_pole = $show_tags_pages = $golos_admin = $comment_all_link = 0;
-	$menushow = $titleshow = $razdeltitleshow = $razdel_link = $peopleshow = $design = $tags = $podrobno = $podrazdel_active_show = $podrazdel_show = $tipograf = $limkol = $tags_show = $tema_zapret = $tema_zapret_comm = $show_read_all = $opentextshow = $maintextshow = $papka_tags_pages = $razdel_tags_pages = 1;
-	$comment_all_link_text = "читать полностью";
-	$comm_col_letters = "1000";
-	$comment_shablon = 2;
-	$col_tags_pages = 5;
-	$lim = 20;
-	$where = $order = $calendar = $reclama = "";
-	$comm_show_one_more = 3;
-    $comm_show_one_more_text = "Показать еще";
-	$sort = "date desc";
-	$tema = "Открыть новую тему";
-	$tema_name = "Ваше имя";
-	$tema_title = "Название темы";
-	$tema_opis = "Подробнее (содержание темы)";
-	$comments_1 = "Комментарии";
-	$comments_2 = "Оставьте ваш вопрос или комментарий:";
-	$comments_3 = "Ваше имя:";
-	$comments_4 = "Ваш email:";
-	$comments_5 = "Ваш адрес:";
-	$comments_6 = "Ваш телефон:";
-	$comments_7 = "Ваш вопрос или комментарий:";
-	$comments_8 = "Показать все";
-	$tag_text_show = "Ключевые слова";
-	$read_all = "Читать далее...";
-	$reiting_data = "Дата написания отзыва";
-	$text_tags_pages = "См. также:";
+		echo "
+		".input("nastroi", "1", "1", "hidden")."
+		".input("module_name", $module_name, "1", "hidden")."
 
-	parse_str($options); // раскладка всех настроек раздела
+		Настройка раздела «".trim($title)."»</span></div>
+		<p>Для настройки раздела внимательно прочитайте опции и выберите соответствующие варианты.</p>
 
-	echo "
-	".input("nastroi", "1", "1", "hidden")."
-	".input("module_name", $module_name, "1", "hidden")."
+		<a class='dark_pole align_center' onclick=\"show_animate('block1');\"><h2>Дизайн (обрамление страниц)</h2> 
+		</a><div id=block1 style='display: none;'>
+		<table  class='w100 mw800 table_light'>
+		<tr class='v_bottom'>
+		<td><b>Общий дизайн:</b> <a class='button small' href='sys.php?op=mainpage&amp;name=design' target='_blank'>Добавить</a>
+		<li>для раздела (по умолчанию - Главный дизайн)
+		<li>для страниц (по умолчанию - дизайн раздела)</td>
+		<td>
+		<p>".select("options[design]", $design_var, $design_names, $design)."
+		<p>".select("options[designpages]", "0,".$design_var, "— как у Общего дизайна раздела,".$design_names, $designpages)."</td>
+		</tr>
+		<tr class='v_bottom'>
+		<td><b>Дизайн для планшетов:</b>
+		<li>для раздела
+		<li>для страниц</td>
+		<td>
+		<p>".select("options[design_tablet]", "0,".$design_var, "— как у Общего дизайна раздела,".$design_names, $design_tablet)."
+		<p>".select("options[designpages_tablet]", "0,".$design_var, "— как у Общего дизайна раздела,".$design_names, $designpages_tablet)."</td>
+		</tr>
+		<tr class='v_bottom'>
+		<td><b>Дизайн для смартфонов:</b>
+		<li>для раздела
+		<li>для страниц</td>
+		<td>
+		<p>".select("options[design_phone]", "0,".$design_var, "— как у Общего дизайна раздела,".$design_names, $design_phone)."
+		<p>".select("options[designpages_phone]", "0,".$design_var, "— как у Общего дизайна раздела,".$design_names, $designpages_phone)."</td>
+		</tr>
 
-	Настройка раздела «".trim($title)."»</span></div>
-	<p>Для настройки раздела внимательно прочитайте опции и выберите соответствующие варианты.</p>
+		</table>
+		</div>
 
-	<a class='dark_pole align_center' onclick=\"show_animate('block1');\"><h2>Дизайн (обрамление страниц)</h2> 
-	</a><div id=block1 style='display: none;'>
-	<table  class='w100 mw800 table_light'>
-	<tr class='v_bottom'>
-	<td><b>Общий дизайн:</b> <a class='button small' href='sys.php?op=mainpage&amp;name=design' target='_blank'>Добавить</a>
-	<li>для раздела (по умолчанию - Главный дизайн)
-	<li>для страниц (по умолчанию - дизайн раздела)</td>
-	<td>
-	<p>".select("options[design]", $design_var, $design_names, $design)."
-	<p>".select("options[designpages]", "0,".$design_var, "— как у Общего дизайна раздела,".$design_names, $designpages)."</td>
-	</tr>
-	<tr class='v_bottom'>
-	<td><b>Дизайн для планшетов:</b>
-	<li>для раздела
-	<li>для страниц</td>
-	<td>
-	<p>".select("options[design_tablet]", "0,".$design_var, "— как у Общего дизайна раздела,".$design_names, $design_tablet)."
-	<p>".select("options[designpages_tablet]", "0,".$design_var, "— как у Общего дизайна раздела,".$design_names, $designpages_tablet)."</td>
-	</tr>
-	<tr class='v_bottom'>
-	<td><b>Дизайн для смартфонов:</b>
-	<li>для раздела
-	<li>для страниц</td>
-	<td>
-	<p>".select("options[design_phone]", "0,".$design_var, "— как у Общего дизайна раздела,".$design_names, $design_phone)."
-	<p>".select("options[designpages_phone]", "0,".$design_var, "— как у Общего дизайна раздела,".$design_names, $designpages_phone)."</td>
-	</tr>
-
-	</table>
-	</div>
-
-	<a class='dark_pole align_center' onclick=\"show_animate('block3');\"><h2>Шаблоны (расположение и наличие элементов)</h2>
-	</a><div id=block3 style='display: none;'>
-	<table  class='w100 mw800 table_light'>
-	<tr>
-	<tr>
-	<td><b>Шаблон для списка страниц</b> (вывод заголовков страниц и т.д.)</td>
-	<td>".select("options[razdel_shablon]", $shablon_var."0", $shablon_names."без шаблона", $razdel_shablon)."</td>
-	</tr>
-	<tr>
-	<td><b>Формирование списка страниц</b> в разделе и папках. Разделение отдельных страниц</td>
-	<td>".select("options[div_or_table]", "1,0", "Безтабличное DIV,Табличное TABLE TR TD", $div_or_table)."</td>
-	</tr>
-	<tr>
-	<td><b>Тип раздела:</b><br>
-	<i class=red>Для типа раздела «Анкеты-рейтинги» необходимо выбрать в настройках ниже возможность комментировать и голосовать за страницы.<br>
-	Для типа раздела «Форум» необходимо выбрать в настройках «Раздел и папки» сортировку страниц «для Форума»</i></td>
-	<td>".select("options[view]", "4,1,6,0", "Анкеты-рейтинги,Форум,Папки на Главной,Страницы на Главной", $view)."</td>
-	</tr>
-	<td><b>Шаблон для комментариев</b> на странице  [<a href=sys.php?op=mainpage&amp;name=shablon target=_blank>Добавить</a>]</td>
-	<td>".select("options[comment_shablon]", $shablon_var."3,2,1,0", $shablon_names."ДвижОк: аля ХабраХабр,ДвижОк: ArtistStyle,ДвижОк: диалоговый аля Joomla,ДвижОк: стандартный", $comment_shablon)."</td>
-	</tr>
-	<tr>
-	<td><b>Шаблон для страницы</b></td>
-	<td>".select("options[page_shablon]", $shablon_var."0", $shablon_names."без шаблона", $page_shablon)."</td>
-	</tr>
-	</table>
-	</div>
+		<a class='dark_pole align_center' onclick=\"show_animate('block3');\"><h2>Шаблоны (расположение и наличие элементов)</h2>
+		</a><div id=block3 style='display: none;'>
+		<table  class='w100 mw800 table_light'>
+		<tr>
+		<tr>
+		<td><b>Шаблон для списка страниц</b> (вывод заголовков страниц и т.д.)</td>
+		<td>".select("options[razdel_shablon]", $shablon_var."0", $shablon_names."без шаблона", $razdel_shablon)."</td>
+		</tr>
+		<tr>
+		<td><b>Формирование списка страниц</b> в разделе и папках. Разделение отдельных страниц</td>
+		<td>".select("options[div_or_table]", "1,0", "Безтабличное DIV,Табличное TABLE TR TD", $div_or_table)."</td>
+		</tr>
+		<tr>
+		<td><b>Тип раздела:</b><br>
+		<i class=red>Для типа раздела «Анкеты-рейтинги» необходимо выбрать в настройках ниже возможность комментировать и голосовать за страницы.<br>
+		Для типа раздела «Форум» необходимо выбрать в настройках «Раздел и папки» сортировку страниц «для Форума»</i></td>
+		<td>".select("options[view]", "4,1,6,0", "Анкеты-рейтинги,Форум,Папки на Главной,Страницы на Главной", $view)."</td>
+		</tr>
+		<td><b>Шаблон для комментариев</b> на странице  [<a href='sys.php?op=mainpage&amp;name=shablon' target='_blank'>Добавить</a>]</td>
+		<td>".select("options[comment_shablon]", $shablon_var."3,2,1,0", $shablon_names."ДвижОк: аля ХабраХабр,ДвижОк: ArtistStyle,ДвижОк: диалоговый аля Joomla,ДвижОк: стандартный", $comment_shablon)."</td>
+		</tr>
+		<tr>
+		<td><b>Шаблон для страницы</b></td>
+		<td>".select("options[page_shablon]", $shablon_var."0", $shablon_names."без шаблона", $page_shablon)."</td>
+		</tr>
+		</table>
+		</div>
 
 
-	<a class='dark_pole align_center' onclick=\"show_animate('block5');\"><h2>Раздел и папки</h2>
-	</a><div id=block5 style='display: none;'>
-	<table  class='w100 mw800 table_light'>
-	<tr>
-	<td>Количество колонок (столбцов) в списке страниц, выводимом в папках и начале раздела, <nobr>по-умолчанию: 1.</nobr></td>
-	<td>".select("options[limkol]", "1,2,3,4,5,6,7,8,9,10", "1,2,3,4,5,6,7,8,9,10", $limkol)."</td>
-	</tr>
-	<tr>
-	<td><strong>Количество строк</strong> в списке страниц, выводимом в папках и начале раздела, <nobr>по-умолчанию: 20.</nobr></td>
-	<td>".select("options[lim]", "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,25,20,25,30,50,75,100,200,500,1000", "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,25,20,25,30,50,75,100,200,500,1000", $lim)."</td>
-	</tr>
-	<tr>
-	<td>Выводить количество страниц в папках, <nobr>по-умолчанию: нет.</nobr></td>
-	<td>".select("options[pagekol]", "1,0", "ДА,НЕТ", $pagekol)."</td>
-	</tr>
-	<tr>
-	<td><strong>Выводить нумерацию страниц</strong>, <nobr>по-умолчанию: снизу.</nobr></td>
-	<td>".select("options[pagenumbers]", "0,1,2", "снизу,сверху,блок [нумерация] в дизайне или разделе", $pagenumbers)."</td>
-	</tr>
-	<tr>
-	<td><strong>Сортировка страниц</strong> в списке</td>
-	<td>".select("options[sort]", "sort[|]date desc,date desc,date,title,open_text,counter,golos desc,comm,cid[|]title,cid[|]date desc,mainpage desc,search desc,pid,open_text[|] golos,price,prise desc", "по очередности (настраивается),по дате (с последнего),по дате (с первого),по названию (по алфавиту),по предисловию (по алфавиту),по кол-ву посещений страницы,по среднему баллу голосования,по кол-ву комментариев,по № папки и названию,для типа «Форум» (по № папки и дате), по важности (Главная стр.),по наличию ключ. слов,по № страницы,по предисловию и голосованию,магазин: по цене (с мин.), магазин: по цене (с макс.)", $sort)."</td>
-	</tr>
-	<tr>
-	<td>Вставка между Названием раздела и списком страниц. Можно написать HTML-код или вставить любой [блок]. Не использовать символ &</td>
-	<td>".input("options[reclama]", $reclama, 60, "txt")."</td>
-	</tr>
-	<tr>
-	<td>Выводить описание папки:</td>
-	<td>".select("options[papka_show]", "1,0", "снизу,сверху", $papka_show)."</td>
-	</tr>
-	<tr>
-	<td>Добавление строки поиска в раздел (поиск по этому разделу)</td>
-	<td>".select("options[search]", "2,1,0", "снизу,сверху,нет", $search)."</td>
-	</tr>
-	<tr>
-	<td>Дополнительно: Внутренний поиск раздела будет искать</td>
-	<td>".select("options[search_papka]", "1,0", "только по открытой папке раздела,по всему разделу", $search_papka)."</td>
-	</tr>
-	<tr>
-	<td>Показывать название раздела, папки и выбор подпапок</td>
-	<td>".select("options[menushow]", "1,0", "ДА,НЕТ", $menushow)."</td>
-	</tr>
-	<tr>
-	<td>Название раздела — </td>
-	<td>".select("options[razdel_link]", "2,1,0", "не показывать,это ссылка на раздел,без ссылки", $razdel_link)."</td>
-	</tr>
-	<tr>
-	<td>Показывать список папок открытого раздела или папки</td>
-	<td>".select("options[podrazdel_show]", "3,2,1,0", "сверху и снизу,снизу (не реализовано!),сверху,нет", $podrazdel_show)."</td>
-	</tr>
-	<tr>
-	<td>Показывать название открытой папки на страницах</td>
-	<td>".select("options[podrazdel_active_show]", "3,2,4,1,0", "раскрывающийся список папок,выделять из списка подразделов,после названия раздела (разделитель Enter),после названия раздела (разделитель | ),нет", $podrazdel_active_show)."</td>
-	</tr>
-	</table>
-	</div>
+		<a class='dark_pole align_center' onclick=\"show_animate('block5');\"><h2>Раздел и папки</h2>
+		</a><div id=block5 style='display: none;'>
+		<table  class='w100 mw800 table_light'>
+		<tr>
+		<td>Количество колонок (столбцов) в списке страниц, выводимом в папках и начале раздела, <nobr>по-умолчанию: 1.</nobr></td>
+		<td>".select("options[limkol]", "1,2,3,4,5,6,7,8,9,10", "1,2,3,4,5,6,7,8,9,10", $limkol)."</td>
+		</tr>
+		<tr>
+		<td><strong>Количество строк</strong> в списке страниц, выводимом в папках и начале раздела, <nobr>по-умолчанию: 20.</nobr></td>
+		<td>".select("options[lim]", "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,25,20,25,30,50,75,100,200,500,1000", "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,25,20,25,30,50,75,100,200,500,1000", $lim)."</td>
+		</tr>
+		<tr>
+		<td>Выводить количество страниц в папках, <nobr>по-умолчанию: нет.</nobr></td>
+		<td>".select("options[pagekol]", "1,0", "ДА,НЕТ", $pagekol)."</td>
+		</tr>
+		<tr>
+		<td><strong>Выводить нумерацию страниц</strong>, <nobr>по-умолчанию: снизу.</nobr></td>
+		<td>".select("options[pagenumbers]", "0,1,2", "снизу,сверху,блок [нумерация] в дизайне или разделе", $pagenumbers)."</td>
+		</tr>
+		<tr>
+		<td><strong>Сортировка страниц</strong> в списке</td>
+		<td>".select("options[sort]", "sort[|]date desc,date desc,date,title,open_text,counter,golos desc,comm,cid[|]title,cid[|]date desc,mainpage desc,search desc,pid,open_text[|] golos,price,prise desc", "по очередности (настраивается),по дате (с последнего),по дате (с первого),по названию (по алфавиту),по предисловию (по алфавиту),по кол-ву посещений страницы,по среднему баллу голосования,по кол-ву комментариев,по № папки и названию,для типа «Форум» (по № папки и дате), по важности (Главная стр.),по наличию ключ. слов,по № страницы,по предисловию и голосованию,магазин: по цене (с мин.), магазин: по цене (с макс.)", $sort)."</td>
+		</tr>
+		<tr>
+		<td>Вставка между Названием раздела и списком страниц. Можно написать HTML-код или вставить любой [блок]. Не использовать символ &</td>
+		<td>".input("options[reclama]", $reclama, 60, "txt")."</td>
+		</tr>
+		<tr>
+		<td>Выводить описание папки:</td>
+		<td>".select("options[papka_show]", "1,0", "снизу,сверху", $papka_show)."</td>
+		</tr>
+		<tr>
+		<td>Добавление строки поиска в раздел (поиск по этому разделу)</td>
+		<td>".select("options[search]", "2,1,0", "снизу,сверху,нет", $search)."</td>
+		</tr>
+		<tr>
+		<td>Дополнительно: Внутренний поиск раздела будет искать</td>
+		<td>".select("options[search_papka]", "1,0", "только по открытой папке раздела,по всему разделу", $search_papka)."</td>
+		</tr>
+		<tr>
+		<td>Показывать название раздела, папки и выбор подпапок</td>
+		<td>".select("options[menushow]", "1,0", "ДА,НЕТ", $menushow)."</td>
+		</tr>
+		<tr>
+		<td>Название раздела — </td>
+		<td>".select("options[razdel_link]", "2,1,0", "не показывать,это ссылка на раздел,без ссылки", $razdel_link)."</td>
+		</tr>
+		<tr>
+		<td>Показывать список папок открытого раздела или папки</td>
+		<td>".select("options[podrazdel_show]", "3,2,1,0", "сверху и снизу,снизу (не реализовано!),сверху,нет", $podrazdel_show)."</td>
+		</tr>
+		<tr>
+		<td>Показывать название открытой папки на страницах</td>
+		<td>".select("options[podrazdel_active_show]", "3,2,4,1,0", "раскрывающийся список папок,выделять из списка подразделов,после названия раздела (разделитель Enter),после названия раздела (разделитель | ),нет", $podrazdel_active_show)."</td>
+		</tr>
+		</table>
+		</div>
 
 
 
-	<a class='dark_pole align_center' onclick=\"show_animate('block6');\"><h2>Ключевые слова (тэги)</h2>
-	</a><div id=block6 style='display: none;'>
-	<table  class='w100 mw800 table_light'>
-	<tr>
-	<td><strong>Показывать ".input("options[tag_text_show]",$tag_text_show)." </strong></td>
-	<td>".select("options[tags]", "3,2,5,6,4,7,1,0", "ВЕЗДЕ,в разделе и папках,в разделе (в разработке),в разделе и на страницах (в разработке),в папках (в разработке),в папках и на страницах (в разработке),на страницах,НИГДЕ", $tags)."</td>
-	</tr>
-	<tr>
-	<td><strong>Облако ключевых слов в разделе</strong> (наверху, после названия)</td>
-	<td>".select("options[tags_type]", "3,2,1,0", "ИЗ текущей папки раздела,ИЗ текущего раздела,ИЗ всех разделов портала,НЕ ПОКАЗЫВАТЬ", $tags_type)."</td>
-	</tr>
-	<tr>
-	<td>Облако ключевых слов в разделе показывать раскрытым</td>
-	<td>".select("options[tags_show]", "1,0", "ДА,НЕТ", $tags_show)."</td>
-	</tr>
-	</table>
-	</div>
+		<a class='dark_pole align_center' onclick=\"show_animate('block6');\"><h2>Ключевые слова (тэги)</h2>
+		</a><div id=block6 style='display: none;'>
+		<table  class='w100 mw800 table_light'>
+		<tr>
+		<td><strong>Показывать ".input("options[tag_text_show]",$tag_text_show)." </strong></td>
+		<td>".select("options[tags]", "3,2,5,6,4,7,1,0", "ВЕЗДЕ,в разделе и папках,в разделе (в разработке),в разделе и на страницах (в разработке),в папках (в разработке),в папках и на страницах (в разработке),на страницах,НИГДЕ", $tags)."</td>
+		</tr>
+		<tr>
+		<td><strong>Облако ключевых слов в разделе</strong> (наверху, после названия)</td>
+		<td>".select("options[tags_type]", "3,2,1,0", "ИЗ текущей папки раздела,ИЗ текущего раздела,ИЗ всех разделов портала,НЕ ПОКАЗЫВАТЬ", $tags_type)."</td>
+		</tr>
+		<tr>
+		<td>Облако ключевых слов в разделе показывать раскрытым</td>
+		<td>".select("options[tags_show]", "1,0", "ДА,НЕТ", $tags_show)."</td>
+		</tr>
+		</table>
+		</div>
 
 
-	<a class='dark_pole align_center' onclick=\"show_animate('block7');\"><h2>Рейтинг</h2>
-	</a><div id=block7 style='display: none;'>
-	<table  class='w100 mw800 table_light'>
-	<tr>
-	<td>Показывать рейтинг на страницах</td>
-	<td>".select("options[golos]", "1,0", "ДА,НЕТ", $golos)."</td>
-	</tr>
-	<tr>
-	<td>Показывать рейтинг в разделе (в списке страниц)</td>
-	<td>".select("options[golosrazdel]", "1,0", "ДА,НЕТ", $golosrazdel)."</td>
-	</tr>
-	<tr>
-	<td><strong>Тип рейтинга</strong></td>
-	<td>".select("options[golostype]", "4,5,6,0,1,2,3", "Оценка (3 балла),Оценка (5 баллов),Оценка (10 баллов),Оценка (5 звезд),Кнопка «Проголосовать»,Рейтинг (кнопки + и -),Рейтинг (понравилось/не понравилось)", $golostype)."</td>
-	</tr>
-	<tr>
-	<td>Рейтинг редактирует Администратор, т.е. посетители сайта не могут влиять на рейтинг. Если ранее рейтинг был включен без этой опции — все набранные посетителями значения будут обнулены и всем страницам нужно будет заново проставить рейтинг, поэтому обычно эту опцию следует включать для только что созданных разделов.</td>
-	<td>".select("options[golos_admin]", "1,0", "ДА,НЕТ", $golos_admin)."</td>
-	</tr>
-	</table>
-	</div>
+		<a class='dark_pole align_center' onclick=\"show_animate('block7');\"><h2>Рейтинг</h2>
+		</a><div id=block7 style='display: none;'>
+		<table  class='w100 mw800 table_light'>
+		<tr>
+		<td>Показывать рейтинг на страницах</td>
+		<td>".select("options[golos]", "1,0", "ДА,НЕТ", $golos)."</td>
+		</tr>
+		<tr>
+		<td>Показывать рейтинг в разделе (в списке страниц)</td>
+		<td>".select("options[golosrazdel]", "1,0", "ДА,НЕТ", $golosrazdel)."</td>
+		</tr>
+		<tr>
+		<td><strong>Тип рейтинга</strong></td>
+		<td>".select("options[golostype]", "4,5,6,0,1,2,3", "Оценка (3 балла),Оценка (5 баллов),Оценка (10 баллов),Оценка (5 звезд),Кнопка «Проголосовать»,Рейтинг (кнопки + и -),Рейтинг (понравилось/не понравилось)", $golostype)."</td>
+		</tr>
+		<tr>
+		<td>Рейтинг редактирует Администратор, т.е. посетители сайта не могут влиять на рейтинг. Если ранее рейтинг был включен без этой опции — все набранные посетителями значения будут обнулены и всем страницам нужно будет заново проставить рейтинг, поэтому обычно эту опцию следует включать для только что созданных разделов.</td>
+		<td>".select("options[golos_admin]", "1,0", "ДА,НЕТ", $golos_admin)."</td>
+		</tr>
+		</table>
+		</div>
 
 
-	<a class='dark_pole align_center' onclick=\"show_animate('block8');\"><h2>Страницы в разделе</h2>
-	</a><div id=block8 style='display: none;'>
-	<table class='w100 mw800 table_light'>
-	<tr>
-	<td>Показывать Название раздела</td>
-	<td>".select("options[razdeltitleshow]", "1,0", "ДА,НЕТ", $razdeltitleshow)."</td>
-	</tr>
-	<tr>
-	<td>Показывать Название страницы</td>
-	<td>".select("options[titleshow]", "1,0", "ДА,НЕТ", $titleshow)."</td>
-	</tr>
-	<tr>
-	<td>Показывать Предисловие страницы</td>
-	<td>".select("options[opentextshow]", "1,0", "ДА,НЕТ", $opentextshow)."</td>
-	</tr>
-	<tr>
-	<td>Показывать Содержание страницы</td>
-	<td>".select("options[maintextshow]", "1,0", "ДА,НЕТ", $maintextshow)."</td>
-	</tr>
-	<tr>
-	<tr>
-	<td>Показывать в разделе/папке в предисловии ссылку ".input("options[read_all]", $read_all)." на страницу.<br>
-	Если отключить автоматическую вставку ссылок — можно поставить их вручную с помощью блока [ссылка].<br>
-	Также можно использовать другие обозначения: &lt;cut&gt;, &lt;!--more--&gt; и &lt;hr class=\"editor_cut\"&gt;<br>
-	В случае последующего включения автоматических ссылок, все поставленные вручную не будут показаны.</td>
-	<td>".select("options[show_read_all]", "1,0", "ДА,НЕТ", $show_read_all)."</td>
-	</tr>
-	<tr>
-	<td><strong>Показывать Дату создания</strong></td>
-	<td>".select("options[datashow]", "1,0", "ДА,НЕТ", $datashow)."</td>
-	</tr>
-	<tr>
-	<td><strong>Показывать Количество посещений</strong></td>
-	<td>".select("options[peopleshow]", "0,1", "НЕТ,ДА", $peopleshow)."</td>
-	</tr>
-	<tr>
-	<td>Показывать похожие страницы ".input("options[text_tags_pages]", $text_tags_pages, 40)." <p>
-	Количество страниц ".input("options[col_tags_pages]", $col_tags_pages, 3).".<p>
-	<b>Вывод страниц основан на одинаковых тегах</b> (ключевых словах). Включать их отображение на странице необязательно, но заполнять данные поля в дополнительных настройках при редактировании страницы обязательно.<p>
-	Показывать похожие страницы только из этой же папки (если нет — со всего раздела) ".select("options[papka_tags_pages]", "0,1", "НЕТ,ДА", $papka_tags_pages)."<p>
-	Показывать похожие страницы только из этого раздела (если нет — со всех разделов) ".select("options[razdel_tags_pages]", "0,1", "НЕТ,ДА", $razdel_tags_pages)."</td>
-	<td>".select("options[show_tags_pages]", "0,1", "НЕТ,ДА", $show_tags_pages)."</td>
-	</tr>
-	<tr>
-	<td><strong>Показывать Добавление страниц в Интернет-закладки</strong></td>
-	<td>".select("options[favorites]", "1,0", "ДА,НЕТ", $favorites)."</td>
-	</tr>
-	<tr>
-	<td><strong>Показывать Добавление страниц в Социальные сети</strong> (Вконтакте, Гугл+, МойМир и т.д.)</td>
-	<td>".select("options[socialnetwork]", "1,0", "ДА,НЕТ", $socialnetwork)."</td>
-	</tr>
-	<tr>
-	<td>Показывать Код для вставки в блоги (Название и Предисловие страницы со ссылкой на сайт). При выборе варианта «с логотипом» небольшой логотип (small_logo.jpg) нужно разместить в корне сайта. Проще всего это будет сделать администратору (если у вас нет доступа к FTP серверу и достаточных знаний).</td>
-	<td>".select("options[put_in_blog]", "2,1,0", "с логотипом,без логотипа,НЕТ", $put_in_blog)."</td>
-	</tr>
-	<tr>
-	<td>Очищать предисловие от HTML-кода (оставить обычный текст)</td>
-	<td>".select("options[no_html_in_opentext]", "1,0", "ДА,НЕТ", $no_html_in_opentext)."</td>
-	</tr>
-	<tr>
-	<td>Очищать содержание от HTML-кода (оставить обычный текст)</td>
-	<td>".select("options[no_html_in_text]", "1,0", "ДА,НЕТ", $no_html_in_text)."</td>
-	</tr>
-	<tr>
-	<td><b>Преобразовывать таблицы</b> в «красивые» (добавлять class «table_light»)</td>
-	<td>".select("options[table_light]", "1,0", "ДА,НЕТ", $table_light)."</td>
-	</tr>
-	<tr>
-	<td>При сохранении использовать типограф для Содержания и Предисловия</td>
-	<td>".select("options[tipograf]", "1,0", "ДА,НЕТ", $tipograf)."</td>
-	</tr>
-	</table>
-	</div>
+		<a class='dark_pole align_center' onclick=\"show_animate('block8');\"><h2>Страницы в разделе</h2>
+		</a><div id=block8 style='display: none;'>
+		<table class='w100 mw800 table_light'>
+		<tr>
+		<td>Показывать Название раздела</td>
+		<td>".select("options[razdeltitleshow]", "1,0", "ДА,НЕТ", $razdeltitleshow)."</td>
+		</tr>
+		<tr>
+		<td>Показывать Название страницы</td>
+		<td>".select("options[titleshow]", "1,0", "ДА,НЕТ", $titleshow)."</td>
+		</tr>
+		<tr>
+		<td>Показывать Предисловие страницы</td>
+		<td>".select("options[opentextshow]", "1,0", "ДА,НЕТ", $opentextshow)."</td>
+		</tr>
+		<tr>
+		<td>Показывать Содержание страницы</td>
+		<td>".select("options[maintextshow]", "1,0", "ДА,НЕТ", $maintextshow)."</td>
+		</tr>
+		<tr>
+		<tr>
+		<td>Показывать в разделе/папке в предисловии ссылку ".input("options[read_all]", $read_all)." на страницу.<br>
+		Если отключить автоматическую вставку ссылок — можно поставить их вручную с помощью блока [ссылка].<br>
+		Также можно использовать другие обозначения: &lt;cut&gt;, &lt;!--more--&gt; и &lt;hr class=\"editor_cut\"&gt;<br>
+		В случае последующего включения автоматических ссылок, все поставленные вручную не будут показаны.</td>
+		<td>".select("options[show_read_all]", "1,0", "ДА,НЕТ", $show_read_all)."</td>
+		</tr>
+		<tr>
+		<td><strong>Показывать Дату создания</strong></td>
+		<td>".select("options[datashow]", "1,0", "ДА,НЕТ", $datashow)."</td>
+		</tr>
+		<tr>
+		<td><strong>Показывать Количество посещений</strong></td>
+		<td>".select("options[peopleshow]", "0,1", "НЕТ,ДА", $peopleshow)."</td>
+		</tr>
+		<tr>
+		<td>Показывать похожие страницы ".input("options[text_tags_pages]", $text_tags_pages, 40)." <p>
+		Количество страниц ".input("options[col_tags_pages]", $col_tags_pages, 3).".<p>
+		<b>Вывод страниц основан на одинаковых тегах</b> (ключевых словах). Включать их отображение на странице необязательно, но заполнять данные поля в дополнительных настройках при редактировании страницы обязательно.<p>
+		Показывать похожие страницы только из этой же папки (если нет — со всего раздела) ".select("options[papka_tags_pages]", "0,1", "НЕТ,ДА", $papka_tags_pages)."<p>
+		Показывать похожие страницы только из этого раздела (если нет — со всех разделов) ".select("options[razdel_tags_pages]", "0,1", "НЕТ,ДА", $razdel_tags_pages)."</td>
+		<td>".select("options[show_tags_pages]", "0,1", "НЕТ,ДА", $show_tags_pages)."</td>
+		</tr>
+		<tr>
+		<td><strong>Показывать Добавление страниц в Интернет-закладки</strong></td>
+		<td>".select("options[favorites]", "1,0", "ДА,НЕТ", $favorites)."</td>
+		</tr>
+		<tr>
+		<td><strong>Показывать Добавление страниц в Социальные сети</strong> (Вконтакте, Гугл+, МойМир и т.д.)</td>
+		<td>".select("options[socialnetwork]", "1,0", "ДА,НЕТ", $socialnetwork)."</td>
+		</tr>
+		<tr>
+		<td>Показывать Код для вставки в блоги (Название и Предисловие страницы со ссылкой на сайт). При выборе варианта «с логотипом» небольшой логотип (small_logo.jpg) нужно разместить в корне сайта. Проще всего это будет сделать администратору (если у вас нет доступа к FTP серверу и достаточных знаний).</td>
+		<td>".select("options[put_in_blog]", "2,1,0", "с логотипом,без логотипа,НЕТ", $put_in_blog)."</td>
+		</tr>
+		<tr>
+		<td>Очищать предисловие от HTML-кода (оставить обычный текст)</td>
+		<td>".select("options[no_html_in_opentext]", "1,0", "ДА,НЕТ", $no_html_in_opentext)."</td>
+		</tr>
+		<tr>
+		<td>Очищать содержание от HTML-кода (оставить обычный текст)</td>
+		<td>".select("options[no_html_in_text]", "1,0", "ДА,НЕТ", $no_html_in_text)."</td>
+		</tr>
+		<tr>
+		<td><b>Преобразовывать таблицы</b> в «красивые» (добавлять class «table_light»)</td>
+		<td>".select("options[table_light]", "1,0", "ДА,НЕТ", $table_light)."</td>
+		</tr>
+		<tr>
+		<td>При сохранении использовать типограф для Содержания и Предисловия</td>
+		<td>".select("options[tipograf]", "1,0", "ДА,НЕТ", $tipograf)."</td>
+		</tr>
+		</table>
+		</div>
 
 
-	<a class='dark_pole align_center' onclick=\"show_animate('block9');\"><h2>Комментарии</h2>
-	</a><div id=block9 style='display: none;'>
-	<table  class='w100 mw800 table_light'>
-	<tr>
-	<td><b>Показывать</b> ".input("options[comments_1]", $comments_1)." на страницах</td>
-	<td>".select("options[comments]", "0,1", "НЕТ,ДА", $comments)."</td>
-	</tr>
-	<tr>
-	<td>Показывать на Главной странице Раздела</td>
-	<td>".select("options[comments_main]", "1,0", "ДА,НЕТ", $comments_main)."</td>
-	</tr>
-	<tr>
-	<td><b>Разрешить пользователям Добавлять комментарии на страницы</b></td>
-	<td>".select("options[comments_add]", "0,2,1", "НЕТ,с проверкой администратора,без проверки", $comments_add)."</td>
-	</tr>
-	<tr>
-	<td><b>Система комментариев:</b><br>
-	<li>Линейная система — на первый взгляд помогает комментаторам держаться темы, мешает вести одновременно несколько бесед, хорошо воспринимается зрительно, но при попытке людей создать дискуссию - сильно усложняет её понимание.
-	<li>Древовидная система — помогает комментаторам развивать в ветках разные темы, провоцирует комментаторов на ведение споров, затрудняет последовательное чтение комментариев, но облегчает понимание дискуссий, повышает количество комментариев и время на сайте.
-	<li>Гибридная система — Линейная система, раскрывающаяся в Древовидную за счет кнопки «Раскрыть все». Также под каждым комментарием с ответом есть кнопка «Показать ответ».
-	</td>
-	<td>".select("options[vetki]", "2,1,0", "Древовидная система,Гибриная система,Линейная система", $vetki)."</td>
-	</tr>
-	<tr>
-	<td>Направление комментариев по дате:</td>
-	<td>".select("options[comments_desc]", "1,0", "сначала последние (новые),сначала первые (старые)", $comments_desc)."</td>
-	</tr>
-	<tr>
-	<td>Показывать поле ".input("options[comments_4]", $comments_4)." </td>
-	<td>".select("options[comments_mail]", "3,2,1,0", "везде,на странице в комментариях,в форме добавления комментария,НЕТ", $comments_mail)."</td>
-	</tr>
-	<tr>
-	<td>Показывать ссылку, разворачивающую полный текст комментария ".input("options[comment_all_link_text]", $comment_all_link_text)."<br>
-	Количество букв, до которых будет сокращен комментарий ".input("options[comm_col_letters]", $comm_col_letters, "7", "number")."</td>
-	<td>".select("options[comment_all_link]", "1,0", "ДА,НЕТ", $comment_all_link)."</td>
-	</tr>
+		<a class='dark_pole align_center' onclick=\"show_animate('block9');\"><h2>Комментарии</h2>
+		</a><div id=block9 style='display: none;'>
+		<table  class='w100 mw800 table_light'>
+		<tr>
+		<td><b>Показывать</b> ".input("options[comments_1]", $comments_1)." на страницах</td>
+		<td>".select("options[comments]", "0,1", "НЕТ,ДА", $comments)."</td>
+		</tr>
+		<tr>
+		<td>Показывать на Главной странице Раздела</td>
+		<td>".select("options[comments_main]", "1,0", "ДА,НЕТ", $comments_main)."</td>
+		</tr>
+		<tr>
+		<td><b>Разрешить пользователям Добавлять комментарии на страницы</b></td>
+		<td>".select("options[comments_add]", "0,2,1", "НЕТ,с проверкой администратора,без проверки", $comments_add)."</td>
+		</tr>
+		<tr>
+		<td><b>Система комментариев:</b><br>
+		<li>Линейная система — на первый взгляд помогает комментаторам держаться темы, мешает вести одновременно несколько бесед, хорошо воспринимается зрительно, но при попытке людей создать дискуссию - сильно усложняет её понимание.
+		<li>Древовидная система — помогает комментаторам развивать в ветках разные темы, провоцирует комментаторов на ведение споров, затрудняет последовательное чтение комментариев, но облегчает понимание дискуссий, повышает количество комментариев и время на сайте.
+		<li>Гибридная система — Линейная система, раскрывающаяся в Древовидную за счет кнопки «Раскрыть все». Также под каждым комментарием с ответом есть кнопка «Показать ответ».
+		</td>
+		<td>".select("options[vetki]", "2,1,0", "Древовидная система,Гибриная система,Линейная система", $vetki)."</td>
+		</tr>
+		<tr>
+		<td>Направление комментариев по дате:</td>
+		<td>".select("options[comments_desc]", "1,0", "сначала последние (новые),сначала первые (старые)", $comments_desc)."</td>
+		</tr>
+		<tr>
+		<td>Показывать поле ".input("options[comments_4]", $comments_4)." </td>
+		<td>".select("options[comments_mail]", "3,2,1,0", "везде,на странице в комментариях,в форме добавления комментария,НЕТ", $comments_mail)."</td>
+		</tr>
+		<tr>
+		<td>Показывать ссылку, разворачивающую полный текст комментария ".input("options[comment_all_link_text]", $comment_all_link_text)."<br>
+		Количество букв, до которых будет сокращен комментарий ".input("options[comm_col_letters]", $comm_col_letters, "7", "number")."</td>
+		<td>".select("options[comment_all_link]", "1,0", "ДА,НЕТ", $comment_all_link)."</td>
+		</tr>
 
-	<tr>
-	<td>Показывать поле ".input("options[comments_5]", $comments_5)." </td>
-	<td>".select("options[comments_adres]", "3,2,1,0", "везде,на странице в комментариях,в форме добавления комментария,НЕТ", $comments_adres)."</td>
-	</tr>
-	<tr>
-	<td>Показывать поле ".input("options[comments_6]", $comments_6)." </td>
-	<td>".select("options[comments_tel]", "3,2,1,0", "везде,на странице в комментариях,в форме добавления комментария,НЕТ", $comments_tel)."</td>
-	</tr>
-	<tr>
-	<td><b>Включить визуальный редактор</b> в форме добавления комментария.
-	<br>Кнопки редактора: жирность, наклон, зачеркнуто, добавить картинку, видео, файл и ссылку.
-	<br>Запрешенные форматы файлов: exe, php, js, html и xml</td>
-	<td>".select("options[media_comment]", "1,0", "ДА,НЕТ", $media_comment)."</td>
-	</tr>
-	<tr>
-	<td>Можно заменить надпись «Оставьте ваш вопрос или комментарий:» на:</td>
-	<td>".input("options[comments_2]", $comments_2)."</td>
-	</tr>
-	<tr>
-	<td>Можно заменить надпись «Ваше имя:» на:</td>
-	<td>".input("options[comments_3]", $comments_3)."</td>
-	</tr>
-	<tr>
-	<td>Можно заменить надпись «Ваш вопрос или комментарий:» на:</td>
-	<td>".input("options[comments_7]", $comments_7)."</td>
-	</tr>
-	<tr>
-	<td><b>Запретить добавление ссылок</b> в комментариях</td>
-	<td>".select("options[tema_zapret_comm]", "1,0", "НЕТ,ЕСТЬ", $tema_zapret_comm)."</td>
-	</tr>
-	<tr>
-	<td>Если выбран тип раздела «Анкеты-рейтинги» Дата написания отзыва (пример: для отзывов о роддомах - дата родов, дата посещения и т.д.):</td>
-	<td>".input("options[reiting_data]", $reiting_data)."</td>
-	</tr>
-	<tr>
-	<td>Количество выводимых комментариев</td>
-	<td>".select("options[comments_num]", "0,1,2,3,4,5,10,15,20,25,30,50,75,100,200,500,1000", "выводить все,1,2,3,4,5,10,15,20,25,30,50,75,100,200,500,1000", $comments_num)."</td>
-	</tr>
-	<tr>
-	<td colspan='2'><h3>Если выводятся не все комментарии:</h3></td>
-	</tr>
-	<tr>
-	<td>Показывать кнопку ".input("options[comments_8]", $comments_8)."</td>
-	<td>".select("options[comments_all]", "1,0", "ДА,НЕТ", $comments_all)."</td>
-	</tr>
-	<tr>
-	<td>Показывать кнопку ".input("options[comm_show_one_more_text]", $comm_show_one_more_text)." или ссылки на страницы с комментариями</td>
-	<td>".select("options[comm_show_one_more]", "0,1,2,3", "ничего не показывать,«Показать еще» — откроются под предыдущими комментариями,«Показать еще» — откроются вместо предыдущих комментариев,ссылки на страницы с комментариями 1 2 3 4 >", $comm_show_one_more)."</td>
-	</tr>
-	</table>
-	</div>
-
-
-	<a class='dark_pole align_center' onclick=\"show_animate('block10');\"><h2>Добавление страниц пользователем</h2>
-	</a><div id=block10 style='display: none;'>
-	<table  class='w100 mw800 table_light'>
-	<tr>
-	<td><b>Разрешить пользователям добавлять страницы</b> в раздел.<br>Выделение серым цветом позволяет сразу писать комментарии к добавленной странице, что особенно актуально, если выбран тип раздела «Анкеты-рейтинги».</td>
-	<td>".select("options[post]", "3,2,1,0", "с выделением серым цветом,с проверкой администратора,без проверки,ЗАПРЕТИТЬ", $post)."</td>
-	</tr>
-	<tr>
-	<td><b>Показывать на главной</b> странице раздела Добавление страницы.</td>
-	<td>".select("options[show_add_post_on_first_page]", "1,0", "ДА,НЕТ", $show_add_post_on_first_page)."</td>
-	</tr>
-	<tr>
-	<td><b>Показывать добавление страницы в корень раздела.</td>
-	<td>".select("options[add_post_to_mainpage]", "1,0", "ДА,НЕТ", $add_post_to_mainpage)."</td>
-	</tr>
-	<tr>
-	<td><b>Включить визуальный редактор</b> в форме добавления страницы.
-	<br>Кнопки редактора: жирность, наклон, зачеркнуто, добавить картинку, видео, файл и ссылку.
-	<br>Запрешенные форматы файлов: exe, php, js, html и xml</td>
-	<td>".select("options[media_post]", "1,0", "ДА,НЕТ", $media_post)."</td>
-	</tr>
-	<tr>
-	<td>Замена названия кнопки «Открыть новую тему». Например: «Добавить новость», «Разместить статью», «Добавить фото», «Добавить организацию».</td>
-	<td>".input("options[tema]", $tema)."</td>
-	</tr>
-	<tr>
-	<td>Замена названия текстового поля «Ваше имя». Например: «Ваш ник», «Ваши Ф.И.О.», «Автор сообщения», «Адрес». Если написать «no» - это поле не будет отображаться.</td>
-	<td>".input("options[tema_name]", $tema_name)."</td>
-	</tr>
-	<tr>
-	<td>Замена названия текстового поля «Название темы». Например: «Заголовок статьи», «Название фото», «Название и/или № организации».</td>
-	<td>".input("options[tema_title]", $tema_title)."</td>
-	</tr>
-	<tr>
-	<td>Замена названия текстового поля «Подробнее (содержание темы)». Например: «Описание фото», «Текст статьи», «Сообщение». Если написать «no» - это поле не будет отображаться.</td>
-	<td>".input("options[tema_opis]", $tema_opis)."</td>
-	</tr>
-	<tr>
-	<td><b>Запретить добавление ссылок</b> в тексте добавляемой страницы</td>
-	<td>".select("options[tema_zapret]", "1,0", "НЕТ,ЕСТЬ", $tema_zapret)."</td>
-	</tr>
-	</table>
-	</div>
+		<tr>
+		<td>Показывать поле ".input("options[comments_5]", $comments_5)." </td>
+		<td>".select("options[comments_adres]", "3,2,1,0", "везде,на странице в комментариях,в форме добавления комментария,НЕТ", $comments_adres)."</td>
+		</tr>
+		<tr>
+		<td>Показывать поле ".input("options[comments_6]", $comments_6)." </td>
+		<td>".select("options[comments_tel]", "3,2,1,0", "везде,на странице в комментариях,в форме добавления комментария,НЕТ", $comments_tel)."</td>
+		</tr>
+		<tr>
+		<td><b>Включить визуальный редактор</b> в форме добавления комментария.
+		<br>Кнопки редактора: жирность, наклон, зачеркнуто, добавить картинку, видео, файл и ссылку.
+		<br>Запрешенные форматы файлов: exe, php, js, html и xml</td>
+		<td>".select("options[media_comment]", "1,0", "ДА,НЕТ", $media_comment)."</td>
+		</tr>
+		<tr>
+		<td>Можно заменить надпись «Оставьте ваш вопрос или комментарий:» на:</td>
+		<td>".input("options[comments_2]", $comments_2)."</td>
+		</tr>
+		<tr>
+		<td>Можно заменить надпись «Ваше имя:» на:</td>
+		<td>".input("options[comments_3]", $comments_3)."</td>
+		</tr>
+		<tr>
+		<td>Можно заменить надпись «Ваш вопрос или комментарий:» на:</td>
+		<td>".input("options[comments_7]", $comments_7)."</td>
+		</tr>
+		<tr>
+		<td><b>Запретить добавление ссылок</b> в комментариях</td>
+		<td>".select("options[tema_zapret_comm]", "1,0", "НЕТ,ЕСТЬ", $tema_zapret_comm)."</td>
+		</tr>
+		<tr>
+		<td>Если выбран тип раздела «Анкеты-рейтинги» Дата написания отзыва (пример: для отзывов о роддомах - дата родов, дата посещения и т.д.):</td>
+		<td>".input("options[reiting_data]", $reiting_data)."</td>
+		</tr>
+		<tr>
+		<td>Количество выводимых комментариев</td>
+		<td>".select("options[comments_num]", "0,1,2,3,4,5,10,15,20,25,30,50,75,100,200,500,1000", "выводить все,1,2,3,4,5,10,15,20,25,30,50,75,100,200,500,1000", $comments_num)."</td>
+		</tr>
+		<tr>
+		<td colspan='2'><h3>Если выводятся не все комментарии:</h3></td>
+		</tr>
+		<tr>
+		<td>Показывать кнопку ".input("options[comments_8]", $comments_8)."</td>
+		<td>".select("options[comments_all]", "1,0", "ДА,НЕТ", $comments_all)."</td>
+		</tr>
+		<tr>
+		<td>Показывать кнопку ".input("options[comm_show_one_more_text]", $comm_show_one_more_text)." или ссылки на страницы с комментариями</td>
+		<td>".select("options[comm_show_one_more]", "0,1,2,3", "ничего не показывать,«Показать еще» — откроются под предыдущими комментариями,«Показать еще» — откроются вместо предыдущих комментариев,ссылки на страницы с комментариями 1 2 3 4 >", $comm_show_one_more)."</td>
+		</tr>
+		</table>
+		</div>
 
 
-	<a class='dark_pole align_center' onclick=\"show_animate('block4');\"><h2>Дополнительные блоки</h2>
-	</a><div id=block4 style='display: none;'>
-	<table  class='w100 mw800 table_light'>
-	<tr>
-	<td>Добавление блока Календарь. Выберите поле, подключенное к данному разделу и содержащее период времени (две даты).</td>
-	<td>".select("options[calendar]", $spisok_var, $spisok_names, $calendar)."</td>
-	</tr>
-	</table>
-	</div>
+		<a class='dark_pole align_center' onclick=\"show_animate('block10');\"><h2>Добавление страниц пользователем</h2>
+		</a><div id=block10 style='display: none;'>
+		<table  class='w100 mw800 table_light'>
+		<tr>
+		<td><b>Разрешить пользователям добавлять страницы</b> в раздел.<br>Выделение серым цветом позволяет сразу писать комментарии к добавленной странице, что особенно актуально, если выбран тип раздела «Анкеты-рейтинги».</td>
+		<td>".select("options[post]", "3,2,1,0", "с выделением серым цветом,с проверкой администратора,без проверки,ЗАПРЕТИТЬ", $post)."</td>
+		</tr>
+		<tr>
+		<td><b>Показывать на главной</b> странице раздела Добавление страницы.</td>
+		<td>".select("options[show_add_post_on_first_page]", "1,0", "ДА,НЕТ", $show_add_post_on_first_page)."</td>
+		</tr>
+		<tr>
+		<td><b>Показывать добавление страницы в корень раздела.</td>
+		<td>".select("options[add_post_to_mainpage]", "1,0", "ДА,НЕТ", $add_post_to_mainpage)."</td>
+		</tr>
+		<tr>
+		<td><b>Включить визуальный редактор</b> в форме добавления страницы.
+		<br>Кнопки редактора: жирность, наклон, зачеркнуто, добавить картинку, видео, файл и ссылку.
+		<br>Запрешенные форматы файлов: exe, php, js, html и xml</td>
+		<td>".select("options[media_post]", "1,0", "ДА,НЕТ", $media_post)."</td>
+		</tr>
+		<tr>
+		<td>Замена названия кнопки «Открыть новую тему». Например: «Добавить новость», «Разместить статью», «Добавить фото», «Добавить организацию».</td>
+		<td>".input("options[tema]", $tema)."</td>
+		</tr>
+		<tr>
+		<td>Замена названия текстового поля «Ваше имя». Например: «Ваш ник», «Ваши Ф.И.О.», «Автор сообщения», «Адрес». Если написать «no» - это поле не будет отображаться.</td>
+		<td>".input("options[tema_name]", $tema_name)."</td>
+		</tr>
+		<tr>
+		<td>Замена названия текстового поля «Название темы». Например: «Заголовок статьи», «Название фото», «Название и/или № организации».</td>
+		<td>".input("options[tema_title]", $tema_title)."</td>
+		</tr>
+		<tr>
+		<td>Замена названия текстового поля «Подробнее (содержание темы)». Например: «Описание фото», «Текст статьи», «Сообщение». Если написать «no» - это поле не будет отображаться.</td>
+		<td>".input("options[tema_opis]", $tema_opis)."</td>
+		</tr>
+		<tr>
+		<td><b>Запретить добавление ссылок</b> в тексте добавляемой страницы</td>
+		<td>".select("options[tema_zapret]", "1,0", "НЕТ,ЕСТЬ", $tema_zapret)."</td>
+		</tr>
+		</table>
+		</div>
 
 
-	<a class='dark_pole align_center' onclick=\"show_animate('block2');\"><h2>Подключение базы данных вместо страниц</h2>
-	</a><div id=block2 style='display: none;'>
-	<table  class='w100 mw800 table_light'>
-	<tr>
-	<td><b>Подключить базу данных</b> вместо страниц и папок [<a href=sys.php?op=mainpage&amp;name=base target=_blank>Добавить</a>]</td>
-	<td>".select("options[base]", $base_var, $base_names, $base)."</td>
-	</tr>
-	<tr>
-	<td>Выводить ссылку Подробнее... </td>
-	<td>".select("options[podrobno]", "1,0", "ДА,НЕТ", $podrobno)."</td>
-	</tr>
-	</table>
-	</div>
+		<a class='dark_pole align_center' onclick=\"show_animate('block4');\"><h2>Дополнительные блоки</h2>
+		</a><div id=block4 style='display: none;'>
+		<table  class='w100 mw800 table_light'>
+		<tr>
+		<td>Добавление блока Календарь. Выберите поле, подключенное к данному разделу и содержащее период времени (две даты).</td>
+		<td>".select("options[calendar]", $spisok_var, $spisok_names, $calendar)."</td>
+		</tr>
+		</table>
+		</div>
 
 
-	<a class='dark_pole align_center' onclick=\"show_animate('block12');\"><h2>Администрирование раздела</h2>
-	</a><div id=block12 style='display: none;'>
-	<table  class='w100 mw800 table_light'>
-	<tr>
-	<td>Выводить редактирование полей при раскрытии функций страницы на Главной администрирования</td>
-	<td>".select("options[edit_pole]", "1,0", "ДА,НЕТ", $edit_pole)."</td>
-	</tr>
-	</table>
-	</div>
+		<a class='dark_pole align_center' onclick=\"show_animate('block2');\"><h2>Подключение базы данных вместо страниц</h2>
+		</a><div id=block2 style='display: none;'>
+		<table  class='w100 mw800 table_light'>
+		<tr>
+		<td><b>Подключить базу данных</b> вместо страниц и папок [<a href='sys.php?op=mainpage&amp;name=base' target='_blank'>Добавить</a>]</td>
+		<td>".select("options[base]", $base_var, $base_names, $base)."</td>
+		</tr>
+		<tr>
+		<td>Выводить ссылку Подробнее... </td>
+		<td>".select("options[podrobno]", "1,0", "ДА,НЕТ", $podrobno)."</td>
+		</tr>
+		</table>
+		</div>
 
 
-	<p class='red'>В текстовых полях нельзя писать символ &</p>";
+		<a class='dark_pole align_center' onclick=\"show_animate('block12');\"><h2>Администрирование раздела</h2>
+		</a><div id=block12 style='display: none;'>
+		<table  class='w100 mw800 table_light'>
+		<tr>
+		<td>Выводить редактирование полей при раскрытии функций страницы на Главной администрирования</td>
+		<td>".select("options[edit_pole]", "1,0", "ДА,НЕТ", $edit_pole)."</td>
+		</tr>
+		</table>
+		</div>
+
+		<p class='red'>В текстовых полях нельзя писать символ &</p>";
 	######################################################################
 	} else { // конец редактирования настроек раздела
 	// начало редактирования раздела
 		echo "Редактирование раздела</span>";
 		if (intval($nastroi) != 1) red_vybor();
+		global $clean_urls;
+		switch($clean_urls) {
+			case 1: $chpu = "<b>ЧПУ: транслит названия страницы.</b> Ссылка на раздел: <a href='/".$name."/' target='_blank'>".$name."/</a>"; break;
+			case 2: $chpu = "<b>ЧПУ: название страницы.</b> Ссылка на раздел: <a href='/".$name."/' target='_blank'>".$name."/</a>"; break;
+			default: $chpu = "<b>ЧПУ выключено.</b> Ссылка на раздел: <a href='/-".$name."' target='_blank'>-".$name."</a>"; break;
+		}
 		echo "</div>
-
 		<table width='100%' border='0'><tr valign='top'><td width='50%'>
 		<h2>Название раздела</h2>
-		<textarea class='big w100 h40 f16' name='title' rows='2' cols='10'>".$title."</textarea>
+		<textarea class='big w100 h40 f16' name='title' rows='2' cols='10'>".$title."</textarea><br>
+		<a class='button blue' onclick='$(\".meta\").toggle();'>SEO настройки</a>
 		</td><td>
 		<h2>Адрес раздела на сайте</h2>
 		<textarea class='big w100 h40 f16' name='namo' rows='1' cols='10'>".$name_all."</textarea>
-		<span class=f12>Ссылка на раздел: <a href='/-".$name."' target='_blank'>-".$name."</a>. Не изменять, если созданы папки/страницы!</span>
+		<span class=f12>".$chpu."<br>Не изменять, если созданы папки/страницы!</span> 
 		</td></tr>
-		<tr><td colspan='2'>
+		</table>
+		<table width='100%' border='0'><tr valign='top' class='hide meta'><td width='40%'>
+		<h3>Замена TITLE: <a onclick=\"show('help17')\" class='help'>?</a></h3><textarea name='meta_titleX' class='big w100 h40' rows='2' cols='10'>".$meta_titleX."</textarea>
+		<div id='help17' style='display:none;'><br><span class=small>По-умолчанию — пустое поле и TITLE будет создан автоматически: «название раздела». Иногда бывает нужно сделать TITLE страницы отличным от её названия.</span></div>
+		</td><td width='30%'>
+		<h3>Ключевые слова: <span class=f12><a onclick=\"show('help5')\" class=help>?</a></span></h3><textarea name='keywordsX' class='big w100 h40' rows='2' cols='10'>".$keywordsX."</textarea>
+		<div id='help5' style='display:none;' class=f12>Это поле keywords для поисковых систем. Максимум 250 символов. Разделять запятой. Если пусто - используются ключевые словосочетания из <a href='/sys.php?op=options' target='_blank'>Настроек портала</a>).<br></div>
+		</td><td>
+		<h3>Описание: <span class=f12><a onclick=\"show('help6')\" class=help>?</a></span></h3><textarea name='descriptionX' class='big w100 h40' rows='2' cols='10'>".$descriptionX."</textarea>
+		<div id='help6' style='display:none;' class=f12>Это поле description для поисковых систем. Максимум 250 символов. Если пусто - используется основное описание из <a href='/sys.php?op=options' target='_blank'>Настроек портала</a>.</div>
+		</td></tr>
+		</table>
 		<h2>Содержание раздела: ".button_resize_red($red, true)."</h2>";
 	  	echo redactor($red, $useit, 'useit', 'shablon'); // редактор: типа редактора, редактируемое поле
 
@@ -1306,13 +1341,6 @@ function edit_main($id) {
 		} else {
 			echo "<input type='hidden' name='shablon' value='".$sha."'>";
 		}
-		echo "</td></tr><tr valign='top'><td width='50%'>
-		<span class=h2>Ключевые слова:</span> <span class=f12><a onclick=\"show('help5')\" class=help>?</a></span><br><textarea name='keywordsX' class='big w100 h40' rows='2' cols='10'>".$keywordsX."</textarea>
-		<div id='help5' style='display:none;' class=f12>Это поле keywords для поисковых систем. Максимум 250 символов. Разделять запятой. Если пусто - используются ключевые словосочетания из <a href=/sys.php?op=options target=_blank>Настроек портала</a>).<br></div>
-		</td><td>
-		<span class=h2>Описание:</span> <span class=f12><a onclick=\"show('help6')\" class=help>?</a></span><br><textarea name='descriptionX' class='big w100 h40' rows='2' cols='10'>".$descriptionX."</textarea>
-		<div id='help6' style='display:none;' class=f12>Это поле description для поисковых систем. Максимум 250 символов. Если пусто - используется основное описание из <a href=/sys.php?op=options target=_blank>Настроек портала</a>.</div>
-		</td></tr></table>";
 	} // конец редактирования раздела
 } ############################### ЗАКРЫТИЕ РАЗДЕЛА
 
@@ -1330,7 +1358,7 @@ function edit_main($id) {
 	}
 
 	// обнулили все опции
-	$titleshow = $reload_one_by_one = $folder = $datashow = $tagdelete = $ipdatauser = $design = $open_all = $catshow = $main = $daleeshow = $openshow = $number = $add = $size = $papki_numbers = $zagolovokin = $menu = $noli = $html = $show_title = $random = $showlinks = $open_new_window = $shablon = $show_new_pages = $reload_link_show = $reload_link_time = $reload_link_on_start = $show_pages_from = $calendar_future = $calendar_years = 0;
+	$titleshow = $reload_one_by_one = $folder = $datashow = $tagdelete = $ipdatauser = $design = $open_all = $catshow = $main = $daleeshow = $openshow = $number = $add = $size = $papki_numbers = $zagolovokin = $menu = $noli = $html = $show_title = $random = $showlinks = $open_new_window = $shablon = $show_new_pages = $reload_link_show = $reload_link_time = $reload_link_on_start = $show_pages_from = $calendar_future = $calendar_years = $re_menu_type = $must_have_foto_adres = 0;
 	$opros_type = $limkol = $pageshow = $only_question = $opros_result = $foto_gallery_type = $re_menu = $notitlelink = $foto_num = 1;
 	$col_bukv = 50;
 	$img_width = 0;
@@ -1423,8 +1451,8 @@ function edit_main($id) {
 	echo "<tr>
 	<td><b>Блок БУДЕТ показан:</b><ul><li><b>во всех разделах</b> – все, <li><b>в определенном разделе</b> — выберите этот раздел и нажмите «Добавить», <li><b>в нескольких разделах</b> — добавьте несколько разделов через запятую.</ul></td>
 	<td>".input("options[show_in_razdel]", $show_in_razdel, "25","input"," id='show_in_raz'")." 
-	<a class='button small' onclick='show_raz();'>&larr; Добавить</a><br>
-	".select("razdels2", $razdel_engname.aa("все"), $razdel_name."ко всем Разделам",$razdels2)."
+	<a class='button small' id='show_in_razdel_button' onclick='show_raz();'>&larr; Добавить</a><br>
+	".select("razdels2", $razdel_engname.aa("все"), $razdel_name."ко всем Разделам",$razdels2," onchange='$(\"#show_in_razdel_button\").addClass(\"green\");'")."
 	<script>function show_raz() { 
 		if ($('#razdels2').val() != '".aa("все")."') {
 			if ($('#show_in_raz').val() == '".aa("все")."') $('#show_in_raz').val( '' ); 
@@ -1441,8 +1469,8 @@ function edit_main($id) {
 	echo "<tr>
 	<td><b>Блок НЕ БУДЕТ показан:</b><ul><li><b>в определенном разделе</b> — выберите этот раздел и нажмите «Добавить», <li><b>в нескольких разделах</b> — добавьте несколько разделов через запятую.</ul>По-умолчанию, пустое поле.</td>
 	<td>".input("options[no_show_in_razdel]", $no_show_in_razdel, 25,"input"," id='no_show_in_raz'")." 
-	<a class='button small' onclick='no_show_raz();'>&larr; Добавить</a><br>
-	".select("razdels3", $razdel_engname, $razdel_name."не выбран раздел",$razdels3)."
+	<a class='button small' id='no_show_in_razdel_button' onclick='no_show_raz();'>&larr; Добавить</a><br>
+	".select("razdels3", $razdel_engname, $razdel_name."не выбран раздел",$razdels3, " onchange='$(\"#no_show_in_razdel_button\").addClass(\"green\");'")."
 	<script>function no_show_raz() { 
 		if ($('#razdels3').val() != '".aa("все")."') {
 			if ($('#no_show_in_raz').val() == '".aa("все")."') $('#no_show_in_raz').val( '' ); 
@@ -1466,8 +1494,8 @@ function edit_main($id) {
 		echo "<tr>
 		<td><b>Блок использует содержание Раздела:</b><ul><li><b>всех разделов</b> – оставьте поле пустым, <li><b>определенного раздела</b> — выберите этот раздел и нажмите «Добавить», <li><b>нескольких разделов</b> — добавьте несколько разделов через запятую, <li><b>открытого раздела</b> — выберите из меню разделов пункт «открытого раздела» и добавьте его или напишите в поле «open_razdel» (без кавычек). При выводе страниц открытого раздела на Главной странице блок исчезнет совсем, при выводе в разделе без страниц будет выведен заголовок, если он разрешен в настройках блока.</ul></td>
 		<td>".input("options[module_name]", $module_name, "25","input"," id='add_razdel'")." 
-	<a class='button small' onclick='add_raz();'>&larr; Добавить</a><br>
-	".select("razdels1", $razdel_engname.",open_razdel", $razdel_name."ко всем Разделам,открытого раздела",$razdels1)."
+	<a class='button small' id='module_name_button' onclick='add_raz();'>&larr; Добавить</a><br>
+	".select("razdels1", $razdel_engname.",open_razdel", $razdel_name."ко всем Разделам,открытого раздела",$razdels1, " onchange='$(\"#module_name_button\").addClass(\"green\");'")."
 	<script>function add_raz() { 
 		if ($('#razdels1').val() != '') {
 			if ($('#razdels1').val() == 'open_razdel') $('#add_razdel').val( $('#razdels1').val() ); 
@@ -1751,7 +1779,12 @@ function edit_main($id) {
 	if ($name == 0) { // доработать блок мини-фото на работу с этими настройками
 		echo "<tr>
 		<td>Показывать страницы... (из «корня» раздела или только из его папок)</td>
-		<td>".select("options[show_pages_from]", "0,1,2", "показывать все страницы,только страницы из «корня» раздела,только страницы из папок", $show_pages_from)."</td>
+		<td>".select("options[show_pages_from]", "0,1,2", "все страницы,только страницы из «корня» раздела,только страницы из папок", $show_pages_from)."</td>
+		</tr>";
+
+		echo "<tr>
+		<td>Показывать страницы с фото...</td>
+		<td>".select("options[must_have_foto_adres]", "0,1", "все страницы,только страницы с фото", $must_have_foto_adres)."</td>
 		</tr>";
 	}
 
@@ -1806,6 +1839,11 @@ function edit_main($id) {
       <div id=re_menu style='display:none;'>".close_button('re_menu')."<p>Меню сайта может настраиваться автоматически или вручную, также можно преобразовать в меню папки выбранного раздела. Если выбран автоматический режим — при редактировании блока можно будет выбрать разделы, папки и страницы сайта, а также их очередность — в удобном редакторе меню. <p>В ручном режиме меню описывается текстом по правилам (для того, чтобы быть универсальным и легко переключать варианты отображения):<br>[элемент открыть][url=/]Главная[/url][элемент закрыть]<br>[элемент открыть][url=#]Пункт меню 1[/url][элемент закрыть]<br>[элемент открыть][url=#]Пункт меню 2[/url]<br>&nbsp;&nbsp;[уровень открыть]<br>&nbsp;&nbsp;[элемент открыть][url=#]Подпункт 1[/url][элемент закрыть]<br>&nbsp;&nbsp;[элемент открыть][url=#]Подпункт 2[/url][элемент закрыть]<br>&nbsp;&nbsp;[уровень закрыть]<br>[элемент закрыть]<br><i>где # - это ссылка на страницу.</i><br>В меню может быть до 3-х уровней вложенности</div>
 	</td>
 	<td>".select("options[re_menu]", $razdel_engname."1,0", $razdel_name."режим: автоматический,режим: ручной", $re_menu)."</td>
+	</tr>";
+
+	echo "<tr>
+	<td>Если выбран «раздел сайта», показывать в автоматическом меню:</td>
+	<td>".select("options[re_menu_type]", "0,1,2", "папки,страницы,папки и страницы", $re_menu_type)."</td>
 	</tr>";
 
 	echo "<tr>
@@ -1874,7 +1912,7 @@ function edit_main($id) {
 		</tr>
 		<tr>
 		<td>Сколько дней сразу выводить в расписании</td>
-		<td>".select("options[all_days]", "0,1,2,3,4,5", "без расписания (в разработке),1 день (желательно),2 дня (без календаря),3 дня (без календаря),4 дня (без календаря),5 дней (без календаря),6 дней (без календаря),неделя (без календаря)", $all_days)."</td>
+		<td>".select("options[all_days]", "0,1,2,3,4,5,6,7", "без расписания (в разработке),1 день,2 дня,3 дня,4 дня,5 дней,6 дней,неделя", $all_days)."</td>
 		</tr>
 		<tr>
 		<td>Показать сразу не текущий, а какой-то другой день, например: «7.10.2013». По-умолчанию, для текущего дня ставим «0»</td>
@@ -2258,54 +2296,61 @@ function edit_main($id) {
 	echo "</div></form>";
 }
 ###################################################################################################
-function mainpage_save($id=0, $type, $namo, $title, $text, $useit, $shablon, $descriptionX, $keywordsX, $s_tip) {
-	global $sgatie, $tip, $admintip, $prefix, $db, $nastroi;
+function mainpage_save($id=0, $type, $namo, $title, $text, $useit, $shablon, $descriptionX, $keywordsX, $meta_titleX, $s_tip) {
+	global $sgatie, $tip, $admintip, $prefix, $db, $nastroi, $clean_urls;
+	$err = 0;
 	$op = $_REQUEST['op'];
-	$sql = "SELECT `name` FROM ".$prefix."_mainpage where `id`='".$id."'";
-	$result = $db->sql_query($sql);
-	$row = $db->sql_fetchrow($result);
-	$mod_name = $row['name'];
-	if (strpos($mod_name, "\n")) { // заменяем имя запароленного раздела
-		$mod_name = explode("\n", str_replace("\r", "", $mod_name));
-		$mod_name = trim($mod_name[0]);
+	if ($type == 2) {
+		$sql = "SELECT `name` FROM ".$prefix."_mainpage where `id`='".$id."'";
+		$result = $db->sql_query($sql);
+		$row = $db->sql_fetchrow($result);
+		$mod_name = $row['name'];
+		if (strpos($mod_name, "\n")) { // заменяем имя запароленного раздела
+			$mod_name = explode("\n", str_replace("\r", "", $mod_name));
+			$mod_name = trim($mod_name[0]);
+		}
+		recash("/-".$mod_name); // Удаление кеша раздела
 	}
-	recash("/-".$mod_name); // Удаление кеша раздела
-
 	// Обратное преобразование textarea (замена русской буквы е)
 	$text = str_replace("tеxtarea","textarea",$text); // ireplace
 	$useit = str_replace("tеxtarea","textarea",$useit); // ireplace
 	$shablon = str_replace("tеxtarea","textarea",$shablon); // ireplace
 
 	if ($type == 2 || $type == 5) {
-		if (trim($namo) == "") $namo = strtolow(translit_name(trim($title)));
-		else $namo = strtolow(translit_name(trim($namo)));
+		if (trim($namo) == "") $namo = $title;
+		if ($clean_urls == 2) $namo = clean_url($namo);
+		else $namo = clean_url(strtolow(translit_name($namo)));
 	}
 	if ($nastroi == 1) { // Настройка раздела или блока
 		global $options, $module_name;
 		$text = array();
 		foreach ($options as $key => $option) {
-			if (($key=="base" and $option=="") or ($key=="base" and $option=="0") or $key=="module_name") {} else $text[] = $key."=".$option;
+			if (($key=="base" and $option=="") or ($key=="base" and $option=="0") or $key=="module_name") {} 
+				else $text[] = $key."=".$option;
 			if ($key=="module_name") $module_name = $option;
 		}
-		if ($type!=2) $text = $module_name."|".implode("&",$text);
+		if ($type != 2) $text = $module_name."|".implode("&",$text);
 		else $text = "pages|".implode("&",$text);
-
 		$text = stripslashes($text);
-
-		// Обновление
+		// Обновление настроек
 		global $siteurl;
-		if ($type!=2) {
-			$db->sql_query("UPDATE ".$prefix."_mainpage SET `useit`='".mysql_real_escape_string($text)."', `tables`='pages' WHERE `id`='".$id."';") or die('Не удалось обновить содержание.');
-		} else {
-			$db->sql_query("UPDATE ".$prefix."_mainpage SET `text`='".mysql_real_escape_string($text)."', `tables`='pages' WHERE `id`='".$id."';") or die('Не удалось обновить содержание.');
+		if ($type != 2) { // блока
+			$db->sql_query("UPDATE ".$prefix."_mainpage SET `useit`='".mysql_real_escape_string($text)."', `tables`='pages' WHERE `id`='".$id."';") or $err = 1;
+		} else { // раздела
+			$db->sql_query("UPDATE ".$prefix."_mainpage SET `text`='".mysql_real_escape_string($text)."', `tables`='pages' WHERE `id`='".$id."';") or $err = 1;
 		}
-		if ($op == "mainpage_save_ayax") { echo "Сохранил"; exit; }
+		if ($err == 1) echo "Не удалось обновить содержание.";
+		if ($op == "mainpage_save_ayax") { 
+			if ($err == 0) echo "Сохранил";
+			exit; 
+		}
+		elseif ($err != 0) die();
 		elseif ($type == 3) Header("Location: sys.php?op=mainpage&type=element");
 		else Header("Location: sys.php");
 		die();
 	}
 
-	if (trim($title)=="") die('Вы не написали название! Вернитесь и заполните это поле.');
+	if (trim($title)=="") $err = 2;
 	if ($type == 0) {
 		$n = count($useit); // обработка полученных стилей дизайна (массив Select)
 		$styles = "";
@@ -2325,6 +2370,7 @@ function mainpage_save($id=0, $type, $namo, $title, $text, $useit, $shablon, $de
 	$shablon = stripslashes(trim($shablon));
 	$descriptionX = stripslashes(trim($descriptionX));
 	$keywordsX = stripslashes(trim($keywordsX));
+	$meta_titleX = stripslashes(trim($meta_titleX));
 
 	// Обратное преобразование textarea (замена на англ. букву e, костыль для текстового редактора)
 	$text = str_replace("tеxtarea","textarea",$text); // ireplace
@@ -2336,9 +2382,15 @@ function mainpage_save($id=0, $type, $namo, $title, $text, $useit, $shablon, $de
 	if ($numrows = $db->sql_numrows($result) > 0) {
 		// Обновление
 		if ($type==3 && $namo == 7) $text = str_replace("<? ", "", str_replace(" ?>", "", $text));
-		$db->sql_query("UPDATE ".$prefix."_mainpage SET `name`='".mysql_real_escape_string($namo)."', `title`='".mysql_real_escape_string($title)."', `text`='".mysql_real_escape_string($text)."', `useit`='".mysql_real_escape_string($useit)."', `shablon`='".mysql_real_escape_string($shablon)."', `tables`='pages', `description`='".mysql_real_escape_string($descriptionX)."', `keywords`='".mysql_real_escape_string($keywordsX)."' WHERE `id`='".$id."';") or die('Не удалось обновить содержание. Попробуйте нажать в Редакторе на кнопку "Чистка HTML"');
+		$db->sql_query("UPDATE ".$prefix."_mainpage SET `name`='".mysql_real_escape_string($namo)."', `title`='".mysql_real_escape_string($title)."', `text`='".mysql_real_escape_string($text)."', `useit`='".mysql_real_escape_string($useit)."', `shablon`='".mysql_real_escape_string($shablon)."', `tables`='pages', `description`='".mysql_real_escape_string($descriptionX)."', `keywords`='".mysql_real_escape_string($keywordsX)."', `meta_title`='".mysql_real_escape_string($meta_titleX)."' WHERE `id`='".$id."';") or $err = 3;
 
-		if ($op == "mainpage_save_ayax") { echo "Сохранил"; exit; }
+		if ($err == 2) echo "Вы не написали название! Вернитесь и заполните это поле.";
+		if ($err == 3) echo "Не удалось обновить содержание. Попробуйте нажать в Редакторе на кнопку «Чистка HTML»";
+		if ($op == "mainpage_save_ayax") {
+			if ($err == 0) echo "Сохранил"; 
+			exit; 
+		}
+		elseif ($err != 0) die();
 		elseif ($type == 2) Header("Location: sys.php");
 		else Header("Location: sys.php?op=mainpage&type=element");
 		die();
@@ -2556,7 +2608,8 @@ function mainpage_create_block($title, $name, $text, $modul, $useit, $design) {
 	$text = str_replace("tеxtarea","textarea",$text); // ireplace
 	$useit = str_replace("tеxtarea","textarea",$useit); // ireplace
 	$shablon = str_replace("tеxtarea","textarea",$shablon); // ireplace
-	$db->sql_query("INSERT INTO ".$prefix."_mainpage VALUES (NULL, '3', '".mysql_real_escape_string($name)."', '".$title."', '".$text."', '".$useit."', '".$shablon."', '0', 'pages', '0', '', '')") or die("Не удалось создать блок. INSERT INTO ".$prefix."_mainpage VALUES (NULL, '3', '".$name."', '".$title."', '".$text."', '', '".$useit."', '".$shablon."', '0', 'pages', '0', '', '') ");
+	// id,type,name,title,text,useit,shablon,counter,tables,color,description,keywords,meta_title
+	$db->sql_query("INSERT INTO ".$prefix."_mainpage (`id`, `type`, `name`, `title`, `text`, `useit`, `shablon`, `tables`) VALUES (NULL, '3', '".mysql_real_escape_string($name)."', '".$title."', '".$text."', '".$useit."', '".$shablon."', 'pages')") or die("Не удалось создать блок. INSERT INTO ".$prefix."_mainpage VALUES (NULL, '3', '".$name."', '".$title."', '".$text."', '".$useit."', '".$shablon."', '0', 'pages', '0', '', '', '') ");
 	// узнаем id
 	$row = $db->sql_fetchrow($db->sql_query("SELECT `id` FROM ".$prefix."_mainpage where `tables`='pages' and `type`='3' and `name`='".$name."' and `title`='".$title."' and `text`='".$text."' and `useit`='".$useit."' limit 1"));
 	if ($name != 31) Header("Location: sys.php?op=".$admintip."&type=3&id=".$row['id']."&nastroi=1");
@@ -2723,13 +2776,14 @@ function block_help() { // проверить вызов
 	    	if ($op == "mainpage_save_ayax") parse_str($_REQUEST['string']);
 		    if (!isset($descriptionX)) $descriptionX = "";
 		    if (!isset($keywordsX)) $keywordsX = "";
+		    if (!isset($meta_titleX)) $meta_titleX = "";
 		    if (!isset($s_tip)) $s_tip = "";
 		    if (!isset($namo)) $namo = "";
 		    if (!isset($title)) $title = "";
 		    if (!isset($text)) $text = "";
 		    if (!isset($useit)) $useit = "";
 		    if (!isset($shablon)) $shablon = "";
-		    mainpage_save($id, $type, $namo, $title, $text, $useit, $shablon, $descriptionX, $keywordsX, $s_tip);
+		    mainpage_save($id, $type, $namo, $title, $text, $useit, $shablon, $descriptionX, $keywordsX, $meta_titleX, $s_tip);
 	    	break;
 	    case "mainpage_del":
 	    	mainpage_del($id, $type, $name);

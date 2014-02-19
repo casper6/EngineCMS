@@ -153,12 +153,11 @@ if ($func == "show_raspisanie") {
 			if (is_admin($admin)) $all_zapisi_person[$zapis_day." ".$zapis_time] = $zapis_name."\n".$zapis_tel;
 		}
 	}
-
 	for ($nextday = $next_day; $nextday < $next_day + $all_days; $nextday++) {
 		if ($current_dayX == 0) $tim = time()+86400*$nextday;
 		else {
-			$current_dayX = explode(".", $current_dayX);
-			$tim = mktime(0,0,0,$current_dayX[1], $current_dayX[0], $current_dayX[2]);
+			if(!is_array($current_dayX)) $current_dayX = explode(".", $current_dayX);
+			$tim = mktime(0,0,0,$current_dayX[1], $current_dayX[0], $current_dayX[2]) + 86400*$nextday;
 		}
 		$now_day = date("j", $tim);
 		$now_day_0 = date("d", $tim); // с нулем число
@@ -170,7 +169,7 @@ if ($func == "show_raspisanie") {
 		$mes_name = array("","января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря");
 		$day_name = $day_name[$day_num];
 		$info .= "<table style='width:100%; margin:0; padding:0; margin-bottom:40px;'>
-		<tr><th width=15%>".$specialist."</th><th>".$day_name_big[$day_num].", ".$now_day." ".$mes_name[$mes_num]." ".$now_year.". ".$work_time."</th></tr>";
+		<tr><th width=15%>".$specialist."</th><th>".$day_name_big[$day_num].", ".$now_day." ".$mes_name[intval($mes_num)]." ".$now_year.". ".$work_time."</th></tr>";
 		foreach ($raspisaniya as $raspisanie) {
 			$raspisanie = explode(";", $raspisanie);
 			$person_num = intval($raspisanie[0]); // номер для заполнения записи
@@ -180,7 +179,7 @@ if ($func == "show_raspisanie") {
 			$count = count($raspisanie);
 			$person_day_time = array("воскресенье"=>"","понедельник"=>"","вторник"=>"","среда"=>"","четверг"=>"","пятница"=>"","суббота"=>"","нечетные"=>"","четные"=>"","будни"=>"","выходные"=>"","ежедневно"=>"");
 			//$chet = 0;
-			for ($i=4; $i < $count; $i++) { 
+			for ($i=4; $i < $count; $i++) {
 				$times = explode(" ", trim($raspisanie[$i]));
 				$days = $times[0];
 				$time = $times[1];
@@ -200,9 +199,12 @@ if ($func == "show_raspisanie") {
 			$work_hours = $work_order = array();
 			// высчитываем процент - кол-во часов текущего дня
 			
-			$mes_name2 = $mes_name[$mes_num];
-			if ($person_day_time[$now_day.$mes_name2] != "") { // числа
-				$person_day_time = $person_day_time[$now_day.$mes_name2];
+			$mes_name2 = $mes_name[intval($mes_num)];
+
+			if (!isset($person_day_time[$now_day." ".$mes_name2])) $person_day_time[$now_day." ".$mes_name2] = "";
+
+			if ($person_day_time[$now_day." ".$mes_name2] != "") { // числа
+				$person_day_time = $person_day_time[$now_day." ".$mes_name2];
 			} elseif ($person_day_time["нечетные"] != "" || $person_day_time["четные"] != "") { // чет/не чет
 				if ($now_day & 1) {
 			       if ($person_day_time["нечетные"] != "") $person_day_time = $person_day_time["нечетные"];
@@ -267,9 +269,11 @@ if ($func == "show_raspisanie") {
 						$totalMinutes = $totalMinutes - ($totalHours*60); // Получаем оставшиеся минуты
 						if ($totalMinutes == 0) $totalMinutes = "00";
 
+						if (!isset($all_zapisi[$now_day.".".$mes_num.".".$now_year." ".$totalHours.":".$totalMinutes]))
+							$all_zapisi[$now_day.".".$mes_num.".".$now_year." ".$totalHours.":".$totalMinutes] = "";
 						if ($all_zapisi[$now_day.".".$mes_num.".".$now_year." ".$totalHours.":".$totalMinutes] != $person_num) {
-							if ($current_dayX == 0 && $next_day == 0 && intval($totalHours) <= intval(date("G",time())))
-								$work_order_ok = "<td width='".$procent_minutes2."%' style='background: lightyellow' title='".$totalHours.":".$totalMinutes."'></td>";
+							if ($current_dayX == 0 && $next_day == 0 && intval($totalHours) <= intval(date("G",time())) && $now_day == date("j", time()))
+								$work_order_ok = "<td width='".$procent_minutes2."%' style='background: lightyellow' title='".$totalHours.":".$totalMinutes."'>$now_day</td>";
 							else $work_order_ok = "<td width='".$procent_minutes2."%' class='raspisanie'><a title='".$record.$totalHours.":".$totalMinutes."' onclick='show_zapis(\"".$person_num."\", \"".$now_day.".".$mes_num.".".$now_year.", ".$totalHours.":".$totalMinutes."\", \"".$person_name.", ".$person_profession."\")'><div class='raspisanie'></div></a></td>";
 						} else {
 							if (is_admin($admin)) $add_button = "<a onclick='show_zapis(\"".$person_num.",".$now_day.".".$mes_num.".".$now_year.", ".$totalHours.":".$totalMinutes.",".str_replace("\n", ",", $all_zapisi_person[$now_day.".".$mes_num.".".$now_year." ".$totalHours.":".$totalMinutes]).";\", \"".$now_day.".".$mes_num.".".$now_year.", ".$totalHours.":".$totalMinutes."\", \"".$person_name.", ".$person_profession."\")'><div class='raspisanie'></div></a>";
@@ -393,7 +397,7 @@ if ($func == "shop_send_order") {
 		}
 		$order .= "<br>".aa("ИТОГО:")." ".$shop_text_val1.$itogo.$shop_text_val2."<br>";
 		// Отправка письма
-		mail($shop_admin_mail, "=?utf-8?b?" . base64_encode($subject) . "?=", str_replace("<br>","\r\n",$order), "MIME-Version: 1.0\r\nContent-type: text/html; charset=utf-8\r\nFrom: =?utf-8?b?" . base64_encode(aa("Администратор")) . "?= <" . $shop_admin_mail . ">");
+		mail($shop_admin_mail, "=?utf-8?b?" . base64_encode($subject) . "?=", $order, "MIME-Version: 1.0\r\nContent-type: text/html; charset=utf-8\r\nFrom: =?utf-8?b?" . base64_encode(aa("Администратор")) . "?= <" . $shop_admin_mail . ">");
     	echo $shop_text_after_mail; 
     	system_mes($order); // Отправляем системное сообщение админу
     	setcookie ('shop_tovar', ''); // очищаем куки
@@ -407,13 +411,15 @@ if ($func == "shop_show_order") {
 	$shop_text_return = ss("Вернуться");
 	$pole = $onclick = "";
 	// Получаем поля
-	$shop_spisok_pole = explode("\n",$shop_spisok_pole);
+	$shop_spisok_pole = explode("\n",str_replace("\r","",$shop_spisok_pole));
 	foreach ($shop_spisok_pole as $key => $value) {
+		$tr_name = trim(translit_name($value));
 		// Определение важности *
 		if (strpos($value, "*")) {
 			$value = str_replace("*", "", $value);
+			$tr_name = str_replace("*", "", $tr_name);
 			$add = "<sup class='red'>*</sup>";
-			$onclick .= "if ($('#mail_".translit_name($value)."').val() == '') al = al + '".ss("Заполните поле")." «".$value."».\\n';";
+			$onclick .= "if ($('#mail_".$tr_name."').val() == '') al = al + '".ss("Заполните поле")." «".$value."».\\n'; ";
 		} else $add = "";
 		// Определение типа текстового поля
 		$type = "text";
@@ -437,16 +443,15 @@ if ($func == "shop_show_order") {
 				if (stripos(" ".$v, $val)!==false) $type = $ke;
 		}
 
-		$pole .= "<p><label for='string[mail_".translit_name($value)."]'>".$value.$add."</label><br>
-		<input type='".$type."' name='string[mail_".translit_name($value)."]' id='mail_".translit_name($value)."' class='shop_form_input' /> ";
+		$pole .= "<p><label for='string[mail_".$tr_name."]'>".$value.$add."</label><br>
+		<input type='".$type."' name='string[mail_".$tr_name."]' id='mail_".$tr_name."' class='shop_form_input' /> ";
 	}
-	$info = "
-	<p>".$shop_text_mail."
+	$info = "<p>".$shop_text_mail."
 	<form action='' class='shop_order_form' method=post id='order_form'>
 		".$pole."
-		<p><input type='button' value='".ss("Отправить")."' onClick=\"AjaxFormRequest('shop_card', 'order_form', 'ajax.php');\" />";
+		<p><input type='button' value='".ss("Отправить")."' onClick=\"var al = ''; ".$onclick." if (al == '') AjaxFormRequest('shop_card', 'order_form', 'ajax.php'); else { alert(al); return false; }\" />";
 	if ($onclick != "") $info .= "<p>".ss("Поля, помеченные")." <sup class='red'>*</sup> ".ss("обязательны к заполнению.");
-	$info .= "<div class='shop_card_oformlenie'><a onclick='shop_show_card(\"card\")'>".$shop_text_return."</a></div>
+	$info .= "<div class='shop_card_oformlenie'><a onclick='shop_show_card(\"card\");'>".$shop_text_return."</a></div>
 	<input name='func' value='shop_send_order' type='hidden'>
 	</form>";
 	echo $info;
@@ -505,11 +510,11 @@ if ($func == "shop_show_card") {
 					$count = " x ".$count;
 				}
 				if ($string == "card") {
-					if ($pic != "") $pic = "<a href='".$tovar[3]."' title='".$tovar[2]."' data-lightbox='shop'><div class='shop_card_minifoto' style='background:url(\"includes/php_thumb/php_thumb.php?src=".$tovar[3]."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0\") center center no-repeat;'></div></a>";
+					if ($pic != "") $pic = "<a href='".re_link($tovar[3])."' title='".$tovar[2]."' data-lightbox='shop'><div class='shop_card_minifoto' style='background:url(\"includes/php_thumb/php_thumb.php?src=".$tovar[3]."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0\") center center no-repeat;'></div></a>";
 					$info .= "<div class='shop_card'>
 					<div class='shop_card_price'><b>".$shop_text_val1.$price.$shop_text_val2.$count."</b>
 					<a class='shop_card_del' onclick='shop_del_tovar(".$id_page.",0)'>".$shop_text_delete."</a>".$del_all."</div>
-					".$pic."<a target='_blank' href='-".$name_razdel."_page_".$id_page."'>".$tovar[2]."</a>
+					".$pic."<a target='_blank' href='".re_link("-".$name_razdel."_page_".$id_page)."'>".$tovar[2]."</a>
 					</div>";
 				}
 			}

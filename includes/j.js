@@ -13,11 +13,11 @@ function CheckForm(opros_num){
 }
 /* Отображение блока голосования */
 function show_opros(id, res, golos) { 
-	$.get('opros.php', { num: id, res: res, golos: golos }, function(data) { $('#show_opros'+id).html( data ); }); 
+	$.get('/opros.php', { num: id, res: res, golos: golos }, function(data) { $('#show_opros'+id).html( data ); }); 
 }
 /* Отображение комментария */
 function show_comment(id) {
-	$.ajax({ url: 'ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: '/ajax.php', cache: false, dataType : "html",
 		data: {'func': 'show_comment', 'id': id},
 		beforeSend: function(){ new Spinner().spin( document.getElementById('comm_'+id) ); },
 	    success: function(data){ $('#comm_'+id).html(data); }
@@ -25,7 +25,7 @@ function show_comment(id) {
 }
 /* Отображение блока календаря */
 function show_calendar(id, string) {
-	$.ajax({ url: 'ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: '/ajax.php', cache: false, dataType : "html",
 		data: {'func': 'show_calendar', 'string': string},
 	    success: function(data){ $('#show_calendar'+id).html(data); }
 	});
@@ -119,7 +119,7 @@ function AjaxFormRequest(result_id,form_id,url) {
 }
 
 function show_raspisanie(id, string) {
-	$.ajax({ url: 'ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: '/ajax.php', cache: false, dataType : "html",
 data: {'func': 'show_raspisanie', 'id': id, 'string': string},
 beforeSend: function(){ new Spinner().spin( document.getElementById('show_raspisanie'+id) ); },
 	    success: function(data){ $('#show_raspisanie'+id).html(data); }
@@ -130,7 +130,7 @@ function save_raspisanie() {
 	var msg = $('form#zapis').serialize();
     $.ajax({
       type: 'POST',
-      url: 'ajax.php',
+      url: '/ajax.php',
       data: {'func': 'save_raspisanie', 'string': msg },
       beforeSend: function(){ new Spinner().spin( document.getElementById('zapis_dialog') ); },
       success: function(data) { $('#zapis_dialog').html(data); }
@@ -138,7 +138,7 @@ function save_raspisanie() {
 }
 
 function page_golos(id,name,gol,type) {
-	$.ajax({ url: 'ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: '/ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'savegolos', 'type': type, 'id': id, 'string': name+'*@%'+gol},
 	    beforeSend: function(){ new Spinner().spin( document.getElementById('golos'+id) ); },
 	    success: function(data){ $('#golos'+id).html(data); }
@@ -146,7 +146,7 @@ function page_golos(id,name,gol,type) {
 }
 
 function shop_show_order() {
-	$.ajax({ url: 'ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: '/ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'shop_show_order' },
 	    beforeSend: function(){ new Spinner().spin( document.getElementById('shop_card') ); },
 	    success: function(data){ $('#shop_card').html(data); }
@@ -154,7 +154,7 @@ function shop_show_order() {
 }
 
 function shop_show_card(basket) {
-	$.ajax({ url: 'ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: '/ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'shop_show_card', 'string': basket },
 	    beforeSend: function(){ $('.shop_' + basket).html('...'); },
 	    success: function(data){ $('.shop_' + basket).html(data); }
@@ -169,7 +169,7 @@ function shop_add_tovar(id,price,count,price_pole,price_replace,replace_type) {
 	if (price == 0 || price == null) alert ('Error: NO Price!');
 	else if (id == 0 || id == null) alert ('Error: NO product ID!');
 		else {
-			$.ajax({ url: 'ajax.php', cache: false, dataType : "html",
+			$.ajax({ url: '/ajax.php', cache: false, dataType : "html",
 		    data: {'func': 'shop_add_tovar', 'id': id, 'string': price+'*@%'+count+'*@%'+price_pole+'*@%'+price_replace+'*@%'+replace_type},
 		    success: function(data){ shop_show_card('price'); shop_show_card('count'); shop_show_card('card'); }
 			});
@@ -178,14 +178,14 @@ function shop_add_tovar(id,price,count,price_pole,price_replace,replace_type) {
 }
 
 function shop_delete() {
-	$.ajax({ url: 'ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: '/ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'shop_delete'},
 	    success: function(data){ shop_show_card('price'); shop_show_card('count'); shop_show_card('card'); }
 	});
 }
 
 function shop_del_tovar(id,all) {
-	$.ajax({ url: 'ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: '/ajax.php', cache: false, dataType : "html",
 	    data: {'func': 'shop_del_tovar', 'id': id, 'string': all},
 	    success: function(data){ shop_show_card('price'); shop_show_card('count'); shop_show_card('card'); }
 	});

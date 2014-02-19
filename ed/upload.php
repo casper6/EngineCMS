@@ -27,11 +27,11 @@ foreach ($_FILES['file'] as $secvalue) {
 }
 $folder =  '../img/';//директория в которую будет загружен файл
 $type = str_replace("image/","",strtolower($_FILES['file']['type']));
-if ($type == 'png' || $type == 'jpg' || $type == 'gif' || $type == 'jpeg' || $type == 'pjpeg') {
+if ($type == 'png' || $type == 'jpg' || $type == 'gif' || $type == 'jpeg') {
   $foto =  md5(date('YmdHis')).'.'.$type;
   if (is_uploaded_file($_FILES['file']['tmp_name'])) {
     if (move_uploaded_file($_FILES['file']['tmp_name'], $folder.$foto)) {
-      if (extension_loaded('imagick') && class_exists("Imagick") && $imagick == true) {
+      if (extension_loaded('imagick') && class_exists("Imagick") && $imagick == true && $type != 'gif') {
         $image = new Imagick($folder.$foto);
         // сжатие
         list($width, $height, $type, $attr) = getimagesize($folder.$foto);

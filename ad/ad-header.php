@@ -2,7 +2,7 @@
 if (stristr(htmlentities($_SERVER['PHP_SELF']), "ad-header.php")) {
 	Header("Location: index.php"); die();
 }
-global $deviceType, $postlink, $name, $sitename, $op, $type, $red, $prefix, $db, $id, $nastroi, $lang_admin, $siteurl, $op, $ad_fon, $show_admin_top;
+global $clean_urls, $deviceType, $postlink, $name, $sitename, $op, $type, $red, $prefix, $db, $id, $nastroi, $lang_admin, $siteurl, $op, $ad_fon, $show_admin_top;
 if ($postlink != "") $post = "<button class='small' onclick='location.href=\"".$postlink."\"' title='".aa("Открыть почтовый сайт...")."'><span class='icon small black' data-icon='@'></span> ".aa("Почта")."</button> "; else $post="";
 
 // Определяем заголовок страницы (title) и цвета кнопок главного меню (какой раздел администрирования выбран)
@@ -38,6 +38,7 @@ echo "<!doctype html>
 <link rel='shortcut icon' href='images/favicon_cms.png' type='image/x-icon'>
 <script src='includes/jquery183.min.js'></script>
 <script src='includes/css-frameworks/kickstart/js/ad-kickstart.js'></script>
+<script>var clean_urls=".$clean_urls.";</script>
 <script src='includes/jad.js'></script>
 <script src='includes/j.js'></script>
 <script src='includes/jquery-ui.min.js'></script>

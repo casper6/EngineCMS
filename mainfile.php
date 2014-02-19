@@ -1,5 +1,11 @@
 <?php
 // Все «правила хорошего кода» написаны кровью, вытекшей из глаз программистов, читавших чужой код.
+
+// $search_html = filter_var($url, FILTER_SANITIZE_SPECIAL_CHARS);
+// $search_url = filter_var($url, FILTER_SANITIZE_ENCODED);
+// $var = filter_var('0755', FILTER_VALIDATE_INT);
+// $var = filter_var('oops', FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+
   ob_start();  // Начался вывод страницы с кешированием
   ob_implicit_flush(0);
   mb_internal_encoding('UTF-8');
@@ -29,7 +35,7 @@
           $db->sql_query("TRUNCATE TABLE `".$prefix."_cash`") or die(aa("Не удалось стереть кеш...")); 
     		}
     		if ($site_cash == "file") {
-      		$files = glob("cashe/*");
+      		$files = glob($_SERVER["DOCUMENT_ROOT"]."/cashe/*");
           $c = count($files);
           if (count($files) > 0)
             foreach ($files as $file)  
@@ -106,7 +112,7 @@
   	// если кеш на файлах
   	if ($site_cash == "file" and $num_post == 0) {
     	if ($url_link == '/' or $url_link == '') $url_link = "-index";
-      if (file_exists("cashe/".$url_link) && $url_link != "-index") $numrows = 1;
+      if (file_exists($_SERVER["DOCUMENT_ROOT"]."/cashe/".$url_link) && $url_link != "-index") $numrows = 1;
     }
   }
   if ($numrows > 0 && $url_link != "" && !is_admin($admin)) {
@@ -119,8 +125,8 @@
   	}
   	// если кеш на файлах
   	if ( $site_cash == "file") {
-    	$dni = dateresize(date("Y.m.d H:i:s", fileatime("cashe/".$url_link))) + $cashe_day;
-    	$txt = stripcslashes(file_get_contents("cashe/".$url_link));
+    	$dni = dateresize(date("Y.m.d H:i:s", fileatime($_SERVER["DOCUMENT_ROOT"]."/cashe/".$url_link))) + $cashe_day;
+    	$txt = stripcslashes(file_get_contents($_SERVER["DOCUMENT_ROOT"]."/cashe/".$url_link));
   	}
     $nowX = dateresize(date("Y.m.d "));
     if ($dni <= $nowX) { // Обновление
@@ -159,10 +165,9 @@
   $captcha_ok = intval($row['captcha_ok']); // отключение проверки комментариев
   $jqueryui = $show_comments = $show_userposts = $normalize = "";
   // Получаем настройки
-  list($jqueryui, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $search_design, $tag_design, $add_fonts, $normalize, $project_logotip, $project_name, $geo, $kolkey, $add_clips, $sortable, $color_tema_html, $color_tema_css, $color_tema_js, $color_tema_php, $tab_obzor, $tab_show, $shop_text_val1, $shop_text_val2, $shop_text_itogo, $shop_text_oformit, $shop_text_korzina, $shop_text_delete, $shop_pole, $shop_admin_mail, $shop_text_after_mail,$shop_spisok_pole, $shop_shablon_form_order, $shop_shablon_mail_client, $shop_shablon_mail_admin,$ed2_button_html,$ed2_button_formatting, $ed2_button_bold, $ed2_button_italic, $ed2_button_deleted, $ed2_button_underline, $ed2_button_unorderedlist, $ed2_button_orderedlist, $ed2_button_outdent, $ed2_button_indent, $ed2_button_image, $ed2_button_video, $ed2_button_file, $ed2_button_table, $ed2_button_link, $ed2_button_alignment, $ed2_button_horizontalrule, $ed2_button_more, $ed2_button_link2, $ed2_button_block, $ed2_button_pre, $ed2_button_fullscreen, $ed2_button_clips, $ed2_button_fontcolor, $ed2_button_fontsize, $ed2_button_fontfamily, $ed2_minHeight, $ed2_direction, $head_insert, $filter_name, $filter_show_all, $gravatar, $ed2_div_convert, $strelka, $smile_icons, $add_mail_shablons, $avtor_comments, $search_in_pages, $search_in_papka, $search_in_razdel, $newsmail_design, $search_col_razdel, $search_col_papka, $search_col_page, $search_col_showall, $scrollyeah, $lightload, $spin, $razdel_sort, $show_admin_top, $ed2_paragraphy, $ed2_button_superscript, $shop_text_ochistit, $shop_text_delete_all, $shop_minimal_itogo, $shop_minimal_itogo_text) = explode("|",trim($row['nocashe']));
+  list($jqueryui, $show_comments, $show_userposts, $show_page, $show_reserv, $uskorenie_blokov, $kickstart, $show_page_links, $ad_fon, $search_design, $tag_design, $add_fonts, $normalize, $project_logotip, $project_name, $geo, $kolkey, $add_clips, $sortable, $color_tema_html, $color_tema_css, $color_tema_js, $color_tema_php, $tab_obzor, $tab_show, $shop_text_val1, $shop_text_val2, $shop_text_itogo, $shop_text_oformit, $shop_text_korzina, $shop_text_delete, $shop_pole, $shop_admin_mail, $shop_text_after_mail,$shop_spisok_pole, $shop_shablon_form_order, $shop_shablon_mail_client, $shop_shablon_mail_admin,$ed2_button_html,$ed2_button_formatting, $ed2_button_bold, $ed2_button_italic, $ed2_button_deleted, $ed2_button_underline, $ed2_button_unorderedlist, $ed2_button_orderedlist, $ed2_button_outdent, $ed2_button_indent, $ed2_button_image, $ed2_button_video, $ed2_button_file, $ed2_button_table, $ed2_button_link, $ed2_button_alignment, $ed2_button_horizontalrule, $ed2_button_more, $ed2_button_link2, $ed2_button_block, $ed2_button_pre, $ed2_button_fullscreen, $ed2_button_clips, $ed2_button_fontcolor, $ed2_button_fontsize, $ed2_button_fontfamily, $ed2_minHeight, $ed2_direction, $head_insert, $filter_name, $filter_show_all, $gravatar, $ed2_div_convert, $strelka, $smile_icons, $add_mail_shablons, $avtor_comments, $search_in_pages, $search_in_papka, $search_in_razdel, $newsmail_design, $search_col_razdel, $search_col_papka, $search_col_page, $search_col_showall, $scrollyeah, $lightload, $spin, $razdel_sort, $show_admin_top, $ed2_paragraphy, $ed2_button_superscript, $shop_text_ochistit, $shop_text_delete_all, $shop_minimal_itogo, $shop_minimal_itogo_text, $clean_urls) = explode("|",trim($row['nocashe']));
 
   // $spin удалить - заменить
-
   $project_name = filter($project_name);
   // Основные настройки
   if ($show_admin_top != "0") $show_admin_top = "1";
@@ -175,6 +180,7 @@
   if ($tab_obzor == "") $tab_obzor = ss("Обзор");
   if ($tab_show == "") $tab_show = "1";
   if ($jqueryui == "") $jqueryui = "1";
+  if ($clean_urls == "") $clean_urls = "0";
   if ($normalize == "") $normalize = "0";
   if ($sortable == "") $sortable = "0";
   if ($show_page == "") $show_page = "1";
@@ -254,6 +260,7 @@
     $id_razdel_and_bd = array(); // список ID разделов
     $title_razdel_and_bd = array(); // список рус. названий разделов и БД
     $title_razdels = array(); // список рус. названий разделов
+    $meta_title_razdels = array(); // список рус. названий разделов
     $title_razdels_by_id = array(); // список рус. названий разделов по ID
     $txt_razdels = array(); // список содержания разделов
     $useit_razdels = array(); // список настроек разделов
@@ -261,7 +268,7 @@
     $pass_razdels = array(); // список паролей для раздела
     $nopass_razdels = array(); // список без паролей для раздела
     //$sqlY = "SELECT `id`,`type`,`name`,`title`,`text`,`useit` from `".$prefix."_mainpage` where `tables`='pages' and (`type`='2' or `type`='5')";
-    $sqlY = "SELECT `id`,`type`,`name`,`title`,`text`,`useit` from `".$prefix."_mainpage` where `tables`='pages' and (`type`='1' or `type`='2' or `type`='5')";//`type`='1' or 
+    $sqlY = "SELECT `id`,`type`,`name`,`title`,`text`,`useit`,`meta_title` from `".$prefix."_mainpage` where `tables`='pages' and (`type`='1' or `type`='2' or `type`='5')";//`type`='1' or 
     $resultY = $db->sql_query($sqlY);
     while ($rowY = $db->sql_fetchrow($resultY)) {
       $nameX = $rowY['name'];
@@ -280,6 +287,7 @@
         if ($rowY['type'] != 1) {
           $name_razdels[$idX] = $rowY['name'];
           $title_razdels[$nameX] = $rowY['title']; 
+          $meta_title_razdels[$nameX] = $rowY['meta_title']; 
           $txt_razdels[$nameX] = $rowY['text'];
           $useit_razdels[$nameX] = $rowY['useit'];
           $title_razdels_by_id[$idX] = $rowY['title'];
@@ -293,25 +301,24 @@
   //$nocash = explode(" ",$mods."/?name=-search search ".trim(str_replace("  "," ",str_replace("\n"," ",$row['nocashe']))));
   ///////////////////////////////////////////////////////////////////////////////////////////////
 }
-#############################
-function close_button($txt) { // Кнопка для закрытия, обращение по id объекта
+############################# Кнопка для закрытия, обращение по id объекта
+function close_button($txt) {
   return "<a class='punkt' onclick=\"$('#".$txt."').hide('slow');\"><div class='radius' style='font-size:12pt; width:20px; height: 20px; color: white; text-align:center; float:right; margin:5px; background: #bbbbbb;'>&nbsp;x&nbsp;</div></a>";
 }
-
-// локализация
+############################# локализация
 global $lang, $lang_admin;
 if ($lang_admin != 'ru')  $lang_text_admin = include ('language/adm_'.$lang_admin.'.php');
 if ($lang != 'ru')        $lang_text = include ('language/'.$lang.'.php');
-#############################
-function aa($t) { // Функция перевода админки / Translate administration function
+############################# Функция перевода админки / Translate administration function
+function aa($t) {
   global $lang_admin, $lang_text_admin;
   if ($lang_admin == 'ru') return $t; // Русский — по-умолчанию.
   else 
     if (isset($lang_text_admin[$t])) return $lang_text_admin[$t];
     else return " [ No translate: ".$t." ] ";
 }
-#############################
-function ss($t) { // Функция перевода сайта / Translate function
+############################# Функция перевода сайта / Translate function
+function ss($t) {
   global $lang, $lang_text;
   if ($lang == 'ru') return $t; // Русский — по-умолчанию.
   else
@@ -322,5 +329,36 @@ function ss($t) { // Функция перевода сайта / Translate func
 function getFromPOST($name, $value) { // перевести все запросы на функцию!
   return isset($_REQUEST[$name]) ? $_REQUEST[$name] : $value;
 }
+############################# ЧПУ
+function re_link($link) {
+  global $db, $prefix, $clean_urls;
+  if ($clean_urls != 0) {
+    $link = str_replace("/", "", $link);
+    $link2 = mb_substr($link,1);
+    if (mb_strpos(" ".$link2, "_cat_")) {
+      $l = explode("_cat_", $link2);
+      if (file_exists($_SERVER["DOCUMENT_ROOT"].'/cashe/clean_url_categories'.$l[1])) $row = file_get_contents($_SERVER["DOCUMENT_ROOT"].'/cashe/clean_url_categories'.$l[1]);
+      else {
+        $row = $db->sql_fetchrow($db->sql_query("SELECT `clean_url` FROM ".$prefix."_pages_categories where `cid`='".$l[1]."'"));
+        $row = $row['clean_url'];
+        file_put_contents($_SERVER["DOCUMENT_ROOT"].'/cashe/clean_url_categories'.$l[1], $row, LOCK_EX);
+      }
+      if ($row == "") return "/".$link;
+      else return "/".$l[0]."/".$row."/";
+    } elseif (mb_strpos(" ".$link2, "_page_")) {
+      $l = explode("_page_", $link2);
+      if (file_exists($_SERVER["DOCUMENT_ROOT"].'/cashe/clean_url_pages'.$l[1])) $row = file_get_contents($_SERVER["DOCUMENT_ROOT"].'/cashe/clean_url_pages'.$l[1]);
+      else {
+        $row = $db->sql_fetchrow($db->sql_query("SELECT `clean_url` FROM ".$prefix."_pages where `pid`='".$l[1]."'"));
+        $row = $row['clean_url'];
+        file_put_contents($_SERVER["DOCUMENT_ROOT"].'/cashe/clean_url_pages'.$l[1], $row, LOCK_EX);
+      }
+      if ($row == "") return "/".$link;
+      else return "/".$l[0]."/".$row.".html";
+    } else {
+      return "/".$link2."/";
+    }
+  } else return $link;
 #############################
+}
 ?>
