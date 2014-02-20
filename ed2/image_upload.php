@@ -3,8 +3,6 @@
 $imagick = true; // Если картинки не закачиваются - можно попробовать установить в false
 $folder =  '../img/'; //директория в которую будет загружен файл
 
-if(!eregi('image/', $_FILES['file']['type'])) exit(0);
-
 foreach ($_FILES['file'] as $secvalue) {
     $secvalue = str_replace("(", "&#040;", str_replace(")", "&#041;", $secvalue));
     if ( (preg_match("/<[^>]*script*\"?[^>]*>/i", $secvalue)) ||
@@ -58,7 +56,7 @@ if (!empty($_FILES['file']['name'])) {
         }
       }
       $array = array('filelink' => str_replace("..","",$folder).$foto);
-      if (is_image($folder.$foto)) 
+      //if (is_image($folder.$foto)) 
         echo stripslashes(json_encode($array)); // 
     }
   }

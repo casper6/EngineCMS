@@ -1,7 +1,6 @@
 ﻿<?php
 // Настройки
 $imagick = true; // Если картинки не закачиваются - можно попробовать установить в false
-if(!eregi('image/', $_FILES['file']['type'])) exit(0);
 
 foreach ($_FILES['file'] as $secvalue) {
     $secvalue = str_replace("(", "&#040;", str_replace(")", "&#041;", $secvalue));
