@@ -107,15 +107,15 @@ function top_menu($cid, $page) {
     if ($razdel_link==1) $ret .= "<h1 class='cat_categorii_link'><A href='".re_link("-".$DBName)."'>".$ModuleName."</a></h1>";
     else $ret .= "<h1 class='cat_categorii_link'>".$ModuleName."</h1>";
     
-  if (!isset($c_description[$cid])) $c_description[$cid] = ""; 
-    $reclama = $reclama.$c_description[$cid];
-  if (trim($reclama) != "" and $view!=4) $ret .= "<div class='cat_description'>".$reclama."</div>";
+    if (!isset($c_description[$cid])) $c_description[$cid] = ""; 
+      $reclama = $reclama.$c_description[$cid];
+    if (trim($reclama) != "" and $view!=4) $ret .= "<div class='cat_description'>".$reclama."</div>";
 
     $ret .= "<br>".$searchline1." ".$title." </div><div class='venzel'></div>";
     if ($razdel_link==2) $ret = "";
 
-  $links="";
-  /////////////////////////////////////////////
+    $links="";
+    /////////////////////////////////////////////
     foreach ($c_title as $key => $cid_title) {
       if ($c_parent[$key]==0) {
         $cid_title = trim($cid_title);
@@ -145,113 +145,120 @@ function top_menu($cid, $page) {
     $pagetitle = $ModuleName." — ".$sitename;
     if (isset($meta_title_razdels[$DBName]))  // Заголовок title для раздела
       if ($meta_title_razdels[$DBName] != "") $pagetitle = $meta_title_razdels[$DBName];
-  #####################################################################
+    #####################################################################
   } else { // Если отображение - не каталог
 
-  if (!isset($c_description[$cid])) $c_description[$cid] = "";
+    if (!isset($c_description[$cid])) $c_description[$cid] = "";
 
-  if ($page == 2) $c_description[$cid] = "";
-  ################################################################
+    if ($page == 2) $c_description[$cid] = "";
+    ################################################################
 
-  if (!isset($c_title[$cid])) $c_title[$cid] = "";
-  if (!isset($c_parent[$cid])) $c_parent[$cid] = 0;
+    if (!isset($c_title[$cid])) $c_title[$cid] = "";
+    if (!isset($c_parent[$cid])) $c_parent[$cid] = 0;
 
-  //if (trim($reclama) == "") 
-    $reclama = $reclama.$c_description[$cid];
-  $title = trim($c_title[$cid]);
-  $parent_id = $c_parent[$cid];
-  $and = "";
+    //if (trim($reclama) == "") 
+      $reclama = $reclama.$c_description[$cid];
+    $title = trim($c_title[$cid]);
+    $parent_id = $c_parent[$cid];
+    $and = "";
 
-  // Добавить подкатегории
-  $title = "<span class='cat_podcategorii_link'>".$title."</span>";
-  $title = getparent_page($parent_id,$title,$cid,$page);
+    // Добавить подкатегории
+    $title = "<span class='cat_podcategorii_link'>".$title."</span>";
+    $title = getparent_page($parent_id,$title,$cid,$page);
 
-  if ($page == 1) $and = " ".$strelka." ".$title."";
-  if ($page == 2) $and = " ".$strelka." <A href='".re_link("-".$DBName."_cat_".$cid)."'>".$title."</a>";
+    if ($page == 1) $and = " ".$strelka." ".$title."";
+    if ($page == 2) $and = " ".$strelka." <A href='".re_link("-".$DBName."_cat_".$cid)."'>".$title."</a>";
 
-  $ret .= "<div class='cat_title'>";
-  if ($razdel_link==1) $ret .= "<h1 class='cat_categorii_link'><A href='".re_link("-".$DBName)."'>".$ModuleName."</a></h1>";
-  else $ret .= "<h1 class='cat_categorii_link'>".$ModuleName."</h1>";
-  if ($podrazdel_active_show > 0) $ret .= $and;
-  $ret .= "</div> ";
+    $ret .= "<div class='cat_title'>";
+    if ($razdel_link==1) $ret .= "<h1 class='cat_categorii_link'><A href='".re_link("-".$DBName)."'>".$ModuleName."</a></h1>";
+    else $ret .= "<h1 class='cat_categorii_link'>".$ModuleName."</h1>";
+    if ($podrazdel_active_show > 0) $ret .= $and;
+    $ret .= "</div> ";
 
-  if ($razdel_link==2) $ret = "";
-  // Добавление табов
-  global $include_tabs, $papka_show;
-  if (mb_strpos(" ".$reclama, "{{")) {
-    if ($include_tabs == false) { 
-      include ('page/tabs.php'); 
-      $include_tabs = true; 
-    }
-    $reclama = show_tabs($reclama);
-  }
-  if ( trim($reclama) != "" && $view!=4) $ret .= "<div class='cat_description'>".$reclama."</div>";
-
-  if ( (count($c_title) > 0) and ($podrazdel_show==3 or $podrazdel_show==1) and ( $page == 1 or $podrazdel_active_show > 0) ) {
-    $links = $links2 = "";
-
-    if ($cid == 0) $c_title = $c_title2;
-    $no_links_perehod = false;
-
-    $links2 .= "<div class='main_cat_links'>";
-  	foreach ($c_title as $key => $cid_title) {
-      $cid_title = str_replace(" ","&nbsp;",trim($cid_title));
-      if ($cid != 0 and $c_parent[$key]!=0 and $no_links_perehod == false) { 
-        $links2 .= "</div><div class='podcategorii_cat_links'>"; 
-        $no_links_perehod = true;
+    if ($razdel_link==2) $ret = "";
+    // Добавление табов
+    global $include_tabs, $papka_show;
+    if (mb_strpos(" ".$reclama, "{{")) {
+      if ($include_tabs == false) { 
+        include ('page/tabs.php'); 
+        $include_tabs = true; 
       }
-      if ($podrazdel_active_show == 2) {
-        if ($cid != $key and $c_parent[$cid] != $key) 
-          $links2 .= "   <a href='".re_link("-".$DBName."_cat_".$key)."' class='no_active_podcategorii_link'>".$cid_title."</a>";
-        else 
-          $links2 .= "   <b><a href='".re_link("-".$DBName."_cat_".$key)."' class='active_podcategorii_link'>".$cid_title."</a></b>";
-      } elseif ($podrazdel_active_show == 3) {
-        if ($cid == $key) $sel = " selected"; else $sel = "";
-        if ($key != 0) $links2 .= "<option value='".re_link("-".$DBName."_cat_".$key)."'".$sel.">".$cid_title."</option>";
-      } else {
-        if ($key == $cid and $cid_title != "") {
-          // Показываем подразделы, если они есть
-          $sql = "SELECT `cid`, `title` FROM ".$prefix."_pages_categories where `module`='".$DBName."' and `parent_id`='".$cid."' and `tables`='pages' order by `sort`, `cid`";
-          $result = $db->sql_query($sql);
-          while ($row = $db->sql_fetchrow($result)) {
-            $c_cid4 = $row['cid'];
-            $c_title4 = $row['title'];
-            //$c_description[$c_cid] = $row['description'];
+      $reclama = show_tabs($reclama);
+    }
+    if ( trim($reclama) != "" && $view!=4) $ret .= "<div class='cat_description'>".$reclama."</div>";
 
-            // Кол-во страниц в подразделах
-            if (isset($num[$c_cid4])) {if ($num[$c_cid4] != "") $num[$c_cid4] = " (".$num[$c_cid4].")";}
-            else $num[$c_cid4] = "";
+    if ( (count($c_title) > 0) and ($podrazdel_show==3 or $podrazdel_show==1) and ( $page == 1 or $podrazdel_active_show > 0) ) {
+      $links = $links2 = "";
 
-            $links2 .= "   <a href='".re_link("-".$DBName."_cat_".$c_cid4)."'>".$c_title4."</a>".$num[$c_cid4]."";
+      if ($cid == 0) $c_title = $c_title2;
+      $no_links_perehod = false;
+
+      $links2 .= "<div class='main_cat_links'>";
+    	foreach ($c_title as $key => $cid_title) {
+        $cid_title = str_replace(" ","&nbsp;",trim($cid_title));
+        if ($cid != 0 and $c_parent[$key]!=0 and $no_links_perehod == false) { 
+          $links2 .= "</div><div class='podcategorii_cat_links'>"; 
+          $no_links_perehod = true;
+        }
+        if ($podrazdel_active_show == 2) {
+          if ($cid != $key and $c_parent[$cid] != $key) 
+            $links2 .= "   <a href='".re_link("-".$DBName."_cat_".$key)."' class='no_active_podcategorii_link'>".$cid_title."</a>";
+          else 
+            $links2 .= "   <b><a href='".re_link("-".$DBName."_cat_".$key)."' class='active_podcategorii_link'>".$cid_title."</a></b>";
+        } elseif ($podrazdel_active_show == 3) {
+          if ($cid == $key) $sel = " selected"; else $sel = "";
+          if ($key != 0) $links2 .= "<option value='".re_link("-".$DBName."_cat_".$key)."'".$sel.">".$cid_title."</option>";
+        } else {
+          if ($key == $cid and $cid_title != "") {
+            // Показываем подразделы, если они есть
+            $sql = "SELECT `cid`, `title` FROM ".$prefix."_pages_categories where `module`='".$DBName."' and `parent_id`='".$cid."' and `tables`='pages' order by `sort`, `cid`";
+            $result = $db->sql_query($sql);
+            while ($row = $db->sql_fetchrow($result)) {
+              $c_cid4 = $row['cid'];
+              $c_title4 = $row['title'];
+              //$c_description[$c_cid] = $row['description'];
+
+              // Кол-во страниц в подразделах
+              if (isset($num[$c_cid4])) {if ($num[$c_cid4] != "") $num[$c_cid4] = " (".$num[$c_cid4].")";}
+              else $num[$c_cid4] = "";
+
+              $links2 .= "   <a href='".re_link("-".$DBName."_cat_".$c_cid4)."'>".$c_title4."</a>".$num[$c_cid4]."";
+            }
           }
         }
+    	}
+      //if ($no_links_perehod == false) $links2 .= "</div>";
+      //$links2 .= "</div>";
+      
+      /////////////////////////////////////
+      if ($podrazdel_active_show == 3) {
+        if ($cid == "0") $sel = " selected"; else $sel = "";
+        $links2 = "<select id='c_id' onchange=\"if (document.getElementById('c_id').value != '') location.href = document.getElementById('c_id').value;\"><option value=''>".ss("Выберите раздел")."</option>".$links2."</select>";
       }
-  	}
-    //if ($no_links_perehod == false) $links2 .= "</div>";
-    //$links2 .= "</div>";
-    
-    /////////////////////////////////////
-    if ($podrazdel_active_show == 3) {
-      if ($cid == "0") $sel = " selected"; else $sel = "";
-      $links2 = "<select id='c_id' onchange=\"if (document.getElementById('c_id').value != '') location.href = document.getElementById('c_id').value;\"><option value=''>".ss("Выберите раздел")."</option>".$links2."</select>";
+      
+    	if (trim($links2) != "" and trim($links2) != "<div class='main_cat_links'>   </div>") {
+        if ($podrazdel_show==3 or $podrazdel_show==1) {
+          if ($podrazdel_active_show != 3) $links .= "<div class='cat_podcategorii_link'>";
+          //if (trim($links2)!="") $links .= "| "; // Разделение черточками
+          if ($podrazdel_active_show == 4) $razdelitel = "<br>"; else $razdelitel = "&nbsp;| ";
+          $links = str_replace("   ",$razdelitel,trim($links2));
+          if ($podrazdel_active_show != 3) $links .= "</div>";
+        }
+    	  //if ($cat==2) $links .= "<div class=cat_maincategorii_link> ".str_replace("   ","</div><div class=cat_maincategorii_link>",trim($links2))."</div>";
+    	  $ret .= $links." <br>";
+    	}
     }
     
-  	if (trim($links2) != "" and trim($links2) != "<div class='main_cat_links'>   </div>") {
-      if ($podrazdel_show==3 or $podrazdel_show==1) {
-        if ($podrazdel_active_show != 3) $links .= "<div class='cat_podcategorii_link'>";
-        //if (trim($links2)!="") $links .= "| "; // Разделение черточками
-        if ($podrazdel_active_show == 4) $razdelitel = "<br>"; else $razdelitel = "&nbsp;| ";
-        $links = str_replace("   ",$razdelitel,trim($links2));
-        if ($podrazdel_active_show != 3) $links .= "</div>";
+    if ($cid != 0) {
+      $pagetitle = $title." / ".$ModuleName." — ".$sitename;
+      if ($c_meta_title[$cid] != "") { // Заголовок title для папки
+        $pagetitle = $c_meta_title[$cid];
       }
-  	  //if ($cat==2) $links .= "<div class=cat_maincategorii_link> ".str_replace("   ","</div><div class=cat_maincategorii_link>",trim($links2))."</div>";
-  	  $ret .= $links." <br>";
-  	}
-  }
-  
-  $pagetitle = $title." / ".$ModuleName." — ".$sitename;
-  if ($c_meta_title[$cid] != "") // Заголовок title для папки
-    $pagetitle = $c_meta_title[$cid];
+    } else {
+      $pagetitle = $ModuleName." — ".$sitename;
+      if (isset($meta_title_razdels[$DBName]))  // Заголовок title для раздела
+        if ($meta_title_razdels[$DBName] != "") $pagetitle = $meta_title_razdels[$DBName];
+    }
 
   }
 

@@ -65,8 +65,19 @@ if ($realadmin==1) {
       <p><a class='button small' href='sys.php?op=stat_delete'><span class='icon red small' data-icon='F'></span> Очистить статистику поиска</a>";
     } else $stat_search .= "<p>На сайте еще никто не пользовался поиском.
     <p>Поисковые запросы администратора не учитываются статистикой.";
-
-    echo "<div class='black_grad'><span class='h1'>".aa("Статистика:")."</span> <div class='right3' style='width:50%; float:right; text-align:right;'>";
+    
+    $result3 = $db->sql_query("SELECT `pid` FROM ".$prefix."_pages where `active`='1' and `tables`='pages'");
+    $size_pages = $db->sql_numrows($result3);
+    $result4 = $db->sql_query("SELECT `pid` FROM ".$prefix."_pages where `active`!='1' and `tables`='pages'");
+    $size_pages_off = $db->sql_numrows($result4);
+    if ($size_pages_off > 0) $size_pages_off = " <span class='red2'>-".$size_pages_off."</span>";
+    $result3 = $db->sql_query("SELECT `cid` FROM ".$prefix."_pages_categories where `tables`='pages'");
+    $size_cat = $db->sql_numrows($result3);
+    $result3 = $db->sql_query("SELECT `id` FROM ".$prefix."_mainpage where `tables`='pages' and `type`='2'");
+    $size_razdel = $db->sql_numrows($result3);
+    $result3 = $db->sql_query("SELECT `cid` FROM ".$prefix."_pages_comments where `tables`='pages' and `active`='1'");
+    $size_comm = $db->sql_numrows($result3);
+    echo "<div class='black_grad'><span class='h1'>".aa("Статистика")."</span> ".aa("Страниц:")." ".$size_pages.$size_pages_off.". ".aa("Папок:")." ". $size_cat.". ".aa("Разделов:")." ". $size_razdel.". ".aa("Комментариев:")." ". $size_comm.".<div class='right3' >";
 
     if ($statlink != "") echo "<a class='button right small' href=".$statlink." target='_blank'><span class=\"icon black medium\" data-icon=\"j\"></span> Сторонняя статистика</a>";
     else echo "Ссылка на стороннюю статистику не <a href='sys.php?op=options'>настроена</a>.";

@@ -869,7 +869,7 @@ class='page_shop_count onchange=\"$('#count_[page_id]').val( $('#range_[page_id]
 
 
 	<table class='table_light'>
-	<tr valign=top><td>
+	<tr valign=top><td width='40%'>
 	<b>Создание резервной копии:</b><br>
 	<a class='button' href='sys.php?op=backup' target='_blank'>Создать сейчас</a></td><td class=small>
 	".select("options[show_reserv]", "0,1", "НЕТ,ДА", $show_reserv)."Каждый день, при посещении администратором главной страницы администрирования, создается резервная копия всего содержания сайта, кроме файлов (документы, архивы, фотографии), закачанных на сервер. Если это большой портал на скромном хостинге, создание копии можно отключить для экономии файлового места.
@@ -913,8 +913,8 @@ class='page_shop_count onchange=\"$('#count_[page_id]').val( $('#range_[page_id]
 	</td></tr>
 
 	<tr valign=top><td>
-	Ключевых слов:</td><td class=small>
-	".input("options[kolkey]", $kolkey, "3", "number")."
+	Количество ключевых слов:</td><td class=small>
+	".input("options[kolkey]", $kolkey, "3", "number")."<br>Используется при SEO-генерации ключевых слов для страницы на вкладке «Дополнительные настройки»
 	</td></tr>
 
 	</table>

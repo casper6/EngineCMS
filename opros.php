@@ -123,7 +123,7 @@ if ($tmp==$opros_id || $opros_res != 1) { // Если голосовали - п�
 } else { // Если еще не голосовали - ссылка на результаты
   $textX .= "<form method=post enctype=\"multipart/form-data\" onsubmit=\"return false\">".$textX2."
   <p><input type='submit' id=\"go\" name='go' value='Отправить' class=\"ok opros\" onclick=\"CheckForm(".$opros_num.");\"></form>";
-  if ($opros_result == 1 || $admin_ok == 1) $textX .= "<p><a href=\"#golos".$re."\" onclick=\"$(show_opros(".$opros_num.",3, 0)); return false;\" class=opros_result_show>".ss("Посмотреть результаты")."</a>";
+  if ($opros_result == 1 || $admin_ok == 1) $textX .= "<p><a href=\"#golos".$re."\" onclick=\"$(show_opros(".$opros_num.",3, 0)); return false;\" class='opros_result_show'>".ss("Посмотреть результаты")."</a>";
 }
 $textX .= "</div>";
 if ($otvet != "") $textX = $otvet; // если нужно сообщить о голосовании

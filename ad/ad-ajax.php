@@ -344,7 +344,7 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
         if ($s_tip[1]==5) $and = "число";
         if ($s_tip[1]==6) $and = "регион (регионы можно выбрать в настройках)";
         if ($s_tip[1]==7) $and = "список слов (выбор нескольких значений)";
-        if ($useit=="0") { $razdel_title = "все разделы"; $papka_title = ""; }
+        if ($useit=="0") { $razdel_title = "Все разделы"; $papka_title = ""; }
         else {
           if ($shablon=="0" or $shablon==" 0 ") $papka_title = ", все папки";
           else { // находим кол-во папок
@@ -352,14 +352,15 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
             $shablon = count($shablon);
             $papka_title = ", ".$shablon." ".num_ending($shablon, Array(aa("папок"),aa("папка"),aa("папки")));
           }
-          $razdel_title = aa("«").$title_razdels_by_id[$useit].aa("»");
+          if (isset($title_razdels_by_id[$useit])) $razdel_title = aa("Раздел: ").aa("«").$title_razdels_by_id[$useit].aa("»");
+          else $razdel_title = aa("Раздел удалён");
         }
         $redactor = "<div style='float:right;'>
         <a href='/sys.php?op=mainpage&id=".$row['id']."&red=1&type=4' title='Редактировать'>".icon('black small','7')."</a> 
         <a class='padleft30 pointer' onclick='$(\"#addmain\").attr(\"class\", \"small right3\"); spiski_show(\"".$row['name']."\", \"".$row['title']."\")' title='Список значений'>".icon('blue small','w')."</a>
         <a class='padleft30 pointer' onclick='delblock(".$row['id'].",0)' title='Удалить'>".icon('red small','F')."</a></div>";
         $info .= "<tr id='block_".$row['id']."' onmouseover='$(\"#hide_".$row['id']."\").show();' onmouseout='$(\"#hide_".$row['id']."\").hide();'><td>".$redactor."<h2><a class='pointer' onclick='$(\"#addmain\").attr(\"class\", \"small right3\"); spiski_show(\"".$row['name']."\", \"".$row['title']."\")'>".$row['title']."</a></h2>
-        <span id='hide_".$row['id']."' class='hide'><sup style=\"color:#999999;\">Блок для использования в шаблоне: [".$row['name']."]</sup><br>Раздел: ".$razdel_title.$papka_title.".<br>Тип: ".$and.".</span></td></tr>";
+        <span id='hide_".$row['id']."' class='hide'><sup style=\"color:#999999;\">Блок для использования в шаблоне: [".$row['name']."]</sup><br>".$razdel_title.$papka_title.".<br>Тип: ".$and.".</span></td></tr>";
       }
       $info .= "</table>
       <p>Дополнительные поля для страниц появляются внизу при создании и редактировании страниц. Для того, чтобы введенная в них информация появилась на страницах сайта, необходимо прописать их в шаблонах с помощью их коротких англоязычных названий в [квадратных скобках] — их можно посмотреть при наведении на поле («Блок для использования в шаблоне»).</p>";
@@ -475,7 +476,7 @@ if ($func == "del_csv") { // Удаляем запись об импортиро
 }
 #################################################################################################
 if ($func == "show_pole") { // Ответ на комментарий из администрирования
-  function spisok_name($s_name,$page_id,$arr=0,$add="") { // Получаем значение поля
+  function spisok_name($s_name, $page_id, $arr=0, $add="") { // Получаем значение поля
     // Если arr=1 - передаем массив
     // add - условия сортировки sql-запроса
     global $db, $prefix;
@@ -497,7 +498,7 @@ if ($func == "show_pole") { // Ответ на комментарий из ад�
   // Ищем все списки по разделу
   $sql = "select `id`, `title`, `name`, `text` from ".$prefix."_mainpage 
   where (`useit`='".$id."' or `useit`='0') and (`shablon` like '% ".$cid." %' or `shablon` = '' or `shablon` = '0' or `shablon` = ' 0 ') 
-  and `type`='4' order by `title`";
+  and `type`='4' and `tables`='pages' order by `title`";
   $result = $db->sql_query($sql);
   while ($row = $db->sql_fetchrow($result)) {
     $s_id = $row['id'];

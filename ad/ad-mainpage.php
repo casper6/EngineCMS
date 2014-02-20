@@ -218,24 +218,11 @@ function create_main($type) {
 	});
 	</script>
 
-	<p><span class='h3'>Дизайн:</span> <select name='design'><option value='0'>выбирать необязательно</option>".$styles."</select>
-
-
-
-
-
-
-
-
-
-<div class=hide>
-	<p><span class='h3'>Вызов в другой блок:</span> 
+	<p><span class='h3'>Добавить в другой блок:</span> 
 	<select name='another_block'><option value='0'>не добавлять</option><option disabled>= текстовые блоки =</option>".$options_block2."<option disabled>= блоки-ротаторы =</option>".$options_block3."</select>, <nobr>позиция: 
 	<select name='another_block_position'><option value='0'>сверху</option><option value='1'>снизу</option><option value='2'>заменить!</option></select></nobr>
-</div>
 
-
-
+	<p><span class='h3'>Дизайн для блока:</span> <select name='design'><option value='0'>выбирать необязательно</option>".$styles."</select>
 
 	<p><span class='h2'>Выберите тип блока:</span> (справа — его параметры, а зеленым цветом снизу — описание)
 	<table class='w100' cellspacing=0 cellpadding=0><tr valign=top><td class=''>
@@ -2587,13 +2574,13 @@ function mainpage_del($id, $type, $name="") {
 	}
 }
 ##################################################################################################
-function mainpage_create_block($title, $name, $text, $modul, $useit, $design) {
+function mainpage_create_block($title, $name, $text, $modul, $useit, $design, $another_block, $another_block_position) {
 	global $tip, $admintip, $prefix, $db; //, $name_razdels;
 	# id type name title text useit shablon
 	$title = trim($title); // Название блока
 	$name = intval($name); // тип блока
 	$useit = "|".trim($useit); // настройки блока
-	if (trim($title) == "") $title = "Вы забыли ввести название этого блока!";
+	if (trim($title) == "") die("Вы забыли ввести название блока!");
 	if ($modul != "0" && $modul != "allrazdely") {
 		$modul_name = translit_name($title); 
 		$useit = $modul.",".$useit;
@@ -2609,6 +2596,14 @@ function mainpage_create_block($title, $name, $text, $modul, $useit, $design) {
 	$useit = str_replace("tеxtarea","textarea",$useit); // ireplace
 	$shablon = str_replace("tеxtarea","textarea",$shablon); // ireplace
 	// id,type,name,title,text,useit,shablon,counter,tables,color,description,keywords,meta_title
+
+	// Прописываем вызов нового блока в другом блоке (текстовом или ротаторе)
+	if ($another_block != 0) {
+		if ($another_block_position == 0) $db->sql_query("UPDATE ".$prefix."_mainpage SET `text`=CONCAT('[".mysql_real_escape_string($title)."]', `text`) WHERE `id`='".$another_block."';"); // сверху
+		if ($another_block_position == 1) $db->sql_query("UPDATE ".$prefix."_mainpage SET `text`=CONCAT(`text`,'[".mysql_real_escape_string($title)."]') WHERE `id`='".$another_block."';"); // снизу
+		if ($another_block_position == 2) $db->sql_query("UPDATE ".$prefix."_mainpage SET `text`='[".mysql_real_escape_string($title)."]' WHERE `id`='".$another_block."';"); // вместо
+	}
+
 	$db->sql_query("INSERT INTO ".$prefix."_mainpage (`id`, `type`, `name`, `title`, `text`, `useit`, `shablon`, `tables`) VALUES (NULL, '3', '".mysql_real_escape_string($name)."', '".$title."', '".$text."', '".$useit."', '".$shablon."', 'pages')") or die("Не удалось создать блок. INSERT INTO ".$prefix."_mainpage VALUES (NULL, '3', '".$name."', '".$title."', '".$text."', '".$useit."', '".$shablon."', '0', 'pages', '0', '', '', '') ");
 	// узнаем id
 	$row = $db->sql_fetchrow($db->sql_query("SELECT `id` FROM ".$prefix."_mainpage where `tables`='pages' and `type`='3' and `name`='".$name."' and `title`='".$title."' and `text`='".$text."' and `useit`='".$useit."' limit 1"));
@@ -2792,7 +2787,7 @@ function block_help() { // проверить вызов
 			mainpage_recycle_spiski();
 			break;
 	    case "mainpage_create_block":
-	    	mainpage_create_block($title, $name, $text, $modul, $useit, $design);
+	    	mainpage_create_block($title, $name, $text, $modul, $useit, $design, $another_block, $another_block_position);
 	    	break;
 		case "mainpage_razdel_color":
 			mainpage_razdel_color($id, $color);

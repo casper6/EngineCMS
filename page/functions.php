@@ -600,7 +600,7 @@ function getparent_spiski($name, $parent, $title) { // получение род
     if ($ptitle!="") $title = $ptitle."/".$title;
     if ($pparent!=0) $title = getparent_spiski($name, $pparent, $title);
     return $title;
-  } else return "";
+  } else return $title;
 }
 /////////////////////////////////////////////////////////////// сделать настройку
 function antivirus($x=0) { // антивирус для защиты от htaccess-вируса (временные костыли)
