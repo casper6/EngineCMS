@@ -59,12 +59,7 @@ function top_menu($cid, $page) {
   // Поиск
   if ($search == 1) $searchline1 .= search_line($DBName, $cid)."<br>";
   // На главную
-  $c_title = array();
-  $c_description = array();
-  $c_parent = array();
-  $c_title2 = array();
-
-
+  $c_title = $c_description = $c_parent = $c_title2 = $c_meta_title = array();
 
   $sql = "SELECT `parent_id` FROM ".$prefix."_pages_categories where module='".$DBName."' and `tables`='pages' and `cid`='".$cid."'";
   $result = $db->sql_query($sql);
@@ -75,13 +70,14 @@ function top_menu($cid, $page) {
   if ( $c_cid_parent != 0 and $c_cid_parent != "" ) $orr .= " or `parent_id` = '".mysql_real_escape_string($c_cid_parent)."'";
   if ( $cid != 0 and $cid != "" ) $orr .= " or `parent_id` = '".$cid."'";
 
-  $sql = "SELECT `cid`, `title`, `description`, `parent_id` FROM ".$prefix."_pages_categories where `module`='".$DBName."' and `tables`='pages' and (`parent_id`='0'".$orr.") order by `sort`, `title`";
+  $sql = "SELECT `cid`, `title`, `description`, `parent_id`, `meta_title` FROM ".$prefix."_pages_categories where `module`='".$DBName."' and `tables`='pages' and (`parent_id`='0'".$orr.") order by `sort`, `title`";
   $result = $db->sql_query($sql);
   while ($row = $db->sql_fetchrow($result)) {
     $c_cid = $row['cid'];
     $c_title[$c_cid] = $row['title'];
     $c_description[$c_cid] = $row['description'];
     $c_parent[$c_cid] = $row['parent_id'];
+    $c_meta_title[$c_cid] = $row['meta_title'];
   }
   
   $sql = "SELECT `cid`, `title` FROM ".$prefix."_pages_categories where `module`='".$DBName."' and `tables`='pages' and `parent_id`='0' order by `sort`, `title`";
@@ -147,7 +143,7 @@ function top_menu($cid, $page) {
     // Поиск
     //if ($search == 2) $soderganie .= search_line($DBName, $cid);
     $pagetitle = $ModuleName." — ".$sitename;
-    if (isset($meta_title_razdels[$DBName])) 
+    if (isset($meta_title_razdels[$DBName]))  // Заголовок title для раздела
       if ($meta_title_razdels[$DBName] != "") $pagetitle = $meta_title_razdels[$DBName];
   #####################################################################
   } else { // Если отображение - не каталог
@@ -173,7 +169,6 @@ function top_menu($cid, $page) {
   if ($page == 1) $and = " ".$strelka." ".$title."";
   if ($page == 2) $and = " ".$strelka." <A href='".re_link("-".$DBName."_cat_".$cid)."'>".$title."</a>";
 
-
   $ret .= "<div class='cat_title'>";
   if ($razdel_link==1) $ret .= "<h1 class='cat_categorii_link'><A href='".re_link("-".$DBName)."'>".$ModuleName."</a></h1>";
   else $ret .= "<h1 class='cat_categorii_link'>".$ModuleName."</h1>";
@@ -193,12 +188,12 @@ function top_menu($cid, $page) {
   if ( trim($reclama) != "" && $view!=4) $ret .= "<div class='cat_description'>".$reclama."</div>";
 
   if ( (count($c_title) > 0) and ($podrazdel_show==3 or $podrazdel_show==1) and ( $page == 1 or $podrazdel_active_show > 0) ) {
-  $links = $links2 = "";
+    $links = $links2 = "";
 
-  if ($cid == 0) $c_title = $c_title2;
-  $no_links_perehod = false;
+    if ($cid == 0) $c_title = $c_title2;
+    $no_links_perehod = false;
 
-  $links2 .= "<div class='main_cat_links'>";
+    $links2 .= "<div class='main_cat_links'>";
   	foreach ($c_title as $key => $cid_title) {
       $cid_title = str_replace(" ","&nbsp;",trim($cid_title));
       if ($cid != 0 and $c_parent[$key]!=0 and $no_links_perehod == false) { 
@@ -235,7 +230,7 @@ function top_menu($cid, $page) {
     //if ($no_links_perehod == false) $links2 .= "</div>";
     //$links2 .= "</div>";
     
-  /////////////////////////////////////
+    /////////////////////////////////////
     if ($podrazdel_active_show == 3) {
       if ($cid == "0") $sel = " selected"; else $sel = "";
       $links2 = "<select id='c_id' onchange=\"if (document.getElementById('c_id').value != '') location.href = document.getElementById('c_id').value;\"><option value=''>".ss("Выберите раздел")."</option>".$links2."</select>";
@@ -253,10 +248,11 @@ function top_menu($cid, $page) {
   	  $ret .= $links." <br>";
   	}
   }
+  
+  $pagetitle = $title." / ".$ModuleName." — ".$sitename;
+  if ($c_meta_title[$cid] != "") // Заголовок title для папки
+    $pagetitle = $c_meta_title[$cid];
 
-  $pagetitle = $ModuleName." — ".$sitename;
-  if (isset($meta_title_razdels[$DBName])) 
-    if ($meta_title_razdels[$DBName] != "") $pagetitle = $meta_title_razdels[$DBName];
   }
 
   if ($post!=0 and $page==0 and $cid!=0) $ret .= addpost($cid);

@@ -552,15 +552,14 @@ function base_pages_save_page($cid, $module, $title, $open_text, $main_text, $fo
 
   $keywords2 = trim(str_replace("  "," ",str_replace("   "," ",str_replace(" ,",", ",$keywords2))));
   $description2 = trim($description2);
-  $meta_title2 = trim($meta_title2);
-
-  if ($meta_title2 == 0) $meta_title2 = "";
+  //$meta_title2 = trim($meta_title2);
+  //if ($meta_title2 == 0) $meta_title2 = "";
 
   $clean_url2 = strtr($clean_url2, array('____'=>'_', '___'=>'_', '__'=>'_', '*'=>'',':'=>'','('=>'',')'=>'','  '=>'',' '=>'', ' '=>'_', '.'=>'', ','=>'', '!'=>'', '?'=>'', '=>'=>'', ';'=>'', '&'=>'_and_', '%'=>'', '$'=>'', '#'=>'', '№'=>'', '@'=>'', '^'=>'', '='=>'', '\''=>'','"'=>'','«'=>'', '»'=>'', '____'=>'_', '___'=>'_', '__'=>'_'));
 
   $data = date2normal_view($data1, 1)." $data2:$data3:$data4";
   $data2 = $now;
-  $sql = "INSERT INTO ".$prefix."_pages VALUES (NULL, '".$module."', '".$cid."', '".$title."', '".$open_text."', '".$main_text."', '".$data."', '".$data2."', '0', '".$active."', '".$golos_reiting."', '0', '".$foto."', '".$search."', '".$mainpage."', '".$rss."', '".$price."', '".$description2."', '".$keywords2."', 'pages', '0','".$sor."', '".$nocomm."', '".$meta_title2."', '".$clean_url2."');";
+  $sql = "INSERT INTO ".$prefix."_pages (`pid`,`module`,`cid`,`title`,`open_text`,`main_text`,`date`,`redate`,`counter`,`active`,`golos`,`comm`,`foto`,`search`,`mainpage`,`rss`,`price`,`description`,`keywords`,`tables`,`copy`,`sort`,`nocomm`,`meta_title`,`clean_url`) VALUES (NULL, '".$module."', '".$cid."', '".$title."', '".$open_text."', '".$main_text."', '".$data."', '".$data2."', '0', '".$active."', '".$golos_reiting."', '0', '".$foto."', '".$search."', '".$mainpage."', '".$rss."', '".$price."', '".$description2."', '".$keywords2."', 'pages', '0','".$sor."', '".$nocomm."', '".$meta_title2."', '".$clean_url2."');";
   $db->sql_query($sql) or die ("Не удалось сохранить страницу. Попробуйте нажать в Редакторе на кнопку Чистка HTML в Редакторе. Если всё равно появится эта ошибка - сообщите разработчику нижеследующее:".$sql);
   // Узнаем получившийся номер страницы ID
   $sql = "select pid from ".$prefix."_pages where title='".$title."' and date='".$data."'";
@@ -587,7 +586,7 @@ function base_pages_save_page($cid, $module, $title, $open_text, $main_text, $fo
         $id_regions = $_POST['id_regions'];
         if (!isset($id_regions)) $id_regions = $elements;
         $region = $db->sql_fetchrow($db->sql_query("select `name` from ".$prefix."_regions where `id`='".$id_regions."'"));
-        $db->sql_query("INSERT INTO ".$prefix."_spiski (id, type, name, opis, sort, pages, parent) VALUES (NULL, '".$name."', '".$region['name']."', '', '0', ' ".$page_id." ', '0');") or die ('Ошибка: Не удалось сохранить список. 6'); 
+        $db->sql_query("INSERT INTO ".$prefix."_spiski (`id`, `type`, `name`, `opis`, `sort`, `pages`, `parent`) VALUES (NULL, '".$name."', '".$region['name']."', '', '0', ' ".$page_id." ', '0');") or die ('Ошибка: Не удалось сохранить список. 6'); 
       break;
       ////////////////////////////////////////////////////////////////////////////
       case "1": // текст
@@ -711,7 +710,7 @@ function base_pages_save_page($cid, $module, $title, $open_text, $main_text, $fo
 function base_pages_edit_sv_page($pid, $module, $cid, $title, $open_text, $main_text, $foto, $link_foto, $search, $active, $mainpage, $rss, $golos_reiting, $nocomm, $price, $add, $data1, $data2, $data3, $data4, $meta_title2, $clean_url2, $keywords2, $description2, $com, $cop, $count, $sor, $open_text_mysor, $main_text_mysor) {
   global $prefix, $db, $now;
   // Делаем резервную копию!
-  $sql = "SELECT `module`,`cid`,`title`,`open_text`,`main_text`,`date`,`counter`,`active`,`golos`,`comm`,`foto`,`search`,`mainpage`,`rss`,`price`,`description`,`keywords`,`copy`,`sort`,`nocomm`,`meta_title`,`clean_url` FROM ".$prefix."_pages WHERE `pid`='".$pid."'";
+  $sql = "SELECT `module`,`cid`,`title`,`open_text`,`main_text`,`date`,`counter`,`active`,`golos`,`comm`,`foto`,`search`,`mainpage`,`rss`,`price`,`description`,`keywords`,`sort`,`nocomm`,`meta_title`,`clean_url` FROM ".$prefix."_pages WHERE `pid`='".$pid."'";
   $result = $db->sql_query($sql);
   list($p_module, $p_cid, $p_title, $p_open_text, $p_main_text, $p_date, $p_counter, $p_active, $p_golos, $p_comm, $p_foto, $p_search, $p_mainpage, $p_rss, $p_price, $p_description, $p_keywords, $p_sort, $p_nocomm, $p_meta_title, $p_clean_url) = $db->sql_fetchrow($result);
   $foto = "";
@@ -745,14 +744,12 @@ function base_pages_edit_sv_page($pid, $module, $cid, $title, $open_text, $main_
 
   $clean_url2 = strtr($clean_url2, array('____'=>'_', '___'=>'_', '__'=>'_', '*'=>'',':'=>'','('=>'',')'=>'','  '=>'',' '=>'', ' '=>'_', '.'=>'', ','=>'', '!'=>'', '?'=>'', '=>'=>'', ';'=>'', '&'=>'_and_', '%'=>'', '$'=>'', '#'=>'', '№'=>'', '@'=>'', '^'=>'', '='=>'', '\''=>'','"'=>'','«'=>'', '»'=>'', '____'=>'_', '___'=>'_', '__'=>'_'));
 
-  if ($meta_title2 == 0) $meta_title2 = "";
-
-  $sql = "UPDATE ".$prefix."_pages SET module='$module', cid='$cid', title='$title', open_text='$open_text', main_text='$main_text', date='$data', redate='$data2', counter='$count', active='$active', golos='$golos_reiting', comm='$com', foto='$foto', search='$search', mainpage='$mainpage', rss='$rss', price='$price', description='$description2', keywords='$keywords2', copy='$cop', sort='$sor', nocomm='$nocomm', meta_title='$meta_title2', clean_url='$clean_url2' WHERE pid='".$pid."';";
+  $sql = "UPDATE ".$prefix."_pages SET `module`='".$module."', `cid`='".$cid."', `title`='".$title."', `open_text`='".$open_text."', `main_text`='".$main_text."', `date`='".$data."', `redate`='".$data2."', `counter`='".$count."', `active`='".$active."', `golos`='".$golos_reiting."', `comm`='".$com."', `foto`='".$foto."', `search`='".$search."', `mainpage`='".$mainpage."', `rss`='".$rss."', `price`='".$price."', `description`='".$description2."', `keywords`='".$keywords2."', `copy`='".$cop."', `sort`='".$sor."', `nocomm`='".$nocomm."', `meta_title`='".$meta_title2."', `clean_url`='".$clean_url2."' WHERE `pid`='".$pid."';";
   $db->sql_query($sql) or die('Не удалось сохранить изменения... Передайте нижеследующий текст разработчику:<br>'.$sql);
 
   // Делаем резервную копию
   if ($p_active != 3) // если это не добавленная пользователем страница
-  $db->sql_query("INSERT INTO ".$prefix."_pages VALUES (NULL, '$p_module', '$p_cid', '$p_title', '$p_open_text', '$p_main_text', '$p_date', '$now', '$p_counter', '$p_active', '$p_golos', '$p_comm', '$p_foto', '$p_search', '$p_mainpage', '$p_rss', '$p_price', '$p_description', '$p_keywords', 'backup', '$pid', '$p_sort', '$p_nocomm', '$p_meta_title', '$p_clean_url' );") or die("Резервная копия не создана...");
+  $db->sql_query("INSERT INTO ".$prefix."_pages (`pid`,`module`,`cid`,`title`,`open_text`,`main_text`,`date`,`redate`,`counter`,`active`,`golos`,`comm`,`foto`,`search`,`mainpage`,`rss`,`price`,`description`,`keywords`,`tables`,`copy`,`sort`,`nocomm`,`meta_title`,`clean_url`) VALUES (NULL, '$p_module', '$p_cid', '$p_title', '$p_open_text', '$p_main_text', '$p_date', '$now', '$p_counter', '$p_active', '$p_golos', '$p_comm', '$p_foto', '$p_search', '$p_mainpage', '$p_rss', '$p_price', '$p_description', '$p_keywords', 'backup', '$pid', '$p_sort', '$p_nocomm', '$p_meta_title', '$p_clean_url' );") or die("Резервная копия не создана...");
 
   // Ярлык?
   $and_copy = "";
