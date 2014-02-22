@@ -194,8 +194,8 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 		$block_color = $block_colorYYY[$idX];
 
 	// обнулили все опции блоков от греха подальше
-	$titleshow = $reload_one_by_one = $folder = $datashow = $tagdelete = $ipdatauser = $design = $open_all = $catshow = $main = $daleeshow = $openshow = $number = $add = $size = $papki_numbers = $zagolovokin = $menu = $noli = $html = $show_title = $random = $showlinks = $open_new_window = $shablon = $show_new_pages = $reload_link_show = $reload_link_time = $re_menu = $show_pages_from = $calendar_future = $calendar_years = $re_menu_type = $must_have_foto_adres = 0;
-	$opros_type = $limkol = $pageshow = $only_question = $opros_result = $foto_gallery_type = $notitlelink = $foto_num = 1;
+	$titleshow = $reload_one_by_one = $folder = $datashow = $tagdelete = $ipdatauser = $design = $open_all = $catshow = $main = $daleeshow = $openshow = $number = $add = $size = $papki_numbers = $zagolovokin = $menu = $noli = $show_title = $random = $showlinks = $open_new_window = $shablon = $show_new_pages = $reload_link_show = $reload_link_time = $re_menu = $show_pages_from = $calendar_future = $calendar_years = $re_menu_type = $must_have_foto_adres = $papki_in_razdel_show = $papki_in_razdel_punkt = $papki_in_papki_show = $papki_in_papki_punkt = $papki_in_pages_show = $papki_in_pages_punkt = 0;
+	$opros_type = $limkol = $pageshow = $only_question = $opros_result = $foto_gallery_type = $notitlelink = $foto_num = $papki_in_papki_check = $papki_in_pages_papka_check = $papki_in_pages_check = 1;
 	$shablon = $class = $alternative_title_link = $cid_open = $no_show_in_razdel = $watermark = $show_in_papka = "";
 	$addtitle = ss("Добавить статью");
 	$dal = ss("Далее...");
@@ -312,9 +312,9 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 			$design_open .= "<h3 class=\"".$shablonX." h3_block_title class_".$class."\">".$block_title."</h3><div class='polosa'></div>";
 	}
 
-	if ($html == 1) { 
+	if ($titleshow == 4) { 
 		$design_close = ""; 
-		$design_open = ""; 
+		$design_open = "";
 		$block_title = ""; 
 		$block_title2 = ""; 
 	}
@@ -488,6 +488,7 @@ case "0": # Блок страниц раздела
 			} */
 		}
 
+		/*
 		if (trim($class) != "") {
 			$class = trim($class);
 			// Смотрим класс стиля, выбранный из списка для блока показываемой страницы.
@@ -496,6 +497,7 @@ case "0": # Блок страниц раздела
 			$row7 = $db->sql_fetchrow($result7); 
 			$class = " ".$row7['name'];
 		} else $class = " "; //no_class
+		*/
 
 		if ($datashow == 1 or $shablon != "") { // Если показывать дату // доработать - функция из mainfile
 			$data = date2normal_view($row['date'])." ".$strelka." ";
@@ -525,7 +527,7 @@ case "0": # Блок страниц раздела
 				"[page_title]"=>$title,
 				"[page_link]"=>re_link("-".$module."_page_".$p_id),
 				"[page_link_title]"=>"<a href='".re_link("-".$module."_page_".$p_id)."'".$blank." class='block_title ".$class."'>".$title."</a>",
-				"[page_opentext]"=>"<span id='block_open_text' class='block_open_text ".$class."'>".$open_text."</span>",
+				"[page_opentext]"=>"<span id='block_open_text' class='block_open_text".$class."'>".$open_text."</span>",
 				"[page_text]"=>$main_text,
 				"[page_data]"=>$data,
 				"[page_counter]"=>$counterX,
@@ -704,6 +706,7 @@ case "4": # Блок папок раздела
 	//if ($useitX == 'index') $block = str_replace("[".$titleX."]", "", $block); // если главная - ничего не выводим
 	//else {
 	if ($noli == 0) $textX = "<ul id='block_ul_title_".$idX."' class='block_ul_title'>"; 
+	
 	// В эту переменную входит содержание блока
 	$and2 = "";
 	if ($useitX=="open_razdel") { // Показывать ВСЕ разделы или выбранный
@@ -718,6 +721,7 @@ case "4": # Блок папок раздела
 		$and2 = " and (".implode(" or ",$a).")";
 	} else $and2 = " and `module`='".$useitX."'";
 
+
 	global $txt_razdels; // ЗАМЕНА mainpage2 №3
 	//$textXX = explode("|", $txt_razdels[$useitX] );
 	// Определяем отношение страниц к папкам
@@ -730,6 +734,7 @@ case "4": # Блок папок раздела
 			if (!isset($num[$cid_id])) $num[$cid_id] = 1; else $num[$cid_id]++;
 		}
 	}
+
 	////// Определяем отношение подпапок к папкам
 	if ($papki_numbers==0) $and_par = " and `parent_id`='0'"; 
 	else $and_par = "";
@@ -742,22 +747,26 @@ case "4": # Блок папок раздела
 		$title[$id] = $row['title'];
 		$par[$id] = $row['parent_id'];
 	}
+
 	// Выводим результаты
-	if ($pid > 0) {
+	$papki_in_razdel_show = $papki_in_razdel_punkt = $papki_in_papki_show = $papki_in_papki_punkt = $papki_in_pages_show = $papki_in_pages_punkt = 0;
+	$papki_in_papki_check = $papki_in_pages_papka_check = $papki_in_pages_check = 1;
+
+	if ($pid > 0) { // страницы
 		// Определяем cid от pid, т.е. если открыта не папка, а страница
 		$sql = "SELECT cid from ".$prefix."_pages where `tables`='pages' and pid='".$pid."'";
 		$result = $db->sql_query($sql);
 		$row = $db->sql_fetchrow($result);
 		$cid = $row['cid'];
 		$textX .= "$pid страницы";
-	} elseif ($cid > 0) {
+	} elseif ($cid > 0) { // папки
 		$textX .= "папки";
-	} else {
+	} else { // разделы
 		foreach ($title as $id => $nam) {
 		if ($papki_numbers == 1) {
-			$and2=""; 
-			if (vhodyagie($id,$par,$num)>0) $and2 = "<div class='add'>+".vhodyagie($id,$par,$num)."</div>";
-			$and="";
+			$and2 = ""; 
+			if (vhodyagie($id,$par,$num) > 0) $and2 = "<div class='add'>+".vhodyagie($id,$par,$num)."</div>";
+			$and = "";
 			if ( isset($num[$id]) ) $and = " (".$num[$id].$and2.")";
 		} else $and="";
 			if ($par[$id]==0) {

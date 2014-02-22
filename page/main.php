@@ -14,7 +14,7 @@ if ($ModuleName=="") $ModuleName = ss("Содержание");
 global $strelka, $go, $cid, $pid, $all, $avtor, $to, $info, $num, $ip, $golos, $getparent_cash;
 ########################################### проверить и возможно убрать кусок
 // настройки раздела из БД
-global $post, $comments, $datashow, $sort, $lim, $foto, $view, $search, $search_papka, $tema, $tema_name, $tema_title, $tema_opis, $menushow, $design, $show_comments; 
+global $post, $comments, $datashow, $sort, $lim, $foto, $view, $search, $search_papka, $tema, $tema_name, $tema_title, $tema_opis, $menushow, $design, $show_comments;
 
 $media = $folder = $col = $view = $golos = $golosrazdel = $post = $comments = $datashow = $favorites = $socialnetwork = $search = $search_papka = $put_in_blog = $base = $vetki = $citata = $media_comment = $no_html_in_opentext = $no_html_in_text = $show_add_post_on_first_page = $media_post = $razdel_shablon = $page_shablon = $comments_all = $comments_num = $comments_mail = $comments_adres = $comments_tel = $comments_desc = $golostype = $pagenumbers = $comments_main = $tags_type = $tema_zapret_comm = $pagekol = $table_light = $designpages = $comments_add = $div_or_table = $papka_show = $add_post_to_mainpage = $design_tablet = $designpages_tablet = $design_phone = $designpages_phone = $show_tags_pages = $golos_admin = $comment_all_link = $show_read_all = 0;
 $menushow = $titleshow = $razdeltitleshow = $razdel_link = $peopleshow = $design = $tags = $podrobno = $podrazdel_active_show = $podrazdel_show = $tipograf = $limkol = $tags_show = $tema_zapret = $opentextshow = $maintextshow = $papka_tags_pages = $razdel_tags_pages = 1;
@@ -1894,7 +1894,7 @@ function addpost($cid) {
 // Сохранение страницы, добавленной посетителем
 function savepost ($avtory, $avtor, $mail, $post_title, $info, $num, $cid, $add){
   $link = getenv("HTTP_REFERER");
-  global $ip, $_SESSION, $_POST, $soderganie, $lang, $media_post, $DBName, $now, $db, $prefix, $module_name, $post, $admin, $tema_zapret, $tema_zapret, $captcha_ok;
+  global $siteurl, $adminmail, $new_pages_send, $ip, $_SESSION, $_POST, $soderganie, $lang, $media_post, $DBName, $now, $db, $prefix, $module_name, $post, $admin, $tema_zapret, $tema_zapret, $captcha_ok;
   // Ввести проверку на активность - проверка постов администратором
 
   $active = 3;
@@ -2094,10 +2094,14 @@ function savepost ($avtory, $avtor, $mail, $post_title, $info, $num, $cid, $add)
 
   unset($_SESSION['captcha_keystring']);
 
+  if ( $new_pages_send != 0 ) { // отправка уведомления о новой странице администратору
+    mail($adminmail, '=?utf-8?b?'.base64_encode(aa("Новая страница на ").$siteurl." [".$now."]").'?=', "<a href='http://".$siteurl.re_link("/-".$DBName."_page_".$page_id)."'><br><br>".aa("Чтобы отредактировать или удалить страницу, перейдите в ")."<a href='http://".$siteurl."/red'>".aa("администрирование")."</a>.<br><br><br><br>".aa("Письмо создано сайтом автоматически."), "Content-Type: text/html; charset=utf-8\r\nFrom: ".$adminmail."\r\n");
+  }
+
   header ("Content-Type: text/html; charset=utf-8");
   echo "<html><head><meta http-equiv='Refresh' content='6; URL=".$location."'></head><body>
   <h2>".ss("Спасибо!")."</h2>".$inform."<br>".ss("Через 6 секунд откроется предыдущая страница.<br>Также вы можете перейти на <a href='/'>Главную</a>.")."</body></html>";
-  global $siteurl; #######################################################################
+  #######################################################################
   recash(str_replace("http://".$siteurl,"",getenv("HTTP_REFERER"))); // Обновление кеша ##
   recash(str_replace("http://".$siteurl,"",getenv("REQUEST_URI")),0); ####################
   ########################################################################################
