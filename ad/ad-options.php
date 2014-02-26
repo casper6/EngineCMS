@@ -119,7 +119,7 @@ if ($row['realadmin'] == 1) {
 		$id_designs = implode(",",$id_designs);
 		$title_designs = implode(",",$title_designs);
 
-$opt_save = ":";
+$opt_save = "";
 if ($ok==1) $opt_save = " сохранены";
 // mainrazdel0
 echo "<table class='w100 mw800 pm0 block_back'><tr valign=top><td id='razdel_td' class='radius nothing'>

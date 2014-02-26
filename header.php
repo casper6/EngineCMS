@@ -195,8 +195,9 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 
 	// обнулили все опции блоков от греха подальше
 	$titleshow = $reload_one_by_one = $folder = $datashow = $tagdelete = $ipdatauser = $design = $open_all = $catshow = $main = $daleeshow = $openshow = $number = $add = $size = $papki_numbers = $zagolovokin = $menu = $noli = $show_title = $random = $showlinks = $open_new_window = $shablon = $show_new_pages = $reload_link_show = $reload_link_time = $re_menu = $show_pages_from = $calendar_future = $calendar_years = $re_menu_type = $must_have_foto_adres = $papki_in_razdel_show = $papki_in_razdel_punkt = $papki_in_papki_show = $papki_in_papki_punkt = $papki_in_pages_show = $papki_in_pages_punkt = 0;
-	$opros_type = $limkol = $pageshow = $only_question = $opros_result = $foto_gallery_type = $notitlelink = $foto_num = $papki_in_papki_check = $papki_in_pages_papka_check = $papki_in_pages_check = 1;
+	$opros_type = $limkol = $pageshow = $only_question = $opros_result = $foto_gallery_type = $notitlelink = $foto_num = $papki_in_papki_check = $papki_in_pages_check = 1;
 	$shablon = $class = $alternative_title_link = $cid_open = $no_show_in_razdel = $watermark = $show_in_papka = "";
+	$noli_razdelitel = "<br>";
 	$addtitle = ss("Добавить статью");
 	$dal = ss("Далее...");
 	$first = "src=";
@@ -705,80 +706,168 @@ case "3": # Блок ротатор рекламы
 case "4": # Блок папок раздела 
 	//if ($useitX == 'index') $block = str_replace("[".$titleX."]", "", $block); // если главная - ничего не выводим
 	//else {
+	$textX = "";
 	if ($noli == 0) $textX = "<ul id='block_ul_title_".$idX."' class='block_ul_title'>"; 
 	
-	// В эту переменную входит содержание блока
-	$and2 = "";
+	// В переменную $and2 входит содержание блока
 	if ($useitX=="open_razdel") { // Показывать ВСЕ разделы или выбранный
 		$and2 = " and `module`='".$name."'";
 	} elseif ($useitX==aa("все") or $useitX=="") { // Показывать ВСЕ разделы или выбранный
+		$and2 = "";
 	} elseif ( strpos($useitX, ",") ) { // Показывать определенные разделы, через «,»
 		$a = array();
-		$use = explode(",",$useitX);
+		$use = explode(",", $useitX);
 		foreach ($use as $value) {
 			if ($value != "") $a[] = "`module`='".$value."'";
 		}
 		$and2 = " and (".implode(" or ",$a).")";
 	} else $and2 = " and `module`='".$useitX."'";
 
-
 	global $txt_razdels; // ЗАМЕНА mainpage2 №3
-	//$textXX = explode("|", $txt_razdels[$useitX] );
-	// Определяем отношение страниц к папкам
-	if ($papki_numbers==1) {
-		$num = array();
-		$sql = "SELECT `pid`, `cid` from ".$prefix."_pages where `tables`='pages'".$and2." and `active`='1'";
+
+	////// Определяем отношение подпапок к папкам
+	$no_papka = $no_pages = $all_papka = $all_pages = false;
+	$and_papka = $and_pages = "";
+	$page_cid = $punkt_open = $punkt_check = $main_cid = 0;
+	if ($pid > 0) { // СТРАНИЦЫ
+		$ppid = $pid;
+		// определим папку страницы
+		$sql = "SELECT `cid` from ".$prefix."_pages where `tables`='pages' and `pid`='".$pid."'";
+		$result = $db->sql_query($sql);
+		$row = $db->sql_fetchrow($result);
+		$ccid = $row['cid'];
+		// при открытом разделе и раздел = папки первого уровня
+		if ( ( $papki_in_pages_show == 0 || ( $papki_in_pages_show == 1 && $papki_in_papki_show == 0 ) ) && ( $papki_in_razdel_show == 0 || $papki_in_razdel_show == 1 ) )
+			$and_papka = " and `parent_id`='0'";
+		// при открытом разделе и раздел = страницы
+		if ( $papki_in_pages_show == 4  || ($papki_in_pages_show == 0 && $papki_in_razdel_show == 4) || ( $papki_in_pages_show == 1 && $papki_in_papki_show == 5 ) )
+			{ $no_papka = true; $papki_numbers = 0; }
+		// при открытом разделе и раздел = папки без страниц
+		if ( $papki_in_pages_show == 5 || $papki_in_pages_show == 2 || ( ($papki_in_pages_show == 0 || ($papki_in_pages_show == 1 && $papki_in_papki_show == 0) ) && ($papki_in_razdel_show == 0 || $papki_in_razdel_show == 2) ) || ( $papki_in_pages_show == 1 && ( $papki_in_papki_show == 1 || $papki_in_papki_show == 3) ) )
+			$no_pages = true;
+		// только вложенные папки
+		if ( $papki_in_pages_show == 2 || $papki_in_pages_show == 3 || ( $papki_in_pages_show == 1 && ($papki_in_papki_show == 3 || $papki_in_papki_show == 4) ) )
+			{ $and_papka = " and `parent_id`='".$ccid."'"; $main_cid = $ccid; }
+		// только папки предыдущего уровня,только папки предыдущего уровня + страницы
+		if ( $papki_in_pages_show == 5 || $papki_in_pages_show == 6) {
+			$page_cid = $ccid;
+			$rowZ = $db->sql_fetchrow($db->sql_query("SELECT `parent_id` from ".$prefix."_pages_categories where `cid`='".$ccid."'"));
+			$ccid = $rowZ['parent_id'];
+			$and_papka = " and `parent_id`='".$ccid."'"; 
+			$main_cid = $ccid;
+		}
+		if ( $papki_in_pages_show == 6) $all_pages = true;
+		// только вложенные страницы
+		if ( $papki_in_pages_show == 6 || $papki_in_pages_show == 3 || $papki_in_pages_show == 4  || ( $papki_in_pages_show == 1 && ($papki_in_papki_show == 2 || $papki_in_papki_show == 4 || $papki_in_papki_show == 5) ))
+			$and_pages = " and `cid`='".$ccid."'";
+		// страницы в корне
+		if ( ( $papki_in_pages_show == 0 || ( $papki_in_pages_show == 1 && $papki_in_papki_show == 0 ) ) && ( $papki_in_razdel_show == 1 || $papki_in_razdel_show == 5 ) )
+			$and_pages = " and `cid`='0'";
+		// все папки
+		if ( ( ( $papki_in_pages_show == 0 || ( $papki_in_pages_show == 1 && $papki_in_papki_show == 0 ) ) && ($papki_in_razdel_show == 2 || $papki_in_razdel_show == 3) ) || ( $papki_in_pages_show == 1 && ($papki_in_papki_show == 1 || $papki_in_papki_show == 2) ) )
+			$all_papka = true;
+		// все страницы
+		if ( ( ( $papki_in_pages_show == 0 || ( $papki_in_pages_show == 1 && $papki_in_papki_show == 0 ) ) && $papki_in_razdel_show == 3 ) || ( $papki_in_pages_show == 1 && $papki_in_papki_show == 2 ) )
+			{ $all_pages = true; $and_pages = " and `cid`='0'"; }
+		$punkt_open = $papki_in_pages_punkt;
+		$punkt_check = $papki_in_pages_check;
+	} elseif ($cid > 0) { // ПАПКИ
+		$ccid = $cid;
+		$ppid = 0;
+		// при открытом разделе и раздел = папки первого уровня
+		if ( $papki_in_papki_show == 0 && ($papki_in_razdel_show == 0 || $papki_in_razdel_show == 1) )
+			$and_papka = " and `parent_id`='0'";
+		// при открытом разделе и раздел = страницы
+		if ( ($papki_in_papki_show == 0 && $papki_in_razdel_show == 4)
+			|| $papki_in_papki_show == 5) 
+			{ $no_papka = true; $papki_numbers = 0; }
+		// при открытом разделе и раздел = папки без страниц
+		if ( ($papki_in_papki_show == 0 && ($papki_in_razdel_show == 0 || $papki_in_razdel_show == 2) )
+			|| $papki_in_papki_show == 1 || $papki_in_papki_show == 3)
+			$no_pages = true;
+		// только вложенные папки
+		if ( $papki_in_papki_show == 3 || $papki_in_papki_show == 4 )
+			{ $and_papka = " and `parent_id`='".$cid."'"; $main_cid = $cid; }
+		// только вложенные страницы
+		if ( $papki_in_papki_show == 2 || $papki_in_papki_show == 4 || $papki_in_papki_show == 5 )
+			$and_pages = " and `cid`='".$cid."'";
+		// страницы в корне
+		if ( $papki_in_papki_show == 0 && ( $papki_in_razdel_show == 1 || $papki_in_razdel_show == 5 ) )
+			$and_pages = " and `cid`='0'";
+		// все папки
+		if ( ($papki_in_papki_show == 0 && ($papki_in_razdel_show == 2 || $papki_in_razdel_show == 3) ) || $papki_in_papki_show == 1 || $papki_in_papki_show == 2 )
+			$all_papka = true;
+		if ( ($papki_in_papki_show == 0 && $papki_in_razdel_show == 3) || $papki_in_papki_show == 2 )
+			{ $all_pages = true; $and_pages = " and `cid`='0'"; }
+		$punkt_open = $papki_in_papki_punkt;
+		$punkt_check = $papki_in_papki_check;
+	} else { // РАЗДЕЛЫ
+		$ccid = $ppid = 0;
+		// папки первого уровня
+		if ($papki_in_razdel_show == 0 || $papki_in_razdel_show == 1)
+			$and_papka = " and `parent_id`='0'";
+		// страницы
+		if ($papki_in_razdel_show == 4 || $papki_in_razdel_show == 5) 
+			{ $no_papka = true; $papki_numbers = 0; }
+		// страницы в корне + все папки и страницы
+		if ( $papki_in_razdel_show == 1 || $papki_in_razdel_show == 5 || $papki_in_razdel_show == 3)
+			$and_pages = " and `cid`='0'";
+		// папки без страниц
+		if ($papki_in_razdel_show == 0 || $papki_in_razdel_show == 2)
+			$no_pages = true;
+		// все папки
+		if ($papki_in_razdel_show == 2 || $papki_in_razdel_show == 3)
+			$all_papka = true;
+		if ( $papki_in_razdel_show == 3)
+			$all_pages = true;
+		$punkt_open = $papki_in_razdel_punkt;
+	}
+
+	$pages_show = "";
+	// вывод страниц в корне
+	if ($no_pages == false) {
+		$sql = "SELECT `pid`, `module`, `title` from ".$prefix."_pages where `tables`='pages'".$and2.$and_pages." and `active`='1' order by ".$sort;
+		$pages_show = list_pages($sql, $noli, $noli_razdelitel, $punkt_check, $ppid);
+	}
+
+	// Показывать кол-во страниц в скобках после названия папки (отношение страниц к папкам)
+	$num = array();
+	if ($papki_numbers == 1) {
+		$sql = "SELECT `pid`, `cid` from ".$prefix."_pages where `tables`='pages'".$and2." and `active`='1' order by ".$sort;
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result)) {
-			$cid_id = $row['cid'];		//
-			if (!isset($num[$cid_id])) $num[$cid_id] = 1; else $num[$cid_id]++;
+			$cid_id = $row['cid'];
+			if (!isset($num[$cid_id])) $num[$cid_id] = 1;
+			else $num[$cid_id]++;
 		}
 	}
 
-	////// Определяем отношение подпапок к папкам
-	if ($papki_numbers==0) $and_par = " and `parent_id`='0'"; 
-	else $and_par = "";
-	$sql="SELECT `cid`, `module`, `title`, `parent_id` from ".$prefix."_pages_categories where `tables`='pages'".$and2.$and_par." order by ".$papka_sort;
-	$result = $db->sql_query($sql);
-	$title = $cid_module = $par = array();
-	while ($row = $db->sql_fetchrow($result)) {
-		$id = $row['cid'];
-		$cid_module[$id] = $row['module'];
-		$title[$id] = $row['title'];
-		$par[$id] = $row['parent_id'];
+	// вывод папок
+	if ($no_papka == false) {
+		$result = $db->sql_query("SELECT `cid`, `module`, `title`, `parent_id` from ".$prefix."_pages_categories where `tables`='pages'".$and2.$and_papka." order by ".$papka_sort);
+		$title = $cid_module = $par = array();
+		while ($row = $db->sql_fetchrow($result)) {
+			$id = $row['cid'];
+			$cid_module[$id] = $row['module'];
+			$title[$id] = $row['title'];
+			$par[$id] = $row['parent_id'];
+		}
 	}
-
 	// Выводим результаты
-	$papki_in_razdel_show = $papki_in_razdel_punkt = $papki_in_papki_show = $papki_in_papki_punkt = $papki_in_pages_show = $papki_in_pages_punkt = 0;
-	$papki_in_papki_check = $papki_in_pages_papka_check = $papki_in_pages_check = 1;
-
+	/*
 	if ($pid > 0) { // страницы
-		// Определяем cid от pid, т.е. если открыта не папка, а страница
-		$sql = "SELECT cid from ".$prefix."_pages where `tables`='pages' and pid='".$pid."'";
-		$result = $db->sql_query($sql);
-		$row = $db->sql_fetchrow($result);
-		$cid = $row['cid'];
-		$textX .= "$pid страницы";
+
 	} elseif ($cid > 0) { // папки
 		$textX .= "папки";
 	} else { // разделы
-		foreach ($title as $id => $nam) {
-		if ($papki_numbers == 1) {
-			$and2 = ""; 
-			if (vhodyagie($id,$par,$num) > 0) $and2 = "<div class='add'>+".vhodyagie($id,$par,$num)."</div>";
-			$and = "";
-			if ( isset($num[$id]) ) $and = " (".$num[$id].$and2.")";
-		} else $and="";
-			if ($par[$id]==0) {
-				if ($noli == 0) {
-					$textX .= "<li id='block_li_title_".$cid_module[$id]."' class='block_li_title'><a class='papki_".$cid_module[$id]."' href='".re_link("-".$cid_module[$id]."_cat_".$id)."'>".$nam."</a>".$and."";
-				} else {
-					$textX .= "<a class='papki_".$cid_module[$id]."' href='".re_link("-".$cid_module[$id]."_cat_".$id)."'>".$nam."</a>".$and." | ";
-				}
-			}
-		}
-		if ($noli == 0) $textX .= "</ul>";
-	}
+		*/
+	$links = array();
+	if ($no_papka == false) {
+		$links = list_papka($title, $par, $num, $noli, $noli_razdelitel, $cid_module, $all_papka, $all_pages, $papki_numbers, $main_cid, $sort, $punkt_open, $punkt_check, $ccid, $ppid, $page_cid);
+	} else $links = "";
+	$textX .= $links.$pages_show; // добавили вывод страниц
+	if ($noli == 0) $textX .= "</ul>";
+	//}
 	// Вставим шаблон из блока!!!
 	$block = str_replace("[".$titleX."]", $design_open.$textX.$design_close, $block);
 	$type = ""; break;
@@ -2031,7 +2120,9 @@ case "31": # Блок JS
 							foreach ($names as $key => $value) {
 								$checked = "";
 								if (isset($filter))
-							    	if ($filter[$s_name."_".$value] == "on") $checked = " checked";
+							    	if (isset($filter[$s_name."_".$value])) 
+							    		if ($filter[$s_name."_".$value] == "on") 
+							    			$checked = " checked";
 							    $filtr_values .= "<label for='text".$s_name."_".$key."'><input class='text".$s_name."' type='checkbox' name='filter[".$s_name."_".$value."]' id='text".$s_name."_".$key."'".$checked."> ".$value."</label><br>";
 
 							    $strlen = mb_strlen($value);

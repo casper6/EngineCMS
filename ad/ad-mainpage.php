@@ -54,8 +54,8 @@ else if ($('#mainrazdel3').attr('class') == 'dark_pole2sel') window.location = '
 else if ($('#mainrazdel6').attr('class') == 'dark_pole2sel') window.location = 'sys.php?op=mainpage&amp;name=shablon&amp;type=6&amp;red=1#1';
 else if ($('#mainrazdel4').attr('class') == 'dark_pole2sel') window.location = 'sys.php?op=mainpage&amp;name=spisok&amp;type=4#1';
 else if ($('#mainrazdel5').attr('class') == 'dark_pole2sel') window.location = 'sys.php?op=mainpage&amp;name=base&amp;type=5#1';
-			else $('#add').toggle();\"><span class='mr-2 icon darkgrey small' data-icon='+'></button>
-			<span class='h1'>Оформление:</span>
+			else $('#add').toggle();\"><span class='mr-2 icon darkgrey medium' data-icon='+'></button>
+			<span class='h1'>Оформление</span>
 			</div>";
 	     ////////////////////// ДИЗАЙН 0
 		 echo "<div id='mainrazdel0' class='dark_pole2'><a class='base_page' onclick=\"$('#addmain').attr('class', 'small right3 green'); oformlenie_show('дизайн (html)','0','design','/sys.php?op=mainpage&amp;name=design&amp;type=0&amp;red=1')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='4'></span><span class='plus20'>Дизайн разделов и блоков (html)</span></div></a></div>";
@@ -142,10 +142,9 @@ function create_main($type) {
 		$bd_show = false;
 		$razdels = "";
 		foreach ($title_razdel_and_bd as $key => $modul_title) {
-			if (strpos(" ".$modul_title, "База данных")) {
-				$razdels .=  "<option value='".$key."' class='baza'>".$modul_title."</option>";
-				$bd_show = true;
-			} else $razdels .= "<option value='".$key."' class='razdely'>".$modul_title."</option>";
+			$key_class = 'razdely';
+			if (strpos(" ".$modul_title, aa("база данных"))) { $key_class='baza'; $bd_show = true; }
+			$razdels .= "<option value='".$key."' class='".$key_class."'>".$modul_title."</option>";
 		}
 		if ($bd_show == false) $bd_show = " disabled"; else $bd_show = "";
 
@@ -158,7 +157,7 @@ function create_main($type) {
 	$typeX[6]  = "Фотогалерея"; 
 	$typeX[9]  = "Экстрактор страниц (по-умолчанию: фото)";
 
-	$typeX[4]  = "(х) Папки раздела (временно не работает)"; 
+	$typeX[4]  = "Папки раздела"; 
 	$typeX[8]  = "Папки открытого раздела";
 	$typeX[0]  = "Страницы раздела"; 
 	$typeX[1]  = "Комментарии раздела"; 
@@ -766,8 +765,8 @@ function edit_main($id) {
 	 });
 	});
 	</script>
-	<a class='scroll_on_top button small green' onclick='save_main(\"ad/ad-mainpage.php\", \"mainpage_save_ayax\", \"\", \"\")' style='position:fixed; top:80%; right:0%; left:90%; width:100px; z-index:1000;'>Сохранить</a>
-	<a class='scroll_on_top button small blue' href='#top' style='position:fixed; top:90%; right:0%; left:90%; width:100px; z-index:1000;'>&uarr;<br>Наверх</a>
+	<a class='scroll_on_top button medium green' onclick='save_main(\"ad/ad-mainpage.php\", \"mainpage_save_ayax\", \"\", \"\")' style='position:fixed; top:86%; right:0%; left:90%; z-index:1000;'>Сохранить</a>
+	<a class='scroll_on_top button medium blue' href='#top' style='position:fixed; top:93%; right:0%; left:90%; z-index:1000;'>&uarr;&nbsp;Наверх</a>
 
 	<div id='save_main' style='float:left; margin:3px;'></div>
 	<span class='h1' style='padding-top:10px;'>";
@@ -1199,10 +1198,10 @@ function edit_main($id) {
 		$module_name = "";
 	}
 
-
 	// обнулили все опции
 	$titleshow = $reload_one_by_one = $folder = $datashow = $tagdelete = $ipdatauser = $design = $open_all = $catshow = $main = $daleeshow = $openshow = $number = $add = $size = $papki_numbers = $zagolovokin = $menu = $noli = $show_title = $random = $showlinks = $open_new_window = $shablon = $show_new_pages = $reload_link_show = $reload_link_time = $reload_link_on_start = $show_pages_from = $calendar_future = $calendar_years = $re_menu_type = $must_have_foto_adres = $papki_in_razdel_show = $papki_in_razdel_punkt = $papki_in_papki_show = $papki_in_papki_punkt = $papki_in_pages_show = $papki_in_pages_punkt = 0;
-	$opros_type = $limkol = $pageshow = $only_question = $opros_result = $foto_gallery_type = $re_menu = $notitlelink = $foto_num = $papki_in_papki_check = $papki_in_pages_papka_check = $papki_in_pages_check = 1;
+	$opros_type = $limkol = $pageshow = $only_question = $opros_result = $foto_gallery_type = $re_menu = $notitlelink = $foto_num = $papki_in_papki_check = $papki_in_pages_check = 1;
+	$noli_razdelitel = "<br>";
 	$col_bukv = 50;
 	$img_width = 0;
 	$img_height = 200;
@@ -1215,6 +1214,8 @@ function edit_main($id) {
 	$second = ">";
 	$third = " ";
 	$sort = "date desc";
+	if ($name == 5) $titleshow = 1; // заголовок для блока голосования - показывать
+	if ($name == 4) $sort = "sort, title"; // сортировка по алфавиту для блока папок
 	$papka_sort = "sort, title";
 	$razdel_open_name = $razdel_open2_name = "Открыть раздел";
 	$show_in_razdel = "все";
@@ -1285,15 +1286,15 @@ function edit_main($id) {
 	}
 
 	echo "<tr><td><b>Дизайн блока</b> (по умолчанию - нет). Окружает блок заранее созданным Дизайном (оформлением) для этого блока и подключает стиль CSS из дизайна</td>
-	<td>".select("options[design]", $design_var.",0", $design_names.",нет", $design)."</td></tr>";
+	<td>".select("options[design]", $design_var.",0", $design_names.",= нет =", $design)."</td></tr>";
 
-	echo "<tr><td><b>CSS-класс блока</b>. Прописать настройки класса можно в Главном (или другом) стиле CSS.</td>
+	echo "<tr><td><b>CSS-класс блока</b>. Название класса (прописать же настройки класса можно в Главном (или другом) стиле CSS).</td>
 	<td>".input("options[class]", $class)."</td></tr>";
 
 	echo "<tr><td><h2>Блок БУДЕТ показан:</h2><ul><li><b>во всех разделах</b> – все, <li><b>в определенном разделе</b> — выберите этот раздел и нажмите «Добавить», <li><b>в нескольких разделах</b> — добавьте несколько разделов через запятую.</ul></td>
-	<td>".input("options[show_in_razdel]", $show_in_razdel, "25","input"," id='show_in_raz'")." 
-	<a class='button small' id='show_in_razdel_button' onclick='show_raz();'>&larr; Добавить</a><br>
-	".select("razdels2", $razdel_engname.aa("все"), $razdel_name."ко всем Разделам",$razdels2," onchange='$(\"#show_in_razdel_button\").addClass(\"green\");'")."
+	<td>".input("options[show_in_razdel]", $show_in_razdel, "25","input"," id='show_in_raz'")."<br>
+	<a class='button medium' id='show_in_razdel_button' onclick='show_raz();'>&uarr; Добавить &uarr;</a><br>
+	".select("razdels2", $razdel_engname.aa("все"), $razdel_name."= ко всем Разделам =",$razdels2," onchange='$(\"#show_in_razdel_button\").addClass(\"green\");'")."
 	<script>function show_raz() { 
 		if ($('#razdels2').val() != '".aa("все")."') {
 			if ($('#show_in_raz').val() == '".aa("все")."') $('#show_in_raz').val( '' ); 
@@ -1306,9 +1307,9 @@ function edit_main($id) {
 	<td>".input("options[show_in_papka]", $show_in_papka, 5)."</td></tr>";
 
 	echo "<tr><td><h2>Блок НЕ БУДЕТ показан:</h2><ul><li><b>в определенном разделе</b> — выберите этот раздел и нажмите «Добавить», <li><b>в нескольких разделах</b> — добавьте несколько разделов через запятую.</ul>По-умолчанию, пустое поле.</td>
-	<td>".input("options[no_show_in_razdel]", $no_show_in_razdel, 25,"input"," id='no_show_in_raz'")." 
-	<a class='button small' id='no_show_in_razdel_button' onclick='no_show_raz();'>&larr; Добавить</a><br>
-	".select("razdels3", $razdel_engname, $razdel_name."не выбран раздел",$razdels3, " onchange='$(\"#no_show_in_razdel_button\").addClass(\"green\");'")."
+	<td>".input("options[no_show_in_razdel]", $no_show_in_razdel, 25,"input"," id='no_show_in_raz'")."<br>
+	<a class='button medium' id='no_show_in_razdel_button' onclick='no_show_raz();'>&uarr; Добавить &uarr;</a><br>
+	".select("razdels3", $razdel_engname, $razdel_name."= не выбран раздел =",$razdels3, " onchange='$(\"#no_show_in_razdel_button\").addClass(\"green\");'")."
 	<script>function no_show_raz() { 
 		if ($('#razdels3').val() != '".aa("все")."') {
 			if ($('#no_show_in_raz').val() == '".aa("все")."') $('#no_show_in_raz').val( '' ); 
@@ -1324,9 +1325,9 @@ function edit_main($id) {
 	
 	if ($name==0 || $name==1 || $name==4 || $name==9 || $name==11 || $name==13 || $name==30) { // дополнить остальные блоки
 		echo "<tr><td><h2>Блок использует содержание Раздела:</h2><ul><li><b>всех разделов</b> – оставьте поле пустым, <li><b>определенного раздела</b> — выберите этот раздел и нажмите «Добавить», <li><b>нескольких разделов</b> — добавьте несколько разделов через запятую, <li><b>открытого раздела</b> — выберите из меню разделов пункт «открытого раздела» и добавьте его или напишите в поле «open_razdel» (без кавычек). При выводе страниц открытого раздела на Главной странице блок исчезнет совсем, при выводе в разделе без страниц будет выведен заголовок, если он разрешен в настройках блока.</ul></td>
-		<td>".input("options[module_name]", $module_name, "25","input"," id='add_razdel'")." 
-	<a class='button small' id='module_name_button' onclick='add_raz();'>&larr; Добавить</a><br>
-	".select("razdels1", $razdel_engname.",open_razdel", $razdel_name."ко всем Разделам,открытого раздела",$razdels1, " onchange='$(\"#module_name_button\").addClass(\"green\");'")."
+		<td>".input("options[module_name]", $module_name, "25","input"," id='add_razdel'")."<br>
+	<a class='button medium' id='module_name_button' onclick='add_raz();'>&uarr; Добавить &uarr;</a><br>
+	".select("razdels1", $razdel_engname.",open_razdel", $razdel_name."= ко всем Разделам =,= открытого раздела =",$razdels1, " onchange='$(\"#module_name_button\").addClass(\"green\");'")."
 	<script>function add_raz() { 
 		if ($('#razdels1').val() != '') {
 			if ($('#razdels1').val() == 'open_razdel') $('#add_razdel').val( $('#razdels1').val() ); 
@@ -1383,37 +1384,41 @@ function edit_main($id) {
 	<td>".select("options[papka_sort]", "title,description,sort[|]title,counter[|]title,parent_id[|]title,cid,cid desc,module[|]title", "названию (по алфавиту),описанию,сортировке,кол-ву посещений,принадлежности к другим папкам,№ папки (с первой),№ папки (с последней),англ. названию раздела", $papka_sort)."</td></tr>";
 	}
 
-	if ($name == 0 or $name == 1 or $name == 4 or $name == 6 or $name == 8 or $name == 9) {
+	if ($name == 0 || $name == 1 || $name == 4 || $name == 6 || $name == 8 || $name == 9) {
 	echo "<tr><td>Убрать ссылку на раздел в заголовке блока</td>
 	<td>".select("options[notitlelink]", "1,0", "ДА,НЕТ", $notitlelink)."</td></tr>";
 	echo "<tr><td>Ссылка заголовка блока: заменить ссылку заголовка на любую другую</td>
 	<td>".input("options[alternative_title_link]", $alternative_title_link)."</td></tr>";
 	}
 
-	if ($name == 4) { // папки
-	echo "
+	if ($name == 0 || $name == 9 || $name == 4) {
+	echo "<tr><td>Сортировка страниц в списке по: </td>
+	<td>".select("options[sort]", "sort[|]date desc,date desc,date,sort[|]title,title,open_text,counter,golos desc,comm,cid[|]title,cid[|]date desc,price,prise desc,mainpage desc,search desc,pid,open_text[|]golos", "по очередности (настраивается),дате (с последнего),дате (с первого),названию (по алфавиту),названию (без поля сортировки),предисловию (по алфавиту),кол-ву посещений страницы,среднему баллу голосования,кол-ву комментариев,№ папки и названию,№ папки и дате страницы,цене (с мин.) магазин,цене (с макс.) магазин,важности (Главная стр.),наличию ключ. слов,№ страницы,предисловию и голосованию", $sort)."</td></tr>";
+	}
 
-	<tr><td><h2>Если открыт раздел</h2>
-	<li>показывать:</td>
-	<td><br><br>".select("options[papki_in_razdel_show]", "0,1,2,3,4", "папки первого уровня,папки первого уровня + страницы,все папки,все папки + страницы,только страницы", $papki_in_razdel_show)."</td></tr>";
+	if ($name == 4) { // папки
+	echo "<tr><td>Разделять пункты ".input("options[noli_razdelitel]", $noli_razdelitel, "size=3").". Если отключено, показывать пункты UL > LI</td> 
+	<td>".select("options[noli]", "1,0", "ДА,НЕТ", $noli)."</td></tr>";
+		
+	echo "<tr><td><h2>Если открыт раздел</h2>
+	<li>показывать:</td> 
+	<td><br><br>".select("options[papki_in_razdel_show]", "0,1,2,3,4,5", "папки первого уровня,папки первого уровня + страницы в корне,все папки,все папки + все страницы,все страницы,страницы в корне", $papki_in_razdel_show)."</td></tr>";
 	echo "<tr><td><li>вложенные пункты:</td>
 	<td>".select("options[papki_in_razdel_punkt]", "0,1,2", "открыты,свёрнуты,открыт только первый уровень", $papki_in_razdel_punkt)."</td></tr>
 
 	<tr><td><h2>Если открыта папка</h2>
 	<li>показывать:</td>
-	<td><br><br>".select("options[papki_in_papki_show]", "0,1,2,3,4,5", "как при открытом разделе,показать вложенные папки,показать вложенные папки + страницы,только вложенные папки,только вложенные папки + страницы,только вложенные страницы", $papki_in_papki_show)."</td></tr>";
+	<td><br><br>".select("options[papki_in_papki_show]", "0,1,2,3,4,5", "как при открытом разделе,все папки,все папки + страницы,только вложенные папки,только вложенные папки + страницы,только вложенные страницы", $papki_in_papki_show)."</td></tr>";
 	echo "<tr><td><li>вложенные пункты:</td>
-	<td>".select("options[papki_in_papki_punkt]", "0,1,2", "открыты,свёрнуты,открыта только ветка текущей папки", $papki_in_papki_punkt)."</td></tr>
+	<td>".select("options[papki_in_papki_punkt]", "0,1,2,3", "открыты,свёрнуты,открыт только первый уровень,открыта только ветка текущей папки", $papki_in_papki_punkt)."</td></tr>
 	<tr><td><li>выделять открытую папку</td>
 	<td>".select("options[papki_in_papki_check]", "1,0", "ДА,НЕТ", $papki_in_papki_check)."</td></tr>
 
 	<tr><td><h2>Если открыта страница</h2>
 	<li>показывать:</td>
-	<td><br><br>".select("options[papki_in_pages_show]", "0,1,2,3,4", "как при открытом разделе,как при открытой папке,только вложенные папки текущей папки,только вложенные папки + страницы,только вложенные страницы", $papki_in_pages_show)."</td></tr>";
+	<td><br><br>".select("options[papki_in_pages_show]", "0,1,2,3,4,5,6", "как при открытом разделе,как при открытой папке,только вложенные папки текущей папки,только вложенные папки + страницы,только вложенные страницы,только папки предыдущего уровня,только папки предыдущего уровня + страницы", $papki_in_pages_show)."</td></tr>";
 	echo "<tr><td><li>вложенные пункты:</td>
-	<td>".select("options[papki_in_pages_punkt]", "0,1,2", "открыты,свёрнуты,открыт только первый уровень", $papki_in_pages_punkt)."</td></tr>
-	<tr><td><li>выделять открытую папку</td>
-	<td>".select("options[papki_in_pages_papka_check]", "1,0", "ДА,НЕТ", $papki_in_pages_papka_check)."</td></tr>
+	<td>".select("options[papki_in_pages_punkt]", "0,1,2,3", "открыты,свёрнуты,открыт только первый уровень,открыта только ветка текущей страницы", $papki_in_pages_punkt)."</td></tr>
 	<tr><td><li>выделять открытую страницу</td>
 	<td>".select("options[papki_in_pages_check]", "1,0", "ДА,НЕТ", $papki_in_pages_check)."</td></tr>";
 	}
@@ -1469,9 +1474,6 @@ function edit_main($id) {
 	}
 
 	if ($name == 0 or $name == 9) {
-	echo "<tr><td>Сортировка страниц в списке по: </td>
-	<td>".select("options[sort]", "sort[|]date desc,date desc,date,title,open_text,counter,golos desc,comm,cid[|]title,cid[|]date desc,price,prise desc,mainpage desc,search desc,pid,open_text[|]golos", "по очередности (настраивается),дате (с последнего),дате (с первого),названию (по алфавиту),предисловию (по алфавиту),кол-ву посещений страницы,среднему баллу голосования,кол-ву комментариев,№ папки и названию,№ папки и дате страницы,цене (с мин.) магазин,цене (с макс.) магазин,важности (Главная стр.),наличию ключ. слов,№ страницы,предисловию и голосованию", $sort)."</td></tr>";
-
 	echo "<tr><td>Показывать Предисловие страницы под ее названием-ссылкой</td>
 	<td>".select("options[openshow]", "2,1,0", "да и без ссылки,да и со ссылкой,нет", $openshow)."</td></tr>";
 	}

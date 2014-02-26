@@ -1760,7 +1760,7 @@ function addpost($cid) {
       }
       if ($parentid != 0) {
         // вывести и очистить переменную
-        $ret .= $first_opt[$parentid];
+        if (isset($first_opt[$parentid])) $ret .= $first_opt[$parentid];
         $first_opt[$parentid] = "";
         $ret .= "<option value='".$cid2."' ".$sel.">".$title."</option>";
       }

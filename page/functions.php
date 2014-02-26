@@ -784,4 +784,92 @@ function site_redactor($nolink=false) {
     </script>";
 }
 ///////////////////////////////////////////////////////////////
+function list_papka($title, $par, $num, $noli, $noli_razdelitel, $cid_module, $all_papka, $all_pages, $papki_numbers, $cid_level, $sort, $punkt_open, $punkt_check, $ccid, $ppid, $page_cid) {
+  global $prefix;
+  $links = array();
+  foreach ($title as $id => $nam) {
+    $list_papka = $list_pages = $and5 = $and4 = $and3 = $and2 = $and = "";
+    if ($par[$id] == $cid_level) { // первый уровень
+      if ($papki_numbers == 1) {
+        $vhod = vhodyagie($id, $par, $num);
+        if ($vhod > 0) $and2 = "<div class='add'>+".$vhod."</div>";
+        if ( isset($num[$id]) ) $and = " (".$num[$id].$and2.")";
+        elseif ($vhod > 0) $and = " (".$and2.")";
+      }
+      if ($noli == 0) {
+        $and3 = "<li id='block_li_title_".$id."' class='block_li_title block_li_title_papka'>";
+        $and4 = "</li>";
+        $and5 = "ul";
+      } else { $and4 = $and3 = ""; $and5 = "div"; }
+      if ($all_papka == true) {
+        $list_papka = list_papka($title, $par, $num, $noli, $noli_razdelitel, $cid_module, $all_papka, $all_pages, $papki_numbers, $id, $sort, $punkt_open, $punkt_check, $ccid, $ppid, $page_cid);
+      }
+      if ($all_pages == true && $id != '0') {
+        $sql = "SELECT `pid`, `module`, `title` from ".$prefix."_pages where `tables`='pages' and `cid`='".$id."' and `active`='1' order by ".$sort;
+        $list_pages = list_pages($sql, $noli, $noli_razdelitel, $punkt_check, $ppid);
+      }
+      if ($list_papka != "" || $list_pages!= "") {
+        $hide = "";
+        if ($punkt_open == 1) $hide = " class='hide'";
+        if ($punkt_open == 2 && $cid_level != '0') $hide = " class='hide'";
+        if ($punkt_open == 3) {
+          if (isset($par[$ccid])) {
+            if ($id != $par[$ccid]) $hide = " class='hide'";
+            if ($id == $ccid) $hide = "";
+          } elseif ($id != $page_cid) $hide = " class='hide'";
+          if (isset($par[ ''.$par[$ccid].'' ]))
+            if ($id == $par[ ''.$par[$ccid].'' ]) $hide = "";
+        }
+        $and4 = "<".$and5.$hide." id='papki_".$id."'>".$list_papka.$list_pages."</".$and5.">".$and4;
+      }
+      // выделяем папку
+      $active = "";
+      if (isset($par[$ccid])) {
+        if ($punkt_check == 1 && ( $id == $par[$ccid] || $id == $ccid) ) $active = " punkt_active";
+      } elseif ($punkt_check == 1 && $id == $page_cid) $active = " punkt_active";
+      if (isset($par[ ''.$par[$ccid].'' ]))
+        if ($punkt_check == 1 && $id == $par[ ''.$par[$ccid].'' ]) $active = " punkt_active";
+
+      if ( ($noli == 0 && $and4 != "</li>") || ($noli == 1 && $and4 != "") ) {
+        $link1 = "<span onclick='$(\"#papki_".$id."\").toggle();' class='spoiler_link".$active."'>";
+        $link2 = "</span>";
+      } elseif ( $punkt_check == 1 && $id == $ccid ) {
+        $link1 = "<span class='punkt_active_main".$active."'>";
+        $link2 = "</span>";
+      } else {
+        $link1 = "<a id='papki_".$id."' href='".re_link("-".$cid_module[$id]."_cat_".$id)."' class='punkt_link".$active."'>";
+        $link2 = "</a>";
+      }
+      
+      $links[] = $and3.$link1.$nam.$link2.$and.$and4."";
+    }
+  }
+  if ($noli != 0) $razdelitel = $noli_razdelitel; 
+  else $razdelitel = "";
+  $links = implode($razdelitel, $links);
+  return $links;
+}
+/////////////////////////////////////////////////////////////// вывод страниц
+function list_pages($sql, $noli, $noli_razdelitel, $punkt_check, $ppid) {
+  $pagesshow = array();
+  global $db;
+  $result = $db->sql_query($sql);
+  while ($row = $db->sql_fetchrow($result)) {
+    $pid_id = $row['pid'];
+    $pid_module = $row['module'];
+    $pid_title = $row['title'];
+    if ($noli == 0) $and3 = "<li id='block_li_title_".$pid_id."' class='block_li_title block_li_title_pages'>";
+    if ($punkt_check == 1 && $ppid == $pid_id) {
+      $pagesshow[] = $and3."<span class='punkt_link punkt_active' href='".re_link("-".$pid_module."_page_".$pid_id)."'>".$pid_title."</span>";
+    } else {
+      $pagesshow[] = $and3."<a id='pages_".$pid_id."' class='punkt_link' href='".re_link("-".$pid_module."_page_".$pid_id)."'>".$pid_title."</a>";
+    }
+  }
+  if ($noli != 0) $razdelitel = $noli_razdelitel; 
+  else $razdelitel = "";
+  $pagesshow = implode($razdelitel, $pagesshow);
+  return $pagesshow;
+}
+///////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
 ?>

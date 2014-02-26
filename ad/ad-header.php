@@ -3,7 +3,7 @@ if (stristr(htmlentities($_SERVER['PHP_SELF']), "ad-header.php")) {
 	Header("Location: index.php"); die();
 }
 global $clean_urls, $deviceType, $postlink, $name, $sitename, $op, $type, $red, $prefix, $db, $id, $nastroi, $lang_admin, $siteurl, $op, $ad_fon, $show_admin_top;
-if ($postlink != "") $post = "<button class='small' onclick='location.href=\"".$postlink."\"' title='".aa("Открыть почтовый сайт...")."'><span class='icon small black' data-icon='@'></span> ".aa("Почта")."</button> "; else $post="";
+if ($postlink != "") $post = "<button class='small' onclick='location.href=\"".$postlink."\"' title='".aa("Открыть почтовый сайт...")."'><span class='icon small' data-icon='@'></span> ".aa("Почта")."</button> "; else $post="";
 
 // Определяем заголовок страницы (title) и цвета кнопок главного меню (какой раздел администрирования выбран)
 $color1 = $color2 = $color3 = $color4 = "gray"; // Цвета 4х кнопок основных категорий админки (Содержание...)
@@ -47,6 +47,8 @@ echo "<!doctype html>
 
 <script src='includes/jquery.tag-it.min.js'></script>
 <link rel='stylesheet' href='includes/jquery.tagit.css'>
+
+<link href='http://fonts.googleapis.com/css?family=Poiret+One&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
 
 <link rel='stylesheet' href='includes/jquery-ui.css'>
 <!--[if lt IE 9]><script src='includes/html5.js'></script><![endif]-->

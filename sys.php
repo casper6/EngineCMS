@@ -177,7 +177,7 @@ function GraphicAdmin() {
 	echo "<div class='curved-vt-2 hide' style='margin-left:-350px; width: 700px; top: 10px;' id='add'></div>
 	<div class='black_grad'>
 	<button id='new_razdel_button' title='".aa("Добавить раздел...")."' class='small right3' onclick=\"openbox('10','', 'add'); $('.dark_pole2sel').attr('class', 'dark_pole2');\"><span class=\"mr-2 icon darkgrey medium\" data-icon=\"+\"></span> Добавить раздел</button>
-	<span class='h1'>".aa("Разделы:")."</span>
+	<span class='h1'>".aa("Разделы")."</span>
 		</div>".$razdel_txt."
 		<div style='max-height:700px;'>";
 
@@ -235,7 +235,7 @@ function GraphicAdmin() {
 		$link = "";
 		$doping = "";
 		if (strpos($options,"base=")) {
-			$title = "БД «".trim($title)."»";
+			$title = trim($title).", ".aa("база данных");
 			$baza_name  = $nam; // Название таблицы БД
 			$plus = $db->sql_numrows($db->sql_query("SELECT `id` FROM ".$prefix."_base_".$nam." where `active`!='0'"));
 			if ($plus < 1) $plus = "";
@@ -261,7 +261,7 @@ function GraphicAdmin() {
 			$ico = ",";
 			$reaction = "razdel_show(\"\", ".$id.", \"".$nam."\", \"".$text."\");";
 		} else { // не содержит страниц
-			$title = trim($title)." (".aa("стр.").")";
+			$title = trim($title).", ".aa("стр.");
 			$right = "<a class='button small ml5' href='sys.php?op=mainpage&type=2&id=".$id."#1' title='".aa("Редактировать страницу раздела")."'><span class='icon small' data-icon='7'></span></a>";
 			$ico = ".";
 			$reaction = "razdel_show(\"\", ".$id.", \"".$nam."\", \"page\");";
@@ -285,7 +285,7 @@ function GraphicAdmin() {
 
 	echo "<div style='margin:10px;'>";
 	if (!empty($project_logotip) && file_exists($project_logotip)) echo "<img src='".$project_logotip."' class=center>";
-	if (!empty($project_name)) echo "<br><font style='font-size:44px; color:gray;'>".$project_name."</font>";
+	if (!empty($project_name)) echo "<br><font class='big_main'>".$project_name."</font>";
 	echo "</div>
 	<form action='".$admin_file.".php?op=mes' method='post' name=form class='nothing' class='w100'>
 		<div class='center light_fon' style='height:242px; border: #ddd 1px solid;'>

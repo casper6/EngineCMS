@@ -16,7 +16,7 @@ function users() {
 			<div id='razdels' style='background:#e7e9ec;'>
 			<div class='black_grad'>
 			<button id=new_razdel_button title='Назад в настройки сайта' class='small black' onclick='location.href=\"/sys.php?op=options#1\"' style='float:left; margin:3px;'><span style='margin-right: -2px;' class=\"icon darkgrey small\" data-icon=\"{\"></span></button>
-			<span class='h1'>Настройка пользователей</span></div>";
+			<span class='h1'>Пользователи</span></div>";
 	
 	echo "<div id='mainrazdel1' class='dark_pole2'><a class='base_page' onclick=\"options_show('1','show_recent')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"v\"></span><span class='plus20'>Настройка регистрации</span></div></a></div>";
 	echo "<div class='right3 '><button id=mainrazdel4 style='float:right;' title='Добавить группу...' class='dark_pole2' onclick=\"options_show('4','show_add_group');\"><span class='mr-2 icon darkgrey small' data-icon='+'></span><span class='plus20'>Добавить</span></button></div>

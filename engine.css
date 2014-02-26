@@ -24,8 +24,8 @@ body {
 	-moz-box-shadow: 0 0 25px #333;
 }
 body, td {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 14px;
+	font-family: Arial, Verdana, Helvetica, sans-serif;
+	font-size: 15px;
 }
 ul li a { text-shadow: none !important;}
 
@@ -151,8 +151,10 @@ input#redactorSaveBtn {background:green; color:white;}
     -moz-transform: rotate(-90deg);
     -webkit-transform: rotate(-90deg);
     -o-transform: rotate(-90deg);
-    color: black;
+    color: #999;
 }
+
+
 
 .ace_editor {z-index: 500;}
 
@@ -276,40 +278,33 @@ h2.spiski p {display: inline;}
 	/* background: #f4f5f7; */
 	/* webkit example */
 	background-image: -webkit-gradient(
-	  linear, left top, left bottom, from(#f4f5f7),
-	  to(#a8acb8)
+	  linear, left top, left bottom, from(#ffffff),
+	  to(#dddddd)
 	);
 	/* mozilla example - FF3.6+ */
 	background-image: -moz-linear-gradient(
-	  #f4f5f7 0%, #a8acb8 95%
+	  #ffffff 0%, #dddddd 95%
 	);
 	/* approximately a 33% opacity on blue */
 	filter: progid:DXImageTransform.Microsoft.gradient(
-	  startColorstr=#f4f5f7FF, endColorstr=#a8acb8FF
+	  startColorstr=#ffffffFF, endColorstr=#ddddddFF
 	);
 	/* IE8 uses -ms-filter for whatever reason... */
 	-ms-filter: progid:DXImageTransform.Microsoft.gradient(
-	  startColorstr=#f4f5f7FF, endColorstr=#a8acb8FF
+	  startColorstr=#ffffffFF, endColorstr=#ddddddFF
 	);
-	background: -o-linear-gradient(top,  #f4f5f7 0%,#a8acb8 100%);
-	background: -ms-linear-gradient(top,  #f4f5f7 0%,#a8acb8 100%);
-	background: linear-gradient(top,  #f4f5f7 0%,#a8acb8 100%);
-	/*
-	background: -moz-linear-gradient(top,  #f4f5f7 0%, #a8acb8 100%);
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f4f5f7), color-stop(100%,#a8acb8));
-	background: -webkit-linear-gradient(top,  #f4f5f7 0%,#a8acb8 100%);
-	background: -o-linear-gradient(top,  #f4f5f7 0%,#a8acb8 100%);
-	background: -ms-linear-gradient(top,  #f4f5f7 0%,#a8acb8 100%);
-	background: linear-gradient(top,  #f4f5f7 0%,#a8acb8 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f4f5f7', endColorstr='#a8acb8',GradientType=0 );
-	*/
-	border-bottom:1px solid #80868f;
+	background: -o-linear-gradient(top,  #ffffff 0%,#dddddd 100%);
+	background: -ms-linear-gradient(top,  #ffffff 0%,#dddddd 100%);
+	background: linear-gradient(top,  #ffffff 0%,#dddddd 100%);
+
+	/*border-bottom:1px solid #80868f;*/
 	/*text-align:center;*/
 	padding-left: 5px;
 	height: 42px;
 	min-width:290px;
 }
 .yellow_grad {
+	border:none;
 	background: #FFFFCC;
 	background: -moz-linear-gradient(top,  #FFFFCC 0%, #ffffff 100%);
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#FFFFCC), color-stop(100%,#ffffff));
@@ -362,38 +357,40 @@ div.b8f4f2 {background: #b8f4f2; border:1px solid gray;}
 
 .nobr {	white-space: nowrap;}
 
+.big_main {font-family: 'Poiret One'; font-size:44px; color:gray;}
+
 h1, h2, h3 {margin:0; padding:5px; font-weight: normal;}
-.h1 {font-size: 22pt; color: #717880;}
+.h1 {font-size: 22pt; color: #717880; font-family: 'Poiret One';}
 .h2 {font-size: 14pt; color: #333;}
-.h3 {font-size: 13pt; color: #333;}
+.h3 {font-size: 14pt; color: #666;}
 h1 {font-size: 21px;color:#333;}
 h2 {font-size: 17px;color:#333; margin-top:15px;}
 .dark_pole h2, .table_light h2 {margin-top:0;}
 h3 {font-size: 14px;color:#333;}
-#podrazdel, .preview {margin-top:5px; padding-left:5px; padding-right:5px;}
+#podrazdel, .preview {padding-left:5px; padding-right:5px;}
 
 textarea.big {
-font-family: Verdana, Arial, Helvetica, sans-serif;
-font-size: 1em;
-border:1px solid #bbbbbb;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 1em;
+	border:1px solid #bbbbbb;
 }
 select, input {
-font-family: Verdana, Arial, Helvetica, sans-serif;
-border:1px solid #bbbbbb;
-font-size: 14px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	border:1px solid #bbbbbb;
+	font-size: 14px;
 }
 
 input {
-transition: all 0.30s ease-in-out;
--webkit-transition: all 0.30s ease-in-out;
--moz-transition: all 0.30s ease-in-out;
-outline:none;
+	transition: all 0.30s ease-in-out;
+	-webkit-transition: all 0.30s ease-in-out;
+	-moz-transition: all 0.30s ease-in-out;
+	outline:none;
 }
 input:focus {
-border:#35a5e5 1px solid;
-box-shadow: 0 0 5px rgba(81, 203, 238, 1);
--webkit-box-shadow: 0 0 5px rgba(81, 203, 238, 1);
--moz-box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+	border:#35a5e5 1px solid;
+	box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+	-webkit-box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+	-moz-box-shadow: 0 0 5px rgba(81, 203, 238, 1);
 }
 input[type=submit] {color:white; background:#666666; border-radius: 5px; -moz-border-radius: 5; -webkit-border-radius: 5;}
 input[type=submit]:hover {background: green; cursor:pointer;}
@@ -415,7 +412,7 @@ border-bottom-left-radius: 10;
 
 .dark_pole2:hover {transformation: transition(all 1s linear);}
 
-
+ul.button-bar li {border: none !important;}
 ul.button-bar li.black,
 ul.button-bar li.black:hover a,
 .dark_pole2sel,
@@ -445,17 +442,15 @@ ul.button-bar li.black:hover a,
 	background: -o-linear-gradient(top,  #999999 0%,#333333 100%);
 	background: -ms-linear-gradient(top,  #999999 0%,#333333 100%);
 	background: linear-gradient(top,  #999999 0%,#333333 100%);
-	/*
-	background: #333333;
-	background: -moz-linear-gradient(top,  #999999 0%, #333333 100%);
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#999999), color-stop(100%,#333333));
-	background: -webkit-linear-gradient(top,  #999999 0%,#333333 100%);
-	background: -o-linear-gradient(top,  #999999 0%,#333333 100%);
-	background: -ms-linear-gradient(top,  #999999 0%,#333333 100%);
-	background: linear-gradient(top,  #999999 0%,#333333 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#999999', endColorstr='#333333',GradientType=0 );
-	*/
-	border-bottom: 1px #999999 solid;
+}
+ul.button-bar li {border: none !important;}
+ul.button-bar li.black,
+ul.button-bar li.black:hover a,
+.openpage:hover,
+.openpapka:hover,
+.black_polosa,
+.sho_page a:hover {
+	border: none !important;
 }
 ul.button-bar li.black span {color:white;}
 ul.button-bar li.black a {color:white !important;}
@@ -511,22 +506,25 @@ p {margin-top: 15px;margin-left: 5px;}
 .dark_pole {border:0; border-radius: 5px; -moz-border-radius: 5; -webkit-border-radius: 5; padding:2px; margin:2px;background:#dddddd; display: inline-block; cursor:pointer;}
 .dark_pole3 {border:0; border-radius: 5px; -moz-border-radius: 5; -webkit-border-radius: 5; padding:2px; color:white !important; margin:2px; background:#8c8c8c; text-decoration:none; display: inline-block;}
 
-
-.dark_pole2 { min-height:28px; max-height:44px; overflow:hidden; border-top: 1px solid #edeef0; border-bottom: 1px solid #d8dadc; padding:5px;}
-.dark_pole:hover, .dark_pole2:hover h2, .dark_pole3:hover {color:black !important; background:#eeeeee; cursor:pointer;}
-.dark_pole2:hover {color:black !important; cursor:pointer;}
-
-.dark_pole2sel,
-.dark_pole2:hover,
-.sho_page a:hover { 
-	min-height:28px; max-height:44px; 
-	border-top: 1px solid #777777; border-bottom: 1px solid #999999;
+.dark_pole2, .dark_pole2sel, .dark_pole2:hover, .dark_pole2sel:hover, .sho_page a:hover { 
+	min-height:28px;
+	max-height:44px;
+	overflow:hidden;
+	border-top: 1px solid #d8dadc;
 	padding:5px;
 }
+.dark_pole:hover, .dark_pole2:hover h2, .dark_pole3:hover {
+	color:black !important; 
+	background:#eeeeee; cursor:pointer;
+}
+.dark_pole2:hover {color:black !important; cursor:pointer;}
 
 .sho_page a:hover { min-height:18px;}
 
-.openpapka:hover a.pointer, .openpapka:hover span.small+.red, .openpage:hover span.pointer, .openpage:hover a.pointer, .dark_pole2sel, .dark_pole2sel span.plus20, .dark_pole2:hover span.plus20, .dark_pole2sel span.green, .dark_pole2:hover span.green, .dark_pole2sel span.gray, .dark_pole2:hover span.gray, .dark_pole2:hover { color: white !important; max-height:44px; overflow:hidden; }
+.openpapka:hover a.pointer, .openpapka:hover span.small+.red, .openpage:hover span.pointer, .openpage:hover a.pointer, .dark_pole2sel, .dark_pole2sel:hover, .dark_pole2sel span.plus20, .dark_pole2:hover span.plus20, .dark_pole2sel span.green, .dark_pole2:hover span.green, .dark_pole2sel span.gray, .dark_pole2:hover span.gray, .dark_pole2:hover { 
+	color: white !important; 
+	max-height:140px; 
+	overflow:hidden; }
 .dark_pole2,
 .dark_pole2sel span.icon span, .dark_pole2:hover span.icon span {  }
 .dark_pole2sel .f14, .dark_pole2:hover .f14 { color: #058bf5 !important; }
@@ -630,7 +628,7 @@ input{ padding: 0; }
 	background-color: #fff;
 }
 
-.button{font: bold 10px Verdana, Arial, Helvetica, sans-serif;}
+.button, button {font: bold 10px Verdana, Arial, Helvetica, sans-serif; border:none !important;}
 
 /*~~~~~~Jquery Table Sorter~~~~~~~~*/
 
@@ -690,7 +688,7 @@ left:50%;
 .li_light li:hover { background: #e9f2fc; }
 /* Красивая таблица - стиль table_light */
 table.table_light tr {border-bottom: 1px solid #ddd;}
-table.table_light td { font-size:13px; border: 0; padding: 4px; color: black; }
+table.table_light td { font-size:15px; border: 0; padding: 4px; color: black; }
 table.table_light thead th, table.table_light tfoot th { font-size:14px; border-bottom: 1px dotted #666; color: black;}
 table.table_light tbody td a { color: #0e5db6; }
 table.table_light tbody td a:hover { color: red; }

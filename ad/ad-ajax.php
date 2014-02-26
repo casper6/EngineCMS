@@ -1010,7 +1010,7 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
             $parse = explode("|",$row3['text']);
             parse_str($parse[1]); // Разложим на переменные и узнаем дизайн раздела
             $styles2[] = $design;
-            $options .= "<option value='".$parse[1]."'>раздела «".$row3['title']."»</option>";
+            $options .= "<option value='".$parse[1]."'>взять настройки раздела «".$row3['title']."»</option>";
         }
         $styles2 = array_count_values($styles2);
         reset($styles2);
@@ -1043,25 +1043,25 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
         $trans_title = " onkeyup='$(\"input#adres_razdela\").val( del_space( $(\"input#name_razdel\").val() ) );'";
         break;
       default: 
-        $chpu_opis = "<b>ЧПУ выключено.</b> Адрес раздела вводится вручную или транслитеруется из названия. <i>Используются прописные англ. буквы и знаки «_» и «-», без пробелов. Примеры: «about_me», «product», «catalog», «contact», «main-price» и т.д.</i> Перед адресом в ссылке автоматически ставится тире, после адреса не ставится слеш. Пример: /-razdel";
+        $chpu_opis = "<b>ЧПУ выключено.</b> Адрес раздела вводится вручную или транслитеруется из названия. <i>Используются прописные англ. буквы и знаки «_» и «-», без пробелов. Примеры адреса: «about_me», «product», «catalog», «contact», «main-price» и т.д.</i> Перед адресом в ссылке автоматически ставится тире, после адреса не ставится слеш. Пример получаемой ссылки: /-about_me";
         $trans_title = " onkeyup='$(\"input#adres_razdela\").val( translite( del_space( $(\"input#name_razdel\").val() ) ).toLowerCase()  );'";
         break;
     }
     $pageslistdel .= close_button("add")."
     <form method='post' action=sys.php>
     <button type='submit' class='green'>Добавить раздел</button>
-    <p><span class='h2'>Название раздела:</span> <input id='name_razdel' type='text' name='title' size='30' class='w60' autofocus".$trans_title."><br>
-    <i>Примеры: «О нас», «Наша продукция», «Каталог», «Контакты» и т.д.</i>
-    <p><span class='h2'>Адрес раздела:</span> <input type='text' id='adres_razdela' name='namo' size='30' class='w45'> ";
+    <p><input placeholder='Название раздела' id='name_razdel' type='text' name='title' size='30' class='w100' autofocus".$trans_title."><br>
+    <i>Примеры названия раздела: «О нас», «Наша продукция», «Каталог», «Контакты» и т.д.</i>
+    <p><input placeholder='Адрес раздела' type='text' id='adres_razdela' name='namo' size='30' class='w60'> ";
     if ($lang != "en") $pageslistdel .= "<a class='button small' onclick=\"window.open('http://translate.google.ru/#".$lang."/en/' + $('#name_razdel').val(),'Перевод',' width=800,height=400'); return false;\">Перевести название</a>";
     $pageslistdel .= "<br>".$chpu_opis."
-    <h2>Использовать настройки:</h2><select name='text' class='w100'>
-    <option value='[название]'>• раздел будет отдельной страницей без вложенных папок и страниц</option>
-    <option value='lim=15&amp;comments=0' selected>• вариант «Статьи» (15 страниц на листе, комментарии выключены)</option>
-    <option value='lim=10&amp;comments=1&amp;comments_add=1&amp;vetki=2&amp;comments_mail=1&amp;comments_adres=1'>• вариант «Блог» (10 страниц на листе, комментарии включены)</option>
-    <option value='lim=500&amp;comments=0'>• вариант «Каталог» (500 страниц на листе, комментарии выключены)</option>
+    <p><select name='text' class='w100'>
+    <option value='[название]'>• раздел «Страница» (без папок и страниц)</option>
+    <option value='lim=15&amp;comments=0' selected>• раздел «Статьи» (15 страниц на листе, комментарии выключены)</option>
+    <option value='lim=10&amp;comments=1&amp;comments_add=1&amp;vetki=2&amp;comments_mail=1&amp;comments_adres=1'>• раздел «Блог» (10 страниц на листе, комментарии включены)</option>
+    <option value='lim=500&amp;comments=0'>• раздел «Каталог» (500 страниц на листе, комментарии выключены)</option>
     ".$options."</select><br><i>Можно настроить новый раздел, выбрав один из вариантов или ранее созданных разделов.</i>
-    <p><span class='h2'>Выберите дизайн:</span> <select name='useit' class='w60'>".$styles."</select><br><i>Дизайн раздела окружает содержимое раздела оформлением, он обязательно должен содержать в себе блок [содержание] (который выводит содержание раздела), а также у дизайна должен быть выбран стиль (css).</i>
+    <p><span class='h2'>Выберите дизайн:</span><br><select name='useit' class='w100'>".$styles."</select><br><i>Дизайн раздела окружает содержимое раздела оформлением, он обязательно должен содержать в себе блок [содержание] (который выводит содержание раздела), а также у дизайна должен быть выбран стиль (css).</i>
     <input type='hidden' name='type' value='2'>
     <input type='hidden' name='shablon'>
     <input type='hidden' name='id' value=''>
@@ -1216,6 +1216,7 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
         <div style='display:none;' id=comm".$cid.">
         ".$otvet.$mails.$tel."<br><br>
         <div class=bggray>".$txt."</div><br>
+        <a title='Удалить комментарий' onclick='delcomm(".$cid.")' class='button red white small right3'>Удалить полностью</a>
         <a id='show_otvet_link".$cid."' onclick=\"show_otvet_comm(".$cid.",'".$avtor."','".$mail."','".$module."',0, '".$avtor_comment1."', '".$add_option."')\" class='button medium'>".icon('orange medium','"')." Ответить на комментарий</a> 
         <a id='show_shablon_link".$cid."' onclick=\"show_otvet_comm(".$cid.",'".$avtor."','".$mail."','".$module."',1, '".$avtor_comment1."', '".$add_option."')\" class='button small'>".icon('orange small','\'')." Использовать шаблон ответа</a>
         <div id='otvet_comm".$cid."'></div><br><br>
@@ -1227,7 +1228,7 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
           // Преобразование адреса URL в ссылку (с учетом тире)
           $txt = preg_replace('@(https?://([-\w\.]+)+(:\d+)?(/([-\w/_\.]*(\?\S+)?)?)?)@', '<a href="$1" target="_blank">$1</a>', $txt);
           $pageslistdel .= "<tr valign=top id='1comm".$cid."'".$bgcolor."'><td class='gray'><nobr>".$data."</nobr></td><td>
-          <a title='Удалить сообщение' onclick='delcomm(".$cid.")' class='button red white small right3'>Удалить</a>";
+          <a title='Удалить сообщение' onclick='delcomm(".$cid.")' class='button red white small right3'>Удалить полностью</a>";
           if ($row5['active'] == 1) $pageslistdel .= "<a onclick='offcomm(".$cid.")' class='button medium right3'>Прочитано</a>";
           $pageslistdel .= "<span class='green2'>".$avtor."</span> &rarr; ".$txt."</td></tr>";
         }

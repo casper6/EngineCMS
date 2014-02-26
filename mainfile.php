@@ -269,7 +269,7 @@
     $pass_razdels = array(); // список паролей для раздела
     $nopass_razdels = array(); // список без паролей для раздела
     //$sqlY = "SELECT `id`,`type`,`name`,`title`,`text`,`useit` from `".$prefix."_mainpage` where `tables`='pages' and (`type`='2' or `type`='5')";
-    $sqlY = "SELECT `id`,`type`,`name`,`title`,`text`,`useit`,`meta_title` from `".$prefix."_mainpage` where `tables`='pages' and (`type`='1' or `type`='2' or `type`='5')";//`type`='1' or 
+    $sqlY = "SELECT `id`,`type`,`name`,`title`,`text`,`useit`,`meta_title` from `".$prefix."_mainpage` where `tables`='pages' and (`type`='1' or `type`='2' or `type`='5') order by `type`,`title`";//`type`='1' or 
     $resultY = $db->sql_query($sqlY);
     while ($rowY = $db->sql_fetchrow($resultY)) {
       $nameX = $rowY['name'];
@@ -283,7 +283,7 @@
       $id_razdel_and_bd[$nameX] = $rowY['id']; 
       $title_razdel_and_bd[$nameX] = $rowY['title']; 
 
-      if ($rowY['type'] == 5) $title_razdel_and_bd[$nameX] = aa("База данных")." «".$title_razdel_and_bd[$nameX]."»";
+      if ($rowY['type'] == 5) $title_razdel_and_bd[$nameX] = $title_razdel_and_bd[$nameX].", ".aa("база данных");
       else {
         if ($rowY['type'] != 1) {
           $name_razdels[$idX] = $rowY['name'];
