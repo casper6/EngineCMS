@@ -51,30 +51,15 @@ input, textarea, select {
 
 .v_bottom {vertical-align: bottom !important; }
 button, a.btn, a.btn:visited, a.button, a.button:visited, input[type="submit"], input[type="reset"], input[type="button"] { text-shadow: none !important; }
-input#redactorSaveBtn {background:green; color:white;}
+/* input#redactorSaveBtn {background:green; color:white;} */
 
-.redactor_toolbar li a.redactor_btn_superscript {background: url(images/superscript.png) no-repeat;}
-.redactor_toolbar li a.redactor_btn_subscript {background: url(images/subscript.png) no-repeat;}
-.redactor_toolbar li a.redactor_btn_pre {background: url(images/pre.png) no-repeat !important;}
-.redactor_toolbar li a.redactor_btn_button_block {background: url(images/brackets1.png) no-repeat;}
-.redactor_toolbar li a.redactor_btn_button_link {background: url(images/brackets2.png) no-repeat;}
-.redactor_toolbar li a.redactor_btn_button_more {background: url(images/more.png) no-repeat;}
-
-.redactor_editor,
-.redactor_editor:focus {
-	position: relative;
-	overflow: scroll;
-	margin: 0 !important;
-	padding: 10px;
-	padding-bottom: 5px;
-	outline: none;
-	background: none;
-	background: #fff !important;
-	box-shadow: none !important;
-	white-space: normal;
-	min-height: 200px;
-	max-height: 600px;
-}
+#redactor-tab-control-2 {display:none !important;}
+.redactor_toolbar li a.re-superscript { background-image: url(images/superscript.png); }
+.redactor_toolbar li a.re-subscript { background-image: url(images/subscript.png); }
+.redactor_toolbar li a.re-pre { background-image: url(images/pre.png); }
+.redactor_toolbar li a.re-button_block { background-image: url(images/brackets1.png); }
+.redactor_toolbar li a.re-button_link { background-image: url(images/brackets2.png); }
+.redactor_toolbar li a.re-button_more { background-image: url(images/more.png); }
 
 #razdels { min-width:300px; padding-bottom:20px; overflow:auto;}
 .razdels {background:#e7e9ec;}

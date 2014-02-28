@@ -12,9 +12,9 @@ RedactorPlugins.fontsize = {
 			dropdown['s' + i] = { title: s + 'px', callback: function() { that.setFontsize(s); } };
 		});
 
-		dropdown['remove'] = { title: 'Remove font size', callback: function() { that.resetFontsize(); } };
+		dropdown['remove'] = { title: 'Удалить размер', callback: function() { that.resetFontsize(); } };
 
-		this.buttonAdd( 'fontsize', 'Change font size', false, dropdown);
+		this.buttonAdd('fontsize', 'Размер шрифта', false, dropdown);
 	},
 	setFontsize: function(size)
 	{

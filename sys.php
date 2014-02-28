@@ -380,22 +380,23 @@ function red_vybor() { // Выбор редактора
   <a onclick=show('red_vybor') style='cursor:pointer; float:right;' title='Закрыть'><div class='close_button radius'>x</div></a>
   <h1>".aa("Выбор редактора")."</h1>
 
-<a href='".$link."&red=3' class='dark_pole3'>
-  <img src=/images/3.jpg><br>
-  <h2 style='display:inline'>".aa("Визуальный №1")."</h2> ".aa("Быстрая вставка фотографий, Удобная работа с таблицами, Вставка видео-роликов и файлов, Автоматическая чистка! при вставке из Word'а, Во весь экран, Зачеркнутый текст, Заливка текста (Цвет фона), Отступы списков.")."</a>
+
 
 <a href='".$link."&red=4' class='dark_pole3'>
-  <img src=/images/4.jpg><br>
-  <h2 style='display:inline'>".aa("Визуальный №2")."</h2> ".aa("Все возможности редактора «Визуальный №1», а также: Загрузка файлов и фотографий путем переноса мышкой, Изменение размеров фотографий движением мышки после их удерживания, Возможность назначения фотографиям ссылок (создание баннеров), Автоматическое изменение размера окна редактора, Поддержка заготовок текста (добавить заготовки можно в Настройках).")."</a>
-
-<a href='".$link."&red=1' class='dark_pole3'>
-  <img src=/images/1.jpg><br>
-  <h2 style='display:inline'>".aa("HTML-код №1")."</h2> ".aa("Невизуальный редактор (простой текст и код).")."</a>
+  <img src=/images/4.png width=637><br>
+  <h2 style='display:inline'>".aa("Основной визуальный")."</h2></a>
 
 <a href='".$link."&red=2' class='dark_pole3'>
   <img src=/images/2.png><br>
-  <h2 style='display:inline'>".aa("HTML-код №2")."</h2> ".aa("Невизуальный редактор с цветной подсветкой кода.")."</a>
+  <h2 style='display:inline'>".aa("С подсветкой кода")."</h2> ".aa("Невизуальный редактор с цветной подсветкой кода.")."</a>
 
+<a href='".$link."&red=1' class='dark_pole3'>
+  <img src=/images/1.jpg><br>
+  <h2 style='display:inline'>".aa("Текстовый")."</h2> ".aa("Невизуальный редактор (простой текст и код).")."</a>
+
+<a href='".$link."&red=3' class='dark_pole3'>
+  <img src=/images/3.png width=637><br>
+  <h2 style='display:inline'>".aa("Запасной визуальный")."</h2> ".aa("Если основной не будет работать.")."</a>
   </div>";
 }
 

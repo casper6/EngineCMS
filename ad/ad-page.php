@@ -273,10 +273,6 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
     // Подстройка редактирования
     $main_title = $title_razdel_and_bd[$module]." &rarr; Редактирование страницы";
     $name = $module;
-    if ($active!=1) $check= " unchecked"; else $check= " checked";
-    if ($nocomm==1) $check2= " checked"; else $check2= " unchecked";
-    if ($rss==1) $check3= " checked"; else $check3= " unchecked";
-    if ($mainpage==1) $check4= " checked"; else $check4= " unchecked";
     $data = explode(" ",$data);
     $data1 = date2normal_view($data[0]);
     $data = explode(":",$data[1]);
@@ -286,7 +282,6 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
     $data3_2 = date("i", time());
     $data3_2 = "<option value=".$data3_2."> ".$data3_2."!</option>";
     $saveme = "_edit_sv_page";
-
   } else { // Если это создание новой страницы
     $golos_reiting = 0;
     if ( $pid > 0 ) { // Если только что добавили страницу
@@ -319,10 +314,10 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
     // Подстройка создания
     $main_title = "Добавление страницы";
     $description = $keywords = $search = $meta_title = $clean_url = "";
-    $check= " checked"; // active
-    $check2= " unchecked"; // nocomm
-    $check3= " checked"; // rss
-    $check4= " unchecked"; // mainpage
+    $active = 1; // active
+    $nocomm = 0; // nocomm
+    $rss = 1; // rss
+    $mainpage = 0; // mainpage
     $sor = "0";
     $data1 = date2normal_view(date("Y-m-d", time()));
     $data2 = date("H", time());
@@ -345,8 +340,8 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
   <span class='h1 pt10'>".$main_title."</span>";
   if ($nastroi != 1) red_vybor();
   echo "</div>
-  <table width=100%><tr valign=top><td width=250 id='razdels' style='background:#e7e9ec;'><p>
-  <label class='darkgreen b'><input type=checkbox name=active value=1".$check."> Включить страницу</label> <a onclick=\"show('help3')\" class=help>?</a><div id='help3' style='display:none;'>Если поставить эту галочку — ссылка на эту страницу будет видна в автоматическом списке страниц данного раздела, а также в блоках, которые выводят страницы данного раздела (если они созданы). Если галочку убрать — на эту страницу все равно можно поставить ссылку из любого места на сайте или с другого сайта и страница будет видна тем, кто перейдет по этой вручную созданной ссылке. Если вы хотите, чтобы в общем списке страниц данная страница не отображалась, а раскрывала более подробную информацию при переходе с другой страницы — отключите ее и сделайте на нее ссылку вручную.<br></div></p>";
+  <table width=100%><tr valign=top><td width=250 id='razdels' style='background:#e7e9ec;'>
+  <p>".select("active", "0,1", "НЕТ,ДА", $active)." <b>Включить</b></p>";
 
   parse_str(str_replace("pages|", "", $txt_razdels[$name]));
   // голосование
@@ -462,13 +457,13 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
   Можно создать Блок «Облако тегов». Теги также могут выводиться на страницах и облаком тегов в начале раздела (см. в настройках Раздела).</span><br></div>
 
   <table class='w100 f12'><tr><td>
-  <label><input type='checkbox' name='mainpage' value='1'".$check4."> На главную страницу</label> <a onclick=\"show('help_mainpage')\" class='help'>?</a>
+  <p>".select("mainpage", "0,1", "НЕТ,ДА", $mainpage)." На главную страницу <a onclick=\"show('help_mainpage')\" class='help'>?</a>
   </td><td>
-  <label><input type='checkbox' name='rss' value='1'".$check3."> Добавить в RSS</label> <a onclick=\"show('help_rss')\" class='help'>?</a>
+  <p>".select("rss", "0,1", "НЕТ,ДА", $rss)." Добавить в RSS <a onclick=\"show('help_rss')\" class='help'>?</a>
   </td><td>
-  <label><input type='checkbox' name='nocomm' value='1'".$check2."> Запретить комментарии</label> <a onclick=\"show('help_nocomm')\" class='help'>?</a>
+  <p>".select("nocomm", "0,1", "НЕТ,ДА", $nocomm)." Запретить комментарии</label> <a onclick=\"show('help_nocomm')\" class='help'>?</a>
   </td><td>
-  Очередность: <input type='text' name='sor' value='".$sor."' size='4' style='text-align:center;'> <a onclick=\"show('help_sor')\" class='help'>?</a>
+  Очередность: <input type='text' name='sor' value='".$sor."' size='5' style='text-align:center;'> <a onclick=\"show('help_sor')\" class='help'>?</a>
   </td></tr></table>
 
   <div id='help_nocomm' style='display:none;'>Если в данном разделе разрешены комментарии — вы можете отключить их выборочно на данной странице, поставив галочку.<br><br></div>

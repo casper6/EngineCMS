@@ -66,7 +66,7 @@ if ($realadmin==1) {
         $cid = $page_cid[$pid];
         $sql = "SELECT * FROM ".$prefix."_pages_comments where num='$pid' order by data desc";
         $page = "<a href=/sys.php?op=base_comments&name=$name&pid=".$pid.">".$page_title[$pid]."</a>";
-        $papka = "<a href=/sys.php?op=base_comments&name=$name&cid=".$cid.">".$papka_title[$cid]."</a>";
+        if (isset ($papka_title[$cid])) $papka = "<a href=/sys.php?op=base_comments&name=$name&cid=".$cid.">".$papka_title[$cid]."</a>"; else $papka = "";
         }
 
         $comm_text = array();
@@ -97,7 +97,7 @@ if ($realadmin==1) {
             $comm_avtor = $rows['avtor'];
             $comm_ip = $rows['ip'];
                 $comm_mail = $rows['mail'];     
-                if (trim($comm_mail) != "") $comm_mail = ",<br><b>E-mail:</b> ".$comm_mail;
+                if (trim($comm_mail) != "") $comm_mail = ",<br><b>Email:</b> ".$comm_mail;
                 $comm_adres = $rows['adres'];   
                 if (trim($comm_adres) != "") $comm_adres = ",<br><b>Адрес:</b> ".$comm_adres;
                 $comm_tel = $rows['tel'];       
@@ -134,7 +134,7 @@ if ($realadmin==1) {
     #####################################################################################################################
     function base_comments_edit_comments($cid) {
     global $prefix, $db, $red;
-        $sql = "SELECT * FROM ".$prefix."_pages_comments WHERE cid='$cid'";
+        $sql = "SELECT * FROM ".$prefix."_pages_comments WHERE `cid`='".$cid."'";
         $result = $db->sql_query($sql);
         $row = $db->sql_fetchrow($result);
         $comm_cid = $row['cid'];
@@ -150,35 +150,37 @@ if ($realadmin==1) {
         $comm_drevo = $row['drevo'];
         $comm_ip = $row['ip'];
         include("ad/ad-header.php");
-        echo "<h1>Редактирование комментария № $cid</h1>";
+        $sql = "SELECT `module`, `title` FROM ".$prefix."_pages WHERE `pid`='".$comm_page."'";
+        $result = $db->sql_query($sql);
+        $row = $db->sql_fetchrow($result);
+        $page_module = $row['module'];
+        $page_title = $row['title'];
         echo "<form method=\"POST\" action=\"sys.php\" enctype=\"multipart/form-data\">
-        <table width=100%><tr valign=top><td>
-        <input type=submit value=\"Сохранить\nизменения\" style='width:95%; height:55px;'><br><br>
-        <b>Страница, №:</b><br><input type=text size=4 name=num value=\"".$comm_page."\"> (лучше не менять!)<br><br>
-        <b>Дата:</b><br><input type=text name='dataX' value=\"".$comm_data."\"><br><br>
-        <b>Голосование:</b><br><input type=text size=2 name=golos value=\"".$comm_golos."\"> (лучше не менять!)<br>
-        0 - нет, <br>1 - плохо, <br>3 - средне, <br>5 - отлично<br>";
-        if ($comm_act==1) $check= " checked";
-        else $check= " unchecked";
-        echo "<br><label><input type=checkbox name=act value=1".$check."> <b>Включить комментарий</b></label><br> (будет виден всем)<br>
-        <br>
-        <b>Ответ на другой комментарий, №:</b><br><input type=text size=3 name=drevo value=\"".$comm_drevo."\"> (лучше не менять!)<br>
-        Если 0 - значит это начальный комментарий
+
+        <div class='fon w100 mw800'>
+        <div class='black_grad' style='height:45px;'>
+        <button type=submit id=new_razdel_button class='medium green' onclick=\"show('sortirovka');\" style='float:left; margin:3px;'><span style='margin-right: -2px;' class='icon white small' data-icon='c'></span> Сохранить</button>
+        <span class='h1' style='padding-top:10px;'>Редактирование комментария (№".$cid.")</span>";
+        red_vybor();
+        echo "</div>
+        <table class='w100'><tr valign='top'><td bgcolor='#eeeeee' width='250' id='razdels'>";
+        echo "<p><b>Относится к странице</b> № <input type=text size=4 name=num value=\"".$comm_page."\"> «<a target='_blank' href='".re_link("-".$page_module."_page_".$comm_page)."'>".$page_title."</a>»
+        <p>".select("act", "0,1", "НЕТ,ДА", $comm_act)." <b>Включить</b>
+        <hr><p><b>Дата:</b> <input type=text name='dataX' class='w60' value=\"".$comm_data."\">
+        <p><b>Голосование/рейтинги:</b><br>".select("golos", "0,1,2,3,4,5,6,7,8,9,10", "НЕТ,1,2,3,4,5,6,7,8,9,10", $comm_golos)."
+        <p><b>Ответ на другой комментарий<br>№:</b> <input type=text size=3 name=drevo value=\"".$comm_drevo."\"> 
+        0 - это начальный комментарий
         <br>
         </td><td>
-        <b>Автор:</b> ( ".$comm_ip." )<br><input type=text size=60 name=avtor2 value=\"".$comm_avtor."\"> (лучше не менять!)<br><br>
-        <b>E-mail:</b><br><input type=text size=60 name=mail value=\"".$comm_mail."\"> (лучше не менять!)<br><br>
-        <b>Адрес:</b><br><input type=text size=60 name=adres value=\"".$comm_adres."\"> (лучше не менять!)<br><br>
-        <b>Телефон:</b><br><input type=text size=60 name=tel value=\"".$comm_tel."\"> (лучше не менять!)<br><br>
-        <b>Текст комментария:</b> (можно поправить ошибки)<br>";
-        if ($red==0) {
-        } elseif ($red==2) { // удалено
-        } elseif ($red==1) {
-            echo "<textarea id=\"comm_text\" name=\"text\" rows=\"15\" cols=\"80\" style='width:100%;'>".$comm_text."</textarea><br>";
-        } else { // доработать
-            echo "<script type=\"text/javascript\" src=\"ed/js/redactor/redactor.js\"></script><link rel=\"stylesheet\" href=\"ed/js/redactor/css/redactor.css\" type=\"text/css\" media=\"screen, projection\" /><script type=\"text/javascript\">$(document).ready(function() { $('#comm_text').redactor({ focus: true, css: ['/css_20'], upload: 'upload.php' }); });</script><textarea id=\"comm_text\" name=\"text\" rows=\"15\" cols=\"80\" style='width:100%;'>".$comm_text."</textarea><br>";
-        }
+        <table class='w100'><tr valign='top'><td width='50%'>
+        <p><b>Автор:</b> ( IP-адрес: ".$comm_ip." )<br><input type=text size=60 class='w100' name=avtor2 value=\"".$comm_avtor."\">
+        <p><b>Email:</b><br><input type=text size=60 class='w100' name=mail value=\"".$comm_mail."\">
+        </td><td>
+        <p><b>Адрес:</b><br><input type=text size=60 class='w100' name=adres value=\"".$comm_adres."\">
+        <p><b>Телефон:</b><br><input type=text size=60 class='w100' name=tel value=\"".$comm_tel."\">
+        </td></tr></table>
 
+        <p><b>Текст комментария:</b><br>".redactor($red, $comm_text, 'text');
         if ($comm_golos > 0) echo "<font color=red>|&| - это символы-разделители в тексте комментария анкет-рейтингов, делят предпросмотр анкеты и саму анкету, НЕ ТРОГАТЬ!!!.</font><br>";
 
         echo "<input type=hidden name=op value=base_comments_edit_sv_comments>

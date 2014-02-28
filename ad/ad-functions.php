@@ -449,58 +449,56 @@ function redactor($type, $txt, $name, $name2="", $style="html") {
     </script><textarea id='".$name."' name='".$name."' style='width: 100%; height: 220px;'>".$txt."</textarea>";
   } elseif ($type=="4") {
     // Настройки второго редактора
-    global $ed2_button_html, $ed2_button_formatting, $ed2_button_bold, $ed2_button_italic, $ed2_button_deleted, $ed2_button_underline, $ed2_button_unorderedlist, $ed2_button_orderedlist, $ed2_button_outdent, $ed2_button_indent, $ed2_button_image, $ed2_button_video, $ed2_button_file, $ed2_button_table, $ed2_button_link, $ed2_button_alignment, $ed2_button_horizontalrule, $ed2_button_more, $ed2_button_link2, $ed2_button_block, $ed2_button_pre, $ed2_button_fullscreen, $ed2_button_clips, $ed2_button_fontcolor, $ed2_button_fontsize, $ed2_button_fontfamily, $ed2_minHeight, $ed2_direction, $ed2_div_convert, $ed2_paragraphy, $ed2_button_superscript;
-    if ($ed2_button_html == "" && $ed2_button_bold == "" && $ed2_button_link == "") $ed2_button_html = $ed2_button_formatting = $ed2_button_bold = $ed2_button_italic = $ed2_button_deleted = $ed2_button_unorderedlist = $ed2_button_orderedlist = $ed2_button_image = $ed2_button_video = $ed2_button_file = $ed2_button_table = $ed2_button_link = $ed2_button_alignment = $ed2_button_horizontalrule = $ed2_button_fullscreen = $ed2_button_clips = " checked";
+    global $ed2_button_html, $ed2_button_formatting, $ed2_button_bold, $ed2_button_italic, $ed2_button_deleted, $ed2_button_underline, $ed2_button_unorderedlist, $ed2_button_orderedlist, $ed2_button_outdent, $ed2_button_indent, $ed2_button_image, $ed2_button_video, $ed2_button_file, $ed2_button_table, $ed2_button_link, $ed2_button_alignment, $ed2_button_horizontalrule, $ed2_button_more, $ed2_button_link2, $ed2_button_block, $ed2_button_pre, $ed2_button_typewriter, $ed2_button_clips, $ed2_button_fontcolor, $ed2_button_fontsize, $ed2_button_fontfamily, $ed2_minHeight, $ed2_direction, $ed2_div_convert, $ed2_paragraphy, $ed2_button_superscript;
+    if ($ed2_button_html == "" && $ed2_button_bold == "" && $ed2_button_link == "") $ed2_button_html = $ed2_button_formatting = $ed2_button_bold = $ed2_button_italic = $ed2_button_deleted = $ed2_button_unorderedlist = $ed2_button_orderedlist = $ed2_button_image = $ed2_button_video = $ed2_button_file = $ed2_button_table = $ed2_button_link = $ed2_button_alignment = $ed2_button_horizontalrule = $ed2_button_typewriter = $ed2_button_clips = "1";
     if ($ed2_direction == "") $ed2_direction = "ltl";
     if ($ed2_div_convert == "1") $ed2_div_convert = "true"; else $ed2_div_convert = "false";
     if ($ed2_minHeight == "") $ed2_minHeight = "300";
-    $ed2_html=$ed2_formatting=$ed2_bold=$ed2_italic=$ed2_deleted=$ed2_underline=$ed2_unorderedlist=$ed2_orderedlist=$ed2_outdent=$ed2_indent=$ed2_image=$ed2_video=$ed2_file=$ed2_table=$ed2_link=$ed2_alignment=$ed2_horizontalrule=$ed2_more=$ed2_link2=$ed2_block=$ed2_pre=$ed2_fullscreen=$ed2_clips=$ed2_fontcolor=$ed2_fontsize=$ed2_fontfamily=$ed2_paragraph=$ed2_superscript="";
+    $ed2_html=$ed2_formatting=$ed2_bold=$ed2_italic=$ed2_deleted=$ed2_underline=$ed2_unorderedlist=$ed2_orderedlist=$ed2_outdent=$ed2_indent=$ed2_image=$ed2_video=$ed2_file=$ed2_table=$ed2_link=$ed2_alignment=$ed2_horizontalrule=$ed2_more=$ed2_link2=$ed2_block=$ed2_pre=$ed2_typewriter=$ed2_clips=$ed2_fontcolor=$ed2_fontsize=$ed2_fontfamily=$ed2_paragraph=$ed2_superscript=$add_buttons="";
     if ($ed2_button_html == "1") $ed2_html = "'html', ";
-    if ($ed2_button_formatting == "1") $ed2_formatting = "'|', 'formatting', ";
-    if ($ed2_button_bold == "1") $ed2_bold = "'|', 'bold',";
+    if ($ed2_button_formatting == "1") $ed2_formatting = "'formatting', ";
+    if ($ed2_button_bold == "1") $ed2_bold = "'bold',";
     if ($ed2_button_italic == "1") $ed2_italic = "'italic',";
     if ($ed2_button_deleted == "1") $ed2_deleted = "'deleted',";
     if ($ed2_button_underline == "1") $ed2_underline = "'underline',";
-    if ($ed2_button_unorderedlist == "1") $ed2_unorderedlist = "'|', 'unorderedlist',";
+    if ($ed2_button_unorderedlist == "1") $ed2_unorderedlist = "'unorderedlist',";
     if ($ed2_button_orderedlist == "1") $ed2_orderedlist = "'orderedlist',";
     if ($ed2_button_outdent == "1") $ed2_outdent = "'outdent',";
     if ($ed2_button_indent == "1") $ed2_indent = "'indent',";
-    if ($ed2_button_image == "1") $ed2_image = "'|', 'image',";
+    if ($ed2_button_image == "1") $ed2_image = "'image',";
     if ($ed2_button_video == "1") $ed2_video = "'video',";
     if ($ed2_button_file == "1") $ed2_file = "'file', ";
     if ($ed2_button_table == "1") $ed2_table = "'table',";
     if ($ed2_button_link == "1") $ed2_link = "'link',";
-    if ($ed2_button_alignment == "1") $ed2_alignment = "'|', 'alignment',";
-    if ($ed2_button_horizontalrule == "1") $ed2_horizontalrule = "'|', 'horizontalrule',";
-    if ($ed2_button_more == "1") $ed2_more = "'|', 'button_more',";
-    if ($ed2_button_link2 == "1") $ed2_link2 = "'button_link',";
-    if ($ed2_button_block == "1") $ed2_block = "'button_block',";
-    if ($ed2_button_pre == "1") $ed2_pre = "'pre'";
-    if ($ed2_button_fullscreen == "1") $ed2_fullscreen = "'fullscreen',";
+    if ($ed2_button_alignment == "1") $ed2_alignment = "'alignment',";
+    if ($ed2_button_horizontalrule == "1") $ed2_horizontalrule = "'horizontalrule'";
     if ($ed2_button_clips == "1") $ed2_clips = "'clips',";
     if ($ed2_button_fontcolor == "1") $ed2_fontcolor = "'fontcolor',";
     if ($ed2_button_fontsize == "1") $ed2_fontsize = "'fontsize',";
-    if ($ed2_button_fontfamily == "1") $ed2_fontfamily = "'fontfamily'";
+    if ($ed2_button_fontfamily == "1") $ed2_fontfamily = "'fontfamily',";
     if ($ed2_paragraphy == "1") $ed2_paragraph = "paragraphy: false,";
-    if ($ed2_button_superscript == "1") $ed2_superscript = "initCallback: function(){this.buttonAdd('superscript', 'Верхний индекс', function(){this.execCommand('superscript');});this.buttonAdd('subscript', 'Нижний индекс', function(){this.execCommand('subscript');});},";
+    if ($ed2_button_typewriter == "1") $ed2_typewriter = "typewriter: true, toolbarFixedBox: true, formattingTags: ['p', 'blockquote', 'pre', 'h1', 'h2'],";
+    if ($ed2_button_superscript == "1") $add_buttons .= "this.buttonAddBefore('fullscreen','superscript', 'Верхний индекс', function(buttonName, buttonDOM, buttonObj, e){this.execCommand('superscript');}); this.buttonAddBefore('fullscreen','subscript', 'Нижний индекс', function(buttonName, buttonDOM, buttonObj, e){this.execCommand('subscript');});";
+    if ($ed2_button_more == "1") $add_buttons .= "this.buttonAddBefore('fullscreen','button_more', 'Вставка ссылки на полное содержание (для предисловия)', function(buttonName, buttonDOM, buttonObj, e){this.insertHtml('[ссылка]');});";
+    if ($ed2_button_link2 == "1") $add_buttons .= "this.buttonAddBefore('fullscreen','button_link', '[] — Вставка блока (например, галереи фотографий)', function(buttonName, buttonDOM, buttonObj, e){this.insertHtml('[Название блока]');});";
+    if ($ed2_button_block == "1") $add_buttons .= "this.buttonAddBefore('fullscreen','button_block', '{} — Вставка быстрой ссылки на страницу или раздел', function(buttonName, buttonDOM, buttonObj, e){this.insertHtml('{Название страницы или раздела}');});";
+    if ($ed2_button_pre == "1") $add_buttons .= "this.buttonAddBefore('fullscreen','pre', '<PRE> Форматированный текст', function(buttonName, buttonDOM, buttonObj, e){this.formatBlocks('pre');});";
+
     // iframe: true, css: 'css_20.css',
     $echo .= "<script>
-    $(document).ready(function() { 
+    $(document).ready(function() {
       $('.redactor').redactor({
-        ".$ed2_superscript."
-        buttons: [".$ed2_html.$ed2_formatting.$ed2_bold.$ed2_italic.$ed2_deleted.$ed2_underline.$ed2_unorderedlist.$ed2_orderedlist.$ed2_outdent.$ed2_indent.$ed2_image.$ed2_video.$ed2_file.$ed2_table.$ed2_link.$ed2_alignment.$ed2_horizontalrule.$ed2_more.$ed2_link2.$ed2_block.$ed2_pre."], 
-        buttonsCustom: {
-            button_more: {title: 'Вставка ссылки на полное содержание (для предисловия)',callback: function (){ this.insertHtml('[ссылка]'); }},
-            button_link: {title: '[] — Вставка блока (например, галереи фотографий)',callback: function (){ this.insertHtml('[НазваниеБлока]'); }},
-            button_block: {title: '{} — Вставка быстрой ссылки на страницу или раздел',callback: function (){ this.insertHtml('{НазваниеСтраницыИЛИраздела}'); }},
-            pre: {title: '<PRE> Форматированный текст', callback: function(){ this.formatBlocks('pre'); }}
-          }, 
+        initCallback: function(){
+        ".$add_buttons."
+        },
+        buttons: [".$ed2_html.$ed2_formatting.$ed2_bold.$ed2_italic.$ed2_deleted.$ed2_underline.$ed2_unorderedlist.$ed2_orderedlist.$ed2_outdent.$ed2_indent.$ed2_image.$ed2_video.$ed2_file.$ed2_table.$ed2_link.$ed2_alignment.$ed2_horizontalrule."],
           mobile: true, 
           observeImages: true, 
           observeLinks: true, 
           convertVideoLinks: true, 
           convertImageLinks: true,
-          tabSpaces: 4, ".$ed2_paragraph."
+          tabSpaces: 4, 
+          ".$ed2_paragraph.$ed2_typewriter."
           boldTag: 'b',
           italicTag: 'i',
           deniedTags: ['html', 'head', 'body', 'meta', 'applet'],
@@ -511,8 +509,8 @@ function redactor($type, $txt, $name, $name2="", $style="html") {
           lang: '".$lang_admin."', 
           minHeight: ".$ed2_minHeight.",
           direction: '".$ed2_direction."',
-          plugins: [".$ed2_fullscreen.$ed2_clips.$ed2_fontcolor.$ed2_fontsize.$ed2_fontfamily."] }); } );
-    </script><textarea id='".$name."' class='redactor' name='".$name."' style='width: 100%; height: 220px;'>".$txt."</textarea>";
+          plugins: [".$ed2_clips.$ed2_fontcolor.$ed2_fontsize.$ed2_fontfamily."'fullscreen'] }); } );
+    </script><div style='background:white;''><textarea id='".$name."' class='redactor' name='".$name."' style='width: 100%; height: 220px;'>".$txt."</textarea></div>";
     $clip_title = array('«Рыба» для заполнения тестовых страниц');
     $clip_text = array('<p>Социальная парадигма, на первый взгляд, определяет антропологический феномен толпы, говорится в докладе ОБСЕ. Политическая психология ограничивает эмпирический доиндустриальный тип политической культуры, указывает в своем исследовании К.Поппер. Демократия участия, как бы это ни казалось парадоксальным, ограничивает социализм, последнее особенно ярко выражено в ранних работах В.И.Ленина. Правовое государство, согласно традиционным представлениям, постоянно. Политическое лидерство отражает феномен толпы, впрочем, это несколько расходится с концепцией Истона.<p>Понятие политического конфликта, особенно в условиях политической нестабильности, означает культ личности (отметим, что это особенно важно для гармонизации политических интересов и интеграции общества). Политическое учение Руссо сохраняет феномен толпы, исчерпывающее исследование чего дал М.Кастельс в труде "Информационная эпоха". Политическое учение Августина, в первом приближении, доказывает механизм власти (приводится по работе Д.Белла "Грядущее постиндустриальное общество"). Либеральная теория, в первом приближении, сохраняет онтологический тоталитарный тип политической культуры, если взять за основу только формально-юридический аспект. Постиндустриализм существенно формирует культ личности, что было отмечено П.Лазарсфельдом. Демократия участия, с другой стороны, вызывает плюралистический доиндустриальный тип политической культуры, впрочем, это несколько расходится с концепцией Истона.');
     $echo .= "<div id=\"clipsmodal\" style=\"display: none;\"><div id=\"redactor_modal_content\"><div class=\"redactor_modal_box\"><ul class=\"redactor_clips_box\">";
@@ -579,10 +577,9 @@ function button_resize_red($redactor, $savebutton=false) { // redactor_id
       $add2 = " $(\"#button_save\").hide();"; 
     } else $add = $add2 = "";
     $txt = "<a id='editor_large_button' class='right3 button small orange' onclick='$(\".ace_editor\").css(\"position\", \"fixed\").css(\"top\", \"0\").css(\"height\", \"100%\").css(\"margin\", \"0\"); $(\"#button_resize_red\").show();".$add."'>↑ Развернуть</a>
-    <a class='z10000 small orange button' id='button_resize_red' onclick='$(\".ace_editor\").css(\"position\", \"relative\").css(\"height\", \"1200px\"); $(\"#button_resize_red\").hide();".$add2."' style='position:absolute; margin:-5px 70%; display:none;'>↓Esc</a>
-
+    <a class='z10000 small orange button' id='button_resize_red' onclick='$(\".ace_editor\").css(\"position\", \"relative\").css(\"height\", \"1200px\"); $(\"#button_resize_red\").hide();".$add2."' style='position:absolute; margin:-5px 60%; display:none;'>↓Esc</a>
     <a class='right3 button small orange' onclick='$(\"#photo_upload\").toggle();'>Вставить фото</a>";
-    if ($savebutton == true) $txt .= "<a class='z10000 small green button' id='button_save' onclick='save_main(\"ad/ad-mainpage.php\", \"mainpage_save_ayax\", \"\", \"\")' style='position:absolute; margin:-5px 80%; display:none;'>".aa("Сохранить")."</a>";
+    if ($savebutton == true) $txt .= "<a class='z10000 small green button' id='button_save' onclick='save_main(\"ad/ad-mainpage.php\", \"mainpage_save_ayax\", \"\", \"\")' style='position:absolute; margin:-5px 70%; display:none;'>".aa("Сохранить")."</a>";
   } else $txt = "";
   return $txt;
 }

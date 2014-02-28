@@ -137,6 +137,7 @@ div.raspisanie { height:15px; width:100%; min-width:5px; border-left: 1px solid 
 
 .filter_interval {font-weight:bold;}
 
+#redactor-tab-control-2 {display:none !important;}
 .redactor_toolbar {height: 30px;}
 .redactor_toolbar li {padding-left:5px !important;}
 

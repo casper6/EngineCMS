@@ -12,9 +12,9 @@ RedactorPlugins.fontfamily = {
 			dropdown['s' + i] = { title: s, callback: function() { that.setFontfamily(s); }};
 		});
 
-		dropdown['remove'] = { title: 'Remove font', callback: function() { that.resetFontfamily(); }};
+		dropdown['remove'] = { title: 'Удалить шрифт (выделять вместе с оригинальным)', callback: function() { that.resetFontfamily(); }};
 
-		this.buttonAdd('fontfamily', 'Change font family', false, dropdown);
+		this.buttonAdd('fontfamily', 'Выбор шрифта', false, dropdown);
 	},
 	setFontfamily: function (value)
 	{

@@ -36,7 +36,12 @@ echo "<!doctype html>
 <meta name='viewport' content='width=device-width'>
 <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
 <link rel='shortcut icon' href='images/favicon_cms.png' type='image/x-icon'>
-<script src='includes/jquery183.min.js'></script>
+
+
+<script src='http://code.jquery.com/jquery-2.0.0.js'></script>
+<script src='http://code.jquery.com/jquery-migrate-1.1.1.js'></script>
+
+
 <script src='includes/css-frameworks/kickstart/js/ad-kickstart.js'></script>
 <script>var clean_urls=".$clean_urls.";</script>
 <script src='includes/jad.js'></script>
@@ -75,7 +80,7 @@ echo "<script src='includes/spin.js'></script>
 <script src='ed2/fontsize.js'></script>
 <script src='ed2/fontfamily.js'></script>";
 
-echo "\n</head>\n<body style=\"background-color: ".$ad_fon.";\"><div class=' radius'>";
+echo "\n</head>\n<body style=\"background-color: ".$ad_fon.";\">";
 $url = getenv("REQUEST_URI");
 $url = str_replace("http://".$siteurl,"",$url);
 $url2 = explode("_",$url);
@@ -95,7 +100,7 @@ $buttons = explode(",", aa(" Содержание, Оформление, Нас�
 if ($deviceType != 'computer') $buttons = array('','','','','','');
 if ($url == "/red" || $url == "/sys.php" || $url == "/sys.php?op=mes") echo "<a class='button small in_r' onclick=\"openbox('8','".aa("Помощь")."'); $('#show_razdel').click();\" title='".aa("Открыть справочную информацию")."'><span class='icon small' data-icon='n'></span>".$buttons[4]."</a>";
 echo "<nobr>
-<button class='small' target=_blank onclick='window.open(\"/\")' title='".aa("Перейти на сайт (откроется в новом окне)")."'><span class='icon small' data-icon='4'></span> ".aa("На сайт")."</button>
+<button class='small' target='_blank' onclick='window.open(\"/\")' title='".aa("Перейти на сайт (откроется в новом окне)")."'><span class='icon small' data-icon='4'></span> ".aa("На сайт")."</button>
 <form method=post name=search action='search' style='display:inline;' class='nothing'><input type='search' placeholder='".aa("Поиск по сайту")."' name='slovo' class='w25'></form>
 ".$post."
 </nobr></div>
@@ -111,5 +116,6 @@ if ($editor_style == false) {
 echo "<li class='last ".$color4."'><a title='".aa("Открыть статистику сайта")."' href='sys.php?op=stat_main'><span class='icon gray small' data-icon='j'></span>".$buttons[3]."</a></li>
 </ul>
 </div></td></tr></table>
-<a name='top'></a><div onmousemove='$(\"#admin_top\").hide(\"fast\"); $(\"#admin_top_line\").show();'>";
+<a name='top'></a>";
+if ($show_admin_top == 0) echo "<div onmousemove='$(\"#admin_top\").hide(\"fast\"); $(\"#admin_top_line\").show();'>";
 ?>
