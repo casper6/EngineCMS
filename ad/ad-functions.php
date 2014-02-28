@@ -449,11 +449,12 @@ function redactor($type, $txt, $name, $name2="", $style="html") {
     </script><textarea id='".$name."' name='".$name."' style='width: 100%; height: 220px;'>".$txt."</textarea>";
   } elseif ($type=="4") {
     // Настройки второго редактора
-    global $ed2_button_html, $ed2_button_formatting, $ed2_button_bold, $ed2_button_italic, $ed2_button_deleted, $ed2_button_underline, $ed2_button_unorderedlist, $ed2_button_orderedlist, $ed2_button_outdent, $ed2_button_indent, $ed2_button_image, $ed2_button_video, $ed2_button_file, $ed2_button_table, $ed2_button_link, $ed2_button_alignment, $ed2_button_horizontalrule, $ed2_button_more, $ed2_button_link2, $ed2_button_block, $ed2_button_pre, $ed2_button_typewriter, $ed2_button_clips, $ed2_button_fontcolor, $ed2_button_fontsize, $ed2_button_fontfamily, $ed2_minHeight, $ed2_direction, $ed2_div_convert, $ed2_paragraphy, $ed2_button_superscript;
+    global $ed2_button_html, $ed2_button_formatting, $ed2_button_bold, $ed2_button_italic, $ed2_button_deleted, $ed2_button_underline, $ed2_button_unorderedlist, $ed2_button_orderedlist, $ed2_button_outdent, $ed2_button_indent, $ed2_button_image, $ed2_button_video, $ed2_button_file, $ed2_button_table, $ed2_button_link, $ed2_button_alignment, $ed2_button_horizontalrule, $ed2_button_more, $ed2_button_link2, $ed2_button_block, $ed2_button_pre, $ed2_button_typewriter, $ed2_button_clips, $ed2_button_fontcolor, $ed2_button_fontsize, $ed2_button_fontfamily, $ed2_minHeight, $ed2_Width, $ed2_direction, $ed2_div_convert, $ed2_paragraphy, $ed2_button_superscript;
     if ($ed2_button_html == "" && $ed2_button_bold == "" && $ed2_button_link == "") $ed2_button_html = $ed2_button_formatting = $ed2_button_bold = $ed2_button_italic = $ed2_button_deleted = $ed2_button_unorderedlist = $ed2_button_orderedlist = $ed2_button_image = $ed2_button_video = $ed2_button_file = $ed2_button_table = $ed2_button_link = $ed2_button_alignment = $ed2_button_horizontalrule = $ed2_button_typewriter = $ed2_button_clips = "1";
     if ($ed2_direction == "") $ed2_direction = "ltl";
     if ($ed2_div_convert == "1") $ed2_div_convert = "true"; else $ed2_div_convert = "false";
     if ($ed2_minHeight == "") $ed2_minHeight = "300";
+    if ($ed2_Width == "") $ed2_Width = "100%";
     $ed2_html=$ed2_formatting=$ed2_bold=$ed2_italic=$ed2_deleted=$ed2_underline=$ed2_unorderedlist=$ed2_orderedlist=$ed2_outdent=$ed2_indent=$ed2_image=$ed2_video=$ed2_file=$ed2_table=$ed2_link=$ed2_alignment=$ed2_horizontalrule=$ed2_more=$ed2_link2=$ed2_block=$ed2_pre=$ed2_typewriter=$ed2_clips=$ed2_fontcolor=$ed2_fontsize=$ed2_fontfamily=$ed2_paragraph=$ed2_superscript=$add_buttons="";
     if ($ed2_button_html == "1") $ed2_html = "'html', ";
     if ($ed2_button_formatting == "1") $ed2_formatting = "'formatting', ";
@@ -510,7 +511,7 @@ function redactor($type, $txt, $name, $name2="", $style="html") {
           minHeight: ".$ed2_minHeight.",
           direction: '".$ed2_direction."',
           plugins: [".$ed2_clips.$ed2_fontcolor.$ed2_fontsize.$ed2_fontfamily."'fullscreen'] }); } );
-    </script><div style='background:white;''><textarea id='".$name."' class='redactor' name='".$name."' style='width: 100%; height: 220px;'>".$txt."</textarea></div>";
+    </script><div style='background:white; width: ".$ed2_Width."'><textarea id='".$name."' class='redactor' name='".$name."'>".$txt."</textarea></div>";
     $clip_title = array('«Рыба» для заполнения тестовых страниц');
     $clip_text = array('<p>Социальная парадигма, на первый взгляд, определяет антропологический феномен толпы, говорится в докладе ОБСЕ. Политическая психология ограничивает эмпирический доиндустриальный тип политической культуры, указывает в своем исследовании К.Поппер. Демократия участия, как бы это ни казалось парадоксальным, ограничивает социализм, последнее особенно ярко выражено в ранних работах В.И.Ленина. Правовое государство, согласно традиционным представлениям, постоянно. Политическое лидерство отражает феномен толпы, впрочем, это несколько расходится с концепцией Истона.<p>Понятие политического конфликта, особенно в условиях политической нестабильности, означает культ личности (отметим, что это особенно важно для гармонизации политических интересов и интеграции общества). Политическое учение Руссо сохраняет феномен толпы, исчерпывающее исследование чего дал М.Кастельс в труде "Информационная эпоха". Политическое учение Августина, в первом приближении, доказывает механизм власти (приводится по работе Д.Белла "Грядущее постиндустриальное общество"). Либеральная теория, в первом приближении, сохраняет онтологический тоталитарный тип политической культуры, если взять за основу только формально-юридический аспект. Постиндустриализм существенно формирует культ личности, что было отмечено П.Лазарсфельдом. Демократия участия, с другой стороны, вызывает плюралистический доиндустриальный тип политической культуры, впрочем, это несколько расходится с концепцией Истона.');
     $echo .= "<div id=\"clipsmodal\" style=\"display: none;\"><div id=\"redactor_modal_content\"><div class=\"redactor_modal_box\"><ul class=\"redactor_clips_box\">";
@@ -531,6 +532,7 @@ function redactor($type, $txt, $name, $name2="", $style="html") {
 }
 ##########################################################################################
 function redactor2($type, $txt, $name, $style="html") {
+  global $ed2_Width;
   $echo = "";
   if ($type=="1") {
     // Преобразование textarea (замена на русскую букву е, только для редактора)
@@ -563,7 +565,7 @@ function redactor2($type, $txt, $name, $style="html") {
           });
           document.getElementById('".$name."').style.fontSize='16px';</script>";
   } elseif ($type=="4") {
-    $echo .= "<textarea id='".$name."' class='redactor' name='".$name."' rows=15 cols=40 style='width: 100%; height: 220px;'>".$txt."</textarea>";
+    $echo .= "<div style='background:white; width: ".$ed2_Width."'><textarea id='".$name."' class='redactor' name='".$name."' rows=15 cols=40>".$txt."</textarea></div>";
   } elseif ($type=="3") {
     $echo .= "<textarea id='".$name."' name='".$name."' rows=15 cols=40 style='width: 100%; height: 220px;'>".$txt."</textarea>";
   }
