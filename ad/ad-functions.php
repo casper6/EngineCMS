@@ -50,7 +50,7 @@ function admin_footer() { // проверить вызов
 ///////////////////////////////////////////////////////////////
 function scandirectory($dir, $echoscan="", $images) { // переделать
   global $echoscan;
-        $level = substr_count($dir,"/");
+        $level = mb_substr_count($dir,"/");
         for($line="", $counter=0; $counter<$level; ++$counter, $line.='--'){}
         $dir_res = opendir($dir);
         while($file = readdir($dir_res)) {
@@ -58,7 +58,7 @@ function scandirectory($dir, $echoscan="", $images) { // переделать
                         if(is_dir($dir."/".$file)) {
                           scandirectory($dir."/".$file, $echoscan);
                         } else {
-                          if (!strpos(" ".$dir."/".$file,"spaw2/uploads/images/icons/") and !strpos(" ".$dir."/".$file,"spaw2/uploads/_thumbs") and (strpos($file,"gif") or strpos($file,"png") or strpos($file,"jpg") or strpos($file,"jpeg") or strpos($file,"GIF") or strpos($file,"PNG") or strpos($file,"JPG") or strpos($file,"JPEG") )) $echoscan .= $dir."/".$file."@";
+                          if ( mb_strpos($file,"gif") || mb_strpos($file,"png") || mb_strpos($file,"jpg") || mb_strpos($file,"jpeg") || mb_strpos($file,"GIF") || mb_strpos($file,"PNG") || mb_strpos($file,"JPG") || mb_strpos($file,"JPEG") ) $echoscan .= $dir."/".$file."@";
                         }
                 }      
         }
@@ -579,9 +579,9 @@ function button_resize_red($redactor, $savebutton=false) { // redactor_id
       $add2 = " $(\"#button_save\").hide();"; 
     } else $add = $add2 = "";
     $txt = "<a id='editor_large_button' class='right3 button small orange' onclick='$(\".ace_editor\").css(\"position\", \"fixed\").css(\"top\", \"0\").css(\"height\", \"100%\").css(\"margin\", \"0\"); $(\"#button_resize_red\").show();".$add."'>↑ Развернуть</a>
-    <a class='z10000 small orange button' id='button_resize_red' onclick='$(\".ace_editor\").css(\"position\", \"relative\").css(\"height\", \"1200px\"); $(\"#button_resize_red\").hide();".$add2."' style='position:absolute; margin:-5px 60%; display:none;'>↓Esc</a>
+    <a class='z10000 small orange button' id='button_resize_red' onclick='$(\".ace_editor\").css(\"position\", \"relative\").css(\"height\", \"1200px\"); $(\"#button_resize_red\").hide();".$add2."' style='position:absolute; margin:-5px 40%; display:none;'>↓Esc</a>
     <a class='right3 button small orange' onclick='$(\"#photo_upload\").toggle();'>Вставить фото</a>";
-    if ($savebutton == true) $txt .= "<a class='z10000 small green button' id='button_save' onclick='save_main(\"ad/ad-mainpage.php\", \"mainpage_save_ayax\", \"\", \"\")' style='position:absolute; margin:-5px 70%; display:none;'>".aa("Сохранить")."</a>";
+    if ($savebutton == true) $txt .= "<a class='z10000 small green button' id='button_save' onclick='save_main(\"ad/ad-mainpage.php\", \"mainpage_save_ayax\", \"\", \"\")' style='position:absolute; margin:-5px 50%; display:none;'>".aa("Сохранить")."</a>";
   } else $txt = "";
   return $txt;
 }

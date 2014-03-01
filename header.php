@@ -2246,8 +2246,6 @@ else header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache"); // HTTP/1.0
-
-
 header ("Content-Type: text/html; charset=utf-8");
 echo "<!doctype html>
 <!--[if lt IE 7 ]><html class='ie ie6 no-js lt-ie9 lt-ie8 lt-ie7' lang='".$lang."'> <![endif]-->
@@ -2317,7 +2315,6 @@ if ($mp3_player == true)
 // Подключение фото-галерей
 if ($gallery_css3 == true) echo "<link rel='stylesheet' href='/includes/lightbox-css3.css' media='screen' />";
 if ($gallery_carusel == false) echo "<script src='/includes/lightbox-2.6.min.js'></script><script src='/includes/jquery.ad-gallery.js'></script><script>$(document).ready(function(){ 
-	/* ('.lightbox').lightbox({ fitToScreen: true, imageClickClose: false });  */
 	var galleries = $('.ad-gallery').adGallery(); $('#switch-effect').change( function() { galleries[0].settings.effect = $(this).val(); return false; } ); });</script>
 <link rel='stylesheet' href='/includes/lightbox_new.css' media='screen' />"; // при включенном kickstart, lightbox не нужен, включается fancybox
 if ($gallery_carusel == true) {
@@ -2451,7 +2448,7 @@ if (mb_strlen($add_fonts)>1) {
 			}
 			// если кеш на файлах
 			if ($site_cash == "file") {
-				if ($url_link == '/' || $url_link == '') $url_link = "-index";
+				if ($url_link == '/' || $url_link == '') $url_link = "index";
 					if (file_exists($_SERVER["DOCUMENT_ROOT"]."/cashe/".$url_link)) $numrows = 1;
 			}
 		    if ($numrows == 0 && $url_link != "search" && $url_link != "savecomm" && $url_link != "savepost") {

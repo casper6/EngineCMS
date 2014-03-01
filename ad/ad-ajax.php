@@ -442,21 +442,18 @@ if ($func == "trash_pics") { // Создаем список неиспользу
   $inf = array_unique($inf);
   $inf_count = count($inf);
   if ($inf_count != 0) {
-    if (is_dir("img")) $inf2 .= scandirectory("img", "", "");
-    if (is_dir("spaw2/uploads")) $inf2 .= scandirectory("spaw2/uploads", "", "");
+    if (is_dir("../img")) $inf2 .= scandirectory("../img", "", "");
     $inf2 = explode("@",trim($inf2));
     $inf2 = array_unique($inf2);
     $inf2_count = count($inf2)-1;
-
-    $info .= "<h1>Загруженных на сервер фотографий: ".$inf2_count.".<h1>";
     $diff = array_diff($inf2, $inf);
     $diff = array_unique($diff);
     $diff_count = count($diff)-1;
-    $info .= "<h2>Неиспользованных на сайте фотографий (из числа загруженных): <b>".$diff_count."</b>.</h2>";
+    $info .= "<h1>Загружено фото: ".$inf2_count.". Неиспользово: <b>".$diff_count."</b>.</h1>";
     if ($diff_count > 0) $info .= "<b>Вы можете удалить</b> те фотографии, которые не понадобятся в дальнейшем.<br>";
     $num = 0;
     foreach ($diff as $a) { 
-      if ($a != '') $info .= "<div id='file".$num."' class='delfoto'><a href='".$a."' target='_blank'><img src='includes/php_thumb/php_thumb.php?src=/".$a."&w=0&h=100&q=0'></a><br><a class='button' onclick=\"del_file('".$a."', '".$num."');\">Удалить фото</a></div>"; // <br>".$a."
+      if ($a != '') $info .= "<div id='file".$num."' class='delfoto'><a href='".$a."' data-lightbox='light'><img src='includes/php_thumb/php_thumb.php?src=../".$a."&w=0&h=100&q=0'></a><br><a class='button' onclick=\"del_file('".$a."', '".$num."');\">Удалить фото</a></div>"; // <br>".$a."
       $num++;
     }
   } else $info .= "<br>Фотографий на сайте не найдено<br>";

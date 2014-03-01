@@ -69,31 +69,30 @@
   global $url_link;
   // Определение страницы для кеша без лишних параметров
   $url_link = "";
-  if (!isset($go)) {
-    if (isset($name) && !isset($op)) $url_link = "-".$name;
-    //$go = "";
-    $url_link = "-index";
-  } else {
-    if ($go == 'addbase') $url_link = "-".$name."_addbase_".$spa;
-    if ($go == 'showdate') $url_link = "date_".$showdate; // доработать
-    if ($go == 'showcat') {
-      if (isset($first) && isset($second)) $url_link = "-".$name."_first_".$first."_second_".$second;
-      if (isset($first) && isset($option)) $url_link = "-".$name."_first_".$first."_opt_".$option;
-      if (isset($cid) && isset($slovo)) $url_link = "-".$name."_cat_".$cid."_slovo_".$slovo;
-      if (!isset($cid) && isset($slovo)) $url_link = "-".$name."_slovo_".$slovo;
-      if (isset($cid) && isset($pag)) $url_link = "-".$name."_cat_".$cid."_page_".$pag;
-      if (isset($cid) && !isset($pag) && !isset($slovo) && !isset($first)) $url_link = "-".$name."_cat_".$cid;
+  if ($site_cash == "base" || $site_cash == "file")
+    if (!isset($go)) {
+      if (isset($name) && !isset($op)) $url_link = $name;
+      $url_link = "index";
+    } else {
+      if ($go == 'addbase') $url_link = $name."_addbase_".$spa;
+      if ($go == 'showdate') $url_link = "date_".$showdate; // доработать
+      if ($go == 'showcat') {
+        if (isset($first) && isset($second)) $url_link = $name."_first_".$first."_second_".$second;
+        if (isset($first) && isset($option)) $url_link = $name."_first_".$first."_opt_".$option;
+        if (isset($cid) && isset($slovo)) $url_link = "cat_".$cid."_slovo_".$slovo;
+        if (!isset($cid) && isset($slovo)) $url_link = $name."_slovo_".$slovo;
+        if (isset($cid) && isset($pag)) $url_link = "cat_".$cid."_page_".$pag;
+        if (isset($cid) && !isset($pag) && !isset($slovo) && !isset($first)) $url_link = "cat_".$cid;
+      }
+      if ($go == 'page') {
+        if (isset($pid)) $url_link = "page_".$pid;
+        if (isset($pid) && isset($com)) $url_link = "page_".$pid."_com_".$com;
+      }
     }
-    if ($go == 'page') {
-      if (isset($pid)) $url_link = "-".$name."_page_".$pid;
-      if (isset($pid) && isset($com)) $url_link = "-".$name."_page_".$pid."_com_".$com;
-      //if (isset($pid) && isset($comm)) $url_link = "-".$name."_page_".$pid."_comm";
-    }
-  }
 
   $pid = mysql_real_escape_string(intval($pid));
   $numrows = 0;
-  if (!is_admin($admin)) { 
+  if (!is_admin($admin)) {
 ##########################################################################################
     // Отдаем страницу из кеша
     // Сколько дней хранить кеш

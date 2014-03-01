@@ -149,6 +149,9 @@ echo "<div class='black_grad p0'>
 <span class='h1'>Настройки".$opt_save."</span>
 </div>
 
+<script src='/includes/lightbox-2.6.min.js'></script>
+<link rel='stylesheet' href='/includes/lightbox_new.css' media='screen' />
+
 <div id='show_options_razrab' class='show_pole pl10' style='display:none;'>";
 
 $phpversion = preg_replace('/[a-z-]/', '', phpversion());
