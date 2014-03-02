@@ -11,16 +11,12 @@
 function users() {
 	global $prefix, $db, $title_razdels_by_id;
 	include("ad/ad-header.php");
-
 	echo "<table style='width:100%; margin-top:5px; padding:0; background: #e2e5ea;' cellspacing=0 cellpadding=0><tr valign=top><td id='razdel_td' class='radius nothing' width=340>
 			<div id='razdels' style='background:#e7e9ec;'>
-			<div class='black_grad'>
-			<button id=new_razdel_button title='Назад в настройки сайта' class='small black' onclick='location.href=\"/sys.php?op=options#1\"' style='float:left; margin:3px;'><span style='margin-right: -2px;' class=\"icon darkgrey small\" data-icon=\"{\"></span></button>
-			<span class='h1'>Пользователи</span></div>";
-	
+			<div class='black_grad'><span class='h1'>Пользователи</span></div>";
 	echo "<div id='mainrazdel1' class='dark_pole2'><a class='base_page' onclick=\"options_show('1','show_recent')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"v\"></span><span class='plus20'>Настройка регистрации</span></div></a></div>";
 	echo "<div class='right3 '><button id=mainrazdel4 style='float:right;' title='Добавить группу...' class='dark_pole2' onclick=\"options_show('4','show_add_group');\"><span class='mr-2 icon darkgrey small' data-icon='+'></span><span class='plus20'>Добавить</span></button></div>
-		<div id='mainrazdel0' class='dark_pole2 dark_pole2sel'><a class='base_page' onclick=\"options_show('0','show_first')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"U\"></span><span class='plus20'>Группы пользователей</span></div></a></div>";
+		<div id='mainrazdel0' class='dark_pole2 dark_pole2sel'><a class='base_page' onclick=\"options_show('0','show_first')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"U\"></span><span class='plus20'>Группы</span></div></a></div>";
 	echo "<div id='mainrazdel2' class='dark_pole2'><a class='base_page' onclick=\"options_show('2','show_user')\"><div id='mainrazdel".$id."'><span class=\"icon gray large\" data-icon=\"u\"></span><span class='plus20'>Пользователи</span></div></a></div>";
 	echo "</div></td><td>";
 echo "<div id='show_first' class='show_pole'>

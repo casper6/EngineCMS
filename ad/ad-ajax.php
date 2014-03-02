@@ -399,65 +399,121 @@ if ($func == "delfile") { // Удаляем фотографию с сервер
 }
 ######################################################################################
 if ($func == "trash_pics") { // Создаем список неиспользуемых фотографий
-  $info = $inf2 = $fotos = "";
-  $inf = array();
-  // собираем адреса фотографий со всех страниц
-  $sql = "select text from ".$prefix."_pages_comments where `tables`='pages' and active='1'";
-  $result = $db->sql_query($sql);
-  while ($row = $db->sql_fetchrow($result)) {
-    $f = foto_find($row['text']);
-    if (is_array($f)) $fotos .= " ".implode(" ",$f);
-  }
-  $sql = "select description from ".$prefix."_pages_categories where `tables`='pages'";
-  $result = $db->sql_query($sql);
-  while ($row = $db->sql_fetchrow($result)) {
-    $f = foto_find($row['description']);
-    if (is_array($f)) $fotos .= " ".implode(" ",$f);
-  }
-  $sql = "select open_text, main_text from ".$prefix."_pages where `tables`='pages'";
-  $result = $db->sql_query($sql);
-  while ($row = $db->sql_fetchrow($result)) {
-    $f = foto_find($row['open_text'].$row['main_text']);
-    if (is_array($f)) $fotos .= " ".implode(" ",$f);
-  }
-  $sql = "select text, useit from ".$prefix."_mainpage where `tables`='pages' and `name`!='6'";
-  $result = $db->sql_query($sql);
-  while ($row = $db->sql_fetchrow($result)) {
-    $f = foto_find($row['text'].$row['useit']);
-    if (is_array($f)) $fotos .= " ".implode(" ",$f);
-  }
-  $sql = "select text from ".$prefix."_mainpage where `tables`='pages' and `type`='3' and `name`='6'";
-  $result = $db->sql_query($sql);
-  while ($row = $db->sql_fetchrow($result)) {
-    $txt = explode("\n",$row['text']);
-    for ( $i=0; $i < count($txt); $i++ ) { 
-      $link = explode("|",$txt[$i]);
-      $link = str_replace("/img/","img/",trim($link[0]));
-      if ($link != "") $fotos .= " ".$link;
+  global $realurl;
+  list($type, $sort, $count) = explode("*@%", $string);
+  if ($type == 0) {
+    $typeX = "2";
+    $sort = "0";
+    $count = "0";
+  } else $typeX = $type;
+    $info = "
+    <table class='w100'><tr valign=top>
+    <td><h2>Фотографии</h2>
+    ".select("type", "1,2,3", "На сайте,Не используются,Загружены", $typeX, 'size=4')."</td>
+    <td><h2>Сортировка</h2>
+    ".select("sort", "0,1,3,2,4", "без сортировки,по дате (сначала старые),по дате (сначала новые),по размеру (сначала маленькие),по размеру (сначала большие)", $sort, 'size=5')."</td>
+    <td><h2>Выводить по:</h2>
+    ".select("count", "0,100,500,1000", "все,100 (не работает),500 (не работает),1000 (не работает)", $count, 'size=3')."</td>
+    <td><a class='button big' onclick=\"trash_pics($('#type').val(),$('#sort').val(),$('#count').val());\">Показать</a></td>
+    </tr></table>";
+    $fotos = "";
+    $fotos2 = "";
+  if ($type != 0) {
+    if ($type != 3) {
+      // собираем адреса фотографий со всех страниц
+      $sql = "select `text` from ".$prefix."_pages_comments where `tables`='pages' and `active`='1'";
+      $result = $db->sql_query($sql);
+      while ($row = $db->sql_fetchrow($result)) {
+        $f = foto_find($row['text']);
+        if (is_array($f)) $fotos .= " ".implode(" ",$f);
+      }
+      $sql = "select `description` from ".$prefix."_pages_categories where `tables`='pages'";
+      $result = $db->sql_query($sql);
+      while ($row = $db->sql_fetchrow($result)) {
+        $f = foto_find($row['description']);
+        if (is_array($f)) $fotos .= " ".implode(" ",$f);
+      }
+      $sql = "select `open_text`, `main_text` from ".$prefix."_pages where `tables`='pages'";
+      $result = $db->sql_query($sql);
+      while ($row = $db->sql_fetchrow($result)) {
+        $f = foto_find($row['open_text'].$row['main_text']);
+        if (is_array($f)) $fotos .= " ".implode(" ",$f);
+      }
+      $sql = "select `text`, `useit` from ".$prefix."_mainpage where `tables`='pages' and `name`!='6'";
+      $result = $db->sql_query($sql);
+      while ($row = $db->sql_fetchrow($result)) {
+        $f = foto_find($row['text'].$row['useit']);
+        if (is_array($f)) $fotos .= " ".implode(" ",$f);
+      }
+      $sql = "select `text` from ".$prefix."_mainpage where `tables`='pages' and `type`='3' and `name`='6'";
+      $result = $db->sql_query($sql);
+      while ($row = $db->sql_fetchrow($result)) {
+        $txt = explode("\n",$row['text']);
+        for ( $i=0; $i < count($txt); $i++ ) { 
+          $link = explode("|",$txt[$i]);
+          $link = str_replace("/img/","img/",trim($link[0]));
+          if ($link != "") $fotos .= " ".$link;
+        }
+      }
+      $fotos = array_unique(explode(" ", trim(str_replace("  "," ",str_replace("/img/","img/",str_replace("/theme/","theme/",$fotos))))));
+      $fotos_count = count($fotos);
+
     }
-  }
-  $inf = array();
-  $f = trim(str_replace("  "," ",$fotos));
-  $inf = explode(" ",$f);
-  $inf = array_unique($inf);
-  $inf_count = count($inf);
-  if ($inf_count != 0) {
-    if (is_dir("../img")) $inf2 .= scandirectory("../img", "", "");
-    $inf2 = explode("@",trim($inf2));
-    $inf2 = array_unique($inf2);
-    $inf2_count = count($inf2)-1;
-    $diff = array_diff($inf2, $inf);
-    $diff = array_unique($diff);
-    $diff_count = count($diff)-1;
-    $info .= "<h1>Загружено фото: ".$inf2_count.". Неиспользово: <b>".$diff_count."</b>.</h1>";
-    if ($diff_count > 0) $info .= "<b>Вы можете удалить</b> те фотографии, которые не понадобятся в дальнейшем.<br>";
+    if ($type == 1) { // на сайте
+      $diff = $fotos;
+      $info .= "<h1>Фото на сайте: ".$fotos_count.".</h1>";
+    } else { // неиспользуемые или загруженные
+      if (is_dir($_SERVER["DOCUMENT_ROOT"]."/img")) 
+        $fotos2 .= scandirectory($_SERVER["DOCUMENT_ROOT"]."/img", "", "");
+      if (is_dir($_SERVER["DOCUMENT_ROOT"]."/theme")) 
+        $fotos2 .= scandirectory($_SERVER["DOCUMENT_ROOT"]."/theme", "", "");
+      $fotos2 = explode("@",trim($fotos2));
+      $fotos2 = str_replace($_SERVER["DOCUMENT_ROOT"]."/","",array_unique($fotos2));
+      $fotos2_count = count($fotos2)-1;
+      if ($type == 3) { // загруженные
+        $diff = $fotos2;
+        $info .= "<h1>Загружено фото: ".$fotos2_count.".</h1>";
+      } else { // неиспользуемые
+        $diff = array_unique(array_diff($fotos2, $fotos));
+        $diff_count = count($diff)-1;
+        $info .= "<h1>Загружено фото: ".$fotos2_count.". Неиспользовано: <b>".$diff_count."</b>.</h1>";
+        if ($diff_count > 0) $info .= "<p><b>Вы можете удалить</b> те фотографии, которые не понадобятся в дальнейшем.";
+      }
+    }
     $num = 0;
-    foreach ($diff as $a) { 
-      if ($a != '') $info .= "<div id='file".$num."' class='delfoto'><a href='".$a."' data-lightbox='light'><img src='includes/php_thumb/php_thumb.php?src=../".$a."&w=0&h=100&q=0'></a><br><a class='button' onclick=\"del_file('".$a."', '".$num."');\">Удалить фото</a></div>"; // <br>".$a."
+    // Сортировка: 1 - по дате, 2 - по размеру"
+    $diff2 = $files = $file_info = array();
+    if ($sort != 0) {
+      foreach ($diff as $a) {
+        if (file_exists($_SERVER["DOCUMENT_ROOT"]."/".$a)) {
+          if ($sort == 2 || $sort == 4)
+            $f = filesize($_SERVER["DOCUMENT_ROOT"]."/".$a);
+          else
+            $f = filemtime($_SERVER["DOCUMENT_ROOT"]."/".$a);
+          $i = $f.mt_rand(1000000, 9999999);
+          $diff2[$i] = $a;
+          $file_info[$i] = $f;
+        }
+      }
+      $diff = $diff2;
+      if ($sort == 1 || $sort == 2) ksort($diff);
+      else krsort($diff);
+    }
+    foreach ($diff as $i => $a) {
+      if ($a != '') {
+        if (file_exists($_SERVER["DOCUMENT_ROOT"]."/".$a)) {
+          $info .= "<div id='file".$num."' class='manager_foto'><a href='".$a."' data-lightbox='light'><img src='includes/php_thumb/php_thumb.php?src=/".$a."&w=0&h=100&q=0'></a>";
+          if ($sort == 1 || $sort == 3) $info .= "<div class='manager_foto_date'>".date2normal_view(date("Y-n-j", $file_info[$i]))."</div>";
+          if ($sort == 2 || $sort == 4) $info .= "<div class='manager_foto_file'>".human_filesize($file_info[$i],0)."</div>";
+          $info .= "<div class='mt5'><a class='button green' onclick=\"alert('/".$a."\\n\\nhttp://".$realurl."/".$a."');\">Ссылка</a></div>";
+         if ($type == 2) $info .= "<div class='mt5'><a class='button red small' onclick=\"del_file('".$a."', '".$num."');\">Удалить</a></div>";
+         $info .= "</div>";
+        } //else $info .= "<div id='file".$num."' class='manager_foto'>Файл ".$a." не найден. <br><a class='button' onclick=\"search_file('".$a."', '".$num."');\">Показать место</a></div>";
+      }
       $num++;
     }
-  } else $info .= "<br>Фотографий на сайте не найдено<br>";
-  echo $info; 
+  }
+  echo $info;
   exit; 
 }
 ###############################################################################################
@@ -836,7 +892,7 @@ if ($func == "offpage") { // вкл./выкл. страницы
   if ($clean_urls == 0) $re_link = "";
   else $re_link = re_link('-'.$active['module'].'_page_'.$active['pid']);
 
-  echo "<div id=\"page".$active['pid']."\"><a href='#".mt_rand(10000, 99999).$active['pid']."' onmouseover='sho(".$active['pid'].", \"".$active['module']."\",".$act.",".$id_razdel.",".$active['cid'].",\"".$edit_pole."\",\"".$re_link."\");'".$color.">".$nowork."".$active['title']."</a><div id='pid".$active['pid']."' class='pid'></div></div>"; exit;
+  echo "<div id=\"page".$active['pid']."\"><div id='pid".$active['pid']."' class='pid'></div><a href='#".mt_rand(10000, 99999).$active['pid']."' onmouseover='sho(".$active['pid'].", \"".$active['module']."\",".$act.",".$id_razdel.",".$active['cid'].",\"".$edit_pole."\",\"".$re_link."\");'".$color.">".$nowork."".$active['title']."</a></div>"; exit;
 }
 ######################################################################################
 if ($func == "delrazdel") { // Удаление раздела
@@ -1343,7 +1399,7 @@ if ($func == "rep") { // Копия/Перемещения/Ярлык стран
     } else $copy = $id;
 
   // `pid`,`module`,`cid`,`title`,`open_text`,`main_text`,`date`,`redate`,`counter`,`active`,`golos`,`comm`,`foto`,`search`,`mainpage`,`rss`,`price`,`description`,`keywords`,`tables`,`copy`,`sort`,`nocomm`
-    $sql = "INSERT INTO ".$prefix."_pages VALUES (NULL, '".mysql_real_escape_string($razdel)."', '$papka', '".mysql_real_escape_string($title)."', '".mysql_real_escape_string($opentext)."', '".mysql_real_escape_string($bodytext)."', '$data', '$data2', '0', '$active', '0', '0', '$foto', '".mysql_real_escape_string($search)."', '$mainpage', '$rss', '".mysql_real_escape_string($price)."', '".mysql_real_escape_string($desc)."', '".mysql_real_escape_string($keys)."', 'pages', '0', '$sort', '$nocomm');";
+    $sql = "INSERT INTO ".$prefix."_pages VALUES (NULL, '".mysql_real_escape_string($razdel)."', '$papka', '".mysql_real_escape_string($title)."', '".mysql_real_escape_string($opentext)."', '".mysql_real_escape_string($bodytext)."', '$data', '$data2', '0', '$active', '0', '0', '$foto', '".mysql_real_escape_string($search)."', '$mainpage', '$rss', '".mysql_real_escape_string($price)."', '".mysql_real_escape_string($desc)."', '".mysql_real_escape_string($keys)."', 'pages', '0', '$sort', '$nocomm','','');";
   $db->sql_query($sql) or $info = "Скопировать не удалось."; 
   }
 
@@ -1503,7 +1559,7 @@ if ($func == "papka") { // Папка
         if ($clean_urls == 0) $re_link = "";
         else $re_link = re_link('-'.$name.'_page_'.$pid);
 
-        $pg = "<div id='page".$pid."' class='openpage' onmouseover='sho(".$pid.", \"".$name."\", ".$active.",".$id_razdel.",".$cid.",\"".$edit_pole."\",\"".$re_link."\");'><a href='/sys.php?op=base_pages_edit_page&pid=".$pid."#1' target='_blank'".$color.">".$nowork.$title.$copy." — ".$date."</a> ".$keydes." <div id='pid".$pid."' class='pid'></div></div>";
+        $pg = "<div id='page".$pid."' class='openpage' onmouseover='sho(".$pid.", \"".$name."\", ".$active.",".$id_razdel.",".$cid.",\"".$edit_pole."\",\"".$re_link."\");'><div id='pid".$pid."' class='pid'></div><a href='/sys.php?op=base_pages_edit_page&pid=".$pid."#1' target='_blank'".$color.">".$nowork.$title.$copy." — ".$date."</a> ".$keydes." </div>";
         if ($no_pages < $granica+1) $list .= $pg; 
         if ($no_pages > $granica) $dop_list .= $pg;
         $no_pages++;
@@ -1619,7 +1675,7 @@ if ($func == "razdel") { // Раздел
       if ($clean_urls == 0) $re_link = "";
       else $re_link = re_link('-'.$name_raz.'_page_'.$pid);
 
-      $pg = "<div id='page".$pid."' class='openpage'><a href='/sys.php?op=base_pages_edit_page&pid=".$pid."#1' target='_blank' onmouseover='sho(".$pid.", \"".$name_raz."\", ".$active.",".$id_razdel.",".$cid.",\"".$edit_pole."\",\"".$re_link."\");'".$color.">".$nowork.$title.$copy." — ".$date."</a> ".$keydes." <div id='pid".$pid."' class='pid'></div></div>";
+      $pg = "<div id='page".$pid."' class='openpage'><div id='pid".$pid."' class='pid'></div><a href='/sys.php?op=base_pages_edit_page&pid=".$pid."#1' target='_blank' onmouseover='sho(".$pid.", \"".$name_raz."\", ".$active.",".$id_razdel.",".$cid.",\"".$edit_pole."\",\"".$re_link."\");'".$color.">".$nowork.$title.$copy." — ".$date."</a> ".$keydes." </div>";
       if ($no_pages < $granica+1) $list .= $pg; 
       if ($no_pages > $granica) $dop_list .= $pg;
       $no_pages++;
@@ -1663,4 +1719,11 @@ function unicode_escape($str) {
     $out .= '%u'.bin2hex(mb_substr($str, $i, 1, 'UTF-16'));
   return $out;
 }
+/////////////////////////////////////////////////////////////// Размер файла
+function human_filesize($bytes, $decimals = 2) {
+  $sz = 'BKMGTP';
+  $factor = floor((strlen($bytes) - 1) / 3);
+  return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];
+}
+
 ?>

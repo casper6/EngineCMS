@@ -122,8 +122,15 @@ if ($row['realadmin'] == 1) {
 $opt_save = "";
 if ($ok==1) $opt_save = " сохранены";
 // mainrazdel0
-echo "<table class='w100 mw800 pm0 block_back'><tr valign=top><td id='razdel_td' class='radius nothing'>
-<form action='".$admin_file.".php' method='post' name='form'>
+echo "<form action='".$admin_file.".php' method='post' name='form'>
+
+<div class='black_grad p0'>
+<div style='max-width:744px;'>
+<button id='save_options' type='submit' class='small green' style='float:right; margin:3px;'><span class='mr-2 icon white medium' data-icon='c'></span> Сохранить настройки</button>
+<span class='h1'>Настройки".$opt_save."</span></div></div>
+
+<table class='w100 mw800 pm0 block_back'><tr valign=top><td id='razdel_td' class='radius nothing'>
+
 	<div id='razdels' style='width:340px;'>";
 	echo "<div id='mainrazdel8' class='dark_pole2sel'><a class='base_page' onclick=\"options_show('8','show_first')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='.'></span><span class='plus20'>Начальные настройки</span></div></a></div>";
 	echo "<div id='mainrazdel1' class='dark_pole2'><a class='base_page' onclick=\"options_show('1','show_options_company')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='Y'></span><span class='plus20'>Карточка компании (мини блоки)</span></div></a></div>";
@@ -134,7 +141,7 @@ echo "<table class='w100 mw800 pm0 block_back'><tr valign=top><td id='razdel_td'
 	echo "<div id='mainrazdel13' class='dark_pole2'><a class='base_page' onclick=\"options_show('13','show_shop')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='$'></span><span class='plus20'>Магазин</span></div></a></div>";
 	echo "<br>";
 	echo "<div id='mainrazdel4' class='dark_pole2'><a class='base_page' onclick=\"options_show('4','show_options_pass_block')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='O'></span><span class='plus20'>Смена пароля и Блокировка по IP</span></div></a></div>";
-	echo "<div id='mainrazdel7' class='dark_pole2'><a class='base_page' onclick=\"options_show('7','show_options_oldfotos'); trash_pics();\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='1'></span><span class='plus20'>Удаление старых фото</span></div></a></div>";
+	echo "<div id='mainrazdel7' class='dark_pole2'><a class='base_page' onclick=\"options_show('7','show_options_oldfotos'); trash_pics(0,0,0);\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='1'></span><span class='plus20'>Менеджер фотографий</span></div></a></div>";
 	echo "<div id='mainrazdel5' class='dark_pole2'><a class='base_page' href='sys.php?op=subscribe'><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='@'></span><span class='plus20'>Cписок адресатов для рассылки</span></div></a></div>";
 	echo "<div id='mainrazdel6' class='dark_pole2'><a class='base_page' href='sys.php?op=users'><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='U'></span><span class='plus20'>Пользователи (в разработке)</span></div></a></div>";
     echo "<div id='mainrazdel11' class='dark_pole2'><a class='base_page' href='sys.php?op=txt_and_csv_main'><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='('></span><span class='plus20'>Импорт из Excel (в формате .csv)</span></div></a></div>";
@@ -144,12 +151,7 @@ echo "<table class='w100 mw800 pm0 block_back'><tr valign=top><td id='razdel_td'
 	<td style='padding:0;'><a class='punkt' title='Свернуть/развернуть левую колонку' onmousemove='$(\"#razdels\").show();' onclick='$(\"#razdels\").toggle(\"slow\");'><div class='polosa_razdelitel'><div id='rotateText'><nobr>↑ Сворачивает Настройки ↑</nobr></div></div></a></td>
 	<td class='w100 p0'>";
 
-echo "<div class='black_grad p0'>
-<button id='save_options' type='submit' class='small green' style='float:left; margin:3px;'><span class='mr-2 icon white medium' data-icon='c'></span>Сохранить</button>
-<span class='h1'>Настройки".$opt_save."</span>
-</div>
-
-<script src='/includes/lightbox-2.6.min.js'></script>
+echo "<script src='/includes/lightbox-2.6.min.js'></script>
 <link rel='stylesheet' href='/includes/lightbox_new.css' media='screen' />
 
 <div id='show_options_razrab' class='show_pole pl10' style='display:none;'>";
@@ -167,6 +169,7 @@ if (!extension_loaded('imagick') || !class_exists("Imagick"))
 	echo "<p style='color:red;'>Библиотека Imagick не установлена – вам придется самостоятельно уменьшать размер больших фотографий (полученных фотоаппаратом) перед вставкой в редактор. Советуем перейти на другой хостинг с поддержкой этой библиотеки или договориться с текущим хостингом о её подключении.";
 
 echo "<li><a href='http://hotel-s.ru' target='_blank'>Официальный сайт CMS «ДвижОк»</a>
+<li><a href='http://code.1hub.ru' target='_blank'>Коллекция кода, в которую легко можно добавить свою заметку</a>
 <li><a href='http://translate.google.com/manager/website/add' target='_blank'>Переводчик сайтов</a>
 <li><a href='http://uptolike.ru' target='_blank'>Большие удобные настраиваемые социальные кнопки</a>
 
@@ -404,7 +407,8 @@ lightload поставить «'», а в конце всех настроек �
 Пример: lightload' data-spin='true
 
 </pre></div>
-<p>".select("options[spin]", "0,1", "НЕТ,ДА", $spin)."<a href='http://fgnass.github.io/spin.js/' target='_blank'>Spin</a>, используется для создания вращающегося индикатора активности, применяется для LightLoad.
+<input type='hidden' name='options[spin]' value='1'>
+<p><a href='http://fgnass.github.io/spin.js/' target='_blank'>Spin</a> используется для создания вращающегося индикатора активности, применяется для LightLoad.
 </td></tr>
 
 <tr valign=top><td style='min-width:250px;'>
@@ -554,7 +558,7 @@ lightload поставить «'», а в конце всех настроек �
 	</td></tr>
 
 </table>
-<div style='text-align:center;'><input type='submit' value=' Сохранить ' style='width:300px; height:40px;'></div>
+
 <input type='hidden' name='op' value='options_save'>
 </div>
 
@@ -691,7 +695,7 @@ class='page_shop_count onchange=\"$('#count_[page_id]').val( $('#range_[page_id]
 	</td></tr>
 
 	</table>
-	<div style='text-align:center;'><input type='submit' value=' Сохранить ' style='width:300px; height:40px;'></div>
+	
 	<input type='hidden' name='op' value='options_save'>
 	</div>
 
@@ -796,7 +800,7 @@ class='page_shop_count onchange=\"$('#count_[page_id]').val( $('#range_[page_id]
 	}
 	</pre></div>
 	<p>
-	<div style='text-align:center;'><input type='submit' value=' Сохранить ' style='width:300px; height:40px;'></div>
+	
 	</div>
 
 <div id='show_options_company' class='show_pole pl10' style='display:none;'>
@@ -832,7 +836,7 @@ class='page_shop_count onchange=\"$('#count_[page_id]').val( $('#range_[page_id]
 	Контактное(ые) лицо(а): [лицо компании1]
 	".input("options[company_people]", $company_people, 80, "txt")."</td></tr>
 	</table>
-	<div style='text-align:center;'><input type='submit' value=' Сохранить ' style='width:300px; height:40px;'></div>
+	
 	</div>
 
 
@@ -930,7 +934,7 @@ class='page_shop_count onchange=\"$('#count_[page_id]').val( $('#range_[page_id]
 
 	</td></tr></table>
 	
-	<div style='text-align:center;'><input type='submit' value=' Сохранить ' style='width:300px; height:40px;'></div>
+	
 	</div>";
 
 
@@ -1011,7 +1015,7 @@ echo "<div id='show_options_comments' class='show_pole pl10' style='display:none
 
 	<div id='mail_shablon_preview' style='margin:10px; padding:10px; clear: both; background:white;'>Здесь будет показан выбранный вариант ответа.</div>
 
-	<div style='text-align:center;'><input type='submit' value=' Сохранить ' style='width:300px; height:40px;'></div>
+	
 	<input type='hidden' name='op' value='options_save'>
 	</div>";
 
@@ -1042,37 +1046,37 @@ if ($ed2_direction == "") $ed2_direction = "ltl";
 if ($ed2_minHeight == "") $ed2_minHeight = "300";
 if ($ed2_Width == "") $ed2_Width = "100%";
 echo "<p>".select('options[ed2_button_typewriter]','0,1','НЕТ,ДА',$ed2_button_typewriter)." <b>Режим писателя</b> (комфортный для глаз)<br>
-<p>".select('options[ed2_button_html]','0,1','НЕТ,ДА',$ed2_button_html)." Код (режим просмотра HTML)<br>
-<p>".select('options[ed2_button_formatting]','0,1','НЕТ,ДА',$ed2_button_formatting)." Форматирование текста<br>
-<p>".select('options[ed2_button_bold]','0,1','НЕТ,ДА',$ed2_button_bold)." Полужирный<br>
-<p>".select('options[ed2_button_italic]','0,1','НЕТ,ДА',$ed2_button_italic)." Наклонный (курсив)<br>
-<p>".select('options[ed2_button_deleted]','0,1','НЕТ,ДА',$ed2_button_deleted)." Зачеркнутый<br>
-<p>".select('options[ed2_button_underline]','0,1','НЕТ,ДА',$ed2_button_underline)." Подчеркнутый<br>
-<p>".select('options[ed2_button_unorderedlist]','0,1','НЕТ,ДА',$ed2_button_unorderedlist)." • Обычный список<br>
-<p>".select('options[ed2_button_orderedlist]','0,1','НЕТ,ДА',$ed2_button_orderedlist)." 1. Нумерованный список<br>
-<p>".select('options[ed2_button_outdent]','0,1','НЕТ,ДА',$ed2_button_outdent)." < Уменьшить отступ<br>
-<p>".select('options[ed2_button_indent]','0,1','НЕТ,ДА',$ed2_button_indent)." > Увеличить отступ<br>
-<p>".select('options[ed2_button_image]','0,1','НЕТ,ДА',$ed2_button_image)." Изображение<br>
-<p>".select('options[ed2_button_video]','0,1','НЕТ,ДА',$ed2_button_video)." Видео<br>
-<p>".select('options[ed2_button_file]','0,1','НЕТ,ДА',$ed2_button_file)." Файл<br>
-<p>".select('options[ed2_button_table]','0,1','НЕТ,ДА',$ed2_button_table)." Таблица<br>
-<p>".select('options[ed2_button_link]','0,1','НЕТ,ДА',$ed2_button_link)." Ссылка<br>
+<p><br>".select('options[ed2_button_html]','0,1','НЕТ,ДА',$ed2_button_html)." Код (режим просмотра HTML)<br>
+<p><br>".select('options[ed2_button_formatting]','0,1','НЕТ,ДА',$ed2_button_formatting)." Форматирование текста<br>
+<p><br>".select('options[ed2_button_bold]','0,1','НЕТ,ДА',$ed2_button_bold)." Полужирный<br>
+<p><br>".select('options[ed2_button_italic]','0,1','НЕТ,ДА',$ed2_button_italic)." Наклонный (курсив)<br>
+<p><br>".select('options[ed2_button_deleted]','0,1','НЕТ,ДА',$ed2_button_deleted)." Зачеркнутый<br>
+<p><br>".select('options[ed2_button_underline]','0,1','НЕТ,ДА',$ed2_button_underline)." Подчеркнутый<br>
+<p><br>".select('options[ed2_button_unorderedlist]','0,1','НЕТ,ДА',$ed2_button_unorderedlist)." • Обычный список<br>
+<p><br>".select('options[ed2_button_orderedlist]','0,1','НЕТ,ДА',$ed2_button_orderedlist)." 1. Нумерованный список<br>
+<p><br>".select('options[ed2_button_outdent]','0,1','НЕТ,ДА',$ed2_button_outdent)." < Уменьшить отступ<br>
+<p><br>".select('options[ed2_button_indent]','0,1','НЕТ,ДА',$ed2_button_indent)." > Увеличить отступ<br>
+<p><br>".select('options[ed2_button_image]','0,1','НЕТ,ДА',$ed2_button_image)." Изображение<br>
+<p><br>".select('options[ed2_button_video]','0,1','НЕТ,ДА',$ed2_button_video)." Видео<br>
+<p><br>".select('options[ed2_button_file]','0,1','НЕТ,ДА',$ed2_button_file)." Файл<br>
+<p><br>".select('options[ed2_button_table]','0,1','НЕТ,ДА',$ed2_button_table)." Таблица<br>
+<p><br>".select('options[ed2_button_link]','0,1','НЕТ,ДА',$ed2_button_link)." Ссылка<br>
 </td><td class=small>
 <p>".select('options[ed2_button_alignment]','0,1','НЕТ,ДА',$ed2_button_alignment)." Выравнивание текста<br>
-<p>".select('options[ed2_button_horizontalrule]','0,1','НЕТ,ДА',$ed2_button_horizontalrule)." Горизонтальная линия<br>
-<p>".select('options[ed2_button_more]','0,1','НЕТ,ДА',$ed2_button_more)." Ссылка на полное содержание (для предисловия)<br>
-<p>".select('options[ed2_button_link2]','0,1','НЕТ,ДА',$ed2_button_link2)." [] Вставка блока<br>
-<p>".select('options[ed2_button_block]','0,1','НЕТ,ДА',$ed2_button_block)." {} Вставка ссылки на страницу или раздел*<br>
-<p>".select('options[ed2_button_pre]','0,1','НЕТ,ДА',$ed2_button_pre)." Предварительно форматированный текст (PRE)<br>
-<p>".select('options[ed2_button_clips]','0,1','НЕТ,ДА',$ed2_button_clips)." <b>Заготовки</b> (шаблоны, можно добавить ниже ↓)<br>
-<p>".select('options[ed2_button_fontcolor]','0,1','НЕТ,ДА',$ed2_button_fontcolor)." Цвет текста и заливки (фона) текста<br>
-<p>".select('options[ed2_button_fontsize]','0,1','НЕТ,ДА',$ed2_button_fontsize)." Размер текста (нежелательно!)<br>
-<p>".select('options[ed2_button_fontfamily]','0,1','НЕТ,ДА',$ed2_button_fontfamily)." Шрифт текста (нежелательно!)<br>
-<p>".select('options[ed2_button_superscript]','0,1','НЕТ,ДА',$ed2_button_superscript)." Нижний и верхний индекс<br>
-<p>Ширина поля редактора (% или px): ".input('options[ed2_Width]',$ed2_Width, "10")."<br>
-<p>Высота поля редактора: ".input('options[ed2_minHeight]',$ed2_minHeight, "10")."<br>
-Направление текста: ".select('options[ed2_direction]','ltl,rtl','слева направо,справа налево (по-арабски)',$ed2_direction)."<p>
-Конвертировать тэги DIV в P".select('options[ed2_div_convert]','0,1','НЕТ,ДА',$ed2_div_convert)."<p>
+<p><br>".select('options[ed2_button_horizontalrule]','0,1','НЕТ,ДА',$ed2_button_horizontalrule)." Горизонтальная линия<br>
+<p><br>".select('options[ed2_button_more]','0,1','НЕТ,ДА',$ed2_button_more)." Ссылка на полное содержание (для предисловия)<br>
+<p><br>".select('options[ed2_button_link2]','0,1','НЕТ,ДА',$ed2_button_link2)." [] Вставка блока<br>
+<p><br>".select('options[ed2_button_block]','0,1','НЕТ,ДА',$ed2_button_block)." {} Вставка ссылки на страницу или раздел*<br>
+<p><br>".select('options[ed2_button_pre]','0,1','НЕТ,ДА',$ed2_button_pre)." Предварительно форматированный текст (PRE)<br>
+<p><br>".select('options[ed2_button_clips]','0,1','НЕТ,ДА',$ed2_button_clips)." <b>Заготовки</b> (шаблоны, можно добавить ниже ↓)<br>
+<p><br>".select('options[ed2_button_fontcolor]','0,1','НЕТ,ДА',$ed2_button_fontcolor)." Цвет текста и заливки (фона) текста<br>
+<p><br>".select('options[ed2_button_fontsize]','0,1','НЕТ,ДА',$ed2_button_fontsize)." Размер текста (нежелательно!)<br>
+<p><br>".select('options[ed2_button_fontfamily]','0,1','НЕТ,ДА',$ed2_button_fontfamily)." Шрифт текста (нежелательно!)<br>
+<p><br>".select('options[ed2_button_superscript]','0,1','НЕТ,ДА',$ed2_button_superscript)." Нижний и верхний индекс<br>
+<p><br>Ширина поля редактора (% или px): ".input('options[ed2_Width]',$ed2_Width, "10")."<br>
+<p><br>Высота поля редактора: ".input('options[ed2_minHeight]',$ed2_minHeight, "10")."<br>
+<p><br>Направление текста: ".select('options[ed2_direction]','ltl,rtl','слева направо,справа налево (по-арабски)',$ed2_direction)."<p><br>
+Конвертировать тэги DIV в P".select('options[ed2_div_convert]','0,1','НЕТ,ДА',$ed2_div_convert)."<p><br>
 Запретить автоматическую вставку тэга P (будет использован BR)".select('options[ed2_paragraphy]','0,1','НЕТ,ДА',$ed2_paragraphy)."
 	</td></tr>
 	</table>
@@ -1129,7 +1133,7 @@ echo "<p>".select('options[ed2_button_typewriter]','0,1','НЕТ,ДА',$ed2_butt
 
 	<div id='clip_preview' style='margin:10px; padding:10px; clear: both; background:white;'>Здесь будет показана выбранная заготовка.</div>
 
-	<div style='text-align:center;'><input type='submit' value=' Сохранить ' style='width:300px; height:40px;'></div>
+	
 	<input type='hidden' name='op' value='options_save'>
 	</div>
 	</form>";
@@ -1256,7 +1260,7 @@ echo "<p>".select('options[ed2_button_typewriter]','0,1','НЕТ,ДА',$ed2_butt
 				if ($nu == 25) { $echo .= "<hr>"; $nu = 0; }
 			}
 		}
-		echo "<span class=h1 style='font-size:20pt;'>Рассылка</span>
+		echo "<div class='black_grad'><span class='h1'>Рассылка</span></div>
 		<div class='block radius'><h2>Адреса Email из комментариев: всего ".count($mails2).", разбито по 25 штук.</h2><a class='nothing punkt dark_pole' onclick=\"show_animate('show_about');\">Справочная информация</a><div id='show_about' style='display:none;'>";
 		if ($nu2 > 0) echo "<p><b>Подписавшиеся на рассылку выделены жирным, всего: ".$nu2.".</b></p>";
 		echo "<p>Можно вставлять для отправки сразу после исправления имен, если они набраны неправильно.</p>

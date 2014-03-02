@@ -1,6 +1,10 @@
 # Кодировка по-умолчанию (временно необходима)
 AddDefaultCharset utf-8
 
+# Запрет «волшебных» кавычек - если выдает ошибку 500 - убрать следующие две строки
+php_flag magic_quotes_gpc off
+php_flag magic_quotes_runtime off
+
 # закрываем доступ к .htaccess
 <files .htaccess="">
 order allow,deny

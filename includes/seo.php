@@ -9,7 +9,7 @@ global $razmetka;
 if ($metod == "newkey") {
   $kol = $_POST['kol'];
   $kolslov = $_POST['kolslov'];
-  $x = $_POST['x']; 
+  $x = $_POST['x'];
   echo newkey($x,$kol,$kolslov);
 }
 if ($metod == "des") {
@@ -19,139 +19,105 @@ if ($metod == "des") {
   echo trim(newdesc($x,$key,$kol));
 }
 if ($metod == "procent") {
+  $rep1 = array("\n","  ","!","?","#","№","!","&",":",";","-","—","\"","«","»","(",")",",,","..","...");
+  $rep2 = array(" "," ", ".",".","", "", "", "", ",",",",",",",","",  "", "", "", "", ",", ".", ".");
   $ys = $_POST['x']; 
-  $sin = $_POST['sin'];
   $key = $_POST['key'];
   $str = explode(".", trim($ys));
-  $keys = array(); $go = array(); $i=0;
+
+  $go = array(); 
+  $i = 0;
   foreach ($str as $word) {
-    $k = explode(",", trim($word));
-    foreach ($k as $fraza) { 
-      if(mb_substr_count(trim($fraza), ' ') > 2) {
-        $keys[$i]= trim($fraza); $i++;
-        $go[$i] = '!('.trim($fraza).')'; 
+    $k = explode(",", $word);
+    foreach ($k as $fraza) {
+      $fraza = trim($fraza);
+      if (mb_substr_count($fraza, ' ') > 2) {
+
+        $i++;
+        $go[$i] = '!('.$fraza.')'; 
       }
     }
   }
-  $count = count($keys);
-  $arr = array();
-  $arr = gopars($go);
-  $y = 0;
-  $s = false;
-  $zamena = '';
-  for($i=0; $i<$count-1; $i++) {
-    $poisk = $arr[$i];
-    $a = str_ireplace("&quot;", "", $keys[$i]);
-    $a = mb_convert_case($a, MB_CASE_LOWER); // все в нижний регистр
-    $count2 = count($poisk);
-    for ($p=0; $p<$count2-1; $p++) {
-      $ar = str_replace(chr(194).chr(160), " ", $poisk[$p]);
-      $ar = str_ireplace("&quot;", "", $ar);
-      $ar = str_ireplace(array("<em>", "</em>", "<b>", "</b>"), "", $ar);
-      $ar = mb_convert_case($ar, MB_CASE_LOWER); // все в нижний регистр
-      if (mb_substr_count($ar,$a) > 0 && $s === false) { 
-        $y++; 
-        $s= true;
-        $zamena .= '['.$keys[$i].']<br>';
-      }
-    }
-    $s = false;
-  }
-  if ($y == 0) $y = 1;
-  // || $count - 1 == 0) $proc = "0%";
-  // else 
-  $proc = 100 - 100 / (($count - 1) / $y)."%";
-  if ($proc > 79) $strok = 'Текст уникален<br>'; 
-  else $strok = 'Текст не уникален, измените следующие фразы:<br>'.$zamena;
-  $strok .= procent($ys,$key,$sin);
-  echo $strok;
+  echo procent($ys,$key);
 }
 
 function newkey($text,$kol,$kolslov) {
   # Чистим текст
   $text = normaltext($text,0); // полная функция для ключевиков
-$textorig = stopslov($text);
-$texts = explode(' ', $textorig);
-$text5 = delslov($texts,4);
-$counts=count($texts);
-$text2 =$text5;
-sort($text2);
-$count=count($text5);
-$arr = array(); $arr2 = array(); $arr3 = array(); $arr4 = array(); $arr5 = ''; $arrse = array();
-for($i=0;$i<$count;$i++) {
-if (strpos('-—,.?();:!',trim($text2[$i])) < 1) {
-$koren = sklon(trim($text2[$i])); // находим корень слова
-if (summpristav($textorig, trim($koren)) > 1) { // берем слова имеющие более 1-го вхождения
-$arr[$koren] = summpristav($textorig, trim($koren)); // корень и сколько вхождений в тексте он имеет
-$arr2[$koren]= $text2[$i]; // корень и найденное слово по нему
-$arr3[$i]= $koren; // Массив с корнями
-}
-}
-}
-$text_koren = '';
-for ($i=0;$i<$counts;$i++) {
-  if (mb_strlen($text) > 4) $text_koren .= sklon(trim($texts[$i]))." "; // строим текст из корней
-  else $text_koren .= trim($texts[$i])." ";
-}
-for ($i=0;$i<$counts;$i++) { // строим фразы
-  if (!empty($texts[$i]) && !empty($texts[$i+1]))
-    if (mb_substr_count('-—,.?();:!', trim($texts[$i])) == 0 && mb_substr_count('-—,.?();:!',trim($texts[$i+1])) == 0) {
-      $sear1 = sklon(trim($texts[$i]));
-      $sear2 = sklon(trim($texts[$i+1]));
-      $sear3 = sklon(trim($texts[$i+2]));
-      if (array_key_exists($sear1,$arr) 
-      && array_key_exists($sear2,$arr) 
-      && mb_substr_count($arr5,$sear1.' '.$sear2) == 0 
-      && mb_substr_count($text_koren, $sear1.' '.$sear2) > 1) {
-        $arr4[trim($texts[$i]).' '.trim($texts[$i+1])] = mb_substr_count($text_koren, $sear1.' '.$sear2); // Фраза в 2 слова и ее вес
-        $arr5 .= $sear1.' '.$sear2.'|';
-        $arr5 .= $sear2.' '.$sear1.'|';
+
+  $textorig = stopslov($text);
+  $texts = explode(' ', $textorig);
+  $text2 = $texts;
+  $count = count($texts);
+  $text_koren = $arr5 = '';
+  $arr = $arr2 = $arr3 = $arr4 = $arrse = array();
+  for ($i=0; $i < $count; $i++) {
+    if (mb_strlen(trim($texts[$i])) > 4) {
+      $koren = sklon(trim($texts[$i])); // находим корень слова
+      if (summpristav($textorig, trim($koren)) > 1) { // берем слова имеющие более 1-го вхождения
+        $arr[$koren] = summpristav($textorig, trim($koren)); // корень и сколько вхождений в тексте он имеет
+        $arr2[$koren]= $texts[$i]; // корень и найденное слово по нему
+        $arr3[$i]= $koren; // Массив с корнями
       }
-      if ($i < $counts-1 
-      && array_key_exists($sear1,$arr) 
-      && array_key_exists($sear3,$arr) 
-      && mb_substr_count($arr5,$sear1.' '.trim($texts[$i+1]).' '.$sear3) == 0
-      && mb_substr_count($arr5,$sear1.' '.$sear2) == 0 
-      && mb_substr_count($text_koren, $sear1.' '.trim($texts[$i+1]).' '.$sear3) > 1) {
-        $arr4[trim($texts[$i]).' '.trim($texts[$i+1]).' '.trim($texts[$i+2])] = mb_substr_count($text_koren, $sear1.' '.trim($texts[$i+1]).' '.$sear3); // Фраза в 3 слова с предлогом в середине и ее вес
-        $arr5 .= $sear1.' '.trim($texts[$i+1]).' '.$sear3.'|';
-      }
+      $text_koren .= $koren." "; // строим текст из корней
+    } else $text_koren .= trim($texts[$i])." ";
+  }
+  for ($i=0; $i < $count; $i++) { // строим фразы
+    if (!empty($texts[$i]) && !empty($texts[$i+1])) {
+      if (isset($arr3[$i+1]) && isset($arr3[$i]))
+        if (array_key_exists($arr3[$i],$arr) 
+        && array_key_exists($arr3[$i+1],$arr) 
+        && mb_substr_count($arr5,$arr3[$i].' '.$arr3[$i+1]) == 0 
+        && mb_substr_count($text_koren, $arr3[$i].' '.$arr3[$i+1]) > 1) {
+          $arr4[trim($texts[$i]).' '.trim($texts[$i+1])] = mb_substr_count($text_koren, $arr3[$i].' '.$arr3[$i+1]); // Фраза в 2 слова и ее вес
+          $arr5 .= $arr3[$i].' '.$arr3[$i+1].'|';
+          $arr5 .= $arr3[$i+1].' '.$arr3[$i].'|';
+        }
+      if (isset($arr3[$i+2]) && isset($arr3[$i+1]) && isset($arr3[$i]))
+        if ($i < $count - 1 
+        && array_key_exists($arr3[$i],$arr) 
+        && array_key_exists($arr3[$i+2],$arr) 
+        && mb_substr_count($arr5,$arr3[$i].' '.trim($texts[$i+1]).' '.$arr3[$i+2]) == 0
+        && mb_substr_count($arr5,$arr3[$i].' '.$arr3[$i+1]) == 0 
+        && mb_substr_count($text_koren, $arr3[$i].' '.trim($texts[$i+1]).' '.$arr3[$i+2]) > 1) {
+          $arr4[trim($texts[$i]).' '.trim($texts[$i+1]).' '.trim($texts[$i+2])] = mb_substr_count($text_koren, $arr3[$i].' '.trim($texts[$i+1]).' '.$arr3[$i+2]); // Фраза в 3 слова с предлогом в середине и ее вес
+          $arr5 .= $arr3[$i].' '.trim($texts[$i+1]).' '.$arr3[$i+2].'|';
+        }
     }
+  }
+  arsort($arr4); // сортируем словосочетания по вхождениям
+  $arrres2 = array_keys($arr4); // переводим в массив словосочетаний (номер - словосочетание)
+  $countres2 = count($arrres2);
+  $y =1; // этот счетчик будет работать в двух циклах
+  $str = '';  // начинаем строить строку с ключами (берем словосочетания)
+  for ($i=0; $i < $countres2; $i++) {
+    if ($y > $kolslov) break;
+    $str .= " ".$arrres2[$i].","; // обязательно пробел в начале или strpos не сработает потом
+    ++$y;
+  }
+  $count2=count($arr3);
+  $vhod1 = array();
+  $arr6 = array_slice($arr4, 0, $kolslov);
+  // в итоге получаем
+  for ($i=0; $i < $count2; $i++)
+    if (!empty($arr3[$i]))
+      if (mb_substr_count($str,$arr3[$i]) < 1) 
+        $arr6[$arr2[$arr3[$i]]] = $arr[$arr3[$i]]; // слово и сколько вхождений в тексте
+  $str2 = ''; // продолжаем строить строку с ключами
+  arsort($arr6); // сортируем словосочетания по вхождениям
+  $arrres2 = array_keys($arr6); // переводим в массив словосочетаний (номер - словосочетание)
+  $countres2 = count($arrres2)-1;
+  $y =1; // этот счетчик будет работать в двух циклах
+  $str = '';  // начинаем строить строку с ключами (берем словосочетания)
+  for ($i=0;$i<$countres2;$i++) {
+    if ($y > $kol) break;
+    $str2 .= " ".$arrres2[$i].","; // обязательно пробел в начале или strpos не сработает потом
+    ++$y;
+  }
+  $keys = trim(mb_substr($str2, 0, -1 , 'UTF-8')); // обьединяем словосочетания и слова
+  return $keys;
 }
-arsort($arr4); // сортируем словосочетания по вхождениям
-$arrres2 = array_keys($arr4); // переводим в массив словосочетаний (номер - словосочетание)
-$countres2 = count($arrres2);
-$y =1; // этот счетчик будет работать в двух циклах
-$str = '';  // начинаем строить строку с ключами (берем словосочетания)
-for($i=0;$i<$countres2;$i++) {
-if($y > $kolslov)break;
-$str .= " ".$arrres2[$i].","; // обязательно пробел в начале или strpos не сработает потом
-++$y;
-}
-$count2=count($arr3);
-$vhod1 = array();
-$arr6 = array_slice($arr4, 0, $kolslov);
-// в итоге получаем
-for ($i=0; $i<$count2; $i++)
-  if (!empty($arr3[$i]))
-    if (mb_substr_count($str,$arr3[$i]) < 1) 
-      $arr6[$arr2[$arr3[$i]]] = $arr[$arr3[$i]]; // слово и сколько вхождений в тексте
-$str2 = ''; // продолжаем строить строку с ключами
 
-
-arsort($arr6); // сортируем словосочетания по вхождениям
-$arrres2 = array_keys($arr6); // переводим в массив словосочетаний (номер - словосочетание)
-$countres2 = count($arrres2)-1;
-$y =1; // этот счетчик будет работать в двух циклах
-$str = '';  // начинаем строить строку с ключами (берем словосочетания)
-for($i=0;$i<$countres2;$i++) {
-if($y > $kol)break;
-$str2 .= " ".$arrres2[$i].","; // обязательно пробел в начале или strpos не сработает потом
-++$y;
-}
-	  $keys = trim(mb_substr($str2, 0, -1 , 'UTF-8')); // обьединяем словосочетания и слова
-	  return $keys;
-}
 function newdesc($text,$key,$kol) {
   $text = normaltext($text,1);  // краткая функция для описания
   # убираем стоп слова
@@ -160,22 +126,23 @@ function newdesc($text,$key,$kol) {
   $key = str_replace(",", "", $key);
   $datai = explode(" ", trim($key)); // Ключевики в массив
   $desc=array();
-  foreach($data2 as $arr1) { // Выполняем поиск предложения с максимумом ключевиков
+  foreach ($data2 as $arr1) { // Выполняем поиск предложения с максимумом ключевиков
   if (strlen(trim($arr1)) < $kol) {
     $i = 0;
-    foreach($datai as $arr2) {
+    foreach ($datai as $arr2) {
       $i += summpristav($arr1, sklon(trim($arr2)));
     }
      $desc[$i] = trim($arr1); // новый массив предложений, предложение и сколько содержит ключевиков
 	 }
   }
   krsort($desc); // сортируем
-  foreach($desc as $key => $val) {
+  foreach ($desc as $key => $val) {
     $newdesk = $val; // берем только с максимальным вхождением ключевиков
     break 1;
   }
   return $newdesk;
 }
+
 function normaltext($text, $a) { // Нормализация текста - убираем все лишнее
   $text= mb_convert_case($text, MB_CASE_LOWER); // все в нижний регистр
   $text = preg_replace( "'<script[^>]*>.*?</script>'usi", ' ', $text );  
@@ -191,19 +158,16 @@ function normaltext($text, $a) { // Нормализация текста - уб
   $text = preg_replace($regex, ' ', $text); // убираем ноуиндекс
   $regex = "~<table[^>]*?>.*?</table>~usi";
   $text = preg_replace($regex, ' ', $text);
-  if ($a !== 1) { // для description не нужно
-    // убираем ненужные знаки
-    $text = str_ireplace(array("&nbsp;", "\r\n", "\r", "\n", "\t", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "&", "%", "/", "`", "_", "'", "=", "+", "*", "^", "#", "]", "[", "\""), " ", $text);
-      $text = str_ireplace(array("-", "—", ",", ".", "?", "(", ")", ";", ":", "!"), array(" - ", " — ", " , ", " . ", " ? ", " ( ", " ) ", " ; ", " : ", " ! "), $text);
- 
-  }
+  if ($a !== 1) // для description не нужно
+    $text = str_ireplace(array("&nbsp;", "\r\n", "\r", "\n", "\t", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "&", "%", "/", "`", "_", "'", "=", "+", "*", "^", "#", "]", "[", "\"", "-", "—", ",", ".", "?", "(", ")", ";", ":", "!"), " ", $text); // убираем ненужные знаки
   return trim($text);
 }
+
 function stopslov($text) { // Удаление стоп слов
   $data = array('ближе','близко','более','будет','была','были','было','быстро','быть','вам','вами','вас','верх','внутри','http','www','вопрос','восемнадцать','восемь','восемьдесят','восемьсот','воскресенье',
   'время','всё','всего','всех','вторник','вчера','года','градус','грамм','даже','далеко','два','двадцать','двенадцать','двести','девяносто','девятнадцать','девять','девятьсот','день','десять','длинный','для',
   'его','если','есть','завтра','здесь','знать','ибо','идет','извините','или','иногда','иной','кажется','казаться','каких','килограмм','километр','килотонна','когда','конечно','короткий','которая','которой','которые',
-  'какое','какой','который','которым','которых','лево','либо','литр','лишь','мало','медленно','между','меня','метр','миллиграмм','миллилитр','миллиметр','миллисекунда','минута','млрд','мне','многие','много','могут',
+  'какое','какой','какие','который','которым','которых','лево','либо','литр','лишь','мало','медленно','между','меня','метр','миллиграмм','миллилитр','миллиметр','миллисекунда','минута','млрд','мне','многие','много','могут',
   'мое','моё','моей','может','можно','надо','найти','нам','нами','наоборот','например','нас','нах','нашего','нашей','него','нее','ней','некоторые','некто','необходимо','несколько','нет','нибудь','низ','никто','ним',
   'ними','них','нужно','ночь','обо','один','одиннадцать','однако','окуеть','она','они','оно','очень','паре','парой','пару','перед','писали','под','подле','пожалуйста','поздно','понедельник','порой','после','потом',
   'поэтому','одной','нужна','состоит','второй','право','своей','простите','просто','пуд','назад','вперед','опять','снова','вновь','классно','впредь','такую','я','сайт','интернет','порно','вспять','но','по',
@@ -222,12 +186,6 @@ function stopslov($text) { // Удаление стоп слов
   $text = str_replace("  ", " ", $text);
   //print($text);
   return $text;
-}
-function delslov($array,$n) { // Удаление слов до 4 символов в массиве
-  for($i = 0, $c = count($array); $i < $c; $i++) {
-    if(mb_strlen(trim($array[$i])) < $n) unset($array[$i]);
-  }
-  return $array;
 }
 function sklon($text) {
 // удаляем
@@ -256,152 +214,64 @@ $text = mb_substr($text, 0, -1);
 return $text;
 }
 
-function procent($text,$keys,$sinoff) {
+function procent($text,$keys) {
   # Чистим текст
   $text = normaltext($text,0); // полная функция для ключевиков
   $text = stopslov($text); 
   $textd = explode(" ", trim($text));
-  $sized=count($textd);
+  $sized = count($textd);
   $textorig =  preg_replace('/ {2,}/',' ',$text);
-
   # Получаем массив слов
   $textm = explode(" ", trim($textorig));
-  $size3=count($textm);
+  $size3 = count($textm);
   $keys0 = explode(" ", trim($keys));
   $keys2 = explode(",", trim($keys));
-  $size2=count($keys0);
-  $keyssin = explode(",", trim($keyssi));
+  $size2 = count($keys0);
   $text_koren = '';
-for($i=0;$i<$size3;$i++) {
-$text_koren .= sklon(trim($textm[$i]))." "; // строим текст из корней
-}
-$key_koren = '';
-for($i=0;$i<$size2;$i++) {
-$s1 = mb_substr($keys0[$i], mb_strlen($keys0[$i])-1, 1);
-if ($s1==",") {
-$key = mb_substr($keys0[$i], 0, -1);
-$koren = sklon(trim($key)); // находим корень слова ключевика
-$key_koren .= $koren.", "; // строим ключевики из корней
-} else { $key = $keys0[$i];
-$koren = sklon(trim($key)); // находим корень слова ключевика
-$key_koren .= $koren." "; // строим ключевики из корней
-}
-}
-$key_koren = explode(",", trim($key_koren));
-$size4=count($key_koren);
-  $result = 'Слово с наибольшим весом является самым главным в тексте, 
-  чтобы повысить вес слова – употребите его чаще или поставьте ближе к началу текста.<br>';
-  $result .= '<table class="table_light" width=100%>';
-  $result .= "<tr><td>Словосочетание</td><td align=center>Упоминания</td><td align=center>% в тексте</td><td width=65% align=center>Синонимы</td></tr>";
-    	if ($sinoff == 1) { $str = sinonim(trim($keys).'|');  // получаем синонимы
-$arr1 = explode("|", trim($str));
-$sin1 = array();
-foreach ($arr1 as $gruppa) {
-$arr2 = explode(",", trim($gruppa));
-for($i=0;$i<$size4;$i++) {
-$sin1[$i] .= trim($arr2[$i]).', ';
-}}
-	}
-      for($i=0;$i<$size4;$i++) {
-	  if ($sinoff == 1) {
-	  $sin = explode(",",$sin1[$i]);
-$arr = array_flip($sin);
-$sin = array_flip($arr);
-$sinonim = implode(",", $sin);
-$sinonim = str_ireplace(',', ', ', $sinonim);
-}
+  for ($i=0; $i<$size3; $i++) {
+    $text_koren .= sklon(trim($textm[$i]))." "; // строим текст из корней
+  }
+  $key_koren = '';
+  for ($i=0; $i<$size2; $i++) {
+    $s1 = mb_substr($keys0[$i], mb_strlen($keys0[$i])-1, 1);
+    if ($s1 == ",") {
+      $key = mb_substr($keys0[$i], 0, -1);
+      $koren = sklon(trim($key)); // находим корень слова ключевика
+      $key_koren .= $koren.", "; // строим ключевики из корней
+    } else { 
+      $key = $keys0[$i];
+      $koren = sklon(trim($key)); // находим корень слова ключевика
+      $key_koren .= $koren." "; // строим ключевики из корней
+    }
+  }
+  $key_koren = explode(",", trim($key_koren));
+  $size4 = count($key_koren);
+  $result = '<p>Слово с наибольшим весом является самым главным в тексте, 
+    чтобы повысить вес слова – употребите его чаще или поставьте ближе к началу текста.<br>';
+  $result .= '<table class="table_light w60">';
+  $result .= "<tr><td>Словосочетание</td><td align=center>Упоминания</td><td align=center>% в тексте</td></tr>";
+  $re = array();
+  for ($i=0; $i < $size4; $i++) {
     $raz = summpristav($text_koren, trim($key_koren[$i]));
-	if ( mb_substr_count(trim($keys2[$i]), ' ') > 0 )
-	$procent_slovo = round($raz*100/$sized,2)*2;
-	 else 
-	$procent_slovo = round($raz*100/$sized,2);
-$result .= "<tr><td>".trim($keys2[$i])."</td><td align=center>".$raz."</td><td align=center>".$procent_slovo."</td>";
-if ($sinoff == 1) $result .= "<td align=center>".$sinonim."</td>";
-if ($sinoff == 0) $result .= "<td align=center>Поиск синонимов отключен.</td>";
-$result .= "</tr>";
-      }
-  $result .= '</table>';
+  	if ( mb_substr_count(trim($keys2[$i]), ' ') > 0 )
+  	  $procent_slovo = round($raz * 100 / $sized, 2) * 2;
+  	else 
+  	  $procent_slovo = round($raz * 100 / $sized, 2);
+    $re[$raz.mt_rand(1000000, 9999999)] = "<tr><td>".trim($keys2[$i])."</td><td align=center>".$raz."</td><td align=center>".$procent_slovo."</td></tr>";
+  }
+  krsort($re);
+  $result .= implode("",$re).'</table>';
   return  $result;
 }
 
-function sinonim($sinonim) { 
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, 'http://seogenerator.ru/api/synonym/');
-  curl_setopt($ch, CURLOPT_HEADER,0);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-  curl_setopt($ch, CURLOPT_REFERER, 'http://seogenerator.ru/');
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
-  curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
-  curl_setopt($ch, CURLOPT_POST, true);
-  curl_setopt($ch, CURLOPT_POSTFIELDS, 'text='.$sinonim.'&base=big1&type=random&count=10&format=text');
-  $contents = curl_exec($ch);
-  curl_close($ch);
-  if ($contents == 'Exceeded the limit queries from this IP address') $contents = 'Перегрузка сервера.';
-  return $contents;
-}
-function gopars($word) {
-  $count = count($word);
-  $uri = array();
-  for($i=0;$i<$count;$i++) {
-  $params = array(
-    'q' => $word[$i],
-  );
-  $uri[$i] = 'http://www.google.ru/search?'.http_build_query($params);
-  }
-  $contents = array();
-  $contents = multigopars($uri);
-  $m = array();
-  for($i=0;$i<$count;$i++) {
-  /* Парсинг данных и их вывод на экран */
-  if ( preg_match_all('/<span class="st">(.*)<\/span>/isU', $contents[$i], $table) ) {
-	$s[$i] = $table[0];
-}}
-	  return $s;
-}
-function multigopars($data) {
-  $curls = array();
-  $result = array();
-  $mh = curl_multi_init();
-  // Дескриптор мульти потока. Тоесть эта штука отвечает за то, чтобы много
-  // запросов шли параллельно.
-  foreach ($data as $id => $d) {
-    $curls[$id] = curl_init();
-        // Для каждого url создаем отдельный curl механизм чтоб посылал запрос)
-        $url = (is_array($d) && !empty($d['url'])) ? $d['url'] : $d;
-        // Если $d это массив (как в случае с пост), то достаем из массива url
-        // если это не массив, а уже ссылка - то берем сразу ссылку
-  curl_setopt($curls[$id], CURLOPT_URL,$url);
-  curl_setopt($curls[$id], CURLOPT_HEADER,0);
-  curl_setopt($curls[$id], CURLOPT_RETURNTRANSFER, true);
-  curl_setopt($curls[$id], CURLOPT_REFERER, 'http://www.google.ru/');
-  curl_setopt($curls[$id], CURLOPT_CONNECTTIMEOUT, 30);
-  curl_setopt($curls[$id], CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
-        // добавляем текущий механизм к числу работающих параллельно
-    curl_multi_add_handle($mh, $curls[$id]);
-  }
-  // число работающих процессов.
-  $running = null;
-  // curl_mult_exec запишет в переменную running количество еще не завершившихся
-  // процессов. Пока они есть - продолжаем выполнять запросы.
-  do { curl_multi_exec($mh, $running); } while($running > 0);
-  // Собираем из всех созданных механизмов результаты, а сами механизмы удаляем
-  foreach($curls as $id => $c) {
-    $result[$id] = curl_multi_getcontent($c);
-    curl_multi_remove_handle($mh, $c);
-  }
-  // Освобождаем память от механизма мультипотоков
-  curl_multi_close($mh);
-  // возвращаем данные собранные из всех потоков.
-  return $result;
-}
 function summpristav($text,$slovo) { // Подсчет слова с приставками
-$summ = 0;
-$summ += mb_substr_count($text,' '.$slovo);
-$pr = 'во взо вы до за изо ко на над надо не недо о об обо от ото па пере по под подо пра пред предо про разо с со су у без бес вз вс воз вос из ис низ нис раз рас роз рос пре при';
-$p = explode(' ', $pr);
-foreach($p as $arr) {
-$summ += mb_substr_count($text,' '.$arr.$slovo);
-}
-return $summ;
+  $summ = 0;
+  $summ += mb_substr_count($text,' '.$slovo);
+  $pr = 'во взо вы до за изо ко на над надо не недо о об обо от ото па пере по под подо пра пред предо про разо с со су у без бес вз вс воз вос из ис низ нис раз рас роз рос пре при';
+  $p = explode(' ', $pr);
+  foreach($p as $arr) {
+    $summ += mb_substr_count($text,' '.$arr.$slovo);
+  }
+  return $summ;
 }
 ?>

@@ -138,7 +138,7 @@ function GraphicAdmin() {
  	
  	$soderganie_menu = "";
  	global $deviceType;
- 	$buttons = explode(",", aa(" Новое, Проверить: , Удаленное, Старое, Блоки, Отзывы:, Вставить дату"));
+ 	$buttons = explode(",", aa(" Новое, Проверить: ,,, Блоки, Отзывы:, Вставить дату"));
 	if ($deviceType != 'computer') $buttons = array('','','','','','','');
 
 	if ($comm_segodnya > 0) $color_comm = " orange"; else $color_comm = "";
@@ -175,10 +175,10 @@ function GraphicAdmin() {
 	if ($registr=='1') echo "&nbsp;&nbsp;&nbsp;<a href='".$admin_file.".php?op=MainUser'>".aa("Пользователи")."</a> <a href=".$admin_file.".php?op=sortuser>".aa("Список")."</a>";
 
 	echo "<div class='curved-vt-2 hide' style='margin-left:-350px; width: 700px; top: 10px;' id='add'></div>
-	<div class='black_grad'>
-	<button id='new_razdel_button' title='".aa("Добавить раздел...")."' class='small right3' onclick=\"openbox('10','', 'add'); $('.dark_pole2sel').attr('class', 'dark_pole2');\"><span class=\"mr-2 icon darkgrey medium\" data-icon=\"+\"></span> Добавить раздел</button>
+	<div class='black_grad'><div class=''>
+	<button id='new_razdel_button' title='".aa("Добавить раздел...")."' class='dark_pole2 right3' onclick=\"openbox('10','', 'add'); $('.dark_pole2sel').attr('class', 'dark_pole2');\"><span class=\"icon \" data-icon=\"+\"></span> ".aa("Добавить раздел")."</button>
 	<span class='h1'>".aa("Разделы")."</span>
-		</div>".$razdel_txt."
+		</div></div>".$razdel_txt."
 		<div style='max-height:700px;'>";
 
 	$icon_size = "large";
@@ -271,30 +271,54 @@ function GraphicAdmin() {
 		<span class='icon ".$color." ".$icon_size."' data-icon='".$ico."'></span><span class='plus20'>".$title."</span>
 		</div></a></div>";
     }
+
+    $result3 = $db->sql_query("SELECT `pid` FROM ".$prefix."_pages where `active`='1' and `tables`='pages'");
+    $size_pages = $db->sql_numrows($result3);
+    $result4 = $db->sql_query("SELECT `pid` FROM ".$prefix."_pages where `active`!='1' and `tables`='pages'");
+    $size_pages_off = $db->sql_numrows($result4);
+    if ($size_pages_off > 0) $size_pages_off = " <span class='red2'>-".$size_pages_off."</span>";
+    $result3 = $db->sql_query("SELECT `cid` FROM ".$prefix."_pages_categories where `tables`='pages'");
+    $size_cat = $db->sql_numrows($result3);
+    $result3 = $db->sql_query("SELECT `id` FROM ".$prefix."_mainpage where `tables`='pages' and `type`='2'");
+    $size_razdel = $db->sql_numrows($result3);
+    $result3 = $db->sql_query("SELECT `cid` FROM ".$prefix."_pages_comments where `tables`='pages' and `active`='1'");
+    $size_comm = $db->sql_numrows($result3);
+
 	echo "</div></div>
 	</td>
 	<td style='padding:0;'><a class='punkt' title='Свернуть/развернуть левую колонку' onmousemove='$(\"#razdels\").show();' onclick='$(\"#razdels\").toggle(\"slow\");'><div class='polosa_razdelitel'><div id='rotateText'><nobr>↑ Сворачивает Разделы ↑</nobr></div></div></a></td>
-	<td style='width:100%;padding:0;'><div class='black_grad'><div class='pt5'>".$soderganie_menu."</div></div><div class='podrazdel radius nothing' id='podrazdel'>";
+	<td style='width:100%;padding:0;'><div class='black_grad'><div class='pt5'>
+
+	".$soderganie_menu."
+
+</div></div>
+	<div class='podrazdel radius nothing' id='podrazdel'>";
 
 	// ЗАПИСКИ
 	$row = $db->sql_fetchrow($db->sql_query("SELECT `adminmes` FROM ".$prefix."_config"));
 	$adminmes = $row['adminmes'];
 	global $op, $project_logotip, $project_name;
-	if ($op == "mes") $mes_ok = "<span class='green'>".aa("Записки сохранены")."</span>"; 
+	if ($op == "mes") $mes_ok = "<span class='darkgreen'>".aa("Записки сохранены")."</span>"; 
 	else $mes_ok = aa("Записки");
 
 	echo "<div style='margin:10px;'>";
 	if (!empty($project_logotip) && file_exists($project_logotip)) echo "<img src='".$project_logotip."' class=center>";
 	if (!empty($project_name)) echo "<br><font class='big_main'>".$project_name."</font>";
-	echo "</div>
+	echo "<p>".aa("Страниц:")." ".$size_pages.$size_pages_off.".
+	<p>".aa("Папок:")." ". $size_cat.".
+	<p>".aa("Разделов:")." ". $size_razdel.".
+	<p>".aa("Комментариев:")." ". $size_comm."
+
 	<form action='".$admin_file.".php?op=mes' method='post' name=form class='nothing' class='w100'>
-		<div class='center light_fon' style='height:242px; border: #ddd 1px solid;'>
+		<div class='center' style='height:242px;'>
 		<a id='adminmes_date' style='float:right; margin:3px; display:none;' onclick=\"document.getElementById('adminmes').value+='\\r'+getDateNow()+'  '\" title='".aa("Вставить дату и время (в конце текста)")."' class='button small ml20'><span class='icon gray small' data-icon='6'></span>".$buttons[6]."</a>
-		<button id='adminmes_save' class='hide small punkt' type='submit' style='float:left; margin:3px;'><span class=\"icon gray small\" data-icon=\"c\"></span> ".aa("Сохранить")."</button><div class='h3' style='height:40px;'>".$mes_ok."</div>
+		<button id='adminmes_save' class='hide green small punkt' type='submit' style='float:left; margin:3px;'><span class=\"icon white small\" data-icon=\"c\"></span> ".aa("Сохранить")."</button><div class='h3' style='height:40px;'>".$mes_ok."</div>
 		
-		<textarea id='adminmes' name='adminmes' rows='3' cols='40' style='width:99%' class='f14 yellow_grad h200' onclick='$(\"#adminmes_save\").show(); $(\"#adminmes_date\").show();'>".$adminmes."</textarea>
+		<textarea id='adminmes' name='adminmes' rows='3' cols='40' style='width:99%' class='f14 h200' onclick='$(\"#adminmes_save\").show(); $(\"#adminmes_date\").show();'>".$adminmes."</textarea>
 		</div>
 	</form>
+	</div>
+
 	</div>
 	</td></tr></table>";
 
@@ -374,7 +398,7 @@ function red_vybor() { // Выбор редактора
   global $url;
   $link = str_replace("&red=0","",str_replace("&red=1","",str_replace("&red=2","",str_replace("&red=3","",str_replace("&red=4","",$url)))));
   echo "
-  <button id='rerurn' class='small orange' type=button onclick=\"show('red_vybor');\" style='float:right;margin:3px;'><span style='margin-right: -2px;' class=\"icon white medium\" data-icon=\"7\"></span> ".aa("Редактор")."</button>
+  <button id='rerurn' class='small orange' type=button onclick=\"show('red_vybor');\" style='float:right;margin:3px;'><span style='margin-right: -2px;' class=\"icon white small\" data-icon=\"7\"></span> ".aa("Редактор")."</button>
 
   <div id='red_vybor' style='position: absolute; z-index:666; right:5px; top:5px; padding:5px; width:647px; background:white; display:none; border:solid 10px gray;' class=radius>
   <a onclick=show('red_vybor') style='cursor:pointer; float:right;' title='Закрыть'><div class='close_button radius'>x</div></a>

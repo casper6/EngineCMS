@@ -117,9 +117,9 @@ function new_otvet(type, id, sender, info, mail, mod) {
 	    success: function(data){ $('#otvet_send'+id).html('<span class=h1>'+icon('green medium','c')+data+'</span>'); }
 	});
 }
-function trash_pics() {
+function trash_pics(type, sort, count) {
 	$.ajax({ url: 'ad/ad-ajax.php', type: "POST", cache: false, dataType : "html",
-	    data: {'func': 'trash_pics'},
+	    data: {'func': 'trash_pics', 'string': type+'*@%'+sort+'*@%'+count},
 	    beforeSend: function(){ new Spinner().spin( document.getElementById('show_options_oldfotos') ); },
 	    success: function(data){ $('#show_options_oldfotos').html(data); }
 	});
@@ -192,9 +192,9 @@ function razdel_show(title,id,name,type,xxx,sort) {
 	if (name == 'index') del_razdel = '<li class="last"><a href="sys.php?op=mainpage&id='+id+'&amp;type=2&nastroi=1#1" title="Настройки (опции) раздела">'+icon('orange small','V')+' Настроить</a></li></ul></nobr>';
 	if (id == 0) txt = '<h1>'+title+'</h1>';
 	else {
-		txt = '<div class="dark_pole2sel"><nobr><ul class="button-bar"><li class="first"><a target="_blank" class="blue" href="'+re_link+'" title="Открыть этот раздел на сайте">'+icon('blue small','s')+' Открыть</a></li><li><a href="sys.php?op=mainpage&amp;type=2&id='+id+'#1" title="Редактировать Главную страницу этого раздела и Шаблон для заполнения страниц">'+icon('orange small','7')+' Редактировать</a></li>'+del_razdel; 
+		txt = '<div class="m5"><nobr><ul class="button-bar"><li class="first"><a target="_blank" class="blue" href="'+re_link+'" title="Открыть этот раздел на сайте">'+icon('blue small','s')+' Открыть</a></li><li><a href="sys.php?op=mainpage&amp;type=2&id='+id+'#1" title="Редактировать Главную страницу этого раздела и Шаблон для заполнения страниц">'+icon('orange small','7')+' Редактировать</a></li>'+del_razdel; 
 		if (type == 'pages') {
-			txt = txt+'<div class="mt5 mb20"><ul class="button-bar"><li class="first"><a title="Добавить страницу (в редакторе)" target=_blank href="sys.php?op=base_pages_add_page&name='+name+'#1">'+icon('small','+')+' Добавить страницу</a></li><li class="last"><a class="pointer" onclick="add_papka(\''+id+'\',0)">'+icon('orange small',',')+' Добавить папку</a></li></ul> <a class="button small" onclick=\'$("#add").show().html( $("#colors").html() );\' title="Цвет раздела (видит только администратор)">'+icon('small',',')+' Цвет</a><br><a onclick="add_papka(\''+id+'\',1)" class="button small" title="Добавить несколько страниц">или несколько страниц</a> ' + colors + '<div id="add_papka" style="display:none;"></div></div>';
+			txt = txt+'<div class="mt5 mb20"><ul class="button-bar"><li class="first"><a title="Добавить страницу (в редакторе)" target=_blank href="sys.php?op=base_pages_add_page&name='+name+'#1">'+icon('small','+')+' Добавить страницу</a></li><li class="last"><a class="pointer" onclick="add_papka(\''+id+'\',0)">'+icon('orange small',',')+' Добавить папку</a></li></ul> <button class="dark_pole2" onclick=\'$("#add").show().html( $("#colors").html() );\' title="Цвет раздела (видит только администратор)">'+icon('small',',')+' Цвет</button><br><button class="dark_pole2 small" onclick="add_papka(\''+id+'\',1)" title="Добавить несколько страниц">или несколько страниц</button> ' + colors + '<div id="add_papka" style="display:none;"></div></div>';
 		} else if (type == 'database') {
 			txt = txt+'<div class="mt5 mb20"><nobr><a class="button green" href="sys.php?op=base_base_create_base&base='+name+'&name='+name+'&amp;red=1#1" title="Добавить строку в базу данных">'+icon('white small','+')+' Добавить строку</a> <a class="button blue" href="sys.php?op=base_base&name='+name+'" title="Открыть базу данных">'+icon('white small','s')+' Открыть таблицу</a> <a class="button small" onclick=\'$("#add").show().html( $("#colors").html() );\' title="Цвет раздела (видит только администратор)">'+icon('small',',')+' Цвет</a>' + colors + '</nobr></div>';
 		} else txt = txt+' <a class="button small" onclick=\'$("#add").show().html( $("#colors").html() );\' title="Цвет раздела (видит только администратор)">'+icon('small',',')+' Цвет</a>' + colors;

@@ -54,7 +54,7 @@ else if ($('#mainrazdel3').attr('class') == 'dark_pole2sel') window.location = '
 else if ($('#mainrazdel6').attr('class') == 'dark_pole2sel') window.location = 'sys.php?op=mainpage&amp;name=shablon&amp;type=6&amp;red=1#1';
 else if ($('#mainrazdel4').attr('class') == 'dark_pole2sel') window.location = 'sys.php?op=mainpage&amp;name=spisok&amp;type=4#1';
 else if ($('#mainrazdel5').attr('class') == 'dark_pole2sel') window.location = 'sys.php?op=mainpage&amp;name=base&amp;type=5#1';
-			else $('#add').toggle();\"><span class='mr-2 icon darkgrey medium' data-icon='+'></button>
+			else $('#add').toggle();\"><span class='mr-2 icon small' data-icon='+'></button>
 			<span class='h1'>Оформление</span>
 			</div>";
 	     ////////////////////// ДИЗАЙН 0
@@ -78,8 +78,8 @@ else if ($('#mainrazdel5').attr('class') == 'dark_pole2sel') window.location = '
 	<td style='padding:0;'><a class='punkt' title='Свернуть/развернуть левую колонку' onmousemove='$(\"#razdels\").show();' onclick='$(\"#razdels\").toggle(\"slow\");'><div class='polosa_razdelitel'><div id='rotateText'><nobr>↑ Сворачивает Оформление ↑</nobr></div></div></a></td>
 	<td class='w100 pm0'>
 			<div class='black_grad'><div class='pt5'>
-			<button class='small' onclick='location.href=\"/sys.php?op=mainpage&amp;type=0&amp;id=1&amp;red=2\"' title='Редактировать главный дизайн'><span class='icon gray medium' data-icon='7'></span>Главный дизайн</button> 
-			<button class='small' onclick='location.href=\"/sys.php?op=mainpage&amp;type=1&amp;id=20\"' title='Редактировать главный стиль'><span class='icon gray medium' data-icon='7'></span>Главный стиль</button>";
+			<button class='small' onclick='location.href=\"/sys.php?op=mainpage&amp;type=0&amp;id=1&amp;red=2\"' title='Редактировать главный дизайн'><span class='icon small' data-icon='7'></span> Главный дизайн</button> 
+			<button class='small' onclick='location.href=\"/sys.php?op=mainpage&amp;type=1&amp;id=20\"' title='Редактировать главный стиль'><span class='icon small' data-icon='7'></span> Главный стиль</button>";
 		echo "</div></div>
 		<div class='podrazdel radius' id='podrazdel'></div>
 			</td></tr></table>";
@@ -633,7 +633,7 @@ function create_main($type) {
 	<div class='fon w100 mw800'>
 	<div class='black_grad h40'>
 	<button type='button' style='float:right;margin:3px;' class='medium orange' onClick=\"show_animate('about')\">?</button>
-	<button type='submit' class='small green' style='float:left; margin:3px;'><span class='mr-2 icon white medium' data-icon='c'></span>Сохранить</button>
+	<button type='submit' class='small green' style='float:left; margin:3px;'><span class='mr-2 icon white small' data-icon='c'></span>Сохранить</button>
 	<span class='h1'>Добавление ".$type_opis."</span></div>".$create."
 	</div>
 	</form>";
@@ -753,7 +753,7 @@ function edit_main($id) {
 	$spisok_names = implode(",",$spisok_names);
 	echo "<div class='fon w100 mw800'>
 	<div class='black_grad h40'>
-	<a class='button small green' onclick='save_main(\"ad/ad-mainpage.php\", \"mainpage_save_ayax\", \"\", \"\")' style='float:left; margin:3px;'><span class='mr-2 icon white medium' data-icon='c'></span> Сохранить</a>
+	<a class='button small green' onclick='save_main(\"ad/ad-mainpage.php\", \"mainpage_save_ayax\", \"\", \"\")' style='float:left; margin:3px;'><span class='mr-2 icon white small' data-icon='c'></span> Сохранить</a>
 
 	<script type='text/javascript'>
 	jQuery(function(){
@@ -1004,7 +1004,7 @@ function edit_main($id) {
 		<tr><td>Показывать похожие страницы ".input("options[text_tags_pages]", $text_tags_pages, 40)." <p>
 		Количество страниц ".input("options[col_tags_pages]", $col_tags_pages, 3).".<p>
 		<b>Вывод страниц основан на одинаковых тегах</b> (ключевых словах). Включать их отображение на странице необязательно, но заполнять данные поля в дополнительных настройках при редактировании страницы обязательно.<p>
-		Показывать похожие страницы только из этой же папки (если нет — со всего раздела) ".select("options[papka_tags_pages]", "0,1", "НЕТ,ДА", $papka_tags_pages)."<p>
+		Показывать похожие страницы только из этой же папки (если нет — со всего раздела) ".select("options[papka_tags_pages]", "0,1", "НЕТ,ДА", $papka_tags_pages)."<br><p><br>
 		Показывать похожие страницы только из этого раздела (если нет — со всех разделов) ".select("options[razdel_tags_pages]", "0,1", "НЕТ,ДА", $razdel_tags_pages)."</td>
 		<td>".select("options[show_tags_pages]", "0,1", "НЕТ,ДА", $show_tags_pages)."</td></tr>
 		<tr><td><strong>Показывать Добавление страниц в Интернет-закладки</strong></td>

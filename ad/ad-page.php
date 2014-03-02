@@ -18,12 +18,12 @@ function seo($edit=false){
   global $kolkey;
   echo "<script>
   function seo(){
+    new Spinner().spin( document.getElementById('procent') );
     var x = $('#open_text').val();
     var y = $('#main_text').val();
     var kolkey = $('select.kolkey').val();
     var kolslov = $('select.kolslov').val();
     var kolslov = $('select.kolslov').val();
-    var poisksin = $('select.poisksin').val();
     var koldes=250;
     var a = (x+y);
     if ( (x + y).length >= 400) {
@@ -35,7 +35,7 @@ function seo($edit=false){
           $('#key').show('slow'); $('#key_hide').hide();
       document.getElementById('procent').innerHTML = '<h2>".aa("Загружаю вычисления...")."</h2>';
           zapros('metod=des&x='+a+'&key='+key+'&kol='+koldes,document.getElementById('description2'),'des');
-          zapros('metod=procent&x='+a+'&key='+key+'&sin='+poisksin,document.getElementById('procent'),'proc');
+          zapros('metod=procent&x='+a+'&key='+key,document.getElementById('procent'),'proc');
         } 
       }
       xps.open('POST','includes/seo.php',true);
@@ -54,7 +54,8 @@ function seo($edit=false){
     metod.setRequestHeader('Content-type','application/x-www-form-urlencoded');
     metod.send(url);
   }
-  </script><span id='ajax'></span><input type='button' value='".aa("Заполнить ключевые слова")."' onclick='seo()'> <a class=punkt onclick='$(\"#opt_seo\").toggle(\"slow\")'>".aa("Настройки")."</a><div id=opt_seo style='display:none'><br><b>".aa("Ключевых слов всего:")."</b> <select class='kolkey'><option value='30'>30</option><option value='20'>20</option><option value='15'>15</option><option value='10' selected='selected'>10</option><option value='9'>9</option><option value='8'>8</option><option value='7'>7</option><option value='6'>6</option><option value='5'>5</option><option value='4'>4</option><option value='3'>3</option><option value='2'>2</option><option value='1'>1</option></select><br><b>".aa("Из них словосочетаний:")."</b> <select class='kolslov'><option value='1'>1</option><option value='2'>2</option><option value='3'>3</option><option value='4'>4</option><option value='5'>5</option><option value='6'>6</option><option value='7'>7</option><option value='8'>8</option><option value='9'>9</option><option value='10'>10</option></select><br><b>".aa("Искать синонимы:")."</b> <select class='poisksin'><option value='0' selected='selected'>".aa("НЕТ")."</option><option value='1'>".aa("ДА")."</option></select></div><p id='procent'></p>";
+  </script><span id='ajax'></span><input type='button' class='blue' value='".aa("Заполнить ключевые слова")."' onclick='seo()'> ".aa("Ключевых слов:")." <select class='kolkey'><option value='30'>30</option><option value='20'>20</option><option value='15' selected='selected'>15</option><option value='10'>10</option><option value='9'>9</option><option value='8'>8</option><option value='7'>7</option><option value='6'>6</option><option value='5'>5</option><option value='4'>4</option><option value='3'>3</option><option value='2'>2</option><option value='1'>1</option></select>, ".aa("из них словосочетаний:")." <select class='kolslov'><option value='1'>1</option><option value='2'>2</option><option value='3' selected='selected'>3</option><option value='4'>4</option><option value='5'>5</option><option value='6'>6</option><option value='7'>7</option><option value='8'>8</option><option value='9'>9</option><option value='10'>10</option></select>
+  <p id='procent'></p>";
 }
 
 function edit_base_pages_category($cid, $red=0) {
@@ -271,7 +272,7 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
     echo "</div>";
 
     // Подстройка редактирования
-    $main_title = $title_razdel_and_bd[$module]." &rarr; Редактирование страницы";
+    $main_title = "Редактирование страницы";
     $name = $module;
     $data = explode(" ",$data);
     $data1 = date2normal_view($data[0]);
@@ -336,7 +337,7 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
 
   echo "<form action='sys.php' method='post' enctype='multipart/form-data'>
   <div class='fon w100 mw800'><div class='black_grad h40'>
-  <button type=submit onClick=\" if (document.getElementById('to_razdel').value=='') { alert('Выберите раздел для страницы (слева сверху)'); return false; } else { submit(); } \" class='small green left3'><span class='icon white medium mr-2' data-icon='c'></span> Сохранить</button>
+  <button type=submit onClick=\" if (document.getElementById('to_razdel').value=='') { alert('Выберите раздел для страницы (слева сверху)'); return false; } else { submit(); } \" class='small green left3'><span class='icon white small mr-2' data-icon='c'></span> Сохранить</button>
   <span class='h1 pt10'>".$main_title."</span>";
   if ($nastroi != 1) red_vybor();
   echo "</div>
@@ -349,7 +350,7 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
   else echo "<input name='golos_reiting' value='".$golos_reiting."' type='hidden'>";
   // 0,1,2,3", "Оценка (5 звезд),Кнопка «Проголосовать»,Рейтинг (кнопки + и -),Рейтинг (понравилось/не понравилось)
 
-  echo "<span class='h2 darkgreen'>Раздел:</span><br>";
+  echo "<br><p><span class='h2 darkgreen'>Раздел:</span><br>";
   global $id_razdel_and_bd;
   $ra = array();
   foreach ($id_razdel_and_bd as $key => $value) {
@@ -456,7 +457,7 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
 <div id='help12' style='display:none;'><span class=small>Разделять запятыми, можно писать словосочетания.<br>
   Можно создать Блок «Облако тегов». Теги также могут выводиться на страницах и облаком тегов в начале раздела (см. в настройках Раздела).</span><br></div>
 
-  <table class='w100 f12'><tr><td>
+  <table class='w100'><tr><td>
   <p>".select("mainpage", "0,1", "НЕТ,ДА", $mainpage)." На главную страницу <a onclick=\"show('help_mainpage')\" class='help'>?</a>
   </td><td>
   <p>".select("rss", "0,1", "НЕТ,ДА", $rss)." Добавить в RSS <a onclick=\"show('help_rss')\" class='help'>?</a>

@@ -62,6 +62,7 @@ echo "<!doctype html>
 <link rel='stylesheet' href='includes/css-frameworks/kickstart/css/kickstart-forms.css'>
 <link rel='stylesheet' href='includes/css-frameworks/kickstart/css/kickstart-icons.css'>
 <link rel='stylesheet' href='includes/css-frameworks/kickstart/css/kickstart-buttons.css'>
+<link rel='stylesheet' href='includes/css-frameworks/kickstart/css/kickstart-menus.css'>
 ";
 
 if ($lang_admin != 'ru') echo "<script src='language/adm_".$lang_admin.".js'></script>";
@@ -91,20 +92,21 @@ $lang_logo = "";
 if ($lang_admin != "ru" && $lang_admin != "ua") $lang_logo = "_en";
 
 if ($show_admin_top == 0) echo "<div class='mw800 w100 m0 h15 center' id='admin_top_line' onmousemove=' $(\"#admin_top_line\").hide(); $(\"#admin_top\").show();'><img height=15 align=left src='images/logo_admin".$lang_logo.".png'>".aa("Главное меню")."</div><table class='mw800 hide w100 m0 fixed z1000 l0 t0 shadow' id='admin_top' style='background-color: ".$ad_fon.";'>";
-else echo "<table class='mw800 w100 m0'>";
+else echo "<table class='mw800 w100 m10'>";
 echo "<tr><td class=center width=170><a title='".aa("Перейти в Содержание")."' href='sys.php' class='nothing'><img src='images/logo_admin".$lang_logo.".png'></a></td><td class=mp0><div class='nothing noprint'><div style='margin: 5px 5px 5px 0;'>";
 //if($detect->isiOS())
 //if($detect->isAndroidOS())
 global $buttons;
 $buttons = explode(",", aa(" Содержание, Оформление, Настройки, Статистика, ПОМОЩЬ, "));
 if ($deviceType != 'computer') $buttons = array('','','','','','');
-if ($url == "/red" || $url == "/sys.php" || $url == "/sys.php?op=mes") echo "<a class='button small in_r' onclick=\"openbox('8','".aa("Помощь")."'); $('#show_razdel').click();\" title='".aa("Открыть справочную информацию")."'><span class='icon small' data-icon='n'></span>".$buttons[4]."</a>";
-echo "<nobr>
-<button class='small' target='_blank' onclick='window.open(\"/\")' title='".aa("Перейти на сайт (откроется в новом окне)")."'><span class='icon small' data-icon='4'></span> ".aa("На сайт")."</button>
-<form method=post name=search action='search' style='display:inline;' class='nothing'><input type='search' placeholder='".aa("Поиск по сайту")."' name='slovo' class='w25'></form>
-".$post."
+echo "
+<nobr>
+<button class='small' target='_blank' onclick='window.open(\"/\")' title='".aa("Перейти на сайт (откроется в новом окне)")."'><span class='icon small' data-icon='4'></span> ".aa("На сайт")."</button> ".$post;
+if ($url == "/red" || $url == "/sys.php" || $url == "/sys.php?op=mes") echo "<a class='button small' onclick=\"openbox('8','".aa("Помощь")."'); $('#show_razdel').click();\" title='".aa("Открыть справочную информацию")."'><span class='icon small' data-icon='n'></span>".$buttons[4]."</a>";
+echo " <form method='post' name='search' action='search' style='display:inline;' class='nothing'><input type='search' placeholder='".aa("Поиск по сайту")."' name='slovo' style='width:167px; height: 36px;'></form>
+<a class='button small' title='".aa("Выход из администрирования\n(мера безопасности)")."' href='sys.php?op=logout'><span class='icon small' data-icon='Q'></span></a>
 </nobr></div>
-<a class='in_r button small' style='margin: 0 5px 0 0;' title='".aa("Выход из администрирования\n(мера безопасности)")."' href='sys.php?op=logout'><span class='icon small' data-icon='Q'></span></a>
+
 
 <ul class='button-bar'>
 <li class='first ".$color1."'><a title='".aa("Содержание сайта: разделы, папки, страницы и комментарии")."' href='sys.php'><span class='icon gray small' data-icon=','></span>".$buttons[0]."</a></li>";
