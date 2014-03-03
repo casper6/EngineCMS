@@ -200,7 +200,7 @@ if ($realadmin==1) {
         $result = $db->sql_query($sql);
         $row = $db->sql_fetchrow($result);
         $mod = $row['module'];
-        recash("/-".$mod."_page_".$num); // Обновление кеша
+        recash("page_".$num); // Обновление кеша
         Header("Location: sys.php?op=base_comments&pid=".$num."&name=".$mod);
     }
     ##########################################################

@@ -16,7 +16,7 @@ if ($op == "mainpage") {
 	$color1 = "gray"; $color2 = "black";
 	if (isset($type)) $title = $titles_text[$op."_".$type];
 	if ($type == 2) { $color2 = "gray"; $color1 = "black"; }
-	if (isset($name)) $title = $titles_text[$op."_".$name];
+	if (isset($titles_text[$op."_".$name])) $title = $titles_text[$op."_".$name];
 	if ($nastroi == 1) { 
 		$title = $titles_text[$op."_nastroi"]; 
 		$color2 = "gray"; $color3 = "black";
@@ -36,12 +36,8 @@ echo "<!doctype html>
 <meta name='viewport' content='width=device-width'>
 <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
 <link rel='shortcut icon' href='images/favicon_cms.png' type='image/x-icon'>
-
-
-<script src='http://code.jquery.com/jquery-2.0.0.js'></script>
-<script src='http://code.jquery.com/jquery-migrate-1.1.1.js'></script>
-
-
+<script src='/includes/jquery-2.0.0.js'></script>
+<script src='/includes/jquery-migrate-1.1.1.js'></script>
 <script src='includes/css-frameworks/kickstart/js/ad-kickstart.js'></script>
 <script>var clean_urls=".$clean_urls.";</script>
 <script src='includes/jad.js'></script>
@@ -49,7 +45,6 @@ echo "<!doctype html>
 <script src='includes/jquery-ui.min.js'></script>
 <script src='includes/jquery-ui-i18n.min.js'></script> 
 <script src='includes/jquery.innerfade.js'></script>
-
 <script src='includes/jquery.tag-it.min.js'></script>
 <link rel='stylesheet' href='includes/jquery.tagit.css'>
 

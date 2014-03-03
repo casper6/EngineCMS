@@ -33,6 +33,7 @@ if (isset($_REQUEST['ipban'])) {
 	$lang_admin = $_REQUEST['lang_admin'];
 	$ipban = $_REQUEST['ipban'];
 	$site_cash = $_REQUEST['site_cash'];
+	if ($site_cash != "false") $site_cash = '"'.$site_cash.'"';
 	$dbhost = $_REQUEST['dbhost'];
 	$dbuname = $_REQUEST['dbuname'];
 	$dbpass = $_REQUEST['dbpass'];
@@ -111,7 +112,7 @@ $lang_admin			= "'.$lang_admin.'"; // Язык администрировани�
 $lang 				= "'.$lang.'"; // Язык сайта
 $display_errors 	= false; # Отладочная опция - показ ошибок (и запросов к БД и их количества) = true
 $ipban 				= '.$ipban.'; # Админ-опция - включение блокировки по IP = true, отключение = false
-$site_cash    		= '.$site_cash.'; # Система кеширования: false - отключена, file - кеширование в файлы, base - кеширование в БД
+$site_cash    		= '.$site_cash.'; # Система кеширования: false - отключена, "file" - кеширование в файлы, "base" - кеширование в БД
 $style_disable		= false; # true = отключение дополнительных встроенных стилей css, остаются только необходимые
 // date_default_timezone_set(\'Europe/Moscow\'); # Может не работать на вашем сервере, позволяет настроить сайт на нужную временную зону
 ################### Проверка безопасности
@@ -522,9 +523,9 @@ if (!isset($_REQUEST['lang'])) {
 				<li><strong>Псевдоним (логин)</strong><br><input name="a" value="admin"><br><b>Желательно поменять!</b></li>
 				<li><strong>Пароль</strong><br><input name="pass" value="<? echo $pass; ?>"><br>
 					Будет отправлен на указанный email</li>
-				<li id='all_show'><a onclick='$("#blo_show").show();$("#cash_show").show();$("#all_show").hide();' style='color:darkgreen; cursor:pointer; text-decoration:none; border-bottom:1px dashed green;'>IP-блокировка и кеш отключены</a></li>
+				<li id='all_show'><a onclick='$("#blo_show").show();$("#cash_show").show();$("#all_show").hide();' style='color:darkgreen; cursor:pointer; text-decoration:none; border-bottom:1px dashed green;'>IP-блокировка и кеш</a></li>
 				<li id='blo_show' style='display:none'><strong>Блокировка по IP-адресу</strong>:<br><select style="width:100%;" name="ipban"><option value="true">Включить</option><option value="false" selected>Отключить</option></select></li>
-				<li id='cash_show' style='display:none'><strong>Кеширование страниц сайта</strong>:<br><select style="width:100%;" name="site_cash"><option value="false">Отключено</option><option value="file" disabled>в файлы (доработка в процессе)</option><option value="base" disabled>в базу данных (доработка в процессе)</option></select></li>
+				<li id='cash_show' style='display:none'><strong>Кеширование страниц сайта</strong>:<br><select style="width:100%;" name="site_cash"><option value="false">Отключено</option><option value="file">в файлы</option><option value="base">в базу данных</option></select></li>
 			</ul>
 			
 		</div>

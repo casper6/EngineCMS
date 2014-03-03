@@ -1707,8 +1707,9 @@ function savebase ($name, $basename, $type, $text) { // Сохранение д�
   //} else die("Ошибка: вероятно попытка взлома или добавление в базу данных из сохраненной страницы. Вернитесь на сайт! name - $name, basename - $basename");
   unset($_SESSION['captcha_keystring']);
   global $siteurl;
-  recash(str_replace("http://".$siteurl,"",$link)); // Обновление кеша
-  recash(str_replace("http://".$siteurl,"",getenv("REQUEST_URI")),0);
+  // переделать
+  recash($DBName."_addbase_".$basename); // Обновление кеша
+  recash($DBName);
   Header("Location: $location");
 }
 ########################################################################################
@@ -2101,10 +2102,7 @@ function savepost ($avtory, $avtor, $mail, $post_title, $info, $num, $cid, $add)
   header ("Content-Type: text/html; charset=utf-8");
   echo "<html><head><meta http-equiv='Refresh' content='6; URL=".$location."'></head><body>
   <h2>".ss("Спасибо!")."</h2>".$inform."<br>".ss("Через 6 секунд откроется предыдущая страница.<br>Также вы можете перейти на <a href='/'>Главную</a>.")."</body></html>";
-  #######################################################################
-  recash(str_replace("http://".$siteurl,"",getenv("HTTP_REFERER"))); // Обновление кеша ##
-  recash(str_replace("http://".$siteurl,"",getenv("REQUEST_URI")),0); ####################
-  ########################################################################################
+  recash($DBName);
   exit;
 }
 ###########################################
@@ -2326,9 +2324,8 @@ function savereiting ($avtor, $info, $num, $cid, $gol, $date1, $minus, $plus){
     } else die("Ошибка: Вы неправильно ввели код проверки. Нажмите в браузере «Назад».");
   } else die("Ошибка: Вы не ввели основную информацию. Нажмите в браузере «Назад».");
 
-  global $siteurl; #######################################################################
-  recash(str_replace("http://".$siteurl,"",getenv("HTTP_REFERER"))); // Обновление кеша ##
-  recash(str_replace("http://".$siteurl,"",getenv("REQUEST_URI")),0); ####################
+  recash("page_".$num); // Обновление кеша
+  recash($DBName);
   ########################################################################################
   unset($_SESSION['captcha_keystring']);
   Header("Location: $location");
@@ -2465,8 +2462,8 @@ function savecomm($avtor, $avtory, $info, $num, $comm_otvet, $maily, $mail, $adr
 // Сохранение голосования
 function savegolos ($gol, $num){
   global $soderganie, $DBName, $db, $prefix, $module_name, $ip, $commentagain, $admin, $bangolosdays, $siteurl;
-  recash(str_replace("http://".$siteurl,"",getenv("HTTP_REFERER"))); // Обновление кеша ##
-  recash(str_replace("http://".$siteurl,"",getenv("REQUEST_URI")),0);
+  recash("page_".$num); // Обновление кеша
+  recash($DBName);
   $num = mysql_real_escape_string(intval($num));
   if ($gol>10) $gol=10;
   if ($gol<1) $gol=1;

@@ -1,7 +1,7 @@
 <?php
 ##########################################################################################
 function page_admin($txt, $pid) { // добавление функций админа к странице сайта
-  global $db, $prefix, $module_name, $url, $name;
+  global $db, $prefix, $module_name, $url, $name, $site_cash;
   if ( $pid > 0 ) $red = "
 <script>
 function delpage(id) {
@@ -23,8 +23,11 @@ function delpage(id) {
   elseif ( $module_name == "" ) $red = "<a class='ad_button' target='_blank' href='/sys.php?op=mainpage&amp;id=24'><img class='ad_icon' src='/images/editpage.png'>Редактировать Главную страницу</a><a class='ad_button' target='_blank' href='/sys.php?op=base_pages_add_page#1'><img class='ad_icon' src='/images/pluspage.png'>Добавить <nobr>новую страницу</nobr> на сайт</a>";
   else $red = "";
   $url = getenv("REQUEST_URI");
-  $txt = str_replace("</body>","<div id='redact_show'><a title='Показать настройки администратора' style='cursor:pointer;' onclick=\"$('#redact').toggle(); $('#redact_show').toggle();\"><img src='/images/adminconfig.png' width='32'></a></div>
-    <div id='redact' class='show_block'><a title='Скрыть настройки администратора' style='cursor:pointer; text-decoration:none;' onclick=\"$('#redact_show').toggle(); $('#redact').toggle();\"><div class='show_block_title'><div style='float:right'>x</div>Настройки администратора</div></a>".$red."<form method=post name=blocks_show action='".$url."' style='display:inline;'><input type='hidden' name=blocks value='1'><a class='ad_button' href='javascript:document.blocks_show.submit();' title='Показать редактирование блоков на странице'><img class='ad_icon' src='/images/showblocks.png'>Показать блоки <nobr>на странице</nobr></a></form><a class='ad_button' href='/sys.php?op=base_pages_re&amp;link=".$url."'><img class='ad_icon' src='/images/refresh.png'>Обновить (перезагрузить) страницу</a><a class='ad_button' target='_blank' href='/red'><img class='ad_icon' src='/images/adminsite.png'>Открыть администрирование</a></div></body>",$txt);
+  $r = "<div id='redact_show'><a title='Показать настройки администратора' style='cursor:pointer;' onclick=\"$('#redact').toggle(); $('#redact_show').toggle();\"><img src='/images/adminconfig.png' width='32'></a></div>
+    <div id='redact' class='show_block'><a title='Скрыть настройки администратора' style='cursor:pointer; text-decoration:none;' onclick=\"$('#redact_show').toggle(); $('#redact').toggle();\"><div class='show_block_title'><div style='float:right'>x</div>Настройки администратора</div></a>".$red."<form method=post name=blocks_show action='".$url."' style='display:inline;'><input type='hidden' name=blocks value='1'><a class='ad_button' href='javascript:document.blocks_show.submit();' title='Показать редактирование блоков на странице'><img class='ad_icon' src='/images/showblocks.png'>Показать блоки <nobr>на странице</nobr></a></form>";
+  if ($site_cash == "base" || $site_cash == "file") $r .= "<a class='ad_button' href='/sys.php?op=base_pages_re&amp;link=".$url."'><img class='ad_icon' src='/images/refresh.png'>Обновить страницу (кеш)</a>";
+  $r .= "<a class='ad_button' target='_blank' href='/red'><img class='ad_icon' src='/images/adminsite.png'>Открыть администрирование</a></div></body>";
+  $txt = str_replace("</body>",$r,$txt);
   return $txt;
 }
 ///////////////////////////////////////////////////////////////

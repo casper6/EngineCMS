@@ -756,19 +756,20 @@ function base_pages_edit_sv_page($pid, $module, $cid, $title, $open_text, $main_
     while ($row = $db->sql_fetchrow($result)) {
       $pidX = $row['pid'];
       $and_copy[] = "pid='".$pidX."'";
-      if (function_exists('recash')) recash("/-".$module."_page_".$pidX, 0); // Обновление кеша ##
+      //if (function_exists('recash')) 
+      recash("page_".$pidX, 0); // Обновление кеша ##
     }
     $and_copy = implode(" or ",$and_copy);
     $db->sql_query("UPDATE ".$prefix."_pages SET title='$title', open_text='$open_text', main_text='$main_text', date='$data', redate='$data2', counter='$count', active='$active', golos='$golos_reiting', comm='$com', foto='$foto', search='$search', mainpage='$mainpage', rss='$rss', price='$price', description='$description2', keywords='$keywords2', sort='$sor', meta_title='$meta_title2' WHERE ".$and_copy.";");
   }
 
   global $siteurl;
-  if (function_exists('recash') and $active == 1) {
-    recash("/-".$module."_page_".$pid); // Обновление кеша ##
-    recash("/-".$module."_cat_".$cid, 0); ####################
-    recash("/-".$module."_cat_".$cid."_page_0", 0); ##########
-    recash("/-".$module."_cat_".$cid."_page_1", 0); ##########
-    recash("/-".$module."",0); ###############################
+  if ($active == 1) { // function_exists('recash') and 
+    recash("page_".$pid); // Обновление кеша ##
+    recash("cat_".$cid, 0); ####################
+    recash("cat_".$cid."_page_0", 0); ##########
+    recash("cat_".$cid."_page_1", 0); ##########
+    recash($module,0); ###############################
   }
 
   // РАБОТА СО СПИСКАМИ
@@ -978,7 +979,8 @@ function base_pages_delit_comm($cid, $ok, $pid) {
     $result = $db->sql_query($sql);
     $row = $db->sql_fetchrow($result);
     $mod = $row['module'];
-    if (function_exists('recash')) recash("/-".$mod."_page_".$pid); // Обновление кеша ##
+    //if (function_exists('recash')) 
+    recash("page_".$pid); // Обновление кеша ##
       $url = str_replace("#comm","",$url);
       Header("Location: ".$url);
     }

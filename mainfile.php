@@ -11,22 +11,13 @@
   mb_internal_encoding('UTF-8');
   require_once ('page/functions.php'); // Функции
   require_once ('page/sec.php'); // Функции безопасности
-  //if (file_exists('config.php')) 
-    require_once ('config.php');
-  //else die(ss("Файл")." config.php ".ss("не найден")); // Настройки сайта
+  require_once ('config.php'); // Настройки сайта
   require_once ('includes/db.php'); // Работа с базой данных
   require_once ('includes/sql_layer.php'); // Функции для работы с БД MySQL
   require_once ('includes/mobiledetect.php'); // Определяем устройство - компьютер, планшет или телефон
   $detect = new Mobile_Detect;
   global $deviceType, $ipban, $display_errors, $pid, $site_cash;
   $deviceType = ($detect->isMobile() ? ($detect->isTablet() ? 'tablet' : 'phone') : 'computer');
-  //global $lang;
-
-  // Переходная рудиментарная опция - убрано после переделки установщика
-  //if (!isset($lang)) $lang = "ru";
-  //if ($lang == "ru-RU") $lang = "ru";
-  //if (!isset($lang_admin)) $lang_admin = "ru";
-
   if ( isset($admin) ) {
     if (is_admin($admin)) {
       require_once ('ad/ad-functions.php'); // Функции для администрирования
@@ -58,22 +49,18 @@
     ini_set('display_errors', 0);
     error_reporting(8191); // было 0, но 8191 - запрещает вывод всех ошибок PHP 4, 5 и 6
   }
-  $now = date("Y.m.d H:i:s");
+  $data = $now = date("Y.m.d H:i:s");
   $referer = getenv("HTTP_REFERER"); // REQUEST_URI
-  $url = getenv("REQUEST_URI"); //REQUEST_URI substr(getenv("REQUEST_URI"), 1);
-  $data = $now;
-  
-  $url = str_replace("/", "", $url); 
-  if ($url == '') $url = "-index";
-
-  global $url_link;
+##########################################################################################
+  global $url_link, $name, $pid, $cid;
   // Определение страницы для кеша без лишних параметров
   $url_link = "";
   if ($site_cash == "base" || $site_cash == "file")
     if (!isset($go)) {
       if (isset($name) && !isset($op)) $url_link = $name;
-      $url_link = "index";
+      else { $url_link = "index"; }
     } else {
+      if (!isset($name)) $name = "index";
       if ($go == 'addbase') $url_link = $name."_addbase_".$spa;
       if ($go == 'showdate') $url_link = "date_".$showdate; // доработать
       if ($go == 'showcat') {
@@ -89,18 +76,19 @@
         if (isset($pid) && isset($com)) $url_link = "page_".$pid."_com_".$com;
       }
     }
-
-  $pid = mysql_real_escape_string(intval($pid));
+  $pid = intval($pid);
+  $cid = intval($cid);
   $numrows = 0;
   if (!is_admin($admin)) {
 ##########################################################################################
     // Отдаем страницу из кеша
     // Сколько дней хранить кеш
-    if ($pid > 0) {
-      $cashe_day = 30;  // если это страница
+    if ($pid > 0) { // если это страница
+      $cashe_day = 30; 
       $db->sql_query("UPDATE ".$prefix."_pages SET `counter`=counter+1 WHERE `pid`='".$pid."'"); // Простой счетчик посещаемости страниц
-      recash($url_link);
     } else $cashe_day = 1; // если это главная страница, разделы и папки
+    if ($pid == 0 && $cid == 0) // если это раздел
+      $db->sql_query("UPDATE ".$prefix."_mainpage SET `counter`=`counter`+1 WHERE `tables`='pages' and (`name` = '".$name."' or `name` like '".$name." %') and `type`='2'");
 
     // если кеш на базе
   	if ($site_cash == "base" and $num_post == 0) {
@@ -110,10 +98,11 @@
     }
   	// если кеш на файлах
   	if ($site_cash == "file" and $num_post == 0) {
-    	if ($url_link == '/' or $url_link == '') $url_link = "-index";
-      if (file_exists($_SERVER["DOCUMENT_ROOT"]."/cashe/".$url_link) && $url_link != "-index") $numrows = 1;
+    	if ($url_link == '/' || $url_link == '') $url_link = "index";
+      if (file_exists($_SERVER["DOCUMENT_ROOT"]."/cashe/".$url_link)) $numrows = 1; //  && $url_link != "index"
     }
   }
+
   if ($numrows > 0 && $url_link != "" && !is_admin($admin)) {
     // Ставим страницу из кеша
 	  // если кеш на базе
@@ -136,7 +125,7 @@
       if (is_admin($admin)) $txt = page_admin($txt, $pid); // добавляем на стр. кнопку её редактирования
     }
     echo $txt; // Выводим страницу
-    if ($display_errors == true) print("\n<!-- \n".aa("запросов к БД").": ".$db->num_queries." \n".$db->num_q." -->"); // Запросы к БД
+    if ($display_errors) echo "\n<!-- ".aa("Тип кеша").": ".$site_cash." \n".aa("БД запросы").": ".$db->num_queries." \n".$db->num_q." -->"; // Запросы к БД
     die(); // Закончили вывод страницы из кеша
 ##########################################################################################
   } else { // переходим к настройкам сайта и генерации страницы без кеша
@@ -219,6 +208,12 @@
   if ($shop_spisok_pole == "") $shop_spisok_pole = ss("Ф.И.О.:*\nТелефон:*\nEmail:\nАдрес:\nДополнительная информация:");
   if ($shop_minimal_itogo == "") $shop_minimal_itogo = "0";
   if ($shop_minimal_itogo_text == "") $shop_minimal_itogo_text = ss("Минимальная сумма заказа — 10.000 руб.");
+
+  $url = getenv("REQUEST_URI"); //REQUEST_URI substr(getenv("REQUEST_URI"), 1);
+  $url = str_replace("/", "", $url); 
+  if ($url == '') 
+    if ($clean_urls == "0") $url = "-index";
+    else $url = "index";
 
   //if ($shop_shablon_form_order == "") $shop_shablon_form_order = "";
   //if ($shop_shablon_mail_client == "") $shop_shablon_mail_client = "";

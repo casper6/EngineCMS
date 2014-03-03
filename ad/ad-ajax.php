@@ -504,7 +504,7 @@ if ($func == "trash_pics") { // Создаем список неиспользу
         if (file_exists($_SERVER["DOCUMENT_ROOT"]."/".$a)) {
           $info .= "<div id='file".$num."' class='manager_foto'><a href='".$a."' data-lightbox='light'><img src='includes/php_thumb/php_thumb.php?src=/".$a."&w=0&h=100&q=0'></a>";
           if ($sort == 1 || $sort == 3) $info .= "<div class='manager_foto_date'>".date2normal_view(date("Y-n-j", $file_info[$i]))."</div>";
-          if ($sort == 2 || $sort == 4) $info .= "<div class='manager_foto_file'>".human_filesize($file_info[$i],0)."</div>";
+          if ($sort == 2 || $sort == 4) $info .= "<div class='manager_foto_file'>".round( $file_info[$i] / 1024, 0)." Кбайт</div>";
           $info .= "<div class='mt5'><a class='button green' onclick=\"alert('/".$a."\\n\\nhttp://".$realurl."/".$a."');\">Ссылка</a></div>";
          if ($type == 2) $info .= "<div class='mt5'><a class='button red small' onclick=\"del_file('".$a."', '".$num."');\">Удалить</a></div>";
          $info .= "</div>";
@@ -1720,10 +1720,5 @@ function unicode_escape($str) {
   return $out;
 }
 /////////////////////////////////////////////////////////////// Размер файла
-function human_filesize($bytes, $decimals = 2) {
-  $sz = 'BKMGTP';
-  $factor = floor((strlen($bytes) - 1) / 3);
-  return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];
-}
 
 ?>

@@ -2264,12 +2264,12 @@ echo "<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
 <meta name='description' content='".str_replace("'","",$description2)."'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0'>
 <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
-<!--[if lt IE 9]><script src='http://html5shim.googlecode.com/svn/trunk/html5.js'></script><![endif]-->
+<!--[if lt IE 9]><script src='/includes/html5.js'></script><![endif]-->
 <!--[if IE]><script src='/includes/iepngfix_tilebg.js'></script><![endif]-->
 <script src='/includes/j.js'></script>
-<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js'></script>
+<script src='/includes/jquery-2.0.0.js'></script>
+<script src='/includes/jquery-migrate-1.1.1.js'></script>
 <script src='/includes/modernizr-1.5.min.js'></script>";
-
 // Подключение других языков, если это не русский
 if ($lang != 'ru') echo "<script src='/language/".$lang.".js'></script>";
 
@@ -2277,7 +2277,11 @@ if ($normalize != 0) echo "<link rel='stylesheet' href='/includes/css-frameworks
 
 if ($sortable != 0) echo "<script src='/includes/jquery.tinysort.min.js'></script>";
 
-if ($jqueryui != 0) echo "<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js'></script><script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/i18n/jquery-ui-i18n.min.js'></script><link rel='stylesheet' href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css' media='all' /><script src='/includes/jquery-ui-datepicker-ru.js'></script>";
+if ($jqueryui != 0) echo "
+<link rel='stylesheet' href='/includes/jquery-ui.css' />
+<script src='/includes/jquery-ui.min.js'></script>
+<script src='/includes/jquery-ui-i18n-min.js'></script>
+<script src='/includes/jquery-ui-datepicker-ru.js'></script>";
 
 switch($kickstart) { // Выбор CSS-фреймворка
 	case 1: // KickStart
@@ -2434,12 +2438,12 @@ if (mb_strlen($add_fonts)>1) {
 	if (is_admin($admin)) echo page_admin($txt,$pid); // добавили функции админа к страничке
 	else echo $txt;
 	// если в config.php выбрано «показывать ошибки», помимо этого покажет запросы к БД и их количество
-	if ($display_errors == true) print("<!-- DataBase queries: $db->num_queries \n $db->num_q -->");
+	if ($display_errors == true && is_admin($admin)) print("<!-- БД: \n $db->num_queries \n $db->num_q -->");
 
 	// Проверка добавляемой информации
 	if ( $site_cash != false ) {
 		$numrows = 0;
-		$txt = addslashes($txt);
+		//$txt = addslashes($txt);
 		global $url_link;
 		if ($url_link != "") {
 			if ($site_cash == "base") {
@@ -2454,7 +2458,7 @@ if (mb_strlen($add_fonts)>1) {
 		    if ($numrows == 0 && $url_link != "search" && $url_link != "savecomm" && $url_link != "savepost") {
 				// Добавление в кеш
 				if ($site_cash == "base") // если кеш в БД
-					$db->sql_query("INSERT INTO `".$prefix."_cash` (`id`, `url`, `data`, `text`) VALUES (NULL, '".$url_link."', '".$now."', '".$txt."');") or die (ss("Обновите страницу, (нажав F5)."));
+					$db->sql_query("INSERT INTO `".$prefix."_cash` (`id`, `url`, `data`, `text`) VALUES (NULL, '".mysql_real_escape_string($url_link)."', '".$now."', '".mysql_real_escape_string($txt)."');") or die (ss("Обновите страницу, (нажав F5)."));
 				elseif ($site_cash == "file") { // если кеш в файлах
 					$filestr = fopen ($_SERVER["DOCUMENT_ROOT"]."/cashe/".$url_link,"w+");
 					fwrite($filestr, $txt);

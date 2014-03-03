@@ -528,20 +528,20 @@ function block_names() { // Функция для получения назва�
 ///////////////////////////////////////////////////////////////
 function recash($url, $main=1) { // Обновление кеша
   global $db, $prefix, $site_cash;
-  $u = explode("_page_",$url);
+  $u = explode("page_",$url);
   if ($site_cash == "base") { // если кеш хранится в БД
     if ($main == 1) $db->sql_query("DELETE FROM ".$prefix."_cash WHERE `url`='/'");
-    if (mb_strpos($url,"_page_")) {
+    if (mb_strpos($url,"page_")) {
       $db->sql_query("DELETE FROM ".$prefix."_cash WHERE `url`='".mysql_real_escape_string($u[0])."'");
-      $db->sql_query("DELETE FROM ".$prefix."_cash WHERE `url` LIKE '".mysql_real_escape_string($u[0])."_cat_%'");
+      $db->sql_query("DELETE FROM ".$prefix."_cash WHERE `url` LIKE 'cat_%'");
     }
     $db->sql_query("DELETE FROM ".$prefix."_cash WHERE `url`='".mysql_real_escape_string($url)."'"); 
-  } else { // если кеш файловый
+  } elseif ($site_cash == "file") { // если кеш файловый
     if ($main == 1) 
-      if (file_exists("cashe/-index")) unlink("cashe/-index");
-  	if (mb_strpos($url,"_page_")) {
+      if (file_exists("cashe/index")) unlink("cashe/index");
+  	if (mb_strpos($url,"page_")) {
       if (file_exists("cashe/".$u[0])) unlink("cashe/".$u[0]);
-  	  $files = glob("cashe/".$u[0]."_cat_*");
+  	  $files = glob("cashe/cat_*");
       $c = count($files);
       if (count($files) > 0) {
         foreach ($files as $file) {
@@ -549,7 +549,7 @@ function recash($url, $main=1) { // Обновление кеша
         }
       }
     }
-    if (file_exists("cashe/".$url) && $url != "/") unlink("cashe/".$url);
+    if ($url != "" && file_exists("cashe/".$url) && $url != "/") unlink("cashe/".$url);
   }
 }
 ///////////////////////////////////////////////////////////////

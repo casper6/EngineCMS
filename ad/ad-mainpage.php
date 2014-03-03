@@ -1976,7 +1976,7 @@ function mainpage_save($id=0, $type, $namo, $title, $text, $useit, $shablon, $de
 			$mod_name = explode("\n", str_replace("\r", "", $mod_name));
 			$mod_name = trim($mod_name[0]);
 		}
-		recash("/-".$mod_name); // Удаление кеша раздела
+		recash($mod_name); // Удаление кеша раздела
 	}
 	// Обратное преобразование textarea (замена русской буквы е)
 	$text = str_replace("tеxtarea","textarea",$text); // ireplace
