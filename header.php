@@ -2290,8 +2290,10 @@ switch($kickstart) { // Выбор CSS-фреймворка
 	echo "<link rel='stylesheet' href='/includes/css-frameworks/css-framework.css' />"; break;
 	case 3: // Skeleton
 	echo "<link rel='stylesheet' href='/includes/css-frameworks/skeleton/base.css'><link rel='stylesheet' href='/includes/css-frameworks/skeleton/skeleton.css'><link rel='stylesheet' href='/includes/css-frameworks/skeleton/layout.css'>"; break;
-	case 4: // Kube
+	case 4: // Kube old
 	echo "<link rel='stylesheet' href='/includes/css-frameworks/kube/kube.min.css' /><link rel='stylesheet' href='/includes/css-frameworks/kube/master.css' /><script src='/includes/css-frameworks/kube/kube.buttons.js'></script><script src='/includes/css-frameworks/kube/kube.tabs.js'></script>"; break;
+	case 12: // Kube new
+	echo "<link rel='stylesheet' href='/includes/css-frameworks/kube/kube.min.css' />"; break;
 	case 5: // Bootstrap
 	echo "<link href='/includes/css-frameworks/bootstrap/css/bootstrap.min.css' rel='stylesheet'><link href='/includes/css-frameworks/bootstrap/css/bootstrap-responsive.min.css' rel='stylesheet'><script src='/includes/css-frameworks/bootstrap/js/bootstrap.min.js'></script>"; break;
 	case 6: // 1140 Grid

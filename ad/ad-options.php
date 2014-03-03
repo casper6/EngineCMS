@@ -208,8 +208,11 @@ switch($kickstart) {
 	$kick_link = "http://www.getskeleton.com/#examples";
 	$kick_name = "Skeleton"; break;
 	case 4:
-	$kick_link = "http://kubeframework.com";
-	$kick_name = "Kube"; break;
+	$kick_link = "http://imperavi.com/kube/old/";
+	$kick_name = "Kube (старая версия)"; break;
+	case 12:
+	$kick_link = "http://imperavi.com/kube/typography/";
+	$kick_name = "Kube (новая версия)"; break;
 	case 5:
 	$kick_link = "http://twitter.github.com/bootstrap/base-css.html";
 	$kick_name = "Bootstrap"; break;
@@ -235,7 +238,7 @@ switch($kickstart) {
 if ($kickstart != 0) echo " <a target='_blank' class='button small' href='".$kick_link."' title='Открыть сайт CSS-фреймворка «".$kick_name."»'><span class='icon small black' data-icon='S'></span> ".$kick_name."</a>";
 
 echo "</td><td class=small>
-".select("options[kickstart]", "0,1,2,3,4,5,6,7,8,9,10,11", "- НЕТ -,KickStart,CSSframework,Skeleton,Kube,Bootstrap,1140 Grid,Toast,Blueprint,YUI CSS Grids,960gs (12 и/или 16 колонок),960gs (24 колонки)", $kickstart, ' id=kickstart onchange="if ( $(\'#kickstart\').val() == 1) $(\'#frame1\').show(); else $(\'#frame1\').hide(); if ( $(\'#kickstart\').val() == 6) $(\'#frame6\').show(); else $(\'#frame6\').hide(); "')."
+".select("options[kickstart]", "0,1,2,3,12,4,5,6,7,8,9,10,11", "- НЕТ -,KickStart,CSSframework,Skeleton,Kube (новая версия),Kube (старая версия),Bootstrap,1140 Grid,Toast,Blueprint,YUI CSS Grids,960gs (12 и/или 16 колонок),960gs (24 колонки)", $kickstart, ' id=kickstart onchange="if ( $(\'#kickstart\').val() == 1) $(\'#frame1\').show(); else $(\'#frame1\').hide(); if ( $(\'#kickstart\').val() == 6) $(\'#frame6\').show(); else $(\'#frame6\').hide(); "')."
 <br>Ссылка на сайт фреймворка (для просмотра правил оформления CSS и HTML) появится слева после сохранения.
 <pre id='frame1' style='display:none;'>
 LightBox отключен, включен FancyBox, входящий в состав KickStart
