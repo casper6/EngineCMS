@@ -542,7 +542,7 @@ function create_main($type) {
 	<tr id=pole_0><td>
 	<input type=text name=pole_rusname[] size=15 class='w100' /><a class=punkt onclick='show_eng(this)'>Псевдоним</a> (англ., будет создан автоматически)<span class='eng hide'>:<br><input type=text name=pole_name[] size=15 class='w100' /></span>
 	</td><td>
-	<select name=pole_tip[] class='w100'><option value='строка'>Строка с выбором предыдущих значений (до 5000 символов)</option><option value='строкабезвариантов' selected>Строка (до 5000 символов)</option><option value='число'>Число</option><option value='список'>Список (в поле «Замена информации» — слова через запятую)</option><option value='текст'>Текст</option><option value='дата'>Дата</option><option value='датавремя'>Дата/Время</option><option value='фото'>Фото</option><option value='минифото'>МиниФото</option><option value='файл' disabled>Файл</option><option value='ссылка'>Ссылка</option><option value='' disabled>——— Списки из колонок других таблиц ———</option>".$another_table_list."</select></td><td>
+	<select name=pole_tip[] class='w100'><option value='строка'>Строка с выбором предыдущих значений (до 5000 символов)</option><option value='строкабезвариантов' selected>Строка (до 5000 символов)</option><option value='число'>Число</option><option value='список'>Список (в поле «Замена информации» — слова через запятую)</option><option value='текст'>Текст</option><option value='дата'>Дата</option><option value='датавремя'>Дата/Время</option><option value='фото'>Фото</option><option value='минифото'>МиниФото</option><option value='файл' disabled>Файл</option><option value='ссылка' disabled>Ссылка</option><option value='' disabled>——— Списки из колонок других таблиц ———</option>".$another_table_list."</select></td><td>
 	<select name=pole_main[] class='w100'><option value=0>не важно</option><option value=1>1. основная категория</option><option value=2>2. вторичная категория</option><option value=3>обязательно заполнять</option><option value=4>не важно и не печатать</option><option value=6>не важно, не печатать и не показывать</option><option value=7>обязательно, не печатать и не показывать</option><option value=5>пустая для печати</option></select></td>
 	<td class='pole_open hide'>
 	<select name=pole_open[] class='w100'><option value=1 selected>не видно нигде</option><option value=0>видно в таблице и на странице «Подробнее»</option><option value=2>видно после нажатия «Подробнее»</option></select></td><td>
@@ -605,9 +605,9 @@ function create_main($type) {
 
 	<p><sup>1</sup> <b>«Важность»</b>: основная и вторичная категории выводятся в блоках БД и обязательны к заполнению. <i>Пример: таблица аренды недвижимости. Основная категория — список типов недвижимости (квартира,дом,участок), вторичная — список районов города (Центральный,Кировский,Советский). Блоки могут выводить количество строк в данных категориям.</i>
 	<p><sup>2</sup> <b>«Замена информации»</b>: при выборе типа данных «Строка», «Число», «Текст», «Дата», «Дата/Время» или «Ссылка» можно написать текст по-умолчанию.
-	<p>Поля № и Активность (включено/выключено) будут добавлены автоматически.<br><br>
+	<p>Поля № и Активность (включено/выключено) будут добавлены автоматически.
+	<p>Для вывода информации по кол-ву записей за сегодня, завтра и послезавтра — назовите англ. поле с датой — data.
 	
-	<p>Доступны фильтры для псевдонимов: data и data2 (дата), men (менеджер), company (компания)
 	<input type=hidden name=id value=''>
 	<input type=hidden name=op value=".$admintip."_save>";
 	break;
@@ -2090,7 +2090,7 @@ function mainpage_save($id=0, $type, $namo, $title, $text, $useit, $shablon, $de
 		}
 
 		if ($type==5) { //////////////////////////////////////////////////////////
-			global $delete_table, $line_ekran, $line_close, $line_razdel, $delete_stroka, $add_pole_golos, $add_pole_comm, $add_pole_kol, $pole_rename, $pole_open, $pole_main, $pole_tip, $pole_rusname, $pole_name;
+			global $delete_table, $line_ekran, $line_close, $line_razdel, $delete_stroka, $add_pole_golos, $add_pole_comm, $add_pole_kol, $pole_rename, $pole_open, $pole_filter, $pole_main, $pole_tip, $pole_rusname, $pole_name;
 
 			$delete_table = intval($delete_table);
 			$delete_stroka = intval($delete_stroka);
@@ -2105,7 +2105,7 @@ function mainpage_save($id=0, $type, $namo, $title, $text, $useit, $shablon, $de
 			for ($x=0; $x < $n; $x++) {
 				if (trim($pole_name[$x]) == "") $pole_name[$x] = strtolow(translit_name(trim($pole_rusname[$x])));
 				else $pole_name[$x] = strtolow(translit_name(trim($pole_name[$x])));
-				$text[] = $pole_name[$x]."#!#".$pole_rusname[$x]."#!#".$pole_tip[$x]."#!#".$pole_main[$x]."#!#".$pole_open[$x]."#!#".$pole_rename[$x];
+				$text[] = $pole_name[$x]."#!#".$pole_rusname[$x]."#!#".$pole_tip[$x]."#!#".$pole_main[$x]."#!#".$pole_open[$x]."#!#".$pole_rename[$x]."#!#".$pole_filter[$x];
 			}
 			$text2 = implode("/!/",$text);
 

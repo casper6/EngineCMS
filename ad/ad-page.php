@@ -71,6 +71,7 @@ function edit_base_pages_category($cid, $red=0) {
   $module = $name;
   $desc = $row['description'];
   $sortirovka = $row['sort'];
+  $pic = $row['pic'];
   $parent_id = $row['parent_id'];
   $clean_url = $row['clean_url'];
   $meta_title = $row['meta_title'];
@@ -144,19 +145,24 @@ function edit_base_pages_category($cid, $red=0) {
 
   echo "<div style='display:none' id='dop'><a title='Закрыть' class='punkt' onclick=\"if ( $('#dop').is(':hidden') ) $('#mainrazdel').attr('class', 'dark_pole2sel'); else $('#mainrazdel').attr('class', 'dark_pole2'); $('#main').toggle(); $('#dop').toggle('slow'); \"><div class='radius' style='font-size:12pt; width:20px; height: 20px; color: white; text-align:center; float:right; margin:5px; background: #bbbbbb;'>&nbsp;x&nbsp;</div></a>";
 
-  if ($clean_urls != 0) echo "<h3>Замена адреса папки (ссылки):</h3><textarea name='clean_url' id='clean_url' class='big w100' rows='2' cols='10'>".$clean_url."</textarea>";
+  if ($clean_urls != 0) echo "<h2>Замена адреса папки (ссылки):</h2><textarea name='clean_url' id='clean_url' class='big w100' rows='2' cols='10'>".$clean_url."</textarea>";
   else echo "<input name='clean_url' type='hidden' value='".$clean_url."'>";
 
   echo "<div class='radius w100 p5' style='border: 1px solid #1D6DC1;'><h2 style='color: #1D6DC1;'>SEO настройки</h2>
-  <h3>Замена TITLE: <a onclick=\"show('help17')\" class='help'>?</a></h3><textarea name='meta_title' class='big w95' rows='2' cols='10'>".$meta_title."</textarea>
+  <h2>Замена TITLE: <a onclick=\"show('help17')\" class='help'>?</a></h2><textarea name='meta_title' class='big w95' rows='2' cols='10'>".$meta_title."</textarea>
   <br><div id='help17' style='display:none;'><span class=small>По-умолчанию — пустое поле и TITLE будет создан автоматически: «название папки — название раздела».</span><p></div>
 
-  <h3>Ключевые слова для поисковых систем: <a onclick=\"show('help10')\" class='help'>?</a></h3><textarea name='keywords2' class='big w95' rows='2' cols='10'>".$keywords."</textarea>
+  <h2>Ключевые слова для поисковых систем: <a onclick=\"show('help10')\" class='help'>?</a></h2><textarea name='keywords2' class='big w95' rows='2' cols='10'>".$keywords."</textarea>
   <br><div id='help10' style='display:none;'><span class=small>Максимум 500 символов. Разделять словосочетания желательно запятой. Если пусто - используются Ключевые словосочетания из <a href='/sys.php?op=options' target='_blank'>Настроек портала</a>).</span><p></div>
 
-  <h3>Описание для поисковых систем: <a onclick=\"show('help11')\" class='help'>?</a></h3><textarea name='description2' class='big w95' rows='4' cols='10'>".$description."</textarea>
+  <h2>Описание для поисковых систем: <a onclick=\"show('help11')\" class='help'>?</a></h2><textarea name='description2' class='big w95' rows='4' cols='10'>".$description."</textarea>
   <br><div id='help11' style='display:none;'><span class=small>Максимум 200 символов. Если пусто - используется <b>Название</b> папки.</span><p></div>
-  </div>";
+  </div>
+
+  <h2>Фотография для папки, адрес изображения:</h2>
+  <input type='text' name='pic' value='".$pic."' class='w100'><br>
+  Можно настроить раздел на использование шаблона папки, содержащего фотографию. Загрузить картинку можно с помощью редактора, затем переключиться в HTML-режим первой кнопкой редактора, скопировать её адрес и вставить в это поле.
+  ";
 
   // Замена ссылок (адрес страницы)
   $trans_title = "";
@@ -172,7 +178,7 @@ function edit_base_pages_category($cid, $red=0) {
   echo redactor($red, $desc, 'desc'); // редактор: типа редактора, редактируемое поле
 
   echo "<h2>Сортировка:</h2>
-  <input type='text' name='sortirovka' value='$sortirovka' size='3' style='float:left; margin-right:10px;'> Если нужно отсортировать папки в определенной последовательности - лучше указывать цифры в этом поле, использовать десятичную разницу между числами сортировки для разных папок, например: 10, 20, 30, 40... Это нужно для того, чтобы в случае создания новой папки вы не изменяли сортировку для всех предыдущих, а легко присвоили ей следующий номер за сортировкой, стоящей перед ней папки, например: 11, 21, 31, 41... или 15, 25, 35 - чтобы можно было вклинить новые папки между ними. <b>Пример:</b> для первой папки в поле Сортировка указать 10, для второй — 20 и так далее.
+  <input type='text' name='sortirovka' value='".$sortirovka."' size='3' style='float:left; margin-right:10px;'> Если нужно отсортировать папки в определенной последовательности - лучше указывать цифры в этом поле, использовать десятичную разницу между числами сортировки для разных папок, например: 10, 20, 30, 40... Это нужно для того, чтобы в случае создания новой папки вы не изменяли сортировку для всех предыдущих, а легко присвоили ей следующий номер за сортировкой, стоящей перед ней папки, например: 11, 21, 31, 41... или 15, 25, 35 - чтобы можно было вклинить новые папки между ними. <b>Пример:</b> для первой папки в поле Сортировка указать 10, для второй — 20 и так далее.
   </div>
     <input type='hidden' name='cid' value='$cid'>
     <input type='hidden' name='op' value='base_pages_save_category'>
@@ -180,9 +186,9 @@ function edit_base_pages_category($cid, $red=0) {
   admin_footer();
 }
 
-function base_pages_save_category($cid, $module, $title, $desc, $sortirovka, $parent_id, $description2, $keywords2, $meta_title, $clean_url) {
+function base_pages_save_category($cid, $module, $title, $desc, $sortirovka, $parent_id, $description2, $keywords2, $meta_title, $clean_url, $pic) {
   global $prefix, $db;
-  $db->sql_query("UPDATE ".$prefix."_pages_categories SET `module`='".mysql_real_escape_string($module)."', `title`='".mysql_real_escape_string($title)."', `description`='".mysql_real_escape_string($desc)."', `sort`='".mysql_real_escape_string($sortirovka)."', `parent_id`='".mysql_real_escape_string($parent_id)."', `tables`='pages', `meta_description`='".mysql_real_escape_string($description2)."', `keywords`='".mysql_real_escape_string($keywords2)."', `meta_title`='".mysql_real_escape_string($meta_title)."', `clean_url`='".mysql_real_escape_string($clean_url)."' WHERE cid='$cid'") or die("не удалось обновить папку");
+  $db->sql_query("UPDATE ".$prefix."_pages_categories SET `module`='".mysql_real_escape_string($module)."', `title`='".mysql_real_escape_string($title)."', `description`='".mysql_real_escape_string($desc)."', `pic`='".mysql_real_escape_string($pic)."', `sort`='".mysql_real_escape_string($sortirovka)."', `parent_id`='".mysql_real_escape_string($parent_id)."', `tables`='pages', `meta_description`='".mysql_real_escape_string($description2)."', `keywords`='".mysql_real_escape_string($keywords2)."', `meta_title`='".mysql_real_escape_string($meta_title)."', `clean_url`='".mysql_real_escape_string($clean_url)."' WHERE cid='$cid'") or die("не удалось обновить папку");
   Header("Location: sys.php?op=edit_base_pages_category&cid=".$cid."&new=1#1");
 }
 
@@ -998,7 +1004,7 @@ function base_pages_re($link) {
       break;
     case "base_pages_save_category":
       if (file_exists($_SERVER["DOCUMENT_ROOT"].'/cashe/clean_url_categories'.$cid)) unlink ($_SERVER["DOCUMENT_ROOT"].'/cashe/clean_url_categories'.$cid);
-      base_pages_save_category($cid, $module, $title, $desc, $sortirovka, $parent_id, $description2, $keywords2, $meta_title, $clean_url);
+      base_pages_save_category($cid, $module, $title, $desc, $sortirovka, $parent_id, $description2, $keywords2, $meta_title, $clean_url, $pic);
       break;
     case "base_pages_add_page":
       if (!isset($razdel)) $razdel = "";

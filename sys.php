@@ -107,7 +107,7 @@ echo "<title>".aa("Вход в Администрирование")."</title>
 <script type='text/javascript' src='includes/css-frameworks/kickstart/js/kickstart.js'></script><link rel='stylesheet' type='text/css' href='includes/css-frameworks/kickstart/css/kickstart.css' media='all' /><link rel='stylesheet' type='text/css' href='includes/css-frameworks/kickstart/style.css' media='all' />
 </head>
 <body style='background: rgb(236, 220, 252);' class='elements'>
-<div class='grid'><form action='red' class=radius style='margin-top:20px; ' method='post' id=form>
+<div class='grid'><form action='sys.php' class=radius style='margin-top:20px; ' method='post' id=form>
 <h5>".aa("Вход в администрирование")."</h5>
 <input type=text name=aid size=20> <label>".aa("Псевдоним")."</label><br>
 <input type=password name=pwd size=20> <label>".aa("Пароль")."</label><br><br>

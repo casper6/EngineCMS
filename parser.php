@@ -1,383 +1,376 @@
 <?php
-mb_http_input('UTF-8'); 
-mb_http_output('UTF-8'); 
-mb_internal_encoding("UTF-8");
-header("Content-type:text/html; charset='utf-8'");
 require_once("mainfile.php");
-if (isset($_REQUEST['action']))   $action = $_REQUEST['action']; else die(); // Выбор события
-if ($_REQUEST['site'] !== '') {  $site = $_REQUEST['site']; } else { echo 'Введите домен'; exit; }// должно быть всегда
-#####################
-if ($action == 1) { // добавление сайта в сканер
-if ($_REQUEST['login'] !== '')   $login = $_REQUEST['login'];
-if ($_REQUEST['pass'] !== '')   $pass = $_REQUEST['pass'];
-$site = str_replace("http://", "", $site);
-$site = str_replace("www.", "", $site);
-$v = $db->sql_numrows($db->sql_query("SELECT url FROM ".$prefix."_parser where class='s' and url='".$site."'"));
-if ($v > 0) { echo 'Сайт '.$site.' уже есть в базе'; exit; }
-$db->sql_query("INSERT INTO ".$prefix."_parser (id, class, url, title, text, config) VALUES ('','s','".$site."','".$login."','".$pass."','')") or die ('Ошибка: Не удалось сохранить. 1');
-$filestr = fopen ('files/'.$site,"w+");
-fwrite($filestr, $site."/\n");
-fclose ($filestr);
-$filestr2 = fopen ('files/go'.$site,"w+");
-fwrite($filestr2, '');
-fclose ($filestr2);
-echo 'Сайт '.$site.' успешно добавили<meta http-equiv="Refresh" content="2"/> Перезагрузка'; exit;
+global $prefix, $db, $admin, $now;
+if (is_admin($admin)) {
+	if (isset($_REQUEST['action'])) $action = $_REQUEST['action']; else die(); // Выбор события
+	if (isset($_REQUEST['data1'])) $data1 = $_REQUEST['data1']; else die();
+	#####################
+	if ($action == 1) { // добавляем url-ы
+		$urls = explode(PHP_EOL, $data1);	
+		foreach($urls as $url)
+			$db->sql_query("INSERT INTO ".$prefix."_parser (id, class, url, title, text, config) VALUES ('','1','".$url."','','','')") or die ('Ошибка: Не удалось сохранить список url.');
+		echo "<h1 style='color: green'>Добавили ".count($urls)." URL-ов в промежуточные записи</h1>"; exit;
+	}
+	#####################
+	if ($action == 2) { // сканируем сайт
+		//	$db->sql_query("INSERT INTO ".$prefix."_parser (id, class, url, title, text, config) VALUES ('','2','".$data1."','','','')") or die ('Ошибка: Не удалось сохранить url.');
+		echo "{'result_par':1}"; exit;
+	}
+	#####################
+	if ($action == 3) { // ищем через яшу
+		$res = $db->sql_fetchrow($db->sql_query("SELECT config FROM ".$prefix."_parser where `class`='config'"));
+		$PCon = explode('][',$res['config']);
+		// 0 - Логин на Яндексе
+		// 1 - Ключ АПИ Яндекса
+		// 7 - Глубина поиска через Яндекс
+		// 10 - метод поиска
+		global $geo, $prefix, $db;
+		// для регионального добавить &lr='.$geo.'
+		if ($PCon[10] == 1) $text = $data1; else $text = 'статьи && '.$data1;
+		$page = get_cpage('http://xmlsearch.yandex.ru/xmlsearch?user='.$PCon[0].'&key='.$PCon[1].'&query='.urlencode(trim($text)).'&page=0&sortby=rlv&groupby=attr%3Dd.mode%3Ddeep.groups-on-page%3D'.$PCon[7]);
+		// Массив с возможными вариантами ошибок. На примере 32го показано присвоение пояснений к ошибке
+		$errors = array('1', '2', '15', '18', '19', '20', '31', '32' => 'Закончились лимиты', '33', '34', '37', '42', '43', '44', '48', '100');
+		foreach ($errors as $key => $value)
+			if (strpos($page, '<error code="'.$key.'">')) { echo 'Ошибка '.$key.': '.$value; exit; }
+		$xml = simplexml_load_string($page);
+		foreach ($xml->response->results->grouping->group as $urldata) {
+			$name = $urldata->doc->url;
+			$db->sql_query("INSERT INTO ".$prefix."_parser (id, class, url, title, text, config) VALUES ('','1','".$name."','','','')") or die ('Ошибка: Не удалось сохранить список url.');
+		}
+		echo "<h1 style='color: green'>Результаты поиска сохранили в промежуточные записи</h1>"; exit;
+	}
+	#####################
+	if ($action == 4) { // настройка
+		$PCon = explode('][',$data1);
+		// 0 - Логин на Яндексе
+		// 1 - Ключ АПИ Яндекса
+		// 2 - Раздел для сохранения
+		// 3 - Включение статей
+		// 4 - Авто key и desc
+		// 5 - Ключи в облако
+		// 6 - Предложений в предисловии
+		// 7 - Глубина поиска через Яндекс
+		// 8 - Если есть ключи берем их
+		// 9 - Тоже с описанием
+		// 10 - метод поиска
+		$result = $db->sql_fetchrow($db->sql_query("SELECT title FROM ".$prefix."_mainpage where id = '".$PCon[2]."'"));	
+		$config = $PCon[0].']['.$PCon[1].']['.$PCon[2].'}{'.$result["title"].']['.$PCon[3].']['.$PCon[4].']['.$PCon[5].']['.$PCon[6].']['.$PCon[7].']['.$PCon[8].']['.$PCon[9].']['.$PCon[10];
+		$db->sql_query("UPDATE ".$prefix."_parser SET config = '".$config."' WHERE class='config'") or die ('Ошибка: Не удалось сохранить настройку.');
+		echo "<h1 style='color: green'>Сохранил</h1>"; exit;
+	}
+	if ($action == 5) { // Удаление промежуточных записей
+		$db->sql_query("DELETE from ".$prefix."_parser where `class`='1'");
+		echo "<h1 style='color: red'>Записи удалили!</h1>"; exit;
+	}
+	#####################
+	if ($action == 6) { // добавление ссылки
+		$urls = explode(PHP_EOL,$data1);
+		foreach($urls as $url) {
+			$link = explode('|',$url);
+			$db->sql_query("INSERT INTO ".$prefix."_parser (id, class, url, title, text, config) VALUES ('','zamena','".$link[1]."','".$link[0]."','','0')") or die ('Ошибка: Не удалось сохранить ссылку.');
+		}
+		echo "<table class='table_light'><tr><td></td><td>Фраза</td><td>Ссылка</td><td>Раз поставили</td><td></td></tr>";
+		$res = $db->sql_query("SELECT * FROM ".$prefix."_parser where `class`='zamena'");
+		$i = 1;
+		while ($row = $db->sql_fetchrow($res)) {
+			echo "<tr><td>".$i."</td><td>".$row['title']."</td><td>".$row['url']."</td><td>".$row['config']."</td>
+			<td><a title='удалить' class='button red white punkt' onClick='pardellink(".$row['id'].",1)'>Удалить</a></td></tr>";
+			$i++;
+		}
+		echo "</table>"; 
+		exit;
+	}
+	#####################
+	if ($action == 7) { // удаление ссылки
+		$db->sql_query("DELETE from ".$prefix."_parser where `id`='".$data1."'");
+		echo "<table class='table_light'><tr><td></td><td>Фраза</td><td>Ссылка</td><td>Раз поставили</td><td></td></tr>";
+		$res = $db->sql_query("SELECT * FROM ".$prefix."_parser where `class`='zamena'");
+		$i = 1;
+		while ($row = $db->sql_fetchrow($res)) {
+			echo "<tr><td>".$i."</td><td>".$row['title']."</td><td>".$row['url']."</td><td>".$row['config']."</td>
+			<td><a title='удалить' class='button red white punkt' onClick='pardellink(".$row['id'].",1)'>Удалить</a></td></tr>";
+			$i++;
+		}
+		echo "</table>"; 
+		exit;
+	}
+	#####################
+	if ($action == 8) { // Грабим статьи
+		$v = $db->sql_numrows($db->sql_query("SELECT url FROM ".$prefix."_parser where class='1'"));
+		if ($v > 0) {
+			$row = $db->sql_fetchrow($db->sql_query("SELECT * FROM ".$prefix."_parser where `class`='1' limit 1"));
+			$urls = $row['url']; 
+			$db->sql_query("DELETE FROM ".$prefix."_parser WHERE id='".$row['id']."'");
+			$str = $str2 = get_cpage($urls);
+			$kod = get_codepage($str);
+			if ($kod != "UTF-8") {
+				$str = iconv($kod, 'UTF-8', $str);
+				$str2 = iconv($kod, 'UTF-8', $str2);
+			}
+			echo dos_parser($str,$str2,$urls,$row['title'],$row['text']);
+		} else echo "2"; 
+		exit;
+	}
+	#####################
+	if ($action == 9) { // Добавляем RSS
+		$db->sql_query("INSERT INTO ".$prefix."_parser (id, class, url, title, text, config) VALUES ('','rss_chanel','".$data1."','','','')") or die ('Ошибка: Не удалось сохранить rss.');
+		$doc  = new DOMDocument();
+		$doc->load($data1);
+		$items = $doc->getElementsByTagName("item");
+		$i = 0;
+		foreach($items as $item) {
+			$tnl = $item->getElementsByTagName("title");
+			$tnl = $tnl->item(0);
+			$title = $tnl->firstChild->textContent;
+			$tnl = $item->getElementsByTagName("link");
+			$tnl = $tnl->item(0);
+			$link = $tnl->firstChild->textContent;		
+			$tnl = $item->getElementsByTagName("description");
+			$tnl = $tnl->item(0);
+			$description = $tnl->firstChild->textContent;
+			$v = $db->sql_numrows($db->sql_query("SELECT `url` FROM ".$prefix."_parser where class='rss_link' and url ='".$link."'"));
+			if ($v == 0) {
+				$db->sql_query("INSERT INTO ".$prefix."_parser (id, class, url, title, text, config) VALUES ('','rss_link','".$link."','','','')") or die ('Ошибка: Не удалось сохранить rss2.');
+				$db->sql_query("INSERT INTO ".$prefix."_parser (id, class, url, title, text, config) VALUES ('','1','".$link."','".$title."','".$description."','')") or die ('Ошибка: Не удалось сохранить rss2.');
+				$i++;
+			}
+		}
+		if ($i == 0) echo "2"; 
+		else {
+			$str = "<h1 style='color: green'>RSS добавили, новых записей ".$i."</h1>";
+			$str .= "<table class='table_light'>";
+			$res2 = $db->sql_query("SELECT * FROM ".$prefix."_parser where `class`='rss_chanel'");
+			$i = 1;
+			while ($row = $db->sql_fetchrow($res2)) {
+				$str .= "<tr><td>".$i."</td><td>".$row['url']."</td>
+				<td><a title='удалить' class='button red white punkt' onClick='pardellink(".$row['id'].",2)'>Удалить</a></td></tr>";
+				$i++;
+			}
+			$str .= "</table>";
+			echo $str;
+		}
+		exit;
+	}
+	#####################
+	if ($action == 10) { // Проверяем RSS
+		$res2 = $db->sql_query("SELECT * FROM ".$prefix."_parser  where `class`='rss_chanel'");
+		$str = ''; $kol = 0;
+		while ($row = $db->sql_fetchrow($res2)) {
+			$doc  = new DOMDocument();
+			$doc->load($row['url']);
+			$items = $doc->getElementsByTagName("item");
+			$i = 0;
+			foreach($items as $item) {
+				$tnl = $item->getElementsByTagName("title");
+				$tnl = $tnl->item(0);
+				$title = $tnl->firstChild->textContent;
+				$tnl = $item->getElementsByTagName("link");
+				$tnl = $tnl->item(0);
+				$link = $tnl->firstChild->textContent;		
+				$tnl = $item->getElementsByTagName("description");
+				$tnl = $tnl->item(0);
+				$description = $tnl->firstChild->textContent;
+				$v = $db->sql_numrows($db->sql_query("SELECT `url` FROM ".$prefix."_parser where class='rss_link' and url ='".$link."'"));
+				if ($v == 0) {
+					$db->sql_query("INSERT INTO ".$prefix."_parser (id, class, url, title, text, config) VALUES ('','rss_link','".$link."','','','')") or die ('Ошибка: Не удалось сохранить rss2.');
+					$db->sql_query("INSERT INTO ".$prefix."_parser (id, class, url, title, text, config) VALUES ('','1','".$link."','".$title."','".$description."','')") or die ('Ошибка: Не удалось сохранить rss2.');
+					$i++;
+				}
+			}   
+			$str .= "<h1 style='color: green'>RSS - ".$row['url'].", новых записей ".$i."</h1>";
+			$kol += $i;
+		}
+		if ($kol ==0) echo "2"; else echo $str;
+		exit;
+	}
+	if ($action == 9) { // Удаляем RSS
+		$db->sql_query("DELETE from ".$prefix."_parser where `id`='".$data1."'");
+		$str = "<table class='table_light'>";
+		$res2 = $db->sql_query("SELECT * FROM ".$prefix."_parser where `class`='rss_chanel'");
+		$i = 1;
+		while ($row = $db->sql_fetchrow($res2)) {
+			$str .= "<tr><td>".$i."</td><td>".$row['url']."</td>
+			<td><a title='удалить' class='button red white punkt' onClick='pardellink(".$row['id'].",2)'>Удалить</a></td></tr>";
+			$i++;
+		}
+		$str .= "</table>";
+		echo $str;
+		exit;
+	}
 }
-#####################
-if ($action == 2) { // сохраняем и изменяем авторизацию
-if ($_REQUEST['login'] == '' || $_REQUEST['pass'] == '') 
-echo 'Без авторизации'; else echo 'Есть авторизация';  
-$pass = $_REQUEST['pass'];
-$login = $_REQUEST['login'];
-$db->sql_query("UPDATE ".$prefix."_parser SET title = '".$login."', text = '".$pass."'  WHERE id='".$site."'") or die ('Ошибка: Не удалось сохранить. 2');
-exit;
-}
-#####################
-if ($action == 3) { // форма редактирования
-$result = $db->sql_fetchrow($db->sql_query("SELECT * FROM ".$prefix."_parser where id='".$site."'"));
-if ($result['config'] !== '') {
-$arr = explode('|', $result['config']);
-$sp = '';
-$i = 0;
-foreach ($arr as $u) {
-$sp .= "<div id='delis".$site.$i."'>".$u."</div>";
-$i++;
-}
-} else $sp = '';
-echo "<h3>Аторизация</h3>
-Логин: <input id='logins".$site."' value='".$result['title']."'><br>
-Пароль: <input id='passs".$site."' value='".$result['text']."'><br>
-<a href='#' onclick='parser(2,".$site.")'>Изменить</a> <hr>
-<h3>Исключения</h3>
-если url содержит исключение то он не будет просканирован<br>
-Список:<br><div id='isres".$site."'>".$sp."</div>
-<hr><a href='#' onclick='parser(7,".$site.")'>Удалить исключения</a>
-<hr>Добавить исключение: <input id='is".$site."'><a href='#' onclick='parser(4,".$site.")'>Добавить</a>
-<hr><center>
-<button type='submit' onclick='close_site(".$site.")' class='medium green'><span class='mr-2 icon white medium' data-icon='c' style='display: inline-block; '></span>Закрыть</button><hr>
-<a href='/sys.php?op=parser_del&id=".$site."'>
-<button type='submit' class='medium black'><span class='mr-2 icon red medium' data-icon='c' style='display: inline-block; '></span>Удалить сайт</button>
-</a></center>";
-exit;
-}
-#####################
-if ($action == 4) { // Добавляем исключения
-if ($_REQUEST['login'] == '') { echo 'Введите исключение'; exit; }
-$login = $_REQUEST['login'];
-$result = $db->sql_fetchrow($db->sql_query("SELECT config FROM ".$prefix."_parser where id='".$site."'"));
-if (mb_substr_count($result['config'],$login) > 0) { echo 'Такое исключение уже есть';  exit; }
-if ($result['config'] == '') {
-$db->sql_query("UPDATE ".$prefix."_parser SET config = '".trim($login)."' WHERE id='".$site."'") or die ('Ошибка: Не удалось сохранить. 4');
-echo "<div id='delis".$site."1'>".$login."</div>";
-exit;
-} else {
-$db->sql_query("UPDATE ".$prefix."_parser SET config = '".$result['config']."|".trim($login)."' WHERE id='".$site."'") or die ('Ошибка: Не удалось сохранить. 4');
-$arr = explode('|', $result['config']."|".$login);
-$i = 0;
-foreach ($arr as $u) {
-echo "<div id='delis".$site.$i."'>".$u."</div>";
-$i++;
-}
-exit;
-}
-}
-#####################
-if ($action == 5) { // сканер сайта
-$urls = array(); $vs = array();
-$res = $db->sql_fetchrow($db->sql_query("SELECT * FROM ".$prefix."_parser where id='".$site."'"));
-if ($res['title'] and $res['text']) $avto = true; else $avto = false; // Устанавливаем авторизацию
-$vs = file('files/'.$res['url']); // всего нашли урл
-$go = file('files/go'.$res['url']); // обработали
-$vsego = count($vs); // сколько всего сканер нашел страниц
-$gotov=  count($go); // сколько страниц обработал
-if ($gotov == 0 ) 
- $urls = $vs;
-else {
-$ot = array_diff ($vs, $go); // Здесь то что еще не обработали
-reset($ot);
-$urls = array_slice($ot, 0, 10); // берем только 10 урл для обработки
-}
-unset($vs,$go);
-if ($vsego !== $gotov) {
-// Массив адресов получили - парсим
-$res3 = mpars($urls,$res['title'],$res['text'],$avto,'http://'.$res['url']);
-// Пишем в базу страницы
-$count = count($res3);
-$str = '';
-for($i=0;$i<$count;$i++) {
-$db->sql_query("INSERT INTO ".$prefix."_parser (id, class, url, title, text, config) VALUES ('','s".$res['id']."','".str_replace("\n", "", $urls[$i])."','".addslashes($res3[$i])."','0','0')") or die ('Ошибка: Не удалось сохранить. 5-2');
-$file = fopen ('files/go'.$res['url'],"a+");
-fwrite($file, $urls[$i]);
-fclose ($file);
-$str .= $res3[$i];// Ложим страницы в одну строку для поиска ссылок
-}
-preg_match_all('/(<a[^>]*)href=(\"?)([^\s\">]+?)(\"?)([^>]*>)/ismU',$str,$res4);
-$a = $res4[0];
-$c = count($a);
-// список доменных зон
-$domain = explode('|','.aero|.localhost|.arpa|.asia|.biz|.cat|.com|.coop|.edu|.gov|.info|.int|.jobs|.mil|.mobi|.museum|.name|.net|.org|.post|.pro|.tel|.travel|.xxx|.ac|.ad|.ae|.af|.ag|.ai|.al|.am|.an|.ao|.aq|.ar|.as|.at|.au|.aw|.ax|.az|.ba|.bb|.bd|.be|.bf|.bg|.bh|.bi|.bj|.bl|.bm|.bn|.bo|.bq|.br|.bs|.bt|.bv|.bw|.by|.bz|.ca|.cc|.cd|.cf|.cg|.ch|.ci|.ck|.cl|.cm|.cn|.co|.cr|.cu|.cv|.cw|.cx|.cy|.cz|.de|.dj|.dk|.dm|.do|.dz|.ec|.ee|.eg|.eh|.er|.es|.et|.eu|.fi|.fj|.fk|.fm|.fo|.fr|.ga|.gb|.gd|.ge|.gf|.gg|.gh|.gi|.gl|.gm|.gn|.gp|.gq|.gr|.gs|.gt|.gu|.gw|.gy|.hk|.hm|.hn|.hr|.ht|.hu|.id|.ie|.il|.im|.in|.io|.iq|.ir|.is|.it|.je|.jm|.jo|.jp|.ke|.kg|.kh|.ki|.km|.kn|.kp|.kr|.kw|.ky|.kz|.la|.lb|.lc|.li|.lk|.lr|.ls|.lt|.lu|.lv|.ly|.ma|.mc|.md|.me|.mf|.mg|.mh|.mk|.ml|.mm|.mn|.mo|.mp|.mq|.mr|.ms|.mt|.mu|.mv|.mw|.mx|.my|.mz|.na|.nc|.ne|.nf|.ng|.ni|.nl|.no|.np|.nr|.nu|.nz|.om|.pa|.pe|.pf|.pg|.ph|.pk|.pl|.pm|.pn|.pr|.ps|.pt|.pw|.py|.qa|.re|.ro|.rs|.ru|.rw|.sa|.sb|.sc|.sd|.se|.sg|.sh|.si|.sj|.sk|.sl|.sm|.sn|.so|.sr|.ss|.st|.su|.sv|.sx|.sy|.sz|.tc|.td|.tf|.tg|.th|.tj|.tk|.tl|.tm|.tn|.to|.tp|.tr|.tt|.tv|.tw|.tz|.ua|.ug|.uk|.um|.us|.uy|.uz|.va|.vc|.ve|.vg|.vi|.vn|.vu|.wf|.ws|.ye|.yt|.za|.zm|.zw|.рф|.испытание|.срб|.укр|.мон|.бг');
-$s = file_get_contents('files/'.$res['url']);
- for($i=0;$i<$c ;$i++) {
-       $ur = stristr($a[$i], "href=");
-	   $ur= mb_convert_case($ur, MB_CASE_LOWER); // все в нижний регистр
-	   if(mb_substr_count($ur,' ') > 0)$ur = mb_substr($ur, 0, mb_strpos(trim($ur), ' '));
-	   if(mb_strpos($ur, ' ') === false) $ur = str_replace('>', '', $ur);
-	   if ( mb_substr_count($ur,"href=") == 1 || mb_substr_count($ur,"http") == 1) {
-	   $ur = str_replace(array('href=','http://','www.',',','"',"'"), '', $ur);
-	   // если урл правильный и это не файл
-	if (mb_substr_count($ur,'#') == 0 and $ur !== '/' and $ur !=='' and $ur !==' ' and
-	mb_substr_count($ur,'skype:') == 0 and
-	mb_substr_count($ur,']') == 0 and
-	mb_substr_count($ur,'[') == 0 and
-	mb_substr_count($ur,'}') == 0 and
-	mb_substr_count($ur,'{') == 0 and
-	     mb_substr_count($ur,".zip") == 0 and 
-		 mb_substr_count($ur,".js") == 0 and 
-		 mb_substr_count($ur,".css") == 0 and 
-	     mb_substr_count($ur,".rar") == 0 and 
-		 mb_substr_count($ur,".jpg") == 0 and 
-		 mb_substr_count($ur,".jpeg") == 0 and
-		 mb_substr_count($ur,".gif") == 0 and
-		 mb_substr_count($ur,".png") == 0 and
-		 mb_substr_count($ur,".doc") == 0 and 
-		 mb_substr_count($ur,".docx") == 0 and 
-		 mb_substr_count($ur,".txt") == 0 and 
-		 mb_substr_count($ur,".mp3") == 0 and 
-		 mb_substr_count($ur,".mp4") == 0 ) {
-	if (mb_substr($ur, 0, 1) == '/' and mb_substr_count($s,$res['url'].$ur) == 0) { //    /index.htm нашли и пишем site.ru/index.htm
-	$s .= $res['url'].$ur; 
-	 $filestr = fopen ('files/'.$res['url'],"a+");
-     fwrite($filestr, $res['url'].$ur."\n");
-     fclose ($filestr);
-	} 
-    if (mb_substr($ur, 0, 1) !== '/')	{
-	$nn = false;
-	foreach ($domain as $d) {
-	   if (mb_substr_count($ur,$d) == 1) $nn = true;
-	   }
-	   // нашли доменную зону и это ссылка на наш сайт
-	   $fr = parse_url($ur);
-	   if ( $nn === true and $fr['host'] == $res['url'] and mb_substr_count($s,$ur) == 0) {// - нашли .ru и пишем site.ru/index.htm
-	$s .= $ur;
-	 $filestr = fopen ('files/'.$res['url'],"a+");
-     fwrite($filestr, $ur."\n");
-     fclose ($filestr);
-	 }
-	 // не нашли доменную зону
-	   if ( $nn === false and mb_substr_count($s,$res['url'].'/'.$ur) == 0 ) { // - добавляем слеш пишем site.ru/index.htm
-	 $s .= $res['url'].'/'.$ur;
-	 $filestr = fopen ('files/'.$res['url'],"a+");
-     fwrite($filestr, $res['url'].'/'.$ur."\n");
-     fclose ($filestr);
-	 }}
 
-	 }
-	   } 
+function dos_parser($str,$str2,$urls,$titles,$texts) {
+	global $prefix, $db, $admin, $now;
+	$str = preg_replace( "'<script[^>]*>.*?</script>'usi", ' ', $str);
+	$str = preg_replace( "'<style[^>]*>.*?</style>'usi", ' ', $str);
+	$str = preg_replace("#(</?\w+)(?:\s(?:[^<>/]|/[^<>])*)?(/?>)#ui", '$1$2', $str); // удаляем атрибуты тегов
+	$arr = explode("</div>", $str);
+	$ar = array();
+	foreach($arr as $str) {
+		$str = preg_replace('/ {2,}/', ' ', $str); // убераем повторы пробелов
+		$str = str_ireplace(array("\n","\r","\r\n","  ", "<p>&nbsp;</p>", "<p></p>"), "", $str);
+		$str3 = preg_replace('#<a href=(?:.*)(?=</a>)#Usi', '', $str);
+		$ar[strlen(trim(strip_tags($str3)))] = trim(strip_tags($str,'<p>, <h1>'));
+	}
+	krsort($ar);
+	$content = current($ar); // наша статья
+	if (strlen(trim($content)) > 1000) {
+		$res = $db->sql_fetchrow($db->sql_query("SELECT config FROM ".$prefix."_parser where `class`='config'"));
+		$PCon = explode('][',$res['config']);
+		$PRazdel = explode('}{',$PCon[2]);
+		// 2 - Раздел для сохранения
+		// 3 - Включение статей
+		// 4 - Авто key и desc
+		// 5 - Ключи в облако
+		// 6 - Предложений в предисловии
+		// 8 - Если есть ключи берем их
+		// 9 - Тоже с описанием
+		require_once("includes/seo.php");
+		if  (!empty($titles)) $title = $titles;
+		else {
+			eregi("<title>(.*)</title>",$str2,$regs2);
+			$title = $regs2[1]; 
+		}
+		// ключи и описание
+		$key = $desc = '';
+		if ($PCon[4] == 1) {
+			$meta = get_meta_tags ($urls[$i]);
+			if ($PCon[8] == 1 && !empty($meta['keywords'])) 
+				$key = iconv($kod, 'UTF-8',$meta['keywords']);
+			else
+				$key = newkey(mb_substr($content, 0, 2000),5,3);
+			if ($PCon[9] == 1 && !empty($meta['description']))
+				$desc = iconv($kod, 'UTF-8',$meta['description']);
+			else
+				$desc = trim(newdesc($content,$key,250));
+		}
+		// раздел куда сохраняем
+		$result2 = $db->sql_fetchrow($db->sql_query("SELECT name FROM ".$prefix."_mainpage where id = '".$PRazdel[0]."'"));
+		// облако мета
+		if ( $PCon[5] == 1 ) $obl = $key; else $obl = '';
+		// предложения в описание
+		if  (!empty($texts)) { 
+			$dubl = $opis = $texts; 
+			$poln = preg_replace("@".$texts."@", '', $content, 1);  
+		} else {
+			$arr = explode(".", $content);
+			$opis = ''; $poln = ''; $dubl = '';
+			for($i=0;$i<count($arr);$i++) {
+				if ($i < $PCon[6]) $opis .= $arr[$i].".";
+				else $poln .= $arr[$i].".";
+				if ($i > 5 && $i < 8) $dubl .= $arr[$i].".";
+			}
+		}
+		$vs = $db->sql_numrows($db->sql_query("SELECT `pid` FROM ".$prefix."_pages where (`open_text` LIKE '%".mysql_real_escape_string($dubl)."%' or `main_text` LIKE '%".mysql_real_escape_string($dubl)."%')"));
+		if ($vs == 0) {
+			// подстановка ссылок
+			$zamen = true;
+			$link_arr = $link_arr2 = array();
+			$res = $db->sql_query("SELECT * FROM ".$prefix."_parser where `class`='zamena'");
+			if ($db->sql_numrows($res) > 0) {
+			while ($row = $db->sql_fetchrow($res)) {
+				if (strpos($poln, $row['title'])) {
+					$poln = preg_replace("@".$row['title']."@", '<a href="'.$row['url'].'">'.$row['title'].'</a>', $poln, 1);
+					$zamen = false;
+					$ch = $row['config'] + 1;
+					$db->sql_query("UPDATE ".$prefix."_parser SET config = '".$ch."' WHERE id='".$row['id']."'") or die ('Ошибка: Не удалось сохранить1.');
+					break;
+				}
+				$link_arr[$row['config']] = $row['title']; 
+				$link_arr2[$row['config']] = $row['url'];
+				$link_arr3[$row['config']] = $row['id']; 
+				$link_arr4[$row['config']] = $row['config']; }
+				if ($zamen == true) {
+					ksort($link_arr); 
+					ksort($link_arr2); 
+					ksort($link_arr3); 
+					ksort($link_arr4);
+					$link_title = current($link_arr);
+					$link_url = current($link_arr2);
+					$link_id = current($link_arr3);
+					$link_config = current($link_arr4);
+					$poln = '<a href="'.$link_url.'">'.$link_title.'</a>. '.$poln;
+					$ch = $link_config+1;
+					$db->sql_query("UPDATE ".$prefix."_parser SET config = '".$ch."' WHERE id='".$link_id."'") or die ('Ошибка: Не удалось сохранить2.');
+				}
+			}
+			$sql = "INSERT INTO ".$prefix."_pages (`pid`,`module`,`cid`,`title`,`open_text`,`main_text`,`date`,`redate`,`counter`,`active`,`golos`,`comm`,`foto`,`search`,`mainpage`,`rss`,`price`,`description`,`keywords`,`tables`,`copy`,`sort`,`nocomm`,`meta_title`,`clean_url`) VALUES 
+			(NULL, '".$result2['name']."', '0', '".mysql_real_escape_string(trim($title))."', '".mysql_real_escape_string(trim($opis))."', '".mysql_real_escape_string(trim($poln))."', '".$now."', '".$now."', '0', '".$PCon[3]."', '0', '0', '', '".$obl."', '0', '1', '0.00', '".mysql_real_escape_string($desc)."', '".mysql_real_escape_string($key)."', 'pages', '0','', '', '', '');";
+			$db->sql_query($sql) or die ("Не удалось сохранить страницу. Попробуйте нажать в Редакторе на кнопку Чистка HTML в Редакторе. Если всё равно появится эта ошибка - сообщите разработчику нижеследующее:".$sql);
+			// Узнаем получившийся номер страницы ID
+			$sqld = "select pid from ".$prefix."_pages where title='".$title."' and date='".$now."'";
+			$resultd = $db->sql_query($sqld);
+			$rowd = $db->sql_fetchrow($resultd);
+			return "Страница <a href='/-".$rowd['module']."_page_".$rowd['pid']."' target='_blank'>".$title."</a> ДОБАВЛЕНА - <a target='_blank' href='/sys.php?op=base_pages_edit_page&name=".$rowd['module']."&pid=".$rowd['pid']."'>Редактировать</a><hr>";
+		} else return "Возможно статья уже существует ".$urls."<hr>";
+	} else return "текст не нашли по адресу ".$urls."<hr>";
 }
-}
-if($vsego !== $gotov) echo 'Страниц найденно - '.$vsego.' Страниц обработанно - '.$gotov; // еще не закончили - продолжаем
-if($vsego == $gotov) echo 'Страниц готово - '.$vsego.' Конец работы';  //Все готово - остановка
-}
-#####################
-if ($action == 6) { // Добавляем шаблон
-$v = $db->sql_numrows($db->sql_query("SELECT url FROM ".$prefix."_parser where class='h' and url='".$site."'"));
-if ($v > 0) { echo 'Имя '.$site.' уже есть в базе'; exit; }
-// Добавляем сам шаблон
-$db->sql_query("INSERT INTO ".$prefix."_parser (id, class, url, title, text, config) VALUES ('','h','".$site."','','','')") or die ('Ошибка: Не удалось сохранить. 6');
-$db->sql_query("INSERT INTO ".$prefix."_parser (id, class, url, title, text, config) VALUES ('','h".$site."','Заголовок','0','title|plaintext','0')") or die ('Ошибка: Не удалось сохранить. 6-2');
-$db->sql_query("INSERT INTO ".$prefix."_parser (id, class, url, title, text, config) VALUES ('','zh".$site."','[Заголовок]','','','')") or die ('Ошибка: Не удалось сохранить. 6-3');
-$db->sql_query("INSERT INTO ".$prefix."_parser (id, class, url, title, text, config) VALUES ('','oh".$site."','[Ваше правило] и текст','','','')") or die ('Ошибка: Не удалось сохранить. 6-4');
-$db->sql_query("INSERT INTO ".$prefix."_parser (id, class, url, title, text, config) VALUES ('','mh".$site."','[Ваше правило] и текст','','','')") or die ('Ошибка: Не удалось сохранить. 6-5');
-$db->sql_query("INSERT INTO ".$prefix."_parser (id, class, url, title, text, config) VALUES ('','kh".$site."','','','','')") or die ('Ошибка: Не удалось сохранить. 6-6');
-$db->sql_query("INSERT INTO ".$prefix."_parser (id, class, url, title, text, config) VALUES ('','dh".$site."','','','','')") or die ('Ошибка: Не удалось сохранить. 6-7');
-$res = $db->sql_query("SELECT id, url FROM ".$prefix."_parser where class='h'");
-while ($row = $db->sql_fetchrow($res)) {
-echo '<b>'.$row['url'].'</b>   <a href="/sys.php?op=parser_temp&id='.$row['id'].'">Редактор</a>   <a href="/sys.php?op=parser_temp_del&id='.$row['id'].'">Удалить</a><hr>';
-}}
-#####################
-if ($action == 7) { // Удаляем исключения
-echo "";
-$db->sql_query("UPDATE ".$prefix."_parser SET config = '' WHERE id='".$site."'") or die ('Ошибка: Не удалось сохранить. 7');
-exit;
-}
-if ($action == 8) { // Добавляем правило
-$nomer = $_REQUEST['nomer']; // Номер по счету
-$ishod = $_REQUEST['ishod']; // Где ищем
-$name = $_REQUEST['name']; // Название правила
-$elem = $_REQUEST['elem']; // Элемент
-$metod = $_REQUEST['metod']; // Что получить
-$res = $db->sql_fetchrow($db->sql_query("SELECT url FROM ".$prefix."_parser where id='".$site."'"));
-$v = $db->sql_numrows($db->sql_query("SELECT id FROM ".$prefix."_parser where url='".$name."' and class='h".$res['url']."'"));
-if ($v > 0) { echo 'Такое правило уже есть';  exit; }
-$db->sql_query("INSERT INTO ".$prefix."_parser (id, class, url, title, text, config) VALUES ('','h".$res['url']."','".$name."','".$nomer."','".$elem."|".$metod."','".$ishod."')") or die ('Ошибка: Не удалось сохранить. 8');
-echo "<table width='100%'><tr><td>Правило</td><td>Использует</td><td>Номер эл-та</td><td>Элемент</td><td>Извлекаем</td><td></td><td></tr>";
-$res2 = $db->sql_query("SELECT * FROM ".$prefix."_parser where class='h".$res['url']."'");
-while ($row = $db->sql_fetchrow($res2)) {
-$el = explode('|',$row['text']);
-echo '<tr><td>'.$row['url'].'</td><td>'.$row['config'].'</td><td>'.$row['title'].'</td><td>'.$el[0].'</td><td>'.$el[1].'</td><td><a href="#" onclick="parser(9,'.$row['id'].')">Удалить</a></td><td></tr>';
-}
-echo "</table>";
-exit;
-}
-if ($action == 9) { // Удаляем правило
-$res = $db->sql_fetchrow($db->sql_query("SELECT url FROM ".$prefix."_parser where id='".$site."'"));
-$db->sql_query("DELETE FROM ".$prefix."_parser WHERE id='".$site."'");
-$db->sql_query("DELETE FROM ".$prefix."_parser WHERE config='".$site."' and class='h".$res['url']."'");
-echo '<meta http-equiv="Refresh" content="1"/>';
-exit;
-}
-if ($action == 10) { // оставшееся проект 
-require_once("includes/simple_html_dom.php");
-$r = '';
-$res = $db->sql_query("SELECT url, title FROM ".$prefix."_parser where class='s".$site."' limit 30");
-$v = $db->sql_numrows($db->sql_query("SELECT url FROM ".$prefix."_parser where class='s".$site."'"));
-echo '<h1>Всего нашли '.$v.'</h1>';
-while ($row = $db->sql_fetchrow($res)) {
-$html = str_get_html(stripslashes($row['title']));
-$title = $html->find('title',0)->plaintext;
-$r .= "<a href='http://".$row['url']."'>".$title."</a><br>";
-}
-echo $r;
-exit;
-}
-if ($action == 11) { // пример проект
-$esli = $_REQUEST['esli']; // ищем в урл или странице
-$sodr = addslashes($_REQUEST['sodr']); // что ищем
-if($esli == 0 ) $es = "url LIKE '%".$sodr."%'";
-if($esli == 1 ) $es = "title LIKE '%".$sodr."%'"; 
-require_once("includes/simple_html_dom.php");
-$res = $db->sql_query("SELECT id, title, url FROM ".$prefix."_parser where class='s".$site."' and ".$es." limit 30");
-while ($row = $db->sql_fetchrow($res)) {
-$html = str_get_html(stripslashes($row['title']));
-$title = $html->find('title',0)->plaintext;
-$r .= "<a href='http://".$row['url']."'>".$title."</a><br>";
-}
-$v = $db->sql_numrows($db->sql_query("SELECT url FROM ".$prefix."_parser where class='s".$site."' and ".$es.""));
-echo '<h1>Всего нашли '.$v.'</h1>';
-echo $r;
-exit;
-}
-if ($action == 12) { // запись из паука
-global $now;
-$esli = $_REQUEST['esli']; // ищем в урл или странице
-$sodr = addslashes($_REQUEST['sodr']); // что ищем
-$imv = explode('|',$_REQUEST['imv']); // куда пишем
-$sh = $_REQUEST['sh']; // шаблон для разбора страницы
-$plag = $_REQUEST['plag']; // использовать уникализатор
-if($esli == 0 ) $es = "url LIKE '%".$sodr."%'";
-if($esli == 1 ) $es = "title LIKE '%".$sodr."%'";  
-require_once("includes/simple_html_dom.php");
-$s = $db->sql_fetchrow($db->sql_query("SELECT url FROM ".$prefix."_parser where id='".$sh."'"));
-$pravila = $db->sql_query("SELECT * FROM ".$prefix."_parser where class='h".$s['url']."'");
-$sz = $db->sql_fetchrow($db->sql_query("SELECT url FROM ".$prefix."_parser where class='zh".$s['url']."'"));
-$so = $db->sql_fetchrow($db->sql_query("SELECT url FROM ".$prefix."_parser where class='oh".$s['url']."'"));
-$sm = $db->sql_fetchrow($db->sql_query("SELECT url FROM ".$prefix."_parser where class='mh".$s['url']."'"));
-$sk = $db->sql_fetchrow($db->sql_query("SELECT url FROM ".$prefix."_parser where class='kh".$s['url']."'"));
-$sd = $db->sql_fetchrow($db->sql_query("SELECT url FROM ".$prefix."_parser where class='dh".$s['url']."'"));
-$res = $db->sql_query("SELECT id, url, title FROM ".$prefix."_parser where class='s".$site."' and ".$es." limit 10");
-$module = $imv[0];
-$cid = $imv[1];
 
-$data = $now;
-$data2 = $now;
+function get_charset($url) {
+    $data = get_headers($url);
+    foreach ($data as $key => $value) {
+        $s = explode(':', $value);
+        if(strcmp($s[0], 'Content-Type') == 0) return substr($s[1], strpos($s[1],'charset=') + 8);
+    }
+}
 
-$temp = array();
-while ($row = $db->sql_fetchrow($res)) {
-$title = $sz['url'];
-$open_text = $so['url'];
-$main_text = $sm['url'];
-$description2 = $sd['url'];
-$keywords2 = $sk['url'];
-$html = str_get_html(stripslashes($row['title']));
-while ($rowtemp = $db->sql_fetchrow($pravila)) {
-if ($rowtemp['config'] == 0) {
-$a = explode('|',$rowtemp['text']); 
- $temp[$rowtemp['url']] = $html->find($a[0],$rowtemp['title'])->$a[1];
-$title = str_replace("[".$rowtemp['url']."]", $temp[$rowtemp['url']], $title);
-$open_text = str_replace("[".$rowtemp['url']."]", $temp[$rowtemp['url']], $open_text);
-$main_text = str_replace("[".$rowtemp['url']."]", $temp[$rowtemp['url']], $main_text);
-$description2 = str_replace("[".$rowtemp['url']."]", $temp[$rowtemp['url']], $description2);
-$keywords2 = str_replace("[".$rowtemp['url']."]", $temp[$rowtemp['url']], $keywords2);
-} }
-while ($rowtemp2 = $db->sql_fetchrow($pravila)) {
-if ($rowtemp2['config'] !== 0) {
-$a = explode('|',$rowtemp2['text']); 
-$html2 = str_get_html($temp['config']);
-$temp[$rowtemp2['url']] = $html2->find($a[0],$rowtemp2['title'])->$a[1];
-$title = str_replace("[".$rowtemp2['url']."]", $temp[$rowtemp2['url']], $title);
-$open_text = str_replace("[".$rowtemp2['url']."]", $temp[$rowtemp2['url']], $open_text);
-$main_text = str_replace("[".$rowtemp2['url']."]", $temp[$rowtemp2['url']], $main_text);
-$description2 = str_replace("[".$rowtemp2['url']."]", $temp[$rowtemp2['url']], $description2);
-$keywords2 = str_replace("[".$rowtemp2['url']."]", $temp[$rowtemp2['url']], $keywords2);
-}}
-if( $plag == 1) {
-$open_text = plagiat($open_text);
-$main_text = plagiat($main_text);
+function get_codepage($text = '') {
+    if (!empty($text)) {
+        $utflower  = 7;
+        $utfupper  = 5;
+        $lowercase = 3;
+        $uppercase = 1;
+        $last_simb = 0;
+        $charsets = array(
+            'UTF-8'       => 0,
+            'CP1251'      => 0,
+            'KOI8-R'      => 0,
+            'IBM866'      => 0,
+            'ISO-8859-5'  => 0,
+            'MAC'         => 0,
+        );
+        for ($a = 0; $a < strlen($text); $a++) {
+            $char = ord($text[$a]);
+            // non-russian characters
+            if ($char<128 || $char>256) continue;
+            // UTF-8
+            if (($last_simb==208) && (($char>143 && $char<176) || $char==129)) $charsets['UTF-8'] += ($utfupper * 2);
+            if ((($last_simb==208) && (($char>175 && $char<192) || $char==145)) || ($last_simb==209 && $char>127 && $char<144)) $charsets['UTF-8'] += ($utflower * 2);
+            // CP1251
+            if (($char>223 && $char<256) || $char==184) $charsets['CP1251'] += $lowercase;
+            if (($char>191 && $char<224) || $char==168) $charsets['CP1251'] += $uppercase;
+            // KOI8-R
+            if (($char>191 && $char<224) || $char==163) $charsets['KOI8-R'] += $lowercase;
+            if (($char>222 && $char<256) || $char==179) $charsets['KOI8-R'] += $uppercase;
+            // IBM866
+            if (($char>159 && $char<176) || ($char>223 && $char<241)) $charsets['IBM866'] += $lowercase;
+            if (($char>127 && $char<160) || $char==241) $charsets['IBM866'] += $uppercase;
+            // ISO-8859-5
+            if (($char>207 && $char<240) || $char==161) $charsets['ISO-8859-5'] += $lowercase;
+            if (($char>175 && $char<208) || $char==241) $charsets['ISO-8859-5'] += $uppercase;
+            // MAC
+            if ($char>221 && $char<255) $charsets['MAC'] += $lowercase;
+            if ($char>127 && $char<160) $charsets['MAC'] += $uppercase;
+            $last_simb = $char;
+        }
+        arsort($charsets);
+        return key($charsets);
+    }
 }
-$title = mysql_real_escape_string($title);
-$open_text = mysql_real_escape_string($open_text);
-$main_text = mysql_real_escape_string($main_text);
-$db->sql_query("INSERT INTO ".$prefix."_pages VALUES 
-(NULL, '".$module."', '".$cid."', '".$title."', '".$open_text."', '".$main_text."', '".$data."', '".$data2."', '0', '1', '0', '0',
- '', '', '0', '1', '0.00', '".$description2."', '".$keywords2."', 'pages', '0','0', '0');");
-$db->sql_query("DELETE FROM ".$prefix."_parser WHERE id='".$row['id']."'");
+
+function get_cpage($url) { 
+	ob_start();
+	$ch = curl_init();
+	curl_setopt($ch,CURLOPT_URL,$url);
+	curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
+	curl_setopt($ch, CURLOPT_HEADER, 0);
+	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+	curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+	curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+	curl_exec($ch);
+	$result = ob_get_contents();
+	curl_close ($ch);
+	ob_end_clean();
+	return $result;
 }
-$v = $db->sql_numrows($db->sql_query("SELECT url FROM ".$prefix."_parser where class='s".$site."' and ".$es.""));
-echo '<h1>Осталось '.$v.'</h1>';
-exit;
-}
-function mpars($data,$log,$pass,$avto,$site) {
-if ($avto === true) {
-$post_data['login'] = $log;
-$post_data['pas'] = $pass;
-foreach ( $post_data as $key => $value) {
-    $post_items[] = $key . '=' . $value;
-}
-$post_string = implode ('&', $post_items);
-}
-  $curls = array();
-  $result = array();
-  $mh = curl_multi_init();
-  foreach ($data as $id => $d) {
-    $curls[$id] = curl_init();
-        $url = (is_array($d) && !empty($d['url'])) ? $d['url'] : $d;
-  curl_setopt($curls[$id], CURLOPT_URL, $url);
-  curl_setopt($curls[$id], CURLOPT_HEADER,0);
-  curl_setopt($curls[$id], CURLOPT_RETURNTRANSFER, true);
-  curl_setopt($curls[$id], CURLOPT_FOLLOWLOCATION, 1);
-if ($avto === true) {
-  curl_setopt($curls[$id], CURLOPT_POST,true);
-  curl_setopt($curls[$id], CURLOPT_POSTFIELDS, $post_string);
-}  
-  curl_setopt($curls[$id], CURLOPT_REFERER, $site);
-  curl_setopt($curls[$id], CURLOPT_CONNECTTIMEOUT, 30);
-  curl_setopt($curls[$id], CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
-    curl_multi_add_handle($mh, $curls[$id]);
-  }
-  $running = null;
-  do { curl_multi_exec($mh, $running); } while($running > 0);
-  foreach($curls as $id => $c) {
-    $result[$id] = curl_multi_getcontent($c);
-    curl_multi_remove_handle($mh, $c);
-  }
-  curl_multi_close($mh);
-  return $result;
-}
-function plagiat($str) {
-$arr = explode(' ',$str);
-$count = count($arr);
-$a = ''; 
- for($i=0;$i<$count ;$i++) {
- if (strlen($arr[$i]) < 7) {
- $s = '';
- for($e=0;$e<strlen($arr[$i]) ;$e++) {
- $s .= $arr[$i]{$e}.$arr[$i]{$e+1}.'&#8202;';
- $e++;
- }
- $a .= $s.' ';
- } else
- $a .= $arr[$i].' ';
- }
- return trim($a);
- }
 ?>

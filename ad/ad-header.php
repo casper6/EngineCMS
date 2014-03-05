@@ -38,6 +38,7 @@ echo "<!doctype html>
 <link rel='shortcut icon' href='images/favicon_cms.png' type='image/x-icon'>
 <script src='/includes/jquery-2.0.0.js'></script>
 <script src='/includes/jquery-migrate-1.1.1.js'></script>
+<script src='includes/jquery-ui-datepicker-ru.js'></script>
 <script src='includes/css-frameworks/kickstart/js/ad-kickstart.js'></script>
 <script>var clean_urls=".$clean_urls.";</script>
 <script src='includes/jad.js'></script>
@@ -86,9 +87,9 @@ $url2 = $url2[0];
 $lang_logo = "";
 if ($lang_admin != "ru" && $lang_admin != "ua") $lang_logo = "_en";
 
-if ($show_admin_top == 0) echo "<div class='mw800 w100 m0 h15 center' id='admin_top_line' onmousemove=' $(\"#admin_top_line\").hide(); $(\"#admin_top\").show();'><img height=15 align=left src='images/logo_admin".$lang_logo.".png'>".aa("Главное меню")."</div><table class='mw800 hide w100 m0 fixed z1000 l0 t0 shadow' id='admin_top' style='background-color: ".$ad_fon.";'>";
+if ($show_admin_top == 0) echo "<div class='mw800 w100 m0 h15 center noprint' id='admin_top_line' onmousemove=' $(\"#admin_top_line\").hide(); $(\"#admin_top\").show();'><img height=15 align=left src='images/logo_admin".$lang_logo.".png'>".aa("Главное меню")."</div><table class='mw800 hide w100 m0 fixed z1000 l0 t0 shadow' id='admin_top' style='background-color: ".$ad_fon.";'>";
 else echo "<table class='mw800 w100 m10'>";
-echo "<tr><td class=center width=170><a title='".aa("Перейти в Содержание")."' href='sys.php' class='nothing'><img src='images/logo_admin".$lang_logo.".png'></a></td><td class=mp0><div class='nothing noprint'><div style='margin: 5px 5px 5px 0;'>";
+echo "<tr class='noprint'><td class=center width=170><a title='".aa("Перейти в Содержание")."' href='sys.php' class='nothing'><img src='images/logo_admin".$lang_logo.".png'></a></td><td class=mp0><div class='nothing'><div style='margin: 5px 5px 5px 0;'>";
 //if($detect->isiOS())
 //if($detect->isAndroidOS())
 global $buttons;

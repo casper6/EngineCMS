@@ -4,43 +4,44 @@
 mb_http_input('UTF-8'); 
 mb_http_output('UTF-8'); 
 mb_internal_encoding("UTF-8");
-$metod = $_POST['metod'];
-global $razmetka;
-if ($metod == "newkey") {
-  $kol = $_POST['kol'];
-  $kolslov = $_POST['kolslov'];
-  $x = $_POST['x'];
-  echo newkey($x,$kol,$kolslov);
-}
-if ($metod == "des") {
-  $kol = $_POST['kol'];
-  $x = $_POST['x']; 
-  $key = $_POST['key'];
-  echo trim(newdesc($x,$key,$kol));
-}
-if ($metod == "procent") {
-  $rep1 = array("\n","  ","!","?","#","№","!","&",":",";","-","—","\"","«","»","(",")",",,","..","...");
-  $rep2 = array(" "," ", ".",".","", "", "", "", ",",",",",",",","",  "", "", "", "", ",", ".", ".");
-  $ys = $_POST['x']; 
-  $key = $_POST['key'];
-  $str = explode(".", trim($ys));
+if (isset($_POST['metod'])) {
+  $metod = $_POST['metod'];
+  global $razmetka;
+  if ($metod == "newkey") {
+    $kol = $_POST['kol'];
+    $kolslov = $_POST['kolslov'];
+    $x = $_POST['x'];
+    echo newkey($x,$kol,$kolslov);
+  }
+  if ($metod == "des") {
+    $kol = $_POST['kol'];
+    $x = $_POST['x']; 
+    $key = $_POST['key'];
+    echo trim(newdesc($x,$key,$kol));
+  }
+  if ($metod == "procent") {
+    $rep1 = array("\n","  ","!","?","#","№","!","&",":",";","-","—","\"","«","»","(",")",",,","..","...");
+    $rep2 = array(" "," ", ".",".","", "", "", "", ",",",",",",",","",  "", "", "", "", ",", ".", ".");
+    $ys = $_POST['x']; 
+    $key = $_POST['key'];
+    $str = explode(".", trim($ys));
 
-  $go = array(); 
-  $i = 0;
-  foreach ($str as $word) {
-    $k = explode(",", $word);
-    foreach ($k as $fraza) {
-      $fraza = trim($fraza);
-      if (mb_substr_count($fraza, ' ') > 2) {
+    $go = array(); 
+    $i = 0;
+    foreach ($str as $word) {
+      $k = explode(",", $word);
+      foreach ($k as $fraza) {
+        $fraza = trim($fraza);
+        if (mb_substr_count($fraza, ' ') > 2) {
 
-        $i++;
-        $go[$i] = '!('.$fraza.')'; 
+          $i++;
+          $go[$i] = '!('.$fraza.')'; 
+        }
       }
     }
+    echo procent($ys,$key);
   }
-  echo procent($ys,$key);
 }
-
 function newkey($text,$kol,$kolslov) {
   # Чистим текст
   $text = normaltext($text,0); // полная функция для ключевиков
@@ -274,4 +275,6 @@ function summpristav($text,$slovo) { // Подсчет слова с прист�
   }
   return $summ;
 }
+
+
 ?>
