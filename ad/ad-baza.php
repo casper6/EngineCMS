@@ -64,7 +64,7 @@ function base_base($name) {
             while ($row3 = mysql_fetch_assoc($result3)) {
                 foreach ($search_sort2 as $value) {
                     if ($row3['Field'] != 'id' && $row3['Field'] != 'active' && $row3['Type'] != 'date') 
-                        $where_search[] = "`".$row3['Field']."` like '%".$value."%'";
+                        $where_search[] = "LOWER(`".$row3['Field']."`) like '%".mb_strtolower($value)."%'";
                 }
             }
         $where[] = "(".implode(" or ",$where_search).")";
@@ -128,7 +128,7 @@ function base_base($name) {
             }
             echo "<a class=punkt onclick=\"show('passwords');\"><strong>Список паролей</strong></a>
             <div id='passwords' style='display:none;'>
-            <table width=100%><tr bgcolor=#dddddd><td>Дата создания</td><td>Кем создан</td><td>Пароль</td><td>Информация</td><td>Действия</td></tr>
+            <table width=100%><tr bgcolor=#dddddd><td>Дата создания</td><td>Кем создан</td><td>Пароль</td><td>Информация</td><td></td></tr>
             ".$passwords."</table>
             <br>
             <form method=\"POST\" action=\"sys.php\" enctype=\"multipart/form-data\"><strong>Создать новый пароль</strong><br>
@@ -171,13 +171,17 @@ function base_base($name) {
             }
         } else $link = "";
 
+        //$s = mt_rand(10000, 99999);
         if (isset($option[6]))
             if ($option[6] == 1) { // включить фильтр для этого поля
-                $filters[] = $option[0]; // добавили англ. имя поля
-                $filters_name[] = $option[1]; // добавили рус. имя поля
+                $filters[ ] = $option[0]; // добавили англ. имя поля
+                $filters_name[ ] = $option[1]; // добавили рус. имя поля
+            } else {
+                $filters[ ] = ""; // добавили англ. имя поля
+                $filters_name[ ] = ""; // добавили рус. имя поля
             }
         $rus_names[] = "<b>".$option[1]."</b>".$link;
-        $type_names[] = $option[2];
+        $type_names[ ] = $option[2];
         if ($option[3] == 4) { // не важно и не печатать
             $noprint_pole[] = $option[1];
             $noprint_pole_index[] = $x+1;
@@ -195,7 +199,7 @@ function base_base($name) {
     // WHERE
 
     foreach ($filters as $key => $value) {
-        if (isset($show[$value]))
+        if (isset($show[$value]) && $value != "")
             if ( $type_names[$key] == 'дата' ) {
                 if (mb_strpos($show[$value], "-")) { // диапазон дат
                     $datas = explode("-", urldecode($show[$value]));
@@ -206,7 +210,7 @@ function base_base($name) {
                 $where[] = "`".$value."`='".urldecode($show[$value])."'";
             }
     }
-    // $data_sort $data_sort2  $men_sort  $firm_sort
+
     $where = implode(" and ", $where);
 
         $names["-1"] = "id";
@@ -270,6 +274,7 @@ function base_base($name) {
             echo "<div class='block noprint".$hide_search."' id='base_search'>".close_button('base_search').$show_all_button."
             <p><span class=h2>Поиск:</span> <input type=text id=\"f_search\" name=\"search_sort\" value=\"".$search_sort2."\" placeholder='".$search_sort3."' size=30><a class='button small' href='#' onClick=\"location='".$main_url."&search_sort=' + document.getElementById('f_search').value\">Найти</a>";
         $another_tables = array();
+
         foreach ($type_names as $type_name) {
             if (strpos(" ".$type_name, "table|")) {
                 // Получаем все поля колонки другой таблицы
@@ -282,29 +287,32 @@ function base_base($name) {
                 }
             }
         }
+        //print_r($type_names);
         foreach ($filters as $key => $value) {
-            if ( $type_names[$key] == 'дата' ) { // Выбор по дате, если есть такое поле
-                if (!isset($show[$value]))
-                    $show[$value] = $show2[$value] = date2normal_view(date("Y-m-d"));
-                elseif (mb_strpos($show[$value], "-")) { // диапазон дат
-                    $datas = explode("-", urldecode($show[$value]));
-                    $show[$value] = $datas[0];
-                    $show2[$value] = $datas[1];
-                } else $show2[$value] = $show[$value];
-                echo "<script>$(function() { $.datepicker.setDefaults( $.datepicker.regional[ \"ru\" ] ); 
-                    $( \"#f_".$value."\" ).datepicker({ numberOfMonths: 1, changeMonth: true, changeYear: true, dateFormat: \"d MM yy\", showAnim: 'slide' }); 
-                    $( \"#ff_".$value."\" ).datepicker({ numberOfMonths: 1, changeMonth: true, changeYear: true, dateFormat: \"d MM yy\", showAnim: 'slide' }); 
-                });</script>
-                <p><strong>".$filters_name[$key].":</strong><br><INPUT type=text name=\"text\" id=\"f_".$value."\" value='".$show[$value]."' readonly=1 size=15 onmouseover=\"this.style.background=&#39;#dddddd&#39;\" onmouseout=\"this.style.background=&#39;&#39;\" style='cursor:pointer; width:130px;'> <a class='button small' href='#' onClick=\"location='".$main_url."&show[".$value."]=' + document.getElementById('f_".$value."').value\">Показать дату</a>
-                <p>по <INPUT type=text name=\"text\" id=\"ff_".$value."\" value='".$show2[$value]."' readonly=1 size=15 onmouseover=\"this.style.background=&#39;#dddddd&#39;\" onmouseout=\"this.style.background=&#39;&#39;\" style='cursor:pointer; width:130px;'>
-                <a class='button small' href='#' onClick=\"location='".$main_url."&show[".$value."]=' + $('#f_".$value."').val() + '-' + $('#ff_".$value."').val()\">Показать диапазон дат</a>";
-            } elseif ( $type_names[$key] == 'строка' || $type_names[$key] == 'список' || mb_stripos(" ".$type_names[$key], 'table|')) {
-                if (!isset($show[$value])) $show[$value] = "= выберите =";
-                elseif (mb_stripos(" ".$type_names[$key], 'table|')) $show[$value] = $another_tables[ $type_names[$key] ][ $show[$value] ];
-                echo "<p><strong>".$filters_name[$key].":</strong><br>".vybor_stroka($baza_name, "f_".$value."", $value, $show[$value], 250, $another_tables, $type_names[$key])." <a class='button small' href='#' onClick=\"location='".$main_url."&show[".$value."]=' + document.getElementById('f_".$value."').value\">Показать</a>";
-            } else {
-                if (!isset($show[$value])) $show[$value] = "";
-                echo "<p><strong>".$filters_name[$key].":</strong><br>".input("f_".$value."", $show[$value], 30, 'input', " id=\"f_".$value."\"")." <a class='button small' href='#' onClick=\"location='".$main_url."&show[".$value."]=' + $('#f_".$value."').val();\">Показать</a>";
+            //echo $key;
+            if ($value != "") {
+                if ( $type_names[$key] == 'дата' ) { // Выбор по дате, если есть такое поле
+                    if (!isset($show[$value]))
+                        $show[$value] = $show2[$value] = date2normal_view(date("Y-m-d"));
+                    elseif (mb_strpos($show[$value], "-")) { // диапазон дат
+                        $datas = explode("-", urldecode($show[$value]));
+                        $show[$value] = $datas[0];
+                        $show2[$value] = $datas[1];
+                    } else $show2[$value] = $show[$value];
+                    echo "<script>$(function() { $.datepicker.setDefaults( $.datepicker.regional[ \"ru\" ] ); 
+                        $( \"#f_".$value."\" ).datepicker({ numberOfMonths: 1, changeMonth: true, changeYear: true, dateFormat: \"d MM yy\", showAnim: 'slide' }); 
+                        $( \"#ff_".$value."\" ).datepicker({ numberOfMonths: 1, changeMonth: true, changeYear: true, dateFormat: \"d MM yy\", showAnim: 'slide' }); 
+                    });</script>
+                    <p><strong>".$filters_name[$key].":</strong><br><INPUT type=text name=\"text\" id=\"f_".$value."\" value='".$show[$value]."' readonly=1 size=15 onmouseover=\"this.style.background=&#39;#dddddd&#39;\" onmouseout=\"this.style.background=&#39;&#39;\" style='cursor:pointer; width:130px;'> <a class='button small' href='#' onClick=\"location='".$main_url."&show[".$value."]=' + document.getElementById('f_".$value."').value\">Показать дату</a>
+                    <nobr>по <INPUT type=text name=\"text\" id=\"ff_".$value."\" value='".$show2[$value]."' readonly=1 size=15 onmouseover=\"this.style.background=&#39;#dddddd&#39;\" onmouseout=\"this.style.background=&#39;&#39;\" style='cursor:pointer; width:130px;'> <a class='button small' href='#' onClick=\"location='".$main_url."&show[".$value."]=' + $('#f_".$value."').val() + '-' + $('#ff_".$value."').val()\">Показать диапазон дат</a></nobr>";
+                } elseif ( $type_names[$key] == 'строка' || $type_names[$key] == 'список' || mb_stripos(" ".$type_names[$key], 'table|')) {
+                    if (!isset($show[$value])) $show[$value] = "= выберите =";
+                    elseif (mb_stripos(" ".$type_names[$key], 'table|')) $show[$value] = $another_tables[ $type_names[$key] ][ $show[$value] ];
+                    echo "<p><strong>".$filters_name[$key].":</strong><br>".vybor_stroka($baza_name, "f_".$value."", $value, $show[$value], 250, $another_tables, $type_names[$key])." <a class='button small' href='#' onClick=\"location='".$main_url."&show[".$value."]=' + document.getElementById('f_".$value."').value\">Показать</a>";
+                } else {
+                    if (!isset($show[$value])) $show[$value] = "";
+                    echo "<p><strong>".$filters_name[$key].":</strong><br>".input("f_".$value."", $show[$value], 30, 'input', " id=\"f_".$value."\"")." <a class='button small' href='#' onClick=\"location='".$main_url."&show[".$value."]=' + $('#f_".$value."').val();\">Показать</a>";
+                }
             }
         }
         echo "<p><strong>Интервал&nbsp;(№):</strong><br>
@@ -355,7 +363,7 @@ function base_base($name) {
             }
         }
     }
-    if ($doc=="") echo "<td class='noprint' width=80><b>Действия</b></td></tr>";
+    if ($doc=="") echo "<td class='noprint'></td></tr>";
 
     	$sql = "SELECT * FROM ".$prefix."_base_".$baza_name." ".$where."".$order." limit $offset,".$lim;
     	$result = $db->sql_query($sql) or die("SELECT * FROM ".$prefix."_base_".$baza_name." ".$where."".$order." limit $offset,".$lim);
@@ -369,7 +377,7 @@ function base_base($name) {
             case "3": $base_active="<span title='В работе' class=\"icon green small\" data-icon=\"c\"></span>"; $color="#ffffff"; break;
     	}
 
-    	echo "<tr bgcolor=".$color." class='tr_hover tr".$base_id."'><td class='noprint'><a style='cursor:pointer; float:left;' onclick=\"$('.tr".$base_id."').addClass('tr_hide noprint');\"><span class=\"icon black small left3\" data-icon=\"x\"></span></a>".$base_active."</td>";
+    	echo "<tr bgcolor=".$color." class='tr_hover tr".$base_id."'><td class='noprint'><a style='cursor:pointer; float:left;' onclick=\"$('.tr".$base_id."').toggleClass('tr_hide noprint');\"><span class=\"icon black small left3\" data-icon=\"x\"></span></a>".$base_active."</td>";
     	for ($x=0; $x < $pass_num+1; $x++) {
             if ($x !=0 and $type_names[$x-1]=="дата") {
                 $tr = array(" Январь"=>" Янв"," Февраль"=>" Фев"," Март"=>" Март"," Апрель"=>" Апр"," Май"=>" Май"," Июнь"=>" Июнь"," Июль"=>" Июль"," Август"=>" Авг"," Сентябрь"=>" Сен"," Октябрь"=>" Окт"," Ноябрь"=>" Ноя"," Декабрь"=>" Дек");
@@ -392,7 +400,7 @@ function base_base($name) {
       
         if ($doc=="" and $row['active'] != 1) {
             echo "<td class='noprint'>";
-            if ($edit_stroka == 1) echo "<a href='/sys.php?op=base_base_edit_base&name=".$name."&base=".$baza_name."&red=1&id=".$base_id."'><span class=\"icon blue small\" data-icon=\"7\" title=\"Редактировать\"></span></a> &nbsp; ";
+            if ($edit_stroka == 1) echo "<a href='/sys.php?op=base_base_edit_base&name=".$name."&base=".$baza_name."&red=1&id=".$base_id."'><span class=\"icon blue small\" data-icon=\"7\" title=\"Редактировать\"></span></a> ";
             if ($del_stroka == 1) echo "<a href='/sys.php?op=base_base_delit_base&name=".$name."&base=".$baza_name."&id=".$base_id."'><span class=\"icon red small\" data-icon=\"T\" title=\"Удалить с подтверждением\"></span></a>";
             echo "</td>";
         } else echo "<td class='noprint'><span class=\"icon gray small\" data-icon=\"X\" title=\"Нельзя удалять и редактировать! Информация закрыта\"></span></td>";
@@ -400,7 +408,7 @@ function base_base($name) {
         
     	}
     	echo "</table>
-        <p class='noprint'><span class=\"icon black small left3\" data-icon=\"x\"></span> — при нажатии строка не будет выведена при печати. Если не сработало или для отмены - обновите страницу.";
+        <p class='noprint'><span class=\"icon black small left3\" data-icon=\"x\"></span> — при нажатии строка не будет выведена при печати.";
 
 
     if ($doc=="") echo "<div class='radius_bottom noprint' style='min-width:500px;margin-right:50px;background:#333333;float:right;text-align:center;'>".base_links($numrows,$p,$main_url."&p=",$lim,"bottom")."</div><br>";
@@ -505,9 +513,9 @@ function base_base_edit_base($id, $base, $name, $red=0) {
                 // Добавляем выбор вариантов
                 $stroka = explode(",",$one[5]); 
                 $opt = "";
-                foreach ($stroka as $r) { 
-                $r = trim($r);
-                $opt .= "<option value=\"".$r."\">".$r."</option>";
+                foreach ($stroka as $r) {
+                    //$r = trim($r);
+                    $opt .= "<option value=\"".$r."\">".$r."</option>";
                 }
                 if ($one[4] == 0 or $one[4] == 2) echo " <select id=\"".$one[0]."\" name=\"text[".$one[0]."]\"><option value=\"".$row[$x+1]."\" style=\"background:#dddddd;\" selected>".$row[$x+1]."</option>".$opt."</select>
                 <input type=hidden name=\"type[".$one[0]."]\" value=\"список\"></p>"; 

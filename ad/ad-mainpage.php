@@ -542,7 +542,7 @@ function create_main($type) {
 	<tr id=pole_0><td>
 	<input type=text name=pole_rusname[] size=15 class='w100' /><a class=punkt onclick='show_eng(this)'>Псевдоним</a> (англ., будет создан автоматически)<span class='eng hide'>:<br><input type=text name=pole_name[] size=15 class='w100' /></span>
 	</td><td>
-	<select name=pole_tip[] class='w100'><option value='строка'>Строка с выбором предыдущих значений (до 5000 символов)</option><option value='строкабезвариантов' selected>Строка (до 5000 символов)</option><option value='число'>Число</option><option value='список'>Список (в поле «Замена информации» — слова через запятую)</option><option value='текст'>Текст</option><option value='дата'>Дата</option><option value='датавремя'>Дата/Время</option><option value='фото'>Фото</option><option value='минифото'>МиниФото</option><option value='файл' disabled>Файл</option><option value='ссылка' disabled>Ссылка</option><option value='' disabled>——— Списки из колонок других таблиц ———</option>".$another_table_list."</select></td><td>
+	<select name=pole_tip[] class='w100'><option value='строка'>Строка с выбором предыдущих значений (до 1000 символов)</option><option value='строкабезвариантов' selected>Строка (до 1000 символов)</option><option value='число'>Число</option><option value='список'>Список (в поле «Замена информации» — слова через запятую)</option><option value='текст'>Текст</option><option value='дата'>Дата</option><option value='датавремя'>Дата/Время</option><option value='фото'>Фото</option><option value='минифото'>МиниФото</option><option value='файл' disabled>Файл</option><option value='ссылка' disabled>Ссылка</option><option value='' disabled>——— Списки из колонок других таблиц ———</option>".$another_table_list."</select></td><td>
 	<select name=pole_main[] class='w100'><option value=0>не важно</option><option value=1>1. основная категория</option><option value=2>2. вторичная категория</option><option value=3>обязательно заполнять</option><option value=4>не важно и не печатать</option><option value=6>не важно, не печатать и не показывать</option><option value=7>обязательно, не печатать и не показывать</option><option value=5>пустая для печати</option></select></td>
 	<td class='pole_open hide'>
 	<select name=pole_open[] class='w100'><option value=1 selected>не видно нигде</option><option value=0>видно в таблице и на странице «Подробнее»</option><option value=2>видно после нажатия «Подробнее»</option></select></td><td>
@@ -1931,7 +1931,7 @@ function edit_main($id) {
 
 		<h2>Параметр message=</h2> Сообщение справа при добавлении информации в базу данных, можно использовать HTML.
 
-		<h2>Параметр del_stroka=</h2> Показывать кнопку удаления строки: 0 - показывать, 1 - не показывать. 
+		<h2>Параметр del_stroka=</h2> Показывать кнопку удаления строки: 1 - показывать, 0 - не показывать. 
 		<h2>Параметр edit_stroka=</h2> Показывать кнопку редактирования строки: 0 - показывать, 1 - не показывать.
 		<h2>Параметр num_day_stroka=</h2> Максимальное количество строк, добавляемых за 1 день, 0 - без ограничений.
 
@@ -2119,10 +2119,10 @@ function mainpage_save($id=0, $type, $namo, $title, $text, $useit, $shablon, $de
 				$one = explode("#!#",$text[$x]);
 				switch ($one[2]) {
 					case "текст": $sql2[] = "`$one[0]` TEXT NOT NULL"; break;
-					case "строка": $sql2[] = "`$one[0]` VARCHAR( 5000 ) NOT NULL"; break;
-					case "строкабезвариантов": $sql2[] = "`$one[0]` VARCHAR( 5000 ) NOT NULL"; break;
-					case "список": $sql2[] = "`$one[0]` VARCHAR( 5000 ) NOT NULL"; break;
-					case "ссылка": $sql2[] = "`$one[0]` VARCHAR( 5000 ) NOT NULL"; break;
+					case "строка": $sql2[] = "`$one[0]` VARCHAR( 1000 ) NOT NULL"; break;
+					case "строкабезвариантов": $sql2[] = "`$one[0]` VARCHAR( 1000 ) NOT NULL"; break;
+					case "список": $sql2[] = "`$one[0]` VARCHAR( 1000 ) NOT NULL"; break;
+					case "ссылка": $sql2[] = "`$one[0]` VARCHAR( 1000 ) NOT NULL"; break;
 					case "фото": $sql2[] = "`$one[0]` TEXT NOT NULL"; break;
 					case "минифото": $sql2[] = "`$one[0]` TEXT NOT NULL"; break;
 					case "файл": $sql2[] = "`$one[0]` TEXT NOT NULL"; break;
@@ -2131,7 +2131,7 @@ function mainpage_save($id=0, $type, $namo, $title, $text, $useit, $shablon, $de
 					case "датавремя": $sql2[] = "`$one[0]` DATETIME NOT NULL"; break;
 					default: 
 						if (strpos(" ".$one[2], "table|")) $sql2[] = "`$one[0]` INT( 10 ) NOT NULL";
-						else $sql2[] = "`$one[0]` VARCHAR( 5000 ) NOT NULL"; break;
+						else $sql2[] = "`$one[0]` VARCHAR( 1000 ) NOT NULL"; break;
 				}
 				$all[] = trim($one[0]);
 			}
@@ -2173,7 +2173,8 @@ function mainpage_save($id=0, $type, $namo, $title, $text, $useit, $shablon, $de
   		$text = str_replace("tеxtarea","textarea",$text); // ireplace
   		$useit = str_replace("tеxtarea","textarea",$useit); // ireplace
   		$shablon = str_replace("tеxtarea","textarea",$shablon); // ireplace
-		$db->sql_query("INSERT INTO ".$prefix."_mainpage (`id`, `type`, `name`, `title`, `text`, `useit`, `shablon`, `counter`, `tables`, `color`, `description`, `keywords`) VALUES (NULL, '".mysql_real_escape_string($type)."', '".mysql_real_escape_string($namo)."', '".mysql_real_escape_string($title)."', '".mysql_real_escape_string($text)."', '".mysql_real_escape_string($useit)."', '".mysql_real_escape_string($shablon)."', '0', 'pages', '0', '', '');") or die('Не удалось создать. Попробуйте еще раз и в случае неудачи обратитесь к разработчику.');
+  		$sql = "INSERT INTO ".$prefix."_mainpage (`id`, `type`, `name`, `title`, `text`, `useit`, `shablon`, `tables`) VALUES (NULL, '".$type."', '".mysql_real_escape_string($namo)."', '".mysql_real_escape_string($title)."', '".mysql_real_escape_string($text)."', '".mysql_real_escape_string($useit)."', '".mysql_real_escape_string($shablon)."', 'pages');";
+		$db->sql_query($sql) or die('Не удалось создать. Попробуйте еще раз и в случае неудачи обратитесь к разработчику. '.$sql);
 	}
 
 	// узнаем id
