@@ -2253,7 +2253,7 @@ echo "<!doctype html>
 <!--[if IE 8 ]><html class='ie ie8 no-js lt-ie9' lang='".$lang."'> <![endif]-->
 <!--[if (gte IE 9)|!(IE)]><!--><html lang='".$lang."' dir='ltr' class='no-js'> <!--<![endif]-->
 <head>
-<title>".strip_tags($pagetitle)."</title>";$author
+<title>".strip_tags($pagetitle)."</title>";
 if ($author != "") echo "<link rel='author' href='".$author."' />";
 if (file_exists("favicon.png"))  echo "<link rel='shortcut icon' href='/favicon.png' />";
 else echo "<link rel='shortcut icon' href='/favicon.ico' />";
