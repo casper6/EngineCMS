@@ -58,15 +58,15 @@ else if ($('#mainrazdel5').attr('class') == 'dark_pole2sel') window.location = '
 			<span class='h1'>Оформление</span>
 			</div>";
 	     ////////////////////// ДИЗАЙН 0
-		 echo "<div id='mainrazdel0' class='dark_pole2'><a class='base_page' onclick=\"$('#addmain').attr('class', 'small right3 green'); oformlenie_show('дизайн (html)','0','design','/sys.php?op=mainpage&amp;name=design&amp;type=0&amp;red=1')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='4'></span><span class='plus20'>Дизайн разделов и блоков (html)</span></div></a></div>";
+		 if ($show_admin_top != "2") echo "<div id='mainrazdel0' class='dark_pole2'><a class='base_page' onclick=\"$('#addmain').attr('class', 'small right3 green'); oformlenie_show('дизайн (html)','0','design','/sys.php?op=mainpage&amp;name=design&amp;type=0&amp;red=1')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='4'></span><span class='plus20'>Дизайн разделов и блоков (html)</span></div></a></div>";
 		 ////////////////////// СТИЛЬ 1
-		 echo "<div id='mainrazdel1' class='dark_pole2'><a class='base_page' onclick=\"$('#addmain').attr('class', 'small right3 green'); oformlenie_show('стиль (css)','1','css','/sys.php?op=mainpage&amp;name=css&amp;type=1')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='#'></span><span class='plus20'>Стиль для дизайна (css)</span></div></a></div>";
+		 if ($show_admin_top != "2") echo "<div id='mainrazdel1' class='dark_pole2'><a class='base_page' onclick=\"$('#addmain').attr('class', 'small right3 green'); oformlenie_show('стиль (css)','1','css','/sys.php?op=mainpage&amp;name=css&amp;type=1')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='#'></span><span class='plus20'>Стиль для дизайна (css)</span></div></a></div>";
 		 ////////////////////// БЛОКИ 3
 		 echo "<div id='mainrazdel3' class='dark_pole2'><a class='base_page' onclick=\"$('#addmain').attr('class', 'small right3 green'); oformlenie_show('блок','3','block','/sys.php?op=mainpage&amp;name=block&amp;type=3')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='R'></span><span class='plus20'>Блоки (небольшие элементы)</span></div></a></div>";
 		 ////////////////////// ШАБЛОНЫ 6
-		 echo "<div id='mainrazdel6' class='dark_pole2'><a class='base_page' onclick=\"$('#addmain').attr('class', 'small right3 green'); oformlenie_show('шаблон','6','shablon','/sys.php?op=mainpage&amp;name=shablon&amp;type=6&amp;red=1')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='v'></span><span class='plus20'>Шаблоны (внешний вид)</span></div></a></div>";
+		 if ($show_admin_top != "2") echo "<div id='mainrazdel6' class='dark_pole2'><a class='base_page' onclick=\"$('#addmain').attr('class', 'small right3 green'); oformlenie_show('шаблон','6','shablon','/sys.php?op=mainpage&amp;name=shablon&amp;type=6&amp;red=1')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='v'></span><span class='plus20'>Шаблоны (внешний вид)</span></div></a></div>";
 		 ////////////////////// ПОЛЯ 4
-		 echo "<div id='mainrazdel4' class='dark_pole2'><a class='base_page' onclick=\"$('#addmain').attr('class', 'small right3 green'); oformlenie_show('поле','4','pole','/sys.php?op=mainpage&amp;name=spisok&amp;type=4')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='S'></span><span class='plus20'>Поля (для страниц)</span></div></a></div>";
+		 if ($show_admin_top != "2") echo "<div id='mainrazdel4' class='dark_pole2'><a class='base_page' onclick=\"$('#addmain').attr('class', 'small right3 green'); oformlenie_show('поле','4','pole','/sys.php?op=mainpage&amp;name=spisok&amp;type=4')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='S'></span><span class='plus20'>Поля (для страниц)</span></div></a></div>";
 		 ////////////////////// БАЗЫ ДАННЫХ 5
 		 echo "<div id='mainrazdel5' class='dark_pole2'><a class='base_page' onclick=\"$('#addmain').attr('class', 'small right3 green'); oformlenie_show('БД','5','base','/sys.php?op=mainpage&amp;name=base&amp;type=5')\"><div id='mainrazdel".$id."'><span class='icon gray large' data-icon='D'></span><span class='plus20'>Базы данных (таблицы)</span></div></a></div>";
 
@@ -76,12 +76,13 @@ else if ($('#mainrazdel5').attr('class') == 'dark_pole2sel') window.location = '
 		 
 		echo "</div></td>
 	<td style='padding:0;'><a class='punkt' title='Свернуть/развернуть левую колонку' onmousemove='$(\"#razdels\").show();' onclick='$(\"#razdels\").toggle(\"slow\");'><div class='polosa_razdelitel'><div id='rotateText'><nobr>↑ Сворачивает Оформление ↑</nobr></div></div></a></td>
-	<td class='w100 pm0'>
-			<div class='black_grad'><div class='pt5'>
+	<td class='w100 pm0'>";
+			
+			if ($show_admin_top != "2") echo "<div class='black_grad'><div class='pt5'>
 			<button class='small' onclick='location.href=\"/sys.php?op=mainpage&amp;type=0&amp;id=1&amp;red=2\"' title='Редактировать главный дизайн'><span class='icon small' data-icon='7'></span> Главный дизайн</button> 
-			<button class='small' onclick='location.href=\"/sys.php?op=mainpage&amp;type=1&amp;id=20\"' title='Редактировать главный стиль'><span class='icon small' data-icon='7'></span> Главный стиль</button>";
-		echo "</div></div>
-		<div class='podrazdel radius' id='podrazdel'></div>
+			<button class='small' onclick='location.href=\"/sys.php?op=mainpage&amp;type=1&amp;id=20\"' title='Редактировать главный стиль'><span class='icon small' data-icon='7'></span> Главный стиль</button></div></div>";
+
+		echo "<div class='podrazdel radius' id='podrazdel'></div>
 			</td></tr></table>";
 		}
 	echo "
@@ -99,7 +100,10 @@ function create_main($type) {
 	<span class=h2>Название:</span> По-русски, можно с пробелами
 	<input type='text' name='title' value='' size=40 class='w100 h40 f16' autofocus><br>
 	".help_design()."
-	<h2>Содержание дизайна (HTML): ".button_resize_red(2, false)."</h2>
+	<h1>Содержание дизайна (HTML): ".button_resize_red(2, false)."
+	<a class='button small blue' onclick='if ($(\"#color_scheme\").html() == \"\") $(\"#color_scheme\").html(\"<iframe src=http://colorscheme.ru width=985 height=660 scrolling=no frameborder=0></iframe>\"); $(\"#color_scheme\").toggle();'>Подбор цвета</a>
+	</h1>
+	<div class='hide' style='position:absolute; margin: 0 auto; width: 985px; height:660px; z-index:1000;' id='color_scheme'></div>
 	".redactor('2', '', 'text', '', 'html')."
 	<div class='notice success black'><span class='icon large white' data-icon='C'></span>
 	Здесь вы можете вставить готовый HTML-код (от тега &lt;body&gt; до &lt;/body&gt;, не включительно) или набрать его с нуля.
@@ -120,11 +124,11 @@ function create_main($type) {
 	<div class='w95 mw800'>
 	<h2>Название: <span class='f12'>По-русски, можно с пробелами</span><br><input type='text' name='title' value='' size='40' class='w100 h40 f16' autofocus></h2>
 
-	<h2>Содержание стиля: ".button_resize_red(2, false)."
+	<h1>Содержание стиля: ".button_resize_red(2, false)."
 	<a class='button small blue' onclick='if ($(\"#color_scheme\").html() == \"\") $(\"#color_scheme\").html(\"<iframe src=http://colorscheme.ru width=985 height=660 scrolling=no frameborder=0></iframe>\"); $(\"#color_scheme\").toggle();'>Подбор цвета</a>
 	 <a class='button small blue' href='http://sassmeister.com' target='_blank'>SASS > CSS</a>
 	 <a class='button small blue' href='http://less2css.org' target='_blank'>LESS > CSS</a>
-	</h2>
+	</h1>
 	<div class='hide' style='position:absolute; margin: 0 auto; width: 985px; height:660px; z-index:1000;' id='color_scheme'></div>
 	".redactor('2', '', 'text', '', 'css')."
 	<input type='hidden' name='id' value=0>
@@ -800,7 +804,10 @@ function edit_main($id) {
 	<h2>Название дизайна</h2>
 	<textarea class='big w100 h40 f16' name='title' rows='1' cols='10'>".$title."</textarea>
 	".help_design()."
-	<h2>Содержание дизайна (HTML):".button_resize_red($red, true)."</h2>"; 
+	<h1>Содержание дизайна (HTML):".button_resize_red($red, true)."
+	<a class='button small blue' onclick='if ($(\"#color_scheme\").html() == \"\") $(\"#color_scheme\").html(\"<iframe src=http://colorscheme.ru width=985 height=660 scrolling=no frameborder=0></iframe>\"); $(\"#color_scheme\").toggle();'>Подбор цвета</a>
+	</h1>
+	<div class='hide' style='position:absolute; margin: 0 auto; width: 985px; height:660px; z-index:1000;' id='color_scheme'></div>"; 
   	echo redactor($red, $text, 'text'); // редактор: типа редактора, редактируемое поле
 
 	echo "<span class=h2>Использованные в дизайне стили CSS</span>
@@ -1167,7 +1174,12 @@ function edit_main($id) {
 		<div id='help6' style='display:none;' class=f12>Это поле description для поисковых систем. Максимум 250 символов. Если пусто - используется основное описание из <a href='/sys.php?op=options' target='_blank'>Настроек портала</a>.</div>
 		</td></tr>
 		</table>
-		<h2>Содержание раздела: ".button_resize_red($red, true)."</h2>";
+
+		<div class='right3'>Проверка текста: 
+		  <a href='http://orthography.morphology.ru' target='_blank' class='button small blue'>орфография</a> 
+		  <a href='http://speller.yandex.net/speller/1.0/index.html' target='_blank' class='button small blue'>орфография 2</a> 
+		  <a href='http://test-the-text.ru' target='_blank' class='button small blue'>информационный стиль</a></div>
+		<h1>Содержание раздела: ".button_resize_red($red, true)."</h1>";
 	  	echo redactor($red, $useit, 'useit', 'shablon'); // редактор: типа редактора, редактируемое поле
 
 		echo "<input type='hidden' name='text' value='".$text."'>";

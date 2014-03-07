@@ -2253,7 +2253,8 @@ echo "<!doctype html>
 <!--[if IE 8 ]><html class='ie ie8 no-js lt-ie9' lang='".$lang."'> <![endif]-->
 <!--[if (gte IE 9)|!(IE)]><!--><html lang='".$lang."' dir='ltr' class='no-js'> <!--<![endif]-->
 <head>
-<title>".strip_tags($pagetitle)."</title>";
+<title>".strip_tags($pagetitle)."</title>";$author
+if ($author != "") echo "<link rel='author' href='".$author."' />";
 if (file_exists("favicon.png"))  echo "<link rel='shortcut icon' href='/favicon.png' />";
 else echo "<link rel='shortcut icon' href='/favicon.ico' />";
 // <meta http-equiv='Content-language' content='".$lang."'> 
@@ -2430,7 +2431,31 @@ if (mb_strlen($add_fonts)>1) {
 
 	if ($kickstart == 1 or $kickstart == 3 or $kickstart == 4 or $kickstart == 8) echo "</div>";
 
-	echo "</body></html>";
+	echo "<script>
+  function CtrlEnterOrfus() {
+    document.body.onkeydown = function() {
+      if ( event.ctrlKey || event.keyCode == 91) {
+        document.body.onkeydown = function() {
+          if ( event.keyCode == 13 ) {
+            if (getSelection() != '') {
+				$('#orfus').html('<div style=\"background:#D4D0C8; width:550px; z-index:10001; border: 1px solid #555; padding:1em; font-family: Arial; font-size: 90%; color:black\"><div style=\"font-weight:bold; padding-bottom:0.2em\">Орфографическая ошибка в тексте</div><div style=\"padding: 0 0 1em 1em\">'+getSelection()+'</div><div style=\"padding: 0 0 1em 0\">Послать сообщение об ошибке автору? Ваш браузер останется на этой странице.</div><form style=\"padding:0; margin:0; border:0\"><div>Комментарий для автора (необязательно):</div><input type=\"text\" maxlength=\"250\" style=\"width:100%; margin: 0.2em 0\" /><div style=\"text-align:right; font-family: Tahoma\"><input type=\"submit\" value=\"Отправить\" style=\"width:9em; font-weight: bold\">&nbsp;<input type=\"button\" value=\"Отмена\" style=\"width:9em\" onclick=\"$(\'#orfus\').hide();\"></div></form></div>').show('slow');
+			}
+            CtrlEnterOrfus();
+            return false;
+          } else CtrlEnterOrfus();
+        }
+      }
+    }
+  }
+function getSelection() {
+    return (!!document.getSelection) ? document.getSelection() :
+           (!!window.getSelection)   ? window.getSelection() :
+           document.selection.createRange().text;
+}
+  CtrlEnterOrfus();
+  </script>
+<div id=orfus class=hide style='position:absolute; left:30%; top: 100px; z-index:10001;'>111</div>
+  </body></html>";
 
 	$txt = ob_get_contents(); // собираем файл для вывода на экран и сохранения в кеше
 

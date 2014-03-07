@@ -137,7 +137,11 @@ function edit_base_pages_category($cid, $red=0) {
   Ваше Имя *: |строка<br>
   Договаривались ли Вы заранее с врачом: |выбор|да|нет<br>
   Отзыв о Вашем враче: |текст<br>";
-  else $blok = "<h2>Содержание папки (текст над списком страниц папки):</h2>";
+  else $blok = "<div class='right3'>Проверка текста: 
+      <a href='http://orthography.morphology.ru' target='_blank' class='button small blue'>орфография</a> 
+      <a href='http://speller.yandex.net/speller/1.0/index.html' target='_blank' class='button small blue'>орфография 2</a> 
+      <a href='http://test-the-text.ru' target='_blank' class='button small blue'>информационный стиль</a></div>
+      <h1>Содержание папки:</h1>";
 
   echo "<div id='mainrazdel' class='dark_pole2'><a class='base_page' onclick=\"if ( $('#dop').is(':hidden') ) $('#mainrazdel').attr('class', 'dark_pole2sel'); else { $('#mainrazdel').attr('class', 'dark_pole2');} $('#main').toggle(); $('#dop').toggle('slow'); \"><div id='mainrazdel'><div style=\"float:right\"><span class=\"f16 gray\">></span></div><span class='icon gray large in_b' data-icon='z'><span aria-hidden='true'>z</span></span><span class='plus20'>Дополнительные настройки</span></div></a></div> ";
 
@@ -492,12 +496,15 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
   echo "</div>
 
   <div id='main'>
-  <h2>Название страницы (заголовок)</h2>
+  <h1>Название страницы (заголовок)</h1>
   <textarea class='f16 w100 h40' name=title id=title rows=1 cols=10".$trans_title.">".$titl."</textarea>
-  <div class='right3'>Проверка текста: <a href='http://orthography.morphology.ru' target='_blank' class='button small blue'>орфография</a> и <a href='http://test-the-text.ru' target='_blank' class='button small blue'>информационный стиль</a></div>
-  <h2>Предисловие</h2>";
+  <div class='right3'>Проверка текста: 
+  <a href='http://orthography.morphology.ru' target='_blank' class='button small blue'>орфография</a> 
+  <a href='http://speller.yandex.net/speller/1.0/index.html' target='_blank' class='button small blue'>орфография 2</a> 
+  <a href='http://test-the-text.ru' target='_blank' class='button small blue'>информационный стиль</a></div>
+  <h1>Предисловие</h1>";
   echo redactor($red, $shablon1, 'open_text', 'main_text'); // редактор: тип редактора, редактируемое поле
-  echo "<h2>Содержание (основной текст)</h2>";
+  echo "<h1>Содержание (основной текст)</h1>";
   echo redactor2($red, $shablon2, 'main_text');
 
   echo "<br><input type='hidden' name='foto' value=''>";

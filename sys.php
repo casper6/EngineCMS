@@ -118,7 +118,7 @@ echo "<title>".aa("Вход в Администрирование")."</title>
 }
 
 function GraphicAdmin() {
-	global $aid, $admin, $prefix, $db, $counter, $admin_file, $show_comments, $show_userposts, $razdel_sort, $registr, $show_page, $show_reserv;
+	global $show_admin_top, $aid, $admin, $prefix, $db, $counter, $admin_file, $show_comments, $show_userposts, $razdel_sort, $registr, $show_page, $show_reserv;
 	$inf_base = "";
 	// Показываем основные возможности - ред. разделов.
 	// Комментарии
@@ -175,9 +175,11 @@ function GraphicAdmin() {
 	if ($registr=='1') echo "&nbsp;&nbsp;&nbsp;<a href='".$admin_file.".php?op=MainUser'>".aa("Пользователи")."</a> <a href=".$admin_file.".php?op=sortuser>".aa("Список")."</a>";
 
 	echo "<div class='curved-vt-2 hide' style='margin-left:-350px; width: 700px; top: 10px;' id='add'></div>
-	<div class='black_grad'><div class=''>
-	<button id='new_razdel_button' title='".aa("Добавить раздел...")."' class='dark_pole2 right3' onclick=\"openbox('10','', 'add'); $('.dark_pole2sel').attr('class', 'dark_pole2');\"><span class=\"icon \" data-icon=\"+\"></span> ".aa("Добавить раздел")."</button>
-	<span class='h1'>".aa("Разделы")."</span>
+	<div class='black_grad'><div class=''>";
+
+	if ($show_admin_top != "2") echo "<button id='new_razdel_button' title='".aa("Добавить раздел...")."' class='dark_pole2 right3' onclick=\"openbox('10','', 'add'); $('.dark_pole2sel').attr('class', 'dark_pole2');\"><span class=\"icon \" data-icon=\"+\"></span> ".aa("Добавить раздел")."</button>";
+
+	echo "<span class='h1'>".aa("Разделы")."</span>
 		</div></div>".$razdel_txt."
 		<div style='max-height:700px;'>";
 
@@ -266,10 +268,13 @@ function GraphicAdmin() {
 			$ico = ".";
 			$reaction = "razdel_show(\"\", ".$id.", \"".$nam."\", \"page\");";
 		}
-		if ($nam=="index") $title = "<b>".$title."</b>";
-		echo "<div id='mainrazdel".$id."' class='dark_pole2'><div style='float:right'>".$right."</div><a class='base_page' title='".aa("Нажмите для просмотра действий над этим разделом и его содержимым")."' href=#1 onclick='".$reaction."'><div id='mainrazdel".$id."'>
-		<span class='icon ".$color." ".$icon_size."' data-icon='".$ico."'></span><span class='plus20'>".$title."</span>
-		</div></a></div>";
+		if ($show_admin_top == "2" && $nam == "index") {
+		} else {
+			if ($nam=="index") $title = "<b>".$title."</b>";
+			echo "<div id='mainrazdel".$id."' class='dark_pole2'><div style='float:right'>".$right."</div><a class='base_page' title='".aa("Нажмите для просмотра действий над этим разделом и его содержимым")."' href=#1 onclick='".$reaction."'><div id='mainrazdel".$id."'>
+			<span class='icon ".$color." ".$icon_size."' data-icon='".$ico."'></span><span class='plus20'>".$title."</span>
+			</div></a></div>";
+		}
     }
 
     $result3 = $db->sql_query("SELECT `pid` FROM ".$prefix."_pages where `active`='1' and `tables`='pages'");
@@ -288,8 +293,11 @@ function GraphicAdmin() {
 	echo "</div></div>
 	</td>
 	<td style='padding:0;'><a class='punkt' title='Свернуть/развернуть левую колонку' onmousemove='$(\"#razdels\").show();' onclick='$(\"#razdels\").toggle(\"slow\");'><div class='polosa_razdelitel'><div id='rotateText'><nobr>↑ Сворачивает Разделы ↑</nobr></div></div></a></td>
-	<td style='width:100%;padding:0;'><div class='black_grad'><div class='pt5'>".$soderganie_menu."</div></div>
-	<div class='podrazdel radius nothing' id='podrazdel'>";
+	<td style='width:100%;padding:0;'>";
+
+	if ($show_admin_top != "2") echo "<div class='black_grad'><div class='pt5'>".$soderganie_menu."</div></div>";
+
+	echo "<div class='podrazdel radius nothing' id='podrazdel'>";
 	// ЗАПИСКИ
 	$row = $db->sql_fetchrow($db->sql_query("SELECT `adminmes` FROM ".$prefix."_config"));
 	$adminmes = $row['adminmes'];
@@ -299,11 +307,13 @@ function GraphicAdmin() {
 	echo "<div style='margin:10px;'>";
 	if (!empty($project_logotip) && file_exists($project_logotip)) echo "<img src='".$project_logotip."' class=center>";
 	if (!empty($project_name)) echo "<br><font class='big_main'>".$project_name."</font>";
-	echo "<p>".aa("Страниц:")." ".$size_pages.$size_pages_off.".
+	
+	if ($show_admin_top != "2") echo "<p>".aa("Страниц:")." ".$size_pages.$size_pages_off.".
 	<p>".aa("Папок:")." ". $size_cat.".
 	<p>".aa("Разделов:")." ". $size_razdel.".
-	<p>".aa("Комментариев:")." ". $size_comm."
-	<form action='".$admin_file.".php?op=mes' method='post' name=form class='nothing' class='w100'>
+	<p>".aa("Комментариев:")." ". $size_comm."";
+
+	echo "<form action='".$admin_file.".php?op=mes' method='post' name=form class='nothing' class='w100'>
 		<div class='center' style='height:242px;'>
 		<a id='adminmes_date' style='float:right; margin:3px; display:none;' onclick=\"document.getElementById('adminmes').value+='\\r'+getDateNow()+'  '\" title='".aa("Вставить дату и время (в конце текста)")."' class='button small ml20'><span class='icon gray small' data-icon='6'></span>".$buttons[6]."</a>
 		<button id='adminmes_save' class='hide green small punkt' type='submit' style='float:left; margin:3px;'><span class=\"icon white small\" data-icon=\"c\"></span> ".aa("Сохранить")."</button><div class='h3' style='height:40px;'>".$mes_ok."</div>

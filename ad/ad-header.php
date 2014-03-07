@@ -89,30 +89,34 @@ if ($lang_admin != "ru" && $lang_admin != "ua") $lang_logo = "_en";
 
 if ($show_admin_top == 0) echo "<div class='mw800 w100 m0 h15 center noprint' id='admin_top_line' onmousemove=' $(\"#admin_top_line\").hide(); $(\"#admin_top\").show();'><img height=15 align=left src='images/logo_admin".$lang_logo.".png'>".aa("Главное меню")."</div><table class='mw800 hide w100 m0 fixed z1000 l0 t0 shadow' id='admin_top' style='background-color: ".$ad_fon.";'>";
 else echo "<table class='mw800 w100 m10'>";
-echo "<tr class='noprint'><td class=center width=170><a title='".aa("Перейти в Содержание")."' href='sys.php' class='nothing'><img src='images/logo_admin".$lang_logo.".png'></a></td><td class=mp0><div class='nothing'><div style='margin: 5px 5px 5px 0;'>";
+echo "<tr class='noprint'>";
+if ($show_admin_top != "2") echo "<td class=center width=170><a title='".aa("Перейти в Содержание")."' href='sys.php' class='nothing'><img src='images/logo_admin".$lang_logo.".png'></a></td>";
+echo "<td class=mp0><div class='nothing'><div style='margin: 5px 5px 5px 0;'>";
 //if($detect->isiOS())
 //if($detect->isAndroidOS())
 global $buttons;
 $buttons = explode(",", aa(" Содержание, Оформление, Настройки, Статистика, ПОМОЩЬ, "));
 if ($deviceType != 'computer') $buttons = array('','','','','','');
-echo "
-<nobr>
-<button class='small' target='_blank' onclick='window.open(\"/\")' title='".aa("Перейти на сайт (откроется в новом окне)")."'><span class='icon small' data-icon='4'></span> ".aa("На сайт")."</button> ".$post;
-if ($url == "/red" || $url == "/sys.php" || $url == "/sys.php?op=mes") echo "<a class='button small' onclick=\"openbox('8','".aa("Помощь")."'); $('#show_razdel').click();\" title='".aa("Открыть справочную информацию")."'><span class='icon small' data-icon='n'></span>".$buttons[4]."</a>";
-echo " <form method='post' name='search' action='search' style='display:inline;' class='nothing'><input type='search' placeholder='".aa("Поиск по сайту")."' name='slovo' style='width:167px; height: 36px;'></form>
-<a class='button small' title='".aa("Выход из администрирования\n(мера безопасности)")."' href='sys.php?op=logout'><span class='icon small' data-icon='Q'></span></a>
-</nobr></div>
 
+$exit_admin_button = "<a class='button small' title='".aa("Выход из администрирования\n(мера безопасности)")."' href='sys.php?op=logout'><span class='icon small' data-icon='Q'></span></a>";
 
-<ul class='button-bar'>
-<li class='first ".$color1."'><a title='".aa("Содержание сайта: разделы, папки, страницы и комментарии")."' href='sys.php'><span class='icon gray small' data-icon=','></span>".$buttons[0]."</a></li>";
+if ($show_admin_top != "2") {
+	echo "<nobr><button class='small' target='_blank' onclick='window.open(\"/\")' title='".aa("Перейти на сайт (откроется в новом окне)")."'><span class='icon small' data-icon='4'></span> ".aa("На сайт")."</button> ".$post;
+	if ($url == "/red" || $url == "/sys.php" || $url == "/sys.php?op=mes") echo "<a class='button small' onclick=\"openbox('8','".aa("Помощь")."'); $('#show_razdel').click();\" title='".aa("Открыть справочную информацию")."'><span class='icon small' data-icon='n'></span>".$buttons[4]."</a>";
+	echo " <form method='post' name='search' action='search' style='display:inline;' class='nothing'><input type='search' placeholder='".aa("Поиск по сайту")."' name='slovo' style='width:167px; height: 36px;'></form>".$exit_admin_button."</nobr></div>";
+}
+
+echo "<ul class='button-bar'>
+<li class='first ".$color1."'><a title='".aa("Содержание: разделы и страницы")."' href='sys.php'><span class='icon gray small' data-icon=','></span>".$buttons[0]."</a></li>";
 global $editor_style;
 if ($editor_style == false) {
 	echo "<li class='".$color2."'><a title='".aa("Дизайн, стиль, блоки и прочие элементы оформления сайта")."' href='sys.php?op=mainpage&amp;type=element'><span class='icon gray small' data-icon='Y'></span>".$buttons[1]."</a></li>
 	<li class='".$color3."'><a title='".aa("Настройки сайта")."' href='sys.php?op=options'><span class='icon gray small' data-icon='='></span>".$buttons[2]."</a></li>";
 }
-echo "<li class='last ".$color4."'><a title='".aa("Открыть статистику сайта")."' href='sys.php?op=stat_main'><span class='icon gray small' data-icon='j'></span>".$buttons[3]."</a></li>
-</ul>
+if ($show_admin_top != "2") echo "<li class='last ".$color4."'><a title='".aa("Открыть статистику сайта")."' href='sys.php?op=stat_main'><span class='icon gray small' data-icon='j'></span>".$buttons[3]."</a></li>";
+else echo "".$exit_admin_button."";
+
+echo "</ul>
 </div></td></tr></table>
 <a name='top'></a>";
 if ($show_admin_top == 0) echo "<div onmousemove='$(\"#admin_top\").hide(\"fast\"); $(\"#admin_top_line\").show();'>";

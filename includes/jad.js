@@ -1,4 +1,4 @@
-﻿/* JS для админ-панели — подписать все функции! */
+/* JS для админ-панели — подписать все функции! */
 var global_spisok_name = global_spisok_title = "";
 function aa(t,lang_admin,lang_admin_text) { // Функция перевода сайта / Translate function
   if (lang_admin == 'ru') return t; // Русский — по-умолчанию.
