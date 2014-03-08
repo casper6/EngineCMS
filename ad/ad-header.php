@@ -98,10 +98,10 @@ global $buttons;
 $buttons = explode(",", aa(" Содержание, Оформление, Настройки, Статистика, ПОМОЩЬ, "));
 if ($deviceType != 'computer') $buttons = array('','','','','','');
 
-$exit_admin_button = "<a class='button small' title='".aa("Выход из администрирования\n(мера безопасности)")."' href='sys.php?op=logout'><span class='icon small' data-icon='Q'></span></a>";
+$exit_admin_button = "<a id='logout_button' class='button small' title='".aa("Выход из администрирования\n(мера безопасности)")."' href='sys.php?op=logout'><span class='icon small' data-icon='Q'></span></a>";
 
 if ($show_admin_top != "2") {
-	echo "<nobr><button class='small' target='_blank' onclick='window.open(\"/\")' title='".aa("Перейти на сайт (откроется в новом окне)")."'><span class='icon small' data-icon='4'></span> ".aa("На сайт")."</button> ".$post;
+	echo "<nobr><button id='site_button' class='small' target='_blank' onclick='window.open(\"/\")' title='".aa("Перейти на сайт (откроется в новом окне)")."'><span class='icon small' data-icon='4'></span> ".aa("На сайт")."</button> ".$post;
 	if ($url == "/red" || $url == "/sys.php" || $url == "/sys.php?op=mes") echo "<a class='button small' onclick=\"openbox('8','".aa("Помощь")."'); $('#show_razdel').click();\" title='".aa("Открыть справочную информацию")."'><span class='icon small' data-icon='n'></span>".$buttons[4]."</a>";
 	echo " <form method='post' name='search' action='search' style='display:inline;' class='nothing'><input type='search' placeholder='".aa("Поиск по сайту")."' name='slovo' style='width:167px; height: 36px;'></form>".$exit_admin_button."</nobr></div>";
 }

@@ -2234,7 +2234,7 @@ if ($keywords2 == "") $keywords2 = $keywords;
 if ($description2 == "") $description2 = $description;
 
 // При открытии раздела можно убирать определенные блоки и через CSS
-global $add_css, $data_page, $lang, $kickstart, $jqueryui, $normalize, $sortable, $add_fonts, $url, $admin, $pid, $now, $nocash, $head_insert; //, $slider;
+global $orfus, $add_css, $data_page, $lang, $kickstart, $jqueryui, $normalize, $sortable, $add_fonts, $url, $admin, $pid, $now, $nocash, $head_insert; //, $slider;
 if (trim($add_css) != "") $stil .= "_add_".str_replace (" ","-", str_replace ("  "," ", trim($add_css))); 
 
 // Кеширование: откл.
@@ -2431,31 +2431,39 @@ if (mb_strlen($add_fonts)>1) {
 
 	if ($kickstart == 1 or $kickstart == 3 or $kickstart == 4 or $kickstart == 8) echo "</div>";
 
-	echo "<script>
-  function CtrlEnterOrfus() {
-    document.body.onkeydown = function() {
-      if ( event.ctrlKey || event.keyCode == 91) {
-        document.body.onkeydown = function() {
-          if ( event.keyCode == 13 ) {
-            if (getSelection() != '') {
-				$('#orfus').html('<div style=\"background:#D4D0C8; width:550px; z-index:10001; border: 1px solid #555; padding:1em; font-family: Arial; font-size: 90%; color:black\"><div style=\"font-weight:bold; padding-bottom:0.2em\">Орфографическая ошибка в тексте</div><div style=\"padding: 0 0 1em 1em\">'+getSelection()+'</div><div style=\"padding: 0 0 1em 0\">Послать сообщение об ошибке автору? Ваш браузер останется на этой странице.</div><form style=\"padding:0; margin:0; border:0\"><div>Комментарий для автора (необязательно):</div><input type=\"text\" maxlength=\"250\" style=\"width:100%; margin: 0.2em 0\" /><div style=\"text-align:right; font-family: Tahoma\"><input type=\"submit\" value=\"Отправить\" style=\"width:9em; font-weight: bold\">&nbsp;<input type=\"button\" value=\"Отмена\" style=\"width:9em\" onclick=\"$(\'#orfus\').hide();\"></div></form></div>').show('slow');
-			}
-            CtrlEnterOrfus();
-            return false;
-          } else CtrlEnterOrfus();
-        }
-      }
-    }
-  }
-function getSelection() {
-    return (!!document.getSelection) ? document.getSelection() :
-           (!!window.getSelection)   ? window.getSelection() :
-           document.selection.createRange().text;
-}
-  CtrlEnterOrfus();
-  </script>
-<div id=orfus class=hide style='position:absolute; left:30%; top: 100px; z-index:10001;'>111</div>
-  </body></html>";
+	if ($orfus == 1) echo "<script>
+	function send_error(error, comment) {
+	$.ajax({ url: '/ajax.php', cache: false, dataType : 'html',
+	    data: {'func': 'send_error', 'string': error+'*@%'+comment},
+	    beforeSend: function(){ $('#send_error_subg').html('Отправляю...'); },
+	    success: function(data){ $('#send_error_subg').html(data); }
+	});
+	}
+	function CtrlEnterOrfus() {
+	document.body.onkeydown = function() {
+	  if ( event.ctrlKey || event.keyCode == 91) {
+	    document.body.onkeydown = function() {
+	      if ( event.keyCode == 13 ) {
+	      	var selected_text = getSelection()
+	        if (selected_text != '') {
+			$('#orfus').html('<div style=\"background:#D4D0C8; width:550px; z-index:10001; border: 1px solid #555; padding:1em; font-family: Arial; font-size: 90%; color:black\"><a onclick=\"$(\'#orfus\').hide(\'slow\');\"><div class=\"radius\" style=\"font-size:12pt; width:20px; height: 20px; color: white; text-align:center; float:right; margin:5px; background: #bbbbbb; cursor:pointer;\">&nbsp;x&nbsp;</div></a><div id=\"send_error_subg\"><div style=\"font-weight:bold; padding-bottom:0.2em\">Орфографическая ошибка в тексте</div><div id=\"selected_text\" style=\"padding: 0 0 1em 1em\">' + selected_text + '</div><div style=\"padding: 0 0 1em 0\">Послать сообщение об ошибке автору? Ваш браузер останется на этой странице.</div><div>Комментарий для автора (необязательно):</div><input id=\"send_error_input\" type=\"text\" maxlength=\"250\" style=\"width:100%; margin: 0.2em 0\" /><div style=\"text-align:right; font-family: Tahoma\"><input type=\"button\" value=\"Отправить\" style=\"width:9em; font-weight: bold\" onclick=\"send_error($(\'#selected_text\').html(), $(\'#send_error_input\').val() )\">&nbsp;<input type=\"button\" value=\"Отмена\" style=\"width:9em\" onclick=\"$(\'#orfus\').hide();\"></div></div></div>').show('slow');
+			} else alert('Выделите ошибку и еще раз нажмите сочетание клавиш Ctrl+Enter');
+	        CtrlEnterOrfus();
+	        return false;
+	      } else CtrlEnterOrfus();
+	    }
+	  }
+	}
+	}
+	function getSelection() {
+	    return (!!document.getSelection) ? document.getSelection() :
+	           (!!window.getSelection)   ? window.getSelection() :
+	           document.selection.createRange().text;
+	}
+	CtrlEnterOrfus();
+	</script>
+	<div id='orfus' class='hide' style='position:absolute; left:30%; top: 100px; z-index:10001;'></div>";
+ 	echo "</body></html>";
 
 	$txt = ob_get_contents(); // собираем файл для вывода на экран и сохранения в кеше
 

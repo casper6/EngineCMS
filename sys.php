@@ -295,7 +295,7 @@ function GraphicAdmin() {
 	<td style='padding:0;'><a class='punkt' title='Свернуть/развернуть левую колонку' onmousemove='$(\"#razdels\").show();' onclick='$(\"#razdels\").toggle(\"slow\");'><div class='polosa_razdelitel'><div id='rotateText'><nobr>↑ Сворачивает Разделы ↑</nobr></div></div></a></td>
 	<td style='width:100%;padding:0;'>";
 
-	if ($show_admin_top != "2") echo "<div class='black_grad'><div class='pt5'>".$soderganie_menu."</div></div>";
+	if ($show_admin_top != "2") echo "<div class='black_grad' id='soderganie_menu'><div class='pt5'>".$soderganie_menu."</div></div>";
 
 	echo "<div class='podrazdel radius nothing' id='podrazdel'>";
 	// ЗАПИСКИ

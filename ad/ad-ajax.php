@@ -134,9 +134,7 @@ if ($func == "oformlenie_show") { // Выводим содержание раз�
        else $css = "Подключенные стили (css): ".$css."<br>";
        if ($row['title'] != "Главный дизайн") $delx = "<a class='padleft30 pointer' onclick='delblock(".$row['id'].",0)' title='Удалить'>".icon('red small','F')."</a>";
         else $delx = "<span class='padleft30'>".icon('gray small','X');
-       
-
-
+      
        $info .= "<tr valign='top' id='block_".$row['id']."' onmouseover='$(\"#hide_".$row['id']."\").show();' onmouseout='$(\"#hide_".$row['id']."\").hide();'><td><div style='float:right;'><a href='/sys.php?op=mainpage&id=".$row['id']."&red=2' title='Редактировать'>".icon('black small','7')."</a> ".$delx."</div><h2><a href='/sys.php?op=mainpage&id=".$row['id']."&red=2' title='Редактировать'>".$row['title']."</a></h2>
        <span id='hide_".$row['id']."' class='hide'>";
       ///////
@@ -892,7 +890,7 @@ if ($func == "offpage") { // вкл./выкл. страницы
   if ($clean_urls == 0) $re_link = "";
   else $re_link = re_link('-'.$active['module'].'_page_'.$active['pid']);
 
-  echo "<div id=\"page".$active['pid']."\"><div id='pid".$active['pid']."' class='pid'></div><a href='#".mt_rand(10000, 99999).$active['pid']."' onmouseover='sho(".$active['pid'].", \"".$active['module']."\",".$act.",".$id_razdel.",".$active['cid'].",\"".$edit_pole."\",\"".$re_link."\");'".$color.">".$nowork."".$active['title']."</a></div>"; exit;
+  echo "<div id=\"page".$active['pid']."\"><div id='pid".$active['pid']."' class='pid'></div><a href='#".mt_rand(10000, 99999).$active['pid']."' onclick='sho(".$active['pid'].", \"".$active['module']."\",".$act.",".$id_razdel.",".$active['cid'].",\"".$edit_pole."\",\"".$re_link."\");'".$color.">".$nowork."".$active['title']."</a></div>"; exit;
 }
 ######################################################################################
 if ($func == "delrazdel") { // Удаление раздела
@@ -1559,7 +1557,7 @@ if ($func == "papka") { // Папка
         if ($clean_urls == 0) $re_link = "";
         else $re_link = re_link('-'.$name.'_page_'.$pid);
 
-        $pg = "<div id='page".$pid."' class='openpage' onmouseover='sho(".$pid.", \"".$name."\", ".$active.",".$id_razdel.",".$cid.",\"".$edit_pole."\",\"".$re_link."\");'><div id='pid".$pid."' class='pid'></div><a href='/sys.php?op=base_pages_edit_page&pid=".$pid."#1' target='_blank'".$color.">".$nowork.$title.$copy." — ".$date."</a> ".$keydes." </div>";
+        $pg = "<div id='page".$pid."' class='openpage'><a onclick='sho(".$pid.", \"".$name."\", ".$active.",".$id_razdel.",".$cid.",\"".$edit_pole."\",\"".$re_link."\");'".$color.">".$nowork.$title.$copy." — ".$date."</a> ".$keydes." <div id='pid".$pid."' class='pid'></div></div>";
         if ($no_pages < $granica+1) $list .= $pg; 
         if ($no_pages > $granica) $dop_list .= $pg;
         $no_pages++;
@@ -1675,7 +1673,7 @@ if ($func == "razdel") { // Раздел
       if ($clean_urls == 0) $re_link = "";
       else $re_link = re_link('-'.$name_raz.'_page_'.$pid);
 
-      $pg = "<div id='page".$pid."' class='openpage'><div id='pid".$pid."' class='pid'></div><a href='/sys.php?op=base_pages_edit_page&pid=".$pid."#1' target='_blank' onmouseover='sho(".$pid.", \"".$name_raz."\", ".$active.",".$id_razdel.",".$cid.",\"".$edit_pole."\",\"".$re_link."\");'".$color.">".$nowork.$title.$copy." — ".$date."</a> ".$keydes." </div>";
+      $pg = "<div id='page".$pid."' class='openpage'><a onclick='sho(".$pid.", \"".$name_raz."\", ".$active.",".$id_razdel.",".$cid.",\"".$edit_pole."\",\"".$re_link."\");'".$color.">".$nowork.$title.$copy." — ".$date."</a> ".$keydes." <div id='pid".$pid."' class='pid'></div></div>";
       if ($no_pages < $granica+1) $list .= $pg; 
       if ($no_pages > $granica) $dop_list .= $pg;
       $no_pages++;

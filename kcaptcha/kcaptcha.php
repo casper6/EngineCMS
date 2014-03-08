@@ -1,23 +1,9 @@
 <?php
-
 # KCAPTCHA PROJECT VERSION 1.2.4
-
 # Automatic test to tell computers and humans apart
-
 # Copyright by Kruglov Sergei, 2006
 # www.captcha.ru, www.kruglov.ru
-
-# System requirements: PHP 4.0.6+ w/ GD
-
-# KCAPTCHA is a free software. You can freely use it for building own site or software.
-# If you use this software as a part of own sofware, you must leave copyright notices intact or add KCAPTCHA copyright notices to own.
-# As a default configuration, KCAPTCHA has a small credits text at bottom of CAPTCHA image.
-# You can remove it, but I would be pleased if you left it. ;)
-
-# See kcaptcha_config.php for customizing
-
 class KCAPTCHA{
-
 	// generates keystring and image
 	function KCAPTCHA(){
 
