@@ -180,7 +180,8 @@ div.nothing #logout_button:hover span{ color:#ff0000 !important; }
 #razdels .button{ top:0px !important; }
 .dark_pole2{ padding:2px 5px 11px 5px !important;border-bottom:1px solid #d0d0d0 !important;border-top:1px solid #f9f9f9 !important; }
 .dark_pole2:hover{ border-top:1px solid #aeaeae !important; }
-.dark_pole2sel{ padding:0 10px 0 10px !important;border:none !important; text-shadow:none !important;}
+.dark_pole2sel{ padding:3px 5px 12px 5px !important;border:none !important; text-shadow:none !important;}
+.pt5 .dark_pole2sel{ padding:3px 5px 0 5px !important;}
 .dark_pole2sel:hover .icon, .dark_pole2sel:hover .icon span{ background: none !important; color: white !important;}
 .base_page div{ padding:8px 0px 0px 0px; }
 .icon.large{ font-size:25px !important;top:-6px !important; }
