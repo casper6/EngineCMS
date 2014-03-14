@@ -895,20 +895,20 @@ case "6": # Фотогалерея
 		if (isset($link[2])) $alt = $link[2]; else $alt = "";
 		if (isset($link[3])) $alt2 = $link[3]; else $alt2 = "";
 		if (isset($link[0])) $link = $link[0]; else $link = "";
-		if ($watermark != "") $water = "/includes/php_thumb/php_thumb.php?src=".$link."&fltr[]=wmi|".$watermark."|BR|100";	else $water = $link;
+		if ($watermark != "") $water = "includes/php_thumb/php_thumb.php?src=".$link."&fltr[]=wmi|".$watermark."|BR|100";	else $water = $link;
 		// foto_gallery_type: 1 - миниатюры, 0 - «карусель», 2 - описание в 3 строки, 3 - аля макос горизонтальная полоса прокрутки
-		if ($foto_gallery_type == 1) $textX .= "<span class='div_a_img_gallery'><a title='".$title."' href='".$water."' data-lightbox='light'><img alt='".$title."' src='/includes/php_thumb/php_thumb.php?src=".$link."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0' class='img_gallery'></a></span> ";
-		if ($foto_gallery_type == 0) $textX0 .= "<li><a href='".$water."'><img src='/includes/php_thumb/php_thumb.php?src=".$link."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0' title='".$title."' alt='".$alt."' class='image".$i."'></a></li>";
+		if ($foto_gallery_type == 1) $textX .= "<span class='div_a_img_gallery'><a title='".$title."' href='".$water."' data-lightbox='light'><img alt='".$title."' src='includes/php_thumb/php_thumb.php?src=".$link."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0' class='img_gallery'></a></span> ";
+		if ($foto_gallery_type == 0) $textX0 .= "<li><a href='".$water."'><img src='includes/php_thumb/php_thumb.php?src=".$link."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0' title='".$title."' alt='".$alt."' class='image".$i."'></a></li>";
 
 		if ($foto_gallery_type == 2) {
 			if ($img_height >= $img_width) $img_wh="&amp;h=".$img_height;
 			elseif ($img_height < $img_width)  $img_wh="&amp;w=".$img_width;
-			$textX0 .= "<li><a href='#image-".$i."'><div style='background-image: url(\"/includes/php_thumb/php_thumb.php?src=".$link."&amp;fltr[]=crop|0|0|0|0".$img_wh."&amp;q=0\"); width:".$img_width."px; height:".$img_height."px;'><span>".$title."</span></div></a><div class='lb-overlay' id='image-".$i."'><a href='#page' title='".ss("Закрыть")."'><img src='".$water."' alt='".$title." / ".$alt." / ".$alt2."' /></a><div><h3>".$title."<span>".$alt."</h3><p>".$alt2."</p></div><a href='#page' class='lb-close'>".ss("Закрыть")."</a></div></li>";
+			$textX0 .= "<li><a href='#image-".$i."'><div style='background-image: url(\"includes/php_thumb/php_thumb.php?src=".$link."&amp;fltr[]=crop|0|0|0|0".$img_wh."&amp;q=0\"); width:".$img_width."px; height:".$img_height."px;'><span>".$title."</span></div></a><div class='lb-overlay' id='image-".$i."'><a href='#page' title='".ss("Закрыть")."'><img src='".$water."' alt='".$title." / ".$alt." / ".$alt2."' /></a><div><h3>".$title."<span>".$alt."</h3><p>".$alt2."</p></div><a href='#page' class='lb-close'>".ss("Закрыть")."</a></div></li>";
 		}
 
-		if ($foto_gallery_type >= 3 && $foto_gallery_type <= 6) $textX0 .= "<li><a title='".$title."' href='".$water."' data-lightbox='light'><img src='/includes/php_thumb/php_thumb.php?src=".$link."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0' alt='".$alt."'></a></li>";
-		if ($foto_gallery_type == 7) $textX0 .= "<a title='".$title."' href='".$water."' data-lightbox='light'><div class='figure' style=\"background-image: url('/includes/php_thumb/php_thumb.php?src=".$link."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0')\"><div class='figcaption'><h4>".$title."</h4><p>".$alt."</p></div></div></a>";
-		if ($foto_gallery_type == 8) $textX0[] = "<a title='".$title."' href='".$water."' data-lightbox='light'><img src='/includes/php_thumb/php_thumb.php?src=".$link."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0' alt='".$alt."' class='img_gallery'></a>";
+		if ($foto_gallery_type >= 3 && $foto_gallery_type <= 6) $textX0 .= "<li><a title='".$title."' href='".$water."' data-lightbox='light'><img src='includes/php_thumb/php_thumb.php?src=".$link."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0' alt='".$alt."'></a></li>";
+		if ($foto_gallery_type == 7) $textX0 .= "<a title='".$title."' href='".$water."' data-lightbox='light'><div class='figure' style=\"background-image: url('includes/php_thumb/php_thumb.php?src=".$link."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0')\"><div class='figcaption'><h4>".$title."</h4><p>".$alt."</p></div></div></a>";
+		if ($foto_gallery_type == 8) $textX0[] = "<a title='".$title."' href='".$water."' data-lightbox='light'><img src='includes/php_thumb/php_thumb.php?src=".$link."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0' alt='".$alt."' class='img_gallery'></a>";
 	}
 	if ($foto_gallery_type == 8) {
 		if ($foto_num > count($textX0)) $foto_num = count($textX0);
@@ -2265,70 +2265,70 @@ echo "<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
 <meta name='description' content='".str_replace("'","",$description2)."'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0'>
 <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
-<!--[if lt IE 9]><script src='/includes/html5.js'></script><![endif]-->
-<!--[if IE]><script src='/includes/iepngfix_tilebg.js'></script><![endif]-->
-<script src='/includes/j.js'></script>
-<script src='/includes/jquery-2.0.0.js'></script>
-<script src='/includes/jquery-migrate-1.1.1.js'></script>
-<script src='/includes/modernizr-1.5.min.js'></script>";
+<!--[if lt IE 9]><script src='includes/html5.js'></script><![endif]-->
+<!--[if IE]><script src='includes/iepngfix_tilebg.js'></script><![endif]-->
+<script src='includes/j.js'></script>
+<script src='includes/jquery-2.0.0.js'></script>
+<script src='includes/jquery-migrate-1.1.1.js'></script>
+<script src='includes/modernizr-1.5.min.js'></script>";
 // Подключение других языков, если это не русский
 if ($lang != 'ru') echo "<script src='/language/".$lang.".js'></script>";
 
-if ($normalize != 0) echo "<link rel='stylesheet' href='/includes/css-frameworks/normalize.css' />";
+if ($normalize != 0) echo "<link rel='stylesheet' href='includes/css-frameworks/normalize.css' />";
 
-if ($sortable != 0) echo "<script src='/includes/jquery.tinysort.min.js'></script>";
+if ($sortable != 0) echo "<script src='includes/jquery.tinysort.min.js'></script>";
 
 if ($jqueryui != 0) echo "
-<link rel='stylesheet' href='/includes/jquery-ui.css' />
-<script src='/includes/jquery-ui.min.js'></script>
-<script src='/includes/jquery-ui-i18n-min.js'></script>
-<script src='/includes/jquery-ui-datepicker-ru.js'></script>";
+<link rel='stylesheet' href='includes/jquery-ui.css' />
+<script src='includes/jquery-ui.min.js'></script>
+<script src='includes/jquery-ui-i18n-min.js'></script>
+<script src='includes/jquery-ui-datepicker-ru.js'></script>";
 
 switch($kickstart) { // Выбор CSS-фреймворка
 	case 1: // KickStart
-	echo "<script src='/includes/css-frameworks/kickstart/js/kickstart.js'></script><link rel='stylesheet' href='/includes/css-frameworks/kickstart/css/kickstart.css' media='all' /><link rel='stylesheet' href='/includes/css-frameworks/kickstart/style.css' media='all' />"; break;
+	echo "<script src='includes/css-frameworks/kickstart/js/kickstart.js'></script><link rel='stylesheet' href='includes/css-frameworks/kickstart/css/kickstart.css' media='all' /><link rel='stylesheet' href='includes/css-frameworks/kickstart/style.css' media='all' />"; break;
 	case 2: // CSSframework
-	echo "<link rel='stylesheet' href='/includes/css-frameworks/css-framework.css' />"; break;
+	echo "<link rel='stylesheet' href='includes/css-frameworks/css-framework.css' />"; break;
 	case 3: // Skeleton
-	echo "<link rel='stylesheet' href='/includes/css-frameworks/skeleton/base.css'><link rel='stylesheet' href='/includes/css-frameworks/skeleton/skeleton.css'><link rel='stylesheet' href='/includes/css-frameworks/skeleton/layout.css'>"; break;
+	echo "<link rel='stylesheet' href='includes/css-frameworks/skeleton/base.css'><link rel='stylesheet' href='includes/css-frameworks/skeleton/skeleton.css'><link rel='stylesheet' href='includes/css-frameworks/skeleton/layout.css'>"; break;
 	case 4: // Kube old
-	echo "<link rel='stylesheet' href='/includes/css-frameworks/kube/kube.min.css' /><link rel='stylesheet' href='/includes/css-frameworks/kube/master.css' /><script src='/includes/css-frameworks/kube/kube.buttons.js'></script><script src='/includes/css-frameworks/kube/kube.tabs.js'></script>"; break;
+	echo "<link rel='stylesheet' href='includes/css-frameworks/kube/kube.min.css' /><link rel='stylesheet' href='includes/css-frameworks/kube/master.css' /><script src='includes/css-frameworks/kube/kube.buttons.js'></script><script src='includes/css-frameworks/kube/kube.tabs.js'></script>"; break;
 	case 12: // Kube new
-	echo "<link rel='stylesheet' href='/includes/css-frameworks/kube/kube.min.css' />"; break;
+	echo "<link rel='stylesheet' href='includes/css-frameworks/kube/kube.min.css' />"; break;
 	case 5: // Bootstrap
-	echo "<link href='/includes/css-frameworks/bootstrap/css/bootstrap.min.css' rel='stylesheet'><link href='/includes/css-frameworks/bootstrap/css/bootstrap-responsive.min.css' rel='stylesheet'><script src='/includes/css-frameworks/bootstrap/js/bootstrap.min.js'></script>"; break;
+	echo "<link href='includes/css-frameworks/bootstrap/css/bootstrap.min.css' rel='stylesheet'><link href='includes/css-frameworks/bootstrap/css/bootstrap-responsive.min.css' rel='stylesheet'><script src='includes/css-frameworks/bootstrap/js/bootstrap.min.js'></script>"; break;
 	case 6: // 1140 Grid
-	echo "<!--[if lte IE 9]><link rel='stylesheet' href='/includes/css-frameworks/1140_cssgrid/ie.css' media='screen' /><![endif]--><link rel='stylesheet' href='/includes/css-frameworks/1140_cssgrid/1140.css' media='screen' /><script src='/includes/css-frameworks/1140_cssgrid/css3-mediaqueries.js'></script>"; break;
+	echo "<!--[if lte IE 9]><link rel='stylesheet' href='includes/css-frameworks/1140_cssgrid/ie.css' media='screen' /><![endif]--><link rel='stylesheet' href='includes/css-frameworks/1140_cssgrid/1140.css' media='screen' /><script src='includes/css-frameworks/1140_cssgrid/css3-mediaqueries.js'></script>"; break;
 	case 7: // Toast
-	echo "<link rel='stylesheet' href='/includes/css-frameworks/toast/toast.css' />"; break;
+	echo "<link rel='stylesheet' href='includes/css-frameworks/toast/toast.css' />"; break;
 	case 8: // Blueprint
-	echo "<link rel='stylesheet' href='/includes/css-frameworks/blueprint/screen.css' media='screen, projection'><link rel='stylesheet' href='/includes/css-frameworks/blueprint/print.css' media='print'><!--[if lt IE 8]><link rel='stylesheet' href='/includes/css-frameworks/blueprint/ie.css' media='screen, projection'><![endif]-->"; break;
+	echo "<link rel='stylesheet' href='includes/css-frameworks/blueprint/screen.css' media='screen, projection'><link rel='stylesheet' href='includes/css-frameworks/blueprint/print.css' media='print'><!--[if lt IE 8]><link rel='stylesheet' href='includes/css-frameworks/blueprint/ie.css' media='screen, projection'><![endif]-->"; break;
 	case 9: // YUI CSS Grids
 	// http://yuilibrary.com/yui/quick-start/
 	// http://yui.github.io/skinbuilder/
 	echo "<script src='http://yui.yahooapis.com/3.14.1/build/yui/yui-min.js'></script>"; break;
 	case 10: // 960gs (12 и/или 16 колонок)
-	echo "<link rel='stylesheet' href='/includes/css-frameworks/960gs/reset.css' /><link rel='stylesheet' href='/includes/css-frameworks/960gs/text.css' /><link rel='stylesheet' href='/includes/css-frameworks/960gs/960.css' />"; break;
+	echo "<link rel='stylesheet' href='includes/css-frameworks/960gs/reset.css' /><link rel='stylesheet' href='includes/css-frameworks/960gs/text.css' /><link rel='stylesheet' href='includes/css-frameworks/960gs/960.css' />"; break;
 	case 11: // 960gs (24 колонки)
-	echo "<link rel='stylesheet' href='/includes/css-frameworks/960gs/reset.css' /><link rel='stylesheet' href='/includes/css-frameworks/960gs/text.css' /><link rel='stylesheet' href='/includes/css-frameworks/960gs/960_24_col.css' />"; break;
+	echo "<link rel='stylesheet' href='includes/css-frameworks/960gs/reset.css' /><link rel='stylesheet' href='includes/css-frameworks/960gs/text.css' /><link rel='stylesheet' href='includes/css-frameworks/960gs/960_24_col.css' />"; break;
 	default:
 	break;
 }
 
 // Подключение mp3-плеера
 if ($mp3_player == true)
-	echo "<script src='/includes/jquery.jplayer.min.js'></script><script src='/includes/jouele/jouele.js'></script><link rel='stylesheet' href='/includes/jouele/jouele.css' />";
+	echo "<script src='includes/jquery.jplayer.min.js'></script><script src='includes/jouele/jouele.js'></script><link rel='stylesheet' href='includes/jouele/jouele.css' />";
 
 // Подключение фото-галерей
-if ($gallery_css3 == true) echo "<link rel='stylesheet' href='/includes/lightbox-css3.css' media='screen' />";
-if ($gallery_carusel == false) echo "<script src='/includes/lightbox-2.6.min.js'></script><script src='/includes/jquery.ad-gallery.js'></script><script>$(document).ready(function(){ 
+if ($gallery_css3 == true) echo "<link rel='stylesheet' href='.штсдгвуы.lightbox-css3.css' media='screen' />";
+if ($gallery_carusel == false) echo "<script src='includes/lightbox-2.6.min.js'></script><script src='includes/jquery.ad-gallery.js'></script><script>$(document).ready(function(){ 
 	var galleries = $('.ad-gallery').adGallery(); $('#switch-effect').change( function() { galleries[0].settings.effect = $(this).val(); return false; } ); });</script>
-<link rel='stylesheet' href='/includes/lightbox_new.css' media='screen' />"; // при включенном kickstart, lightbox не нужен, включается fancybox
+<link rel='stylesheet' href='includes/lightbox_new.css' media='screen' />"; // при включенном kickstart, lightbox не нужен, включается fancybox
 if ($gallery_carusel == true) {
     if ($lang=="ru") $carusel_labels = "start_label: 'Старт', stop_label: 'Стоп',";
     else $carusel_labels = "start_label: 'Start', stop_label: 'Stop',";
     echo "
-	<script src='/includes/jquery.ad-gallery.js'></script>
+	<script src='includes/jquery.ad-gallery.js'></script>
 	<script>$(document).ready(function(){ 
 	var galleries = $('.ad-gallery').adGallery({
   loader_image: '',
@@ -2376,16 +2376,16 @@ if ($gallery_carusel == true) {
     },
   }
 });
-});</script><link rel='stylesheet' href='/includes/jquery.ad-gallery.css' media='screen' />";
+});</script><link rel='stylesheet' href='includes/jquery.ad-gallery.css' media='screen' />";
 }
-if ($gallery_sly == true) echo "<script src='/includes/sly.min.js'></script><link rel='stylesheet' href='/includes/sly.css' media='screen' />";
-if ($gallery_sly_full == true) echo "<script src='/includes/sly.min.js'></script><link rel='stylesheet' href='/includes/sly_full.css' media='screen' />";
+if ($gallery_sly == true) echo "<script src='includes/sly.min.js'></script><link rel='stylesheet' href='includes/sly.css' media='screen' />";
+if ($gallery_sly_full == true) echo "<script src='includes/sly.min.js'></script><link rel='stylesheet' href='includes/sly_full.css' media='screen' />";
 
 if ($js != "" && $js != "no") echo "<script src='/js_".$js.".js'></script>";
 
-if ($lightload != 0) echo "<script src='/includes/lightload.js'></script>";
-echo "<script src='/includes/spin.js'></script>";
-if ($scrollyeah != 0) echo "<script src='/includes/scrollyeah.js'></script><link rel='stylesheet' href='/includes/scrollyeah.css' />";
+if ($lightload != 0) echo "<script src='includes/lightload.js'></script>";
+echo "<script src='includes/spin.js'></script>";
+if ($scrollyeah != 0) echo "<script src='includes/scrollyeah.js'></script><link rel='stylesheet' href='includes/scrollyeah.css' />";
 
 echo "<link rel='alternate' href='/rss/' title='".$project_name." RSS' />
 <link rel='stylesheet' href='".$stil.".css' />";
@@ -2393,7 +2393,6 @@ echo "<link rel='alternate' href='/rss/' title='".$project_name." RSS' />
 if (mb_strlen($add_fonts)>1) {
 	$add_fonts = explode(".",$add_fonts);
 	if (count($add_fonts) > 0) {
-
 		foreach ($add_fonts as $font) {
 			$font = explode(",",$font);
 			$effect_show = "";
@@ -2415,14 +2414,14 @@ if (mb_strlen($add_fonts)>1) {
 	//if ($kickstart == 4) echo "<div id='page'>";
 	echo $block; // Вывод страницы
 
-	if ($url=="-index") { // снег, листья и шарики на Главной
-		if ($pogoda==1) echo "<script src='/includes/sneg.js'></script>\n";
-		if ($pogoda==2) echo "<script src='/includes/list.js'></script>\n";
-		if ($pogoda==3) { echo "<script src='/includes/shar.js'></script>\n"; include("includes/ballon.htm"); }
+	if ($url=="index" || $url=="-index") { // снег, листья и шарики на Главной
+		if ($pogoda==1) echo "<script src='includes/sneg.js'></script>\n";
+		if ($pogoda==2) echo "<script src='includes/list.js'></script>\n";
+		if ($pogoda==3) { echo "<script src='includes/shar.js'></script>\n"; include("includes/ballon.htm"); }
 	}
 	
 	// Если включена SWF Flash поддержка
-	if ($flash==1) echo "<script src='/includes/swfobject.js'></script><script src='includes/swffix_modified.js'></script>";
+	if ($flash==1) echo "<script src='includes/swfobject.js'></script><script src='includes/swffix_modified.js'></script>";
 
 	// Если включена защита от копирования (для школьников)
 	if ($stopcopy==1) echo "<script><!-- 
@@ -2446,7 +2445,7 @@ if (mb_strlen($add_fonts)>1) {
 	      if ( event.keyCode == 13 ) {
 	      	var selected_text = getSelection()
 	        if (selected_text != '') {
-			$('#orfus').html('<div style=\"background:#D4D0C8; width:550px; z-index:10001; border: 1px solid #555; padding:1em; font-family: Arial; font-size: 90%; color:black\"><a onclick=\"$(\'#orfus\').hide(\'slow\');\"><div class=\"radius\" style=\"font-size:12pt; width:20px; height: 20px; color: white; text-align:center; float:right; margin:5px; background: #bbbbbb; cursor:pointer;\">&nbsp;x&nbsp;</div></a><div id=\"send_error_subg\"><div style=\"font-weight:bold; padding-bottom:0.2em\">Орфографическая ошибка в тексте</div><div id=\"selected_text\" style=\"padding: 0 0 1em 1em\">' + selected_text + '</div><div style=\"padding: 0 0 1em 0\">Послать сообщение об ошибке автору? Ваш браузер останется на этой странице.</div><div>Комментарий для автора (необязательно):</div><input id=\"send_error_input\" type=\"text\" maxlength=\"250\" style=\"width:100%; margin: 0.2em 0\" /><div style=\"text-align:right; font-family: Tahoma\"><input type=\"button\" value=\"Отправить\" style=\"width:9em; font-weight: bold\" onclick=\"send_error($(\'#selected_text\').html(), $(\'#send_error_input\').val() )\">&nbsp;<input type=\"button\" value=\"Отмена\" style=\"width:9em\" onclick=\"$(\'#orfus\').hide();\"></div></div></div>').show('slow');
+			$('#orfus').html('<div style=\"background:#D4D0C8; width:550px; z-index:10001; border: 1px solid #555; padding:1em; font-family: Arial; font-size: 90%; color:black; position:fixed;\"><a onclick=\"$(\'#orfus\').hide(\'slow\');\"><div class=\"radius\" style=\"font-size:12pt; width:20px; height: 20px; color: white; text-align:center; float:right; margin:5px; background: #bbbbbb; cursor:pointer;\">&nbsp;x&nbsp;</div></a><div id=\"send_error_subg\"><div style=\"font-weight:bold; padding-bottom:0.2em\">Орфографическая ошибка в тексте</div><div id=\"selected_text\" style=\"padding: 0 0 1em 1em\">' + selected_text + '</div><div style=\"padding: 0 0 1em 0\">Послать сообщение об ошибке автору? Ваш браузер останется на этой странице.</div><div>Комментарий для автора (необязательно):</div><input id=\"send_error_input\" type=\"text\" maxlength=\"250\" style=\"width:100%; margin: 0.2em 0\" /><div style=\"text-align:right; font-family: Tahoma\"><input type=\"button\" value=\"Отправить\" style=\"width:9em; font-weight: bold\" onclick=\"send_error($(\'#selected_text\').html(), $(\'#send_error_input\').val() )\">&nbsp;<input type=\"button\" value=\"Отмена\" style=\"width:9em\" onclick=\"$(\'#orfus\').hide();\"></div></div></div>').show('slow');
 			} else alert('Выделите ошибку и еще раз нажмите сочетание клавиш Ctrl+Enter');
 	        CtrlEnterOrfus();
 	        return false;
@@ -2503,4 +2502,5 @@ if (mb_strlen($add_fonts)>1) {
 		}
 	}
 	antivirus(); // Запуск антивируса :)
+	// проверка на отключение и включение страниц
 ?>

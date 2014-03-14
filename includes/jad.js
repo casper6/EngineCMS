@@ -18,7 +18,7 @@ function pics_refresh(txt){
 	$.each(text, function(index, value) {
 		val = value.split('|');
 		if (val[1] == ''  || typeof val[1] == 'undefined') val[1] = 'без имени';
-		id = val[0].replace(".", "").replace("/", "").replace("/", "");
+		id = val[0].replace('.', '').replace('/', '').replace('/', '');
 		if (val[0] != '') $('.pics').append('<div id="' + id + '" class="pic" style="background:url(\'includes/php_thumb/php_thumb.php?src=' + val[0] + '&amp;w=160&amp;h=100&amp;q=0\') no-repeat bottom white;"><a title="Удалить фото" class="button small red white" onclick="pics_replace(\'#' + id + '\',\'' + txt + '\',\'' + value + '\');">×</a><span>' + val[1] + '</span></div>');
 	});
 }
@@ -62,29 +62,27 @@ function papka_show(cid, name, sort, id, xxx, relink) {
 	}
 }
 function papka(cid, sort, id, xxx) {
-	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : 'html',
 	    data: {'func': 'papka', 'id': id, 'string': cid+'*@%'+sort},
 	    beforeSend: function(){ new Spinner().spin( document.getElementById('podpapka'+cid) ); },
 	    success: function(data){ $('#podpapka'+cid).html(data); }
 	});
 }
 function show_pole(id, page_id, razdel, cid) {
-	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : 'html',
 	    data: {'func': 'show_pole', 'id': id, 'string': razdel+'*@%'+page_id+'*@%'+cid},
 	    beforeSend: function(){ new Spinner().spin( document.getElementById('pole'+page_id) ); },
 	    success: function(data){ $('#pole'+page_id).html(data); }
 	});
 }
 function save_main(url, op, id, id2) {
-	if (id == "") id = 'form';
-	if (id2 == "") id2 = '#save_main';
+	if (id == '') id = 'form';
+	if (id2 == '') id2 = '#save_main';
 	var msg = $(id).serialize();
-    $.ajax({
-      type: 'POST',
-      url: url,
-      data: {'op': op, 'string': msg },
+    $.ajax({ type:'POST', url: url, 
+      data: {'op': op, 'string': msg},
 	  beforeSend: function(){ $(id2).html('Сохраняю...'); },
-      success: function(data) { $(id2).html(data); if (id2 != '#save_main') $(id2).html(icon('green small','*')); },
+      success: function(data) { $(id2).html(data); if (id2 != '#save_main') $(id2).html(icon('green small','*')); }
       /* error: function(xhr, str) { alert('Возникла ошибка: ' + xhr.responseCode ); } */
     });
 }
@@ -103,7 +101,7 @@ function show_otvet_comm(cid, name, mail, mod, shablon, main_nick, all_nicks) {
 		$('#otvet_comm_txt'+cid).focus(); 
 		$('#otvet_comm_txt'+cid).val(name+', ');
 		if (shablon == 1) {
-			$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
+			$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : 'html',
 			    data: {'func': 'mail_shablon', 'id': cid},
 			    success: function(data){ $('#otvet_comm'+cid).append(data); }
 			});
@@ -111,21 +109,21 @@ function show_otvet_comm(cid, name, mail, mod, shablon, main_nick, all_nicks) {
 	}
 }
 function new_otvet(type, id, sender, info, mail, mod) {
-	$.ajax({ url: 'ad/ad-ajax.php', type: "POST", cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', type: "POST", cache: false, dataType : 'html',
 	    data: {'func': 'comm_otvet', 'id': id, 'type': type, 'string': sender+'*@%'+info+'*@%'+mail+'*@%'+mod},
 	    beforeSend: function(){ $('#otvet_send'+id).html('Отправляю ответ...'); },
 	    success: function(data){ $('#otvet_send'+id).html('<span class=h1>'+icon('green medium','c')+data+'</span>'); }
 	});
 }
 function trash_pics(type, sort, count) {
-	$.ajax({ url: 'ad/ad-ajax.php', type: "POST", cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', type: "POST", cache: false, dataType : 'html',
 	    data: {'func': 'trash_pics', 'string': type+'*@%'+sort+'*@%'+count},
 	    beforeSend: function(){ new Spinner().spin( document.getElementById('show_options_oldfotos') ); },
 	    success: function(data){ $('#show_options_oldfotos').html(data); }
 	});
 }
 function replace(id) {
-	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : 'html',
 	    data: {'func': 'replace', 'id': id},
 	    beforeSend: function(){ new Spinner().spin( document.getElementById('pid'+id) ); },
 	    success: function(data){ $('#pid'+id).html(data); }
@@ -165,7 +163,7 @@ function spiski_show(name, title) {
 	global_spisok_title = title;
 	var txt;
 	txt = '<span class=h2>Редактирование значений поля «'+title+'»</span><p>При удалении значения также удаляется информация из связанных с ним страниц.<br>Пример: Создав поле «Цена» (prise, число) и выставив для страницы его значение, например 1000, мы создали значение prise = 1000. Здесь мы можем его удалить также, как если бы отредактировали страницу и стерли 1000 в поле Цена.</p><a class="button green" style="margin-top:4px;margin-bottom:10px;" target="_blank" onclick="add_spisok(\'0\', \''+name+'\', \'\', \'\', \'\', \'0\', \'0\')"> '+icon('white small','+')+' Добавить значение поля</a>';
-	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : 'html',
 	    data: {'func': 'spiski_show', 'type': name },
 	    beforeSend: function(){ new Spinner().spin( document.getElementById('podrazdel') ); },
 	    success: function(data){ $('#podrazdel').html( txt + data ); }
@@ -175,7 +173,7 @@ function oformlenie_show(title,id,type,link) {
 	var txt = '';
 	select_button('mainrazdel'+id);
 	if (id==2) txt = '<p>При удалении объекта оформления, он попадает в «Удаленное оформление» для окончательного удаления или восстановления.<p>'+icon('red small','F')+' <a href=sys.php?op=delete_all&del=design>Очистить Удаленное</a>';
-	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : 'html',
 	    data: {'func': 'oformlenie_show', 'type': type },
 	    beforeSend: function(){ new Spinner().spin( document.getElementById('podrazdel') ); },
 	    success: function(data){ $('#podrazdel').html( txt + data ); }
@@ -208,7 +206,7 @@ function icon(classes,data) {
 	return '<span class="icon '+classes+'" data-icon="'+data+'" style="display: inline-block; "><span aria-hidden="true">'+data+'</span></span>';
 }
 function razdel(id, sort, re, txt) {
-	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : 'html',
 	    data: {'func': 'razdel', 'id': id, 'string': re+'*@%'+sort},
 	    beforeSend: function(){ new Spinner().spin( document.getElementById('podrazdel') ); },
 	    success: function(data){ $('#podrazdel').html(txt + data + '<hr>'); }
@@ -216,20 +214,20 @@ function razdel(id, sort, re, txt) {
 }
 function add_papka(id,pages) {
 	if (pages==0) pages = 'add_papka'; else pages = 'add_pages';
-	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : 'html',
 	    data: {'func': pages, 'id': id},
 	    success: function(data){ $('#add').show().html(data); }
 	});
 }
 function save_papka(id,title,parent,name,pages) {
 	if (pages==0) pages = 'addpapka'; else pages = 'addpages';
-	$.ajax({ url: 'ad/ad-ajax.php', type: "POST", cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', type: "POST", cache: false, dataType : 'html',
 	    data: {'func': pages, 'id': id, 'string': title+'*@%'+parent },
 	    success: function(data){ $('#add').hide(); razdel_show(data,id,name,'pages',(Math.floor( Math.random() * (100000 - 9) ) + 10)); }
 	});
 }
 function offpage(id,on) {
-	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : 'html',
 	    data: {'func': 'offpage', 'id': id },
 	    success: function(data){
 	    	if (on == 1) $('#1page'+id).html('<td colspan="4" class="notice success"><h2 class="center">Страница включена</h2></td>');
@@ -250,28 +248,28 @@ function openbox(id,name,type) {
 	if (name == 'Добавленное посетителями') add = 'Эти страницы нуждаются в проверке и включении.<br><br>';
 	if (name == 'Новое и отредактированное') add = 'История последних изменений<br><br>';
 	if (type != 'add') type = 'podrazdel';
-	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : 'html',
 	    data: {'func': 'opengarbage', 'id': id},
 	    beforeSend: function(){ new Spinner().spin( document.getElementById(type) ); },
 	    success: function(data){ $('#'+type).html('<h1>'+name+'</h1>'+add+data); $('#'+type).show(); }
 	});
 }
 function delslovo(id) {
-	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : 'html',
 	    data: {'func': 'delslovo', 'id': id},
 	    beforeSend: function(){ new Spinner().spin( document.getElementById('s_'+id) ); },
 	    success: function(data){ $('#s_'+id).html(' <b class="green">Удалено</b>'); }
 	});
 }
 function del_csv(id) {
-	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : 'html',
 	    data: {'func': 'del_csv', 'id': id},
 	    beforeSend: function(){ $('#id_'+id).html('<td colspan="4"></td><td>Удаляю...</td>'); },
 	    success: function(data){ $('#id_'+id).html('<td colspan="5"><div class="notice error">Файл удален</div></td>'); }
 	});
 }
 function delpage(id) {
-	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : 'html',
 	    data: {'func': 'delpage', 'id': id}
 	});
 	$('#page'+id).hide();
@@ -279,63 +277,63 @@ function delpage(id) {
 	$('#openbox1').show().addClass('orange');
 }
 function deletepage(id) {
-	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : 'html',
 	    data: {'func': 'deletepage', 'id': id}
 	});
 	$('#delpage'+id).hide();
 	$('#backuppage'+id).hide();
 }
 function resetpage(id) {
-	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : 'html',
 	    data: {'func': 'resetpage', 'id': id }
 	});
 	$('#delpage'+id).html('<td colspan="3" class="notice success"><h2 class="center">Страница успешно восстановлена</h2></td>');
 	$('#backuppage'+id).html('<td colspan="3" class="notice success"><h2 class="center">Оригинал страницы заменен на резервную копию</h2></td>');
 }
 function delcomm(id) {
-	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : 'html',
 	    data: {'func': 'delcomm', 'id': id },
-	    beforeSend: function(){ $('#1comm'+id).hide(); $('#comm'+id).hide(); },
+	    beforeSend: function(){ $('#1comm'+id).hide(); $('#comm'+id).hide(); }
 	});
 }
 function del_file(file, id) {
-	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : 'html',
 	    data: {'func': 'delfile', 'type': file },
 	    beforeSend: function(){ $('#file'+id).html(' Удаляю...'); },
 	    success: function(data){ $('#file'+id).hide(); }
 	});
 }
 function delblock(id,type) {
-	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : 'html',
 	    data: {'func': 'delblock', 'id': id, 'type': type },
-	    beforeSend: function(){ $('#block_'+id).hide(); },
+	    beforeSend: function(){ $('#block_'+id).hide(); }
 	});
 }
 function delspisok(id) {
-	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : 'html',
 	    data: {'func': 'delspisok', 'id': id },
-	    beforeSend: function(){ $('#block_'+id).hide(); },
+	    beforeSend: function(){ $('#block_'+id).hide(); }
 	});
 }
 function offblock(id) {
-	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : 'html',
 	    data: {'func': 'offblock', 'id': id },
 	    success: function(data){ $('#block_'+id).html(data); }
 	});
 }
 function offcomm(id) {
-	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : 'html',
 	    data: {'func': 'offcomm', 'id': id },
 	    success: function(data){ $('#1comm'+id).html(data); $('#comm'+id).hide(); }
 	});
 }
 function delrazdel(id) {
-	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : 'html',
 	    data: {'func': 'delrazdel', 'id': id }
 	});
 }
 function rep(id,type,razdel,papka) {
-	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : 'html',
 	    data: {'func': 'rep', 'type': type, 'id': id, 'string': papka+'*@%'+razdel },
 	    beforeSend: function(){ new Spinner().spin( document.getElementById('rep'+id) ); },
 	    success: function(data){ $('#rep'+id).html(data); if (type == 3) $('#page'+id).hide('slow'); }
@@ -345,14 +343,14 @@ function clo(pid) {
 	document.getElementById('pid'+pid).innerHTML = '';
 }
 function izmenapapka(select,papka,this_cid,id,type) {
-	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : 'html',
 	    data: {'func': 'izmenapapka', 'id': id, 'type': type, 'string': select+'*@%'+papka+'*@%'+this_cid },
 	    beforeSend: function(){ new Spinner().spin( document.getElementById('izmenapapka'+id) ); },
 	    success: function(data){ $('#izmenapapka'+id).html(data); }
 	});
 }
 function delpapka(id) {
-	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : "html",
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : 'html',
 	    data: {'func': 'delpapka', 'id': id },
 	    beforeSend: function(){ $('#cid'+id).hide(); }
 	});
@@ -385,7 +383,7 @@ function show_animate(obj) {
 function del_space(str){
 	var arr={' ':'_', '&':'_and_'};
 	var replacer=function(a){return arr[a]||a};
-	return str.replace(/./gi,replacer) // 34234234 sdfsdf   947586!@#$%^&?=*(;:,.«»
+	return str.replace(/./gi,replacer);
 }
 
 // функция транслита
@@ -426,3 +424,12 @@ jQuery.fn.extend({
         })
     }
 });
+
+// плагиат - функция его поиска для страниц
+function plagiat() {
+	$.ajax({ url: 'ad/ad-ajax.php', type: "POST", cache: false, dataType : 'html',
+	    data: {'func': 'plagiat', 'string': $('#open_text').val() + $('#main_text').val() },
+	    beforeSend: function(){ $('#plagiat').show(); new Spinner().spin( document.getElementById('plagiat') ); },
+	    success: function(data){ $('#plagiat').html(data); }
+	});
+}

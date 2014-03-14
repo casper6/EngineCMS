@@ -22,24 +22,40 @@ function base_base($name) {
     $row = $db->sql_fetchrow($result);
     $module_id = $row['id']; // номер раздела
     $module_title = $row['title']; // Название раздела
-    $module_options = explode("|",$row['text']); $module_options = $module_options[1]; 
+    //$module_options = explode("|",$row['text']); 
+    //$module_options = $module_options[1]; 
+    $module_options = explode("|",$row['text']); 
+    $module_options = str_replace($module_options[0]."|", "", $row['text']);
     $base = 0;
     $lim = 200; // Настройка кол-ва выводимых элементов по-умолчанию.
     parse_str($module_options); // Настройки раздела
     $offset = $p * $lim;
 
-    $sql = "SELECT `name`, `title`, `text` FROM ".$prefix."_mainpage where `id`='".$base."'";
+    $sql = "SELECT `name`, `title`, `text` FROM ".$prefix."_mainpage where `id`='".$base."' and `type`='5'";
     $result = $db->sql_query($sql);
     $row = $db->sql_fetchrow($result);
     $baza_title  = $row['title']; // Название БД
-    $baza_options  = $row['text']; 
+    //$baza_options  = $row['text']; 
+    $baza_options = explode("|",$row['text']); 
+    $baza_options = str_replace($baza_options[0]."|", "", $row['text']);
     $baza_name  = $row['name']; // Название таблицы БД 
     $type = 2; // Тип базы данных
+    $status = "Удалено|#fcccd7#!#Утверждено|#dddddd#!#Проверить|#eeeeee#!#В_работе|#ffffff";
+    // Значение статуса: Название|цвет
     $del_stroka = 1; // Удаление строки
     $edit_stroka = 1; // Редактирование строки
     $num_day_stroka = 0; // Ограничение кол-ва вносимых каждый день строк
     $message = ""; // Дополнительные сообщения
+    //echo $baza_options;
     parse_str($baza_options);
+    $status_color = $status_name = array();
+    //echo $status;
+    $status = explode("#!#", $status);
+    foreach ($status as $value) {
+        $s = explode("|", $value);
+        $status_color[] = $s[1];
+        $status_name[] = $s[0];
+    }
 
     $where = array();
 
@@ -272,7 +288,7 @@ function base_base($name) {
                 $show_all_button = "";
             }
             echo "<div class='block noprint".$hide_search."' id='base_search'>".close_button('base_search').$show_all_button."
-            <p><span class=h2>Поиск:</span> <input type=text id=\"f_search\" name=\"search_sort\" value=\"".$search_sort2."\" placeholder='".$search_sort3."' size=30><a class='button small' href='#' onClick=\"location='".$main_url."&search_sort=' + document.getElementById('f_search').value\">Найти</a>";
+            <p class='noprint'><span class=h2>Поиск:</span> <input type=text id=\"f_search\" name=\"search_sort\" value=\"".$search_sort2."\" placeholder='".$search_sort3."' size=30><a class='button small' href='#' onClick=\"location='".$main_url."&search_sort=' + document.getElementById('f_search').value\">Найти</a>";
         $another_tables = array();
 
         foreach ($type_names as $type_name) {
@@ -303,20 +319,19 @@ function base_base($name) {
                         $( \"#f_".$value."\" ).datepicker({ numberOfMonths: 1, changeMonth: true, changeYear: true, dateFormat: \"d MM yy\", showAnim: 'slide' }); 
                         $( \"#ff_".$value."\" ).datepicker({ numberOfMonths: 1, changeMonth: true, changeYear: true, dateFormat: \"d MM yy\", showAnim: 'slide' }); 
                     });</script>
-                    <p><strong>".$filters_name[$key].":</strong><br><INPUT type=text name=\"text\" id=\"f_".$value."\" value='".$show[$value]."' readonly=1 size=15 onmouseover=\"this.style.background=&#39;#dddddd&#39;\" onmouseout=\"this.style.background=&#39;&#39;\" style='cursor:pointer; width:130px;'> <a class='button small' href='#' onClick=\"location='".$main_url."&show[".$value."]=' + document.getElementById('f_".$value."').value\">Показать дату</a>
+                    <p class='noprint'><strong>".$filters_name[$key].":</strong><br><INPUT type=text name=\"text\" id=\"f_".$value."\" value='".$show[$value]."' readonly=1 size=15 onmouseover=\"this.style.background=&#39;#dddddd&#39;\" onmouseout=\"this.style.background=&#39;&#39;\" style='cursor:pointer; width:130px;'> <a class='button small' href='#' onClick=\"location='".$main_url."&show[".$value."]=' + document.getElementById('f_".$value."').value\">Показать дату</a>
                     <nobr>по <INPUT type=text name=\"text\" id=\"ff_".$value."\" value='".$show2[$value]."' readonly=1 size=15 onmouseover=\"this.style.background=&#39;#dddddd&#39;\" onmouseout=\"this.style.background=&#39;&#39;\" style='cursor:pointer; width:130px;'> <a class='button small' href='#' onClick=\"location='".$main_url."&show[".$value."]=' + $('#f_".$value."').val() + '-' + $('#ff_".$value."').val()\">Показать диапазон дат</a></nobr>";
                 } elseif ( $type_names[$key] == 'строка' || $type_names[$key] == 'список' || mb_stripos(" ".$type_names[$key], 'table|')) {
                     if (!isset($show[$value])) $show[$value] = "= выберите =";
                     elseif (mb_stripos(" ".$type_names[$key], 'table|')) $show[$value] = $another_tables[ $type_names[$key] ][ $show[$value] ];
-                    echo "<p><strong>".$filters_name[$key].":</strong><br>".vybor_stroka($baza_name, "f_".$value."", $value, $show[$value], 250, $another_tables, $type_names[$key])." <a class='button small' href='#' onClick=\"location='".$main_url."&show[".$value."]=' + document.getElementById('f_".$value."').value\">Показать</a>";
+                    echo "<p class='noprint'><strong>".$filters_name[$key].":</strong><br>".vybor_stroka($baza_name, "f_".$value."", $value, $show[$value], 250, $another_tables, $type_names[$key])." <a class='button small' href='#' onClick=\"location='".$main_url."&show[".$value."]=' + document.getElementById('f_".$value."').value\">Показать</a>";
                 } else {
                     if (!isset($show[$value])) $show[$value] = "";
-                    echo "<p><strong>".$filters_name[$key].":</strong><br>".input("f_".$value."", $show[$value], 30, 'input', " id=\"f_".$value."\"")." <a class='button small' href='#' onClick=\"location='".$main_url."&show[".$value."]=' + $('#f_".$value."').val();\">Показать</a>";
+                    echo "<p class='noprint'><strong>".$filters_name[$key].":</strong><br>".input("f_".$value."", $show[$value], 30, 'input', " id=\"f_".$value."\"")." <a class='button small' href='#' onClick=\"location='".$main_url."&show[".$value."]=' + $('#f_".$value."').val();\">Показать</a>";
                 }
             }
         }
-        echo "<p><strong>Интервал&nbsp;(№):</strong><br>
-        <input type=text id=\"f_interval\" name=\"interval_sort\" value=\"".$interval_sort2."\" placeholder='".$interval_sort3."' size=6> <a class='button small' href='#' onClick=\"location='".$main_url."&interval_sort=' + document.getElementById('f_interval').value\">Показать</a>&nbsp; Пример: «23-45» или «34» (если от цифры до конца)</td>
+        echo "<p class='noprint'><strong>Интервал&nbsp;(№):</strong><br><input type=text id=\"f_interval\" name=\"interval_sort\" value=\"".$interval_sort2."\" placeholder='".$interval_sort3."' size=6> <a class='button small' href='#' onClick=\"location='".$main_url."&interval_sort=' + document.getElementById('f_interval').value\">Показать</a>&nbsp; Пример: «23-45» или «34» (если от цифры до конца)</td>
         </div>";
 
         $date_now1 = date("Y-m-d");
@@ -350,7 +365,7 @@ function base_base($name) {
     if ($doc=="") echo "<div class='radius_top noprint' style='float:left;min-width:500;background:#333333;text-align:center; height:17px; margin-left:50px; overflow:hidden;'>".base_links($numrows,$p,$main_url."&p=",$lim,"top")."</div>";
 
 
-    echo "<table class='table_light w100'><tr valign=top class='block'><td class='noprint' title='Статус (Активность)' width=60><span class=\"icon gray small\" data-icon=\"W\"></span> ".$link_active."</td><td><b>№</b>".$link_id."</td><td>".$rus_names."</td>";
+    echo "<table class='table_light w100'><tr valign=top class='block'><td class='noprint' title='Статус (Активность)' width=120><span class=\"icon gray small\" data-icon=\"W\"></span>Статус".$link_active."</td><td><b>№</b>".$link_id."</td><td>".$rus_names."</td>";
     foreach ($names as $row3) {
         if (!in_array($row3, $names)) {
             switch ($row3) {
@@ -365,18 +380,12 @@ function base_base($name) {
     }
     if ($doc=="") echo "<td class='noprint'></td></tr>";
 
-    	$sql = "SELECT * FROM ".$prefix."_base_".$baza_name." ".$where."".$order." limit $offset,".$lim;
-    	$result = $db->sql_query($sql) or die("SELECT * FROM ".$prefix."_base_".$baza_name." ".$where."".$order." limit $offset,".$lim);
-    	while ($row = $db->sql_fetchrow($result)) {
-
+	$sql = "SELECT * FROM ".$prefix."_base_".$baza_name." ".$where."".$order." limit $offset,".$lim;
+	$result = $db->sql_query($sql) or die("SELECT * FROM ".$prefix."_base_".$baza_name." ".$where."".$order." limit $offset,".$lim);
+	while ($row = $db->sql_fetchrow($result)) {
     	$base_id = $row['id'];
-    	switch ($row['active']) {
-            case "0": $base_active="<span title='Удалено' class=\"icon red small\" data-icon=\"Q\"></span>"; $color="#FCCCD7"; break;
-            case "1": $base_active="<a href='sys.php?op=base_base_edit_base&name=".$name."&base=".$baza_name."&red=1&id=".$base_id."'><span title='Утверждено' class=\"icon gray small\" data-icon=\"X\"></span></a>"; $color="#dddddd"; break;
-            case "2": $base_active="<span title='Проверить!' class=\"icon orange small\" data-icon=\"?\"></span>"; $color="#eeeeee"; break;
-            case "3": $base_active="<span title='В работе' class=\"icon green small\" data-icon=\"c\"></span>"; $color="#ffffff"; break;
-    	}
-
+        $base_active = $status_name[ $row['active'] ]; 
+        $color = $status_color[ $row['active'] ];
     	echo "<tr bgcolor=".$color." class='tr_hover tr".$base_id."'><td class='noprint'><a style='cursor:pointer; float:left;' onclick=\"$('.tr".$base_id."').toggleClass('tr_hide noprint');\"><span class=\"icon black small left3\" data-icon=\"x\"></span></a>".$base_active."</td>";
     	for ($x=0; $x < $pass_num+1; $x++) {
             if ($x !=0 and $type_names[$x-1]=="дата") {
@@ -406,9 +415,8 @@ function base_base($name) {
         } else echo "<td class='noprint'><span class=\"icon gray small\" data-icon=\"X\" title=\"Нельзя удалять и редактировать! Информация закрыта\"></span></td>";
         echo "</tr>";
         
-    	}
-    	echo "</table>
-        <p class='noprint'><span class=\"icon black small left3\" data-icon=\"x\"></span> — при нажатии строка не будет выведена при печати.";
+    }
+    echo "</table><p class='noprint'><span class=\"icon black small left3\" data-icon=\"x\"></span> — при нажатии строка не будет выведена при печати.";
 
 
     if ($doc=="") echo "<div class='radius_bottom noprint' style='min-width:500px;margin-right:50px;background:#333333;float:right;text-align:center;'>".base_links($numrows,$p,$main_url."&p=",$lim,"bottom")."</div><br>";
@@ -439,8 +447,20 @@ function base_base_edit_base($id, $base, $name, $red=0) {
     // Верстаем данные, которые заносятся в таблицу
     $text = explode("|",$row2['text']); 
     $text = str_replace($text[0]."|", "", $row2['text']);
-    $message = "";
+    $status = "Удалено|#fcccd7#!#Утверждено|#dddddd#!#Проверить|#eeeeee#!#В_работе|#ffffff";
+    // Значение статуса: Название|цвет
+    $message = ""; // Дополнительные сообщения
     parse_str($text);
+    $status_name = $status_int = array();
+    $status = explode("#!#", $status);
+    $i = 0;
+    foreach ($status as $value) {
+        $s = explode("|", $value);
+        $status_name[] = $s[0];
+        $status_int[] = $i;
+        $i++;
+    }
+
     $options = explode("/!/",$options); // $!$  ранее *
     $n = count($options);
 
@@ -603,25 +623,13 @@ function base_base_edit_base($id, $base, $name, $red=0) {
                 }
             }
 
-    if ($row['active']==0) $sel0=" selected";
-    if ($row['active']==1) $sel1=" selected";
-    if ($row['active']==2) $sel2=" selected";
-    if ($row['active']==3) $sel3=" selected";
 
     if (!isset($alerts)) $alerts = "";
-    if (!isset($sel0)) $sel0 = "";
-    if (!isset($sel1)) $sel1 = "";
-    if (!isset($sel2)) $sel2 = "";
-    if (!isset($sel3)) $sel3 = "";
+
     echo "<br><br>
     </td><td width=150>
     <input type=submit value='Сохранить\nизменения' style='width:100%; height:55px; font-size: 20px;' onClick=\" al=''; ".$alerts." if (al) { alert(al); return false; } else { submit(); } \"><br><br><b>Статус:</b><br>
-    <select name=active size=4>
-    <option value='0'".$sel0.">Удалено</option>
-    <option value='1'".$sel1.">Утверждено</option>
-    <option value='2'".$sel2.">Проверить!</option>
-    <option value='3'".$sel3.">В работе</option>
-    </select>
+    ".select("active",implode(',',$status_int),implode(',',$status_name), $row['active'], " size=4")."
     </td></tr></table>
     <input type='hidden' name='op' value='base_base_edit_sv_base'>
     <input type='hidden' name='id' value='".$id."'>
@@ -646,8 +654,20 @@ function base_base_create_base($base, $name, $red=0) {
     // Верстаем данные, которые заносятся в таблицу
     $text = explode("|",$row2['text']); 
     $text = str_replace($text[0]."|", "", $row2['text']); 
-    $message = "";
+    $status = "Удалено|#fcccd7#!#Утверждено|#dddddd#!#Проверить|#eeeeee#!#В_работе|#ffffff";
+    // Значение статуса: Название|цвет
+    $message = ""; // Дополнительные сообщения
     parse_str($text);
+    $status_name = $status_int = array();
+    $status = explode("#!#", $status);
+    $i = 0;
+    foreach ($status as $value) {
+        $s = explode("|", $value);
+        $status_name[] = $s[0];
+        $status_int[] = $i;
+        $i++;
+    }
+
     $options = explode("/!/",$options); // $!$  ранее *
     $n = count($options);
 
@@ -811,22 +831,11 @@ function base_base_create_base($base, $name, $red=0) {
                     break;
                 }
             }
-    }   
-    $sel3 = "";
-    $opt1 = "";
-    if ($type==1 or $type==3) $sel3 = " selected"; // Магазин
-    if ($type==1 or $type==2) $opt1 = "<option value=\"1\" selected style=\"background:#dddddd;\">Утверждено</option>"; // Магазин
-    if ($type==2) $sel3 = " selected"; // Магазин
-
+    }
     echo "<br><br>
-
     </td><td width=150>
-    <input type=submit value='Сохранить\nстроку' style='width:100%; height:55px; font-size: 20px;' onClick=\" al=''; ".$alerts." if (al) { alert(al); return false; } else { submit(); } \"><br><br><b>Статус:</b><br><select name=active>
-    <option value=\"0\" style=\"background:#FF9966;\">Удалено</option>
-    ".$opt1."
-    <option value=\"2\" style=\"background:#eeeeee;\">Проверить!</option>
-    <option value=\"3\"".$sel3." style=\"background:#ffffff;\">В работе</option>
-    </select>
+    <input type=submit value='Сохранить\nстроку' style='width:100%; height:55px; font-size: 20px;' onClick=\" al=''; ".$alerts." if (al) { alert(al); return false; } else { submit(); } \"><br><br><b>Статус:</b><br>
+    ".select("active",implode(',',$status_int),implode(',',$status_name), '3')."
     </td></tr></table>
     <input type=hidden name=op value=base_base_edit_sv_base>
     <input type=hidden name=id value=0>
@@ -982,6 +991,7 @@ function vybor_stroka($base, $name, $stroka, $now="выберите", $width=200
         break;
 
         case "base_base_delit_base":
+            if (!isset($ok)) $ok = 0;
             base_base_delit_base($base, $name, $id, $ok);
         break;
 

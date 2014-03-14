@@ -131,8 +131,8 @@ if ($row['realadmin'] == 1) {
 		//$tables = mysql_list_tables($dbname);
 		
 		// замена функции
-		$sql = "SHOW TABLES FROM ".$dbname;
-		$tables = mysql_query($sql) or die ("Ошибка: Не могу получить базу данных");
+		$sql = "SHOW TABLES FROM `".$dbname."`;";
+		$tables = mysql_query($sql) or die ("Ошибка: Не могу получить базу данных ".$dbname);
 
 		$num_tables = @mysql_numrows($tables);
 		if($num_tables == 0) {

@@ -12,6 +12,8 @@ $db->sql_query("select `meta_title` from `".$prefix."_pages`;") or $db->sql_quer
 
 $db->sql_query("select `class` from `".$prefix."_pages_comments`;") or $db->sql_query("alter table `".$prefix."_pages_comments` add `class` varchar( 1000 ) not null ;");
 
+$db->sql_query("select `close_date` from `".$prefix."_pages`;") or $db->sql_query("alter table `".$prefix."_pages` add `close_date` date DEFAULT '0000-00-00' ;");
+
 // удаляем файл обновления
 unlink('update.php');
 

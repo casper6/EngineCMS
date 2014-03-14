@@ -8,6 +8,38 @@ if (is_admin($admin)) {
   if (isset($_REQUEST['id']))     $id = intval($_REQUEST['id']); else $id = 0;
   if (isset($_REQUEST['string'])) $string = $_REQUEST['string']; else $string = "";
   ######################################################################################
+if ($func == "plagiat") {
+  //$str = filter_var($_POST['data'], FILTER_SANITIZE_SPECIAL_CHARS);
+  $str2 = str_replace("   ", " ", str_replace("  ", " ", str_replace(array('&hellip;','...','.',':',';','!','?','(',')'), ",", strip_tags($string))));
+  $arr = explode(',',$str2);
+  $i = 0; 
+  $zapros = array();
+  foreach($arr as $fraza) {
+    $n = explode(' ',trim($fraza));
+    if ( count($n) > 3 ) $zapros[$i] = trim($fraza);
+    $i++;
+  }
+  sort($zapros);
+  $res = pars_xml($zapros);
+  $i = $err = 0;
+  foreach($res as $page) {
+    $doc = new DOMDocument();
+    $doc->loadXML($page);
+    $passages = $doc->getElementsByTagName("passage");
+    $passages = $passages->item(0);
+    if (isset($passages->textContent)) {
+      $t = $passages->textContent;
+      if (mb_substr_count(mb_convert_case(strip_tags($t), MB_CASE_LOWER), mb_convert_case($zapros[$i], MB_CASE_LOWER)) > 0)
+        $string = str_ireplace($zapros[$i], "<font color='red'>".$zapros[$i]."</font>", $string);
+    } else $err++;
+    $i++;
+  }
+  echo "".close_button('plagiat')."<h1>Похожие на плагиат словосочетания выделены <span style='color:red;'>красным</span>.</h1>";
+  if ($err > 1) echo "<h2 class='notice error'>Запрос на наличие плагиата не удался. Повторите попытку через 1 час.</h2>";
+  echo $string;
+  exit;
+}
+######################################################################################
 if ($func == "mail_shablon") {
   global $add_mail_shablons;
   $add_mail_shablons1 = "";
@@ -1144,7 +1176,7 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
         if ($row6['active'] == 1) { $p_active_color = ""; $vkl_title = ""; }
         else {
           $p_active_color = " bgcolor='#dddddd'";
-          $vkl_title = "<a onclick='offpage(".$pid.",1)' class='button small' title='Включение страницы'>".icon('white small','`')."Включить</a>";
+          $vkl_title = "<a onclick='offpage(".$pid.",1)' class='button small' title='Включение страницы'>".icon('white small','`')."</a>";
         }
         $pageslistdel .= "<tr id='1page".$pid."'".$p_active_color."' class='tr_hover'><td class='".$gray_date."'><nobr>".$date."</nobr></td><td>".$m_title."</td><td>".$vkl_title."</td><td>
         <a title='Удалить страницу в Удаленные' onclick='delpage(".$pid.")' class='pointer' style='float:right;'>".icon('red small','T')."</a>
@@ -1688,7 +1720,7 @@ if ($func == "razdel") { // Раздел
   if ($nopage == 1 and $nopapka == 1) {
     $list2 = "";
   } else {
-      $list2 = "<div style=\"margin-left:20px; float:right;\">
+      $list2 = "<div id=\"sort_pages\">
       <button class='small' onclick=show('sortir_page')><img src='/images/sortirovka.png'></button>
       <div id=sortir_page style='display:none;'><br>Сортировать страницы:<br>";
       // Сортировка страниц
@@ -1717,6 +1749,30 @@ function unicode_escape($str) {
     $out .= '%u'.bin2hex(mb_substr($str, $i, 1, 'UTF-16'));
   return $out;
 }
-/////////////////////////////////////////////////////////////// Размер файла
-
+///////////////////////////////////////////////////////////////
+function pars_xml($data) { // для получения уникальности страниц
+  global $yandex_user, $yandex_key;
+  $curls = array();
+  $result = array();
+  $mh = curl_multi_init();
+  $id = 0;
+  foreach ($data as $url) {
+    $curls[$id] = curl_init();
+    curl_setopt($curls[$id], CURLOPT_URL, 'http://xmlsearch.yandex.ru/xmlsearch?user='.$yandex_user.'&key='.$yandex_key.'&query='.urlencode('"'.trim($url).'"').'&page=0&sortby=rlv&groupby=attr%3Dd.mode%3Ddeep.groups-on-page%3D1');
+    curl_setopt($curls[$id], CURLOPT_HEADER,0);
+    curl_setopt($curls[$id], CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($curls[$id], CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
+      curl_multi_add_handle($mh, $curls[$id]);
+    $id++;
+  }
+  $running = null;
+  do curl_multi_exec($mh, $running);
+    while($running > 0);
+  foreach($curls as $id => $c) {
+    $result[$id] = curl_multi_getcontent($c);
+    curl_multi_remove_handle($mh, $c);
+  }
+  curl_multi_close($mh);
+  return $result;
+}
 ?>

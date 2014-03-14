@@ -60,6 +60,3 @@ php_flag magic_quotes_runtime 0
 Уменьшение «веса» CMS «ДвижОк». Какие файлы необязательны? Можно удалить:
 - папка includes/regions поставляется в архиве includes/regions.zip (2 Мб) - не нужна, если вы не собираетесь использовать выбор регионов при создании дополнительных полей и где-либо на сайте
 - папка install – удаляется автоматически после установки
-
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/dveezhok/enginecms/trend.png)](http://karta63.ru "Bitdeli Badge")

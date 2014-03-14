@@ -73,29 +73,14 @@ function parser_main() {
 	<div id='pardiv3'>
 		<table width='100%'><tr valign=top><td width='33%'>
 		<h1>Настройка для Яндекса</h1>
-		<table class='table_light'><tr><td>
-		Логин</td><td><input id='par4' type='text' value='".$PCon[0]."'></td></tr>
-		<tr><td>Kлюч (key)</td><td><input id='par5' type='text' value='".$PCon[1]."'></td></tr>
+		<table class='table_light'>
 		<tr><td>Брать первые</td><td>
-		<select id='par17'>
-		<option value='".$PCon[7]."'>".$PCon[7]."</option>
-		<option value='10'>10</option>
-		<option value='20'>20</option>
-		<option value='30'>30</option>
-		<option value='40'>40</option>
-		<option value='50'>50</option>
-		<option value='60'>60</option>
-		<option value='70'>70</option>
-		<option value='80'>80</option>
-		<option value='90'>90</option>
-		<option value='100'>100</option>
-		</select> сайтов
+		".select("par17", "10,20,30,40,50,60,70,80,90,100", "10,20,30,40,50,60,70,80,90,100", $PCon[7], " style='width:70px;'")." сайтов
 		</td></tr><tr><td>
-		Искать</td><td><select id='par110'>";
+		Искать</td><td>";
 		$vs = $db->sql_numrows($db->sql_query("SELECT id FROM ".$prefix."_parser where `class`='1'"));
-		if ( $PCon[10] == 1 ) echo "<option value='1'>Любые тексты</option><option value='2'>Только статьи</option>"; else echo "<option value='2'>Только статьи</option><option value='1'>Любые тексты</option>";
-		echo "</select></td></tr>
-		<tr><td>Ваш IP:</td><td>".$_SERVER['SERVER_ADDR']."<br>введите его в <a target='_blank' href='http://xml.yandex.ru/settings.xml'>Яндекс XML</a></td></tr>
+		
+		echo "".select("par110", "1,2", "Любые тексты,Только статьи", $PCon[10], " style='width:160px;'")."</td></tr>
 		<tr><td></td><td><input type='submit' onClick='parser(4)' value='Сохранить Настройки'></td></tr>
 		<tr><td>Осталось промежуточных записей</td><td>".$vs."</td></tr>
 		<tr><td>
@@ -123,7 +108,7 @@ function parser_main() {
 		Найти фразу</td><td>и поставить ссылку</td></tr></table>
 		<textarea id='par10' style='width: 100%; height: 220px;'>Наша фраза|http://site.ru</textarea>
 		<input type='submit' onClick='parser(6)' value='Добавить'>
-		<div id='parlisturl'><table class='table_light'><tr><td></td><td>Фраза</td><td>Ссылка</td><td>Раз поставили</td><td></td></tr>";
+		<div id='parlisturl'><table class='table_light'><tr><td></td><td>Фраза</td><td>Ссылка</td><td>Сколько поставили</td><td></td></tr>";
 		$res2 = $db->sql_query("SELECT * FROM ".$prefix."_parser  where `class`='zamena'");
 		$i = 1;
 		while ($row = $db->sql_fetchrow($res2)) {
@@ -141,6 +126,7 @@ function parser_main() {
 
 // input[name=myname] - селектор для name
 function parser_js() {
+	global $yandex_user, $yandex_key;
 	// function parser
 	// 1 - добавляем url-ы
 	// 2 - сканируем сайт
@@ -182,7 +168,7 @@ function parser_js() {
 		if ( action == 1) { var data1 =document.getElementById('par1').value; }
 		if ( action == 2) { var data1 =document.getElementById('par2').value; }
 		if ( action == 3) { var data1 =document.getElementById('par3').value; }
-		if ( action == 4) { var configpar = document.getElementById('par4').value+']['+document.getElementById('par5').value+']['+parseInt($('select#par12').val(),10)+']['+parseInt($('select[name=par13]').val(),10)+']['+parseInt($('select[name=par6]').val(),10)+']['+parseInt($('select[name=par7]').val(),10)+']['+parseInt($('select[name=par9]').val(),10)+']['+parseInt($('select#par17').val(),10)+']['+parseInt($('select[name=par18]').val(),10)+']['+parseInt($('select[name=par19]').val(),10)+']['+parseInt($('select#par110').val(),10); }
+		if ( action == 4) { var configpar = ".$yandex_user."+']['+".$yandex_key."+']['+parseInt($('select#par12').val(),10)+']['+parseInt($('select[name=par13]').val(),10)+']['+parseInt($('select[name=par6]').val(),10)+']['+parseInt($('select[name=par7]').val(),10)+']['+parseInt($('select[name=par9]').val(),10)+']['+parseInt($('select#par17').val(),10)+']['+parseInt($('select[name=par18]').val(),10)+']['+parseInt($('select[name=par19]').val(),10)+']['+parseInt($('select#par110').val(),10); }
 		if ( action == 6) { var data1 =document.getElementById('par10').value;  }
 		if ( action == 7) { var data1 =document.getElementById('par21').value;  }
 		xps = new XMLHttpRequest();

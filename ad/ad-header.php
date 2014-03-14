@@ -36,46 +36,38 @@ echo "<!doctype html>
 <meta name='viewport' content='width=device-width'>
 <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
 <link rel='shortcut icon' href='images/favicon_cms.png' type='image/x-icon'>
-<script src='/includes/jquery-2.0.0.js'></script>
-<script src='/includes/jquery-migrate-1.1.1.js'></script>
-<script src='includes/jquery-ui-datepicker-ru.js'></script>
-<script src='includes/css-frameworks/kickstart/js/ad-kickstart.js'></script>
 <script>var clean_urls=".$clean_urls.";</script>
-<script src='includes/jad.js'></script>
-<script src='includes/j.js'></script>
-<script src='includes/jquery-ui.min.js'></script>
-<script src='includes/jquery-ui-i18n.min.js'></script> 
-<script src='includes/jquery.innerfade.js'></script>
-<script src='includes/jquery.tag-it.min.js'></script>
-<link rel='stylesheet' href='includes/jquery.tagit.css'>
-
-<link href='http://fonts.googleapis.com/css?family=Poiret+One&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
-
-<link rel='stylesheet' href='includes/jquery-ui.css'>
+<script src='/includes/jquery.compress.js'></script>
+<script src='includes/css-frameworks/kickstart/js/ad-kickstart.compress.js'></script>
 <!--[if lt IE 9]><script src='includes/html5.js'></script><![endif]-->
-<link rel='stylesheet' href='engine.css'>
-<link rel='stylesheet' href='includes/css-frameworks/kickstart/css/ad-kickstart.css'>
-<link rel='stylesheet' href='includes/css-frameworks/kickstart/css/kickstart-forms.css'>
-<link rel='stylesheet' href='includes/css-frameworks/kickstart/css/kickstart-icons.css'>
-<link rel='stylesheet' href='includes/css-frameworks/kickstart/css/kickstart-buttons.css'>
-<link rel='stylesheet' href='includes/css-frameworks/kickstart/css/kickstart-menus.css'>
-";
+<link rel='stylesheet' href='includes/jquery.compress.css'>
+<link rel='stylesheet' href='engine.compress.css'>
+<link rel='stylesheet' href='includes/css-frameworks/kickstart/css/ad-kickstart.compress.css'>";
+/* 
+jquery-2.0.0.js
+jquery-migrate-1.1.1.js
+jquery-ui-datepicker-ru.js
+jad.js
+j.js
+jquery-ui.min.js
+jquery-ui-i18n-min.js - не используется, оставлен русский язык
+jquery.innerfade.js - слайдер, не используется
+jquery.tag-it.min.js
+spin.js
 
+jquery.compress.css
+includes/jquery.tagit.css
+includes/jquery-ui.css
+
+ad-kickstart.compress.css = 
+	ad-kickstart.css
+	kickstart-icons.css
+	kickstart-forms.css
+	kickstart-menus.css
+	kickstart-buttons.css
+*/
 if ($lang_admin != 'ru') echo "<script src='language/adm_".$lang_admin.".js'></script>";
-
-if ($red==3) echo "<script src='ed/js/editor/editor.js'></script> 
-<link rel='stylesheet' href='ed/js/editor/css/editor.css' media='screen, projection' /> ";
-
-echo "<script src='includes/spin.js'></script>
-<script src='ed2/redactor.js'></script>
-<link rel='stylesheet' href='ed2/redactor.css' />
-<script src='ed2/".$lang_admin.".js'></script>
-<script src='ed2/clips.js'></script>
-<link rel='stylesheet' href='ed2/clips.css' />
-<script src='ed2/fullscreen.js'></script>
-<script src='ed2/fontcolor.js'></script>
-<script src='ed2/fontsize.js'></script>
-<script src='ed2/fontfamily.js'></script>";
+if ($red==3) echo "<script src='ed/js/editor/editor.js'></script><link rel='stylesheet' href='ed/js/editor/css/editor.css' media='screen, projection' /> ";
 
 echo "\n</head>\n<body style=\"background-color: ".$ad_fon.";\">";
 $url = getenv("REQUEST_URI");
@@ -98,12 +90,13 @@ global $buttons;
 $buttons = explode(",", aa(" Содержание, Оформление, Настройки, Статистика, ПОМОЩЬ, "));
 if ($deviceType != 'computer') $buttons = array('','','','','','');
 
-$exit_admin_button = "<a id='logout_button' class='button small' title='".aa("Выход из администрирования\n(мера безопасности)")."' href='sys.php?op=logout'><span class='icon small' data-icon='Q'></span></a>";
+$exit_admin_button = " <a id='logout_button' class='button small' title='".aa("Выход из администрирования\n(мера безопасности)")."' href='sys.php?op=logout'><span class='icon small red' data-icon='Q'></span></a>";
 
 if ($show_admin_top != "2") {
-	echo "<nobr><button id='site_button' class='small' target='_blank' onclick='window.open(\"/\")' title='".aa("Перейти на сайт (откроется в новом окне)")."'><span class='icon small' data-icon='4'></span> ".aa("На сайт")."</button> ".$post;
+	echo "<nobr><form method='post' name='search' action='search' style='display:inline;' class='nothing'><input type='search' placeholder='".aa("Поиск")."' name='slovo'></form> 
+	<button id='site_button' class='small' target='_blank' onclick='window.open(\"/\")' title='".aa("Перейти на сайт (откроется в новом окне)")."'><span class='icon small' data-icon='4'></span> ".aa("На сайт")."</button> ".$post;
 	if ($url == "/red" || $url == "/sys.php" || $url == "/sys.php?op=mes") echo "<a class='button small' onclick=\"openbox('8','".aa("Помощь")."'); $('#show_razdel').click();\" title='".aa("Открыть справочную информацию")."'><span class='icon small' data-icon='n'></span>".$buttons[4]."</a>";
-	echo " <form method='post' name='search' action='search' style='display:inline;' class='nothing'><input type='search' placeholder='".aa("Поиск по сайту")."' name='slovo' style='width:167px; height: 36px;'></form>".$exit_admin_button."</nobr></div>";
+	echo "".$exit_admin_button."</nobr></div>";
 }
 
 echo "<ul class='button-bar'>

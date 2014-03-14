@@ -129,15 +129,12 @@ input, textarea, select {
 .hide {display:none;}
 .fon {background: url(/images/fon.png);}
 
-.polosa_razdelitel {
-width:16px; padding-top: 400px; height:300px; cursor: w-resize; background: #a3a3a3;
-border-top:1px solid #dadada;
-}
+.polosa_razdelitel {width:16px; padding-top: 400px; height:300px; cursor: w-resize; background: url(/images/fon.png);}
 #rotateText {
     -moz-transform: rotate(-90deg);
     -webkit-transform: rotate(-90deg);
     -o-transform: rotate(-90deg);
-    color: #fff;
+    color: #999;
 }
 
 .ace_editor {z-index: 500;}
@@ -223,423 +220,10 @@ h2.spiski p {display: inline;}
 }
 .black_grad {
 	background: #b0b0b0;
-	border-top:1px solid #dadada;
-	border-bottom:1px solid #9f9f9f;
+	border-bottom:1px solid #a0a0a0;
 	padding-left: 5px;
-	height: 47px;
+	height: 50px;
 	min-width:290px;
-}
-
-
-/***НАСТРОЙКИ ГЛАВНОГО МЕНЮ***/
-
-ul.button-bar li {
-	border: none !important; 
-	margin:0px!important;
-	position: relative;
-	 z-index: 2;
-}
-
-ul.button-bar li.black,
-ul.button-bar li.black:hover a,
-.dark_pole2:hover,
-.openpapka:hover,
-.black_polosa {
-	background: #aeaeae !important;
-}
-ul.button-bar li a {
-     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e1e1e1', endColorstr='#d6d6d6') !important;
-	 background: -webkit-gradient(linear, left top, left bottom, from(#e1e1e1), to(#d6d6d6)) !important;
-	 background: -moz-linear-gradient(top,  #e1e1e1,  #d6d6d6) !important;
-	 background: -o-linear-gradient(top,  #e1e1e1,  #d6d6d6) !important;
-	 background: -ms-linear-gradient(top,  #e1e1e1,  #d6d6d6) !important;
-	 
-     padding:10px 14px 8px 14px !important;
-	 border-left:1px solid #eaeaea !important;
-	 border-right:1px solid #cecece !important;
-	 border-top:1px solid #f5f5f5 !important;
-	 border-bottom:1px solid #bdbdbd !important;
-	 color:#343434  !important;
-	 text-shadow: #f1f1f1 0px 1px 0px  !important;
-	 
-}
-ul.button-bar li a:hover, 
-div.nothing #site_button:hover, 
-div.nothing button.small:hover, 
-div.nothing a.button:hover, 
-button.dark_pole2:hover
-{
-	 background:#dcdcdc  !important;
-}
-.m5 button.dark_pole2:hover
-{
-	 border-top:none !important;
-	 margin:0px !important;
-	 top:5px !important;
-}
-
-.m5 button.small:hover
-{
-	 top:0px !important;
-	 margin:0px 0px 1px 0px !important;
-}
-
-
-button {
--o-transition: all 0s linear !important;
-     -moz-transition: all 0s linear !important;
-     -webkit-transition: all 0s linear !important;
-     transition: all 0s linear !important;
-}
-button:focus {
-	 -moz-box-shadow: 0 0 10px rgba(0,0,0,0.5);
-     -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.5);
-     box-shadow: none !important; 
-}
-
-
-tr.noprint a:active,
-tr.noprint button:active
-
-{
-	 border-top:1px solid #bdbdbd !important;
-	 border-left:1px solid #bdbdbd !important;
-	 -moz-box-shadow: inset 0 2px 5px rgba(0,0,0,0.2); 
-     -webkit-box-shadow: inset 0 2px 5px rgba(0,0,0,0.2); 
-     box-shadow: inset 0 2px 5px rgba(0,0,0,0.2); 
-}
-tr.noprint #site_button:active
-{
-	 border-top:1px solid #bdbdbd !important;
-}
-
-ul.button-bar li.first a {
-     border-left:none !important;
-}
-.button-bar li.last a {
-     border-right:none !important;
-}
-
-
-ul.button-bar li.black {
-	 position: relative;
-	 z-index: 2;
-}
-ul.button-bar li.black a {
-     background:#7d8084  !important;
-	 border-top:1px solid #c7c7c7 !important;
-	 border-bottom:1px solid #bdbdbd !important;
-	 border-left:none !important;
-	 border-right:none !important;
-	 text-shadow: #000 0px -1px 0px  !important;
-	 color:#fff  !important;
-}
-
-tr.noprint .icon span {
-     top:-8px  !important;
-}
-tr.noprint .icon {
-	 font-size:25px !important;
-	 color:#7d8084 !important;
-	 text-shadow: #f1f1f1 0px 1px 0px  !important;
-}
-tr.noprint .black .icon {
-	 text-shadow: #393b3d 0px -1px 0px  !important;
-	 color:#dcdcdc !important;
-}
-
-
-/***НАСТРОЙКИ ДОП МЕНЮ***/
-
-div.nothing #site_button, div.nothing button.small, div.nothing a.button, button.dark_pole2 {
-     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e1e1e1', endColorstr='#d6d6d6') !important;
-	 background: -webkit-gradient(linear, left top, left bottom, from(#e1e1e1), to(#d6d6d6)) !important;
-	 background: -moz-linear-gradient(top,  #e1e1e1,  #d6d6d6) !important;
-	 background: -o-linear-gradient(top,  #e1e1e1,  #d6d6d6) !important;
-	 background: -ms-linear-gradient(top,  #e1e1e1,  #d6d6d6) !important;
-	 
-     padding:10px 14px 8px 14px !important;
-	 border-left:1px solid #eaeaea !important;
-	 border-right:1px solid #cecece !important;
-	 border-top:1px solid #f5f5f5 !important;
-	 border-bottom:1px solid #bdbdbd !important;
-	 color:#343434  !important;
-	 text-shadow: #f1f1f1 0px 1px 0px  !important;
-	 margin:0px -5px 0px 0px  !important;
-	 font-size:14px  !important;
-	 
-	 -o-transition: all 0s linear !important;
-     -moz-transition: all 0s linear !important;
-     -webkit-transition: all 0s linear !important;
-     transition: all 0s linear !important;
-	 
-}
-button.dark_pole2 {
-     top:4px;
-	 left:2px;
-	 border-right:none;
-}
-
-.m5 button.small:hover {
-     top:-1px !important;
-}
-
-div.mt5  button.small {
-     top:-1px;
-	 left:4px;
-	 font-size:11px !important;
-	 border-radius:0px 0px 3px 3px !important;
-	 -moz-border-radius:0px 0px 3px 3px !important;
-	 -khtml-border-radius:0px 0px 3px 3px !important;
-	 z-index: 1;
-	 
-	 -moz-box-shadow: 0 0 10px rgba(0,0,0,0.5);
-     -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.5);
-     box-shadow: inset 0 3px 5px rgba(0,0,0,0.1); 
-	 
-	 
-}
-div.mt5  button.dark_pole2 {
-margin:0px 0px 0px 0px;
-}
-
-button, a{
-     -o-transition: all 0s linear !important;
-     -moz-transition: all 0s linear !important;
-     -webkit-transition: all 0s linear !important;
-     transition: all 0s linear !important;
-}
-
-div.nothing #site_button {
-     border-radius:3px 0px 0px 3px  !important;
-	 -moz-border-radius:3px 0px 0px 3px !important;
-	 -khtml-border-radius:3px 0px 0px 3px !important;
-	 border-left:none  !important;
-}
-div.nothing .small {
-     border-radius:0px  !important;
-	 -moz-border-radius:0px !important;
-	 -khtml-border-radius:0px !important;
-}
-div.nothing a.button {
-     border-radius:0px 3px 3px 0px  !important;
-	 -moz-border-radius:0px 3px 3px 0px !important;
-	 -khtml-border-radius:0px 3px 3px 0px !important;
-	 margin:0px  !important;
-}
-
-div.nothing input[type="search"] {
-     background:#ebebeb !important;
-     padding:11px 5px 11px 10px !important;
-	 width:146px !important;
-	 height:auto !important;
-	 border-radius:4px !important;
-	 -moz-border-radius:4px !important;
-	 -khtml-border-radius:4px !important;
-	 margin:0px 5px 0px 0px  !important;
-	 border:1px solid #acacac  !important;
-	 text-indent:0px;
-	 -moz-box-shadow: 0 0 2px rgba(0,0,0,0.3), 0 1px 1px #e5e5e5 ;
-     -webkit-box-shadow: 0 0 2px rgba(0,0,0,0.3), 0 1px 1px #e5e5e5;
-     box-shadow: inset 0 0 2px rgba(0,0,0,0.3), 0 1px 1px #e5e5e5;
-	 opacity:1 !important;
-	 color:#323232  !important;
-}
-
-div.nothing #logout_button {
-	 border-radius:4px !important;
-	 -moz-border-radius:4px !important;
-	 -khtml-border-radius:4px !important;
-	 border-left:none  !important;
-	 border-right:none  !important;
-}
-div.nothing #logout_button:hover span {
-	 color:#ff0000 !important;
-}
-
-
-
-/***КНОПКИ ДОБАВЛЕНИЯ РАЗДЕЛА И СТРАНИЦ***/
-
-#new_razdel_button, 
-#razdels a.button, 
-.pt5 .dark_pole2,
-#addmain
-  {
-     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e1e1e1', endColorstr='#d6d6d6'); /* for IE */
-	 background: -webkit-gradient(linear, left top, left bottom, from(#e1e1e1), to(#d6d6d6)); /* for webkit browsers */
-	 background: -moz-linear-gradient(top,  #e1e1e1,  #d6d6d6); /* for firefox 3.6+ */
-	 background: -o-linear-gradient(top,  #e1e1e1,  #d6d6d6); /* Opera 11.10+ */
-	 background: -ms-linear-gradient(top,  #e1e1e1,  #d6d6d6); /* IE10+ */
-	 
-	 padding:8px 12px 5px 12px !important;
-	 font-size:15px !important;
-	 border:1px solid #d9d9d9  !important;
-	 margin:6px 6px 0px 0px !important;
-	 -moz-box-shadow: 0 1px 1px #767676, inset 0 1px 0px #fff; 
-     -webkit-box-shadow: 0 1px 1px #767676, inset 0 1px 0px #fff; 
-     box-shadow: 0 1px 1px #767676, inset 0 1px 0px #fff; 
-	 
-	 border-radius:4px  !important;
-	 -moz-border-radius:4px !important;
-	 -khtml-border-radius:4px !important;
-}
-.black_grad #new_razdel_button {
-     margin:4px 10px 0px 0px !important;
-}
-#new_razdel_button .icon {
-	 color:#666666 !important;
-}
-
-#addmain
- {
-     margin-top:8px !important;
-}
-#addmain .icon
- {
-     top:-2px;
-}
-
-
-.f14 {  /***КОЛИЧЕСТВО СТРАНИЦ В РАЗДЕЛЕ***/
-position:relative;
-top:4px;
-}
-
-.podrazdel .m5 {
-     margin:7px !important;
-}
-.podrazdel .m5 a.button  {
-     top:4px;
-	 left:0px;
-	 border-radius:4px !important;
-	 -moz-border-radius:4px !important;
-	 -khtml-border-radius:4px !important;
-	 border-right:none !important;
-}
-.pt5 .dark_pole2 {
-     margin-top:-1px !important;
-}
-
-
-.black_grad #new_razdel_button,
- .pt5 .dark_pole2
- 
-{
-     border:1px solid #9b9b9b  !important;
-	 -moz-box-shadow: 0 1px 1px #8f8f8f, inset 0 1px 0px #fff; 
-     -webkit-box-shadow: 0 1px 1px #8f8f8f, inset 0 1px 0px #fff; 
-     box-shadow: 0 1px 1px #8f8f8f, inset 0 1px 0px #fff; 
-}
-
-.black_grad #new_razdel_button:hover,  /***ДЛЯ КНОПОК СПРАВА***/
-#razdels a.button:hover,
-.pt5 .dark_pole2:hover,
-#new_razdel_button:hover .icon,
-div.pt5 button:hover .icon,
-.mt5 .dark_pole2:hover .icon,
-#addmain:hover .icon
-{
-     background:#dbdbdb !important;
-	 color:#666666 !important;
-	 text-shadow: #fff 0px 1px 0px  !important;
-	 color:#379be8 !important;
-
-}
-.mt5 .dark_pole2:hover .icon
-{
-	 color:#343434 !important;
-
-}
-.mt5 .dark_pole2:hover
-{
-	 color:#343434 !important;
-
-}
-
-.pt5 .dark_pole2:hover  {
-     padding:8px 12px 6px 12px !important;
-}
-
-
-/***ТЕНИ КНОПОК ПРИ НАЖАТИИ***/
-.black_grad #new_razdel_button:active,
-#razdels a.button:active,
-#adminmes_save:active,
-#adminmes_date:active
-  {
-     -moz-box-shadow: inset 0 2px 5px rgba(0,0,0,0.2) !important; 
-     -webkit-box-shadow: inset 0 2px 5px rgba(0,0,0,0.2) !important; 
-     box-shadow: inset 0 2px 5px rgba(0,0,0,0.2) !important; 
-}
-
-#razdels .button  {
-     top:0px !important;
-}
-
-
-.dark_pole2 {
-     padding:2px 5px 11px 5px  !important;
-	 border-bottom:1px solid #d0d0d0 !important;
-	 border-top:1px solid #f9f9f9 !important;
-}
-.dark_pole2:hover {
-	 border-top:1px solid #aeaeae  !important;
-}
-.dark_pole2sel {
-     padding:3px 5px 12px 5px  !important;
-	 border:none !important;
-}
-
-
-
-.base_page div {
-     padding:8px 0px 0px 0px;
-}
-.icon.large {
-     font-size:25px !important;
-	 top:-6px !important;
-}
-.icon.large span {
-     margin:10px 0px 0px 0px;
-}
-
-
-
-span.icon.gray {
-	 color:#7d8084 !important;
-}
-
-
-/***СОХРАНЕНИЕ ЗАПИСОК***/
-
-#adminmes_save, #adminmes_date  {
-     background:#7cb354 !important;
-	 border-top:1px solid #fff  !important;
-	 border-bottom:1px solid #737373  !important;
-	 border-left:none  !important;
-	 border-right:none  !important;
-	 color:#fff !important;
-	 text-shadow: #507236 0px -1px 0px !important;
-	 
-	 border-radius:3px  !important;
-	 -moz-border-radius:3px !important;
-	 -khtml-border-radius:3px !important;
-}
-#adminmes_save .icon,
-#adminmes_date .icon
- {
-     top:0px;
-	 color:#fff !important;
-}
-
-#adminmes_date {
-     background:#548eba !important;
-	 text-shadow: #365a77 0px -1px 0px !important;
-}
-#adminmes {
-     width:98% !important;
-	 padding:1%;
 }
 
 .white, .white a {color: #fff;} 
@@ -669,71 +253,11 @@ div.b8f4f2 {background: #b8f4f2; border:1px solid gray;}
 }
 
 .openpage, .openpapka {
-	width: 96%;
+	width: 100%;
 	min-height: 20px;
-	padding: 5px 2% 2px 2%;
+	padding: 2px;
 }
-.openpapka:hover .openpage .pointer, 
-.openpage:hover .pointer .icon,
-.openpapka:hover .block_white .pointer .icon,
-.openpapka:hover .no .icon
-{
-color:#fff !important;
-}
-
-.block_white .openpage:hover {
-     background:#a3a3a3 !important;
-}
-
-.openpapka .icon {
-
-}
-.openpage .icon {
-
-	font-size:17px;
-}
-
-.no {
-     float:left;
-	 margin:0px 20px 0px 0px !important;
-}
-.openpapka ul.button-bar
- {
-    display: block !important;
-    margin-top:10px;
-}
-
-
-
-
-
-/***МЕНЮ У СТРАНИЦ**/
-.openpage .pointer, .openpage .red2 {
-     
-}
-.block_white .pid {
-}
-
-
-#sort_pages {
-     float:right;
-	 margin:-40px 15px 0px 0px;
-	 -o-transition: all 0.2s linear;
-     -moz-transition: all 0.2s linear;
-     -webkit-transition: all 0.2s linear;
-     transition: all 0.2s linear;
-}
-#sort_pages button.small {
-     padding: 7px 9px 5px 9px !important;
-	 border-radius:4px !important;
-	 -moz-border-radius:4px !important;
-	 -khtml-border-radius:4px !important;
-	 float:right;
-}
-
-
-
-
+.openpapka:hover .openpage .pointer {color:white;}
 
 .zagolovok { font-size: 14pt; }
 
@@ -741,14 +265,10 @@ color:#fff !important;
 
 .nobr {	white-space: nowrap;}
 
-.big_main {font-family: verdana; font-size:30px; color:#343434;}
+.big_main {font-size:30px; color:black;}
 
 h1, h2, h3 {margin:0; padding:5px; font-weight: normal;}
-.h1 {font-size: 18pt; color: #ffffff; text-shadow: 0px -1px 0px #636363 !important;
-position: relative;
-top:9px;
-	 font-family:verdana;
-}
+.h1 {font-size: 28pt; color: #ffffff; text-shadow: 0px -2px 0px rgba(0,0,0, 1) !important;}
 .h2 {font-size: 14pt; color: #333;}
 .h3 {font-size: 14pt; color: #666;}
 h1 {font-size: 21px;color:#333;}
@@ -785,7 +305,7 @@ input[type=submit]:hover {background: green; cursor:pointer;}
 
 b, .b {font-size: 1em; font-weight:bold; } /* color: #715d9d; */
 
-a {color:#444; font-weight: normal;}
+a {color:black; font-weight: normal;}
 a:hover {color:darkred;}
 
 .dark_pole2:hover {text-shadow: none !important; border-color: #7d8185;}
@@ -795,14 +315,30 @@ a:hover {color:darkred;}
 	background: #b0b0b0 !important;
 }
 
-
-
-
-
-
-
-
-
+ul.button-bar li {
+	border-top: 1px solid #f6f6f6 !important; 
+	border-bottom: 1px solid #bebebe !important; 
+	background: #e0e0e0 !important;
+}
+ul.button-bar li:hover,
+ul.button-bar li a:hover,
+ul.button-bar li.black,
+ul.button-bar li.black:hover a,
+.dark_pole2:hover,
+.openpapka:hover,
+.black_polosa {
+	background: #7d8185 !important;
+}
+ul.button-bar li a {
+	border-left: none !important; 
+	border-right: none !important; 
+}
+ul.button-bar li.black,
+ul.button-bar li.black:hover {
+	border: 1px solid #bdbfc1 !important; 
+}
+ul.button-bar li.black span {color:white;}
+ul.button-bar li.black a, ul.button-bar li:hover span, ul.button-bar li:hover a {color:white !important;}
 ul.button-bar li.black:hover a {border-bottom:none;}
 ul.button-bar li.first, ul.button-bar li.first a {
 	border-top-left-radius: 3px !important;
@@ -812,7 +348,9 @@ ul.button-bar li.last, ul.button-bar li.last a {
 	border-top-right-radius: 3px !important;
 	border-bottom-right-radius: 3px !important;
 }
-
+ul.button-bar li {
+	padding: 5px 10px !important; 
+}
 
 a.punkt {text-decoration: none;	border-bottom: 1px dashed black;}
 a.punkt img {border: 0;}
@@ -873,20 +411,7 @@ p {margin-top: 15px;margin-left: 5px;}
 	max-height:70px !important; 
 }
 
-#sortir_page {
-background:#dbdbdb;
-width:200px; 
-padding:0px 10px 10px 10px;
-margin:2px 5px 0px 0px;
-float:right; 
-border-radius:4px;
--moz-border-radius:4px;
--khtml-border-radius:4px;
--moz-box-shadow: 0 0 10px rgba(0,0,0,0.5);
-     -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.5);
-     box-shadow: 0 2px 2px rgba(0,0,0,0.2), inset 0 1px 2px #fff; 
-	 border:1px solid #ccc;
-}
+.sortir_page {width:200px; float:right; }
 
 .left {margin-right: 5px; text-decoration:underline;}
 
@@ -956,7 +481,7 @@ button, a.btn, a.btn:visited, a.button, a.button:visited, input[type="submit"], 
 	-webkit-border-radius:3px !important;
 	border-radius:3px !important;
 }
-button.small, a.btn.small, a.button.small, {
+button.small, a.btn.small, a.button.small, .dark_pole2, .dark_pole2sel {
 	padding: 10px 15px !important; 
 }
 /*~~~~~~Global Low Priority Setting ~~~~~~~~*/

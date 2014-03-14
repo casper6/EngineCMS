@@ -1,5 +1,5 @@
 <?php
-##########################################################################################
+
 function page_admin($txt, $pid) { // добавление функций админа к странице сайта
   global $db, $prefix, $module_name, $url, $name, $site_cash;
   if ( $pid > 0 ) $red = "
@@ -292,7 +292,7 @@ function help_shablon() {
     </select>
     <a title='Закрыть/Открыть справочное окно' id='show_shablon_var' class=punkt onclick=\"show_animate('shablon_var');\" style='float:right; display:none;'><div class='radius' style='font-size:12pt; width:20px; height: 20px; color: white; text-align:center; float:right; margin:5px; margin-bottom:0; background: #bbbbbb;'>&nbsp;&uarr;&nbsp;</div></a><div id=shablon_var style='display:none; width:95%; height:300px; scroll:auto;' class=block></div>";
 }
-##########################################################################################
+
 function add_file_upload_form($textarea="textarea", $textarea_show="textarea", $spisok_show = true, $redactor_id = "", $css = false) {
   $txt = "<form id='fileupload' action='includes/upload/server/php/' method='POST' enctype='multipart/form-data'>
   <label for='show_oldnames'><input type='checkbox' id='show_oldnames' checked> <b>Добавлять имя файла</b> фотографии как её описание (<i>подходит для осмысленных названий</i>)</label>
@@ -350,7 +350,7 @@ $(function () {
 </form>";
 return $txt;
 }
-##########################################################################################
+
 function redactor($type, $txt, $name, $name2="", $style="html") {
   global $add_clips, $lang_admin;
   // индексы клавиш - https://code.google.com/p/jquerykeyboard/wiki/Indexes
@@ -401,7 +401,6 @@ function redactor($type, $txt, $name, $name2="", $style="html") {
       ".$name.".getSession().setValue( $('#".$name."X').val() );
       ".$name.".getSession().setMode('ace/mode/".$style."');
       ".$name.".getSession().setUseWrapMode(true);
-
       ".$name.".getSession().setWrapLimitRange(null, null);
       ".$name.".setBehavioursEnabled(true); //auto pairing of quotes & brackets
       ".$name.".setShowPrintMargin(false);
@@ -488,8 +487,17 @@ function redactor($type, $txt, $name, $name2="", $style="html") {
     if ($ed2_button_block == "1") $add_buttons .= "this.buttonAddBefore('fullscreen','button_block', '{} — Вставка быстрой ссылки на страницу или раздел', function(buttonName, buttonDOM, buttonObj, e){this.insertHtml('{Название страницы или раздела}');});";
     if ($ed2_button_pre == "1") $add_buttons .= "this.buttonAddBefore('fullscreen','pre', '<PRE> Форматированный текст', function(buttonName, buttonDOM, buttonObj, e){this.formatBlocks('pre');});";
 
-    // iframe: true, css: 'css_20.css',
-    $echo .= "<script>
+    // iframe: true, css: 'css_20.css',   tabSpaces: 4, 
+    $echo .= "<script src='ed2/redactor.js'></script>
+<link rel='stylesheet' href='ed2/redactor.css' />
+<script src='ed2/".$lang_admin.".js'></script>
+<script src='ed2/clips.js'></script>
+<link rel='stylesheet' href='ed2/clips.css' />
+<script src='ed2/fullscreen.js'></script>
+<script src='ed2/fontcolor.js'></script>
+<script src='ed2/fontsize.js'></script>
+<script src='ed2/fontfamily.js'></script>
+<script>
     $(document).ready(function() {
       $('.redactor').redactor({
         initCallback: function(){
@@ -501,9 +509,9 @@ function redactor($type, $txt, $name, $name2="", $style="html") {
           observeLinks: true, 
           convertVideoLinks: true, 
           convertImageLinks: true,
-          tabSpaces: 4, 
           ".$ed2_paragraph.$ed2_typewriter."
           boldTag: 'b',
+          tabSpaces: false, 
           italicTag: 'i',
           deniedTags: ['html', 'head', 'body', 'meta', 'applet'],
           convertDivs: ".$ed2_div_convert.",
@@ -533,7 +541,7 @@ function redactor($type, $txt, $name, $name2="", $style="html") {
   }
   return $echo;
 }
-##########################################################################################
+
 function redactor2($type, $txt, $name, $style="html") {
   global $ed2_Width;
   $echo = "";
@@ -574,7 +582,7 @@ function redactor2($type, $txt, $name, $style="html") {
   }
   return $echo;
 }
-##########################################################################################
+
 function button_resize_red($redactor, $savebutton=false) { // redactor_id
   if ($redactor == 2) {
     if ($savebutton == true) { 
@@ -588,7 +596,7 @@ function button_resize_red($redactor, $savebutton=false) { // redactor_id
   } else $txt = "";
   return $txt;
 }
-##########################################################################################
+
 function clean_url($url) {
   return str_replace(" ", "_", str_replace("  ", " ", str_replace("   ", " ", trim( str_replace(",", "", str_replace(":", "", str_replace(";", "", str_replace("!", "", str_replace("?", "", str_replace("&", " ", str_replace("%", "", $url)))))))))));
 }

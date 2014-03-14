@@ -840,7 +840,7 @@ function edit_main($id) {
 		$module_name = $options[0];
 		$options = str_replace($module_name."|","",$text);
 		// обнулили все опции
-		$media = $folder = $col = $view = $golos = $golosrazdel = $post = $comments = $datashow = $favorites = $socialnetwork = $search = $search_papka = $put_in_blog = $base = $vetki = $citata = $media_comment = $no_html_in_opentext = $no_html_in_text = $show_add_post_on_first_page = $media_post = $razdel_shablon = $page_shablon = $comments_all = $comments_num = $comments_mail = $comments_adres = $comments_tel = $comments_desc = $golostype = $pagenumbers = $comments_main = $tags_type = $pagekol = $table_light = $designpages = $comments_add = $papka_show = $add_post_to_mainpage = $design_tablet = $designpages_tablet = $design_phone = $designpages_phone = $edit_pole = $show_tags_pages = $golos_admin = $comment_all_link = $show_read_all = 0;
+		$media = $folder = $col = $view = $golos = $golosrazdel = $post = $comments = $datashow = $favorites = $socialnetwork = $search = $search_papka = $put_in_blog = $base = $vetki = $citata = $media_comment = $no_html_in_opentext = $no_html_in_text = $show_add_post_on_first_page = $media_post = $razdel_shablon = $page_shablon = $comments_all = $comments_num = $comments_mail = $comments_adres = $comments_tel = $comments_desc = $golostype = $pagenumbers = $comments_main = $tags_type = $pagekol = $table_light = $designpages = $comments_add = $papka_show = $add_post_to_mainpage = $design_tablet = $designpages_tablet = $design_phone = $designpages_phone = $edit_pole = $show_tags_pages = $golos_admin = $comment_all_link = $show_read_all = $future_date = $close_date = 0;
 		$menushow = $titleshow = $razdeltitleshow = $razdel_link = $peopleshow = $design = $tags = $podrobno = $podrazdel_active_show = $podrazdel_show = $tipograf = $limkol = $tags_show = $tema_zapret = $tema_zapret_comm = $opentextshow = $maintextshow = $papka_tags_pages = $razdel_tags_pages = $div_or_table = 1;
 		$comment_all_link_text = "читать полностью";
 		$comm_col_letters = "1000";
@@ -990,6 +990,10 @@ function edit_main($id) {
 		<a class='dark_pole align_center' onclick=\"show_animate('block8');\"><h2>Страницы в разделе</h2>
 		</a><div id=block8 style='display: none;'>
 		<table class='w100 mw800 table_light'>
+		<tr><td>Показывать страницу на сайте только после наступления указанной при её создании даты</td>
+		<td>".select("options[future_date]", "1,0", "ДА,НЕТ", $future_date)."По-умолчанию, отключено, т.е. страница с датой в будущем показывается сразу.</td></tr>
+		<tr><td>Показывать поле «Дата выключения»</td>
+		<td>".select("options[close_date]", "1,0", "ДА,НЕТ", $close_date)."</td></tr>
 		<tr><td>Показывать Название раздела</td>
 		<td>".select("options[razdeltitleshow]", "1,0", "ДА,НЕТ", $razdeltitleshow)."</td></tr>
 		<tr><td>Показывать Название страницы</td>
@@ -1940,6 +1944,8 @@ function edit_main($id) {
 		<p>Параметры разделяются знаком &, который нельзя использовать в параметрах.
 
 		<h2>Параметр type=</h2> Доступность на сайте (1 — доступен для вывода на сайте, 2 — доступен только администратору).
+
+		<h2>Параметр status=</h2> Позволяет изменить стандартный список статусов, записывается как «Название|цвет», разделяется «#!#». Пример по-умолчанию: Удалено|#fcccd7#!#Утверждено|#dddddd#!#Проверить|#eeeeee#!#В работе|#ffffff
 
 		<h2>Параметр message=</h2> Сообщение справа при добавлении информации в базу данных, можно использовать HTML.
 

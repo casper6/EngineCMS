@@ -140,10 +140,10 @@ function edit_base_pages_category($cid, $red=0) {
   else $blok = "<div class='right3'>Проверка текста: 
       <a href='http://orthography.morphology.ru' target='_blank' class='button small blue'>орфография</a> 
       <a href='http://speller.yandex.net/speller/1.0/index.html' target='_blank' class='button small blue'>орфография 2</a> 
-      <a href='http://test-the-text.ru' target='_blank' class='button small blue'>информационный стиль</a></div>
+      <a href='http://test-the-text.ru' target='_blank' class='button small blue'>информационный стиль</a></div><p>
       <h1>Содержание папки:</h1>";
 
-  echo "<div id='mainrazdel' class='dark_pole2'><a class='base_page' onclick=\"if ( $('#dop').is(':hidden') ) $('#mainrazdel').attr('class', 'dark_pole2sel'); else { $('#mainrazdel').attr('class', 'dark_pole2');} $('#main').toggle(); $('#dop').toggle('slow'); \"><div id='mainrazdel'><div style=\"float:right\"><span class=\"f16 gray\">></span></div><span class='icon gray large in_b' data-icon='z'><span aria-hidden='true'>z</span></span><span class='plus20'>Дополнительные настройки</span></div></a></div> ";
+  echo "<div id='mainrazdel' class='dark_pole2'><a class='base_page' onclick=\"if ( $('#dop').is(':hidden') ) $('#mainrazdel').attr('class', 'dark_pole2sel'); else { $('#mainrazdel').attr('class', 'dark_pole2');} $('#main').toggle(); $('#dop').toggle('slow'); \"><div id='mainrazdel'><span class='icon gray large in_b' data-icon='z'><span aria-hidden='true'>z</span></span><span class='plus20'>Дополнительные настройки</span></div></a></div> ";
 
   echo "</td><td style='padding:0;'><a class='punkt' title='Свернуть/развернуть левую колонку' onclick='$(\"#razdels\").toggle(\"slow\");'><div class='polosa_razdelitel'><div id='rotateText'><nobr>↑ Сворачивает левую колонку ↑</nobr></div></div></a></td><td>";
 
@@ -225,11 +225,11 @@ function delete_all($del="del") {
 }
 
 # СТРАНИЦЫ =================
-function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pid=0) {
-  global $module, $prefix, $db, $red, $new, $pid, $redaktor, $toolbars, $kolkey, $title_razdel_and_bd, $siteurl, $txt_razdels, $clean_urls, $golos_admin;
+function base_pages_add_page($page_id=0, $red=0, $name=0, $cid=0, $new=0, $pid=0) {
+  global $module, $prefix, $db, $red, $new, $pid, $redaktor, $toolbars, $kolkey, $title_razdel_and_bd, $siteurl, $txt_razdels, $clean_urls, $golos_admin, $future_date, $close_date;
   include("ad/ad-header.php");
   $id = intval ($id);
-  $cid = $golos = 0;
+  $golos = 0;
   $search_tags = '';
   if ( $page_id > 0 ) { // Если это редактирование
     $sql = "SELECT * FROM ".$prefix."_pages WHERE pid='".$pid."' limit 1";
@@ -243,6 +243,7 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
     //$foto = $row['foto'];
     $search_tags = $row['search'];
     $data = $row['date'];
+    $close_data = $row['close_date'];
     $counter = $row['counter'];
     $active = $row['active'];
     $comm = $row['comm'];
@@ -257,8 +258,6 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
     $clean_url = $row['clean_url'];
     $copy = $row['copy'];
     $sor = intval ($row['sort']);
-
-    
     global $clean_urls;
     switch($clean_urls) {
       case 1: $chpu = "<b>ЧПУ: транслит названия страницы.</b> Ссылка на раздел: <a href='/".$name."/' target='_blank'>".$name."/</a>"; 
@@ -284,14 +283,14 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
     // Подстройка редактирования
     $main_title = "Редактирование страницы";
     $name = $module;
+
     $data = explode(" ",$data);
     $data1 = date2normal_view($data[0]);
     $data = explode(":",$data[1]);
     $data2 = $data[0];
     $data3 = $data[1];
     $data4 = $data[2];
-    $data3_2 = date("i", time());
-    $data3_2 = "<option value=".$data3_2."> ".$data3_2."!</option>";
+    $close_data = date2normal_view($close_data);
     $saveme = "_edit_sv_page";
   } else { // Если это создание новой страницы
     $golos_reiting = 0;
@@ -330,11 +329,10 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
     $rss = 1; // rss
     $mainpage = 0; // mainpage
     $sor = "0";
-    $data1 = date2normal_view(date("Y-m-d", time()));
+    $close_data = $data1 = date2normal_view(date("Y-m-d", time()));
     $data2 = date("H", time());
     $data3 = date("i", time());
     $data4 = date("s", time());
-    $data3_2 = "";
     $titl = "";
     $saveme = "_save_page";
   }
@@ -393,7 +391,8 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
   $sql = "select * from ".$prefix."_pages_categories where `module`='".$name."' and `tables`='pages' order by `parent_id`, `title`";
   $result = $db->sql_query($sql);
   $numrows = $db->sql_numrows($result);
-  if ($numrows > 10) $size = 10*16; else $size = ($numrows+2)*16;
+  if ($numrows > 10) $size = 10*16; 
+  else $size = ($numrows+2)*16;
   echo "</select>";
 
   //if ($numrows > 0) {
@@ -402,9 +401,9 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
     <div id='izmenapapka'><script>izmenapapka($('#to_razdel').val(),'".$cid."','','','addpage');</script></div>";
   //} else echo "<input type='hidden' name='cid' value='0'><p><i>В разделе нет папок.</i></p>";    
   
-  echo "<div id='mainrazdel' class='dark_pole2'><a class='base_page' onclick=\"if ( $('#dop').is(':hidden') ) $('#mainrazdel').attr('class', 'dark_pole2sel'); else { $('#mainrazdel').attr('class', 'dark_pole2');} $('#main').toggle(); $('#dop').toggle('slow'); \"><div id='mainrazdel'><div style=\"float:right\"><span class=\"f16 gray\">></span></div><span class='icon gray large in_b' data-icon='z'><span aria-hidden='true'>z</span></span><span class='plus20'>Дополнительные настройки</span></div></a></div> ";
+  echo "<div id='mainrazdel' class='dark_pole2'><a class='base_page' onclick=\"if ( $('#dop').is(':hidden') ) $('#mainrazdel').attr('class', 'dark_pole2sel'); else { $('#mainrazdel').attr('class', 'dark_pole2');} $('#main').toggle(); $('#dop').toggle('slow'); \"><div id='mainrazdel'><span class='icon gray large in_b' data-icon='z'><span aria-hidden='true'>z</span></span><span class='plus20'>Дополнительные настройки</span></div></a></div> ";
 
-  if ( $pid > 0 ) echo "<br><b>Искать по названию в:</b><ul>
+  if ( $pid > 0 & $new==0) echo "<br><b>Искать по названию в:</b><ul>
 <li><a target='_blank' href='http://yandex.ru/yandsearch?text=".$titl."'>Яндексе</a>
 <li><a target='_blank' href='http://images.yandex.ru/yandsearch?text=".$titl."'>Яндекс.Картинках</a>
 <li><a target='_blank' href='http://market.yandex.ru/search.xml?text=".$titl."'>Яндекс.Маркете</a>
@@ -480,36 +479,42 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
   <div id='help_nocomm' style='display:none;'>Если в данном разделе разрешены комментарии — вы можете отключить их выборочно на данной странице, поставив галочку.<br><br></div>
   <div id='help_rss' style='display:none;'>Технология RSS похожа на e-mail подписку на новости — в RSS-программу, сайт RSS-читалки или встроенную систему чтения RSS в браузере добавляется ссылка на данный сайт, после чего название и предисловие всех новых страниц, отмеченных данной галочкой, будут видны подписавшемуся человеку и он сможет быстро ознакомиться с их заголовками, не заходя на сайт. Если что-то ему понравится — он откроет сайт и прочитает подробности. RSS используется для постепенного увеличения количества посетителей сайта путем их возвращения на сайт за интересной информацией. <a href='http://yandex.ru/yandsearch?text=Что+такое+RSS%3F' target=_blank>Подробнее о RSS?</a><br><br></div>
   <div id='help_mainpage' style='display:none;'>Если отметить эту галочку, данная страница будет отображаться в блоке, который настроен на отображение только помеченных этой галочкой страниц, или не будет отображаться в блоке, который настроен на показ всех неотмеченных галочкой страниц.<br><br></div>
-  <div id='help_sor' style='display:none;'>Настраивается в настройках раздела. Может быть равна цифре. Применяется для ручной сортировки страниц. Лучше всего делать кратной 10, например 20, 30, 40 и т.д. для того, чтобы было удобно вставлять страницы между двумя другими. Если очередность у двух страниц совпадает, сортировка происходит по дате.<br><br></div>
+  <div id='help_sor' style='display:none;'>Настраивается в настройках раздела. Может быть равна цифре. Применяется для ручной сортировки страниц. Лучше всего делать кратной 10, например 20, 30, 40 и т.д. для того, чтобы было удобно вставлять страницы между двумя другими. Если очередность у двух страниц совпадает, сортировка происходит по дате.<br><br></div>";
 
-  <span class='h2'>Дата создания:</span> <script>$(function() { $.datepicker.setDefaults( $.datepicker.regional[ \"ru\" ] ); $( \"#f_date_c999\" ).datepicker({ changeMonth: true, changeYear: true, dateFormat: \"d MM yy\", showAnim: 'slide' }); });</script>
-  <INPUT type=text name=data1 id=\"f_date_c999\" value=\"".$data1."\" onchange=\"document.getElementById('add999').value=document.getElementById('f_date_c999').value+'|'+document.getElementById('f_date_c2999').value\" readonly='1' size='18'> <a onclick=\"show('help0')\" class='help'>?</a> <nobr>Время: <select name='data2' class='f12'>";
-  for ($x=0; $x < 24; $x++) {
-    if ($x<10) $xx = "0".$x; else $xx = $x;
-    $sel = ""; if ($xx == $data2) $sel = " selected";
-    echo "<option value=".$xx.$sel."> ".$xx." </option>";
-  }
-  echo "</select>ч <select name=data3 class='f12'><option value=".$data3.$sel."> ".$data3." </option>".$data3_2."<option value='00'> 00 </option><option value='10'> 10 </option><option value='15'> 15 </option><option value='20'> 20 </option><option value='30'> 30 </option><option value='40'> 40 </option><option value='45'> 45 </option><option value='50'> 50 </option><option value='55'> 55 </option></select>м <input type=text name=data4 value='".$data4."' class='f12' size=3 onclick=\"this.value='00'\">с</nobr><div id='help0' style='display:none;'><br>Для выбора даты из календаря нажмите по дате. Для обнуления секунд кликните по ним. Минуты представлены текущим вариантом или выбором из основного интервала для ускорения работы.<br></div><br><br>";
+
+  if ($future_date == "1") {
+    $create_date = "Дата отложенной публикации";
+    $data2 = $data3 = $data4 = "00"; $notime = " class='hide'";
+  } else { $create_date = "Дата публикации"; $notime = ""; }
+  echo "<h2>".$create_date.":</h2> <script>$(function() { $.datepicker.setDefaults( $.datepicker.regional[ \"ru\" ] ); $( \"#f_date_c999\" ).datepicker({ changeMonth: true, changeYear: true, dateFormat: \"d MM yy\", showAnim: 'slide' }); });</script>
+  <INPUT type=text name='data1' id=\"f_date_c999\" value=\"".$data1."\" readonly='1' size='18'> 
+
+  <nobr".$notime."> Время: ".select("data2", "00,01,02,03,04,05,06,07,08,09,10,11,12,13,14,15,16,17,18,19,20,21,22,23", "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23", $data2, " style='width:60px;'")." ч 
+  ".select("data3", "00,10,15,20,25,30,35,40,45,50,55", "00,10,15,20,25,30,35,40,45,50,55", $data3, " style='width:60px;'")." м <input type=text name='data4' value='".$data4."' class='f12' size=3 onclick=\"this.value='00'\"> с <a onclick=\"show('help0')\" class='help'>?</a></nobr>
+
+  <div id='help0' style='display:none;'><br>Для выбора даты из календаря нажмите по дате. Для обнуления секунд кликните по ним. Минуты представлены текущим вариантом или выбором из основного интервала для ускорения работы.<br></div>";
+
+  if ($close_date == "1") echo "<h2>Дата отключения:</h2> <script>$(function() { $.datepicker.setDefaults( $.datepicker.regional[ \"ru\" ] ); $( \"#f_date_999\" ).datepicker({ changeMonth: true, changeYear: true, dateFormat: \"d MM yy\", showAnim: 'slide' }); });</script>
+  <INPUT type=text name='close_data' id=\"f_date_999\" value=\"".$close_data."\" readonly='1' size='18'> <br>Если выбранная дата отключения позже даты публикации, страница не будет показана на сайте после этой даты.";
+  else echo input("close_data", $close_data, 40, "hidden");
 
   if ($page_id > 0) echo "<a onclick=\"show('slugebka')\" class=punkt>Скрытая информация</a><br><div id='slugebka' style='display:none;'><div class=radius><span class=small>Лучше не менять.</span><br><h3 style='display:inline'>Копия:</h3><INPUT type=text name=cop value='".$copy."' size=3><a onclick=\"show('help18')\" class=help>?</a><br><div id='help18' style='display:none;'>У страниц-копий указывается один и тот же номер — номер оригинальной страницы. Если это не копия, а единственный оригинал, цифра равна 0.<br></div><br><h3 style='display:inline'>Кол-во комментариев:</h3><INPUT type=text name=com value='".$comm."' size=3><br><br><h3 style='display:inline'>Кол-во посещений:</h3><INPUT type=text name=count value='".$counter."' size=3></div></div><br>";
-
   echo "</div>
-
   <div id='main'>
   <h1>Название страницы (заголовок)</h1>
   <textarea class='f16 w100 h40' name=title id=title rows=1 cols=10".$trans_title.">".$titl."</textarea>
   <div class='right3'>Проверка текста: 
-  <a href='http://orthography.morphology.ru' target='_blank' class='button small blue'>орфография</a> 
-  <a href='http://speller.yandex.net/speller/1.0/index.html' target='_blank' class='button small blue'>орфография 2</a> 
-  <a href='http://test-the-text.ru' target='_blank' class='button small blue'>информационный стиль</a></div>
+    <a href='#plagiat' onclick='plagiat()' class='button small blue'>уникальность</a> 
+    <a href='http://orthography.morphology.ru' target='_blank' class='button small blue'>орфография</a> 
+    <a href='http://speller.yandex.net/speller/1.0/index.html' target='_blank' class='button small blue'>орфография 2</a> 
+    <a href='http://test-the-text.ru' target='_blank' class='button small blue'>информационный стиль</a>
+  </div><p>
   <h1>Предисловие</h1>";
   echo redactor($red, $shablon1, 'open_text', 'main_text'); // редактор: тип редактора, редактируемое поле
   echo "<h1>Содержание (основной текст)</h1>";
   echo redactor2($red, $shablon2, 'main_text');
-
-  echo "<br><input type='hidden' name='foto' value=''>";
-  echo "<input type='hidden' name='price' value=''>";
-
+  echo "<a name='plagiat'></a><div id='plagiat' class=hide style='min-height:700px;'></div>
+  <input type='hidden' name='foto' value=''><input type='hidden' name='price' value=''>";
   //$sql = "select `text` from ".$prefix."_mainpage where (`name` = '".$name."' or `name` like '".$name." %') and `type`='2'";
   //$result = $db->sql_query($sql);
   //$row = $db->sql_fetchrow($result);
@@ -532,44 +537,40 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $razdel=0, $new=0, $pi
 
 
 ####################################################################################
-function base_pages_save_page($cid, $module, $title, $open_text, $main_text, $foto, $link_foto, $search, $active, $mainpage, $rss, $golos_reiting, $nocomm, $price, $add, $data1, $data2, $data3, $data4, $meta_title2, $clean_url2, $keywords2, $description2, $sor, $open_text_mysor, $main_text_mysor) {
-  global $red, $prefix, $db, $admin_file, $now;
-  $foto="";
-  // это магазин?
-  $price=intval($price);
+function base_pages_save_page($cid, $module, $title, $open_text, $main_text, $foto, $link_foto, $search, $active, $mainpage, $rss, $golos_reiting, $nocomm, $price, $add, $data1, $data2, $data3, $data4, $meta_title2, $clean_url2, $keywords2, $description2, $sor, $open_text_mysor, $main_text_mysor, $close_data) {
+  global $red, $prefix, $db, $admin_file;
+  $now = date("Y-m-d H:i:s");
+  $foto = "";
+  $price = intval($price); // это магазин?
 
   $search = trim(str_replace(",",", ",$search));
   $search = str_replace(".",", ",$search);
   $search = str_replace("   "," ",$search);
   $search = str_replace("  "," ",$search);
   # pid module cid title open_text main_text date counter active golos comm foto search mainpage
-  if ($open_text == " <br><br>") $open_text = "";
-  if ($main_text == " <br><br>") $main_text = "";
+  //if ($open_text == " <br><br>") $open_text = "";
+  //if ($main_text == " <br><br>") $main_text = "";
 
-  // mysql_escape_string
   $sor = intval($sor);
   $rss = intval($rss);
   $nocomm = intval($nocomm);
   $golos_reiting = intval($golos_reiting);
-
+  $open_text = str_replace("http://http://", "http://", str_replace("http//", "http://", $open_text));
+  $main_text = str_replace("http://http://", "http://", str_replace("http//", "http://", $main_text));
   $open_text = mysql_real_escape_string(form($module, $open_text, "open"));
   $main_text = mysql_real_escape_string(form($module, $main_text, "main"));
   $title = mysql_real_escape_string(form($module, trim($title), "title"));
-
-  $open_text = str_replace("http://http://", "http://", str_replace("http//", "http://", $open_text));
-  $main_text = str_replace("http://http://", "http://", str_replace("http//", "http://", $main_text));
-
-  $keywords2 = trim(str_replace("  "," ",str_replace("   "," ",str_replace(" ,",", ",$keywords2))));
-  $description2 = trim($description2);
-  //$meta_title2 = trim($meta_title2);
-  //if ($meta_title2 == 0) $meta_title2 = "";
+  $keywords2 = mysql_real_escape_string(trim(str_replace("  "," ",str_replace("   "," ",str_replace(" ,",", ",$keywords2)))));
+  $description2 = mysql_real_escape_string(trim($description2));
+  $meta_title2 = mysql_real_escape_string($meta_title2);
 
   $clean_url2 = strtr($clean_url2, array('____'=>'_', '___'=>'_', '__'=>'_', '*'=>'',':'=>'','('=>'',')'=>'','  '=>'',' '=>'', ' '=>'_', '.'=>'', ','=>'', '!'=>'', '?'=>'', '=>'=>'', ';'=>'', '&'=>'_and_', '%'=>'', '$'=>'', '#'=>'', '№'=>'', '@'=>'', '^'=>'', '='=>'', '\''=>'','"'=>'','«'=>'', '»'=>'', '____'=>'_', '___'=>'_', '__'=>'_'));
 
   $data = date2normal_view($data1, 1)." $data2:$data3:$data4";
-  $data2 = $now;
-  $sql = "INSERT INTO ".$prefix."_pages (`pid`,`module`,`cid`,`title`,`open_text`,`main_text`,`date`,`redate`,`counter`,`active`,`golos`,`comm`,`foto`,`search`,`mainpage`,`rss`,`price`,`description`,`keywords`,`tables`,`copy`,`sort`,`nocomm`,`meta_title`,`clean_url`) VALUES (NULL, '".$module."', '".$cid."', '".$title."', '".$open_text."', '".$main_text."', '".$data."', '".$data2."', '0', '".$active."', '".$golos_reiting."', '0', '".$foto."', '".$search."', '".$mainpage."', '".$rss."', '".$price."', '".$description2."', '".$keywords2."', 'pages', '0','".$sor."', '".$nocomm."', '".$meta_title2."', '".$clean_url2."');";
-  $db->sql_query($sql) or die ("Не удалось сохранить страницу. Попробуйте нажать в Редакторе на кнопку Чистка HTML в Редакторе. Если всё равно появится эта ошибка - сообщите разработчику нижеследующее:".$sql);
+  $close_data = date2normal_view($close_data, 1);
+
+  $sql = "INSERT INTO ".$prefix."_pages (`pid`,`module`,`cid`,`title`,`open_text`,`main_text`,`date`,`redate`,`counter`,`active`,`golos`,`comm`,`foto`,`search`,`mainpage`,`rss`,`price`,`description`,`keywords`,`tables`,`copy`,`sort`,`nocomm`,`meta_title`,`clean_url`,`close_date`) VALUES (NULL, '".$module."', '".$cid."', '".$title."', '".$open_text."', '".$main_text."', '".$data."', '".$now."', '0', '".$active."', '".$golos_reiting."', '0', '".$foto."', '".$search."', '".$mainpage."', '".$rss."', '".$price."', '".$description2."', '".$keywords2."', 'pages', '0','".$sor."', '".$nocomm."', '".$meta_title2."', '".$clean_url2."', '".$close_data."');";
+  $db->sql_query($sql) or die ("Не удалось сохранить страницу. Сообщите разработчику нижеследующее:".$sql);
   // Узнаем получившийся номер страницы ID
   $sql = "select pid from ".$prefix."_pages where title='".$title."' and date='".$data."'";
   $result = $db->sql_query($sql);
@@ -713,15 +714,16 @@ function base_pages_save_page($cid, $module, $title, $open_text, $main_text, $fo
   }
   $db->sql_query("DELETE FROM ".$prefix."_spiski WHERE name='-00-00'"); 
   // Удаление ошибок. Потом поправить, чтобы не было их!!!
-  Header("Location: sys.php?op=base_pages_add_page&name=".$module."&razdel=".$cid."&red=".$red."&new=1&pid=".$page_id."#1");
+  Header("Location: sys.php?op=base_pages_add_page&name=".$module."&cid=".$cid."&red=".$red."&new=1&pid=".$page_id."#1");
 }
 ###################################################################################
-function base_pages_edit_sv_page($pid, $module, $cid, $title, $open_text, $main_text, $foto, $link_foto, $search, $active, $mainpage, $rss, $golos_reiting, $nocomm, $price, $add, $data1, $data2, $data3, $data4, $meta_title2, $clean_url2, $keywords2, $description2, $com, $cop, $count, $sor, $open_text_mysor, $main_text_mysor) {
-  global $prefix, $db, $now;
+function base_pages_edit_sv_page($pid, $module, $cid, $title, $open_text, $main_text, $foto, $link_foto, $search, $active, $mainpage, $rss, $golos_reiting, $nocomm, $price, $add, $data1, $data2, $data3, $data4, $meta_title2, $clean_url2, $keywords2, $description2, $com, $cop, $count, $sor, $open_text_mysor, $main_text_mysor, $close_data) {
+  global $prefix, $db;
+  $now = date("Y-m-d H:i:s");
   // Делаем резервную копию!
-  $sql = "SELECT `module`,`cid`,`title`,`open_text`,`main_text`,`date`,`counter`,`active`,`golos`,`comm`,`foto`,`search`,`mainpage`,`rss`,`price`,`description`,`keywords`,`sort`,`nocomm`,`meta_title`,`clean_url` FROM ".$prefix."_pages WHERE `pid`='".$pid."'";
+  $sql = "SELECT `module`,`cid`,`title`,`open_text`,`main_text`,`date`,`counter`,`active`,`golos`,`comm`,`foto`,`search`,`mainpage`,`rss`,`price`,`description`,`keywords`,`sort`,`nocomm`,`meta_title`,`clean_url`,`close_data` FROM ".$prefix."_pages WHERE `pid`='".$pid."'";
   $result = $db->sql_query($sql);
-  list($p_module, $p_cid, $p_title, $p_open_text, $p_main_text, $p_date, $p_counter, $p_active, $p_golos, $p_comm, $p_foto, $p_search, $p_mainpage, $p_rss, $p_price, $p_description, $p_keywords, $p_sort, $p_nocomm, $p_meta_title, $p_clean_url) = $db->sql_fetchrow($result);
+  list($p_module, $p_cid, $p_title, $p_open_text, $p_main_text, $p_date, $p_counter, $p_active, $p_golos, $p_comm, $p_foto, $p_search, $p_mainpage, $p_rss, $p_price, $p_description, $p_keywords, $p_sort, $p_nocomm, $p_meta_title, $p_clean_url, $p_close_data) = $db->sql_fetchrow($result);
   $foto = "";
   $price = intval($price); // это магазин? убрать/доработать
   $search = trim(str_replace(",",", ",$search));
@@ -733,32 +735,46 @@ function base_pages_edit_sv_page($pid, $module, $cid, $title, $open_text, $main_
   $rss = intval($rss);
   $nocomm = intval($nocomm);
   $golos_reiting = intval($golos_reiting);
+  $data1 = date2normal_view($data1, 1);
+  $close_data = date2normal_view($close_data, 1);
+  // получаем настройки раздела по отложенной и отключенной публикации
+  $future_date = $close_date = 0;
+  $result = $db->sql_query("SELECT `text` FROM ".$prefix."_mainpage where `name`='".$module."'");
+  $row = $db->sql_fetchrow($result);
+  $options = explode("|",$row['text']);
+  parse_str( str_replace($options[0]."|","",$row['text']) );
+  if ( ( $future_date == 1 && $data1 > $now ) || 
+    ( $close_date == 1 && $close_data < $now ) ) $active = "0";
 
-  $keywords2 = trim(str_replace("  "," ",str_replace("   "," ",str_replace(" ,",", ",$keywords2))));
-  $description2 = trim($description2);
+  // Обратное преобразование textarea (замена русской буквы е)
+  $open_text = str_replace("http://http://", "http://", str_replace("http//", "http://", $open_text));
+  $main_text = str_replace("http://http://", "http://", str_replace("http//", "http://", $main_text));
+  $main_text = str_replace("tеxtarea","textarea",$main_text); // ireplace
+  $open_text = str_replace("tеxtarea","textarea",$open_text); // ireplace
   $open_text = mysql_real_escape_string(form($module, $open_text, "open"));
   $main_text = mysql_real_escape_string(form($module, $main_text, "main"));
   $title = mysql_real_escape_string(form($module, $title, "title"));
-
-  // Обратное преобразование textarea (замена русской буквы е)
-  $main_text = str_replace("tеxtarea","textarea",$main_text); // ireplace
-  $open_text = str_replace("tеxtarea","textarea",$open_text); // ireplace
+  $keywords2 = mysql_real_escape_string(trim(str_replace("  "," ",str_replace("   "," ",str_replace(" ,",", ",$keywords2)))));
+  $description2 = mysql_real_escape_string(trim($description2));
+  $meta_title2 = mysql_real_escape_string($meta_title2);
 
   $p_open_text = mysql_real_escape_string(form($module, $p_open_text, "open"));
   $p_main_text = mysql_real_escape_string(form($module, $p_main_text, "main"));
   $p_title = mysql_real_escape_string(form($module, $p_title, "title"));
+  $p_keywords2 = mysql_real_escape_string(trim(str_replace("  "," ",str_replace("   "," ",str_replace(" ,",", ",$p_keywords2)))));
+  $p_description2 = mysql_real_escape_string(trim($p_description2));
+  $p_meta_title2 = mysql_real_escape_string($p_meta_title2);
 
-  $data = date2normal_view($data1, 1)." $data2:$data3:$data4";
-  $data2 = $now;
+  $data = $date1." $data2:$data3:$data4";
 
   $clean_url2 = strtr($clean_url2, array('____'=>'_', '___'=>'_', '__'=>'_', '*'=>'',':'=>'','('=>'',')'=>'','  '=>'',' '=>'', ' '=>'_', '.'=>'', ','=>'', '!'=>'', '?'=>'', '=>'=>'', ';'=>'', '&'=>'_and_', '%'=>'', '$'=>'', '#'=>'', '№'=>'', '@'=>'', '^'=>'', '='=>'', '\''=>'','"'=>'','«'=>'', '»'=>'', '____'=>'_', '___'=>'_', '__'=>'_'));
 
-  $sql = "UPDATE ".$prefix."_pages SET `module`='".$module."', `cid`='".$cid."', `title`='".$title."', `open_text`='".$open_text."', `main_text`='".$main_text."', `date`='".$data."', `redate`='".$data2."', `counter`='".$count."', `active`='".$active."', `golos`='".$golos_reiting."', `comm`='".$com."', `foto`='".$foto."', `search`='".$search."', `mainpage`='".$mainpage."', `rss`='".$rss."', `price`='".$price."', `description`='".$description2."', `keywords`='".$keywords2."', `copy`='".$cop."', `sort`='".$sor."', `nocomm`='".$nocomm."', `meta_title`='".$meta_title2."', `clean_url`='".$clean_url2."' WHERE `pid`='".$pid."';";
+  $sql = "UPDATE ".$prefix."_pages SET `module`='".$module."', `cid`='".$cid."', `title`='".$title."', `open_text`='".$open_text."', `main_text`='".$main_text."', `date`='".$data."', `redate`='".$now."', `counter`='".$count."', `active`='".$active."', `golos`='".$golos_reiting."', `comm`='".$com."', `foto`='".$foto."', `search`='".$search."', `mainpage`='".$mainpage."', `rss`='".$rss."', `price`='".$price."', `description`='".$description2."', `keywords`='".$keywords2."', `copy`='".$cop."', `sort`='".$sor."', `nocomm`='".$nocomm."', `meta_title`='".$meta_title2."', `clean_url`='".$clean_url2."', `close_date`='".$close_data."' WHERE `pid`='".$pid."';";
   $db->sql_query($sql) or die('Не удалось сохранить изменения... Передайте нижеследующий текст разработчику:<br>'.$sql);
 
   // Делаем резервную копию
   if ($p_active != 3) // если это не добавленная пользователем страница
-  $db->sql_query("INSERT INTO ".$prefix."_pages (`pid`,`module`,`cid`,`title`,`open_text`,`main_text`,`date`,`redate`,`counter`,`active`,`golos`,`comm`,`foto`,`search`,`mainpage`,`rss`,`price`,`description`,`keywords`,`tables`,`copy`,`sort`,`nocomm`,`meta_title`,`clean_url`) VALUES (NULL, '$p_module', '$p_cid', '$p_title', '$p_open_text', '$p_main_text', '$p_date', '$now', '$p_counter', '$p_active', '$p_golos', '$p_comm', '$p_foto', '$p_search', '$p_mainpage', '$p_rss', '$p_price', '$p_description', '$p_keywords', 'backup', '$pid', '$p_sort', '$p_nocomm', '$p_meta_title', '$p_clean_url' );") or die("Резервная копия не создана...");
+  $db->sql_query("INSERT INTO ".$prefix."_pages (`pid`,`module`,`cid`,`title`,`open_text`,`main_text`,`date`,`redate`,`counter`,`active`,`golos`,`comm`,`foto`,`search`,`mainpage`,`rss`,`price`,`description`,`keywords`,`tables`,`copy`,`sort`,`nocomm`,`meta_title`,`clean_url`,`close_date`) VALUES (NULL, '$p_module', '$p_cid', '$p_title', '$p_open_text', '$p_main_text', '$p_date', '$now', '$p_counter', '$p_active', '$p_golos', '$p_comm', '$p_foto', '$p_search', '$p_mainpage', '$p_rss', '$p_price', '$p_description', '$p_keywords', 'backup', '$pid', '$p_sort', '$p_nocomm', '$p_meta_title', '$p_clean_url', '$p_close_data' );") or die("Резервная копия не создана...");
 
   // Ярлык?
   $and_copy = "";
@@ -773,7 +789,7 @@ function base_pages_edit_sv_page($pid, $module, $cid, $title, $open_text, $main_
       recash("page_".$pidX, 0); // Обновление кеша ##
     }
     $and_copy = implode(" or ",$and_copy);
-    $db->sql_query("UPDATE ".$prefix."_pages SET title='$title', open_text='$open_text', main_text='$main_text', date='$data', redate='$data2', counter='$count', active='$active', golos='$golos_reiting', comm='$com', foto='$foto', search='$search', mainpage='$mainpage', rss='$rss', price='$price', description='$description2', keywords='$keywords2', sort='$sor', meta_title='$meta_title2' WHERE ".$and_copy.";");
+    $db->sql_query("UPDATE ".$prefix."_pages SET `title`='".$title."', `open_text`='".$open_text."', `main_text`='".$main_text."', `date`='".$data."', `redate`='".$data2."', `counter`='".$count."', `active`='".$active."', `golos`='".$golos_reiting."', `comm`='".$com."', `foto`='".$foto."', `search`='".$search."', `mainpage`='".$mainpage."', `rss`='".$rss."', `price`='".$price."', `description`='".$description2."', `keywords`='".$keywords2."', `sort`='".$sor."', `meta_title`='".$meta_title2."', `close_date`='".$close_data."' WHERE ".$and_copy.";");
   }
 
   global $siteurl;
@@ -1014,10 +1030,10 @@ function base_pages_re($link) {
       base_pages_save_category($cid, $module, $title, $desc, $sortirovka, $parent_id, $description2, $keywords2, $meta_title, $clean_url, $pic);
       break;
     case "base_pages_add_page":
-      if (!isset($razdel)) $razdel = "";
+      if (!isset($cid)) $cid = 0;
       if (!isset($name)) $name = "";
       if (!isset($red)) $red = "3";
-      base_pages_add_page(0, $red, $name, $razdel);
+      base_pages_add_page(0, $red, $name, $cid);
       break;
     case "base_pages_save_page":
       if (!isset($foto)) $foto = "";
@@ -1027,7 +1043,7 @@ function base_pages_re($link) {
       if (!isset($open_text_mysor)) $open_text_mysor = "";
       if (!isset($main_text_mysor)) $main_text_mysor = "";
       if (file_exists($_SERVER["DOCUMENT_ROOT"].'/cashe/clean_url_pages'.$pid)) unlink ($_SERVER["DOCUMENT_ROOT"].'/cashe/clean_url_pages'.$pid);
-      base_pages_save_page($cid, $module, $title, $open_text, $main_text, $foto, $link_foto, $search, $active, $mainpage, $rss, $golos_reiting, $nocomm, $price, $add, $data1, $data2, $data3, $data4, $meta_title2, $clean_url2, $keywords2, $description2, $sor, $open_text_mysor, $main_text_mysor);
+      base_pages_save_page($cid, $module, $title, $open_text, $main_text, $foto, $link_foto, $search, $active, $mainpage, $rss, $golos_reiting, $nocomm, $price, $add, $data1, $data2, $data3, $data4, $meta_title2, $clean_url2, $keywords2, $description2, $sor, $open_text_mysor, $main_text_mysor, $close_data);
       break;
     case "base_pages_edit_page":
       if (!isset($red)) $red = 0;
@@ -1041,7 +1057,7 @@ function base_pages_re($link) {
       if (!isset($open_text_mysor)) $open_text_mysor = "";
       if (!isset($main_text_mysor)) $main_text_mysor = "";
       if (file_exists($_SERVER["DOCUMENT_ROOT"].'/cashe/clean_url_pages'.$pid)) unlink ($_SERVER["DOCUMENT_ROOT"].'/cashe/clean_url_pages'.$pid);
-          base_pages_edit_sv_page($pid, $module, $cid, $title, $open_text, $main_text, $foto, $link_foto, $search, $active, $mainpage, $rss, $golos_reiting, $nocomm, $price, $add, $data1, $data2, $data3, $data4, $meta_title2, $clean_url2, $keywords2, $description2, $com, $cop, $count, $sor, $open_text_mysor, $main_text_mysor);
+          base_pages_edit_sv_page($pid, $module, $cid, $title, $open_text, $main_text, $foto, $link_foto, $search, $active, $mainpage, $rss, $golos_reiting, $nocomm, $price, $add, $data1, $data2, $data3, $data4, $meta_title2, $clean_url2, $keywords2, $description2, $com, $cop, $count, $sor, $open_text_mysor, $main_text_mysor, $close_data);
       break;
     case "base_pages_delit_page":
       if (!isset($ok)) $ok = 0; 

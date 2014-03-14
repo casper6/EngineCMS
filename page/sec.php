@@ -155,7 +155,6 @@
         (preg_match("/<[^>]*onload*\"?[^>]*>/i", $secvalue)) ||
         (preg_match("/<[^>]*onreset*\"?[^>]*>/i", $secvalue)) ||
         (preg_match("/<[^>]*onresize*\"?[^>]*>/i", $secvalue)) ||
-      (preg_match("/<[^>]*body*\"?[^>]*>/i", $secvalue)) ||
       (preg_match("/\([^>]*\"?[^)]*\)/i", $secvalue)) ) {
       die ($htmltags);
       }

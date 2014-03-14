@@ -1008,9 +1008,11 @@ function page($pid, $all) {
     $clean_url = $row['clean_url'];
     $title = str_replace("<p>","",str_replace("</p>","",filter($row['title'])));
     $titl = str_replace("\"","",$title); 
+    $opentext = $row['open_text'];
+    $bodytext = $row['main_text'];
 
-    $opentext = str_replace("jpg\"><img ","jpg\" class=\"lightbox\" rel=\"page\"><img ", str_replace("<img ","<img title='".$titl."' ", filter($row['open_text'])));
-    $bodytext = str_replace("jpg\"><img ","jpg\" class=\"lightbox\" rel=\"page\"><img ", str_replace("<img ","<img title='".$titl."' ", filter($row['main_text'])));
+    //$opentext = str_replace("jpg\"><img ","jpg\" class=\"lightbox\" rel=\"page\"><img ", str_replace("<img ","<img title='".$titl."' ", filter($row['open_text'])));
+    //$bodytext = str_replace("jpg\"><img ","jpg\" class=\"lightbox\" rel=\"page\"><img ", str_replace("<img ","<img title='".$titl."' ", filter($row['main_text'])));
     $nocomm = $row['nocomm'];
     // Вырезание авто-ссылок
     $opentext = str_replace('</cut>','',str_replace('<cut>','',str_replace('<!--more-->','',str_replace('[ссылка]','',str_replace('-ссылка]','',str_replace('[ссылка-','',str_replace('<hr class="editor_cut">','',$opentext)))))));
@@ -1371,8 +1373,7 @@ function page($pid, $all) {
     if (!isset($order)) $order = "";
 
     if ($order != "") $order = " order ".stripcslashes($order).""; // сортировка
-    $page_opentext .= "
-    <table width=100% cellspacing=0 cellpadding=5 class=main_base_table>";
+    $page_opentext .= "<table width=100% cellspacing=0 cellpadding=5 class='main_base_table'>";
 
     $zapros_names = mysql_real_escape_string($zapros_names);
     $baza_name = mysql_real_escape_string($baza_name);
