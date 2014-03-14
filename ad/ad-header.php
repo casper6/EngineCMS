@@ -3,7 +3,7 @@ if (stristr(htmlentities($_SERVER['PHP_SELF']), "ad-header.php")) {
 	Header("Location: index.php"); die();
 }
 global $clean_urls, $deviceType, $postlink, $name, $sitename, $op, $type, $red, $prefix, $db, $id, $nastroi, $lang_admin, $siteurl, $op, $ad_fon, $show_admin_top;
-if ($postlink != "") $post = "<button class='small' onclick='location.href=\"".$postlink."\"' title='".aa("Открыть почтовый сайт...")."'><span class='icon small' data-icon='@'></span> ".aa("Почта")."</button> "; else $post="";
+if ($postlink != "") $post = "<button class='small' onclick='location.href=\"".$postlink."\"' title='".aa("Открыть почтовый сайт...")."'><span class='icon small' data-icon='@'></span></button> "; else $post="";
 
 // Определяем заголовок страницы (title) и цвета кнопок главного меню (какой раздел администрирования выбран)
 $color1 = $color2 = $color3 = $color4 = "gray"; // Цвета 4х кнопок основных категорий админки (Содержание...)
@@ -41,7 +41,7 @@ echo "<!doctype html>
 <script src='includes/css-frameworks/kickstart/js/ad-kickstart.compress.js'></script>
 <!--[if lt IE 9]><script src='includes/html5.js'></script><![endif]-->
 <link rel='stylesheet' href='includes/jquery.compress.css'>
-<link rel='stylesheet' href='engine.compress.css'>
+<link rel='stylesheet' href='engine.css'>
 <link rel='stylesheet' href='includes/css-frameworks/kickstart/css/ad-kickstart.compress.css'>";
 /* 
 jquery-2.0.0.js
@@ -80,26 +80,24 @@ $lang_logo = "";
 if ($lang_admin != "ru" && $lang_admin != "ua") $lang_logo = "_en";
 
 if ($show_admin_top == 0) echo "<div class='mw800 w100 m0 h15 center noprint' id='admin_top_line' onmousemove=' $(\"#admin_top_line\").hide(); $(\"#admin_top\").show();'><img height=15 align=left src='images/logo_admin".$lang_logo.".png'>".aa("Главное меню")."</div><table class='mw800 hide w100 m0 fixed z1000 l0 t0 shadow' id='admin_top' style='background-color: ".$ad_fon.";'>";
-else echo "<table class='mw800 w100 m10'>";
+else echo "<table class='mw800 w100 m0'>";
 echo "<tr class='noprint'>";
-if ($show_admin_top != "2") echo "<td class=center width=170><a title='".aa("Перейти в Содержание")."' href='sys.php' class='nothing'><img src='images/logo_admin".$lang_logo.".png'></a></td>";
-echo "<td class=mp0><div class='nothing'><div style='margin: 5px 5px 5px 0;'>";
+if ($show_admin_top != "2") echo "<td class=center ><a title='".aa("Перейти в Содержание")."' href='sys.php' class='nothing'><img src='images/logo_admin".$lang_logo.".png' align=left></a> 
+
+
+</td>";
+echo "<td class='mp0'><div class='nothing p5'>";
 //if($detect->isiOS())
 //if($detect->isAndroidOS())
 global $buttons;
-$buttons = explode(",", aa(" Содержание, Оформление, Настройки, Статистика, ПОМОЩЬ, "));
-if ($deviceType != 'computer') $buttons = array('','','','','','');
+$buttons = explode(",", aa(" Содержание, Оформление, Настройки, Статистика"));
+if ($deviceType != 'computer') $buttons = array('','','','');
 
-$exit_admin_button = " <a id='logout_button' class='button small' title='".aa("Выход из администрирования\n(мера безопасности)")."' href='sys.php?op=logout'><span class='icon small red' data-icon='Q'></span></a>";
+$exit_admin_button = " <a id='logout_button' class='button small right3' title='".aa("Выход из администрирования\n(мера безопасности)")."' href='sys.php?op=logout'><span class='icon small red' data-icon='Q'></span></a>";
 
-if ($show_admin_top != "2") {
-	echo "<nobr><form method='post' name='search' action='search' style='display:inline;' class='nothing'><input type='search' placeholder='".aa("Поиск")."' name='slovo'></form> 
-	<button id='site_button' class='small' target='_blank' onclick='window.open(\"/\")' title='".aa("Перейти на сайт (откроется в новом окне)")."'><span class='icon small' data-icon='4'></span> ".aa("На сайт")."</button> ".$post;
-	if ($url == "/red" || $url == "/sys.php" || $url == "/sys.php?op=mes") echo "<a class='button small' onclick=\"openbox('8','".aa("Помощь")."'); $('#show_razdel').click();\" title='".aa("Открыть справочную информацию")."'><span class='icon small' data-icon='n'></span>".$buttons[4]."</a>";
-	echo "".$exit_admin_button."</nobr></div>";
-}
 
-echo "<ul class='button-bar'>
+
+echo "<ul class='button-bar' style='margin-right: 5px; margin-bottom: 5px'>
 <li class='first ".$color1."'><a title='".aa("Содержание: разделы и страницы")."' href='sys.php'><span class='icon gray small' data-icon=','></span>".$buttons[0]."</a></li>";
 global $editor_style;
 if ($editor_style == false) {
@@ -107,10 +105,21 @@ if ($editor_style == false) {
 	<li class='".$color3."'><a title='".aa("Настройки сайта")."' href='sys.php?op=options'><span class='icon gray small' data-icon='='></span>".$buttons[2]."</a></li>";
 }
 if ($show_admin_top != "2") echo "<li class='last ".$color4."'><a title='".aa("Открыть статистику сайта")."' href='sys.php?op=stat_main'><span class='icon gray small' data-icon='j'></span>".$buttons[3]."</a></li>";
-else echo "".$exit_admin_button."";
+else echo $exit_admin_button."";
+echo "</ul>";
 
-echo "</ul>
-</div></td></tr></table>
+if ($show_admin_top != "2") {
+	echo "<script>
+	var search_form = \"<a class=punkt onclick=$('#add').hide('slow');><div class=radius style='font-size:12pt; width:20px; height: 20px; color: white; text-align:center; float:right; margin:5px; background: #bbbbbb;'>&nbsp;x&nbsp;</div></a><h1>Поиск по сайту</h1><form method='post' name='search' action='search' style='display:inline;' class='nothing'><input class='w100' type='search' name='slovo'></form>\";
+	</script>
+	<nobr><button id='site_button' class='small' target='_blank' onclick='window.open(\"/\")' title='".aa("Перейти на сайт (откроется в новом окне)")."'><span class='icon small' data-icon='4'></span></button> 
+	<button class='small' title='".aa("Поиск по сайту")."' onclick='$(\"#add\").toggle().html(search_form); $(\"#add form input\").focus();'><span class='icon small red' data-icon='s'></span></button>
+	".$post;
+	if ($url == "/red" || $url == "/sys.php" || $url == "/sys.php?op=mes") echo "<a class='button small' onclick=\"openbox('8','".aa("Помощь")."'); $('#show_razdel').click();\" title='".aa("Открыть справочную информацию")."'><span class='icon small' data-icon='n'></span></a>";
+	echo "".$exit_admin_button."</nobr>";
+}
+
+echo "</div></td></tr></table>
 <a name='top'></a>";
 if ($show_admin_top == 0) echo "<div onmousemove='$(\"#admin_top\").hide(\"fast\"); $(\"#admin_top_line\").show();'>";
 ?>

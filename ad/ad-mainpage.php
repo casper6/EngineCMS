@@ -990,8 +990,8 @@ function edit_main($id) {
 		<a class='dark_pole align_center' onclick=\"show_animate('block8');\"><h2>Страницы в разделе</h2>
 		</a><div id=block8 style='display: none;'>
 		<table class='w100 mw800 table_light'>
-		<tr><td>Показывать страницу на сайте только после наступления указанной при её создании даты</td>
-		<td>".select("options[future_date]", "1,0", "ДА,НЕТ", $future_date)."По-умолчанию, отключено, т.е. страница с датой в будущем показывается сразу.</td></tr>
+		<tr><td>Показывать страницу на сайте только после наступления указанной при её создании даты. По-умолчанию, отключено, т.е. страница с датой в будущем показывается сразу.</td>
+		<td>".select("options[future_date]", "1,0", "ДА,НЕТ", $future_date)."</td></tr>
 		<tr><td>Показывать поле «Дата выключения»</td>
 		<td>".select("options[close_date]", "1,0", "ДА,НЕТ", $close_date)."</td></tr>
 		<tr><td>Показывать Название раздела</td>

@@ -175,12 +175,12 @@ function GraphicAdmin() {
 	if ($registr=='1') echo "&nbsp;&nbsp;&nbsp;<a href='".$admin_file.".php?op=MainUser'>".aa("Пользователи")."</a> <a href=".$admin_file.".php?op=sortuser>".aa("Список")."</a>";
 
 	echo "<div class='curved-vt-2 hide' style='margin-left:-350px; width: 700px; top: 10px;' id='add'></div>
-	<div class='black_grad'><div class=''>";
+	<div class='black_grad'>";
 
 	if ($show_admin_top != "2") echo "<button id='new_razdel_button' title='".aa("Добавить раздел...")."' class='dark_pole2 right3' onclick=\"openbox('10','', 'add'); $('.dark_pole2sel').attr('class', 'dark_pole2');\"><span class=\"icon \" data-icon=\"+\"></span> ".aa("Добавить раздел")."</button>";
 
 	echo "<span class='h1'>".aa("Разделы")."</span>
-		</div></div>".$razdel_txt."
+		</div>".$razdel_txt."
 		<div style='max-height:700px;'>";
 
 	$icon_size = "large";
