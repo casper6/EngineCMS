@@ -76,13 +76,11 @@ $url2 = explode("_",$url);
 $url2 = explode("?",$url2[0]);
 $url2 = $url2[0];
 
-$lang_logo = "";
-if ($lang_admin != "ru" && $lang_admin != "ua") $lang_logo = "_en";
-
-if ($show_admin_top == 0) echo "<div class='mw800 w100 m0 h15 center noprint' id='admin_top_line' onmousemove=' $(\"#admin_top_line\").hide(); $(\"#admin_top\").show();'><img height=15 align=left src='images/logo_admin".$lang_logo.".png'>".aa("Главное меню")."</div><table class='mw800 hide w100 m0 fixed z1000 l0 t0 shadow' id='admin_top' style='background-color: ".$ad_fon.";'>";
-else echo "<table class='mw800 w100 m0'>";
+if ($show_admin_top == 0) {
+	echo "<div class='mw800 w100 m0 h15 center noprint' id='admin_top_line' onmousemove=' $(\"#admin_top_line\").hide(); $(\"#admin_top\").show();'><img height=15 align=left src='images/logotip.png'>".aa("Главное меню")."</div><table class='mw800 hide w100 m0 fixed z1000 l0 t0 shadow' id='admin_top' style='background-color: ".$ad_fon.";'>";
+} else echo "<table class='mw800 w100 m0'>";
 echo "<tr class='noprint'>";
-if ($show_admin_top != "2") echo "<td class=center ><a title='".aa("Перейти в Содержание")."' href='sys.php' class='nothing'><img src='images/logo_admin".$lang_logo.".png' align=left></a> 
+echo "<td class='center mp0'><a title='".aa("Перейти в Содержание")."' href='sys.php' class='nothing'><img src='images/logotip.png' align=left></a> 
 
 
 </td>";
@@ -90,21 +88,21 @@ echo "<td class='mp0'><div class='nothing p5'>";
 //if($detect->isiOS())
 //if($detect->isAndroidOS())
 global $buttons;
-$buttons = explode(",", aa(" Содержание, Оформление, Настройки, Статистика"));
-if ($deviceType != 'computer') $buttons = array('','','','');
+$buttons = explode(",", aa(" Содержание, Оформление, Настройки"));
+if ($deviceType != 'computer') $buttons = array('','','');
 
 $exit_admin_button = " <a id='logout_button' class='button small right3' title='".aa("Выход из администрирования\n(мера безопасности)")."' href='sys.php?op=logout'><span class='icon small red' data-icon='Q'></span></a>";
 
 
 
 echo "<ul class='button-bar' style='margin-right: 5px; margin-bottom: 5px'>
-<li class='first ".$color1."'><a title='".aa("Содержание: разделы и страницы")."' href='sys.php'><span class='icon gray small' data-icon=','></span>".$buttons[0]."</a></li>";
+<li class='first ".$color1."'><a title='".aa("Перейти в Содержание")."' href='sys.php'><span class='icon gray small' data-icon=','></span>".$buttons[0]."</a></li>";
 global $editor_style;
 if ($editor_style == false) {
 	echo "<li class='".$color2."'><a title='".aa("Дизайн, стиль, блоки и прочие элементы оформления сайта")."' href='sys.php?op=mainpage&amp;type=element'><span class='icon gray small' data-icon='Y'></span>".$buttons[1]."</a></li>
 	<li class='".$color3."'><a title='".aa("Настройки сайта")."' href='sys.php?op=options'><span class='icon gray small' data-icon='='></span>".$buttons[2]."</a></li>";
 }
-if ($show_admin_top != "2") echo "<li class='last ".$color4."'><a title='".aa("Открыть статистику сайта")."' href='sys.php?op=stat_main'><span class='icon gray small' data-icon='j'></span>".$buttons[3]."</a></li>";
+if ($show_admin_top != "2") echo "<li class='last ".$color4."'><a title='".aa("Открыть статистику сайта")."' href='sys.php?op=stat_main'><span class='icon gray small' data-icon='j'></span></a></li>";
 else echo $exit_admin_button."";
 echo "</ul>";
 
