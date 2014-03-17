@@ -840,7 +840,7 @@ function edit_main($id) {
 		$module_name = $options[0];
 		$options = str_replace($module_name."|","",$text);
 		// обнулили все опции
-		$media = $folder = $col = $view = $golos = $golosrazdel = $post = $comments = $datashow = $favorites = $socialnetwork = $search = $search_papka = $put_in_blog = $base = $vetki = $citata = $media_comment = $no_html_in_opentext = $no_html_in_text = $show_add_post_on_first_page = $media_post = $razdel_shablon = $page_shablon = $comments_all = $comments_num = $comments_mail = $comments_adres = $comments_tel = $comments_desc = $golostype = $pagenumbers = $comments_main = $tags_type = $pagekol = $table_light = $designpages = $comments_add = $papka_show = $add_post_to_mainpage = $design_tablet = $designpages_tablet = $design_phone = $designpages_phone = $edit_pole = $show_tags_pages = $golos_admin = $comment_all_link = $show_read_all = $future_date = $close_date = 0;
+		$media = $folder = $col = $view = $golos = $golosrazdel = $post = $comments = $datashow = $favorites = $socialnetwork = $search = $search_papka = $put_in_blog = $base = $vetki = $citata = $media_comment = $no_html_in_opentext = $no_html_in_text = $show_add_post_on_first_page = $media_post = $razdel_shablon = $page_shablon = $comments_all = $comments_num = $comments_mail = $comments_adres = $comments_tel = $comments_desc = $golostype = $pagenumbers = $comments_main = $tags_type = $pagekol = $table_light = $designpages = $comments_add = $papka_show = $add_post_to_mainpage = $design_tablet = $designpages_tablet = $design_phone = $designpages_phone = $edit_pole = $show_tags_pages = $golos_admin = $comment_all_link = $show_read_all = $future_date = $close_date = $razdel_tags_random = 0;
 		$menushow = $titleshow = $razdeltitleshow = $razdel_link = $peopleshow = $design = $tags = $podrobno = $podrazdel_active_show = $podrazdel_show = $tipograf = $limkol = $tags_show = $tema_zapret = $tema_zapret_comm = $opentextshow = $maintextshow = $papka_tags_pages = $razdel_tags_pages = $div_or_table = 1;
 		$comment_all_link_text = "читать полностью";
 		$comm_col_letters = "1000";
@@ -1015,8 +1015,10 @@ function edit_main($id) {
 		<tr><td>Показывать похожие страницы ".input("options[text_tags_pages]", $text_tags_pages, 40)." <p>
 		Количество страниц ".input("options[col_tags_pages]", $col_tags_pages, 3).".<p>
 		<b>Вывод страниц основан на одинаковых тегах</b> (ключевых словах). Включать их отображение на странице необязательно, но заполнять данные поля в дополнительных настройках при редактировании страницы обязательно.<p>
-		Показывать похожие страницы только из этой же папки (если нет — со всего раздела) ".select("options[papka_tags_pages]", "0,1", "НЕТ,ДА", $papka_tags_pages)."<br><p><br>
-		Показывать похожие страницы только из этого раздела (если нет — со всех разделов) ".select("options[razdel_tags_pages]", "0,1", "НЕТ,ДА", $razdel_tags_pages)."</td>
+		Показывать только из этой же папки (если отключено — со всего раздела) ".select("options[papka_tags_pages]", "0,1", "НЕТ,ДА", $papka_tags_pages)."<br><p><br>
+		Показывать только из этого раздела (если отключено — со всех разделов) ".select("options[razdel_tags_pages]", "0,1", "НЕТ,ДА", $razdel_tags_pages)."<br><p><br>
+		Показывать вразноброс (если отключено — сортировка по дате, самые свежие) ".select("options[razdel_tags_random]", "0,1", "НЕТ,ДА", $razdel_tags_random)."
+		</td>
 		<td>".select("options[show_tags_pages]", "0,1", "НЕТ,ДА", $show_tags_pages)."</td></tr>
 		<tr><td><strong>Показывать Добавление страниц в Интернет-закладки</strong></td>
 		<td>".select("options[favorites]", "1,0", "ДА,НЕТ", $favorites)."</td></tr>

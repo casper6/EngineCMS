@@ -37,7 +37,7 @@ echo "<!doctype html>
 <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
 <link rel='shortcut icon' href='images/favicon_cms.png' type='image/x-icon'>
 <script>var clean_urls=".$clean_urls.";</script>
-<script src='/includes/jquery.compress.js'></script>
+<script src='/includes/jquery.all_in_one.js'></script>
 <script src='includes/css-frameworks/kickstart/js/ad-kickstart.compress.js'></script>
 <!--[if lt IE 9]><script src='includes/html5.js'></script><![endif]-->
 <link rel='stylesheet' href='includes/jquery.compress.css'>
@@ -69,7 +69,17 @@ ad-kickstart.compress.css =
 if ($lang_admin != 'ru') echo "<script src='language/adm_".$lang_admin.".js'></script>";
 if ($red==3) echo "<script src='ed/js/editor/editor.js'></script><link rel='stylesheet' href='ed/js/editor/css/editor.css' media='screen, projection' /> ";
 
-echo "\n</head>\n<body style=\"background-color: ".$ad_fon.";\">";
+echo "\n</head>\n<body style=\"background-color: ".$ad_fon.";\">
+<script>
+  function keying_esc_add() {
+    document.body.onkeydown = function() {
+      if (event.keyCode == 27) {
+          $(\"#add\").hide();
+      }
+    }
+  }
+  keying_esc_add();
+  </script>";
 $url = getenv("REQUEST_URI");
 $url = str_replace("http://".$siteurl,"",$url);
 $url2 = explode("_",$url);
@@ -77,14 +87,11 @@ $url2 = explode("?",$url2[0]);
 $url2 = $url2[0];
 
 if ($show_admin_top == 0) {
-	echo "<div class='mw800 w100 m0 h15 center noprint' id='admin_top_line' onmousemove=' $(\"#admin_top_line\").hide(); $(\"#admin_top\").show();'><img height=15 align=left src='images/logotip.png'>".aa("Главное меню")."</div><table class='mw800 hide w100 m0 fixed z1000 l0 t0 shadow' id='admin_top' style='background-color: ".$ad_fon.";'>";
-} else echo "<table class='mw800 w100 m0'>";
+	echo "<div class='w100 m0 h15 center noprint' id='admin_top_line' onmousemove=' $(\"#admin_top_line\").hide(); $(\"#admin_top\").show();'><img height=15 align=left src='images/logotip.png'>".aa("Главное меню")."</div><table class='hide w100 m0 fixed z1000 l0 t0 shadow' id='admin_top' style='background-color: ".$ad_fon.";'>";
+} else echo "<table class='w100 mp0'>";
 echo "<tr class='noprint'>";
-echo "<td class='center mp0'><a title='".aa("Перейти в Содержание")."' href='sys.php' class='nothing'><img src='images/logotip.png' align=left></a> 
-
-
-</td>";
-echo "<td class='mp0'><div class='nothing p5'>";
+echo "<td class='center mp0' width=110><a title='".aa("Перейти в Содержание")."' href='sys.php' class='nothing'><img src='images/logotip.png'></a></td>";
+echo "<td class='mp0'><div class='nothing'>";
 //if($detect->isiOS())
 //if($detect->isAndroidOS())
 global $buttons;
@@ -111,7 +118,7 @@ if ($show_admin_top != "2") {
 	var search_form = \"<a class=punkt onclick=$('#add').hide('slow');><div class=radius style='font-size:12pt; width:20px; height: 20px; color: white; text-align:center; float:right; margin:5px; background: #bbbbbb;'>&nbsp;x&nbsp;</div></a><h1>Поиск по сайту</h1><form method='post' name='search' action='search' style='display:inline;' class='nothing'><input class='w100' type='search' name='slovo'></form>\";
 	</script>
 	<nobr><button id='site_button' class='small' target='_blank' onclick='window.open(\"/\")' title='".aa("Перейти на сайт (откроется в новом окне)")."'><span class='icon small' data-icon='4'></span></button> 
-	<button class='small' title='".aa("Поиск по сайту")."' onclick='$(\"#add\").toggle().html(search_form); $(\"#add form input\").focus();'><span class='icon small red' data-icon='s'></span></button>
+	<button class='small' id='search_button' title='".aa("Поиск по сайту")."' onclick='$(\"#add\").toggle().html(search_form); $(\"#add form input\").focus();'><span class='icon small red' data-icon='s'></span></button>
 	".$post;
 	if ($url == "/red" || $url == "/sys.php" || $url == "/sys.php?op=mes") echo "<a class='button small' onclick=\"openbox('8','".aa("Помощь")."'); $('#show_razdel').click();\" title='".aa("Открыть справочную информацию")."'><span class='icon small' data-icon='n'></span></a>";
 	echo "".$exit_admin_button."</nobr>";

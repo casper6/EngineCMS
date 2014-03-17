@@ -125,8 +125,8 @@ function trash_pics(type, sort, count) {
 function replace(id) {
 	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : 'html',
 	    data: {'func': 'replace', 'id': id},
-	    beforeSend: function(){ new Spinner().spin( document.getElementById('pid'+id) ); },
-	    success: function(data){ $('#pid'+id).html(data); }
+	    beforeSend: function(){ $('#add').show(); new Spinner().spin( document.getElementById('add') ); },
+	    success: function(data){ $('#add').html(data); }
 	});
 }
 function select_button(id) {
@@ -186,7 +186,7 @@ function razdel_show(title,id,name,type,xxx,sort) {
 	select_button('mainrazdel'+id);
 	xxx = Math.floor( Math.random() * (100000 - 9) ) + 10;
 	colors = '<span id="colors" class="hide"><a class="punkt" onclick="$(\'#add\').hide(\'slow\');"><div class="radius" style="font-size:12pt; width:20px; height: 20px; color: white; text-align:center; float:right; margin:5px; background: #bbbbbb;">&nbsp;x&nbsp;</div></a><h1>Выберите цвет раздела по частоте его использования:</h1><ul class="button-bar small"><li class="first"><a href="sys.php?op=mainpage_razdel_color&id='+id+'&color=0" title="Без цветовой маркировки">'+icon('gray small',',')+' не выбрано</a></li><li><a href="sys.php?op=mainpage_razdel_color&id='+id+'&color=1" title="Раздел часто используется">'+icon('lightgreen small',',')+' часто</a></li><li><a href="sys.php?op=mainpage_razdel_color&id='+id+'&color=2" title="Раздел редко используется">'+icon('lightyellow small',',')+' редко</a></li><li><a href="sys.php?op=mainpage_razdel_color&id='+id+'&color=3" title="Раздел не используется">'+icon('lightred small',',')+' не используется</a></li><li class="last"><a href="sys.php?op=mainpage_razdel_color&id='+id+'&color=4" title="Новый раздел, в разработке">'+icon('lightblue small',',')+' новый</a></li></ul><p>Цвет может использоваться для сортировки разделов —<br>Настройки -> Администрирование -> «Сортировка разделов...».</span>';
-	del_razdel = '<li><a href="sys.php?op=mainpage&id='+id+'&amp;type=2&nastroi=1#1" title="Настройки (опции) раздела">'+icon('orange small','V')+' Настроить</a></li><li class="last"><a class=pointer onclick="$(\'#add\').show().html( $(\'#del_raz'+id+'\').html() )" title="Удалить этот раздел">'+icon('red small','F')+'</a></li></ul></nobr><div id="del_raz'+id+'" class="hide"><h1>Вы хотите удалить этот раздел и всё его содержимое?</h1><a onclick=\'delrazdel("'+id+'"); $("#add").hide("slow"); show("mainrazdel'+id+'"); razdel_show("Раздел удалён", 0)\' title="Удалить этот раздел" class="button red white">'+icon('white medium','F')+' Удалить</a> <a onclick="$(\'#add\').hide(\'slow\')" title="Не удалять" class="ml50 button">НЕ удалять</a></div>';
+	del_razdel = '<li><a href="sys.php?op=mainpage&id='+id+'&amp;type=2&nastroi=1#1" title="Настройки (опции) раздела">'+icon('orange small','V')+' Настроить</a></li><li class="last"><a class=pointer onclick="$(\'#add\').show().html( $(\'#del_raz'+id+'\').html() )" title="Удалить этот раздел">'+icon('red small','F')+'</a></li></ul></nobr><div id="del_raz'+id+'" class="hide"><h1>Вы хотите удалить этот раздел и всё его содержимое?</h1><a onclick=\'delrazdel("'+id+'"); $("#add").hide("slow"); show("mainrazdel'+id+'"); razdel_show("Раздел удалён", 0)\' title="Удалить этот раздел" class="button">'+icon('red medium','F')+' Удалить</a> <a onclick="$(\'#add\').hide(\'slow\')" title="Не удалять" class="ml50 button">НЕ удалять</a></div>';
 	if (name == 'index') del_razdel = '<li class="last"><a href="sys.php?op=mainpage&id='+id+'&amp;type=2&nastroi=1#1" title="Настройки (опции) раздела">'+icon('orange small','V')+' Настроить</a></li></ul></nobr>';
 	if (id == 0) txt = '<h1>'+title+'</h1>';
 	else {

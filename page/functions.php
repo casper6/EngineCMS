@@ -456,7 +456,7 @@ function select($name,$vars,$vars_name,$znachenie,$add='',$class='left3') { // �
     if ($znachenie == "1") $style1 = "style='display:none;'"; 
     else $style2 = "style='display:none;'";
     $id = md5($name);
-    $button = "<a title='".ss("Выключено")."' class='".$class." button red white small punkt' id=on_".$id." onclick='$(\"#".$id." [value=1]\").attr(\"selected\", \"selected\"); $(\"#on_".$id."\").hide().next().show();'".$style1."><span class=\"icon white small\" data-icon=\"Q\"></span></a><a title='".ss("Включено")."' class='".$class." button green small punkt' id=off_".$id." onclick='$(\"#".$id." [value=0]\").attr(\"selected\", \"selected\"); $(\"#off_".$id."\").hide().prev().show();'".$style2."><span class=\"icon white small\" data-icon=\"`\"></span></a>";
+    $button = "<a title='".ss("Выключено")."' class='".$class." button small punkt' id=on_".$id." onclick='$(\"#".$id." [value=1]\").attr(\"selected\", \"selected\"); $(\"#on_".$id."\").hide().next().show();'".$style1."><span class=\"icon red small\" data-icon=\"Q\"></span></a><a title='".ss("Включено")."' class='".$class." button small punkt' id=off_".$id." onclick='$(\"#".$id." [value=0]\").attr(\"selected\", \"selected\"); $(\"#off_".$id."\").hide().prev().show();'".$style2."><span class=\"icon green small\" data-icon=\"`\"></span></a>";
   } else { 
     $button = "";
     $id = $name;

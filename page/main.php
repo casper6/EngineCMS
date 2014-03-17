@@ -16,7 +16,7 @@ global $strelka, $go, $cid, $pid, $all, $avtor, $to, $info, $num, $ip, $golos, $
 // настройки раздела из БД
 global $post, $comments, $datashow, $sort, $lim, $foto, $view, $search, $search_papka, $tema, $tema_name, $tema_title, $tema_opis, $menushow, $design, $show_comments;
 
-$media = $folder = $col = $view = $golos = $golosrazdel = $post = $comments = $datashow = $favorites = $socialnetwork = $search = $search_papka = $put_in_blog = $base = $vetki = $citata = $media_comment = $no_html_in_opentext = $no_html_in_text = $show_add_post_on_first_page = $media_post = $razdel_shablon = $page_shablon = $comments_all = $comments_num = $comments_mail = $comments_adres = $comments_tel = $comments_desc = $golostype = $pagenumbers = $comments_main = $tags_type = $tema_zapret_comm = $pagekol = $table_light = $designpages = $comments_add = $papka_show = $add_post_to_mainpage = $design_tablet = $designpages_tablet = $design_phone = $designpages_phone = $show_tags_pages = $golos_admin = $comment_all_link = $show_read_all = 0;
+$media = $folder = $col = $view = $golos = $golosrazdel = $post = $comments = $datashow = $favorites = $socialnetwork = $search = $search_papka = $put_in_blog = $base = $vetki = $citata = $media_comment = $no_html_in_opentext = $no_html_in_text = $show_add_post_on_first_page = $media_post = $razdel_shablon = $page_shablon = $comments_all = $comments_num = $comments_mail = $comments_adres = $comments_tel = $comments_desc = $golostype = $pagenumbers = $comments_main = $tags_type = $tema_zapret_comm = $pagekol = $table_light = $designpages = $comments_add = $papka_show = $add_post_to_mainpage = $design_tablet = $designpages_tablet = $design_phone = $designpages_phone = $show_tags_pages = $golos_admin = $comment_all_link = $show_read_all = $razdel_tags_random = 0;
 $menushow = $titleshow = $razdeltitleshow = $razdel_link = $peopleshow = $design = $tags = $podrobno = $podrazdel_active_show = $podrazdel_show = $tipograf = $limkol = $tags_show = $tema_zapret = $opentextshow = $maintextshow = $papka_tags_pages = $razdel_tags_pages = $div_or_table = 1;
 $comment_all_link_text = ss("читать полностью");
 $comm_col_letters = "1000";
@@ -1194,7 +1194,8 @@ function page($pid, $all) {
     $and1 = $and2 = "";
     if ($papka_tags_pages == 1) $and2 = " and `cid`='".$cid."'";
     if ($razdel_tags_pages == 1) $and1 = " and `module`='".$module."'";
-    $result = $db->sql_query("SELECT `pid`, `title`, `date`, `copy` FROM ".$prefix."_pages WHERE `tables`='pages'".$and1." and (`active`='1' or `active`='2') and `pid`!='".$pid."'".$and2.$search_keys." order by `date` desc limit 0,".$col_tags_pages);
+    if ($razdel_tags_random == 1) $sort = "RAND()"; else $sort = "`date` desc";
+    $result = $db->sql_query("SELECT `pid`, `title`, `date`, `copy` FROM ".$prefix."_pages WHERE `tables`='pages'".$and1." and (`active`='1' or `active`='2') and `pid`!='".$pid."'".$and2.$search_keys." order by ".$sort." limit 0,".$col_tags_pages);
     $numrows = $db->sql_numrows($result);
     if ($numrows > 0 and $search_num > 0) {
       $page_search_news = "<div class='page_another'>".$text_tags_pages."</div><div class='another_links'>";

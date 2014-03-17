@@ -307,17 +307,21 @@ function GraphicAdmin() {
 	echo "<div style='margin:10px;'>";
 	if (!empty($project_logotip) && file_exists($project_logotip)) echo "<img src='".$project_logotip."' class=center>";
 	if (!empty($project_name)) echo "<br><font class='big_main'>".$project_name."</font>";
-	
-	if ($show_admin_top != "2") echo "<p>".aa("Страниц:")." ".$size_pages.$size_pages_off.".
-	<p>".aa("Папок:")." ". $size_cat.".
+	echo "<hr>";
+	if ($show_admin_top != "2") echo "<div class='main_icon'>
 	<p>".aa("Разделов:")." ". $size_razdel.".
-	<p>".aa("Комментариев:")." ". $size_comm."";
+	<p>".aa("Папок:")." ". $size_cat.".
+	<p>".aa("Страниц:")." ".$size_pages.$size_pages_off.".
+	<p>".aa("Комментариев:")." ". $size_comm.".
+	</div>";
+	
+	// if () echo "<div class='main_icon'></div>";
 
-	echo "<form action='".$admin_file.".php?op=mes' method='post' name=form class='nothing' class='w100'>
+	echo "<hr><form action='".$admin_file.".php?op=mes' method='post' name=form class='nothing' class='w100'>
 		<div class='center' style='height:242px;'>
 		<a id='adminmes_date' style='float:right; margin:3px; display:none;' onclick=\"document.getElementById('adminmes').value+='\\r'+getDateNow()+'  '\" title='".aa("Вставить дату и время (в конце текста)")."' class='button small ml20'><span class='icon gray small' data-icon='6'></span>".$buttons[6]."</a>
 		<button id='adminmes_save' class='hide green small punkt' type='submit' style='float:left; margin:3px;'><span class=\"icon white small\" data-icon=\"c\"></span> ".aa("Сохранить")."</button><div class='h3' style='height:40px;'>".$mes_ok."</div>
-		<textarea id='adminmes' name='adminmes' rows='3' cols='40' style='width:99%' class='f14 h200' onclick='$(\"#adminmes_save\").show(); $(\"#adminmes_date\").show();'>".$adminmes."</textarea>
+		<textarea id='adminmes' name='adminmes' rows='3' cols='40' style='width:99%' class='f14 h155' onclick='$(\"#adminmes_save\").show(); $(\"#adminmes_date\").show();'>".$adminmes."</textarea>
 		</div>
 	</form>
 	</div>

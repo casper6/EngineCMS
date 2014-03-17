@@ -114,7 +114,7 @@ if ($func == "spiski_show") { // Выводим списки полей
    </td></tr>";
    $last_name = $row['name'];
   }
-  $info .= "</table><div class='curved-vt-2 hide' style='margin-left:-250px; width: 500px; top: 80px;' id='add_spisok'></div>";
+  $info .= "</table>";
   echo $info; exit; 
 }
 ######################################################################################
@@ -1374,71 +1374,32 @@ if ($func == "rep") { // Копия/Перемещения/Ярлык стран
   list($papka, $razdel) = explode("*@%", $string);
   $info = "Не получилось...";
   if ($type == 1) { // создать ярлык (ссылку)
-  $info = "<b>Страница успешно продублирована.</b> При изменении любой из страниц-ярлыков, информация будет меняться во всех остальных страницах. Удаление одной из страниц-ярлыков (в том числе оригинала) не затронет других страниц.";
-  // получим все данные об этой странице
-  $sql = "SELECT * FROM ".$prefix."_pages WHERE pid='".$id."'";
-  $result = $db->sql_query($sql);
-  $row = $db->sql_fetchrow($result);
-    $keys = $row['keywords'];
-    $desc = $row['description'];
-    $title = strip_tags($row['title'], '<b><i>');
-    $opentext = $row['open_text'];
-    $bodytext = $row['main_text'];
-    $data = $row['date'];
-    $data2 = $now;
-    $active = $row['active'];
-    $foto = $row['foto'];
-    $search = $row['search'];
-    $mainpage = $row['mainpage'];
-    $rss = $row['rss'];
-    $price = $row['price'];
+    $info = "<b>Страница успешно продублирована.</b> При изменении любой из страниц-ярлыков, информация будет меняться во всех остальных страницах. Удаление одной из страниц-ярлыков (в том числе оригинала) не затронет других страниц.";
+    // получим все данные об этой странице
+    $row = $db->sql_fetchrow($db->sql_query("SELECT * FROM ".$prefix."_pages WHERE `pid`='".$id."'"));
     $copy = $row['copy'];
-    $sort = $row['sort'];
-    $nocomm = $row['nocomm'];
     $re2 = $id;
     if ($copy == 0) $copy = $id;
     else $re2 = $copy;
-  // создадим такую же
-  $db->sql_query("INSERT INTO ".$prefix."_pages VALUES (NULL, '$razdel', '$papka', '$title', '$opentext', '$bodytext', '$data', '$data2', '0', '$active', '0', '0', '$foto', '$search', '$mainpage', '$rss', '$price', '$desc', '$keys', 'pages', '$copy', '$sort', '$nocomm');") or $info = "Создать копию не удалось."; 
-  $db->sql_query("UPDATE ".$prefix."_pages SET `copy`='$re2' WHERE pid='$id'") or $info .= "Изменить номер в копируемой странице не удалось.";
+    // создадим такую же
+    $db->sql_query("INSERT INTO ".$prefix."_pages (`pid`,`module`,`cid`,`title`,`open_text`,`main_text`,`date`,`redate`,`counter`,`active`,`golos`,`comm`,`foto`,`search`,`mainpage`,`rss`,`price`,`description`,`keywords`,`tables`,`copy`,`sort`,`nocomm`,`meta_title`,`clean_url`,`close_date`) VALUES (NULL, '".mysql_real_escape_string($razdel)."', '".$papka."', '".mysql_real_escape_string(strip_tags($row['title'], '<b><i>'))."', '".mysql_real_escape_string($row['open_text'])."', '".mysql_real_escape_string($row['main_text'])."', '".$row['date']."', '".$now."', '0', '".$row['active']."', '0', '0', '".$row['foto']."', '".mysql_real_escape_string($row['search'])."', '".$row['mainpage']."', '".$row['rss']."', '".mysql_real_escape_string($row['price'])."', '".mysql_real_escape_string($row['description'])."', '".mysql_real_escape_string($row['keywords'])."', 'pages', '".$copy."', '".$row['sort']."', '".$row['nocomm']."', '".mysql_real_escape_string($row['meta_title'])."', '".mysql_real_escape_string($row['clean_url'])."', '".$row['close_date']."');") or $info = "Создать ярлык не удалось."; 
+    $db->sql_query("UPDATE ".$prefix."_pages SET `copy`='".$re2."' WHERE pid='".$id."'") or $info .= "Изменить номер в копируемой странице не удалось.";
   }
-
   if ($type == 2) { // копировать
-  $info = "<b>Страница успешно скопирована.</b>";
-  // получим все данные об этой странице
-  $sql = "SELECT * FROM ".$prefix."_pages WHERE pid='$id'";
-  $result = $db->sql_query($sql);
-  $row = $db->sql_fetchrow($result);
-    $keys = $row['keywords'];
-    $desc = $row['description'];
-    $title = strip_tags($row['title'], '<b><i>');
-    $opentext = $row['open_text'];
-    $bodytext = $row['main_text'];
-    $data = $row['date'];
-    $data2 = $now;
-    $active = $row['active'];
-    $foto = $row['foto'];
-    $search = $row['search'];
-    $mainpage = $row['mainpage'];
-    $rss = $row['rss'];
-    $price = $row['price'];
-    $sort = $row['sort'];
-    $nocomm = $row['nocomm'];
-  // создадим такую же
+    $info = "<b>Страница успешно скопирована.</b>";
+    // получим все данные об этой странице
+    $row = $db->sql_fetchrow($db->sql_query("SELECT * FROM ".$prefix."_pages WHERE `pid`='".$id."'"));
     if (isset($copy)) {
       if ($copy == 0) $copy = $id;
     } else $copy = $id;
-
-  // `pid`,`module`,`cid`,`title`,`open_text`,`main_text`,`date`,`redate`,`counter`,`active`,`golos`,`comm`,`foto`,`search`,`mainpage`,`rss`,`price`,`description`,`keywords`,`tables`,`copy`,`sort`,`nocomm`
-    $sql = "INSERT INTO ".$prefix."_pages VALUES (NULL, '".mysql_real_escape_string($razdel)."', '$papka', '".mysql_real_escape_string($title)."', '".mysql_real_escape_string($opentext)."', '".mysql_real_escape_string($bodytext)."', '$data', '$data2', '0', '$active', '0', '0', '$foto', '".mysql_real_escape_string($search)."', '$mainpage', '$rss', '".mysql_real_escape_string($price)."', '".mysql_real_escape_string($desc)."', '".mysql_real_escape_string($keys)."', 'pages', '0', '$sort', '$nocomm','','');";
-  $db->sql_query($sql) or $info = "Скопировать не удалось."; 
+    $db->sql_query("INSERT INTO ".$prefix."_pages (`pid`,`module`,`cid`,`title`,`open_text`,`main_text`,`date`,`redate`,`counter`,`active`,`golos`,`comm`,`foto`,`search`,`mainpage`,`rss`,`price`,`description`,`keywords`,`tables`,`copy`,`sort`,`nocomm`,`meta_title`,`clean_url`,`close_date`) VALUES (NULL, '".mysql_real_escape_string($razdel)."', '".$papka."', '".mysql_real_escape_string(strip_tags($row['title'], '<b><i>'))."', '".mysql_real_escape_string($row['open_text'])."', '".mysql_real_escape_string($row['main_text'])."', '".$row['date']."', '".$now."', '0', '".$row['active']."', '0', '0', '".$row['foto']."', '".mysql_real_escape_string($row['search'])."', '".$row['mainpage']."', '".$row['rss']."', '".mysql_real_escape_string($row['price'])."', '".mysql_real_escape_string($row['description'])."', '".mysql_real_escape_string($row['keywords'])."', 'pages', '".$copy."', '".$row['sort']."', '".$row['nocomm']."', '".mysql_real_escape_string($row['meta_title'])."', '".mysql_real_escape_string($row['clean_url'])."', '".$row['close_date']."');") or $info = "Скопировать не удалось."; 
   }
 
   if ($type == 3) { // переместить
-  $info = "<b>Страница успешно перемещена.</b>";
-  $db->sql_query("UPDATE ".$prefix."_pages SET `module`='$razdel', `cid`='$papka' WHERE pid='$id'") or $info = "Перемещение не удалось.";
+    $info = "<b>Страница успешно перемещена.</b>";
+    $db->sql_query("UPDATE ".$prefix."_pages SET `module`='".$razdel."', `cid`='".$papka."' WHERE `pid`='".$id."'") or $info = "Перемещение не удалось.";
   }
-  echo "<div class='notice success center mw700'><h2>".$info."</h2></div>"; exit;
+  echo "<div class='notice success center'><h1>".$info."</h1></div>"; exit;
 }
 ######################################################################################
 if ($func == "replace") { // Перемещение страницы
@@ -1447,7 +1408,7 @@ if ($func == "replace") { // Перемещение страницы
   $name_pap = $name_raz['cid'];
   $name_raz = $name_raz['module'];
   $list = "<form method='post' style='display:inline;' name='teleport' onsubmit='return false'>
-  <a title='Закрыть это окно' class='pointer' onclick='clo(".$id.");'><div class='radius' style='font-size:12pt; width:20px; height: 20px; color: white; text-align:center; float:right; margin:5px; margin-bottom:0; background: #bbbbbb;'>&nbsp;x&nbsp;</div></a>
+  <a title='Закрыть это окно' class='pointer' onclick='$(\"#add\").hide();'><div class='radius' style='font-size:12pt; width:20px; height: 20px; color: white; text-align:center; float:right; margin:5px; margin-bottom:0; background: #bbbbbb;'>&nbsp;x&nbsp;</div></a>
   <p><b>Что будем делать?</b> <select name=what id='what".$id."'>
   <option value=1>создадим ярлык</option>
   <option value=2 selected>скопируем</option>
@@ -1486,11 +1447,11 @@ izmenapapka(document.getElementById('to_razdel".$id."').value, $name_pap, '$name
 </script>";
   $list .= "</div><input type=button value=\"OK\" style='width:55%; height:35px;' onclick=\"rep($id,document.getElementById('what".$id."').value,document.getElementById('to_razdel".$id."').value,document.getElementById('to_papka".$id."').value); if ($('#what".$id."').val()==3) clo($id);\"><br>Жмём 1 раз, т.к. копирование и ярлыки при каждом нажатии создают новую страницу.
   </form>";
-  $list = "<div class='block radius' style='width:95%;'>".$list."
+  $list = "".$list."
   <p><a class='punkt' onclick=\"show('yarlyk_help');\">Что такое Ярлык?</a> 
   <div id='yarlyk_help' style='display:none;'>Когда нужна страница, которая должна находиться в нескольких разделах или папках (к примеру компания относится к разным видам деятельности, для которых созданы папки) — нужно создать на нее ярлык. При изменении ярлыка, информация изменится и на основной странице тоже, т.е. получаются зависимые друг от друга страницы. При удалении одной из них (даже источника) данные во всех остальных не теряются.<br>
   Если в разделе или папке 2 ярлыка одной страницы, отобразится только один.<br>
-  Если в разделе или папке оригинал и его ярлык, отобразится только оригинал.</div></div>";
+  Если в разделе или папке оригинал и его ярлык, отобразится только оригинал.</div>";
   echo $list; exit;
 }
 ######################################################################################

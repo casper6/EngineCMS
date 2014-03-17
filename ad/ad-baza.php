@@ -362,7 +362,7 @@ function base_base($name) {
     $url = "sys.php?op=base_base&name=".$name; // getenv("REQUEST_URI");
     if ($sort_way == " desc") $sort_way = 1; else $sort_way = 0;
 
-    if ($doc=="") echo "<div class='radius_top noprint' style='float:left;min-width:500;background:#333333;text-align:center; height:17px; margin-left:50px; overflow:hidden;'>".base_links($numrows,$p,$main_url."&p=",$lim,"top")."</div>";
+    if ($doc=="") echo "<div class='radius_top noprint' style='float:left;min-width:500;background:#eeeeee;text-align:center; height:17px; margin-left:50px; overflow:hidden;'>".base_links($numrows,$p,$main_url."&p=",$lim,"top")."</div>";
 
 
     echo "<table class='table_light w100'><tr valign=top class='block'><td class='noprint' title='Статус (Активность)' width=120><span class=\"icon gray small\" data-icon=\"W\"></span>Статус".$link_active."</td><td><b>№</b>".$link_id."</td><td>".$rus_names."</td>";
@@ -407,19 +407,19 @@ function base_base($name) {
             else echo "<td class='".$nop."'>".$pag_line."</td>";
     	}
       
-        if ($doc=="" and $row['active'] != 1) {
+        //if ($doc=="" and $row['active'] != 1) {
             echo "<td class='noprint'>";
             if ($edit_stroka == 1) echo "<a href='/sys.php?op=base_base_edit_base&name=".$name."&base=".$baza_name."&red=1&id=".$base_id."'><span class=\"icon blue small\" data-icon=\"7\" title=\"Редактировать\"></span></a> ";
             if ($del_stroka == 1) echo "<a href='/sys.php?op=base_base_delit_base&name=".$name."&base=".$baza_name."&id=".$base_id."'><span class=\"icon red small\" data-icon=\"T\" title=\"Удалить с подтверждением\"></span></a>";
             echo "</td>";
-        } else echo "<td class='noprint'><span class=\"icon gray small\" data-icon=\"X\" title=\"Нельзя удалять и редактировать! Информация закрыта\"></span></td>";
+        //} else echo "<td class='noprint'><span class=\"icon gray small\" data-icon=\"X\" title=\"Нельзя удалять и редактировать! Информация закрыта\"></span></td>";
         echo "</tr>";
         
     }
     echo "</table><p class='noprint'><span class=\"icon black small left3\" data-icon=\"x\"></span> — при нажатии строка не будет выведена при печати.";
 
 
-    if ($doc=="") echo "<div class='radius_bottom noprint' style='min-width:500px;margin-right:50px;background:#333333;float:right;text-align:center;'>".base_links($numrows,$p,$main_url."&p=",$lim,"bottom")."</div><br>";
+    if ($doc=="") echo "<div class='radius_bottom noprint' style='min-width:500px;margin-right:50px;background:#eeeeee;float:right;text-align:center;'>".base_links($numrows,$p,$main_url."&p=",$lim,"bottom")."</div><br>";
 
 
     if ($doc=="") admin_footer(); //include("ad-footer.php");

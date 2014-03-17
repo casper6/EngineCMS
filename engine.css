@@ -19,6 +19,8 @@ input,textarea,select{ filter:progid:DXImageTransform.Microsoft.Alpha(opacity=80
 }
 @media screen{ .print{ display:none; }
 }
+.main_icon {width:200px; height:140px; float:left; background:#eee; border: 1px dotted gray; margin-right:5px; margin-bottom:5px;}
+.main_icon:hover {background:#ddd;}
 .bar{ height:18px;background:green; }
 .v_bottom{ vertical-align:bottom !important; }
 #redactor-tab-control-2{ display:none !important; }
