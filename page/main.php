@@ -42,7 +42,7 @@ $comments_8 = ss("Раскрыть все комментарии");
 $tag_text_show = ss("Ключевые слова");
 $reiting_data = ss("Дата написания отзыва");
 $text_tags_pages = ss("См. также:");
-
+$socialnetwork_text = ss("Добавьте в соц. сети: ");
 parse_str($options); // раскладка всех настроек модуля
 ###########################################
 ###########################################
@@ -984,7 +984,7 @@ function showcat($cid=0, $pag=0, $slovo="") {
 function page($pid, $all) {
   global $strelka, $sitename, $soderganie, $soderganie2, $DBName, $db, $prefix, $module_name, $admin, $pagetitle, $ModuleName, $print, $siteurl, $keywords2, $description2, $data_page, $show_comments;
   // настройки модуля из БД
-  global $golos_admin, $golos, $golostype, $post, $comments, $datashow, $sort, $tags, $lim, $folder, $view, $col, $menushow, $favorites, $socialnetwork, $name, $put_in_blog, $base, $titleshow, $razdeltitleshow, $comments_add, $add_css, $comment_shablon, $page_shablon, $comments_all, $comments_num, $comments_mail, $comments_adres, $comments_tel, $vetki, $comments_all, $comments_num, $comments_desc, $comments_1, $comments_2, $comments_3, $comments_4, $comments_5, $comments_6, $comments_7, $comments_8, $tag_text_show, $opentextshow, $maintextshow, $show_tags_pages, $col_tags_pages, $papka_tags_pages, $razdel_tags_pages, $text_tags_pages;
+  global $golos_admin, $golos, $golostype, $post, $comments, $datashow, $sort, $tags, $lim, $folder, $view, $col, $menushow, $favorites, $socialnetwork, $name, $put_in_blog, $base, $titleshow, $razdeltitleshow, $comments_add, $add_css, $comment_shablon, $page_shablon, $comments_all, $comments_num, $comments_mail, $comments_adres, $comments_tel, $vetki, $comments_all, $comments_num, $comments_desc, $comments_1, $comments_2, $comments_3, $comments_4, $comments_5, $comments_6, $comments_7, $comments_8, $tag_text_show, $opentextshow, $maintextshow, $show_tags_pages, $col_tags_pages, $papka_tags_pages, $razdel_tags_pages, $text_tags_pages, $socialnetwork_text;
   $pid = mysql_real_escape_string(intval($pid));
 
   if ($base=="") { // Если это не база данных
@@ -1160,8 +1160,22 @@ function page($pid, $all) {
     $page_tags .= "<div class='page_tags'>".$tag_text_show." ".tags_generate($search)."</div>";
 
   $page_socialnetwork = "";
-  if ($socialnetwork == 1) {
-    $page_socialnetwork .= "<div class='page_socialnetwork'><script src='//yandex.st/share/share.js' charset='utf-8'></script>".ss("Добавьте в соц. сети:")." <div class='yashare-auto-init' data-yashareL10n='ru' data-yashareType='none' data-yashareQuickServices='yaru,vkontakte,facebook,twitter,odnoklassniki,moimir,lj,moikrug,gplus'></div></div>";
+  if ($socialnetwork != 0) {
+    $page_socialnetwork .= "<div class='page_socialnetwork'>".$socialnetwork_text."";
+    switch ($socialnetwork) {
+      case "1": // ссылки
+        $page_socialnetwork .= "<script src='//yandex.st/share/share.js' charset='utf-8'></script><div class='yashare-auto-init' data-yashareL10n='ru' data-yashareType='none' data-yashareQuickServices='yaru,vkontakte,facebook,twitter,odnoklassniki,moimir,lj,moikrug,gplus'></div>";
+      break;
+
+      case "2": // маленькие счетчики
+        $page_socialnetwork .= "<script src='//yandex.st/share/cnt.share.js' charset='utf-8'></script><div class='yashare-auto-init' data-yashareLink='' data-yashareTitle='' data-yashareDescription='' data-yashareImage='' data-yashareQuickServices='yaru,vkontakte,facebook,twitter,odnoklassniki,moimir,gplus' data-yashareTheme='counter' data-yashareType='small'></div>";
+      break;
+
+      case "3": // большие счетчики
+        $page_socialnetwork .= "<script type='text/javascript' src='//yandex.st/share/share.js' charset='utf-8'></script><div class='yashare-auto-init' data-yashareL10n='ru' data-yashareQuickServices='yaru,vkontakte,facebook,twitter,odnoklassniki,moimir,gplus' data-yashareTheme='counter'></div> ";
+      break;
+    }
+    $page_socialnetwork .= "</div>";
   }
 
   if ($favorites == 1) {

@@ -115,7 +115,7 @@ function base_base($name) {
     </div>
     <h1 class='noprint'><a href=/sys.php?op=base_base&name=".$name.">".$module_title."</a>, база данных.
     <a href=/sys.php?op=base_base_create_base&base=$baza_name&name=$name&red=1 class='button green'>+ Добавить строку</a>
-    <a onclick='$(\"#base_search\").toggle();' class='button blue'>Найти строки</a>
+    <a onclick='$(\"#base_search\").toggle();' class='button blue'>Фильтр и поиск</a>
 
     </h1>";
 

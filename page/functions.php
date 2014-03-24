@@ -35,6 +35,50 @@ function is_admin($admin) { // Проверка админа
   }
   return $adminSave = 0;
 }
+/////////////////////////////////////////////////////////
+function timer_show($hour, $one = false) { // Таймер
+if ($one == false) $ver = mt_rand(10000, 99999); // получили случайное число
+else $ver = "1";
+return '<script>
+      var hoursUntil'.$ver.' = '.$hour.'; // собственно устанавливаем «час Икс»
+      var until'.$ver.' = document.cookie.match(new RegExp(\'until_odn'.$ver.'=(.*?)($|;)\'));
+      if (until'.$ver.' == null) {
+        var oToday'.$ver.' = new Date();
+        var time_mos'.$ver.' = new Date(oToday'.$ver.'.getTime() + (oToday'.$ver.'.getTimezoneOffset() + 240) * 60000 + hoursUntil'.$ver.'*60*60*1000);
+        document.cookie = "until_odn'.$ver.'=" + time_mos'.$ver.'.toString() + "; path=/; expires=" + time_mos'.$ver.'.toString();
+        until'.$ver.' = time_mos'.$ver.';    
+      } else { until'.$ver.' = new Date(until'.$ver.'[1]); }
+        var oToday'.$ver.' = new Date();
+        var time_mos'.$ver.' = oToday'.$ver.'.getTime() + (oToday'.$ver.'.getTimezoneOffset() + 240) * 60000;
+        oToday'.$ver.'.setTime(time_mos'.$ver.');      
+        var sek'.$ver.' = Math.floor((until'.$ver.' - oToday'.$ver.') / 1000);
+        sec'.$ver.' = sek'.$ver.' % 60 ; //сколько секунд осталось
+        min'.$ver.'= Math.floor((sek'.$ver.' /60)%60) ;//сколько минут осталось
+        hoursek'.$ver.'= Math.floor((sek'.$ver.' / (60*60)) ) ;//сколько часов осталось
+    $(document).ready(function(){
+        if (hoursek'.$ver.'.toString().length == 1)  hoursek'.$ver.' = "0" + hoursek'.$ver.';
+        if (min'.$ver.'.toString().length == 1)  min'.$ver.' = "0" + min'.$ver.';
+        if (sec'.$ver.'.toString().length == 1)  sec'.$ver.' = "0" + sec'.$ver.';
+      $(".timer'.$ver.'").each(function(){
+        $(this).countdown({
+          image: "/includes/digits.png",
+          format: \'hh:mm:ss\',
+          startTime: hoursek'.$ver.' + \':\' + min'.$ver.' + \':\' + sec'.$ver.'
+        })                
+      })
+    })
+  </script>
+  <div class="timer timer'.$ver.'">
+    <div style="height: 78px; width: 53px; float: left; background: url(/includes/digits.png) repeat scroll 0% 0% transparent;" id="cnt_0" class="cntDigit"></div>
+    <div style="height: 78px; width: 53px; float: left; background: url(/includes/digits.png) repeat scroll 0% 0% transparent;" id="cnt_1" class="cntDigit"></div>
+    <div style="float: left;" class="cntSeparator">:</div>
+    <div style="height: 78px; width: 53px; float: left; background: url(/includes/digits.png) repeat scroll 0% 0% transparent;" id="cnt_3" class="cntDigit"></div>
+    <div style="height: 78px; width: 53px; float: left; background: url(/includes/digits.png) repeat scroll 0% 0% transparent;" id="cnt_4" class="cntDigit"></div>
+    <div style="float: left;" class="cntSeparator">:</div>
+    <div style="height: 78px; width: 53px; float: left; background: url(/includes/digits.png) repeat scroll 0% 0% transparent;" id="cnt_6" class="cntDigit"></div>
+    <div style="height: 78px; width: 53px; float: left; background: url(/includes/digits.png) repeat scroll 0% 0% transparent;" id="cnt_7" class="cntDigit"></div>
+  </div>';
+}
 ///////////////////////////////////////////////////////////////
 function num_ending($number, $endings) { // функция правильных окончаний слов
     $num100 = $number % 100;
@@ -334,8 +378,10 @@ function date2normal_view($dat, $r=0, $t=0, $eng=0) { // Функция для �
   } elseif ($r == 1) { // Функция для приведения даты из формата 20 Февраля 2012 в формат 2012-02-20
     $dat = explode(" ", trim($dat));
     $y = $dat[2];
-    $m = array_search(trim($dat[1]),$months); if ($m<10) $m="0".$m;
-    $d = intval($dat[0]); if ($d<10) $d="0".$d;
+    $m = array_search(trim($dat[1]),$months); 
+    if ($m<10) $m="0".$m;
+    $d = intval($dat[0]); 
+    if ($d<10) $d="0".$d;
     return $y."-".$m."-".$d;
   } 
 }

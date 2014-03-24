@@ -237,7 +237,7 @@ function GraphicAdmin() {
 		$link = "";
 		$doping = "";
 		if (strpos($options,"base=")) {
-			$title = trim($title).", ".aa("база данных");
+			//$title = trim($title).", ".aa("база данных");
 			$baza_name  = $nam; // Название таблицы БД
 			$plus = $db->sql_numrows($db->sql_query("SELECT `id` FROM ".$prefix."_base_".$nam." where `active`!='0'"));
 			if ($plus < 1) $plus = "";
@@ -263,7 +263,7 @@ function GraphicAdmin() {
 			$ico = ",";
 			$reaction = "razdel_show(\"\", ".$id.", \"".$nam."\", \"".$text."\");";
 		} else { // не содержит страниц
-			$title = trim($title).", ".aa("стр.");
+			//$title = trim($title).", ".aa("стр.");
 			$right = "<a class='button small ml5' href='sys.php?op=mainpage&type=2&id=".$id."#1' title='".aa("Редактировать страницу раздела")."'><span class='icon small' data-icon='7'></span></a>";
 			$ico = ".";
 			$reaction = "razdel_show(\"\", ".$id.", \"".$nam."\", \"page\");";

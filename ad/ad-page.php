@@ -761,12 +761,11 @@ function base_pages_edit_sv_page($pid, $module, $cid, $title, $open_text, $main_
   $p_open_text = mysql_real_escape_string(form($module, $p_open_text, "open"));
   $p_main_text = mysql_real_escape_string(form($module, $p_main_text, "main"));
   $p_title = mysql_real_escape_string(form($module, $p_title, "title"));
-  $p_keywords2 = mysql_real_escape_string(trim(str_replace("  "," ",str_replace("   "," ",str_replace(" ,",", ",$p_keywords2)))));
-  $p_description2 = mysql_real_escape_string(trim($p_description2));
-  $p_meta_title2 = mysql_real_escape_string($p_meta_title2);
+  $p_keywords = mysql_real_escape_string(trim(str_replace("  "," ",str_replace("   "," ",str_replace(" ,",", ",$p_keywords)))));
+  $p_description = mysql_real_escape_string(trim($p_description));
+  $p_meta_title = mysql_real_escape_string($p_meta_title);
 
-  $data = $date1." $data2:$data3:$data4";
-
+  $data = $data1." $data2:$data3:$data4";
   $clean_url2 = strtr($clean_url2, array('____'=>'_', '___'=>'_', '__'=>'_', '*'=>'',':'=>'','('=>'',')'=>'','  '=>'',' '=>'', ' '=>'_', '.'=>'', ','=>'', '!'=>'', '?'=>'', '=>'=>'', ';'=>'', '&'=>'_and_', '%'=>'', '$'=>'', '#'=>'', '№'=>'', '@'=>'', '^'=>'', '='=>'', '\''=>'','"'=>'','«'=>'', '»'=>'', '____'=>'_', '___'=>'_', '__'=>'_'));
 
   $sql = "UPDATE ".$prefix."_pages SET `module`='".$module."', `cid`='".$cid."', `title`='".$title."', `open_text`='".$open_text."', `main_text`='".$main_text."', `date`='".$data."', `redate`='".$now."', `counter`='".$count."', `active`='".$active."', `golos`='".$golos_reiting."', `comm`='".$com."', `foto`='".$foto."', `search`='".$search."', `mainpage`='".$mainpage."', `rss`='".$rss."', `price`='".$price."', `description`='".$description2."', `keywords`='".$keywords2."', `copy`='".$cop."', `sort`='".$sor."', `nocomm`='".$nocomm."', `meta_title`='".$meta_title2."', `clean_url`='".$clean_url2."', `close_date`='".$close_data."' WHERE `pid`='".$pid."';";

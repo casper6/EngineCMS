@@ -291,8 +291,8 @@ table.table_light tbody tr:hover th, table.table_light tbody tr.odd:hover th { b
 
 #redact {position:fixed; background: white; top:5px; display:none; floaf:right; right:5px; z-index:3000; width:330px;}
 #redact_show {position:fixed; top:10px; floaf:right; right:25px; z-index:3000; width:18px;}
-.ad_button {width:320px; height:32px; display:block; vertical-align:center; margin:5px; line-height:1em !important; font-size:14px !important; padding-top:10px; text-decoration:none; color: black; font-weight:normal;}
-.ad_button:hover {background: #ddd; color: black; font-weight:bold; border-radius:10px;}
+.ad_button {width:320px; height:32px; display:block; vertical-align:center; margin:5px; line-height:1em !important; font-size:14px !important; padding-top:10px; text-decoration:none; color: #666; font-weight:normal;}
+.ad_button:hover {background: #ddd; color: black; border-radius:10px;}
 .ad_icon {height:32px; display:block; float:left; margin-top:-10px; margin-right:5px;}
 
 .nav-tabs ul li, .tabs ul li {background:none !important; padding: 0 !important;}
@@ -426,6 +426,21 @@ input[type=search]:focus {
 .main_search_button {display:none !important;}
 a.search_razdel_link, a.search_papka_link {color:gray !important;}
 a.search_page_link {font-size:20px !important;}
+
+.timer {
+	margin: 20px auto;
+	width: 400px;
+	height: 77px;
+	overflow: hidden;
+	margin: auto;
+	clear: both;
+	display: block;
+}
+.cntSeparator {
+	font: 54px/54px Georgia,\"Times New Roman\",Times,serif;
+	margin: 10px 11px;
+	color: black;
+}
 ";
 
 

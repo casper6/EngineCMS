@@ -840,7 +840,7 @@ function edit_main($id) {
 		$module_name = $options[0];
 		$options = str_replace($module_name."|","",$text);
 		// обнулили все опции
-		$media = $folder = $col = $view = $golos = $golosrazdel = $post = $comments = $datashow = $favorites = $socialnetwork = $search = $search_papka = $put_in_blog = $base = $vetki = $citata = $media_comment = $no_html_in_opentext = $no_html_in_text = $show_add_post_on_first_page = $media_post = $razdel_shablon = $page_shablon = $comments_all = $comments_num = $comments_mail = $comments_adres = $comments_tel = $comments_desc = $golostype = $pagenumbers = $comments_main = $tags_type = $pagekol = $table_light = $designpages = $comments_add = $papka_show = $add_post_to_mainpage = $design_tablet = $designpages_tablet = $design_phone = $designpages_phone = $edit_pole = $show_tags_pages = $golos_admin = $comment_all_link = $show_read_all = $future_date = $close_date = $razdel_tags_random = 0;
+		$media = $folder = $col = $view = $golos = $golosrazdel = $post = $comments = $datashow = $favorites = $socialnetwork = $search = $search_papka = $put_in_blog = $base = $vetki = $citata = $media_comment = $no_html_in_opentext = $no_html_in_text = $show_add_post_on_first_page = $media_post = $razdel_shablon = $page_shablon = $comments_all = $comments_num = $comments_mail = $comments_adres = $comments_tel = $comments_desc = $golostype = $pagenumbers = $comments_main = $tags_type = $pagekol = $table_light = $designpages = $comments_add = $papka_show = $add_post_to_mainpage = $design_tablet = $designpages_tablet = $design_phone = $designpages_phone = $edit_pole = $show_tags_pages = $golos_admin = $comment_all_link = $show_read_all = $future_date = $close_date = $razdel_tags_random = $razdel_papka_shablon = $papka_shablon = 0;
 		$menushow = $titleshow = $razdeltitleshow = $razdel_link = $peopleshow = $design = $tags = $podrobno = $podrazdel_active_show = $podrazdel_show = $tipograf = $limkol = $tags_show = $tema_zapret = $tema_zapret_comm = $opentextshow = $maintextshow = $papka_tags_pages = $razdel_tags_pages = $div_or_table = 1;
 		$comment_all_link_text = "читать полностью";
 		$comm_col_letters = "1000";
@@ -867,7 +867,7 @@ function edit_main($id) {
 		$read_all = "Читать далее...";
 		$reiting_data = "Дата написания отзыва";
 		$text_tags_pages = "См. также:";
-
+		$socialnetwork_text = ss("Добавьте в соц. сети: ");
 		parse_str($options); // раскладка всех настроек раздела
 
 		echo "
@@ -908,19 +908,21 @@ function edit_main($id) {
 		<a class='dark_pole align_center' onclick=\"show_animate('block3');\"><h2>Шаблоны (расположение и наличие элементов)</h2>
 		</a><div id=block3 style='display: none;'>
 		<table  class='w100 mw800 table_light'>
-		<tr>
-		<tr><td><b>Шаблон для списка страниц</b> (вывод заголовков страниц и т.д.)</td>
+		<tr><td><b>Шаблон для вывода папок в разделе</b></td>
+		<td>".select("options[razdel_papka_shablon]", $shablon_var."0", $shablon_names."без шаблона", $razdel_papka_shablon)."</td></tr>
+		<tr><td><b>Шаблон для папки</b></td>
+		<td>".select("options[papka_shablon]", $shablon_var."0", $shablon_names."без шаблона", $papka_shablon)."</td></tr>
+		<tr><td><b>Шаблон для вывода страниц в разделе и папке</b> (вывод заголовков страниц и т.д.)</td>
 		<td>".select("options[razdel_shablon]", $shablon_var."0", $shablon_names."без шаблона", $razdel_shablon)."</td></tr>
 		<tr><td><b>Формирование списка страниц</b> в разделе и папках. Разделение отдельных страниц</td>
 		<td>".select("options[div_or_table]", "1,0", "Безтабличное DIV,Табличное TABLE TR TD", $div_or_table)."</td></tr>
-		<tr><td><b>Тип раздела:</b><br>
-		<i class=red>Для типа раздела «Анкеты-рейтинги» необходимо выбрать в настройках ниже возможность комментировать и голосовать за страницы.<br>
+		<tr><td><b>Тип раздела:</b><br><i class=red>Для типа раздела «Анкеты-рейтинги» необходимо выбрать в настройках ниже возможность комментировать и голосовать за страницы.<br>
 		Для типа раздела «Форум» необходимо выбрать в настройках «Раздел и папки» сортировку страниц «для Форума»</i></td>
 		<td>".select("options[view]", "4,1,6,0", "Анкеты-рейтинги,Форум,Папки на Главной,Страницы на Главной", $view)."</td></tr>
-		<td><b>Шаблон для комментариев</b> на странице  [<a href='sys.php?op=mainpage&amp;name=shablon' target='_blank'>Добавить</a>]</td>
-		<td>".select("options[comment_shablon]", $shablon_var."3,2,1,0", $shablon_names."ДвижОк: аля ХабраХабр,ДвижОк: ArtistStyle,ДвижОк: диалоговый аля Joomla,ДвижОк: стандартный", $comment_shablon)."</td></tr>
 		<tr><td><b>Шаблон для страницы</b></td>
 		<td>".select("options[page_shablon]", $shablon_var."0", $shablon_names."без шаблона", $page_shablon)."</td></tr>
+		<td><b>Шаблон для комментариев</b> на странице  [<a href='sys.php?op=mainpage&amp;name=shablon' target='_blank'>Добавить</a>]</td>
+		<td>".select("options[comment_shablon]", $shablon_var."3,2,1,0", $shablon_names."ДвижОк: аля ХабраХабр,ДвижОк: ArtistStyle,ДвижОк: диалоговый аля Joomla,ДвижОк: стандартный", $comment_shablon)."</td></tr>
 		</table>
 		</div>
 
@@ -1022,8 +1024,8 @@ function edit_main($id) {
 		<td>".select("options[show_tags_pages]", "0,1", "НЕТ,ДА", $show_tags_pages)."</td></tr>
 		<tr><td><strong>Показывать Добавление страниц в Интернет-закладки</strong></td>
 		<td>".select("options[favorites]", "1,0", "ДА,НЕТ", $favorites)."</td></tr>
-		<tr><td><strong>Показывать Добавление страниц в Социальные сети</strong> (Вконтакте, Гугл+, МойМир и т.д.)</td>
-		<td>".select("options[socialnetwork]", "1,0", "ДА,НЕТ", $socialnetwork)."</td></tr>
+		<tr><td><strong>Показывать Добавление страниц в Социальные сети</strong> (Вконтакте, Гугл+, МойМир и т.д.).<br>Текст при добавлении: ".input("options[socialnetwork_text]", $socialnetwork_text).".<br>Текст может быть и другим, например: Понравилась статья? Поделитесь с друзьями!</td>
+		<td>".select("options[socialnetwork]", "0,1,2,3", "НЕТ,ссылки,маленькие счетчики,большие счетчики", $socialnetwork)."</td></tr>
 		<tr><td>Показывать Код для вставки в блоги (Название и Предисловие страницы со ссылкой на сайт). При выборе варианта «с логотипом» небольшой логотип (small_logo.jpg) нужно разместить в корне сайта. Проще всего это будет сделать администратору (если у вас нет доступа к FTP серверу и достаточных знаний).</td>
 		<td>".select("options[put_in_blog]", "2,1,0", "с логотипом,без логотипа,НЕТ", $put_in_blog)."</td></tr>
 		<tr><td>Очищать предисловие от HTML-кода (оставить обычный текст)</td>

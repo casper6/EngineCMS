@@ -145,21 +145,22 @@ function help_shablon() {
   global $db, $prefix;
   // Перечислим все базы данных
   $bases = ""; // Выборка разделов
-  $sql2 = "select name, title, text from ".$prefix."_mainpage where `tables`='pages' and type='5'";
+  $sql2 = "select `name`, `title`, `text` from ".$prefix."_mainpage where `tables`='pages' and `type`='5'";
   $result2 = $db->sql_query($sql2);
   while ($row2 = $db->sql_fetchrow($result2)) {
       $base_name = $row2['name'];
       $base_title = $row2['title'];
       $base_text = $row2['text']; // Необходимо разобрать и получить имена!
       // Перечислим все их поля
-      $sql3 = "SHOW COLUMNS FROM ".$prefix."_base_".$base_name."";
-      $result3 = $db->sql_query($sql3);
+      $result3 = $db->sql_query("SHOW COLUMNS FROM `".$prefix."_base_".$base_name."`");
       $rowsX = "";
-      while ($row3 = mysql_fetch_assoc($result3)) {
-        $rowsX .= "[".$base_name."_".$row3['Field']."] — <br>"; // [Field] [Type] [Null] [Key] [Default] [Extra]
+      if ($result3 != false) {
+        while ($row3 = mysql_fetch_assoc($result3)) {
+          $rowsX .= "[".$base_name."_".$row3['Field']."]<br>"; // [Field] [Type] [Null] [Key] [Default] [Extra]
+        }
+        $add = "[подробнее]"; //if (strpos($base_text, "type=3")) $add .= " [добавить в корзину]";
+        $bases .= "<option value='".$rowsX.$add."'>Вставки для базы данных \"".$base_title."\"</option>";
       }
-      $add = "[подробнее]"; //if (strpos($base_text, "type=3")) $add .= " [добавить в корзину]";
-      $bases .= "<option value='".$rowsX.$add."'>Вставки для базы данных \"".$base_title."\"</option>";
   }
   return "<h2>Справка:</h2> <select class='w100' name=shablon_var2 onchange=\"$('#shablon_var').html(this.value); $('#shablon_var').show(); $('#show_shablon_var').show();\">
     <option value='Выберите другой объект из того же списка'>Выберите объект для шаблона</option>

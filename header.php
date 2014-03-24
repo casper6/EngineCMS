@@ -392,20 +392,21 @@ case "0": # Блок страниц раздела
 		$s_opts = array();
 		// Определим № раздела
 		global $id_razdel_and_bd;
-		$r_id = $id_razdel_and_bd[$useitX];
-		
-		$result5 = $db->sql_query("SELECT `id`, `name`, `text` FROM ".$prefix."_mainpage WHERE `tables`='pages' and (`useit` = '".$r_id."' or `useit` = '0') and `type`='4'");
-		while ($row5 = $db->sql_fetchrow($result5)) {
-			$s_id = $row5['id'];
-			$n = $row5['name'];
-			$s_names[$s_id] = $n;
-			// Найдем значение всех полей для данных страниц
-			$result6 = $db->sql_query("SELECT name, pages FROM ".$prefix."_spiski WHERE type='".$n."'");
-			while ($row6 = $db->sql_fetchrow($result6)) {
-			$n1 = $row6['name'];
-			$n2 = explode(" ", str_replace("  ", " ", trim($row6['pages'])));
-				foreach ($n2 as $n2_1 => $n2_2) {
-					$s_opts[$n][$n2_2] = $n1;
+		if (isset($id_razdel_and_bd[$useitX])) {
+			$r_id = $id_razdel_and_bd[$useitX];
+			$result5 = $db->sql_query("SELECT `id`, `name`, `text` FROM ".$prefix."_mainpage WHERE `tables`='pages' and (`useit` = '".$r_id."' or `useit` = '0') and `type`='4'");
+			while ($row5 = $db->sql_fetchrow($result5)) {
+				$s_id = $row5['id'];
+				$n = $row5['name'];
+				$s_names[$s_id] = $n;
+				// Найдем значение всех полей для данных страниц
+				$result6 = $db->sql_query("SELECT name, pages FROM ".$prefix."_spiski WHERE type='".$n."'");
+				while ($row6 = $db->sql_fetchrow($result6)) {
+				$n1 = $row6['name'];
+				$n2 = explode(" ", str_replace("  ", " ", trim($row6['pages'])));
+					foreach ($n2 as $n2_1 => $n2_2) {
+						$s_opts[$n][$n2_2] = $n1;
+					}
 				}
 			}
 		}
@@ -1868,16 +1869,23 @@ case "31": # Блок JS
 		$block = str_replace(aa("[почта]"), $mailer, $block); 
 	}
 
+	if (strpos(" ".$block, aa("[таймер"))) {
+		$block = "<script src='/includes/jquery.countdown.js'></script>".$block;
+		for ($i=1; $i < 49; $i++) {
+			$block = str_replace(aa("[таймер".$i."]"), timer_show($i, true), $block);
+			$block = str_replace(aa("[таймер-".$i."]"), timer_show($i), $block);
+		}
+	}
 	// Ставим Новый год
 	if (strpos(" ".$block, aa("[новый год]"))) { //February 12, 2001
-		$newyaer = time_otschet(aa("January 01").", ".$nextyear, ss("C Новым годом!!!"), ss("До Нового года осталось: "));
+		$newyaer = time_otschet("January 01".", ".$nextyear, ss("C Новым годом!!!"), ss("До Нового года осталось: "));
 		$soderganie = str_replace(aa("[новый год]"), $newyaer, $soderganie); 
-		$block = str_replace(aa("[новый год]"), $newyaer, $block); 
+		$block = str_replace(aa("[новый год]"), $newyaer, $block);
 	}
 	if (strpos(" ".$block, aa("[1 сентября]"))) {
 		// Ставим 1 сентября 2011,1,1
 		if ( date("m") > 9 or ( date("m") == 9 and date("d") > 1 ) ) $year = $nextyear;
-		$sent = time_otschet(aa("September 01").", ".$year, ss("Время пришло!"), ss("До нового учебного года осталось: "));
+		$sent = time_otschet("September 01".", ".$year, ss("Время пришло!"), ss("До нового учебного года осталось: "));
 		$soderganie = str_replace(aa("[1 сентября]"), $sent, $soderganie); 
 		$block = str_replace(aa("[1 сентября]"), $sent, $block); 
 	}
@@ -2268,9 +2276,13 @@ echo "<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
 <!--[if lt IE 9]><script src='includes/html5.js'></script><![endif]-->
 <!--[if IE]><script src='includes/iepngfix_tilebg.js'></script><![endif]-->
 <script src='includes/j.js'></script>
-<script src='includes/jquery-2.0.0.js'></script>
+<script src='http://yandex.st/jquery/2.1.0/jquery.min.js'></script>
 <script src='includes/jquery-migrate-1.1.1.js'></script>
-<script src='includes/modernizr-1.5.min.js'></script>";
+<script src='http://yandex.st/modernizr/2.7.1/modernizr.min.js'></script>";
+// includes/jquery-2.0.0.js
+// includes/jquery-ui.min.js
+// includes/modernizr-1.5.min.js
+// includes/jquery-ui.css
 // Подключение других языков, если это не русский
 if ($lang != 'ru') echo "<script src='/language/".$lang.".js'></script>";
 
@@ -2279,8 +2291,8 @@ if ($normalize != 0) echo "<link rel='stylesheet' href='includes/css-frameworks/
 if ($sortable != 0) echo "<script src='includes/jquery.tinysort.min.js'></script>";
 
 if ($jqueryui != 0) echo "
-<link rel='stylesheet' href='includes/jquery-ui.css' />
-<script src='includes/jquery-ui.min.js'></script>
+<link rel='stylesheet' href='http://yandex.st/jquery-ui/1.10.4/themes/base/jquery-ui.min.css' />
+<script src='http://yandex.st/jquery-ui/1.10.4/jquery-ui.min.js'></script>
 <script src='includes/jquery-ui-i18n-min.js'></script>
 <script src='includes/jquery-ui-datepicker-ru.js'></script>";
 
@@ -2296,7 +2308,10 @@ switch($kickstart) { // Выбор CSS-фреймворка
 	case 12: // Kube new
 	echo "<link rel='stylesheet' href='includes/css-frameworks/kube/kube.min.css' />"; break;
 	case 5: // Bootstrap
-	echo "<link href='includes/css-frameworks/bootstrap/css/bootstrap.min.css' rel='stylesheet'><link href='includes/css-frameworks/bootstrap/css/bootstrap-responsive.min.css' rel='stylesheet'><script src='includes/css-frameworks/bootstrap/js/bootstrap.min.js'></script>"; break;
+	// includes/css-frameworks/bootstrap/css/bootstrap.min.css 
+	// <link href='includes/css-frameworks/bootstrap/css/bootstrap-responsive.min.css' rel='stylesheet'>
+	// includes/css-frameworks/bootstrap/js/bootstrap.min.js
+	echo "<link href='http://yandex.st/bootstrap/3.1.1/css/bootstrap.min.css' rel='stylesheet'><script src='http://yandex.st/bootstrap/3.1.1/js/bootstrap.min.js'></script>"; break;
 	case 6: // 1140 Grid
 	echo "<!--[if lte IE 9]><link rel='stylesheet' href='includes/css-frameworks/1140_cssgrid/ie.css' media='screen' /><![endif]--><link rel='stylesheet' href='includes/css-frameworks/1140_cssgrid/1140.css' media='screen' /><script src='includes/css-frameworks/1140_cssgrid/css3-mediaqueries.js'></script>"; break;
 	case 7: // Toast
@@ -2320,7 +2335,7 @@ if ($mp3_player == true)
 	echo "<script src='includes/jquery.jplayer.min.js'></script><script src='includes/jouele/jouele.js'></script><link rel='stylesheet' href='includes/jouele/jouele.css' />";
 
 // Подключение фото-галерей
-if ($gallery_css3 == true) echo "<link rel='stylesheet' href='.штсдгвуы.lightbox-css3.css' media='screen' />";
+if ($gallery_css3 == true) echo "<link rel='stylesheet' href='/includes/lightbox-css3.css' media='screen' />";
 if ($gallery_carusel == false) echo "<script src='includes/lightbox-2.6.min.js'></script><script src='includes/jquery.ad-gallery.js'></script><script>$(document).ready(function(){ 
 	var galleries = $('.ad-gallery').adGallery(); $('#switch-effect').change( function() { galleries[0].settings.effect = $(this).val(); return false; } ); });</script>
 <link rel='stylesheet' href='includes/lightbox_new.css' media='screen' />"; // при включенном kickstart, lightbox не нужен, включается fancybox
@@ -2421,7 +2436,8 @@ if (mb_strlen($add_fonts)>1) {
 	}
 	
 	// Если включена SWF Flash поддержка
-	if ($flash==1) echo "<script src='includes/swfobject.js'></script><script src='includes/swffix_modified.js'></script>";
+	// includes/swfobject.js
+	if ($flash==1) echo "<script src='http://yandex.st/swfobject/2.2/swfobject.min.js'></script><script src='includes/swffix_modified.js'></script>";
 
 	// Если включена защита от копирования (для школьников)
 	if ($stopcopy==1) echo "<script><!-- 
