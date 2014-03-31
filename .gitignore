@@ -2,6 +2,5 @@ backup/
 cashe/
 config.php
 includes/php_thumb/cache/
-img/
 map.xml
 language/shablon_*

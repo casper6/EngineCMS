@@ -42,7 +42,18 @@ echo "<!doctype html>
 <!--[if lt IE 9]><script src='includes/html5.js'></script><![endif]-->
 <link rel='stylesheet' href='includes/jquery.compress.css'>
 <link rel='stylesheet' href='engine.css'>
-<link rel='stylesheet' href='includes/css-frameworks/kickstart/css/ad-kickstart.compress.css'>";
+<link rel='stylesheet' href='includes/css-frameworks/kickstart/css/ad-kickstart.compress.css'>
+
+<script src='includes/lightbox-2.6.min.js'></script>
+<script src='includes/jquery.ad-gallery.js'></script>
+<script>$(document).ready(function(){ 
+	var galleries = $('.ad-gallery').adGallery(); $('#switch-effect').change( function() { galleries[0].settings.effect = $(this).val(); return false; } ); });</script>
+<link rel='stylesheet' href='includes/lightbox_new.css' media='screen' />
+
+";
+if (!function_exists('exif_read_data')) {
+        die('11');
+    }
 /* 
 jquery-2.0.0.js
 jquery-migrate-1.1.1.js
@@ -70,6 +81,7 @@ if ($lang_admin != 'ru') echo "<script src='language/adm_".$lang_admin.".js'></s
 if ($red==3) echo "<script src='ed/js/editor/editor.js'></script><link rel='stylesheet' href='ed/js/editor/css/editor.css' media='screen, projection' /> ";
 
 echo "\n</head>\n<body style=\"background-color: ".$ad_fon.";\">
+<div class='curved-vt-2 hide' style='margin-left:-350px; width: 700px; top: 10px;' id='add'></div>
 <script>
   function keying_esc_add() {
     document.body.onkeydown = function() {
@@ -87,10 +99,45 @@ $url2 = explode("?",$url2[0]);
 $url2 = $url2[0];
 
 if ($show_admin_top == 0) {
-	echo "<div class='w100 m0 h15 center noprint' id='admin_top_line' onmousemove=' $(\"#admin_top_line\").hide(); $(\"#admin_top\").show();'><img height=15 align=left src='images/logotip.png'>".aa("Главное меню")."</div><table class='hide w100 m0 fixed z1000 l0 t0 shadow' id='admin_top' style='background-color: ".$ad_fon.";'>";
+	echo "<div class='w100 m0 h15 center noprint' id='admin_top_line' onmousemove=' $(\"#admin_top_line\").hide(); $(\"#admin_top\").show();'><img height=15 align=left src='images/logotip.png' id='logotip'>".aa("Главное меню")."</div><table class='hide w100 m0 fixed z1000 l0 t0 shadow' id='admin_top' style='background-color: ".$ad_fon.";'>";
 } else echo "<table class='w100 mp0'>";
 echo "<tr class='noprint'>";
-echo "<td class='center mp0' width=110><a title='".aa("Перейти в Содержание")."' href='sys.php' class='nothing'><img src='images/logotip.png'></a></td>";
+echo "<td class='center mp0' width=110><a id='logotip' title='".aa("Перейти в Содержание")."' href='sys.php' class='nothing'><img src='images/logotip.png'></a>
+<div id='logotip_loading' class='hide'></div>
+<script src='includes/canvas.js'></script>
+<script>
+	var cSpeed=6;
+	var cWidth=90;
+	var cHeight=62;
+	var cTotalFrames=20;
+	var cFrameWidth=90;
+	var cImageSrc='images/sprites.gif';
+	var cImageTimeout=false;
+	function startAnimation(){
+		document.getElementById('logotip_loading').innerHTML='<canvas id=\"canvas\" width=\"'+cWidth+'\" height=\"'+cHeight+'\"><p>Your browser does not support the canvas element.</p></canvas>';
+		//FPS = Math.round(100/(maxSpeed+2-speed));
+		FPS = Math.round(100/cSpeed);
+		SECONDS_BETWEEN_FRAMES = 1 / FPS;
+		g_GameObjectManager = null;
+		g_run=genImage;
+		g_run.width=cTotalFrames*cFrameWidth;
+		genImage.onload=function (){cImageTimeout=setTimeout(fun, 0)};
+		initCanvas();
+	}
+	function imageLoader(s, fun){ //Pre-loads the sprites image
+		clearTimeout(cImageTimeout);
+		cImageTimeout=0;
+		genImage = new Image();
+		genImage.onload=function (){cImageTimeout=setTimeout(fun, 0)};
+		genImage.onerror=new Function('alert(\'Could not load the image\')');
+		genImage.src=s;
+	}
+	//The following code starts the animation
+	new imageLoader(cImageSrc, 'startAnimation()');
+</script>
+
+
+</td>";
 echo "<td class='mp0'><div class='nothing'>";
 //if($detect->isiOS())
 //if($detect->isAndroidOS())

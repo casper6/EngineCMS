@@ -15,12 +15,6 @@ if (@ini_get('magic_quotes_runtime')) {
 }
 $starttime = array_sum(explode(' ', microtime()));
 
-// this script relies on the superglobal arrays, fake it here for old PHP versions
-if (phpversion() < '4.1.0') {
-	$_SERVER = $HTTP_SERVER_VARS;
-	$_GET    = $HTTP_GET_VARS;
-}
-
 // instantiate a new php_thumb() object
 ob_start();
 if (!include_once(dirname(__FILE__).'/php_thumb.class.php')) {
@@ -246,19 +240,7 @@ $php_thumb->DebugTimingMessage('php_thumbDebug[3]', __FILE__, __LINE__);
 if (@$_GET['php_thumbDebug'] == '3') {
 	$php_thumb->php_thumbDebug();
 }
-////////////////////////////////////////////////////////////////
 
-//if (!@$_GET['php_thumbDebug'] && !is_file($php_thumb->sourceFilename) && !php_thumb_functions::gd_version()) {
-//	if (!headers_sent()) {
-//		// base64-encoded error image in GIF format
-//		$ERROR_NOGD = 'R0lGODlhIAAgALMAAAAAABQUFCQkJDY2NkZGRldXV2ZmZnJycoaGhpSUlKWlpbe3t8XFxdXV1eTk5P7+/iwAAAAAIAAgAAAE/vDJSau9WILtTAACUinDNijZtAHfCojS4W5H+qxD8xibIDE9h0OwWaRWDIljJSkUJYsN4bihMB8th3IToAKs1VtYM75cyV8sZ8vygtOE5yMKmGbO4jRdICQCjHdlZzwzNW4qZSQmKDaNjhUMBX4BBAlmMywFSRWEmAI6b5gAlhNxokGhooAIK5o/pi9vEw4Lfj4OLTAUpj6IabMtCwlSFw0DCKBoFqwAB04AjI54PyZ+yY3TD0ss2YcVmN/gvpcu4TOyFivWqYJlbAHPpOntvxNAACcmGHjZzAZqzSzcq5fNjxFmAFw9iFRunD1epU6tsIPmFCAJnWYE0FURk7wJDA0MTKpEzoWAAskiAAA7';
-//		header('Content-Type: image/gif');
-//		echo base64_decode($ERROR_NOGD);
-//	} else {
-//		echo '*** ERROR: No PHP-GD support available ***';
-//	}
-//	exit;
-//}
 
 // check to see if file can be output from source with no processing or caching
 $CanPassThroughDirectly = true;

@@ -61,7 +61,7 @@ function translit_name($cyr_str) { # Транслит названий файл�
    return iconv ( "UTF-8", "UTF-8//IGNORE", strtr ( $cyr_str, $tr ) );
 }
 
-$_FILES['file']['name'] = basename($_FILES['file']['name']);
+//$_FILES['file']['name'] = basename($_FILES['file']['name']);
 
 if (!empty($_FILES['file']['name'])) {  
   $file = translit_name($_FILES['file']['name']);

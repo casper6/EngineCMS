@@ -196,7 +196,7 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 	// обнулили все опции блоков от греха подальше
 	$titleshow = $reload_one_by_one = $folder = $datashow = $tagdelete = $ipdatauser = $design = $open_all = $catshow = $main = $daleeshow = $openshow = $number = $add = $size = $papki_numbers = $zagolovokin = $menu = $noli = $show_title = $random = $showlinks = $open_new_window = $shablon = $show_new_pages = $reload_link_show = $reload_link_time = $re_menu = $show_pages_from = $calendar_future = $calendar_years = $re_menu_type = $must_have_foto_adres = $papki_in_razdel_show = $papki_in_razdel_punkt = $papki_in_papki_show = $papki_in_papki_punkt = $papki_in_pages_show = $papki_in_pages_punkt = 0;
 	$opros_type = $limkol = $pageshow = $only_question = $opros_result = $foto_gallery_type = $notitlelink = $foto_num = $papki_in_papki_check = $papki_in_pages_check = 1;
-	$shablon = $class = $alternative_title_link = $cid_open = $no_show_in_razdel = $watermark = $show_in_papka = "";
+	$shablon = $class = $alternative_title_link = $cid_open = $no_show_in_razdel = $watermark = $show_in_papka = $re_title_block = "";
 	$noli_razdelitel = "<br>";
 	$addtitle = ss("Добавить статью");
 	$dal = ss("Далее...");
@@ -283,7 +283,8 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 	$design_open = "<div class='".$shablonX." ".$class."'>";
 	$design_close = "</div>";
 
-	$block_title = $titleX;
+	if ($re_title_block != "") $block_title = $re_title_block;
+	else $block_title = $titleX;
 	$block_title2 = "";
 	/////////////////////////////////////
 	if ($design != 0) { // Если выбран дизайн для блока
@@ -301,7 +302,7 @@ for ($iii=1; $iii <= 2; $iii++) { // 2 прохода по обработке б
 	}
 
 	if ($titleshow != 0) {
-		if (($nameX==0 or $nameX==1 or $nameX==4 or $nameX==6 or $nameX==8 or $nameX==9) and $notitlelink==0) {
+		if ($notitlelink==0 || $titleshow == 3) {
 			$link_block_title = "<a href='".re_link($alternative_title_link)."' title=\"".$block_title."\" class=\"h3_block_title class_".$class."\">";
 			if ($titleshow == 3) {
 				$link_block_title = "<a onclick=\"$('#block_".$idX."').toggle('slow');\" title=\"".ss('Развернуть')."\" class=\"spoiler_link h3_block_title class_".$class."\">";
@@ -896,20 +897,20 @@ case "6": # Фотогалерея
 		if (isset($link[2])) $alt = $link[2]; else $alt = "";
 		if (isset($link[3])) $alt2 = $link[3]; else $alt2 = "";
 		if (isset($link[0])) $link = $link[0]; else $link = "";
-		if ($watermark != "") $water = "includes/php_thumb/php_thumb.php?src=".$link."&fltr[]=wmi|".$watermark."|BR|100";	else $water = $link;
+		if ($watermark != "") $water = "/includes/php_thumb/php_thumb.php?src=".$link."&fltr[]=wmi|".$watermark."|BR|100";	else $water = $link;
 		// foto_gallery_type: 1 - миниатюры, 0 - «карусель», 2 - описание в 3 строки, 3 - аля макос горизонтальная полоса прокрутки
-		if ($foto_gallery_type == 1) $textX .= "<span class='div_a_img_gallery'><a title='".$title."' href='".$water."' data-lightbox='light'><img alt='".$title."' src='includes/php_thumb/php_thumb.php?src=".$link."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0' class='img_gallery'></a></span> ";
-		if ($foto_gallery_type == 0) $textX0 .= "<li><a href='".$water."'><img src='includes/php_thumb/php_thumb.php?src=".$link."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0' title='".$title."' alt='".$alt."' class='image".$i."'></a></li>";
+		if ($foto_gallery_type == 1) $textX .= "<span class='div_a_img_gallery'><a title='".$title."' href='".$water."' data-lightbox='light'><img alt='".$title."' src='/includes/php_thumb/php_thumb.php?src=".$link."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0' class='img_gallery'></a></span> ";
+		if ($foto_gallery_type == 0) $textX0 .= "<li><a href='".$water."'><img src='/includes/php_thumb/php_thumb.php?src=".$link."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0' title='".$title."' alt='".$alt."' class='image".$i."'></a></li>";
 
 		if ($foto_gallery_type == 2) {
 			if ($img_height >= $img_width) $img_wh="&amp;h=".$img_height;
 			elseif ($img_height < $img_width)  $img_wh="&amp;w=".$img_width;
-			$textX0 .= "<li><a href='#image-".$i."'><div style='background-image: url(\"includes/php_thumb/php_thumb.php?src=".$link."&amp;fltr[]=crop|0|0|0|0".$img_wh."&amp;q=0\"); width:".$img_width."px; height:".$img_height."px;'><span>".$title."</span></div></a><div class='lb-overlay' id='image-".$i."'><a href='#page' title='".ss("Закрыть")."'><img src='".$water."' alt='".$title." / ".$alt." / ".$alt2."' /></a><div><h3>".$title."<span>".$alt."</h3><p>".$alt2."</p></div><a href='#page' class='lb-close'>".ss("Закрыть")."</a></div></li>";
+			$textX0 .= "<li><a href='#image-".$i."'><div style='background-image: url(\"/includes/php_thumb/php_thumb.php?src=".$link."&amp;fltr[]=crop|0|0|0|0".$img_wh."&amp;q=0\"); width:".$img_width."px; height:".$img_height."px;'><span>".$title."</span></div></a><div class='lb-overlay' id='image-".$i."'><a href='#page' title='".ss("Закрыть")."'><img src='".$water."' alt='".$title." / ".$alt." / ".$alt2."' /></a><div><h3>".$title."<span>".$alt."</h3><p>".$alt2."</p></div><a href='#page' class='lb-close'>".ss("Закрыть")."</a></div></li>";
 		}
 
-		if ($foto_gallery_type >= 3 && $foto_gallery_type <= 6) $textX0 .= "<li><a title='".$title."' href='".$water."' data-lightbox='light'><img src='includes/php_thumb/php_thumb.php?src=".$link."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0' alt='".$alt."'></a></li>";
-		if ($foto_gallery_type == 7) $textX0 .= "<a title='".$title."' href='".$water."' data-lightbox='light'><div class='figure' style=\"background-image: url('includes/php_thumb/php_thumb.php?src=".$link."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0')\"><div class='figcaption'><h4>".$title."</h4><p>".$alt."</p></div></div></a>";
-		if ($foto_gallery_type == 8) $textX0[] = "<a title='".$title."' href='".$water."' data-lightbox='light'><img src='includes/php_thumb/php_thumb.php?src=".$link."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0' alt='".$alt."' class='img_gallery'></a>";
+		if ($foto_gallery_type >= 3 && $foto_gallery_type <= 6) $textX0 .= "<li><a title='".$title."' href='".$water."' data-lightbox='light'><img src='/includes/php_thumb/php_thumb.php?src=".$link."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0' alt='".$alt."'></a></li>";
+		if ($foto_gallery_type == 7) $textX0 .= "<a title='".$title."' href='".$water."' data-lightbox='light'><div class='figure' style=\"background-image: url('/includes/php_thumb/php_thumb.php?src=".$link."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0')\"><div class='figcaption'><h4>".$title."</h4><p>".$alt."</p></div></div></a>";
+		if ($foto_gallery_type == 8) $textX0[] = "<a title='".$title."' href='".$water."' data-lightbox='light'><img src='/includes/php_thumb/php_thumb.php?src=".$link."&amp;w=".$img_width."&amp;h=".$img_height."&amp;q=0' alt='".$alt."' class='img_gallery'></a>";
 	}
 	if ($foto_gallery_type == 8) {
 		if ($foto_num > count($textX0)) $foto_num = count($textX0);
@@ -1183,6 +1184,10 @@ case "10": # Блок меню
 		$url2 = explode("_",$url1);
 		$url2 = $url2[0];
 		$url4 = str_replace("/","",$url2);
+		$url1 = re_link($url1);
+		$url2 = re_link($url2);
+		$url3 = re_link($url3);
+		$url4 = re_link($url4);
 
 		$lvl_open = "<ul>";
 		$lvl_close = "</ul>";
@@ -1214,7 +1219,7 @@ case "10": # Блок меню
 		// Определяем отношение подпапок к папкам
 		if ($re_menu_type != 1) { // Если показываем папки или папки и страницы
 			if ($re_menu_type == 2) { // Если показываем папки и страницы
-				$sql = "SELECT pid, cid, title from ".$prefix."_pages where module='".$re_menu."' and `tables`='pages' and `active`='1' order by title";
+				$sql = "SELECT `pid`, `cid`, `title` from ".$prefix."_pages where `module`='".$re_menu."' and `tables`='pages' and `active`='1' order by `title`";
 				$result = $db->sql_query($sql);
 				$p_title = $p_cid = array();
 				while ($row = $db->sql_fetchrow($result)) {
@@ -1223,7 +1228,7 @@ case "10": # Блок меню
 					$p_title[$p_id] = $row['title'];
 				}
 			}
-			$sql = "SELECT cid, title, parent_id from ".$prefix."_pages_categories where module='".$re_menu."' and `tables`='pages' order by title";
+			$sql = "SELECT `cid`, `title`, `parent_id` from ".$prefix."_pages_categories where `module`='".$re_menu."' and `tables`='pages' order by `title`";
 			$result = $db->sql_query($sql);
 			$title = $par = array();
 			while ($row = $db->sql_fetchrow($result)) {
@@ -1234,21 +1239,21 @@ case "10": # Блок меню
 			$textXX = "";
 			foreach ($title as $id => $nam) {
 				if ($par[$id]==0) { // папка, содержащая подпапки
-					$textXX .= $el_open.$url_open.'-'.$re_menu.'_cat_'.$id.$url_close1.$nam.$url_close2;
+					$textXX .= $el_open.$url_open.re_link('-'.$re_menu.'_cat_'.$id).$url_close1.$nam.$url_close2;
 					if (in_array($id, $par) && $menu!="1" && $menu!="3" && $menu!="5") {
 						$textXX .= $lvl_open;
 						foreach ($title as $id2 => $nam2) {
 							if ($par[$id2]==$id) { // папка, содержащая подпапки
-								$textXX .= $el_open.$url_open.'-'.$re_menu.'_cat_'.$id2.$url_close1.$nam2.$url_close2;
+								$textXX .= $el_open.$url_open.re_link('-'.$re_menu.'_cat_'.$id2).$url_close1.$nam2.$url_close2;
 								if (in_array($id2, $par) && $menu!="2") {
 									$textXX .= $lvl_open;
 									foreach ($title as $id3 => $nam3) {
 										if ($par[$id3]==$id2) { // подпапка
-											$textXX .= $el_open.$url_open.'-'.$re_menu.'_cat_'.$id3.$url_close1.$nam3.$url_close2.$el_close;
+											$textXX .= $el_open.$url_open.re_link('-'.$re_menu.'_cat_'.$id3).$url_close1.$nam3.$url_close2.$el_close;
 										}
 										// страницы
 										if ($re_menu_type == 2 && in_array($id3, $p_cid)) foreach ($p_title as $p_id => $nam)
-											if ($p_cid[$p_id] == $id3) $textXX .= $el_open.$url_open.'-'.$re_menu.'_page_'.$p_id.$url_close1.$nam.$url_close2.$el_close;
+											if ($p_cid[$p_id] == $id3) $textXX .= $el_open.$url_open.re_link('-'.$re_menu.'_page_'.$p_id).$url_close1.$nam.$url_close2.$el_close;
 									}
 									$textXX .= $lvl_close;
 								}		
@@ -1256,7 +1261,7 @@ case "10": # Блок меню
 								if ($re_menu_type == 2 && in_array($id2, $p_cid)) {
 									$textXX .= $lvl_open;
 									foreach ($p_title as $p_id => $nam)
-										if ($p_cid[$p_id] == $id2) $textXX .= $el_open.$url_open.'-'.$re_menu.'_page_'.$p_id.$url_close1.$nam.$url_close2.$el_close;
+										if ($p_cid[$p_id] == $id2) $textXX .= $el_open.$url_open.re_link('-'.$re_menu.'_page_'.$p_id).$url_close1.$nam.$url_close2.$el_close;
 									$textXX .= $lvl_close;
 								}
 
@@ -1269,7 +1274,7 @@ case "10": # Блок меню
 					if ($re_menu_type == 2 && in_array($id, $p_cid)) {
 						$textXX .= $lvl_open;
 						foreach ($p_title as $p_id => $nam)
-							if ($p_cid[$p_id] == $id) $textXX .= $el_open.$url_open.'-'.$re_menu.'_page_'.$p_id.$url_close1.$nam.$url_close2.$el_close;
+							if ($p_cid[$p_id] == $id) $textXX .= $el_open.$url_open.re_link('-'.$re_menu.'_page_'.$p_id).$url_close1.$nam.$url_close2.$el_close;
 						$textXX .= $lvl_close;
 					}
 					
@@ -1278,7 +1283,7 @@ case "10": # Блок меню
 			}
 			// страницы
 			if ($re_menu_type == 2) foreach ($p_title as $p_id => $nam)
-				if ($p_cid[$p_id] == 0) $textXX .= $el_open.$url_open.'-'.$re_menu.'_page_'.$p_id.$url_close1.$nam.$url_close2.$el_close;
+				if ($p_cid[$p_id] == 0) $textXX .= $el_open.$url_open.re_link('-'.$re_menu.'_page_'.$p_id).$url_close1.$nam.$url_close2.$el_close;
 		} else { // Если показываем только страницы
 			$textXX = "";
 			$sql = "SELECT pid, cid, title from ".$prefix."_pages where module='".$re_menu."' and `cid`='0' and `tables`='pages' and `active`='1' order by title";
@@ -1287,7 +1292,7 @@ case "10": # Блок меню
 			while ($row = $db->sql_fetchrow($result)) {
 				$p_id = $row['pid'];
 				$nam = $row['title'];
-				$textXX .= $el_open.$url_open.'-'.$re_menu.'_page_'.$p_id.$url_close1.$nam.$url_close2.$el_close;
+				$textXX .= $el_open.$url_open.re_link('-'.$re_menu.'_page_'.$p_id).$url_close1.$nam.$url_close2.$el_close;
 			}
 		}
 	} else {
@@ -2273,11 +2278,11 @@ echo "<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
 <meta name='description' content='".str_replace("'","",$description2)."'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0'>
 <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
-<!--[if lt IE 9]><script src='includes/html5.js'></script><![endif]-->
-<!--[if IE]><script src='includes/iepngfix_tilebg.js'></script><![endif]-->
-<script src='includes/j.js'></script>
+<!--[if lt IE 9]><script src='/includes/html5.js'></script><![endif]-->
+<!--[if IE]><script src='/includes/iepngfix_tilebg.js'></script><![endif]-->
+<script src='/includes/j.js'></script>
 <script src='http://yandex.st/jquery/2.1.0/jquery.min.js'></script>
-<script src='includes/jquery-migrate-1.1.1.js'></script>
+<script src='/includes/jquery-migrate-1.1.1.js'></script>
 <script src='http://yandex.st/modernizr/2.7.1/modernizr.min.js'></script>";
 // includes/jquery-2.0.0.js
 // includes/jquery-ui.min.js
@@ -2286,64 +2291,63 @@ echo "<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
 // Подключение других языков, если это не русский
 if ($lang != 'ru') echo "<script src='/language/".$lang.".js'></script>";
 
-if ($normalize != 0) echo "<link rel='stylesheet' href='includes/css-frameworks/normalize.css' />";
+if ($normalize != 0) echo "<link rel='stylesheet' href='/includes/css-frameworks/normalize.css' />";
 
-if ($sortable != 0) echo "<script src='includes/jquery.tinysort.min.js'></script>";
+if ($sortable != 0) echo "<script src='/includes/jquery.tinysort.min.js'></script>";
 
 if ($jqueryui != 0) echo "
 <link rel='stylesheet' href='http://yandex.st/jquery-ui/1.10.4/themes/base/jquery-ui.min.css' />
 <script src='http://yandex.st/jquery-ui/1.10.4/jquery-ui.min.js'></script>
-<script src='includes/jquery-ui-i18n-min.js'></script>
-<script src='includes/jquery-ui-datepicker-ru.js'></script>";
+<script src='/includes/jquery-ui-i18n-min.js'></script>
+<script src='/includes/jquery-ui-datepicker-ru.js'></script>";
 
 switch($kickstart) { // Выбор CSS-фреймворка
 	case 1: // KickStart
-	echo "<script src='includes/css-frameworks/kickstart/js/kickstart.js'></script><link rel='stylesheet' href='includes/css-frameworks/kickstart/css/kickstart.css' media='all' /><link rel='stylesheet' href='includes/css-frameworks/kickstart/style.css' media='all' />"; break;
+	echo "<script src='/includes/css-frameworks/kickstart/js/kickstart.js'></script><link rel='stylesheet' href='/includes/css-frameworks/kickstart/css/kickstart.css' media='all' /><link rel='stylesheet' href='/includes/css-frameworks/kickstart/style.css' media='all' />"; break;
 	case 2: // CSSframework
-	echo "<link rel='stylesheet' href='includes/css-frameworks/css-framework.css' />"; break;
+	echo "<link rel='stylesheet' href='/includes/css-frameworks/css-framework.css' />"; break;
 	case 3: // Skeleton
-	echo "<link rel='stylesheet' href='includes/css-frameworks/skeleton/base.css'><link rel='stylesheet' href='includes/css-frameworks/skeleton/skeleton.css'><link rel='stylesheet' href='includes/css-frameworks/skeleton/layout.css'>"; break;
+	echo "<link rel='stylesheet' href='/includes/css-frameworks/skeleton/base.css'><link rel='stylesheet' href='/includes/css-frameworks/skeleton/skeleton.css'><link rel='stylesheet' href='/includes/css-frameworks/skeleton/layout.css'>"; break;
 	case 4: // Kube old
-	echo "<link rel='stylesheet' href='includes/css-frameworks/kube/kube.min.css' /><link rel='stylesheet' href='includes/css-frameworks/kube/master.css' /><script src='includes/css-frameworks/kube/kube.buttons.js'></script><script src='includes/css-frameworks/kube/kube.tabs.js'></script>"; break;
+	echo "<link rel='stylesheet' href='/includes/css-frameworks/kube/kube.min.css' /><link rel='stylesheet' href='/includes/css-frameworks/kube/master.css' /><script src='/includes/css-frameworks/kube/kube.buttons.js'></script><script src='/includes/css-frameworks/kube/kube.tabs.js'></script>"; break;
 	case 12: // Kube new
-	echo "<link rel='stylesheet' href='includes/css-frameworks/kube/kube.min.css' />"; break;
-	case 5: // Bootstrap
-	// includes/css-frameworks/bootstrap/css/bootstrap.min.css 
-	// <link href='includes/css-frameworks/bootstrap/css/bootstrap-responsive.min.css' rel='stylesheet'>
-	// includes/css-frameworks/bootstrap/js/bootstrap.min.js
+	echo "<link rel='stylesheet' href='/includes/css-frameworks/kube/kube.min.css' />"; break;
+	case 5: // Bootstrap 2.3.2
+	echo "<link href='/includes/css-frameworks/bootstrap/css/bootstrap.min.css' rel='stylesheet'><link href='/includes/css-frameworks/bootstrap/css/bootstrap-responsive.min.css' rel='stylesheet'><script src='/includes/css-frameworks/bootstrap/js/bootstrap.min.js'></script>"; break;
+	case 13: // Bootstrap 3.1.1
 	echo "<link href='http://yandex.st/bootstrap/3.1.1/css/bootstrap.min.css' rel='stylesheet'><script src='http://yandex.st/bootstrap/3.1.1/js/bootstrap.min.js'></script>"; break;
 	case 6: // 1140 Grid
-	echo "<!--[if lte IE 9]><link rel='stylesheet' href='includes/css-frameworks/1140_cssgrid/ie.css' media='screen' /><![endif]--><link rel='stylesheet' href='includes/css-frameworks/1140_cssgrid/1140.css' media='screen' /><script src='includes/css-frameworks/1140_cssgrid/css3-mediaqueries.js'></script>"; break;
+	echo "<!--[if lte IE 9]><link rel='stylesheet' href='/includes/css-frameworks/1140_cssgrid/ie.css' media='screen' /><![endif]--><link rel='stylesheet' href='/includes/css-frameworks/1140_cssgrid/1140.css' media='screen' /><script src='/includes/css-frameworks/1140_cssgrid/css3-mediaqueries.js'></script>"; break;
 	case 7: // Toast
-	echo "<link rel='stylesheet' href='includes/css-frameworks/toast/toast.css' />"; break;
+	echo "<link rel='stylesheet' href='/includes/css-frameworks/toast/toast.css' />"; break;
 	case 8: // Blueprint
-	echo "<link rel='stylesheet' href='includes/css-frameworks/blueprint/screen.css' media='screen, projection'><link rel='stylesheet' href='includes/css-frameworks/blueprint/print.css' media='print'><!--[if lt IE 8]><link rel='stylesheet' href='includes/css-frameworks/blueprint/ie.css' media='screen, projection'><![endif]-->"; break;
+	echo "<link rel='stylesheet' href='/includes/css-frameworks/blueprint/screen.css' media='screen, projection'><link rel='stylesheet' href='/includes/css-frameworks/blueprint/print.css' media='print'><!--[if lt IE 8]><link rel='stylesheet' href='/includes/css-frameworks/blueprint/ie.css' media='screen, projection'><![endif]-->"; break;
 	case 9: // YUI CSS Grids
 	// http://yuilibrary.com/yui/quick-start/
 	// http://yui.github.io/skinbuilder/
 	echo "<script src='http://yui.yahooapis.com/3.14.1/build/yui/yui-min.js'></script>"; break;
 	case 10: // 960gs (12 и/или 16 колонок)
-	echo "<link rel='stylesheet' href='includes/css-frameworks/960gs/reset.css' /><link rel='stylesheet' href='includes/css-frameworks/960gs/text.css' /><link rel='stylesheet' href='includes/css-frameworks/960gs/960.css' />"; break;
+	echo "<link rel='stylesheet' href='/includes/css-frameworks/960gs/reset.css' /><link rel='stylesheet' href='/includes/css-frameworks/960gs/text.css' /><link rel='stylesheet' href='/includes/css-frameworks/960gs/960.css' />"; break;
 	case 11: // 960gs (24 колонки)
-	echo "<link rel='stylesheet' href='includes/css-frameworks/960gs/reset.css' /><link rel='stylesheet' href='includes/css-frameworks/960gs/text.css' /><link rel='stylesheet' href='includes/css-frameworks/960gs/960_24_col.css' />"; break;
+	echo "<link rel='stylesheet' href='/includes/css-frameworks/960gs/reset.css' /><link rel='stylesheet' href='/includes/css-frameworks/960gs/text.css' /><link rel='stylesheet' href='/includes/css-frameworks/960gs/960_24_col.css' />"; break;
 	default:
 	break;
 }
 
 // Подключение mp3-плеера
 if ($mp3_player == true)
-	echo "<script src='includes/jquery.jplayer.min.js'></script><script src='includes/jouele/jouele.js'></script><link rel='stylesheet' href='includes/jouele/jouele.css' />";
+	echo "<script src='/includes/jquery.jplayer.min.js'></script><script src='/includes/jouele/jouele.js'></script><link rel='stylesheet' href='/includes/jouele/jouele.css' />";
 
 // Подключение фото-галерей
-if ($gallery_css3 == true) echo "<link rel='stylesheet' href='/includes/lightbox-css3.css' media='screen' />";
-if ($gallery_carusel == false) echo "<script src='includes/lightbox-2.6.min.js'></script><script src='includes/jquery.ad-gallery.js'></script><script>$(document).ready(function(){ 
+if ($gallery_css3 == true) echo "<link rel='stylesheet' href='//includes/lightbox-css3.css' media='screen' />";
+if ($gallery_carusel == false) echo "<script src='/includes/lightbox-2.6.min.js'></script><script src='/includes/jquery.ad-gallery.js'></script><script>$(document).ready(function(){ 
 	var galleries = $('.ad-gallery').adGallery(); $('#switch-effect').change( function() { galleries[0].settings.effect = $(this).val(); return false; } ); });</script>
-<link rel='stylesheet' href='includes/lightbox_new.css' media='screen' />"; // при включенном kickstart, lightbox не нужен, включается fancybox
+<link rel='stylesheet' href='/includes/lightbox_new.css' media='screen' />"; // при включенном kickstart, lightbox не нужен, включается fancybox
 if ($gallery_carusel == true) {
     if ($lang=="ru") $carusel_labels = "start_label: 'Старт', stop_label: 'Стоп',";
     else $carusel_labels = "start_label: 'Start', stop_label: 'Stop',";
     echo "
-	<script src='includes/jquery.ad-gallery.js'></script>
+	<script src='/includes/jquery.ad-gallery.js'></script>
 	<script>$(document).ready(function(){ 
 	var galleries = $('.ad-gallery').adGallery({
   loader_image: '',
@@ -2391,16 +2395,16 @@ if ($gallery_carusel == true) {
     },
   }
 });
-});</script><link rel='stylesheet' href='includes/jquery.ad-gallery.css' media='screen' />";
+});</script><link rel='stylesheet' href='/includes/jquery.ad-gallery.css' media='screen' />";
 }
-if ($gallery_sly == true) echo "<script src='includes/sly.min.js'></script><link rel='stylesheet' href='includes/sly.css' media='screen' />";
-if ($gallery_sly_full == true) echo "<script src='includes/sly.min.js'></script><link rel='stylesheet' href='includes/sly_full.css' media='screen' />";
+if ($gallery_sly == true) echo "<script src='/includes/sly.min.js'></script><link rel='stylesheet' href='/includes/sly.css' media='screen' />";
+if ($gallery_sly_full == true) echo "<script src='/includes/sly.min.js'></script><link rel='stylesheet' href='/includes/sly_full.css' media='screen' />";
 
 if ($js != "" && $js != "no") echo "<script src='/js_".$js.".js'></script>";
 
-if ($lightload != 0) echo "<script src='includes/lightload.js'></script>";
-echo "<script src='includes/spin.js'></script>";
-if ($scrollyeah != 0) echo "<script src='includes/scrollyeah.js'></script><link rel='stylesheet' href='includes/scrollyeah.css' />";
+if ($lightload != 0) echo "<script src='/includes/lightload.js'></script>";
+echo "<script src='/includes/spin.js'></script>";
+if ($scrollyeah != 0) echo "<script src='/includes/scrollyeah.js'></script><link rel='stylesheet' href='/includes/scrollyeah.css' />";
 
 echo "<link rel='alternate' href='/rss/' title='".$project_name." RSS' />
 <link rel='stylesheet' href='".$stil.".css' />";
@@ -2430,14 +2434,14 @@ if (mb_strlen($add_fonts)>1) {
 	echo $block; // Вывод страницы
 
 	if ($url=="index" || $url=="-index") { // снег, листья и шарики на Главной
-		if ($pogoda==1) echo "<script src='includes/sneg.js'></script>\n";
-		if ($pogoda==2) echo "<script src='includes/list.js'></script>\n";
-		if ($pogoda==3) { echo "<script src='includes/shar.js'></script>\n"; include("includes/ballon.htm"); }
+		if ($pogoda==1) echo "<script src='/includes/sneg.js'></script>\n";
+		if ($pogoda==2) echo "<script src='/includes/list.js'></script>\n";
+		if ($pogoda==3) { echo "<script src='/includes/shar.js'></script>\n"; include("includes/ballon.htm"); }
 	}
 	
 	// Если включена SWF Flash поддержка
 	// includes/swfobject.js
-	if ($flash==1) echo "<script src='http://yandex.st/swfobject/2.2/swfobject.min.js'></script><script src='includes/swffix_modified.js'></script>";
+	if ($flash==1) echo "<script src='http://yandex.st/swfobject/2.2/swfobject.min.js'></script><script src='/includes/swffix_modified.js'></script>";
 
 	// Если включена защита от копирования (для школьников)
 	if ($stopcopy==1) echo "<script><!-- 

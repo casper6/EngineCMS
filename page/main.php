@@ -2462,12 +2462,14 @@ function savecomm($avtor, $avtory, $info, $num, $comm_otvet, $maily, $mail, $adr
         if (trim($mail2)!="") mail($mail2, '=?utf-8?b?'.base64_encode($avtor2.ss(", получен ответ на ваш комментарий на сайте ").$siteurl).'?=', "<h3>".ss("Здравствуйте, ").$avtor2."!</h3><b>".ss("Вы писали:")."</b><br><br>".str_replace("\r\n","<br>",$text2)."<br><br><b>".ss("Вам ответил(а) ").$avtory.", ".$maily.":</b><br><br>".str_replace("\r\n","<br>",$info)."<br><br>".ss("Чтобы ответить на комментарий, перейдите на сайт по ")."<a href=http://".$siteurl.re_link("/-".$mod."_page_".$num)."#comm_".$comm_otvet.">".ss("этой ссылке")."</a>.<br><br><br><br>".ss("Отвечать на это письмо не нужно - оно было создано сайтом автоматически!"), "Content-Type: text/html; charset=utf-8\r\nFrom: ".$maily."\r\n");
     }
 
-    if ( $comment_send == 1 and $active != 0 ) { // отправка уведомления о комментарии администратору
+    if ( $comment_send == 1 ) { // отправка уведомления о комментарии администратору
+      $add = "";
+      if ($active == 0) $add = "<b>Письмо было автоматически отключено по подозрению о спаме.</b>";
       $sql = "SELECT `cid` FROM ".$prefix."_pages_comments WHERE `avtor`='".mysql_real_escape_string($avtory)."' and `text`='".mysql_real_escape_string($info)."'";
       $result = $db->sql_query($sql);
       $row = $db->sql_fetchrow($result);
       $cid_num = $row['cid'];
-      mail($adminmail, '=?utf-8?b?'.base64_encode(aa("Комментарий на ").$siteurl." [".$now."]").'?=', "<b>".aa("Написал(а) ").$avtory." <".$maily.">:</b><br><br>".str_replace("\r\n","<br>",$info)."<br><br>".aa("Чтобы ответить на комментарий, перейдите ")."<a href='http://".$siteurl.re_link("/-".$mod."_page_".$num)."#comm_".$cid_num."'>".aa("на сайт")."</a>".aa(" или в его ")."<a href='http://".$siteurl."/red'>".aa("администрирование")."</a>.<br><br><br><br>".aa("Письмо создано сайтом автоматически."), "Content-Type: text/html; charset=utf-8\r\nFrom: ".$adminmail."\r\n");
+      mail($adminmail, '=?utf-8?b?'.base64_encode(aa("Комментарий на ").$siteurl." [".$now."]").'?=', "<b>".aa("Написал(а) ").$avtory." <".$maily.">:</b><br><br>".str_replace("\r\n","<br>",$info)."<br><br>".aa("Чтобы ответить на комментарий, перейдите ")."<a href='http://".$siteurl.re_link("/-".$mod."_page_".$num)."#comm_".$cid_num."'>".aa("на сайт")."</a>".aa(" или в его ")."<a href='http://".$siteurl."/red'>".aa("администрирование")."</a>.<br><br>".$add."<br><br>".aa("Письмо создано сайтом автоматически."), "Content-Type: text/html; charset=utf-8\r\nFrom: ".$adminmail."\r\n");
     }
   } else die(ss("Размещать комментарии в этом разделе запрещено"));
 

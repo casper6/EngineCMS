@@ -9308,14 +9308,43 @@ function pics_refresh(txt){
 		val = value.split('|');
 		if (val[1] == ''  || typeof val[1] == 'undefined') val[1] = 'без имени';
 		id = val[0].replace('.', '').replace('/', '').replace('/', '');
-		if (val[0] != '') $('.pics').append('<div id="' + id + '" class="pic" style="background:url(\'includes/php_thumb/php_thumb.php?src=' + val[0] + '&amp;w=160&amp;h=100&amp;q=0\') no-repeat bottom white;"><a title="Удалить фото" class="button small red white" onclick="pics_replace(\'#' + id + '\',\'' + txt + '\',\'' + value + '\');">×</a><span>' + val[1] + '</span></div>');
+		if (val[0] != '') $('.pics').append('<div id="' + id + '" class="pic" style="background:url(\'includes/php_thumb/php_thumb.php?src=' + val[0] + '&amp;w=160&amp;h=100&amp;q=0\') no-repeat bottom white;"><a title="Удалить фото" class="del button small" onclick="pics_replace(\'#' + id + '\',\'' + txt + '\',\'' + value + '\');">'+icon('small red','F')+'</a><a title="Посмотреть фото" href="' + val[0] + '" data-lightbox="light" class="button small">'+icon('small blue','s')+'</a> <a title="Развернуть фото влево" onclick="pics_rotate(\'' + id + '\',\'' + val[0] + '\',\'90\');" class="button small">'+icon('small green',':')+'</a><a title="Развернуть фото вправо" onclick="pics_rotate(\'' + id + '\',\'' + val[0] + '\',\'-90\');" class="button small">'+icon('small green',';')+'</a> <a title="Изменить подпись фото" onclick="pics_rename_show(\'' + id + '\',\'' + txt + '\',\'' + value + '\');" class="button small">'+icon('small green','.')+'</a><br><span>' + val[1] + '</span></div>');
 	});
+}
+
+
+function pics_rename_show(id, txt, name) {
+	var nam = name.split('|');
+	var img = nam[0]+'|';
+	name = name.replace(img, '');
+	var data = '<span class=h2>Редактирование подписи фото</span><form id="pics_rename"><input id="pics_id" type="hidden" value="'+id+'"><input id="pics_txt" type="hidden" value="'+txt+'"><input id="pics_img" type="hidden" value="'+img+'"><input id="pics_search_old" type="hidden" value="'+unescape(name)+'"><p><b>Подпись:</b><textarea class="w100 h40" id="pics_search" autofocus>'+unescape(name)+'</textarea><div class="" id="another_options"></div><p class="center"><a class="button middle green white" onclick="pics_rename(\''+txt+'\')"> '+icon('white small','c')+' Сохранить </a> <a class="button middle" onclick="$(\'#add\').hide();"> Отмена </a></form>';
+	$('#add').show().html( data );
+}
+function pics_rename(txt){
+	text = $(txt).val();
+	//alert( text );
+	text = text.replace( $('#pics_img').val() + $('#pics_search_old').val(), $('#pics_img').val() + $('#pics_search').val() );
+	$(txt).val(text);
+	//$(id).hide('slow');
+	//$('#add').html('Сохраняю...');
+	pics_refresh(txt);
+    $('#add').hide('slow'); 
 }
 function pics_replace(id,txt,search){
 	text = $(txt).val();
 	text = text.replace(search + '\n', '');
 	$(txt).val(text);
 	$(id).hide('slow');
+}
+function pics_rotate(id,pic,angle){
+	// отрисовка картинки
+	$("#"+id).attr("style", $("#"+id).attr("style").replace('&ra=90','').replace('&ra=-90','').replace('&q=0', '&q=0&ra='+angle) );
+	// поворот
+	if (angle == "90") angle = "-90"; else angle = "90";
+	$.ajax({ url: 'ad/ad-ajax.php', cache: false, dataType : 'html',
+	    data: {'func': 'photo_rotate', 'type': angle, 'string': pic},
+	    success: function(data){ if (data != "") alert(data); }
+	});
 }
 
 function sho(pid,name,act,id_razdel,cid,edit_pole,clean_url) {
@@ -9370,9 +9399,18 @@ function save_main(url, op, id, id2) {
 	var msg = $(id).serialize();
     $.ajax({ type:'POST', url: url, 
       data: {'op': op, 'string': msg},
-	  beforeSend: function(){ $(id2).html('Сохраняю...'); },
-      success: function(data) { $(id2).html(data); if (id2 != '#save_main') $(id2).html(icon('green small','*')); }
-      /* error: function(xhr, str) { alert('Возникла ошибка: ' + xhr.responseCode ); } */
+	  beforeSend: function(){ 
+	  	$('#logotip').hide(); 
+	  	$('#logotip_loading').show(); 
+	  	$('.black_grad a.green').addClass('notactive');
+	  },
+      success: function(data) { 
+      	if (data != '') $(id2).html(data);
+      	$('#logotip').show(); 
+      	$('#logotip_loading').hide(); 
+      	$('.black_grad a.green').removeClass('notactive');
+      }
+      /* error: function(xhr, str) { alert('Возникла ошибка: ' + xhr.responseCode ); } if (id2 != '#save_main') */
     });
 }
 function show_otvet_comm(cid, name, mail, mod, shablon, main_nick, all_nicks) {

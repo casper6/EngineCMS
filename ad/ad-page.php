@@ -447,10 +447,10 @@ function base_pages_add_page($page_id=0, $red=0, $name=0, $cid=0, $new=0, $pid=0
     }
   }
   $tags = implode("','", array_unique($tags));
-
+  //if ($tags == "0") $search_tags = $tags ="";
   echo "</div>
 
-  <h3>Тэги (слова для похожих по тематике страниц): <a onclick=\"show('help12')\" class='help'>?</a></h3> 
+  <h3>Тэги (слова для похожих по тематике страниц): $search_tags $tags<a onclick=\"show('help12')\" class='help'>?</a></h3> 
   <input name='search' id='question_tags' class='big w100' value='".$search_tags."'>
   <script>
   $(function() {
@@ -563,6 +563,7 @@ function base_pages_save_page($cid, $module, $title, $open_text, $main_text, $fo
   $keywords2 = mysql_real_escape_string(trim(str_replace("  "," ",str_replace("   "," ",str_replace(" ,",", ",$keywords2)))));
   $description2 = mysql_real_escape_string(trim($description2));
   $meta_title2 = mysql_real_escape_string($meta_title2);
+  $search = mysql_real_escape_string($search);
 
   $clean_url2 = strtr($clean_url2, array('____'=>'_', '___'=>'_', '__'=>'_', '*'=>'',':'=>'','('=>'',')'=>'','  '=>'',' '=>'', ' '=>'_', '.'=>'', ','=>'', '!'=>'', '?'=>'', '=>'=>'', ';'=>'', '&'=>'_and_', '%'=>'', '$'=>'', '#'=>'', '№'=>'', '@'=>'', '^'=>'', '='=>'', '\''=>'','"'=>'','«'=>'', '»'=>'', '____'=>'_', '___'=>'_', '__'=>'_'));
 
@@ -729,7 +730,7 @@ function base_pages_edit_sv_page($pid, $module, $cid, $title, $open_text, $main_
   $search = trim(str_replace(",",", ",$search));
   $search = str_replace(".",", ",$search);
   $search = str_replace("   "," ",$search);
-  $search = str_replace("  "," ",$search);
+  $search2 = str_replace("  "," ",$search);
   if ($mainpage == "") $mainpage = 0;
   $sor = intval($sor);
   $rss = intval($rss);
@@ -757,6 +758,7 @@ function base_pages_edit_sv_page($pid, $module, $cid, $title, $open_text, $main_
   $keywords2 = mysql_real_escape_string(trim(str_replace("  "," ",str_replace("   "," ",str_replace(" ,",", ",$keywords2)))));
   $description2 = mysql_real_escape_string(trim($description2));
   $meta_title2 = mysql_real_escape_string($meta_title2);
+  $search2 = mysql_real_escape_string($search2);
 
   $p_open_text = mysql_real_escape_string(form($module, $p_open_text, "open"));
   $p_main_text = mysql_real_escape_string(form($module, $p_main_text, "main"));
@@ -768,7 +770,7 @@ function base_pages_edit_sv_page($pid, $module, $cid, $title, $open_text, $main_
   $data = $data1." $data2:$data3:$data4";
   $clean_url2 = strtr($clean_url2, array('____'=>'_', '___'=>'_', '__'=>'_', '*'=>'',':'=>'','('=>'',')'=>'','  '=>'',' '=>'', ' '=>'_', '.'=>'', ','=>'', '!'=>'', '?'=>'', '=>'=>'', ';'=>'', '&'=>'_and_', '%'=>'', '$'=>'', '#'=>'', '№'=>'', '@'=>'', '^'=>'', '='=>'', '\''=>'','"'=>'','«'=>'', '»'=>'', '____'=>'_', '___'=>'_', '__'=>'_'));
 
-  $sql = "UPDATE ".$prefix."_pages SET `module`='".$module."', `cid`='".$cid."', `title`='".$title."', `open_text`='".$open_text."', `main_text`='".$main_text."', `date`='".$data."', `redate`='".$now."', `counter`='".$count."', `active`='".$active."', `golos`='".$golos_reiting."', `comm`='".$com."', `foto`='".$foto."', `search`='".$search."', `mainpage`='".$mainpage."', `rss`='".$rss."', `price`='".$price."', `description`='".$description2."', `keywords`='".$keywords2."', `copy`='".$cop."', `sort`='".$sor."', `nocomm`='".$nocomm."', `meta_title`='".$meta_title2."', `clean_url`='".$clean_url2."', `close_date`='".$close_data."' WHERE `pid`='".$pid."';";
+  $sql = "UPDATE ".$prefix."_pages SET `module`='".$module."', `cid`='".$cid."', `title`='".$title."', `open_text`='".$open_text."', `main_text`='".$main_text."', `date`='".$data."', `redate`='".$now."', `counter`='".$count."', `active`='".$active."', `golos`='".$golos_reiting."', `comm`='".$com."', `foto`='".$foto."', `search`='".$search2."', `mainpage`='".$mainpage."', `rss`='".$rss."', `price`='".$price."', `description`='".$description2."', `keywords`='".$keywords2."', `copy`='".$cop."', `sort`='".$sor."', `nocomm`='".$nocomm."', `meta_title`='".$meta_title2."', `clean_url`='".$clean_url2."', `close_date`='".$close_data."' WHERE `pid`='".$pid."';";
   $db->sql_query($sql) or die('Не удалось сохранить изменения... Передайте нижеследующий текст разработчику:<br>'.$sql);
 
   // Делаем резервную копию
@@ -788,7 +790,7 @@ function base_pages_edit_sv_page($pid, $module, $cid, $title, $open_text, $main_
       recash("page_".$pidX, 0); // Обновление кеша ##
     }
     $and_copy = implode(" or ",$and_copy);
-    $db->sql_query("UPDATE ".$prefix."_pages SET `title`='".$title."', `open_text`='".$open_text."', `main_text`='".$main_text."', `date`='".$data."', `redate`='".$data2."', `counter`='".$count."', `active`='".$active."', `golos`='".$golos_reiting."', `comm`='".$com."', `foto`='".$foto."', `search`='".$search."', `mainpage`='".$mainpage."', `rss`='".$rss."', `price`='".$price."', `description`='".$description2."', `keywords`='".$keywords2."', `sort`='".$sor."', `meta_title`='".$meta_title2."', `close_date`='".$close_data."' WHERE ".$and_copy.";");
+    $db->sql_query("UPDATE ".$prefix."_pages SET `title`='".$title."', `open_text`='".$open_text."', `main_text`='".$main_text."', `date`='".$data."', `redate`='".$data2."', `counter`='".$count."', `active`='".$active."', `golos`='".$golos_reiting."', `comm`='".$com."', `foto`='".$foto."', `search`='".$search2."', `mainpage`='".$mainpage."', `rss`='".$rss."', `price`='".$price."', `description`='".$description2."', `keywords`='".$keywords2."', `sort`='".$sor."', `meta_title`='".$meta_title2."', `close_date`='".$close_data."' WHERE ".$and_copy.";");
   }
 
   global $siteurl;

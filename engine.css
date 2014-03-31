@@ -350,8 +350,8 @@ input,textarea,select{
  float:left;
  margin:2px;
  clear:right;
- width:160px;
- height:160px;
+ width:220px;
+ height:200px;
  overflow:auto;
  border-radius:5px;
   -moz-border-radius:5;
@@ -359,15 +359,14 @@ input,textarea,select{
  border:1px solid #bbbbbb;
  padding:2px; 
 }
-.pic a.red{
- position:relative;
- right:2px;
- top:2px;
+.pic a.del {
  float:right; 
 }
+/*
 .pic span{
  background:white; 
 }
+*/
 #fileupload{
  clear:both; 
 }
@@ -1479,4 +1478,49 @@ input[type="search"]{
  box-shadow:0 0 15px rgba(0,0,0,0.6);
   -moz-border-radius:10px / 100px;
  border-radius:10px / 100px; 
+}
+
+.notactive {
+  pointer-events: none;
+  cursor: default;
+}
+
+.lightbox {display:none;}
+
+#progress {
+  background-color: whiteSmoke;
+  border-radius: 3px;
+  box-shadow: 0 2px 3px rgba(0,0,0,.5) inset;
+
+  /* Dimensions should be similar to the parent progress element. */
+  width: 100%; height:20px;
+}
+#progress .bar {
+  width: 0%;
+  height: 20px;
+  text-align:right;
+  color:white;
+  background: #803478;
+  background:
+  -webkit-linear-gradient( 135deg,
+                           transparent,
+                           transparent 33%,
+                           rgba(0,0,0,.1) 33%,
+                           rgba(0,0,0,.1) 66%,
+                           transparent 66%),
+    -webkit-linear-gradient( top,
+                            rgba(255, 255, 255, .25),
+                            rgba(0,0,0,.2)),
+     -webkit-linear-gradient( left, #803478, #03e041);
+  background:
+  -moz-linear-gradient( 135deg,
+                           transparent,
+                           transparent 33%,
+                           rgba(0,0,0,.1) 33%,
+                           rgba(0,0,0,.1) 66%,
+                           transparent 66%),
+    -moz-linear-gradient( top,
+                            rgba(255, 255, 255, .25),
+                            rgba(0,0,0,.2)),
+     -moz-linear-gradient( left, #803478, #03e041);
 }

@@ -39,18 +39,53 @@ if ($type == 'png' || $type == 'jpg' || $type == 'gif' || $type == 'jpeg') {
         // наводим резкость, если превью мелкое
         if ($width < 300) $image->sharpenImage(4, 1);
         //закругляем углы
-        //$image->roundCorners(5, 5);
-        // ориентация фото
+        $image->roundCorners(5, 5);
+          /*
         $orientation = exif_read_data($folder.$foto);
         if ($orientation['Orientation'] !== 0 && $orientation['Orientation'] !== 1 && $orientation['Orientation'] != "") {
             $degres = ($orientation['Orientation']- 1) * 90; 
             $image->rotateImage('', $degres);
         }
+        */
         $image->writeImage();
         $image->destroy();
+        // ориентация фото
+        orient_image($folder.$foto);
       }
     }
     echo '/img/'.$foto;
   }
+}
+
+function orient_image($file_path) {
+    if (!function_exists('exif_read_data')) {
+        return false;
+    }
+    $exif = @exif_read_data($file_path);
+    if ($exif === false) {
+        return false;
+    }
+    $orientation = intval(@$exif['Orientation']);
+    if (!in_array($orientation, array(3, 6, 8))) {
+        return false;
+    }
+    $image = @imagecreatefromjpeg($file_path);
+    switch ($orientation) {
+        case 3:
+            $image = @imagerotate($image, 180, 0);
+            break;
+        case 6:
+            $image = @imagerotate($image, 270, 0);
+            break;
+        case 8:
+            $image = @imagerotate($image, 90, 0);
+            break;
+        default:
+            return false;
+    }
+    $success = imagejpeg($image, $file_path);
+    // Free up memory (imagedestroy does not delete files):
+    @imagedestroy($image);
+    return $success;
 }
 ?>

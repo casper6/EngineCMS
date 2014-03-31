@@ -296,16 +296,16 @@ function help_shablon() {
 
 function add_file_upload_form($textarea="textarea", $textarea_show="textarea", $spisok_show = true, $redactor_id = "", $css = false) {
   $txt = "<form id='fileupload' action='includes/upload/server/php/' method='POST' enctype='multipart/form-data'>
-  <label for='show_oldnames'><input type='checkbox' id='show_oldnames' checked> <b>Добавлять имя файла</b> фотографии как её описание (<i>подходит для осмысленных названий</i>)</label>
-  <div class='notice warning green'>Фотографии можно перенести из любой папки вашего компьютера, даже не нажимая кнопку «Добавить файлы...»</div>
+  <div id='progress'><div class='bar'></div></div>
+  <label for='show_oldnames'><input type='checkbox' id='show_oldnames'> <b>Добавлять имя файла</b> фотографии как её описание (<i>подходит для осмысленных названий</i>)</label>
+  <div class='notice warning green'>Перенесите фото из любой папки в окно браузера, не нажимая кнопку «Добавить файлы...» и никуда не целясь.</div>
   <div style='padding:10px; padding-left:30px; margin-bottom:30px;'>
                   <span class='btn btn-success fileinput-button' style='position: relative;  overflow: hidden;  float: left;  margin-right: 5px;'>
                       <a class='button'>Добавить файлы...</a>
                       <input id='fileupload' type='file' name='files[]' style='position: absolute;  top: 0;  right: 0;  margin: 0;  opacity: 0;  filter: alpha(opacity=0);  transform: translate(-300px, 0) scale(4);  font-size: 23px;  direction: ltr;  cursor: pointer;' data-url='server/php/' multiple>";
-                      if ($spisok_show == true) $txt .= "<a class='button small' onclick='$(\"#".$textarea_show."\").toggle();'>Показать список</a>";
+                      if ($spisok_show == true) $txt .= "<a class='spisok_show button small' onclick='$(\"#".$textarea_show."\").toggle();'>Показать список</a>";
   $txt .= "</span>
   </div>
-<div id='progress'><div class='bar' style='width: 0%;height: 18px;background: green;'></div></div>
 <script src='includes/upload/js/jquery.ui.widget.js'></script>
 <script src='includes/upload/js/jquery.iframe-transport.js'></script>
 <script src='includes/upload/js/jquery.fileupload.js'></script>
@@ -327,7 +327,8 @@ $(function () {
           value = '/img/' + file.name + '|' + file.oldname;
           $('#".$textarea."').append(value + '\\n');
           if (file.oldname == null || file.oldname == '' || typeof file.oldname == 'undefined') file.oldname = 'без имени';
-          $('.pics').append('<div id=\"' + id + '\" class=\"pic\" style=\"background:url(\'includes/php_thumb/php_thumb.php?src=/img/' + file.name + '&amp;w=160&amp;h=100&amp;q=0\') no-repeat bottom white;\"><a title=\"Удалить фото\" class=\"button small red white\" onclick=\"pics_replace(\'#' + id + '\',\'#".$textarea."\', \'' + value + '\');\">×</a><span>' + file.oldname + '</span></div>');
+
+          $('.pics').append('<div id=\"' + id + '\" class=\"pic\" style=\"background:url(\'includes/php_thumb/php_thumb.php?src=/img/' + file.name + '&amp;w=160&amp;h=100&amp;q=0\') no-repeat bottom white;\"><a title=\"Удалить фото\" class=\"del button small\" onclick=\"pics_replace(\'#' + id + '\',\'#".$textarea."\', \'' + value + '\');\">'+icon('small red','F')+'</a><a title=\"Посмотреть фото\" href=\"/img/' + file.name + '\" data-lightbox=\"light\" class=\"button small\">'+icon('small blue','s')+'</a> <a title=\"Развернуть фото влево\" onclick=\"pics_rotate(\'' + id + '\',\'/img/' + file.name + '\',\'90\');\" class=\"button small\">'+icon('small green',':')+'</a><a title=\"Развернуть фото вправо\" onclick=\"pics_rotate(\'' + id + '\',\'/img/' + file.name + '\',\'-90\');\" class=\"button small\">'+icon('small green',';')+'</a> <a title=\"Изменить подпись фото\" onclick=\"pics_rename_show(\'' + id + '\',\'#".$textarea."\',\'' + value + '\');\" class=\"button small\">'+icon('small green','.')+'</a><br><span>' + file.oldname + '</span></div>');
           ";
           else {
             $txt .= "\nvalue = '/img/' + file.name;\n";
@@ -335,6 +336,12 @@ $(function () {
             else $txt .= "alt = ''; if (document.getElementById('show_oldnames').checked == true) alt = file.oldname;
               ".$redactor_id.".insert('<img alt=\"'+alt+'\" src=\"'+value+'\">');\n";
           }
+
+          /*
+          $('.pics').append('<div id=\"' + id + '\" class=\"pic\" style=\"background:url(\'includes/php_thumb/php_thumb.php?src=/img/' + file.name + '&amp;w=160&amp;h=100&amp;q=0\') no-repeat bottom white;\"><a title=\"Удалить фото\" class=\"del button small\" onclick=\"pics_replace(\'#' + id + '\',\'#".$textarea."\', \'' + value + '\');\">'+icon('small red','F')+'</a><a title=\"Посмотреть фото\" href=\"/img/' + file.name + '\" data-lightbox=\"light\" class=\"button small\">'+icon('small blue','s')+'</a> <a title=\"Развернуть фото влево\" onclick=\"pics_rotate(\'' + id + '\',\'/img/' + file.name + '\',\'90\');\" class=\"button small\">'+icon('small green',':')+'</a><a title=\"Развернуть фото вправо\" onclick=\"pics_rotate(\'' + id + '\',\'/img/' + file.name + '\',\'-90\');\" class=\"button small\">'+icon('small green',';')+'</a> <a title=\"Изменить подпись фото\" onclick=\"pics_rename_show(\'' + id + '\',\'#".$textarea."\',\'' + value + '\');\" class=\"button small\">'+icon('small green','.')+'</a><br><span>' + file.oldname + '</span></div>');
+
+          
+          */
           $txt .= "
         });
       },
@@ -343,7 +350,16 @@ $(function () {
         $('#progress .bar').css(
             'width',
             progress + '%'
-        );
+        );";
+        if ($redactor_id == "") $txt .= "
+        if (progress < 1) {
+          $('#name').val('6');
+          $('#photo_upload').show();
+          $('.spisok_show').hide();
+        }";
+        $txt .= "
+        if (progress < 100) $('.bar').html(progress+'%&nbsp;');
+        else $('.bar').html('готово&nbsp;');
       }
     });
 });

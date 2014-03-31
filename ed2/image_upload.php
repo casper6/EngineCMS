@@ -1,5 +1,10 @@
 <?php
 // Настройка
+//require_once ('config.php'); // Настройки сайта
+//require_once ('includes/db.php'); // Работа с базой данных
+//require_once ('includes/sql_layer.php'); // Функции для работы с БД MySQL
+
+
 $imagick = true; // Если картинки не закачиваются - можно попробовать установить в false
 $folder =  '../img/'; //директория в которую будет загружен файл
 
@@ -39,20 +44,24 @@ if (!empty($_FILES['file']['name'])) {
           $image = new Imagick($folder.$foto);
           // сжатие
           list($width, $height, $type, $attr) = getimagesize($folder.$foto);
+
           if ($width > 1000) $image->thumbnailImage(1000,0); // по горизонтали до 1000 пикселей
           else if ($height > 1200) $image->thumbnailImage(0,1200); // по вертикали до 1200 пикселей
           // наводим резкость, если превью мелкое
           if ($width < 300) $image->sharpenImage(4, 1);
           //закругляем углы
-          //$image->roundCorners(5, 5);
-          // ориентация фото
+          $image->roundCorners(5, 5);
+          /*
           $orientation = exif_read_data($folder.$foto);
           if ($orientation['Orientation'] !== 0 && $orientation['Orientation'] !== 1 && $orientation['Orientation'] != "") {
               $degres = ($orientation['Orientation']- 1) * 90; 
               $image->rotateImage('', $degres);
           }
+          */
           $image->writeImage();
           $image->destroy();
+          // ориентация фото
+          orient_image($folder.$foto);
         }
       }
       $array = array('filelink' => str_replace("..","",$folder).$foto);
@@ -60,6 +69,38 @@ if (!empty($_FILES['file']['name'])) {
         echo stripslashes(json_encode($array)); // 
     }
   }
+}
+
+function orient_image($file_path) {
+    if (!function_exists('exif_read_data')) {
+        return false;
+    }
+    $exif = @exif_read_data($file_path);
+    if ($exif === false) {
+        return false;
+    }
+    $orientation = intval(@$exif['Orientation']);
+    if (!in_array($orientation, array(3, 6, 8))) {
+        return false;
+    }
+    $image = @imagecreatefromjpeg($file_path);
+    switch ($orientation) {
+        case 3:
+            $image = @imagerotate($image, 180, 0);
+            break;
+        case 6:
+            $image = @imagerotate($image, 270, 0);
+            break;
+        case 8:
+            $image = @imagerotate($image, 90, 0);
+            break;
+        default:
+            return false;
+    }
+    $success = imagejpeg($image, $file_path);
+    // Free up memory (imagedestroy does not delete files):
+    @imagedestroy($image);
+    return $success;
 }
 
 // проверка изображения на безопасность

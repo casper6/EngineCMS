@@ -199,7 +199,7 @@ function create_main($type) {
 	$titles_block = implode("','", $titles_block);
 	$create = "<div id=about class=block style='display:none;'>Блок — это дополнительный элемент сайта, который может быть вставлен в любом его месте. Блоки бывают автоматические (заранее заданные системой), полуавтоматические (создаваемые с последующей настройкой того, что будет в них отображаться) и ручные (текст, HTML, JavaScript или PHP-код).<br></div>
 
-	<p><span class=h2>Название:</span> <input id='block_name' type='text' name='title' value='' size=60 class='w60 f16'>
+	<p><input id='block_name' placeholder='Название' type='text' name='title' value='' size=60 class='w60 f16'>
 	<div id='block_name_correction'></div>
 	<script>
 	function in_array(needle, haystack, strict) {
@@ -221,11 +221,8 @@ function create_main($type) {
 	});
 	</script>
 
-	<p><span class='h3'>Добавить в другой блок:</span> 
-	<select name='another_block'><option value='0'>не добавлять</option><option disabled>= текстовые блоки =</option>".$options_block2."<option disabled>= блоки-ротаторы =</option>".$options_block3."</select>, <nobr>позиция: 
-	<select name='another_block_position'><option value='0'>сверху</option><option value='1'>снизу</option><option value='2'>заменить!</option></select></nobr>
-
-	<p><span class='h3'>Дизайн для блока:</span> <select name='design'><option value='0'>выбирать необязательно</option>".$styles."</select>
+	<p><select name='design'><option value='0'>Дизайн для блока не выбран (необязательно)</option>".$styles."</select> | <select name='another_block' onchange='if(this.value!=0) $(\"#another_block_position\").show(); else $(\"#another_block_position\").hide();'><option value='0'>Не добавлять в другой блок</option><option disabled>= текстовые блоки =</option>".$options_block2."<option disabled>= блоки-ротаторы =</option>".$options_block3."</select> 
+	<select id='another_block_position' class='hide' name='another_block_position'><option value='0'>сверху</option><option value='1'>снизу</option><option value='2'>заменить!</option></select></nobr>
 
 	<p><span class='h2'>Выберите тип блока:</span> (справа — его параметры, а зеленым цветом снизу — описание)
 	<table class='w100' cellspacing=0 cellpadding=0><tr valign=top><td class=''>
@@ -266,16 +263,15 @@ function create_main($type) {
 	</div>
 
 	<div id='textarea_block'>
-
-	<h2>Содержание блока:</h2>
-	<div class='pics w100'></div>
-	<textarea name=text rows=3 cols=86 class='w100 h155' id=textarea onchange=\"if ($('#name').val() == '6') pics_refresh('#textarea');\"></textarea>
+		<span class='h2'>Содержание блока:</span>
+		<textarea name=text rows=3 cols=86 class='w100 h155' id=textarea onchange=\"if ($('#name').val() == '6') pics_refresh('#textarea');\"></textarea>
 	</div>
 	<input type=hidden name=op value='".$admintip."_create_block'>
 	<input type=hidden name=id value=''>
 	</form>
 
 	<div id='photo_upload' class='hide'>".add_file_upload_form("textarea", "textarea_block")."</div>
+	<div class='pics w100'></div>
 
 	</td>
 	<td id='form_block' style='display:none;' width=500 class='block'>
@@ -939,7 +935,7 @@ function edit_main($id) {
 		<tr><td><strong>Выводить нумерацию страниц</strong>, <nobr>по-умолчанию: снизу.</nobr></td>
 		<td>".select("options[pagenumbers]", "0,1,2", "снизу,сверху,блок [нумерация] в дизайне или разделе", $pagenumbers)."</td></tr>
 		<tr><td><strong>Сортировка страниц</strong> в списке</td>
-		<td>".select("options[sort]", "sort[|]date desc,date desc,date,title,open_text,counter,golos desc,comm,cid[|]title,cid[|]date desc,mainpage desc,search desc,pid,open_text[|] golos,price,prise desc", "по очередности (настраивается),по дате (с последнего),по дате (с первого),по названию (по алфавиту),по предисловию (по алфавиту),по кол-ву посещений страницы,по среднему баллу голосования,по кол-ву комментариев,по № папки и названию,для типа «Форум» (по № папки и дате), по важности (Главная стр.),по наличию ключ. слов,по № страницы,по предисловию и голосованию,магазин: по цене (с мин.), магазин: по цене (с макс.)", $sort)."</td></tr>
+		<td>".select("options[sort]", "sort[|]date desc,date desc,date,title,open_text,counter,golos desc,comm,cid[|]title,cid[|]date desc,mainpage desc,search desc,pid,open_text[|] golos", "по очередности (настраивается),по дате (с последнего),по дате (с первого),по названию (по алфавиту),по предисловию (по алфавиту),по кол-ву посещений страницы,по среднему баллу голосования,по кол-ву комментариев,по № папки и названию,для типа «Форум» (по № папки и дате), по важности (Главная стр.),по наличию ключ. слов,по № страницы,по предисловию и голосованию", $sort)."</td></tr>
 		<tr><td>Вставка между Названием раздела и списком страниц. Можно написать HTML-код или вставить любой [блок]. Не использовать символ &</td>
 		<td>".input("options[reclama]", $reclama, 60, "txt")."</td></tr>
 		<tr><td>Выводить описание папки:</td>
@@ -1226,7 +1222,7 @@ function edit_main($id) {
 	$img_width = 0;
 	$img_height = 200;
 	$size = 10;
-	$class = $alternative_title_link = $cid_open = $no_show_in_razdel = $watermark = $show_in_papka = "";
+	$class = $alternative_title_link = $cid_open = $no_show_in_razdel = $watermark = $show_in_papka = $re_title_block = "";
 	$calendar = ""; // Календарь - перенаправление на дату из поля.
 	$addtitle = "Добавить статью";
 	$dal = "Далее...";
@@ -1338,7 +1334,8 @@ function edit_main($id) {
 	}</script>
 	</td></tr>";
 
-	echo "<tr><td><b>Заголовок блока</b></td>
+	echo "<tr><td><b>Заголовок блока</b><br>
+	Замена заголовка: ".input("options[re_title_block]", $re_title_block, 40)." Если пусто — используется название блока.</td>
 	<td>".select("options[titleshow]", "3,2,1,0,4", "спойлер (блок свернут до заголовка),внутри предисловия как блок [заголовок],показывать,не показывать,не показывать и без DIV-обрамления", $titleshow)."</td></tr>";
 	if ($name==0 || $name==1 || $name==3 || $name==4 || $name==5 || $name==6 || $name==8 || $name==9 || $name==10 || $name==11 || $name==13 || $name==14 || $name==15 || $name==30) 
 		echo "</table><h2 class='black_polosa'>Настройки данного типа блока:</h2><table class='w100 mw800 table_light'>";
@@ -1413,7 +1410,7 @@ function edit_main($id) {
 
 	if ($name == 0 || $name == 9 || $name == 4) {
 	echo "<tr><td>Сортировка страниц в списке по: </td>
-	<td>".select("options[sort]", "sort[|]date desc,date desc,date,sort[|]title,title,open_text,counter,golos desc,comm,cid[|]title,cid[|]date desc,price,prise desc,mainpage desc,search desc,pid,open_text[|]golos", "по очередности (настраивается),дате (с последнего),дате (с первого),названию (по алфавиту),названию (без поля сортировки),предисловию (по алфавиту),кол-ву посещений страницы,среднему баллу голосования,кол-ву комментариев,№ папки и названию,№ папки и дате страницы,цене (с мин.) магазин,цене (с макс.) магазин,важности (Главная стр.),наличию ключ. слов,№ страницы,предисловию и голосованию", $sort)."</td></tr>";
+	<td>".select("options[sort]", "sort[|]date desc,date desc,date,sort[|]title,title,open_text,counter,golos desc,comm,cid[|]title,cid[|]date desc,mainpage desc,search desc,pid,open_text[|]golos", "по очередности (настраивается),дате (с последнего),дате (с первого),названию (по алфавиту),названию (без поля сортировки),предисловию (по алфавиту),кол-ву посещений страницы,среднему баллу голосования,кол-ву комментариев,№ папки и названию,№ папки и дате страницы,важности (Главная стр.),наличию ключ. слов,№ страницы,предисловию и голосованию", $sort)."</td></tr>";
 	}
 
 	if ($name == 4) { // папки
@@ -1588,10 +1585,11 @@ function edit_main($id) {
 	}
 
 	if ($name == 10) {
-	echo "<tr><td>Раздел сайта с папками или Режим меню: <a class='punkt' onclick=\"$('#re_menu').toggle('slow');\">Справка</a>.
+	echo "<tr><td>Раздел сайта (выводит только папки) или Режим меню: <a class='punkt' onclick=\"$('#re_menu').toggle('slow');\">Справка</a>. 
       <div id=re_menu style='display:none;'>".close_button('re_menu')."<p>Меню сайта может настраиваться автоматически или вручную, также можно преобразовать в меню папки выбранного раздела. Если выбран автоматический режим — при редактировании блока можно будет выбрать разделы, папки и страницы сайта, а также их очередность — в удобном редакторе меню. <p>В ручном режиме меню описывается текстом по правилам (для того, чтобы быть универсальным и легко переключать варианты отображения):<br>[элемент открыть][url=/]Главная[/url][элемент закрыть]<br>[элемент открыть][url=#]Пункт меню 1[/url][элемент закрыть]<br>[элемент открыть][url=#]Пункт меню 2[/url]<br>&nbsp;&nbsp;[уровень открыть]<br>&nbsp;&nbsp;[элемент открыть][url=#]Подпункт 1[/url][элемент закрыть]<br>&nbsp;&nbsp;[элемент открыть][url=#]Подпункт 2[/url][элемент закрыть]<br>&nbsp;&nbsp;[уровень закрыть]<br>[элемент закрыть]<br><i>где # - это ссылка на страницу.</i><br>В меню может быть до 3-х уровней вложенности</div>
+      <p>Если нужно вывести страницы раздела — используется блок страниц или блок папок (в нем также есть вывод страниц).
 	</td>
-	<td>".select("options[re_menu]", $razdel_engname."1,0", $razdel_name."режим: автоматический,режим: ручной", $re_menu)."</td></tr>";
+	<td>".select("options[re_menu]", $razdel_engname."1,0", $razdel_name."= режим: автоматический =,= режим: ручной =", $re_menu)."</td></tr>";
 
 	echo "<tr><td>Если выбран «раздел сайта», показывать в автоматическом меню:</td>
 	<td>".select("options[re_menu_type]", "0,1,2", "папки,страницы,папки и страницы", $re_menu_type)."</td></tr>";
@@ -2030,7 +2028,7 @@ function mainpage_save($id=0, $type, $namo, $title, $text, $useit, $shablon, $de
 		}
 		if ($err == 1) echo "Не удалось обновить содержание.";
 		if ($op == "mainpage_save_ayax") { 
-			if ($err == 0) echo "Сохранил";
+			//if ($err == 0) echo "Сохранил";
 			exit; 
 		}
 		elseif ($err != 0) die();
@@ -2076,7 +2074,7 @@ function mainpage_save($id=0, $type, $namo, $title, $text, $useit, $shablon, $de
 		if ($err == 2) echo "Вы не написали название! Вернитесь и заполните это поле.";
 		if ($err == 3) echo "Не удалось обновить содержание. Попробуйте нажать в Редакторе на кнопку «Чистка HTML»";
 		if ($op == "mainpage_save_ayax") {
-			if ($err == 0) echo "Сохранил"; 
+			//if ($err == 0) echo "Сохранил"; 
 			exit; 
 		}
 		elseif ($err != 0) die();

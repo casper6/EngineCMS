@@ -8,6 +8,13 @@ if (is_admin($admin)) {
   if (isset($_REQUEST['id']))     $id = intval($_REQUEST['id']); else $id = 0;
   if (isset($_REQUEST['string'])) $string = $_REQUEST['string']; else $string = "";
   ######################################################################################
+if ($func == "photo_rotate") {
+  $image = new Imagick( $_SERVER["DOCUMENT_ROOT"].$string );
+  $image->rotateImage('', $type);
+  $image->writeImage();
+  $image->destroy();
+  exit;
+}
 if ($func == "plagiat") {
   //$str = filter_var($_POST['data'], FILTER_SANITIZE_SPECIAL_CHARS);
   $str2 = str_replace("   ", " ", str_replace("  ", " ", str_replace(array('&hellip;','...','.',':',';','!','?','(',')'), ",", strip_tags($string))));
@@ -69,7 +76,7 @@ if ($func == "save_spiski") {
   require_once ('ad-page.php');
   parse_str($string);
   save_spiski($add);
-  echo " Сохранил";
+  echo "Сохранил";
   exit;
 }
 ######################################################################################
@@ -1252,7 +1259,7 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
       $result4 = $db->sql_query($sql4);
       $row4 = $db->sql_fetchrow($result4);
       $module = $row4['module'];
-      $titles = $row4['title'];
+      $titles = strip_tags($row4['title']);
       $p_cid = $row4['cid'];
 
       $pishet = "пишет в";
@@ -1300,9 +1307,13 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
         <div style='display:none;' id=comm".$cid.">
         ".$otvet.$mails.$tel."<br><br>
         <div class=bggray>".$txt."</div><br>
-        <a title='Удалить комментарий' onclick='delcomm(".$cid.")' class='button red white small right3'>Удалить полностью</a>
+
+        <a title='Удалить комментарий' onclick='delcomm(".$cid.")' class='button red white small right3'>".icon('red medium','F')." Удалить</a>
         <a id='show_otvet_link".$cid."' onclick=\"show_otvet_comm(".$cid.",'".$avtor."','".$mail."','".$module."',0, '".$avtor_comment1."', '".$add_option."')\" class='button medium'>".icon('orange medium','"')." Ответить на комментарий</a> 
-        <a id='show_shablon_link".$cid."' onclick=\"show_otvet_comm(".$cid.",'".$avtor."','".$mail."','".$module."',1, '".$avtor_comment1."', '".$add_option."')\" class='button small'>".icon('orange small','\'')." Использовать шаблон ответа</a>
+        <a id='show_shablon_link".$cid."' onclick=\"show_otvet_comm(".$cid.",'".$avtor."','".$mail."','".$module."',1, '".$avtor_comment1."', '".$add_option."')\" class='button small'>".icon('orange small','\'')." Использовать шаблон ответа</a> 
+        <a class='button red white small' title='Изменить комментарий' href='/sys.php?op=base_comments_edit_comments&cid=".$cid."'>".icon('orange small','7')." Изменить</a> 
+        <a onclick='offcomm(".$cid.")' class='button red white small'>".$vkl." Вкл./Выкл.</a>
+        <br><br>
         <div id='otvet_comm".$cid."'></div><br><br>
         </div>
         </td></tr>";
@@ -1312,7 +1323,7 @@ if ($func == "opengarbage") { // Открытие вкладок Содержа�
           // Преобразование адреса URL в ссылку (с учетом тире)
           $txt = preg_replace('@(https?://([-\w\.]+)+(:\d+)?(/([-\w/_\.]*(\?\S+)?)?)?)@', '<a href="$1" target="_blank">$1</a>', $txt);
           $pageslistdel .= "<tr valign=top id='1comm".$cid."'".$bgcolor."'><td class='gray'><nobr>".$data."</nobr></td><td>
-          <a title='Удалить сообщение' onclick='delcomm(".$cid.")' class='button red white small right3'>Удалить полностью</a>";
+          <a title='Удалить сообщение' onclick='delcomm(".$cid.")' class='button red white small right3'>".icon('red medium','F')." Удалить</a>";
           if ($row5['active'] == 1) $pageslistdel .= "<a onclick='offcomm(".$cid.")' class='button medium right3'>Прочитано</a>";
           $pageslistdel .= "<span class='green2'>".$avtor."</span> &rarr; ".$txt."</td></tr>";
         }

@@ -165,7 +165,7 @@ if ($phpversion{0}==4) die ('Версия PHP — 4. Попросите хост
 if ($phpversion{0}==5 && $phpversion{2}<4) 
 	echo "<p style='color:red;'>Версия PHP — 5.".$phpversion{2}.". Рекомендуется использовать PHP версии 5.4.10, минимум — 5.2.1";
 if ( ( $phpversion{0}==5 && $phpversion{2}>4 ) || $phpversion{0}>5) 
-	echo "<p style='color:red;'>Версия PHP — 5.".$phpversion{2}.".<br>На 5.5 (и выше) CMS полноценно не тестировалась — вы можете попробовать и передать разработчику все возникшие ошибки или замечания.";
+	echo "<p style='color:red;'>Версия PHP — 5.".$phpversion{2}.".<br>На 5.5 CMS тестируется в настоящее время — вы можете попробовать и передать разработчику все возникшие ошибки или замечания.";
 if (!function_exists('curl_init')) 
 	echo "<p style='color:red;'>Желательно включить поддержку cURL на вашем хостинге.";
 if (!extension_loaded('imagick') || !class_exists("Imagick")) 
@@ -175,7 +175,11 @@ echo "<li><a href='http://hotel-s.ru' target='_blank'>Официальный с�
 <li><a href='http://code.1hub.ru' target='_blank'>Коллекция кода, в которую легко можно добавить свою заметку</a>
 <li><a href='http://translate.google.com/manager/website/add' target='_blank'>Переводчик сайтов</a>
 <li><a href='http://uptolike.ru' target='_blank'>Большие удобные настраиваемые социальные кнопки</a>
-<li><a href='http://www.idangero.us/framework7' target='_blank'>Фреймворк для создания сайтов/программ для мобильных устройств</a>
+<li>Фреймворки для создания сайтов/программ для мобильных устройств:<ul>
+	<li><a href='http://www.idangero.us/framework7' target='_blank'>Framework 7</a>
+	<li><a href='http://mobileangularui.com' target='_blank'>Mobile Angular UI</a>
+	</ul>
+</li>
 
 
 <h2>Внутреннее устройство CMS «ДвижОк»</h2>
@@ -220,7 +224,10 @@ switch($kickstart) {
 	$kick_name = "Kube (новая версия)"; break;
 	case 5:
 	$kick_link = "http://twitter.github.com/bootstrap/base-css.html";
-	$kick_name = "Bootstrap"; break;
+	$kick_name = "Bootstrap 2.3.2"; break;
+	case 13:
+	$kick_link = "http://getbootstrap.com/getting-started/";
+	$kick_name = "Bootstrap 3.1.1"; break;
 	case 6:
 	$kick_link = "http://cssgrid.net";
 	$kick_name = "1140 Grid"; break;
@@ -243,7 +250,7 @@ switch($kickstart) {
 if ($kickstart != 0) echo " <a target='_blank' class='button small' href='".$kick_link."' title='Открыть сайт CSS-фреймворка «".$kick_name."»'><span class='icon small black' data-icon='S'></span> ".$kick_name."</a>";
 
 echo "</td><td class=small>
-".select("options[kickstart]", "0,1,2,3,12,4,5,6,7,8,9,10,11", "- НЕТ -,KickStart,CSSframework,Skeleton,Kube (новая версия),Kube (старая версия),Bootstrap,1140 Grid,Toast,Blueprint,YUI CSS Grids,960gs (12 и/или 16 колонок),960gs (24 колонки)", $kickstart, ' id=kickstart onchange="if ( $(\'#kickstart\').val() == 1) $(\'#frame1\').show(); else $(\'#frame1\').hide(); if ( $(\'#kickstart\').val() == 6) $(\'#frame6\').show(); else $(\'#frame6\').hide(); "')."
+".select("options[kickstart]", "0,1,2,3,12,4,5,13,6,7,8,9,10,11", "- НЕТ -,KickStart,CSSframework,Skeleton,Kube (новая версия),Kube (старая версия),Bootstrap версия 2.3.2,Bootstrap версия 3.1.1,1140 Grid,Toast,Blueprint,YUI CSS Grids,960gs (12 и/или 16 колонок),960gs (24 колонки)", $kickstart, ' id=kickstart onchange="if ( $(\'#kickstart\').val() == 1) $(\'#frame1\').show(); else $(\'#frame1\').hide(); if ( $(\'#kickstart\').val() == 6) $(\'#frame6\').show(); else $(\'#frame6\').hide(); "')."
 <br>Ссылка на сайт фреймворка (для просмотра правил оформления CSS и HTML) появится слева после сохранения.
 <pre id='frame1' style='display:none;'>
 LightBox отключен, включен FancyBox, входящий в состав KickStart
