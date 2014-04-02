@@ -97,10 +97,14 @@ if ($tmp==$opros_id || $opros_res != 1) { // Если голосовали - п�
     if ($opros_result == 0 && $admin_ok == 1) $textX .= aa("Результаты опроса видите только вы — администратор.");
     $sql2 = "select `ip` from ".$prefix."_golos where `num`='".$opros_num."'"; 
     $result2 = $db->sql_query($sql2);
-    $sto = array();
-    while ($row = $db->sql_fetchrow($result2))
-      $sto[] = $row['ip'];
-    $sto = count( array_unique($sto) );
+    //$sto = array();
+    //while ($row = $db->sql_fetchrow($result2))
+      //$sto[] = $row['ip'];
+    //$sto = count( $sto );
+    foreach ($lines2 as $line_id => $line) {
+      $xx = intval($cols2[$line_id]);
+      if ($sto < $xx) $sto = $xx; 
+    }
     foreach ($lines2 as $line_id => $line) {
       if ($sto > 0) $proc = intval($cols2[$line_id] * 100 / $sto); 
       else $proc = 0;

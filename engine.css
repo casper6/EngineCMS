@@ -55,8 +55,19 @@ body{
  -o-background-size:1024px auto;
   -moz-background-size:1024px auto; 
 }
-
 }
+
+@media (min-width:1000px){
+  #base_search{ 
+  column-count: 2; 
+  -moz-column-count: 2; 
+  -webkit-column-count:2; 
+  column-gap:50px;
+  -moz-column-gap:50px;  
+  -webkit-column-gap:50px;  
+  }
+}
+
 .shadow{
  box-shadow:0 0 25px #333;
   -webkit-box-shadow:0 0 25px #333;
