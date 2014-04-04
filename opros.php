@@ -97,10 +97,10 @@ if ($tmp==$opros_id || $opros_res != 1) { // Если голосовали - п�
     if ($opros_result == 0 && $admin_ok == 1) $textX .= aa("Результаты опроса видите только вы — администратор.");
     $sql2 = "select `ip` from ".$prefix."_golos where `num`='".$opros_num."'"; 
     $result2 = $db->sql_query($sql2);
-    //$sto = array();
-    //while ($row = $db->sql_fetchrow($result2))
-      //$sto[] = $row['ip'];
-    //$sto = count( $sto );
+    $sto_ip = array();
+    while ($row = $db->sql_fetchrow($result2))
+      $sto_ip[] = $row['ip'];
+    $sto_ip = count( array_unique($sto_ip) );
     foreach ($lines2 as $line_id => $line) {
       $xx = intval($cols2[$line_id]);
       if ($sto < $xx) $sto = $xx; 
@@ -120,7 +120,7 @@ if ($tmp==$opros_id || $opros_res != 1) { // Если голосовали - п�
       $textX .= "<div class='w100' class='opros_otvet'>".$line."</div>
       <div class='w100 opros_line'>".$line1."<div style='width:".$proc2."%;' class='opros_line2'>".$line2."</div></div>";
     }
-    $textX .= "<br><span class='opros_all'>".ss("Всего проголосовало:")." ".$sto.".</span>";
+    $textX .= "<br><span class='opros_all'>".ss("Всего проголосовало:")." ".$sto_ip.".</span>";
   } else {
     $textX .= ss("Вы уже проголосовали. Администратор запретил просмотр результатов голосования.");
   }

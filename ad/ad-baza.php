@@ -7,7 +7,7 @@
     if ($realadmin == 1) {
 #####################################################################################################################
 function base_base($name) {
-    global $url, $prefix, $db, $p, $sortir, $show, $active_sort, $interval_sort, $search_sort, $doc;
+    global $url, $prefix, $db, $p, $sortir, $show, $active_sort, $interval_sort, $search_sort, $itogo_show, $doc;
     //echo "sortir $sortir, show ".print_r ($show).", interval_sort $interval_sort, search_sort $search_sort, doc $doc<br>";
     if ($p == "") $p=0;
     if ($doc == "") {
@@ -42,9 +42,8 @@ function base_base($name) {
     $type = 2; // Тип базы данных
     $status = "Удалено|#fcccd7#!#Утверждено|#dddddd#!#Проверить|#eeeeee#!#В_работе|#ffffff";
     // Значение статуса: Название|цвет
-    $del_stroka = 1; // Удаление строки
-    $edit_stroka = 1; // Редактирование строки
-    $num_day_stroka = 0; // Ограничение кол-ва вносимых каждый день строк
+    $del_stroka = $edit_stroka = 1; // Удаление и Редактирование строки
+    $num_day_stroka = $num_day_sum_stroka = 0; // Ограничение кол-ва и суммы значений вносимых каждый день строк
     $message = ""; // Дополнительные сообщения
     //echo $baza_options;
     parse_str($baza_options);
@@ -66,6 +65,13 @@ function base_base($name) {
         $where[] = "active = '".$active_sort."'";
         $active_sort = "&active_sort=".$active_sort; 
     } else $active_sort2 = $active_sort = "";
+
+    if (isset($itogo_show) && $itogo_show != "") {
+        $itogo_show = intval($itogo_show);
+        if ($itogo_show > 0) {
+            $lim = 1000000;
+        }
+    } else $itogo_show = 0;
 
     if (isset($interval_sort) && $interval_sort != "") {
         $interval_sort2 = urldecode($interval_sort); 
@@ -329,16 +335,17 @@ function base_base($name) {
         $date_now5_2 = date2normal_view(date("Y-m-")."31"); // месяц
         $date_now6 = date2normal_view(date("Y-m-d", mktime(0, 0, 0, date("m")+1, 1,   date("Y")))); // следующий месяц
         $date_now6_2 = date2normal_view(date("Y-m-d", mktime(0, 0, 0, date("m")+1, 31,   date("Y")))); // следующий месяц
-        $date_now7 = date2normal_view(date("Y-m-d", mktime(0, 0, 0, 1, 1, 2000))); // следующий месяц
-        $date_now7_2 = date2normal_view(date("Y-m-d", mktime(0, 0, 0, 1, 1, 3000))); // следующий месяц
+        $date_now7 = date2normal_view(date("Y-m-d", mktime(0, 0, 0, 1, 1, 2000))); // вечность
+        $date_now7_2 = date2normal_view(date("Y-m-d", mktime(0, 0, 0, 1, 1, 3000))); // вечность
 
         foreach ($filters as $key => $value) {
             //echo $key;
             if ($value != "") {
                 if ( $type_names[$key] == 'дата' ) { // Выбор по дате, если есть такое поле
-                    if (!isset($show[$value]))
-                        $show[$value] = $show2[$value] = date2normal_view(date("Y-m-d"));
-                    elseif (mb_strpos($show[$value], "-")) { // диапазон дат
+                    if (!isset($show[$value])) {
+                        $show[$value] = $date_now7;
+                        $show2[$value] = $date_now7_2; //date2normal_view(date("Y-m-d"));
+                    } elseif (mb_strpos($show[$value], "-")) { // диапазон дат
                         $datas = explode("-", urldecode($show[$value]));
                         $show[$value] = $datas[0];
                         $show2[$value] = $datas[1];
@@ -373,7 +380,9 @@ function base_base($name) {
 
         <p class='noprint'>Статус ".select("f_active",','.implode(',',$status_int),','.implode(',',$status_name), $active_sort2, " class='w45'")."
 
-        <p class='noprint'><a class='button big' href='#' onClick=\"location='".$main_url.$filter_urls."&active_sort=' + document.getElementById('f_active').value + '&search_sort=' + document.getElementById('f_search').value + '&interval_sort=' + document.getElementById('f_interval').value + '&show[".$value."]=' + $('#f_".$value."').val()\"><span class='icon medium green' data-icon='s'></span> Найти</a> ".$show_all_button."
+        <p class='noprint'>Дополнительные возможности ".select("f_itogo","0,2,1","= выберите из списка =,Показать все строки сразу,С числами: Сумма[|] среднее[|] макс./мин. + все строки", $itogo_show)."
+
+        <p class='noprint'><a class='button big' href='#' onClick=\"location='".$main_url.$filter_urls."&active_sort=' + document.getElementById('f_active').value + '&search_sort=' + document.getElementById('f_search').value + '&interval_sort=' + document.getElementById('f_interval').value + '&itogo_show=' + document.getElementById('f_itogo').value + '&show[".$value."]=' + $('#f_".$value."').val()\"><span class='icon medium green' data-icon='s'></span> Найти</a> ".$show_all_button."
         <br><br><br><br>
         </div>";
 
@@ -398,7 +407,7 @@ function base_base($name) {
 
             $daty = "".date2normal_view($date_now1).": <b>".$segodnya."</b>. Завтра: <b>".$zavtra."</b>. Послезавтра: <b>".$poslezavtra."</b>."; // &nbsp; Вчера: ". $vchera;
         } else $daty = "";
-        echo "<h2>Показано: ".$numrows." из ".$all.". ".$daty."</span></h2>";
+        echo "<h1><b>".$numrows."</b> из ".$all.". ".$daty."</span></h1>";
     }
 
 
@@ -426,6 +435,8 @@ function base_base($name) {
 	$sql = "SELECT * FROM ".$prefix."_base_".$baza_name." ".$where."".$order." limit $offset,".$lim;
     //echo $sql;
 	$result = $db->sql_query($sql) or die("SELECT * FROM ".$prefix."_base_".$baza_name." ".$where."".$order." limit $offset,".$lim);
+    $itogo = array();
+    $all = 0;
 	while ($row = $db->sql_fetchrow($result)) {
     	$base_id = $row['id'];
         $base_active = $status_name[ $row['active'] ]; 
@@ -436,8 +447,15 @@ function base_base($name) {
                 $tr = array(" Январь"=>" Янв"," Февраль"=>" Фев"," Март"=>" Март"," Апрель"=>" Апр"," Май"=>" Май"," Июнь"=>" Июнь"," Июль"=>" Июль"," Август"=>" Авг"," Сентябрь"=>" Сен"," Октябрь"=>" Окт"," Ноябрь"=>" Ноя"," Декабрь"=>" Дек");
                 $row[$x] = strtr(date2normal_view($row[$x],0),$tr);
             }
-
             $row[$x] = trim(str_replace("&nbsp;"," ",str_replace(",",", ",str_replace(".",". ",str_replace("/","/ ",strip_tags($row[$x]))))));
+            if ($x !=0 && $type_names[$x-1]=="число" && $row[$x] != 0 && $itogo_show == 1) {
+                //if (!isset($itogo[ $names[$x-1] ])) $itogo[ $names[$x-1] ] = 0;
+                preg_match_all('|\d+|', $row[$x], $matches); 
+                $ro = array_sum($matches[0]);
+                if (count($matches[0]) > 1) $row[$x] .= " <b>= ".$ro."</b>";
+                $all++;
+                $itogo[ $names[$x-1] ][] = $ro;
+            }
             $pag_line = $row[$x];
             if ($x !=0 and strpos(" ".$type_names[$x-1], "table|")) {
                 $pole_name = $type_names[$x-1];
@@ -460,6 +478,21 @@ function base_base($name) {
         echo "</tr>";
         
     }
+
+    echo "<tr valign=top class='block'><td class='noprint' width=120></td><td></td>";
+    foreach ($names as $row3) {
+            switch ($row3) {
+                //case "golos": echo "<td>Голосование</td>"; break;
+                case "id":  break;
+                case "active":  break;
+                //case "comm": echo "<td>Кол-во коммент.:</td>"; break;
+                //case "kol": echo "<td>Количество проданного:</td>"; break;
+                default: if (isset($itogo[ $row3 ])) echo "<td>С&nbsp;числами: ".$all."<br><b>Сумма: ".floatNumber(array_sum($itogo[ $row3 ]))."</b><br>Среднее: ".floatNumber( array_sum($itogo[ $row3 ]) / $all, 2)."<br>Максимум: ".floatNumber(max($itogo[ $row3 ]))."<br>Минимум: ".floatNumber(min($itogo[ $row3 ]))."</td>"; else echo "<td></td>"; break;
+            }
+    }
+    if ($doc=="") echo "<td class='noprint'></td></tr>";
+
+
     echo "</table><p class='noprint'><span class=\"icon black small left3\" data-icon=\"x\"></span> — при нажатии строка не будет выведена при печати.";
 
 
@@ -587,7 +620,7 @@ function base_base_edit_base($id, $base, $name, $red=0) {
 
 
             case "число": 
-                echo "<p><b>".$one[1].":</b><br><input type=text name=\"text[".$one[0]."]\" value=\"".$row[$x+1]."\" size=5> (целое число)
+                echo "<p><b>".$one[1].":</b> <input type=text name=\"text[".$one[0]."]\" value=\"".$row[$x+1]."\" size=30> (число или сумма + чисел)
                 <input type=hidden name=\"type[".$one[0]."]\" value=\"число\"></p>"; 
             break;
 
@@ -701,6 +734,7 @@ function base_base_create_base($base, $name, $red=0) {
     $status = "Удалено|#fcccd7#!#Утверждено|#dddddd#!#Проверить|#eeeeee#!#В_работе|#ffffff";
     // Значение статуса: Название|цвет
     $message = ""; // Дополнительные сообщения
+    $num_day_stroka = $num_day_sum_stroka = 0;
     parse_str($text);
     $status_name = $status_int = array();
     $status = explode("#!#", $status);
@@ -797,20 +831,59 @@ function base_base_create_base($base, $name, $red=0) {
 
 
                 case "число": 
-                    echo "<p><b>".$one[1].":</b><br><input type=text id=\"".$one[0]."\" name=\"text[".$one[0]."]\" value=\"\" size=5> (целое число)
+                    echo "<p><b>".$one[1].":</b> <input type=text id=\"".$one[0]."\" name=\"text[".$one[0]."]\" value=\"\" size=30> (число или сумма + чисел)
                     <input type=\"hidden\" name=\"type[".$one[0]."]\" value=\"число\"></p>"; 
                     if ($one[3] == 3 or $one[3] == 2 or $one[3] == 1 or $one[3] == 7) $alerts .= "if (document.getElementById('".$one[0]."').value=='') al = al + 'Не заполнено поле «".$one[1]."». \\r\\n';";
                 break;
 
                  
                 case "дата": 
-                    echo "<p><b>".$one[1].":</b>
-                    <script>
-                    $(function() { $.datepicker.setDefaults( $.datepicker.regional[ \"ru\" ] ); $( \"#f_date_c_".$one[0]."\" ).datepicker({ numberOfMonths: 1, changeMonth: true, changeYear: true, dateFormat: \"d MM yy\", showAnim: 'slide' }); });
+                    $add1 = "var num_day = new Array();";
+                    $add2 = "var num_day_sum = new Array();";
+                    $no_add1 = $no_add2 = "true";
+                    if ($num_day_stroka != 0) { // получаем даты, в которые есть превышение кол-ва строк
+                        $num_day_stroka_el = explode("|", $num_day_stroka);
+                        $rows = array();
+                        $sql = "SELECT `".$num_day_stroka_el[1]."` FROM ".$prefix."_base_".$base." GROUP BY `".$num_day_stroka_el[1]."` HAVING count(`id`)>=".$num_day_stroka_el[0];
+                        
+                        $result2 = $db->sql_query($sql);
+                        while ($row2 = $db->sql_fetchrow($result2)) {
+                            $rows[] = $row2[ $num_day_stroka_el[1] ];
+                        }
+                        if (count($rows)>0) $add1 = "var num_day = new Array('".implode("','", $rows)."');";
+                        $no_add1 = $num_day_stroka_el[2];
+                    }
+
+                    if ($num_day_sum_stroka != 0) { // получаем даты, в которые есть превышение суммы элементов в числовом поле
+                        $num_day_sum_stroka_el = explode("|", $num_day_sum_stroka);
+                        $rows = array();
+                        $result2 = $db->sql_query("SELECT `".$num_day_sum_stroka_el[1]."` FROM ".$prefix."_base_".$base." GROUP BY `".$num_day_sum_stroka_el[1]."` HAVING sum(`".$num_day_sum_stroka_el[2]."`)>=".$num_day_sum_stroka_el[0]);
+                        while ($row2 = $db->sql_fetchrow($result2)) {
+                            $rows[] = $row2[ $num_day_sum_stroka_el[1] ];
+                        }
+                        if (count($rows)>0) $add2 = "var num_day_sum = new Array('".implode("','", $rows)."');";
+                        $no_add2 = $num_day_sum_stroka_el[3];
+                    }
+                    if ($no_add1 == "") { $no_add1 = "true"; $add1 = "var num_day = new Array();"; }
+                    if ($no_add2 == "") { $no_add2 = "true"; $add2 = "var num_day_sum = new Array();"; }
+                    echo "<script>
+                    $(function() { $.datepicker.setDefaults( $.datepicker.regional[ \"ru\" ] ); $( \"#f_date_c_".$one[0]."\" ).datepicker({ numberOfMonths: 1, beforeShowDay: highlight_noactive, changeMonth: true, changeYear: true, dateFormat: \"d MM yy\", showAnim: 'slide' }); });
+                    ".$add1.$add2."
+                    function highlight_noactive(date) {
+                      var Month = (date.getMonth() > 9) ? date.getMonth() + 1 : '0' + (date.getMonth() + 1);
+                      var Day = (date.getDate() > 9) ? date.getDate() : '0' + date.getDate();
+                      var date = date.getFullYear() + '-' + Month + '-' + Day;
+                      var clas = '';
+                      var show = true;
+                      if ($.inArray(date, num_day) != -1 || $.inArray(date, num_day_sum) != -1) clas = 'red_date';
+                      if ($.inArray(date, num_day) != -1) show = ".$no_add1.";
+                      if ($.inArray(date, num_day_sum) != -1) show = ".$no_add2.";
+                      return [show, clas];
+                    }
                     </script>
                     <TABLE cellspacing=0 cellpadding=0 style=\"border-collapse: collapse\"><TBODY><TR> 
-                     <TD><INPUT type=text name=\"text[".$one[0]."]\" id=\"f_date_c_".$one[0]."\" readonly=1 size=15 onmouseover=\"this.style.background=&#39;#dddddd&#39;\" onmouseout=\"this.style.background=&#39;&#39;\" style='cursor:pointer;' onChange=\"document.getElementById('f_date_c[".$one[0]."]').value = this.value\"></TD> 
-                     <TD> (&larr; <b class=red>выберите дату</b>, нажав по полю) <INPUT type=hidden name=\"text[".$one[0]."]\" id=\"f_date_c[".$one[0]."]\"</TD> 
+                     <TD><b>".$one[1].":</b> <INPUT type='text' name=\"text[".$one[0]."]\" id=\"f_date_c_".$one[0]."\" readonly='1' size='17' onmouseover=\"this.style.background=&#39;#dddddd&#39;\" onmouseout=\"this.style.background=&#39;&#39;\" style='cursor:pointer;' onChange=\"document.getElementById('f_date_c[".$one[0]."]').value = this.value\"></TD> 
+                     <TD> (&larr; <b class='red'>выберите дату</b>, нажав по полю) <INPUT type='hidden' name=\"text[".$one[0]."]\" id=\"f_date_c[".$one[0]."]\"</TD> 
                     </TR></TBODY></TABLE>
                     <input type=hidden name=\"type[".$one[0]."]\" value=\"дата\"></p>"; 
                     if ($one[3] == 3 or $one[3] == 2 or $one[3] == 1 or $one[3] == 7) $alerts .= "if (document.getElementById('f_date_c_".$one[0]."').value=='') al = al + 'Не заполнено поле «".$one[1]."». \\r\\n';";
@@ -900,7 +973,7 @@ function base_base_edit_sv_base($id=0, $text, $type, $base, $name, $active) {
             case "строкабезвариантов": $txt = str_replace("!!!","!",str_replace("!!!","!",$txt)); break;
             case "список": break;
             case "число": $txt = intval($txt); break;
-            case "дата": $txt = date2normal_view($txt, 1); $inros_date = $txt; break; // добавлена переменная $inros_date для ИнРос
+            case "дата": $txt = date2normal_view($txt, 1); break;
             case "датавремя":  break;
         }
         $txt = stripslashes(FixQuotes(str_replace("&amp;","&",$txt))); 
@@ -912,16 +985,6 @@ function base_base_edit_sv_base($id=0, $text, $type, $base, $name, $active) {
     if ($id != 0) {
     $db->sql_query("UPDATE ".$prefix."_base_".$base." SET ".$set.", `active`='".$active."' WHERE `id`='".$id."'") or die("Не удалось обновить информацию в базу данных. UPDATE ".$prefix."_base_".$base." SET ".$set.", active='".$active."' WHERE id='".$id."'");
     } else {
-
-    // проверка кол-ва замеров в день.
-    //$num_zamer = 80; // макс. кол-во замеров заменено на num_day_stroka
-    $sql2 = "SELECT data FROM ".$prefix."_base_".$base." WHERE `data`='$inros_date'";
-    $result2 = $db->sql_query($sql2);
-    $numrows = $db->sql_numrows($result2);
-    if ( $numrows >= $num_day_stroka and $num_day_stroka > 0 ) {
-        die("<b>На выбранный день ($inros_date) уже достаточно записей ($num_day_stroka).</b><br>Нажмите [ &larr;Backspace ] на клавиатуре (или Назад в браузере) и выберите другой день, например следующий.<br>Если не устраивает это ограничение — свяжитесь с администратором.");
-    }
-    // ИнРос проверка кол-ва замеров в день.
         global $referer;
         $db->sql_query("INSERT INTO ".$prefix."_base_".$base." VALUES (NULL, ".$set.", '".$active."');") or die("Не удалось добавить информацию в базу данных. INSERT INTO ".$prefix."_base_".$base." VALUES (NULL, ".$set.", '".$active."');");
         Header("Location: ".$referer."&ok=1"); // отправка на повтор

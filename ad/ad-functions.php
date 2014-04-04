@@ -617,4 +617,13 @@ function button_resize_red($redactor, $savebutton=false) { // redactor_id
 function clean_url($url) {
   return str_replace(" ", "_", str_replace("  ", " ", str_replace("   ", " ", trim( str_replace(",", "", str_replace(":", "", str_replace(";", "", str_replace("!", "", str_replace("?", "", str_replace("&", " ", str_replace("%", "", $url)))))))))));
 }
+
+function floatNumber($number, $float) { // Показывает число 145.753 как 145.75, 1.00 как 1
+  $number_array = explode('.',$number);
+  $left = $number_array[0];
+  $right = $number_array[1];
+  $align = strlen($right);
+  if ($align > $float) $align = $float;
+  return number_format($number,$align);
+}
 ?>

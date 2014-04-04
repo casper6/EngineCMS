@@ -281,7 +281,7 @@ if ($func == "show_raspisanie") {
 							$all_zapisi[$now_day.".".$mes_num.".".$now_year." ".$totalHours.":".$totalMinutes] = "";
 						if ($all_zapisi[$now_day.".".$mes_num.".".$now_year." ".$totalHours.":".$totalMinutes] != $person_num) {
 							if ($current_dayX == 0 && $next_day == 0 && intval($totalHours) <= intval(date("G",time())) && $now_day == date("j", time()))
-								$work_order_ok = "<td width='".$procent_minutes2."%' style='background: lightyellow' title='".$totalHours.":".$totalMinutes."'>$now_day</td>";
+								$work_order_ok = "<td width='".$procent_minutes2."%' style='background: lightyellow' title='".$totalHours.":".$totalMinutes."'>".$now_day."</td>";
 							else $work_order_ok = "<td width='".$procent_minutes2."%' class='raspisanie'><a title='".$record.$totalHours.":".$totalMinutes."' onclick='show_zapis(\"".$person_num."\", \"".$now_day.".".$mes_num.".".$now_year.", ".$totalHours.":".$totalMinutes."\", \"".$person_name.", ".$person_profession."\")'><div class='raspisanie'></div></a></td>";
 						} else {
 							if (is_admin($admin)) $add_button = "<a onclick='show_zapis(\"".$person_num.",".$now_day.".".$mes_num.".".$now_year.", ".$totalHours.":".$totalMinutes.",".str_replace("\n", ",", $all_zapisi_person[$now_day.".".$mes_num.".".$now_year." ".$totalHours.":".$totalMinutes]).";\", \"".$now_day.".".$mes_num.".".$now_year.", ".$totalHours.":".$totalMinutes."\", \"".$person_name.", ".$person_profession."\")'><div class='raspisanie'></div></a>";
