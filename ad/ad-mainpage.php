@@ -27,8 +27,9 @@ function mainpage($name="") {
 	elseif (intval($id)>0) { edit_main($id); }
 	elseif ($display_addmenu == false) echo "<center><br>Создание основных разделов сайта запрещено администратором.</center>";
 	else { 
-		echo "<div class='curved-vt-2 hide' style='margin-left:-265px; width: 530px; top: 80px;' id='add'>
-		<a title='Закрыть это окно' class=punkt onclick=\"$('#add').hide();\"><div class='radius close_button'>&nbsp;x&nbsp;</div></a>
+		echo "<div class='curved-vt-2 hide' style='margin-left:-265px; width: 530px; top: 80px;' id='add'></div>
+<div class='hide' id='add_block'>
+<a title='Закрыть это окно' class=punkt onclick=\"$('#add').hide();\"><div class='radius close_button'>&nbsp;x&nbsp;</div></a>
 			<h1>Вы решили добавить:</h1>
 			<a href='sys.php?op=mainpage&amp;name=design&amp;type=0&amp;red=1#1' class='bigicon'><span class='bigicon bi0'></span><b>Дизайн</b><br>
 			Аналог темы, обрамление разделов или блоков</a>
@@ -42,8 +43,7 @@ function mainpage($name="") {
 			для страниц (аналог таксономии, для фильтров и доп. информации)</a>
 			<a href='sys.php?op=mainpage&amp;name=base&amp;type=5#1' class='bigicon'><span class='bigicon bi5'></span><b>Базу данных</b><br>
 			Таблица с поиском и фильтрами для внутреннего или открытого использования</a>
-			</div>
-
+</div>
 		<table class='block_back w100 mw800 pm0' cellspacing=0 cellpadding=0><tr valign=top><td id='razdel_td' class='radius'>
 
 			<div id='razdels' style='width:340px;'>
@@ -54,7 +54,7 @@ else if ($('#mainrazdel3').attr('class') == 'dark_pole2sel') window.location = '
 else if ($('#mainrazdel6').attr('class') == 'dark_pole2sel') window.location = 'sys.php?op=mainpage&amp;name=shablon&amp;type=6&amp;red=1#1';
 else if ($('#mainrazdel4').attr('class') == 'dark_pole2sel') window.location = 'sys.php?op=mainpage&amp;name=spisok&amp;type=4#1';
 else if ($('#mainrazdel5').attr('class') == 'dark_pole2sel') window.location = 'sys.php?op=mainpage&amp;name=base&amp;type=5#1';
-			else $('#add').toggle();\"><span class='mr-2 icon small' data-icon='+'></button>
+			else { $('#add').toggle(); $('#add').html( $('#add_block').html() ); }\"><span class='mr-2 icon small' data-icon='+'></button>
 			<span class='h1'>Оформление</span>
 			</div>";
 	     ////////////////////// ДИЗАЙН 0

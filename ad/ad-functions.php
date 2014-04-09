@@ -621,9 +621,11 @@ function clean_url($url) {
 function floatNumber($number, $float) { // Показывает число 145.753 как 145.75, 1.00 как 1
   $number_array = explode('.',$number);
   $left = $number_array[0];
-  $right = $number_array[1];
-  $align = strlen($right);
-  if ($align > $float) $align = $float;
+  if (isset($number_array[1])) {
+    $right = $number_array[1];
+    $align = strlen($right);
+    if ($align > $float) $align = $float;
+  } else $align = 0;
   return number_format($number,$align);
 }
 ?>

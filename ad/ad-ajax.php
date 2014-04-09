@@ -1585,7 +1585,7 @@ if ($func == "razdel") { // Раздел
     case "5": $order = "active"; break;
     default: $order = "date desc, title"; break;
   }
-  $list = "";
+  $list = $list2 = "";
   $name_raz = $name_razdels[$id];
   if (mb_strpos($name_raz, "\n")) $name_raz = $nopass_razdels[$id];
 
@@ -1615,7 +1615,7 @@ if ($func == "razdel") { // Раздел
       if ($cid_pages > 0) $pusto = "<span class='small'>содержит ".$cid_pages." ".num_ending($cid_pages, Array(aa("страниц"),aa("страницу"),aa("страницы")))."</span>";
       if ($cid_papki > 0) $pusto = "<span class='small'>содержит ".$cid_papki." ".num_ending($cid_papki, Array(aa("папок"),aa("папку"),aa("папки")))."</span>";
       if ($cid_pages > 0 and $cid_papki > 0) $pusto = "<span class='small'>содержит ".$cid_papki." ".num_ending($cid_papki, Array('папок','папку','папки'))." и ".$cid_pages." ".num_ending($cid_pages, Array(aa("страниц"),aa("страницу"),aa("страницы")))."</span>";
-      $list .= "<div id='cid".$с_cid."' class='openpapka'><a name=\"open_pages_".$с_cid."\"></a><a class=\"no green pointer\" onclick='papka_show(".$с_cid.", \"".$name_raz."\", \"".$sort."\", \"".$id."\",(Math.floor( Math.random() * (10000 - 10 + 1) ) + 10), \"$с_clean_url\");'>".icon('orange small',',')." ".$name_cid." ".$pusto."</a> <div id=\"papka".$с_cid."\" style='display:inline; margin-left:5px;'></div><div id=\"podpapka".$с_cid."\" style='display:none;'></div><br></div>";
+      $list .= "<div id='cid".$с_cid."' class='openpapka'><a name=\"open_pages_".$с_cid."\"></a><a class=\"no green pointer\" onclick='papka_show(".$с_cid.", \"".$name_raz."\", \"".$sort."\", \"".$id."\",(Math.floor( Math.random() * (10000 - 10 + 1) ) + 10), \"".$с_clean_url."\");'>".icon('orange small',',')." ".$name_cid." ".$pusto."</a> <div id=\"papka".$с_cid."\" style='display:inline; margin-left:5px;'></div><div id=\"podpapka".$с_cid."\" style='display:none;'></div><br></div>";
     }
   } else {
       $nopapka = 1;
@@ -1691,7 +1691,6 @@ if ($func == "razdel") { // Раздел
   }
   $list .= "<br><br></div>";
   if ($nopage == 1 and $nopapka == 1) {
-    $list2 = "";
   } else {
       $list2 = "<div id=\"sort_pages\">
       <button class='small' onclick=show('sortir_page')><img src='/images/sortirovka.png'></button>

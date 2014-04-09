@@ -175,9 +175,10 @@ echo "<li><a href='http://hotel-s.ru' target='_blank'>Официальный с�
 <li><a href='http://code.1hub.ru' target='_blank'>Коллекция кода, в которую легко можно добавить свою заметку</a>
 <li><a href='http://translate.google.com/manager/website/add' target='_blank'>Переводчик сайтов</a>
 <li><a href='http://uptolike.ru' target='_blank'>Большие удобные настраиваемые социальные кнопки</a>
-<li>Фреймворки для создания сайтов/программ для мобильных устройств:<ul>
-	<li><a href='http://www.idangero.us/framework7' target='_blank'>Framework 7</a>
-	<li><a href='http://mobileangularui.com' target='_blank'>Mobile Angular UI</a>
+<li>Фреймворки:<ul>
+	<li><a href='http://usablica.github.io/front-end-frameworks/compare.html' target='_blank'>Большой список популярных фреймворков</a>
+	<li><a href='http://www.idangero.us/framework7' target='_blank'>Framework 7</a> (для мобильных устройств)
+	<li><a href='http://mobileangularui.com' target='_blank'>Mobile Angular UI</a> (для мобильных устройств)
 	</ul>
 </li>
 

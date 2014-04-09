@@ -1406,8 +1406,32 @@ button.small,a.btn.small,a.button.small,{
 .li_light li:hover{
  background:#e9f2fc; 
 }
+.tr_icon {
+  width: 15px;
+  height: 15px;
+  display: inline-block;
+  margin-right: 5px;
+    background-repeat: no-repeat;
+    background-position: center center;
+    -o-background-size: 100% 100%; /* opera ≥ 9.5 */
+    -webkit-background-size: 100% 100%; /* Safari ≥ 5.0, Chrome ≥ 4.0 */
+    -khtml-background-size: 100% 100%; /* Konqueror ≥ 3.5.4 */
+    -moz-background-size: 100% 100%; /* Firefox ≥ 3.6 */
+    background-size: 100% 100%; /* браузеры с поддержкой CSS3: FF ≥ 4, Opera ≥ 10.53, IE ≥ 9.0 */
+}
+.tr_toggle_icon {
+    background-image: url('/images/close.gif');
+}
+.tr_edit_icon {
+    background-image: url('/images/editpage.png');
+}
+.tr_delete_icon {
+    background-image: url('/images/trash_fill.png');
+    background-color: red;
+}
+
 table.table_light tr{
- border-bottom:1px solid #ddd; 
+ border-bottom:1px solid #bbb;
 }
 table.table_light td{
  font-size:15px;
@@ -1444,6 +1468,20 @@ table.table_light tbody tr:hover{
 table.table_light tbody tr:hover th,table.table_light tbody tr.odd:hover th{
  background:#e9f2fc; 
 }
+
+table.table_light tr.tr_hover {
+ 
+}
+table.table_light .tr_hover td{
+ border-right:1px solid #666 !important;
+ border-top:1px solid #666 !important;
+ font-size:15px;
+ border:0;
+ padding:2px;
+ padding-top: 10px;
+ color:black; 
+}
+
 .padleft30{
  margin-left:30px !important; 
 }

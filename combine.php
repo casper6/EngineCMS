@@ -176,14 +176,6 @@ a img {border:0;}
 .text_link A:visited {color: #666;}
 .text_link A:hover {text-decoration: none; border-bottom: 1px dashed blue;}
 
-.green_link {color: #0f0;}
-.red_link {color: #f00;}
-
-.small {font-size: 0.9em;}
-.red, .red a {color:red;}
-.black, .black a {color:black;}
-.bold, .bold a {color:white; background:red;}
-.select, .select a {color:black; font-weight:bold; background:#dddddd;}
 .calendar_cell {text-align: center; padding:5px; width: 14%; height:30px; float: left; border-radius: 10px;-moz-border-radius: 10px;-webkit-border-radius: 10px;}
 .calendar, .calendar_month_year {width:100%;text-align: center; margin-bottom:10px;}
 .calendar_month, .calendar_year {display:inline;}

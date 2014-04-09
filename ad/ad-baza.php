@@ -5,10 +5,9 @@
     $row = $db->sql_fetchrow($db->sql_query("SELECT `realadmin` FROM ".$prefix."_authors where `aid`='".$aid."'"));
     $realadmin = $row['realadmin'];
     if ($realadmin == 1) {
-#####################################################################################################################
+##################################################################################################
 function base_base($name) {
     global $url, $prefix, $db, $p, $sortir, $show, $active_sort, $interval_sort, $search_sort, $itogo_show, $doc;
-    //echo "sortir $sortir, show ".print_r ($show).", interval_sort $interval_sort, search_sort $search_sort, doc $doc<br>";
     if ($p == "") $p=0;
     if ($doc == "") {
         include("ad/ad-header.php");
@@ -22,20 +21,16 @@ function base_base($name) {
     $row = $db->sql_fetchrow($result);
     $module_id = $row['id']; // номер раздела
     $module_title = $row['title']; // Название раздела
-    //$module_options = explode("|",$row['text']); 
-    //$module_options = $module_options[1]; 
     $module_options = explode("|",$row['text']); 
     $module_options = str_replace($module_options[0]."|", "", $row['text']);
     $base = 0;
     $lim = 100; // Настройка кол-ва выводимых элементов по-умолчанию.
     parse_str($module_options); // Настройки раздела
-    $offset = $p * $lim;
-
+    
     $sql = "SELECT `name`, `title`, `text` FROM ".$prefix."_mainpage where `id`='".$base."' and `type`='5'";
     $result = $db->sql_query($sql);
     $row = $db->sql_fetchrow($result);
     $baza_title  = $row['title']; // Название БД
-    //$baza_options  = $row['text']; 
     $baza_options = explode("|",$row['text']); 
     $baza_options = str_replace($baza_options[0]."|", "", $row['text']);
     $baza_name  = $row['name']; // Название таблицы БД 
@@ -45,8 +40,9 @@ function base_base($name) {
     $del_stroka = $edit_stroka = 1; // Удаление и Редактирование строки
     $num_day_stroka = $num_day_sum_stroka = 0; // Ограничение кол-ва и суммы значений вносимых каждый день строк
     $message = ""; // Дополнительные сообщения
-    //echo $baza_options;
     parse_str($baza_options);
+    $offset = $p * $lim;
+
     $status_color = $status_int = $status_name = array();
     $i = 0;
     $status = explode("#!#", $status);
@@ -63,8 +59,7 @@ function base_base($name) {
     if (isset($active_sort) && $active_sort != "") {
         $active_sort2 = intval($active_sort); 
         $where[] = "active = '".$active_sort."'";
-        $active_sort = "&active_sort=".$active_sort; 
-    } else $active_sort2 = $active_sort = "";
+    } else $active_sort2 = "";
 
     if (isset($itogo_show) && $itogo_show != "") {
         $itogo_show = intval($itogo_show);
@@ -81,8 +76,7 @@ function base_base($name) {
             $interval_sort_ex = explode("-",trim($interval_sort));
             $where[] = "id >= '".$interval_sort_ex[0]."' and id <= '".$interval_sort_ex[1]."'";
         }
-        $interval_sort = "&interval_sort=".$interval_sort; 
-    } else $interval_sort2 = $interval_sort = "";
+    } else $interval_sort2 = "";
     $interval_sort3 = "1-100";
 
     if (isset($search_sort)) {
@@ -98,10 +92,9 @@ function base_base($name) {
                 }
             }
         if (count($where_search) > 0) $where[] = "(".implode(" or ",$where_search).")";
-        $search_sort = "&search_sort=".$search_sort; 
         $search_sort2 = implode(" ",$search_sort2);
     } else
-        $search_sort2 = $search_sort = "";
+        $search_sort2 = "";
     $search_sort3 = "слово (или слова через пробел)";
 
     if (isset($sortir)) {
@@ -186,7 +179,6 @@ function base_base($name) {
     $hide_pole_index = array(); // Те позиции, которые не надо показывать и печатать
     $filters = $filters_name = array(); // Фильтры
     for ($x=0; $x < $options_num; $x++) {
-        // $pole_name[$x]."#!#".$pole_rusname[$x]."#!#".$pole_tip[$x]."#!#".$pole_main[$x]."#!#".$pole_open[$x]."#!#".$pole_rename[$x]."#!#".$pole_filter[$x];    filter - 6
         $option = explode("#!#",$options[$x]); // ранее !
         $xx = $x;
         $names[] = $option[0];
@@ -202,7 +194,6 @@ function base_base($name) {
             }
         } else $link = "";
 
-        //$s = mt_rand(10000, 99999);
         if (isset($option[6]))
             if ($option[6] == 1) { // включить фильтр для этого поля
                 $filters[ ] = $option[0]; // добавили англ. имя поля
@@ -239,7 +230,7 @@ function base_base($name) {
                     $where[] = "`".$value."`='".date2normal_view(urldecode($show[$value]), 1)."'";
             } elseif ($type_names[$key] == 'число') { 
                 $where[] = "`".$value."` = '".trim($show[$value])."'";
-            } elseif ($type_names[$key] == 'строка' || $type_names[$key] == 'список') { 
+            } elseif ($type_names[$key] == 'строка' || $type_names[$key] == 'список' || mb_strpos(" ".$type_names[$key], "table|")) { 
                 $where[] = "`".$value."` = '".$show[$value]."'";
             } else { // строка без вариантов, текст
                 $where[] = "LOWER(`".$value."`) like '%".mb_strtolower(str_replace(" ","%",urldecode($show[$value])))."%'";
@@ -289,16 +280,11 @@ function base_base($name) {
             $where = "where ".stripcslashes($where); 
             $where2 = $where." and active != '3'"; 
         } else $where2 = "where active != '3'";
-        //else $where = "where active = '3'";
-        //if ($order != "") $order = " order by ".stripcslashes($order).""; // сортировка
-        //else 
         $order = " order by ".$names[$sortir].$sort_way.", id desc";
 
         $result = $db->sql_query("SELECT * FROM ".$prefix."_base_".$baza_name." ".$where);
         $numrows = $db->sql_numrows($result);
 
-        //$result2 = $db->sql_query("SELECT * FROM ".$prefix."_base_".$baza_name." ".$where2);
-        //$numrows2 = "(-".$db->sql_numrows($result2).")";
         if ($doc=="") {
             if ($main_url != "/sys.php?op=base_base&name=".$name) {
                 $hide_search = ""; 
@@ -323,7 +309,6 @@ function base_base($name) {
                 }
             }
         }
-        //print_r($type_names);
         $filter_urls = "";
         $date_now0 = date2normal_view(date("Y-m-d", time()-86400)); // вчера
         $date_now1 = date2normal_view(date("Y-m-d")); // сегодня
@@ -339,7 +324,6 @@ function base_base($name) {
         $date_now7_2 = date2normal_view(date("Y-m-d", mktime(0, 0, 0, 1, 1, 3000))); // вечность
 
         foreach ($filters as $key => $value) {
-            //echo $key;
             if ($value != "") {
                 if ( $type_names[$key] == 'дата' ) { // Выбор по дате, если есть такое поле
                     if (!isset($show[$value])) {
@@ -358,12 +342,12 @@ function base_base($name) {
                     <nobr><a class='small button' onclick=\"$('#ff_".$value."').val('".$date_now0."'); $('#f_".$value."').val('".$date_now0."')\"><</a><a class='small button' onclick=\"$('#ff_".$value."').val('".$date_now1."'); $('#f_".$value."').val('".$date_now1."')\">сегодня</a><a class='small button' onclick=\"$('#ff_".$value."').val('".$date_now2."'); $('#f_".$value."').val('".$date_now2."')\">></a><a class='small button' onclick=\"$('#ff_".$value."').val('".$date_now3."'); $('#f_".$value."').val('".$date_now3."')\">>></a> <a class='small button' onclick=\"$('#ff_".$value."').val('".$date_now4_2."'); $('#f_".$value."').val('".$date_now4."')\"><</a><a class='small button' onclick=\"$('#ff_".$value."').val('".$date_now5_2."'); $('#f_".$value."').val('".$date_now5."')\">месяц</a><a class='small button' onclick=\"$('#ff_".$value."').val('".$date_now6_2."'); $('#f_".$value."').val('".$date_now6."')\">></a> <a class='small button' onclick=\"$('#ff_".$value."').val('".$date_now7_2."'); $('#f_".$value."').val('".$date_now7."')\">всё</a></nobr>";
                     $filter_urls .= "&show[".$value."]=' + $('#f_".$value."').val() + '-' + $('#ff_".$value."').val() + '";
                 } elseif ( $type_names[$key] == 'строка' || $type_names[$key] == 'список' || mb_stripos(" ".$type_names[$key], 'table|')) {
-                    if ($value == "") $show[$value] = "";
-                    elseif (!isset($show[$value])) $show[$value] = "";
-                    elseif (mb_stripos(" ".$type_names[$key], 'table|') 
+                    if (!isset($show[$value]) || $value == "") $show[$value] = $show_value = "";
+                    else $show_value = $show[$value];
+                    if (mb_stripos(" ".$type_names[$key], 'table|') 
                         && isset( $another_tables[ $type_names[$key] ][ $show[$value] ] ) ) 
                         $show[$value] = $another_tables[ $type_names[$key] ][ $show[$value] ];
-                    echo "<p class='noprint'>".$filters_name[$key]." ".vybor_stroka($baza_name, "f_".$value."", $value, $show[$value], 250, $another_tables, $type_names[$key]);
+                    echo "<p class='noprint'>".$filters_name[$key]." ".vybor_stroka($baza_name, "f_".$value."", $value, $show_value."|||".$show[$value], 250, $another_tables, $type_names[$key]); // 
                     $filter_urls .= "&show[".$value."]=' + document.getElementById('f_".$value."').value + '";
                 } elseif ( $type_names[$key] == 'число') {
                     if (!isset($show[$value])) $show[$value] = "";
@@ -380,7 +364,7 @@ function base_base($name) {
 
         <p class='noprint'>Статус ".select("f_active",','.implode(',',$status_int),','.implode(',',$status_name), $active_sort2, " class='w45'")."
 
-        <p class='noprint'>Дополнительные возможности ".select("f_itogo","0,2,1","= выберите из списка =,Показать все строки сразу,С числами: Сумма[|] среднее[|] макс./мин. + все строки", $itogo_show)."
+        <p class='noprint'>Дополнительные возможности ".select("f_itogo","0,2,1","- выберите из списка -,Показать все строки сразу,С числами: Сумма[|] среднее[|] макс./мин. + все строки", $itogo_show)."
 
         <p class='noprint'><a class='button big' href='#' onClick=\"location='".$main_url.$filter_urls."&active_sort=' + document.getElementById('f_active').value + '&search_sort=' + document.getElementById('f_search').value + '&interval_sort=' + document.getElementById('f_interval').value + '&itogo_show=' + document.getElementById('f_itogo').value + '&show[".$value."]=' + $('#f_".$value."').val()\"><span class='icon medium green' data-icon='s'></span> Найти</a> ".$show_all_button."
         <br><br><br><br>
@@ -395,15 +379,10 @@ function base_base($name) {
 
         if ( in_array("data",$names) ) {
             $segodnya = $db->sql_numrows($db->sql_query("select id from ".$prefix."_base_".$baza_name." where data = '$date_now1' and active = '3'"));
-            //$segodnya_minus = "(-".$db->sql_numrows($db->sql_query("select id from ".$prefix."_base_".$baza_name." where data = '$date_now1' and active != '3'")).")";
 
             $zavtra = $db->sql_numrows($db->sql_query("select id from ".$prefix."_base_".$baza_name." where data = '$date_now2' and active = '3'"));
-            //$zavtra_minus = "(-".$db->sql_numrows($db->sql_query("select id from ".$prefix."_base_".$baza_name." where data = '$date_now2' and active != '3'")).")";
 
             $poslezavtra = $db->sql_numrows($db->sql_query("select id from ".$prefix."_base_".$baza_name." where data = '$date_now3' and active = '3'"));
-            //$poslezavtra_minus = "(-".$db->sql_numrows($db->sql_query("select id from ".$prefix."_base_".$baza_name." where data = '$date_now3' and active != '3'")).")";
-
-            //$vchera = $db->sql_numrows($db->sql_query("select id from ".$prefix."_base_".$baza_name." where data = '$date_now4' and active = '3'"));
 
             $daty = "".date2normal_view($date_now1).": <b>".$segodnya."</b>. Завтра: <b>".$zavtra."</b>. Послезавтра: <b>".$poslezavtra."</b>."; // &nbsp; Вчера: ". $vchera;
         } else $daty = "";
@@ -417,7 +396,7 @@ function base_base($name) {
     if ($doc=="") echo "<div class='radius_top noprint' style='float:left;min-width:500;background:#eeeeee;text-align:center; height:17px; margin-left:50px; overflow:hidden;'>".base_links($numrows,$p,$main_url."&p=",$lim,"top")."</div>";
 
 
-    echo "<table class='table_light w100'><tr valign=top class='block'><td class='noprint' title='Статус (Активность)' width=120><span class=\"icon gray small\" data-icon=\"W\"></span>Статус".$link_active."</td><td><b>№</b>".$link_id."</td><td>".$rus_names."</td>";
+    echo "<table class='table_light w100'><tr valign=top class='block'><td title='Статус (Активность)' width=120>Статус".$link_active."</td><td><b>№</b>".$link_id."</td><td>".$rus_names."</td>";
     foreach ($names as $row3) {
         if (!in_array($row3, $names)) {
             switch ($row3) {
@@ -432,16 +411,16 @@ function base_base($name) {
     }
     if ($doc=="") echo "<td class='noprint'></td></tr>";
 
-	$sql = "SELECT * FROM ".$prefix."_base_".$baza_name." ".$where."".$order." limit $offset,".$lim;
+	$sql = "SELECT * FROM ".$prefix."_base_".$baza_name." ".$where."".$order." limit ".$offset.",".$lim;
     //echo $sql;
-	$result = $db->sql_query($sql) or die("SELECT * FROM ".$prefix."_base_".$baza_name." ".$where."".$order." limit $offset,".$lim);
+	$result = $db->sql_query($sql) or die($sql);
     $itogo = array();
     $all = 0;
 	while ($row = $db->sql_fetchrow($result)) {
     	$base_id = $row['id'];
         $base_active = $status_name[ $row['active'] ]; 
         $color = $status_color[ $row['active'] ];
-    	echo "<tr bgcolor=".$color." class='tr_hover tr".$base_id."'><td class='noprint'><a style='cursor:pointer; float:left;' onclick=\"$('.tr".$base_id."').toggleClass('tr_hide noprint');\"><span class=\"icon black small left3\" data-icon=\"x\"></span></a>".$base_active."</td>";
+    	echo "<tr bgcolor=".$color." class='tr_hover tr".$base_id."'><td><a style='cursor:pointer; float:right;' onclick=\"$('.tr".$base_id."').toggleClass('tr_hide noprint');\" title=\"При нажатии строка не будет выведена при печати\"><div class='tr_icon tr_toggle_icon noprint'></div></a>".$base_active."</td>";
     	for ($x=0; $x < $pass_num+1; $x++) {
             if ($x !=0 and $type_names[$x-1]=="дата") {
                 $tr = array(" Январь"=>" Янв"," Февраль"=>" Фев"," Март"=>" Март"," Апрель"=>" Апр"," Май"=>" Май"," Июнь"=>" Июнь"," Июль"=>" Июль"," Август"=>" Авг"," Сентябрь"=>" Сен"," Октябрь"=>" Окт"," Ноябрь"=>" Ноя"," Декабрь"=>" Дек");
@@ -449,7 +428,6 @@ function base_base($name) {
             }
             $row[$x] = trim(str_replace("&nbsp;"," ",str_replace(",",", ",str_replace(".",". ",str_replace("/","/ ",strip_tags($row[$x]))))));
             if ($x !=0 && $type_names[$x-1]=="число" && $row[$x] != 0 && $itogo_show == 1) {
-                //if (!isset($itogo[ $names[$x-1] ])) $itogo[ $names[$x-1] ] = 0;
                 preg_match_all('|\d+|', $row[$x], $matches); 
                 $ro = array_sum($matches[0]);
                 if (count($matches[0]) > 1) $row[$x] .= " <b>= ".$ro."</b>";
@@ -469,12 +447,10 @@ function base_base($name) {
             else echo "<td class='".$nop."'>".$pag_line."</td>";
     	}
       
-        //if ($doc=="" and $row['active'] != 1) {
             echo "<td class='noprint'>";
-            if ($edit_stroka == 1) echo "<a href='/sys.php?op=base_base_edit_base&name=".$name."&base=".$baza_name."&red=1&id=".$base_id."'><span class=\"icon blue small\" data-icon=\"7\" title=\"Редактировать\"></span></a> ";
-            if ($del_stroka == 1) echo "<a href='/sys.php?op=base_base_delit_base&name=".$name."&base=".$baza_name."&id=".$base_id."'><span class=\"icon red small\" data-icon=\"T\" title=\"Удалить с подтверждением\"></span></a>";
+            if ($edit_stroka == 1) echo "<a href='/sys.php?op=base_base_edit_base&name=".$name."&base=".$baza_name."&red=1&id=".$base_id."' title=\"Редактировать\"><div class='tr_icon tr_edit_icon noprint'></div></a> ";
+            if ($del_stroka == 1) echo "<a href='/sys.php?op=base_base_delit_base&name=".$name."&base=".$baza_name."&id=".$base_id."' title=\"Удалить с подтверждением\"><div class='tr_icon tr_delete_icon noprint'></div></a>";
             echo "</td>";
-        //} else echo "<td class='noprint'><span class=\"icon gray small\" data-icon=\"X\" title=\"Нельзя удалять и редактировать! Информация закрыта\"></span></td>";
         echo "</tr>";
         
     }
@@ -487,7 +463,7 @@ function base_base($name) {
                 case "active":  break;
                 //case "comm": echo "<td>Кол-во коммент.:</td>"; break;
                 //case "kol": echo "<td>Количество проданного:</td>"; break;
-                default: if (isset($itogo[ $row3 ])) echo "<td>С&nbsp;числами: ".$all."<br><b>Сумма: ".floatNumber(array_sum($itogo[ $row3 ]))."</b><br>Среднее: ".floatNumber( array_sum($itogo[ $row3 ]) / $all, 2)."<br>Максимум: ".floatNumber(max($itogo[ $row3 ]))."<br>Минимум: ".floatNumber(min($itogo[ $row3 ]))."</td>"; else echo "<td></td>"; break;
+                default: if (isset($itogo[ $row3 ])) echo "<td>С&nbsp;числами: ".$all."<br><b>Сумма: ".floatNumber(array_sum($itogo[ $row3 ]), 2)."</b><br>Среднее: ".floatNumber( array_sum($itogo[ $row3 ]) / $all, 2)."<br>Максимум: ".floatNumber(max($itogo[ $row3 ]), 2)."<br>Минимум: ".floatNumber(min($itogo[ $row3 ]), 2)."</td>"; else echo "<td></td>"; break;
             }
     }
     if ($doc=="") echo "<td class='noprint'></td></tr>";
@@ -499,7 +475,7 @@ function base_base($name) {
     if ($doc=="") echo "<div class='radius_bottom noprint' style='min-width:500px;margin-right:50px;background:#eeeeee;float:right;text-align:center;'>".base_links($numrows,$p,$main_url."&p=",$lim,"bottom")."</div><br>";
 
 
-    if ($doc=="") admin_footer(); //include("ad-footer.php");
+    if ($doc=="") admin_footer();
     else {
         $txt = ob_get_contents(); 
         ob_end_clean();
@@ -706,14 +682,14 @@ function base_base_edit_base($id, $base, $name, $red=0) {
     echo "<br><br>
     </td><td width=150>
     <input type=submit value='Сохранить\nизменения' style='width:100%; height:55px; font-size: 20px;' onClick=\" al=''; ".$alerts." if (al) { alert(al); return false; } else { submit(); } \"><br><br><b>Статус:</b><br>
-    ".select("active",implode(',',$status_int),implode(',',$status_name), $row['active'], " size=4")."
+    ".select("active",implode(',',$status_int),implode(',',$status_name), $row['active'], " size=10")."
     </td></tr></table>
     <input type='hidden' name='op' value='base_base_edit_sv_base'>
     <input type='hidden' name='id' value='".$id."'>
     <input type='hidden' name='base' value='".$base."'>
     <input type='hidden' name='name' value='".$name."'>
     </form>";
-    admin_footer(); //include("ad-footer.php");
+    admin_footer();
     // Ограничение: не более 100 элементов в автоматических списках <i>напишите или выберите вариант</i>.<br>Ограничение используется для ускорения загрузки страницы.
 }
 #####################################################################################################################
@@ -802,8 +778,7 @@ function base_base_create_base($base, $name, $red=0) {
                     foreach ($rows as $r) {
                         $opt .= "<option value=\"".$r."\">".$r."</option>";
                     }
-                    //if ($one[4] == 0 or $one[4] == 2) 
-                        echo "<select name=vybor[".$one[0]."] onchange=\"document.getElementById('".$one[0]."').value = this.value;\" style='width:110px;'><option value=\"\">варианты...</option>".$opt."</select>
+                    echo "<select name=vybor[".$one[0]."] onchange=\"document.getElementById('".$one[0]."').value = this.value;\" style='width:110px;'><option value=\"\">варианты...</option>".$opt."</select>
                     <input type=\"hidden\" name=\"type[".$one[0]."]\" value=\"строка\"></p>"; 
                     if ($one[3] == 3 or $one[3] == 2 or $one[3] == 1 or $one[3] == 7) $alerts .= "if (document.getElementById('".$one[0]."').value=='') al = al + 'Не заполнено поле «".$one[1]."». \\r\\n';";
                 break;
@@ -952,7 +927,7 @@ function base_base_create_base($base, $name, $red=0) {
     echo "<br><br>
     </td><td width=150>
     <input type=submit value='Сохранить\nстроку' style='width:100%; height:55px; font-size: 20px;' onClick=\" al=''; ".$alerts." if (al) { alert(al); return false; } else { submit(); } \"><br><br><b>Статус:</b><br>
-    ".select("active",implode(',',$status_int),implode(',',$status_name), '3')."
+    ".select("active",implode(',',$status_int),implode(',',$status_name), '3', " size=10")."
     </td></tr></table>
     <input type=hidden name=op value=base_base_edit_sv_base>
     <input type=hidden name=id value=0>
@@ -1025,7 +1000,7 @@ function base_links($records,$r_start=0,$URL,$inpage=20,$top="top") { // Стр�
     else $str.="";
     return($str);
 }
-#####################################################################################################################
+###################################################################################################
 function base_base_delit_base($base, $name, $id, $ok) {
     global $prefix, $db;
     $id = intval($id);
@@ -1040,14 +1015,14 @@ function base_base_delit_base($base, $name, $id, $ok) {
         admin_footer();
     }
 }
-#####################################################################################################################
+#######################################################################################################
 function base_pause_pass($id, $pause, $cat) {
     global $prefix, $db;
     if ($pause==1 or $pause==0) $db->sql_query("UPDATE ".$prefix."_bases SET pause='".$pause."' WHERE id='".$id."'");
     if ($pause==3) $db->sql_query("DELETE FROM ".$prefix."_bases WHERE id='$id'");
     Header("Location: sys.php?op=base_base&name=$cat#1");
 }
-#####################################################################################################################
+#######################################################################################################
 function base_new_pass($base, $use, $cat, $info) {
     global $prefix, $db;
     // Генерация пароля
@@ -1080,8 +1055,11 @@ function vybor_stroka($base, $name, $stroka, $now="выберите", $width=200
             if ($nu < 500) $opt .= "<option value=\"".$r."\">".$r."</option>";
             $nu++;
         }
+    $no = explode("|||", $now);
+    if (isset($no[1])) { $now2 = $no[1]; $now = $no[0];}
+    else $now2 = $now;
     return "<select id='".$name."' style='width:".$width."px;'>
-    <option value='".$now."' style='background:#dddddd;'>".$now."</option>
+    <option value='".$now."' style='background:#dddddd;'>".$now2."</option>
     <option value='' style='background:#dddddd;'>= пусто =</option>".$opt."
     </select>";
 }
@@ -1090,32 +1068,26 @@ function vybor_stroka($base, $name, $stroka, $now="выберите", $width=200
         case "base_base":
             if (!isset($id)) $id = "";
             base_base($name, $id, $pid);
-        break;
-
+            break;
         case "base_base_edit_base":
             base_base_edit_base($id, $base, $name, $red);
-        break;
-
+            break;
         case "base_base_edit_sv_base":
             base_base_edit_sv_base($id, $text, $type, $base, $name, $active);
-        break;
-
+            break;
         case "base_base_delit_base":
             if (!isset($ok)) $ok = 0;
             base_base_delit_base($base, $name, $id, $ok);
-        break;
-
+            break;
         case "base_base_create_base":
             base_base_create_base($base, $name, $red);
-        break;
-
+            break;
         case "base_base_pause_pass":
             base_pause_pass($id, $pause, $cat);
-        break;
-
+            break;
         case "base_base_new_pass":
             base_new_pass($base, $use, $cat, $info);
-        break;
+            break;
     }
 }
 ?>
