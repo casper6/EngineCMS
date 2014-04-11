@@ -202,7 +202,7 @@ function base_base($name) {
                 $filters[ ] = ""; // добавили англ. имя поля
                 $filters_name[ ] = ""; // добавили рус. имя поля
             }
-        $rus_names[] = "<b>".$option[1]."</b>".$link;
+        $rus_names[] = $option[1].$link;
         $type_names[ ] = $option[2];
         if ($option[3] == 4) { // не важно и не печатать
             $noprint_pole[] = $option[1];
@@ -225,7 +225,7 @@ function base_base($name) {
             if ( $type_names[$key] == 'дата' ) {
                 if (mb_strpos($show[$value], "-")) { // диапазон дат
                     $datas = explode("-", urldecode($show[$value]));
-                    $where[] = "(`".$value."` >= '".date2normal_view($datas[0], 1)."' and `".$value."` <= '".date2normal_view($datas[1], 1)."')";
+                    $where[] = "((`".$value."` >= '".date2normal_view($datas[0], 1)."' and `".$value."` <= '".date2normal_view($datas[1], 1)."') or `".$value."` = '0000-00-00')";
                 } else // одиночная дата
                     $where[] = "`".$value."`='".date2normal_view(urldecode($show[$value]), 1)."'";
             } elseif ($type_names[$key] == 'число') { 
@@ -389,14 +389,12 @@ function base_base($name) {
         echo "<h1><b>".$numrows."</b> из ".$all.". ".$daty."</span></h1>";
     }
 
-
     $url = "sys.php?op=base_base&name=".$name; // getenv("REQUEST_URI");
     if ($sort_way == " desc") $sort_way = 1; else $sort_way = 0;
 
     if ($doc=="") echo "<div class='radius_top noprint' style='float:left;min-width:500;background:#eeeeee;text-align:center; height:17px; margin-left:50px; overflow:hidden;'>".base_links($numrows,$p,$main_url."&p=",$lim,"top")."</div>";
 
-
-    echo "<table class='table_light w100'><tr valign=top class='block'><td title='Статус (Активность)' width=120>Статус".$link_active."</td><td><b>№</b>".$link_id."</td><td>".$rus_names."</td>";
+    echo "<table class='table_light_bd'><tr valign='top'><td title='Статус (Активность)' width='120'>Статус".$link_active."</td><td>№".$link_id."</td><td>".$rus_names."</td>";
     foreach ($names as $row3) {
         if (!in_array($row3, $names)) {
             switch ($row3) {
@@ -409,7 +407,8 @@ function base_base($name) {
             }
         }
     }
-    if ($doc=="") echo "<td class='noprint'></td></tr>";
+    if ($doc=="") echo "<td class='noprint'></td>";
+    echo "</tr>";
 
 	$sql = "SELECT * FROM ".$prefix."_base_".$baza_name." ".$where."".$order." limit ".$offset.",".$lim;
     //echo $sql;
@@ -425,6 +424,7 @@ function base_base($name) {
             if ($x !=0 and $type_names[$x-1]=="дата") {
                 $tr = array(" Январь"=>" Янв"," Февраль"=>" Фев"," Март"=>" Март"," Апрель"=>" Апр"," Май"=>" Май"," Июнь"=>" Июнь"," Июль"=>" Июль"," Август"=>" Авг"," Сентябрь"=>" Сен"," Октябрь"=>" Окт"," Ноябрь"=>" Ноя"," Декабрь"=>" Дек");
                 $row[$x] = strtr(date2normal_view($row[$x],0),$tr);
+                if ($row[$x] == "0 ? 0") $row[$x] = "—";
             }
             $row[$x] = trim(str_replace("&nbsp;"," ",str_replace(",",", ",str_replace(".",". ",str_replace("/","/ ",strip_tags($row[$x]))))));
             if ($x !=0 && $type_names[$x-1]=="число" && $row[$x] != 0 && $itogo_show == 1) {
@@ -457,17 +457,17 @@ function base_base($name) {
 
     echo "<tr valign=top class='block'><td class='noprint' width=120></td><td></td>";
     foreach ($names as $row3) {
-            switch ($row3) {
-                //case "golos": echo "<td>Голосование</td>"; break;
-                case "id":  break;
-                case "active":  break;
-                //case "comm": echo "<td>Кол-во коммент.:</td>"; break;
-                //case "kol": echo "<td>Количество проданного:</td>"; break;
-                default: if (isset($itogo[ $row3 ])) echo "<td>С&nbsp;числами: ".$all."<br><b>Сумма: ".floatNumber(array_sum($itogo[ $row3 ]), 2)."</b><br>Среднее: ".floatNumber( array_sum($itogo[ $row3 ]) / $all, 2)."<br>Максимум: ".floatNumber(max($itogo[ $row3 ]), 2)."<br>Минимум: ".floatNumber(min($itogo[ $row3 ]), 2)."</td>"; else echo "<td></td>"; break;
-            }
+        switch ($row3) {
+            case "id":  break;
+            case "active":  break;
+            default:
+                if (isset($itogo[ $row3 ])) echo "<td>С&nbsp;числами: ".$all."<br><b>Сумма: ".floatNumber(array_sum($itogo[ $row3 ]), 2)."</b><br>Среднее: ".floatNumber( array_sum($itogo[ $row3 ]) / $all, 2)."<br>Максимум: ".floatNumber(max($itogo[ $row3 ]), 2)."<br>Минимум: ".floatNumber(min($itogo[ $row3 ]), 2)."</td>"; 
+                else echo "<td></td>"; 
+            break;
+        }
     }
-    if ($doc=="") echo "<td class='noprint'></td></tr>";
-
+    if ($doc=="") echo "<td class='noprint'></td>";
+    echo "</tr>";
 
     echo "</table><p class='noprint'><span class=\"icon black small left3\" data-icon=\"x\"></span> — при нажатии строка не будет выведена при печати.";
 
@@ -531,7 +531,7 @@ function base_base_edit_base($id, $base, $name, $red=0) {
 
 
             case "текст": 
-                echo "<p><b>".$one[1].":</b><br>";
+                echo "<p>".$one[1].":<br>";
                 if ($red==0) {
                 } elseif ($red==2) {
                 echo "<textarea cols=80 id=editor name=\"text[".$one[0]."]\" rows=10>".$row[$x+1]."</textarea>
@@ -546,15 +546,15 @@ function base_base_edit_base($id, $base, $name, $red=0) {
                 });
                 </script>";
                 } else {
-                echo "<textarea name=\"text[".$one[0]."]\" rows=\"3\" cols=\"60\">".$row[$x+1]."</textarea>
-                <input type=hidden name=\"type[".$one[0]."]\" value=\"текст\"><br>";
+                    echo "<textarea name=\"text[".$one[0]."]\" rows=\"3\" cols=\"60\">".$row[$x+1]."</textarea>
+                    <input type=hidden name=\"type[".$one[0]."]\" value=\"текст\"><br>";
                 }
                 echo "</p>"; 
             break;
 
 
             case "строка": 
-                echo "<p><b>".$one[1].":</b> <input type=text id=\"".$one[0]."\" name=\"text[".$one[0]."]\" value=\"".$row[$x+1]."\" size=40>"; 
+                echo "<p>".$one[1].": <input placeholder='написать или выбрать из вариантов' type=text id=\"".$one[0]."\" name=\"text[".$one[0]."]\" value=\"".$row[$x+1]."\" size=40>"; 
                 // Добавляем выбор вариантов
                 $stroka = $one[0]; 
                 $opt = "";
@@ -562,27 +562,27 @@ function base_base_edit_base($id, $base, $name, $red=0) {
                 $sql1 = "SELECT ".$stroka." FROM ".$prefix."_base_".$base." order by ".$stroka."";
                 $result1 = $db->sql_query($sql1);
                 while ($row1 = $db->sql_fetchrow($result1)) {
-                $rows[] = $row1[$stroka];
+                    $rows[] = $row1[$stroka];
                 }
                 $rows = array_unique($rows);
                 $nu = 0;
                 foreach ($rows as $r) { // Действует ограничение в 100 элементов раскрывающегося списка.
-                if ($nu < 100) $opt .= "<option value=\"".$r."\">".$r."</option>";
-                $nu++;
+                    if ($nu < 100) $opt .= "<option value=\"".$r."\">".$r."</option>";
+                    $nu++;
                 }
-                if ($one[4] == 0 or $one[4] == 2) echo "<select name=vybor[".$one[0]."] onchange=\"$('#".$one[0]."').val(this.value);\" style='width:110px;'><option value=\"\" style=\"background:#dddddd;\">".aa("варианты...")."</option>".$opt."</select>
-                <input type=hidden name=\"type[".$one[0]."]\" value=\"строка\"></p>"; 
+                //if ($one[4] == 0 or $one[4] == 2) 
+                echo "<select name=vybor[".$one[0]."] onchange=\"$('#".$one[0]."').val(this.value);\" style='width:120px;'><option value=\"\" style=\"background:#dddddd;\">".aa("варианты...")."</option>".$opt."</select><input type=hidden name=\"type[".$one[0]."]\" value=\"строка\"></p>";
             break;
 
 
             case "строкабезвариантов": 
-                echo "<p><b>".$one[1].":</b> <input type=text id=\"".$one[0]."\" name=\"text[".$one[0]."]\" value=\"".$row[$x+1]."\" size=50>"; 
+                echo "<p>".$one[1].": <input type=text id=\"".$one[0]."\" name=\"text[".$one[0]."]\" value=\"".$row[$x+1]."\" size=50>"; 
                 if ($one[4] == 0 or $one[4] == 2) echo "<input type=hidden name=\"type[".$one[0]."]\" value=\"строка\"></p>"; 
             break;
 
 
             case "список": 
-                echo "<p><b>".$one[1].":</b> "; 
+                echo "<p>".$one[1].": "; 
                 // Добавляем выбор вариантов
                 $stroka = explode(",",$one[5]); 
                 $opt = "";
@@ -596,29 +596,28 @@ function base_base_edit_base($id, $base, $name, $red=0) {
 
 
             case "число": 
-                echo "<p><b>".$one[1].":</b> <input type=text name=\"text[".$one[0]."]\" value=\"".$row[$x+1]."\" size=30> (число или сумма + чисел)
+                echo "<p>".$one[1].": <input placeholder='0 (число или сумма + чисел)' type=text name=\"text[".$one[0]."]\" value=\"".$row[$x+1]."\" size=30>
                 <input type=hidden name=\"type[".$one[0]."]\" value=\"число\"></p>"; 
             break;
 
 
             case "дата": 
                 $dat = date2normal_view($row[$x+1]);
-                echo "<p><b>".$one[1].":</b>
-                <script>$(function() { $.datepicker.setDefaults( $.datepicker.regional[ \"ru\" ] ); $( \"#f_date_c_".$one[0]."\" ).datepicker({ numberOfMonths: 1, changeMonth: true, changeYear: true, dateFormat: \"d MM yy\", showAnim: 'slide' }); });</script>
-                <TABLE cellspacing=0 cellpadding=0 style=\"border-collapse: collapse\"><TBODY><TR> 
-                 <TD><INPUT type=text name=\"text[".$one[0]."]\" id=\"f_date_c_".$one[0]."\" value=\"".$dat."\" readonly=1 size=15 onmouseover=\"this.style.background=&#39;#dddddd&#39;\" onmouseout=\"this.style.background=&#39;&#39;\" style='cursor:pointer;' onChange=\"document.getElementById('f_date_c[".$one[0]."]').value = this.value\"></TD> 
-                 <TD> (&larr; для выбора даты нажмите по полю) <INPUT type=hidden name=\"text[".$one[0]."]\" id=\"f_date_c[".$one[0]."]\" value=\"".$dat."\"></TD> </TR></TBODY></TABLE><input type=hidden name=\"type[".$one[0]."]\" value=\"дата\"></p>"; 
+                echo "<script>$(function() { $.datepicker.setDefaults( $.datepicker.regional[ \"ru\" ] ); $( \"#f_date_c_".$one[0]."\" ).datepicker({ numberOfMonths: 2, changeMonth: true, changeYear: true, dateFormat: \"d MM yy\", showAnim: 'slide' }); });</script>
+                <p>".$one[1].": <INPUT placeholder='&rarr; выберите дату &larr;' type='text' name=\"text[".$one[0]."]\" id=\"f_date_c_".$one[0]."\" value=\"".$dat."\" readonly='1' size='20' onmouseover=\"this.style.background=&#39;#dddddd&#39;\" onmouseout=\"this.style.background=&#39;&#39;\" style='cursor:pointer;' onChange=\"document.getElementById('f_date_c[".$one[0]."]').value = this.value\"></p>
+                <INPUT type='hidden' name=\"text[".$one[0]."]\" id=\"f_date_c[".$one[0]."]\" value=\"".$dat."\">
+                <input type='hidden' name=\"type[".$one[0]."]\" value=\"дата\"></p>"; 
             break;
 
 
             case "датавремя": 
-                echo "<p><b>".$one[1].":</b><br><input type=text name=\"text[".$one[0]."]\" value=\"".$row[$x+1]."\" size=17>
+                echo "<p>".$one[1].":<br><input type=text name=\"text[".$one[0]."]\" value=\"".$row[$x+1]."\" size=17>
                 <input type=hidden name=\"type[".$one[0]."]\" value=\"датавремя\"></p>"; 
             break;
 
 
             default:
-                echo "<p><b>".$one[1].":</b> "; // Добавляем выбор вариантов
+                echo "<p>".$one[1].": "; // Добавляем выбор вариантов
                 $opt = "";
                 $all = explode("|",$one[2]);
                 $sql2 = "select `id`, `".$all[2]."` from ".$prefix."_base_".$all[1]." where `active`!='0' order by `".$all[2]."`";
@@ -681,7 +680,7 @@ function base_base_edit_base($id, $base, $name, $red=0) {
 
     echo "<br><br>
     </td><td width=150>
-    <input type=submit value='Сохранить\nизменения' style='width:100%; height:55px; font-size: 20px;' onClick=\" al=''; ".$alerts." if (al) { alert(al); return false; } else { submit(); } \"><br><br><b>Статус:</b><br>
+    <input type=submit value='Сохранить\nизменения' style='width:100%; height:65px; font-size: 20px;' onClick=\" al=''; ".$alerts." if (al) { alert(al); return false; } else { submit(); } \"><br><br><b>Статус:</b><br>
     ".select("active",implode(',',$status_int),implode(',',$status_name), $row['active'], " size=10")."
     </td></tr></table>
     <input type='hidden' name='op' value='base_base_edit_sv_base'>
@@ -739,7 +738,7 @@ function base_base_create_base($base, $name, $red=0) {
             switch ($one[2]) {
 
                 case "текст": 
-                    echo "<p><b>".$one[1].":</b><br>";
+                    echo "<p>".$one[1].":<br>";
                     if ($red==0) {
                     } elseif ($red==2) {
                         echo "<textarea cols=80 id=\"".$one[0]."\" name=\"text[".$one[0]."]\" rows=10></textarea>
@@ -764,7 +763,7 @@ function base_base_create_base($base, $name, $red=0) {
 
 
                 case "строка": 
-                    echo "<p><b>".$one[1].":</b> <input type=text id=\"".$one[0]."\" name=\"text[".$one[0]."]\" value=\"\" size=40>"; 
+                    echo "<p>".$one[1].": <input placeholder='написать или выбрать из вариантов' type=text id=\"".$one[0]."\" name=\"text[".$one[0]."]\" value=\"\" size=40>"; 
                     // Добавляем выбор вариантов
                     $stroka = $one[0]; 
                     $opt = "";
@@ -778,21 +777,21 @@ function base_base_create_base($base, $name, $red=0) {
                     foreach ($rows as $r) {
                         $opt .= "<option value=\"".$r."\">".$r."</option>";
                     }
-                    echo "<select name=vybor[".$one[0]."] onchange=\"document.getElementById('".$one[0]."').value = this.value;\" style='width:110px;'><option value=\"\">варианты...</option>".$opt."</select>
+                    echo "<select name=vybor[".$one[0]."] onchange=\"document.getElementById('".$one[0]."').value = this.value;\" style='width:120px;'><option value=\"\">варианты...</option>".$opt."</select>
                     <input type=\"hidden\" name=\"type[".$one[0]."]\" value=\"строка\"></p>"; 
                     if ($one[3] == 3 or $one[3] == 2 or $one[3] == 1 or $one[3] == 7) $alerts .= "if (document.getElementById('".$one[0]."').value=='') al = al + 'Не заполнено поле «".$one[1]."». \\r\\n';";
                 break;
 
 
                 case "строкабезвариантов": 
-                    echo "<p><b>".$one[1].":</b> <input type=text id=\"".$one[0]."\" name=\"text[".$one[0]."]\" value=\"\" size=40>"; 
+                    echo "<p>".$one[1].": <input type=text id=\"".$one[0]."\" name=\"text[".$one[0]."]\" value=\"\" size=40>"; 
                     if ($one[4] == 0 or $one[4] == 2) echo "<input type=hidden name=\"type[".$one[0]."]\" value=\"строка\"></p>"; 
                     if ($one[3] == 3 or $one[3] == 2 or $one[3] == 1 or $one[3] == 7) $alerts .= "if (document.getElementById('".$one[0]."').value=='') al = al + 'Не заполнено поле «".$one[1]."». \\r\\n';";
                 break;
 
 
                 case "список": 
-                    echo "<p><b>".$one[1].":</b> "; // Добавляем выбор вариантов
+                    echo "<p>".$one[1].": "; // Добавляем выбор вариантов
                     $stroka = explode(",",$one[5]); 
                     $opt = "";
                     foreach ($stroka as $r) { 
@@ -801,79 +800,83 @@ function base_base_create_base($base, $name, $red=0) {
                     }
                     if ($one[4] == 0 or $one[4] == 2) echo " <select id=\"".$one[0]."\" name=\"text[".$one[0]."]\"><option value=\"\">&rarr; выберите вариант &larr;</option>".$opt."</select>
                     <input type=\"hidden\" name=\"type[".$one[0]."]\" value=\"список\"></p>"; 
-                    if ($one[3] == 3 or $one[3] == 2 or $one[3] == 1 or $one[3] == 7) $alerts .= "if (document.getElementById('".$one[0]."').value=='-') al = al + 'Не заполнено поле «".$one[1]."». \\r\\n';";
+                    if ($one[3] == 3 or $one[3] == 2 or $one[3] == 1 or $one[3] == 7) $alerts .= "if (document.getElementById('".$one[0]."').value=='') al = al + 'Не заполнено поле «".$one[1]."». \\r\\n';";
                 break;
 
 
                 case "число": 
-                    echo "<p><b>".$one[1].":</b> <input type=text id=\"".$one[0]."\" name=\"text[".$one[0]."]\" value=\"\" size=30> (число или сумма + чисел)
+                    echo "<p>".$one[1].": <input placeholder='0 (число или сумма + чисел)' type=text id=\"".$one[0]."\" name=\"text[".$one[0]."]\" value=\"\" size=30>
                     <input type=\"hidden\" name=\"type[".$one[0]."]\" value=\"число\"></p>"; 
                     if ($one[3] == 3 or $one[3] == 2 or $one[3] == 1 or $one[3] == 7) $alerts .= "if (document.getElementById('".$one[0]."').value=='') al = al + 'Не заполнено поле «".$one[1]."». \\r\\n';";
                 break;
 
                  
                 case "дата": 
-                    $add1 = "var num_day = new Array();";
-                    $add2 = "var num_day_sum = new Array();";
+                    $add1 = "var num_day".$one[0]." = new Array();";
+                    $add2 = "var num_day_sum".$one[0]." = new Array();";
                     $no_add1 = $no_add2 = "true";
                     if ($num_day_stroka != 0) { // получаем даты, в которые есть превышение кол-ва строк
                         $num_day_stroka_el = explode("|", $num_day_stroka);
-                        $rows = array();
-                        $sql = "SELECT `".$num_day_stroka_el[1]."` FROM ".$prefix."_base_".$base." GROUP BY `".$num_day_stroka_el[1]."` HAVING count(`id`)>=".$num_day_stroka_el[0];
-                        
-                        $result2 = $db->sql_query($sql);
-                        while ($row2 = $db->sql_fetchrow($result2)) {
-                            $rows[] = $row2[ $num_day_stroka_el[1] ];
+                        if ($one[0] == $num_day_stroka_el[1]) {
+                            $rows = array();
+                            $sql = "SELECT `".$num_day_stroka_el[1]."` FROM ".$prefix."_base_".$base." GROUP BY `".$num_day_stroka_el[1]."` HAVING count(`id`)>=".$num_day_stroka_el[0];
+                            
+                            $result2 = $db->sql_query($sql);
+                            while ($row2 = $db->sql_fetchrow($result2)) {
+                                $rows[] = $row2[ $num_day_stroka_el[1] ];
+                            }
+                            if (count($rows)>0) $add1 = "var num_day".$one[0]." = new Array('".implode("','", $rows)."');";
+                            $no_add1 = $num_day_stroka_el[2];
                         }
-                        if (count($rows)>0) $add1 = "var num_day = new Array('".implode("','", $rows)."');";
-                        $no_add1 = $num_day_stroka_el[2];
                     }
 
                     if ($num_day_sum_stroka != 0) { // получаем даты, в которые есть превышение суммы элементов в числовом поле
                         $num_day_sum_stroka_el = explode("|", $num_day_sum_stroka);
-                        $rows = array();
-                        $result2 = $db->sql_query("SELECT `".$num_day_sum_stroka_el[1]."` FROM ".$prefix."_base_".$base." GROUP BY `".$num_day_sum_stroka_el[1]."` HAVING sum(`".$num_day_sum_stroka_el[2]."`)>=".$num_day_sum_stroka_el[0]);
-                        while ($row2 = $db->sql_fetchrow($result2)) {
-                            $rows[] = $row2[ $num_day_sum_stroka_el[1] ];
+                        if ($one[0] == $num_day_sum_stroka_el[1]) {
+                            $rows = array();
+                            $result2 = $db->sql_query("SELECT `".$num_day_sum_stroka_el[1]."` FROM ".$prefix."_base_".$base." GROUP BY `".$num_day_sum_stroka_el[1]."` HAVING sum(`".$num_day_sum_stroka_el[2]."`)>=".$num_day_sum_stroka_el[0]);
+                            while ($row2 = $db->sql_fetchrow($result2)) {
+                                $rows[] = $row2[ $num_day_sum_stroka_el[1] ];
+                            }
+                            if (count($rows)>0) $add2 = "var num_day_sum".$one[0]." = new Array('".implode("','", $rows)."');";
+                            $no_add2 = $num_day_sum_stroka_el[3];
                         }
-                        if (count($rows)>0) $add2 = "var num_day_sum = new Array('".implode("','", $rows)."');";
-                        $no_add2 = $num_day_sum_stroka_el[3];
                     }
-                    if ($no_add1 == "") { $no_add1 = "true"; $add1 = "var num_day = new Array();"; }
-                    if ($no_add2 == "") { $no_add2 = "true"; $add2 = "var num_day_sum = new Array();"; }
+                    if ($no_add1 == "") { $no_add1 = "true"; $add1 = "var num_day".$one[0]." = new Array();"; }
+                    if ($no_add2 == "") { $no_add2 = "true"; $add2 = "var num_day_sum".$one[0]." = new Array();"; }
                     echo "<script>
-                    $(function() { $.datepicker.setDefaults( $.datepicker.regional[ \"ru\" ] ); $( \"#f_date_c_".$one[0]."\" ).datepicker({ numberOfMonths: 1, beforeShowDay: highlight_noactive, changeMonth: true, changeYear: true, dateFormat: \"d MM yy\", showAnim: 'slide' }); });
+                    $(function() { 
+                        $.datepicker.setDefaults( $.datepicker.regional[ \"ru\" ] ); 
+                        $( \"#f_date_c_".$one[0]."\" ).datepicker({ numberOfMonths: 2, beforeShowDay: highlight_noactive".$one[0].", changeMonth: true, changeYear: true, dateFormat: \"d MM yy\", showAnim: 'slide' }); });
                     ".$add1.$add2."
-                    function highlight_noactive(date) {
+                    function highlight_noactive".$one[0]."(date) {
                       var Month = (date.getMonth() > 9) ? date.getMonth() + 1 : '0' + (date.getMonth() + 1);
                       var Day = (date.getDate() > 9) ? date.getDate() : '0' + date.getDate();
                       var date = date.getFullYear() + '-' + Month + '-' + Day;
                       var clas = '';
                       var show = true;
-                      if ($.inArray(date, num_day) != -1 || $.inArray(date, num_day_sum) != -1) clas = 'red_date';
-                      if ($.inArray(date, num_day) != -1) show = ".$no_add1.";
-                      if ($.inArray(date, num_day_sum) != -1) show = ".$no_add2.";
+                      if ($.inArray(date, num_day".$one[0].") != -1 || $.inArray(date, num_day_sum".$one[0].") != -1) clas = 'red_date';
+                      if ($.inArray(date, num_day".$one[0].") != -1) show = ".$no_add1.";
+                      if ($.inArray(date, num_day_sum".$one[0].") != -1) show = ".$no_add2.";
                       return [show, clas];
                     }
                     </script>
-                    <TABLE cellspacing=0 cellpadding=0 style=\"border-collapse: collapse\"><TBODY><TR> 
-                     <TD><b>".$one[1].":</b> <INPUT type='text' name=\"text[".$one[0]."]\" id=\"f_date_c_".$one[0]."\" readonly='1' size='17' onmouseover=\"this.style.background=&#39;#dddddd&#39;\" onmouseout=\"this.style.background=&#39;&#39;\" style='cursor:pointer;' onChange=\"document.getElementById('f_date_c[".$one[0]."]').value = this.value\"></TD> 
-                     <TD> (&larr; <b class='red'>выберите дату</b>, нажав по полю) <INPUT type='hidden' name=\"text[".$one[0]."]\" id=\"f_date_c[".$one[0]."]\"</TD> 
-                    </TR></TBODY></TABLE>
+                    <p>".$one[1].": <INPUT placeholder='&rarr; выберите дату &larr;' type='text' name=\"text[".$one[0]."]\" id=\"f_date_c_".$one[0]."\" readonly='1' size='20' onmouseover=\"this.style.background=&#39;#dddddd&#39;\" onmouseout=\"this.style.background=&#39;&#39;\" style='cursor:pointer;' onChange=\"document.getElementById('f_date_c[".$one[0]."]').value = this.value\">
+                    <INPUT type='hidden' name=\"text[".$one[0]."]\" id=\"f_date_c[".$one[0]."]\"
                     <input type=hidden name=\"type[".$one[0]."]\" value=\"дата\"></p>"; 
                     if ($one[3] == 3 or $one[3] == 2 or $one[3] == 1 or $one[3] == 7) $alerts .= "if (document.getElementById('f_date_c_".$one[0]."').value=='') al = al + 'Не заполнено поле «".$one[1]."». \\r\\n';";
                 break;
 
 
                 case "датавремя": 
-                    echo "<p><b>".$one[1].":</b><br><input type=text id=\"".$one[0]."\" name=\"text[".$one[0]."]\" value=\"\" size=17>
+                    echo "<p>".$one[1].":<br><input type=text id=\"".$one[0]."\" name=\"text[".$one[0]."]\" value=\"\" size=17>
                     <input type=hidden name=\"type[".$one[0]."]\" value=\"датавремя\"></p>"; 
                     if ($one[3] == 3 or $one[3] == 2 or $one[3] == 1 or $one[3] == 7) $alerts .= "if (document.getElementById('".$one[0]."').value=='') al = al + 'Не заполнено поле «".$one[1]."». \\r\\n';";
                 break;
 
 
                 default:
-                    echo "<p><b>".$one[1].":</b> "; // Добавляем выбор вариантов
+                    echo "<p>".$one[1].": "; // Добавляем выбор вариантов
                     $opt = "";
                     $all = explode("|",$one[2]);
                     $sql2 = "select `id`, `".$all[2]."` from ".$prefix."_base_".$all[1]." where `active`!='0' order by `".$all[2]."`";
@@ -893,46 +896,46 @@ function base_base_create_base($base, $name, $red=0) {
     $sql3 = "SHOW COLUMNS FROM ".$prefix."_base_".$base."";
     $result3 = $db->sql_query($sql3);
     while ($row3 = mysql_fetch_assoc($result3)) {
-            if (!in_array($row3['Field'], $rowY)) {
-                switch ($row3['Field']) {
-                    case "golos": 
-                    echo "<p><b>Голосование:</b><br><input type=text name=\"text[golos]\" value=\"0\" size=5> (число с точкой)
+        if (!in_array($row3['Field'], $rowY)) {
+            switch ($row3['Field']) {
+                case "golos": 
+                echo "<p><b>Голосование:</b><br><input type=text name=\"text[golos]\" value=\"0\" size=5> (число с точкой)
 <input type=hidden name=\"type[golos]\" value=\"строка\"></p>";
-                    break;
-                    
-                    case "id": 
-                    break;
+                break;
+                
+                case "id": 
+                break;
 
-                    case "active": 
-                    break;
-                    
-                    case "comm": 
-                    echo "<p><b>Кол-во комментариев:</b><br><input type=text name=\"text[comm]\" value=\"0\" size=5> (целое число)
+                case "active": 
+                break;
+                
+                case "comm": 
+                echo "<p><b>Кол-во комментариев:</b><br><input type=text name=\"text[comm]\" value=\"0\" size=5> (целое число)
 <input type=hidden name=\"type[comm]\" value=\"число\"></p>";
-                    break;
-                    
-                    case "kol": 
-                    echo "<p><b>Количество проданного товара:</b><br><input type=text name=\"text[kol]\" value=\"0\" size=5> (целое число)
+                break;
+                
+                case "kol": 
+                echo "<p><b>Количество проданного товара:</b><br><input type=text name=\"text[kol]\" value=\"0\" size=5> (целое число)
 <input type=hidden name=\"type[kol]\" value=\"число\"></p>";
-                    break;
-                    
-                    default: // на всякий случай
-                    echo "<p><b>Поле ".$row3['Field'].":</b><br><input type=text name=\"text[".$row3['Field']."]\" value=\"\" size=5>
+                break;
+                
+                default: // на всякий случай
+                echo "<p><b>Поле ".$row3['Field'].":</b><br><input type=text name=\"text[".$row3['Field']."]\" value=\"\" size=5>
 <input type=hidden name=\"type[".$row3['Field']."]\" value=\"текст\"></p>";
-                    //$x++;
-                    break;
-                }
+                //$x++;
+                break;
             }
+        }
     }
     echo "<br><br>
     </td><td width=150>
-    <input type=submit value='Сохранить\nстроку' style='width:100%; height:55px; font-size: 20px;' onClick=\" al=''; ".$alerts." if (al) { alert(al); return false; } else { submit(); } \"><br><br><b>Статус:</b><br>
+    <input type='submit' value='Сохранить\nстроку' style='width:100%; height:65px; font-size: 20px;' onClick=\" al=''; ".$alerts." if (al) { alert(al); return false; } else { submit(); } \"><br><br><b>Статус:</b><br>
     ".select("active",implode(',',$status_int),implode(',',$status_name), '3', " size=10")."
     </td></tr></table>
-    <input type=hidden name=op value=base_base_edit_sv_base>
-    <input type=hidden name=id value=0>
-    <input type=hidden name=base value=$base>
-    <input type=hidden name=name value=$name>
+    <input type='hidden' name='op' value='base_base_edit_sv_base'>
+    <input type='hidden' name='id' value='0'>
+    <input type='hidden' name='base' value='".$base."'>
+    <input type='hidden' name='name' value='".$name."'>
     </form>";
     admin_footer();
     // <br>Ограничение: не более 100 элементов в списках на выбор (для строк)

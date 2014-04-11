@@ -73,26 +73,27 @@ if ($row['realadmin'] == 1) {
 		Header("Location: ".$admin_file.".php?op=options");
 	}
 	///////////////////////////////////////////////////////////////////////////////////////
-	function updateadmin($chng_aid, $chng_name, $chng_pwd, $chng_pwd2, $adm_aid) {
+	function updateadmin($chng_aid, $chng_pwd, $chng_pwd2, $adm_aid) {
 		global $siteurl, $admin, $prefix, $db, $admin_file;
 			$chng_aid = trim($chng_aid);
-			if (!($chng_aid && $chng_name)) {
-				Header("Location: ".$admin_file.".php?op=options");
+			if (!($chng_aid)) {
+				Header("Location: ".$admin_file.".php?op=options#error");
 			}
 			if (!empty($chng_pwd2)) {
-				if($chng_pwd != $chng_pwd2) {
-					include("ad/ad-header.php");
-					echo "Первый пароль не соответствует второму. Вернитесь назад.<br>";
-					admin_footer();
-					exit;
-				}
-				$chng_pwd = md5($chng_pwd);
+				//if($chng_pwd != $chng_pwd2) {
+					//include("ad/ad-header.php");
+					//echo "Первый пароль не соответствует второму. Вернитесь назад.<br>";
+					//admin_footer();
+					//exit;
+				//}
+				$chng_pwd2 = md5($chng_pwd2);
 				$chng_aid = strtolower(substr($chng_aid, 0,25));
-				$db->sql_query("update ".$prefix."_authors set aid='".$chng_aid."', pwd='".$chng_pwd."' where name='".$chng_name."' AND aid='".$adm_aid."'");
-				Header("Location: ".$admin_file.".php?op=options");
+				$db->sql_query("update ".$prefix."_authors set aid='".$chng_aid."', pwd='".$chng_pwd2."' where aid='".$adm_aid."'");
+				//echo "update ".$prefix."_authors set aid='".$chng_aid."', pwd='".$chng_pwd2."' where aid='".$adm_aid."'";
+				Header("Location: ".$admin_file.".php?op=options#ok");
 			} else {
-				$db->sql_query("update ".$prefix."_authors set aid='".$chng_aid."' where name='".$chng_name."' AND aid='".$adm_aid."'");
-				Header("Location: ".$admin_file.".php?op=options");
+				//$db->sql_query("update ".$prefix."_authors set aid='".$chng_aid."' where name='".$chng_name."' AND aid='".$adm_aid."'");
+				Header("Location: ".$admin_file.".php?op=options#empty_pass");
 			}
 	}
 ////////////////////////////////////////////////
@@ -1361,7 +1362,7 @@ echo "<p>".select('options[ed2_button_typewriter]','0,1','НЕТ,ДА',$ed2_butt
 			break;
 		case "update_author":
 			if ($_POST['op'] != 'update_author') exit;
-			updateadmin($chng_aid, $chng_name, $chng_pwd, $chng_pwd2, $adm_aid);
+			updateadmin($chng_aid, $chng_pwd, $chng_pwd2, $adm_aid);
 			break;
 		case "ipban_delete":
 			ipban_delete($id);

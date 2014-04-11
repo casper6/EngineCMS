@@ -1406,6 +1406,7 @@ button.small,a.btn.small,a.button.small,{
 .li_light li:hover{
  background:#e9f2fc; 
 }
+
 .tr_icon {
   width: 15px;
   height: 15px;
@@ -1429,6 +1430,54 @@ button.small,a.btn.small,a.button.small,{
     background-image: url('/images/trash_fill.png');
     background-color: red;
 }
+
+table.table_light_bd {
+  background:#fff; 
+  white-space: normal;
+  line-height: normal;
+  font-weight: normal;
+  font-size: medium;
+  font-variant: normal;
+  font-style: normal;
+  display: table;
+  text-align: start;
+  border-collapse: collapse;
+  border: 1px solid white;
+  width: 100%;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+  border-left-width: 0px;
+  -webkit-border-horizontal-spacing: 0px;
+  -webkit-border-vertical-spacing: 0px;
+}
+table.table_light_bd th, table.table_light_bd td {
+  vertical-align: top;
+  text-align: left;
+}
+table.table_light_bd tr:first-child td {
+  font-size:16px !important;
+  color: darkviolet;
+}
+table.table_light_bd td {
+  border: 1px dashed #66bbdd;
+  padding: 5px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  color: black;
+  font-size:14px;
+}
+.tr_hover td {
+  border-bottom: 1px solid #eeeeee;
+}
+table.table_light_bd tr:hover{
+ background:#e9f2fc; 
+}
+table.table_light_bd tr:hover th,table.table_light_bd tr.odd:hover th{
+ background:#e9f2fc; 
+}
+
+
 
 table.table_light tr{
  border-bottom:1px solid #bbb;
